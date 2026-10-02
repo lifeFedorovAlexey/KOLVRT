@@ -125,3 +125,13 @@ fn markdown_structure_ignores_markup_inside_fences() {
     );
     assert!(structure("#not-heading\n####### invalid\nordinary\n").is_empty());
 }
+
+#[test]
+fn metadata_aliases_preserve_old_documents_but_reject_ambiguity() {
+    let old = "Document status: CURRENT\nDocument scope: bounded\nStatus reference: [record](record.md)\n";
+    assert!(check_document_status(old).is_ok());
+    assert!(check_document_status(&format!("{old}Evidence scope: another scope\n")).is_err());
+    assert!(
+        check_document_status(&format!("{old}Current reference: [other](other.md)\n")).is_err()
+    );
+}

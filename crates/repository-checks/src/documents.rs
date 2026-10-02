@@ -316,31 +316,46 @@ pub fn check_docs(root: &Path) -> CheckResult<()> {
 
 /// Bounded metadata validation, not proof that claims match execution evidence.
 pub fn check_document_status(text: &str) -> CheckResult<()> {
-    let mut values = Vec::new();
-    for name in ["Document status", "Document scope", "Status reference"] {
-        let prefix = format!("{name}: ");
+    let field = |names: &[&str]| -> CheckResult<String> {
         let fields: Vec<_> = text
             .lines()
-            .filter_map(|s| s.strip_prefix(&prefix))
+            .filter_map(|line| {
+                names
+                    .iter()
+                    .find_map(|name| line.strip_prefix(&format!("{name}: ")))
+            })
+            .map(str::trim)
             .collect();
-        if fields.len() != 1 || fields[0].trim().is_empty() {
-            return Err(format!("document requires exactly one nonempty {name}"));
+        if fields.len() != 1 || fields[0].is_empty() {
+            return Err(format!(
+                "document requires exactly one nonempty {}",
+                names[0]
+            ));
         }
-        values.push(fields[0].trim());
-    }
+        Ok(fields[0].to_owned())
+    };
+    let status = field(&["Document status"])?;
+    // Keep committed documents valid while the metadata spelling migration is unfinished.
+    let _scope = field(&["Document scope", "Evidence scope"])?;
+    let reference = field(&["Status reference", "Current reference"])?;
     if !matches!(
-        values[0],
-        "CURRENT" | "DESIGN BASELINE" | "HISTORICAL" | "SUPERSEDED"
+        status.as_str(),
+        "CURRENT" | "DESIGN BASELINE" | "HISTORICAL" | "HISTORICAL MILESTONE" | "SUPERSEDED"
     ) {
         return Err("unknown document status".into());
     }
-    let link = Regex::new(r"^\[[^\]]+\]\(([^)]+)\)$").unwrap();
-    let capture = link
-        .captures(values[2])
-        .ok_or("status reference must be a local Markdown link")?;
-    let target = &capture[1];
-    if target.starts_with(['/', '#']) || target.contains(':') || !target.ends_with(".md") {
-        return Err("status reference must name a local document".into());
+    let links = Regex::new(r"\[[^\]]+\]\(([^)]+)\)").unwrap();
+    let targets: Vec<_> = links
+        .captures_iter(&reference)
+        .map(|c| c[1].to_owned())
+        .collect();
+    if targets.is_empty() {
+        return Err("status reference must contain a local link".into());
+    }
+    for target in targets {
+        if target.starts_with(['/', '#']) || target.contains(':') {
+            return Err("status reference must use local paths".into());
+        }
     }
     Ok(())
 }
