@@ -13,7 +13,8 @@ use core::sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering};
 use kernel_core::{execution as abi, scheduling::ownership::Phase};
 use local::Local;
 use task::*;
-const TASKS: usize = config::TASKS_PER_CPU;
+pub(crate) const TASKS: usize = config::TASKS_PER_CPU;
+pub(crate) const CAPACITY: usize = config::TOTAL_TASKS;
 const NO_TASK: usize = TASKS;
 const NO_CPU: usize = usize::MAX;
 const QUANTUM: time::Duration = time::Duration::from_millis(1);
@@ -53,18 +54,14 @@ static ARRIVED: AtomicUsize = AtomicUsize::new(0);
 static SESSION: AtomicBool = AtomicBool::new(false);
 static RUNNING_OWNER: [AtomicUsize; config::TOTAL_TASKS] =
     [const { AtomicUsize::new(NO_CPU) }; config::TOTAL_TASKS];
-/// A bounded caller owns mappings across this synchronous session. Immutable setup
-/// is published before admission; permanent CPU slots survive every caller/workload.
-pub(crate) fn run(
-    spaces: &[memory::UserSpace<'_>],
-    contexts: [Context; config::TOTAL_TASKS],
-    slice_budget: usize,
-    timeout: time::Duration,
+/// Persistent native dispatch mechanism. Per-process identity is independent of
+/// queue generation; lifetime and optional bounded limits belong to the caller.
+pub(crate) fn dispatch(
+    tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS],
+    timeout: Option<time::Duration>,
 ) -> Completed {
     percpu::primary_only();
     assert!(cpu::irq_masked(), "scheduler coordinator IRQ contract");
-    assert_eq!(spaces.len(), config::TOTAL_TASKS);
-    assert!(slice_budget > 0);
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     assert_eq!(
         SESSION.compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire),
@@ -80,16 +77,21 @@ pub(crate) fn run(
     NATIVE_ROOT.store(memory::table_root(), Ordering::Release);
     for (owner, local) in LOCALS.iter().enumerate() {
         let mut state = State::ZERO;
-        state.deadline = time::deadline_after(timeout);
+        state.deadline = timeout.map(time::deadline_after);
         for (index, task) in state.tasks.iter_mut().enumerate() {
             let id = owner * TASKS + index;
-            *task = Task::new(
-                id,
-                generation,
-                spaces[id].root(),
-                contexts[id],
-                slice_budget,
-            );
+            if let Some(admitted) = tasks[id] {
+                assert_eq!(admitted.identity.slot(), id);
+                assert_eq!(admitted.space.slot(), id);
+                *task = Task::new(
+                    id,
+                    admitted.identity.generation(),
+                    admitted.space.root(),
+                    admitted.context,
+                    admitted.slice_budget,
+                );
+                task.bind_queue(generation);
+            }
         }
         local.prepare(generation, state);
         local.preempt.store(false, Ordering::Release);
@@ -100,8 +102,9 @@ pub(crate) fn run(
     }
     crate::smp::ping(percpu::SECONDARY_CPU);
     run_local();
-    crate::smp::wait(
+    crate::smp::wait_optional(
         || LOCALS.iter().all(Local::completed),
+        timeout,
         "scheduler completion timeout",
     );
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
@@ -116,23 +119,52 @@ pub(crate) fn run(
         #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
         generation,
     };
-    for local in &LOCALS {
+    for (owner, local) in LOCALS.iter().enumerate() {
         completed.switches += local.inspect(generation, |state| state.switches);
         for index in 0..TASKS {
             // Copy bounded completion evidence; no borrowed state escapes inspection.
             let task = local.inspect(generation, |state| {
-                assert_eq!(
-                    state.tasks[index].generation(),
-                    generation,
-                    "stale scheduler task"
-                );
+                if state.tasks[index].state != CONTEXT_VACANT {
+                    assert_eq!(
+                        state.tasks[index].generation(),
+                        generation,
+                        "stale scheduler task"
+                    );
+                }
                 state.tasks[index].result()
             });
-            completed.tasks[task.id] = task;
+            completed.tasks[owner * TASKS + index] = task;
         }
     }
+    #[cfg(not(feature = "process-unlink-negative"))]
+    unlink(&completed);
     SESSION.store(false, Ordering::Release);
     completed
+}
+/// Unlink scheduler references before publishing process completion. Reports and
+/// copied frame evidence remain diagnostic data; roots can no longer be dispatched.
+pub(crate) fn unlink(completed: &Completed) {
+    assert!(completed.owners_released);
+    for local in &LOCALS {
+        assert!(local.completed());
+        local.quiescent(local.generation(), |state| {
+            state.current = NO_TASK;
+            for task in &mut state.tasks {
+                task.unlink();
+            }
+        });
+    }
+}
+pub(crate) fn detached(id: kernel_core::process::ProcessId) -> bool {
+    let local = &LOCALS[id.slot() / TASKS];
+    if !local.completed() || memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0 {
+        return false;
+    }
+    RUNNING_OWNER[id.slot()].load(Ordering::Acquire) == NO_CPU
+        && local.inspect(local.generation(), |state| {
+            let task = &state.tasks[id.slot() % TASKS];
+            !task.linked() || task.id() != id.slot() || task.process_generation() != id.generation()
+        })
 }
 fn acquire_process(id: usize) {
     assert_eq!(id / TASKS, percpu::id(), "wrong process affinity");
@@ -226,17 +258,19 @@ fn run_local() {
         local.controls(generation);
     }
     let first = local.with(generation, |state| {
-        let index = choose(state, generation).expect("empty ready queue");
-        (
+        let index = choose(state, generation)?;
+        Some((
             state.tasks[index].context,
             state.tasks[index].root(),
             state.tasks[index].id(),
-        )
+        ))
     });
-    acquire_process(first.2);
+    if let Some(first) = first {
+        acquire_process(first.2);
+    }
     #[cfg(feature = "scheduler-owner-negative")]
     if percpu::id() == percpu::BOOT_CPU {
-        acquire_process(first.2);
+        acquire_process(first.expect("control needs task").2);
     }
     // Both CPUs rendezvous before first EL0 entry, so the test covers concurrent queues.
     ARRIVED.fetch_or(1 << percpu::id(), Ordering::AcqRel);
@@ -249,16 +283,17 @@ fn run_local() {
     } else {
         crate::smp::wait(|| START.load(Ordering::Acquire), "EL0 start timeout");
     }
-    // SAFETY: INV-USER-TTBR: driver retains all spaces; root preserves kernel stack/code;
-    // local ownership, masked IRQ, no Rust State reference spans exception execution.
-    unsafe {
-        activate(first.1);
-    }
-    cpu::timer(time::deadline_after(QUANTUM));
-    // SAFETY: INV-USER-CONTEXT: exact statically checked frame ABI, live native stack;
-    // assembly saves its resume SP with STLR, and restores full kernel ABI before return.
-    unsafe {
-        cpu::context::enter(&first.0, local.resume_sp.as_ptr());
+    if let Some(first) = first {
+        // SAFETY: INV-USER-TTBR: caller retains live immutable roots through acquired
+        // completion; no State reference spans ERET, native stack/code remain mapped.
+        unsafe {
+            activate(first.1);
+        }
+        cpu::timer(time::deadline_after(QUANTUM));
+        // SAFETY: INV-USER-CONTEXT: checked frame ABI and permanent native stack.
+        unsafe {
+            cpu::context::enter(&first.0, local.resume_sp.as_ptr());
+        }
     }
     assert_eq!(cpu::el(), cpu::CURRENT_EL1);
     memory::USER_EXECUTION_ACTIVE.fetch_sub(1, Ordering::AcqRel);
@@ -297,7 +332,10 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
             }
             task.slices += 1;
             task.observations.service_timer(task.slices);
-            task.state = if task.slices >= task.slice_budget() {
+            task.state = if task
+                .slice_budget()
+                .is_some_and(|limit| task.slices >= limit)
+            {
                 CONTEXT_TIMED_OUT
             } else {
                 CONTEXT_READY
@@ -330,7 +368,7 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
                 task.fault_far = far;
             }
         }
-        if cpu::ticks() >= state.deadline {
+        if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
             for task in &mut state.tasks {
                 if task.state == CONTEXT_READY || task.state == CONTEXT_RUNNING {
                     task.state = CONTEXT_TIMED_OUT;

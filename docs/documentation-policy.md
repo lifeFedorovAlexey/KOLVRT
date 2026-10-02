@@ -2,15 +2,17 @@
 
 ## Status and evidence
 
-Use `Document status`, `Document scope` and a local `Status reference` link on documents
-whose milestones can be confused. These roles are distinct from ABI publication stages.
+Use `Document status`, `Evidence scope` and a local `Current reference` link on documents
+whose milestones can be confused. Add `Supersedes` when a document replaces another
+decision in whole or in part. These roles are distinct from ABI publication stages.
 
-| Status          | Meaning                                                                                  |
-| --------------- | ---------------------------------------------------------------------------------------- |
-| CURRENT         | Current policy or implementation description within stated evidence limits.              |
-| DESIGN BASELINE | Accepted intended behavior with explicit implementation and acceptance gaps.             |
-| HISTORICAL      | Claims about a named earlier phase/revision, not current implementation.                 |
-| SUPERSEDED      | Replaced for the stated scope; link the replacement and preserve unaffected obligations. |
+| Status               | Meaning                                                                                  |
+| -------------------- | ---------------------------------------------------------------------------------------- |
+| CURRENT              | Current policy or implementation description within stated evidence limits.              |
+| DESIGN BASELINE      | Accepted intended behavior with explicit implementation and acceptance gaps.             |
+| HISTORICAL           | Claims about a named earlier phase/revision, not current implementation.                 |
+| HISTORICAL MILESTONE | Evidence and claims bound to one completed milestone; later work does not rewrite them.  |
+| SUPERSEDED           | Replaced for the stated scope; link the replacement and preserve unaffected obligations. |
 
 Code establishes implemented behavior; accepted current ADRs/specifications establish
 intended behavior. A discrepancy is a defect or requires a reviewed decision, not an
@@ -24,14 +26,14 @@ Issue #6 reviews merged implementation through `d6bf7da`, excluding local Phase 
 execution; [ADR-0012](architecture-decisions/0012-multicore-retirement.md) and
 [ADR-0014](architecture-decisions/0014-el0-foundation.md) record later bounded milestones.
 
-| Statement/document                | Disposition                                                                                                                |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| No kernel/build exists            | Historical Phase 0 only; the merged repository contains a native AArch64 kernel.                                           |
-| Kernel checks have not run        | Historical Phase 0 only; retained foundation/SMP/EL0 QEMU results exist.                                                   |
-| CPU0-only execution               | Original Phase 1 scope; CPU0 allocator ownership is a separate still-valid restriction.                                    |
-| First native slice                | DESIGN BASELINE; EL0/scheduling are partly realized, while IPC/handles/cancellation/service acceptance remains incomplete. |
-| Compatibility and unsafe policies | CURRENT obligations with historical Phase 0 passages; no general loader or complete safety proof is claimed.               |
-| Local Phase 2 routing             | Uncommitted code/results are not merged implementation or evidence for this reviewed revision.                             |
+| Statement/document                | Disposition                                                                                                                                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| No kernel/build exists            | Historical Phase 0 only; the merged repository contains a native AArch64 kernel.                                                                       |
+| Kernel checks have not run        | Historical Phase 0 only; retained foundation/SMP/EL0 QEMU results exist.                                                                               |
+| CPU0-only execution               | Original Phase 1 scope; CPU0 allocator ownership is a separate still-valid restriction.                                                                |
+| First native slice                | DESIGN BASELINE; bounded EL0, scheduling and routing milestones are implemented, while IPC/handles/cancellation/service acceptance remains incomplete. |
+| Compatibility and unsafe policies | CURRENT obligations with historical Phase 0 passages; no general loader or complete safety proof is claimed.                                           |
+| Local Phase 2 routing             | Uncommitted code/results are not merged implementation or evidence for this reviewed revision.                                                         |
 
 Retained [foundation results](../research/results/kernel-foundation.json) cover 23 tests
 per profile and one active CPU; [SMP results](../research/results/kernel-smp.json) cover
@@ -42,8 +44,9 @@ controls belong to each record, not automatically to current code. Physical ARM6
 general-purpose SMP and the complete native slice remain unverified. This change reruns
 no kernel matrix and generates no new execution evidence.
 
-Bounded checks validate metadata and local reference syntax for the audited documents;
-ordinary link checks reject missing targets. They cannot prove that claims match behavior.
+Bounded checks validate status metadata and local references on every document that declares
+them; translation checks compare ADR status, supersession and reference targets across
+languages. They cannot prove that evidence scopes mean the same thing or that claims match behavior.
 Review every capability claim against its actual revision, profile and platform.
 
 Canonical Markdown is written entirely in English. Translations live under `translations/<language>/` and mirror the canonical repository paths, including filenames. Russian uses `translations/ru/`. Use descriptive directory names, such as `architecture-decisions`; avoid unexplained abbreviations in new directory names.
@@ -58,10 +61,14 @@ The original request is preserved as a historical text attachment. Research JSON
 
 ## Phase 2 evidence update
 
-The earlier audit explicitly excludes the then-local Phase 2 work. The now-verified [routing contract](kernel/routing.md) and [ADR-0015](architecture-decisions/0015-el0-versioned-routing.md) describe the bounded optional EL0 slice: eight independent consumers on two CPUs, native/v1/v2/safe-bug routes, pinned PROD profiles and native-core dependency isolation. [Execution results](../research/results/routing-phase2.json) and [physical source-removal evidence](../research/results/native-compat-removal.json) retain exact source/artifact scopes; the latter reruns the same 53-test DEV/PROD foundation and eleven negative controls without routing packages. These records establish only their QEMU scope. IPC, transferred authority, cancellation, general services, dynamic loading and silicon validation remain incomplete; the full first native slice is still a design baseline.
+The earlier audit explicitly excludes the then-local Phase 2 work. The verified [routing contract](kernel/routing.md) and [ADR-0015](architecture-decisions/0015-el0-versioned-routing.md) describe the bounded optional EL0 slice: eight independent consumers on two CPUs, native/v1/v2/safe-bug routes, pinned PROD profiles and isolation from the native-core dependency set. [Execution results](../research/results/routing-phase2.json) and [physical source-removal evidence](../research/results/native-compat-removal.json) retain exact source and artifact scopes; the latter reruns the same 53-test DEV/PROD foundation and eleven negative controls without routing packages. These records establish only their QEMU scope. IPC, delegated authority, cancellation, general services, dynamic loading and silicon validation remain incomplete; the full first native slice is still a design baseline.
 
 ## Phase 3.0 evidence update
 
-[Scheduler ownership](kernel/scheduler.md) and [ADR-0016](architecture-decisions/0016-scheduler-ownership.md) supersede the comment-only runtime access model, while preserving earlier milestone evidence. [Current results](../research/results/kernel-phase3.json) retain 54 tests per profile, both non-test boots and 41 failure controls; [routing regression](../research/results/routing-phase3-regression.json) retains optional payload behavior. This does not complete dynamic lifecycle, user-copy, capabilities/domains, IPC, supervision or persistent services. Phase 3 — Native Process & Service Foundation starts with #16/#17 only; later stages require separate authorization.
+[Scheduler ownership](kernel/scheduler.md) and [ADR-0016](architecture-decisions/0016-scheduler-ownership.md) supersede the earlier runtime-access model that relied on comments, while preserving evidence from earlier milestones. [Phase 3.0 results](../research/results/kernel-phase3.json) retain 54 tests per profile, both non-test boots and 41 failure controls; [routing regression results](../research/results/routing-phase3-regression.json) retain optional-payload behavior. Phase 3.0 does not complete dynamic process lifecycle, safe user-copy, capabilities or security domains, IPC, supervision or persistent services. Those stages require their own authorization and evidence.
+
+## Phase 3.1 evidence update
+
+[Dynamic processes](kernel/processes.md) and [ADR-0017](architecture-decisions/0017-process-lifecycle.md) describe the completed bounded kernel-internal milestone. [Kernel results](../research/results/kernel-phase31.json) retain 65 tests per DEV/PROD profile and 53 failure controls, preserving the previous 54 tests and 41 controls. Stress runs 32 two-CPU rounds, or 64 lifecycle cycles per profile, with generation reuse, contained faults and restored resource counts. [Routing regression](../research/results/routing-phase31-regression.json) and [physical compatibility removal](../research/results/native-compat-removal-phase31.json) preserve their exact execution scopes. Public EL0 creation authority and wait, persistent services, asynchronous retirement and safe user-copy remain deferred. This evidence establishes bounded QEMU behavior, not silicon validation or completion of the full native slice.
 
 [Russian translation](../translations/ru/docs/documentation-policy.md)

@@ -1,8 +1,8 @@
 # Фундамент ownership scheduler
 
 Document status: CURRENT
-Document scope: Phase 3.0, ограниченный scheduler двух CPU с fixed affinity; issues #16 и #17.
-Status reference: [ADR-0016](../architecture-decisions/0016-scheduler-ownership.md)
+Evidence scope: Владение Phase 3.0 и ограниченный жизненный цикл процессов Phase 3.1 на двух CPU; фиксированная привязка.
+Current reference: [ADR-0016](../architecture-decisions/0016-scheduler-ownership.md), [ADR-0017](../architecture-decisions/0017-process-lifecycle.md)
 
 ## Обязанности
 
@@ -71,21 +71,25 @@ Compiler privacy инкапсулирует raw storage и immutable definitions
 
 ## Evidence и следующая граница
 
-[Результаты](../../../../research/results/kernel-phase3.json) сохраняют точные sources/artifacts: 54 tests в каждом DEV/PROD, включая прежние 53 и повторное использование generation/reclamation без reboot; оба non-test boots; исходные eleven failure controls и fifteen scheduler controls в обоих profiles, всего 35. Scheduler controls проверяют foreign CPU mutation, duplicate start/run, stale state/task, re-entry настоящего timer path, live reset/read, premature completion, unmasked mutation, оба направления locks, privileged/AArch32 seeds и masked user IRQ. [Routing regression](../../../../research/results/routing-phase3-regression.json) проверяет прежний optional EL0 behavior; native matrix работает без этого payload. QEMU evidence не устанавливает silicon weak-memory behavior или произвольное число CPU.
+[Результаты](../../../../research/results/kernel-phase3.json) сохраняют точные sources/artifacts: 54 tests в каждом DEV/PROD, включая прежние 53 и повторное использование generation/reclamation без reboot; оба non-test boots; исходные eleven failure controls и fifteen scheduler controls в обоих profiles, всего 41. Scheduler controls проверяют foreign CPU mutation, duplicate start/run, stale state/task, re-entry настоящего timer path, live reset/read, premature completion, unmasked mutation, оба направления locks, privileged/AArch32 seeds и masked user IRQ. [Routing regression](../../../../research/results/routing-phase3-regression.json) проверяет прежний optional EL0 behavior; native matrix работает без этого payload. QEMU evidence не устанавливает silicon weak-memory behavior или произвольное число CPU.
 
 Phase 3 — Native Process & Service Foundation продолжается только по отдельному разрешению:
 
-| Этап | Область                                      |
-| ---- | -------------------------------------------- |
-| 3.0  | Scheduler decomposition и ownership, #16/#17 |
-| 3.1  | Dynamic process lifecycle, #20               |
-| 3.2  | Safe user-copy, #22                          |
-| 3.3  | Handles и capabilities, #23/#24              |
-| 3.4  | Security domains, #25                        |
-| 3.5  | IPC, waits и cancellation, #26               |
-| 3.6  | Supervisor, #27                              |
-| 3.7  | Первый persistent EL0 service, #28           |
+| Этап | Область                                                                                            |
+| ---- | -------------------------------------------------------------------------------------------------- |
+| 3.0  | Scheduler decomposition и ownership, #16/#17                                                       |
+| 3.1  | Динамический внутренний жизненный цикл процессов, #20; публичный допуск и ожидание из EL0 отложены |
+| 3.2  | Safe user-copy, #22                                                                                |
+| 3.3  | Handles и capabilities, #23/#24                                                                    |
+| 3.4  | Security domains, #25                                                                              |
+| 3.5  | IPC, waits и cancellation, #26                                                                     |
+| 3.6  | Supervisor, #27                                                                                    |
+| 3.7  | Первый persistent EL0 service, #28                                                                 |
 
-Issue #20 может опираться на enforced owner boundary, immutable setup, checked generations, copied completion и quiescent retirement. Ему всё ещё нужны per-process create/start/exit/fault/wait transitions, partial-creation rollback, vacant slots и process generations, persistent scheduling/admission и SMP-safe reclamation. Текущие queue generations обозначают ограниченные sessions, а не завершённый dynamic process API. IPC, handles, capabilities, migration, work stealing и routing policy здесь не добавляются. ELF #21 и ASID optimization #18 остаются отдельными задачами. [Master tracker](https://github.com/lifeFedorovAlexey/KOLVRT/issues/37) фиксирует порядок prerequisites.
+Phase 3.1 завершает ограниченный внутренний жизненный цикл, запрошенный для этого этапа: идентификаторы с поколениями, транзакционную подготовку, явный допуск, копируемые результаты завершения или отказа и освобождение ресурсов после отсоединения планировщиком. Идентификатор процесса не даёт полномочий. Публичное создание и ожидание из EL0, допуск постоянных служб и асинхронное освобождение ресурсов остаются будущей работой; более широкая задача #20 автоматически не закрывается. Здесь не добавляются IPC, дескрипторы, полномочия, миграция, кража работы или политика маршрутизации. Задачи ELF #21 и оптимизации ASID #18 остаются отдельными. [Основной список задач](https://github.com/lifeFedorovAlexey/KOLVRT/issues/37) задаёт порядок предпосылок.
+
+## Граница жизненного цикла Phase 3.1
+
+[Жизненный цикл](processes.md) дополняет основу незанятыми слотами и независимыми поколениями процессов. При запуске ядра создаётся один `Registry`, сохраняемый между вызовами; тестовые образы и необязательная полезная нагрузка используют общий путь создания, запуска, диспетчеризации и освобождения. Дескрипторы допуска заимствуют принадлежащие процессам адресные пространства; корни очереди удаляются при подтверждённом безопасном изменении до возврата результата завершения. Для изменения используется существующее исключительное разрешение и те же три места разыменования хранилища. Необязательные пределы задаются вызывающей стороной; `None` не вводит скрытого срока завершения. Исторические результаты Phase 3.0 сохранены. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) фиксирует консервативную границу освобождения и дальнейшие обязательства по копированию данных пользователя.
 
 [English original](../../../../docs/kernel/scheduler.md)

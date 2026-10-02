@@ -328,9 +328,43 @@ const USER_CODE_PAGE: usize = 3;
 const USER_DATA_PAGE: usize = 4;
 const USER_STACK_PAGE: usize = 5;
 pub const USER_SPACE_PAGES: usize = USER_STACK_PAGE + USER_STACK_PAGES;
-static USER_CHARGES: [AtomicUsize; config::USER_PROCESSES] =
-    [const { AtomicUsize::new(0) }; config::USER_PROCESSES];
+static USER_CHARGES: [AtomicUsize; crate::process::CAPACITY] =
+    [const { AtomicUsize::new(0) }; crate::process::CAPACITY];
 pub static USER_EXECUTION_ACTIVE: AtomicUsize = AtomicUsize::new(0);
+/// Linear private space owner for a dynamic process, with no self-referential
+/// borrow. The persistent charge protects even a forgotten owner. No automatic
+/// release can bypass explicit scheduler detachment and Physical ownership.
+pub struct OwnedUserSpace {
+    frame: Frame,
+    id: usize,
+}
+impl OwnedUserSpace {
+    pub fn slot(&self) -> usize {
+        self.id
+    }
+    pub fn new(frame: Frame, id: usize, image: &[u8], entry: usize) -> Self {
+        let space = UserSpace::image(&frame, id, image, entry);
+        // Transfer the same charge, not another mapping or allocation. All
+        // construction borrows end here; the owned Frame stays live until reclaim.
+        core::mem::forget(space);
+        Self { frame, id }
+    }
+    pub fn root(&self) -> u64 {
+        self.frame.address as u64
+    }
+    pub fn data_address(&self) -> usize {
+        self.frame.address + USER_DATA_PAGE * PAGE_SIZE
+    }
+    pub fn reclaim(self, physical: &mut Physical) {
+        // Only kernel-internal lifecycle code owns this value. The caller checked
+        // acquired scheduler unlink; the existing guard enforces CPU quiescence.
+        drop(UserSpace {
+            frame: &self.frame,
+            id: self.id,
+        });
+        physical.release(self.frame);
+    }
+}
 /// CPU0 owns setup/reclamation. Borrow plus persistent charge protects forgotten guards.
 /// The scheduler may publish a root only under its separate unsafe lifetime contract.
 pub struct UserSpace<'a> {
@@ -338,12 +372,9 @@ pub struct UserSpace<'a> {
     id: usize,
 }
 impl<'a> UserSpace<'a> {
+    #[cfg(feature = "user-retirement-negative")]
     pub fn new(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
         Self::image(frame, id, image, USER_CODE)
-    }
-    #[cfg(feature = "boot-payload")]
-    pub fn payload(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
-        Self::image(frame, id, image, config::USER_PAYLOAD_BASE)
     }
     fn image(frame: &'a Frame, id: usize, image: &[u8], entry: usize) -> Self {
         crate::percpu::primary_only();
@@ -420,12 +451,6 @@ impl<'a> UserSpace<'a> {
         drop(native);
         cpu::publish_instructions(frame.address, frame.address + frame.count * PAGE_SIZE);
         Self { frame, id }
-    }
-    pub fn root(&self) -> u64 {
-        self.frame.address as u64
-    }
-    pub fn data_address(&self) -> usize {
-        self.frame.address + USER_DATA_PAGE * PAGE_SIZE
     }
     pub fn alias(id: usize) -> usize {
         USER_BASE + (USER_ALIAS_INDEX + id) * PAGE_SIZE

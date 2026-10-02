@@ -56,4 +56,8 @@ The later routing-demo package owns the separately linked EL0 image; it is not a
 
 The [Phase 3.0 scheduler split](kernel/scheduler.md) places per-CPU runtime and storage access in kernel/src/scheduler, frame/entry in arch/aarch64, and static image allocation/verification in boot_workload.rs and boot_workload.S. Safe ownership and selection stay in kernel-core; no new package or dependency is needed.
 
+## Phase 3.1 process boundary
+
+[Process lifecycle](kernel/processes.md) adds kernel-core/src/process.rs for safe identity/state, kernel/src/process.rs for owned spaces and transactional lifecycle, and kernel/src/process_workload.rs for verification. Existing boot_workload fixtures use the same mechanism. No new package, global mutable process table or universal kernel object is added.
+
 [Russian translation](../translations/ru/docs/project-structure.md)

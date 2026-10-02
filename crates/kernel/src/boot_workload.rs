@@ -1,6 +1,8 @@
 //! Trusted static bootstrap fixtures and post-quiescence verifier. Not scheduler lifetime.
 #[cfg(feature = "boot-payload")]
 use crate::event;
+#[cfg(all(feature = "boot-payload", feature = "machine-events"))]
+use crate::scheduler;
 use crate::scheduler::task::{CONTEXT_EXITED, CONTEXT_FAULTED};
 use crate::{
     cpu,
@@ -10,9 +12,9 @@ use crate::{
     },
     memory, percpu,
     platform::config,
-    scheduler, time,
+    process::{Origin, Registry, Spec},
+    time,
 };
-use alloc::vec::Vec;
 use core::sync::atomic::Ordering;
 const TASKS: usize = config::USER_PROCESSES_PER_CPU;
 #[cfg(feature = "boot-payload")]
@@ -66,32 +68,23 @@ pub struct Evidence {
     pub owners_released: bool,
     pub fault_checks: [bool; config::USER_PROCESSES],
 }
-pub fn exercise(p: &mut memory::Physical) -> Evidence {
+pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence {
     percpu::primary_only();
     cpu::mask();
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     let before = p.available();
-    let mut frames: Vec<_> = (0..config::USER_PROCESSES)
-        .map(|_| {
-            p.allocate(memory::USER_SPACE_PAGES, 1)
-                .expect("user allocation exhausted")
-        })
-        .collect();
     let image_start = &raw const user_image_start as usize;
     let image_end = &raw const user_image_end as usize;
     assert!(image_end > image_start);
     // SAFETY: INV-USER-IMAGE: linked immutable position-independent trusted image extent.
     let image =
         unsafe { core::slice::from_raw_parts(image_start as *const u8, image_end - image_start) };
-    let spaces: Vec<_> = frames
-        .iter()
-        .enumerate()
-        .map(|(id, frame)| memory::UserSpace::new(frame, id, image))
-        .collect();
     #[cfg(feature = "user-retirement-negative")]
     {
-        core::mem::forget(spaces);
-        p.release(frames.pop().unwrap());
+        let frame = p.allocate(memory::USER_SPACE_PAGES, 1).unwrap();
+        let space = memory::UserSpace::new(&frame, 0, image);
+        core::mem::forget(space);
+        p.release(frame);
         panic!("retained user frame release accepted");
     }
     let mut contexts = [Context::ZERO; config::USER_PROCESSES];
@@ -132,7 +125,27 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
             expectations[id] = (expected_class, target);
         }
     }
-    let completed = scheduler::run(&spaces, contexts, MAX_SLICES, RUN_TIMEOUT);
+    assert_eq!(processes.live(), 0, "fixture requires empty registry");
+    let identities: [_; config::USER_PROCESSES] = core::array::from_fn(|id| {
+        let identity = processes
+            .create(
+                p,
+                Origin::Bootstrap,
+                Spec {
+                    image,
+                    context: contexts[id],
+                    owner: id / TASKS,
+                    entry: memory::USER_CODE,
+                    slice_limit: Some(MAX_SLICES),
+                },
+                None,
+            )
+            .unwrap_or_else(|failure| crate::process::reject(failure.error));
+        assert_eq!(identity.slot(), id);
+        processes.start(identity).unwrap();
+        identity
+    });
+    let completed = processes.dispatch(Some(RUN_TIMEOUT));
     let mut evidence = Evidence {
         processes: config::USER_PROCESSES,
         switches: 0,
@@ -153,7 +166,8 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
         // retained frame's initialized tag is read before any space/charge is retired.
         let tag = unsafe {
             core::ptr::read_volatile(
-                (spaces[task.id].data_address() as *const u64).add(DATA_TAG_WORD),
+                (processes.data_address(identities[task.id]).unwrap() as *const u64)
+                    .add(DATA_TAG_WORD),
             )
         };
         assert_eq!(
@@ -196,9 +210,8 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
             }
         }
     }
-    drop(spaces);
-    for frame in frames.drain(..) {
-        p.release(frame);
+    for identity in identities {
+        processes.reclaim(p, identity).unwrap();
     }
     evidence.reclaimed = p.available() == before;
     assert!(evidence.reclaimed, "EL0 frame leak");
@@ -209,21 +222,12 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
 /// Run a trusted boot-selected opaque EL0 image. No adapter, route or profile types
 /// cross this boundary. Immutable code is retained until both native roots are restored.
 #[cfg(feature = "boot-payload")]
-pub fn payload(p: &mut memory::Physical, image: &[u8]) {
+pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8]) {
     percpu::primary_only();
     cpu::mask();
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     let before = p.available();
-    let pages = memory::USER_SPACE_PAGES + image.len().div_ceil(config::PAGE_BYTES);
-    let frames: Vec<_> = (0..config::USER_PROCESSES)
-        .map(|_| p.allocate(pages, 1).expect("payload memory budget"))
-        .collect();
-    let spaces: Vec<_> = frames
-        .iter()
-        .enumerate()
-        .map(|(id, frame)| memory::UserSpace::payload(frame, id, image))
-        .collect();
-    let contexts = core::array::from_fn(|id| {
+    let contexts: [Context; config::USER_PROCESSES] = core::array::from_fn(|id| {
         let mut context = Context::ZERO;
         context.pc = config::USER_PAYLOAD_BASE as u64;
         context.sp = memory::USER_STACK_TOP as u64;
@@ -231,7 +235,31 @@ pub fn payload(p: &mut memory::Physical, image: &[u8]) {
         context.gpr[0] = id as u64;
         context
     });
-    let completed = scheduler::run(&spaces, contexts, PAYLOAD_MAX_SLICES, RUN_TIMEOUT);
+    assert_eq!(
+        processes.live(),
+        0,
+        "payload fixture requires empty registry"
+    );
+    let identities: [_; config::USER_PROCESSES] = core::array::from_fn(|id| {
+        let identity = processes
+            .create(
+                p,
+                Origin::Bootstrap,
+                Spec {
+                    image,
+                    context: contexts[id],
+                    owner: id / TASKS,
+                    entry: config::USER_PAYLOAD_BASE,
+                    slice_limit: Some(PAYLOAD_MAX_SLICES),
+                },
+                None,
+            )
+            .unwrap_or_else(|failure| crate::process::reject(failure.error));
+        assert_eq!(identity.slot(), id);
+        processes.start(identity).unwrap();
+        identity
+    });
+    let completed = processes.dispatch(Some(RUN_TIMEOUT));
     #[cfg(feature = "machine-events")]
     for task in &completed.tasks {
         for offset in (0..task.report_len).step_by(scheduler::REPORT_CHUNK_WORDS) {
@@ -254,9 +282,8 @@ pub fn payload(p: &mut memory::Physical, image: &[u8]) {
             task.native_attempts
         );
     }
-    drop(spaces);
-    for frame in frames {
-        p.release(frame);
+    for identity in identities {
+        processes.reclaim(p, identity).unwrap();
     }
     assert_eq!(p.available(), before, "payload frame leak");
     assert!(completed.owners_released);

@@ -19,6 +19,7 @@ pub mod experiment {
     pub const PANIC: u64 = 5;
     pub const TIMER: u64 = 6;
     pub const REPLY: u64 = 7;
+    pub const PROCESS_CONTEXT: u64 = 8;
     pub const LOCK_ITERATIONS: u64 = 4096;
     pub const PUBLICATION_XOR: u64 = 0x4b4f4c; // ASCII KOL.
     const TIMER_DELAY: time::Duration = time::Duration::from_millis(1);
@@ -89,6 +90,13 @@ pub mod experiment {
             }
             PANIC => panic!("secondary panic control"),
             REPLY => ping(percpu::BOOT_CPU),
+            PROCESS_CONTEXT => RESULT.store(
+                u64::from(
+                    crate::process::context_contract()
+                        == Err(kernel_core::process::Error::ForeignCpu),
+                ),
+                Ordering::Release,
+            ),
             TIMER => {
                 let before = percpu::current().timers.load(Ordering::Acquire);
                 cpu::timer(time::deadline_after(TIMER_DELAY));
@@ -101,13 +109,23 @@ pub mod experiment {
         }
     }
 }
-pub fn wait(mut ready: impl FnMut() -> bool, reason: &str) {
+pub fn wait(ready: impl FnMut() -> bool, reason: &str) {
+    wait_optional(ready, Some(COORDINATION_TIMEOUT), reason);
+}
+/// Native completion can have no workload deadline. Timeout never authorizes reclaim.
+/// Callers wait without a scheduler borrow/ordinary lock and require admitted work
+/// to eventually terminate for return; existing boot coordination keeps its bound.
+pub fn wait_optional(
+    mut ready: impl FnMut() -> bool,
+    timeout: Option<time::Duration>,
+    reason: &str,
+) {
     assert!(
         !percpu::current().scheduler_borrow.load(Ordering::Acquire),
         "scheduler borrow across wait"
     );
     crate::sync::assert_scheduler_unlocked();
-    let deadline = time::deadline_after(COORDINATION_TIMEOUT);
+    let deadline = timeout.map(time::deadline_after);
     loop {
         assert_ne!(
             percpu::CPUS[SECONDARY_CPU].state.load(Ordering::Acquire),
@@ -117,7 +135,10 @@ pub fn wait(mut ready: impl FnMut() -> bool, reason: &str) {
         if ready() {
             return;
         }
-        assert!(cpu::ticks() < deadline, "{reason}");
+        assert!(
+            deadline.is_none_or(|limit| cpu::ticks() < limit),
+            "{reason}"
+        );
         core::hint::spin_loop();
     }
 }

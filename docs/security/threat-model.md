@@ -73,4 +73,8 @@ The bounded [EL0 routing slice](../kernel/routing.md) has an explicit [per-respo
 
 [ADR-0016](../architecture-decisions/0016-scheduler-ownership.md) narrows existing enforcement: foreign CPU/IRQ re-entry, stale state/task, duplicate running ownership, live reset/read and both lock directions are rejected before unsafe storage access or execution. Generations cannot wrap, completed snapshots cannot borrow live state, and retained roots survive native-root/TLBI completion. Both profiles use the same mechanism; privilege violations are fatal. No new authority issuer, dynamic process API, routing policy or IPC admission is added. Queue-session generations do not substitute for future per-process identities and lifecycle rollback.
 
+## Phase 3.1 process boundary
+
+The [process lifecycle](../kernel/processes.md) separates retained address-space ownership and generation-safe identity from authority. A singleton Registry rejects recreation; each task executes only on its indexed CPU. Origin/CPU/IRQ checks precede allocation; EL0 has no create endpoint, handle or wait authority. Completion follows actual native-root/TLBI quiescence and scheduler unlink. Stale identities cannot select reused slots; failed creation returns every acquired frame/charge. DEV/PROD enforcement is identical. Concurrent admission/reclaim, retained user-copy operations and public authority remain unimplemented. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) records privileged necessity and future EL0 policy placement.
+
 [Russian translation](../../translations/ru/docs/security/threat-model.md)

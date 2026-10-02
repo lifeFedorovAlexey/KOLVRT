@@ -1,0 +1,1297 @@
+{
+  "claim": "Physical compatibility-package source removal; identical native runtime and harness sources to the full measured candidate. QEMU correctness evidence, not silicon or performance proof.",
+  "removed_package_directories": [
+    "crates/routing",
+    "crates/window-compat",
+    "crates/routing-demo"
+  ],
+  "modified_workspace_manifests": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "crates/xtask/Cargo.toml"
+  ],
+  "runtime_sources_match": true,
+  "compared_source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "c165c91a9e47f43570c0380be8d37e3629200165174115d110ffbf3a6d6a0970"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "sha256_lf": "6c00394821fe60e21f10a1110feebf6ce0463ece70e9de95a644b492fddd0256"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "8cdc9141e803e6f65ca1ec1a1002c00532ea37560bc3d46be55a8db59f97c033"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "0a34f1b067ea90aacdd716ae1155f41197720f966522406cc5892d19fc82f0f9"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.S",
+      "sha256_lf": "3f69dbec817d830714d9e40bbf0221bd6cd266ce7c89300460d7744ed5c3458e"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "sha256_lf": "b5c31027a89d4edaebac33ee0854240401811c55712b41b47575d3c620b12f5b"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+    },
+    {
+      "path": "crates/kernel/src/execution.rs",
+      "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "184083b3d6bc0239ab26a39e32a278a0d6d53a78fcc0d143cf8fd8e52ae7e6b8"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "5c5f1181a47058aec679ea648b262dcbabdb5c6e8c5d95c22447bdf2bd7dc35b"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "0cbe90f9941116bd7dace00ff5a419e783bbfd57eed249ea9d24e4e319b30991"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "sha256_lf": "dfdb294dc44e45225a0644d281fe71c4759b1160d275eaa68981fa9c0955e82a"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "sha256_lf": "5f944612017a704d63f7ad5aeeed65107c7714aae982b87b09c2374022603c06"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/config.rs",
+      "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "sha256_lf": "5144b7b2e678db1fa2d90014757c472c1635b00e4339e768742f2f1d7fd259d4"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "sha256_lf": "ddca572571f17e358ae851e748a6c75bedf48969b3f65ee3807fb2ed5f4df63a"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "sha256_lf": "9a53a5a400ea7b436b646156faf4b375bede275cffbdb53d1274a8fa7ba765ff"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "87dac4741eccafee11e76270db155586757e3a2776127f1b598b6fdf8fc1e886"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "179fc0234b9f93150b24dc9457bdcd783a0bdaf67dc9c4cf3c0dd2c9b152681d"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "95460f529308c072dd3cd37b021c09d058c5605ad4fdbd34fb96908045a5090a"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "0da518b1b8c47ee49c4b37351cc613c9b6600fe04e756fb34af8b7081e4ee69e"
+    },
+    {
+      "path": "crates/kernel-core/src/execution.rs",
+      "sha256_lf": "3201c8e60cbda5e94d279e08033effba69271fc8b553b7d2a278bcb3145bf254"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "0f7e6957a8b4312280d4a84bba636c4f8fcbe9befb9fbf081533656e0ac32b49"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "5b69f2220e2e40b45f46ff099462797eaf592064e1b37390afeca4c898e89b78"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "sha256_lf": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling/ownership.rs",
+      "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling.rs",
+      "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+    },
+    {
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "sha256_lf": "42af412ac0878d8ca612d216f50eb04747d69f5ccf9266e824cc571d8e6f80f5"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "832f3eca2f16ccea003dcc35bb3ab2f0b6688b07a97086a4f0016a940ee89dfc"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "8061036704d8c17c78eabbcb3b656cabccb3df8d78c8bf1a428d9eb6ffe4d78b"
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "sha256_lf": "c6cd0d7d67c1fd2c7e9a08f3f6eaabb96e07a4d99e829ffb4ca026a12a1f5ce8"
+    },
+    {
+      "path": "crates/xtask/tests/cli.rs",
+      "sha256_lf": "b16996f16daba63492ffe73d39dc3a99acdc961764a1aedbbc5da9b54187cbe3"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "crates/xtask/tests/native_boundary.rs",
+      "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+    },
+    {
+      "path": "crates/xtask/tests/output_writer.rs",
+      "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+    },
+    {
+      "path": "crates/xtask/tests/scheduler_boundary.rs",
+      "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    }
+  ],
+  "native_dependency_tree": "kolvrt-kernel v0.1.0 (D:\\KOLVRT\\target\\verify-native-phase31\\crates\\kernel)\nkernel-core v0.1.0 (D:\\KOLVRT\\target\\verify-native-phase31\\crates\\kernel-core)\n",
+  "measurement": {
+    "claim": "TCG timer observations; not proof of fastest algorithm or hardware throughput",
+    "correctness": {
+      "matrix": "passed",
+      "negative_host_controls": 53,
+      "tests_per_profile": 65
+    },
+    "git_commit": "825d8d561e69e414088d6501dfa1ee939d495c99",
+    "label": "phase31-native-release",
+    "method_review": "docs/architecture/implementation-review.md",
+    "profiles": {
+      "dev": {
+        "boot_build": {
+          "artifact": "target/kernel/dev-boot.elf",
+          "compiler": "1.99.0",
+          "elf_bytes": 2563928,
+          "features": ["machine-events", "diagnostics"],
+          "load_bytes": 344743,
+          "memory_bytes": 1429927,
+          "sha256": "c7c4ae0a18094d2ba0a301b9fe00fff5063b7586607a0a876c592ff33b6737a7",
+          "target": "aarch64-unknown-none"
+        },
+        "measurement": {
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 64,
+          "median": 250,
+          "p95": 287,
+          "p99": 394,
+          "samples": [
+            250, 363, 243, 275, 250, 250, 263, 250, 250, 244, 250, 250, 225,
+            256, 250, 231, 256, 238, 212, 244, 237, 238, 237, 331, 281, 269,
+            263, 250, 225, 250, 394, 263, 257, 287, 250, 275, 269, 268, 263,
+            262, 263, 262, 269, 269, 262, 244, 244, 238, 262, 257, 256, 250,
+            263, 244, 250, 244, 250, 250, 237, 244, 262, 250, 232, 250
+          ],
+          "scope": "lock_uncontended",
+          "units": "timer_ticks",
+          "warmup": 8
+        },
+        "run": {
+          "accelerator": "TCG",
+          "active_cpus": 2,
+          "arguments": [
+            "-machine",
+            "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+            "-cpu",
+            "cortex-a57",
+            "-accel",
+            "tcg",
+            "-smp",
+            "2",
+            "-m",
+            "256M",
+            "-display",
+            "none",
+            "-serial",
+            "stdio",
+            "-monitor",
+            "none",
+            "-nic",
+            "none",
+            "-no-reboot",
+            "-kernel",
+            "target/kernel/dev-tests.elf"
+          ],
+          "configured_cpus": 2,
+          "elf_sha256": "b9c6ec1d35e51d83e55cd487a72265b84a8813e4288bd360b88c6e4f8eb86414",
+          "measurement_claim": "emulator timer ticks; not hardware throughput",
+          "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+          "timeout_seconds": 30
+        },
+        "test_build": {
+          "artifact": "target/kernel/dev-tests.elf",
+          "compiler": "1.99.0",
+          "elf_bytes": 2799104,
+          "features": ["machine-events", "diagnostics", "kernel-tests"],
+          "load_bytes": 402587,
+          "memory_bytes": 1487707,
+          "sha256": "b9c6ec1d35e51d83e55cd487a72265b84a8813e4288bd360b88c6e4f8eb86414",
+          "target": "aarch64-unknown-none"
+        },
+        "test_events": [
+          {
+            "event": "test",
+            "name": "boot_el1",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "uart_mmio",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "exception_vectors",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_discovery",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_allocator",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "allocation_free",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_exhaustion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "page_map",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "invalid_mapping_rejection",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "page_unmap",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "permissions",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "execute_never",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "mmu",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "heap",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "heap_exhaustion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "locking_exclusion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "locking_release",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "monotonic_time",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "interrupt_masking",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "interrupt_delivery",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "timer_rearm",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "irq_simd_context",
+            "status": "pass"
+          },
+          {
+            "event": "measurement",
+            "frequency": 62500000,
+            "iterations": 64,
+            "median": 250,
+            "p95": 287,
+            "p99": 394,
+            "samples": [
+              250, 363, 243, 275, 250, 250, 263, 250, 250, 244, 250, 250, 225,
+              256, 250, 231, 256, 238, 212, 244, 237, 238, 237, 331, 281, 269,
+              263, 250, 225, 250, 394, 263, 257, 287, 250, 275, 269, 268, 263,
+              262, 263, 262, 269, 269, 262, 244, 244, 238, 262, 257, 256, 250,
+              263, 244, 250, 244, 250, 250, 237, 244, 262, 250, 232, 250
+            ],
+            "scope": "lock_uncontended",
+            "units": "timer_ticks",
+            "warmup": 8
+          },
+          {
+            "event": "test",
+            "name": "smp_secondary_boot",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_cpu_identity",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_separate_stacks",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_ipi_forward",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_ipi_reverse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_ipi_repeated",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_lock_publication",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_mapping_visible",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_retirement_pending",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_no_premature_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_remote_ack",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_remote_tlb_invalidation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_safe_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_simultaneous_timers",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_percpu_independent",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "scheduler_generation_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_processes",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_timer_switches",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_user_stacks",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_memory_isolation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_fault_containment",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_quiescent_reclamation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_context_preservation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_smp_ownership",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_kernel_memory_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_foreign_memory_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_code_write_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_stack_guard",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_data_execute_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_privileged_instruction_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_registry_and_cpu_ownership",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_preparation_and_admission",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_normal_exit_and_fault",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_creation_rollback",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_capacity_exhaustion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_slot_generation_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_terminal_rejections",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_authority_boundary",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_sparse_affinity",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_bounded_stress",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_resource_reclamation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_orderly_shutdown",
+            "status": "pass"
+          },
+          {
+            "event": "suite",
+            "status": "pass",
+            "tests": 65
+          }
+        ]
+      },
+      "prod": {
+        "boot_build": {
+          "artifact": "target/kernel/prod-boot.elf",
+          "compiler": "1.99.0",
+          "elf_bytes": 635384,
+          "features": ["machine-events"],
+          "load_bytes": 191175,
+          "memory_bytes": 1272263,
+          "sha256": "5947039382c566282d44ac296b20752bd19f1098e514cbea43fd45beee70a507",
+          "target": "aarch64-unknown-none"
+        },
+        "measurement": {
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 64,
+          "median": 6,
+          "p95": 13,
+          "p99": 13,
+          "samples": [
+            6, 13, 6, 7, 6, 7, 6, 7, 6, 7, 6, 13, 12, 13, 12, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 13, 12, 13, 12, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 12,
+            13, 12, 13, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 13, 12, 13, 6, 7, 6,
+            7
+          ],
+          "scope": "lock_uncontended",
+          "units": "timer_ticks",
+          "warmup": 8
+        },
+        "run": {
+          "accelerator": "TCG",
+          "active_cpus": 2,
+          "arguments": [
+            "-machine",
+            "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+            "-cpu",
+            "cortex-a57",
+            "-accel",
+            "tcg",
+            "-smp",
+            "2",
+            "-m",
+            "256M",
+            "-display",
+            "none",
+            "-serial",
+            "stdio",
+            "-monitor",
+            "none",
+            "-nic",
+            "none",
+            "-no-reboot",
+            "-kernel",
+            "target/kernel/prod-tests.elf"
+          ],
+          "configured_cpus": 2,
+          "elf_sha256": "16ab5d9804aabd2282d98d4177b0303241c3a710a1ac23e8ce12721e7aed21da",
+          "measurement_claim": "emulator timer ticks; not hardware throughput",
+          "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+          "timeout_seconds": 30
+        },
+        "test_build": {
+          "artifact": "target/kernel/prod-tests.elf",
+          "compiler": "1.99.0",
+          "elf_bytes": 851568,
+          "features": ["machine-events", "kernel-tests"],
+          "load_bytes": 231635,
+          "memory_bytes": 1312659,
+          "sha256": "16ab5d9804aabd2282d98d4177b0303241c3a710a1ac23e8ce12721e7aed21da",
+          "target": "aarch64-unknown-none"
+        },
+        "test_events": [
+          {
+            "event": "test",
+            "name": "boot_el1",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "uart_mmio",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "exception_vectors",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_discovery",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_allocator",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "allocation_free",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "physical_exhaustion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "page_map",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "invalid_mapping_rejection",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "page_unmap",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "permissions",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "execute_never",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "mmu",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "heap",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "heap_exhaustion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "locking_exclusion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "locking_release",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "monotonic_time",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "interrupt_masking",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "interrupt_delivery",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "timer_rearm",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "irq_simd_context",
+            "status": "pass"
+          },
+          {
+            "event": "measurement",
+            "frequency": 62500000,
+            "iterations": 64,
+            "median": 6,
+            "p95": 13,
+            "p99": 13,
+            "samples": [
+              6, 13, 6, 7, 6, 7, 6, 7, 6, 7, 6, 13, 12, 13, 12, 6, 6, 6, 6, 6,
+              6, 6, 6, 6, 6, 6, 13, 12, 13, 12, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7,
+              12, 13, 12, 13, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 13, 12, 13, 6,
+              7, 6, 7
+            ],
+            "scope": "lock_uncontended",
+            "units": "timer_ticks",
+            "warmup": 8
+          },
+          {
+            "event": "test",
+            "name": "smp_secondary_boot",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_cpu_identity",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_separate_stacks",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_ipi_forward",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_ipi_reverse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_ipi_repeated",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_lock_publication",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_mapping_visible",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_retirement_pending",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_no_premature_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_remote_ack",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_remote_tlb_invalidation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_safe_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_simultaneous_timers",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_percpu_independent",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "scheduler_generation_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_processes",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_timer_switches",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_user_stacks",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_memory_isolation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_fault_containment",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_quiescent_reclamation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_context_preservation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_smp_ownership",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_kernel_memory_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_foreign_memory_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_code_write_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_stack_guard",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_data_execute_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "el0_privileged_instruction_rejected",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_registry_and_cpu_ownership",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_preparation_and_admission",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_normal_exit_and_fault",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_creation_rollback",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_capacity_exhaustion",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_slot_generation_reuse",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_terminal_rejections",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_authority_boundary",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_sparse_affinity",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_bounded_stress",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "process_resource_reclamation",
+            "status": "pass"
+          },
+          {
+            "event": "test",
+            "name": "smp_orderly_shutdown",
+            "status": "pass"
+          },
+          {
+            "event": "suite",
+            "status": "pass",
+            "tests": 65
+          }
+        ]
+      }
+    },
+    "schema_version": 1,
+    "source_files": [
+      {
+        "path": ".cargo/config.toml",
+        "sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6"
+      },
+      {
+        "path": "Cargo.lock",
+        "sha256_lf": "e69cd7af13cfe6e4ce255327beb673e94a5c455b0eefd35859f339c54123ae8e"
+      },
+      {
+        "path": "Cargo.toml",
+        "sha256_lf": "c95e0ff754f3bad4da99235725a1a976d6233dd39b435c753161273988d75d69"
+      },
+      {
+        "path": "assets/branding/boot-logo.txt",
+        "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+      },
+      {
+        "path": "crates/kernel/Cargo.toml",
+        "sha256_lf": "c165c91a9e47f43570c0380be8d37e3629200165174115d110ffbf3a6d6a0970"
+      },
+      {
+        "path": "crates/kernel/build.rs",
+        "sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61"
+      },
+      {
+        "path": "crates/kernel/linker.ld",
+        "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+      },
+      {
+        "path": "crates/kernel/src/arch/aarch64/context.rs",
+        "sha256_lf": "6c00394821fe60e21f10a1110feebf6ce0463ece70e9de95a644b492fddd0256"
+      },
+      {
+        "path": "crates/kernel/src/arch/aarch64/entry.S",
+        "sha256_lf": "8cdc9141e803e6f65ca1ec1a1002c00532ea37560bc3d46be55a8db59f97c033"
+      },
+      {
+        "path": "crates/kernel/src/arch/aarch64/mod.rs",
+        "sha256_lf": "0a34f1b067ea90aacdd716ae1155f41197720f966522406cc5892d19fc82f0f9"
+      },
+      {
+        "path": "crates/kernel/src/arch/aarch64/page.rs",
+        "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+      },
+      {
+        "path": "crates/kernel/src/boot_workload.S",
+        "sha256_lf": "3f69dbec817d830714d9e40bbf0221bd6cd266ce7c89300460d7744ed5c3458e"
+      },
+      {
+        "path": "crates/kernel/src/boot_workload.rs",
+        "sha256_lf": "b5c31027a89d4edaebac33ee0854240401811c55712b41b47575d3c620b12f5b"
+      },
+      {
+        "path": "crates/kernel/src/diagnostics/mod.rs",
+        "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+      },
+      {
+        "path": "crates/kernel/src/execution.rs",
+        "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+      },
+      {
+        "path": "crates/kernel/src/hal/mod.rs",
+        "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+      },
+      {
+        "path": "crates/kernel/src/interrupt/mod.rs",
+        "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+      },
+      {
+        "path": "crates/kernel/src/main.rs",
+        "sha256_lf": "184083b3d6bc0239ab26a39e32a278a0d6d53a78fcc0d143cf8fd8e52ae7e6b8"
+      },
+      {
+        "path": "crates/kernel/src/memory/mod.rs",
+        "sha256_lf": "5c5f1181a47058aec679ea648b262dcbabdb5c6e8c5d95c22447bdf2bd7dc35b"
+      },
+      {
+        "path": "crates/kernel/src/percpu.rs",
+        "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+      },
+      {
+        "path": "crates/kernel/src/platform/config.rs",
+        "sha256_lf": "0cbe90f9941116bd7dace00ff5a419e783bbfd57eed249ea9d24e4e319b30991"
+      },
+      {
+        "path": "crates/kernel/src/platform/mod.rs",
+        "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+      },
+      {
+        "path": "crates/kernel/src/process.rs",
+        "sha256_lf": "dfdb294dc44e45225a0644d281fe71c4759b1160d275eaa68981fa9c0955e82a"
+      },
+      {
+        "path": "crates/kernel/src/process_workload.rs",
+        "sha256_lf": "5f944612017a704d63f7ad5aeeed65107c7714aae982b87b09c2374022603c06"
+      },
+      {
+        "path": "crates/kernel/src/scheduler/config.rs",
+        "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+      },
+      {
+        "path": "crates/kernel/src/scheduler/local.rs",
+        "sha256_lf": "5144b7b2e678db1fa2d90014757c472c1635b00e4339e768742f2f1d7fd259d4"
+      },
+      {
+        "path": "crates/kernel/src/scheduler/mod.rs",
+        "sha256_lf": "ddca572571f17e358ae851e748a6c75bedf48969b3f65ee3807fb2ed5f4df63a"
+      },
+      {
+        "path": "crates/kernel/src/scheduler/task.rs",
+        "sha256_lf": "9a53a5a400ea7b436b646156faf4b375bede275cffbdb53d1274a8fa7ba765ff"
+      },
+      {
+        "path": "crates/kernel/src/smp.rs",
+        "sha256_lf": "87dac4741eccafee11e76270db155586757e3a2776127f1b598b6fdf8fc1e886"
+      },
+      {
+        "path": "crates/kernel/src/sync/mod.rs",
+        "sha256_lf": "179fc0234b9f93150b24dc9457bdcd783a0bdaf67dc9c4cf3c0dd2c9b152681d"
+      },
+      {
+        "path": "crates/kernel/src/tests.rs",
+        "sha256_lf": "95460f529308c072dd3cd37b021c09d058c5605ad4fdbd34fb96908045a5090a"
+      },
+      {
+        "path": "crates/kernel/src/time/mod.rs",
+        "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+      },
+      {
+        "path": "crates/kernel-core/Cargo.toml",
+        "sha256_lf": "0da518b1b8c47ee49c4b37351cc613c9b6600fe04e756fb34af8b7081e4ee69e"
+      },
+      {
+        "path": "crates/kernel-core/src/execution.rs",
+        "sha256_lf": "3201c8e60cbda5e94d279e08033effba69271fc8b553b7d2a278bcb3145bf254"
+      },
+      {
+        "path": "crates/kernel-core/src/lib.rs",
+        "sha256_lf": "0f7e6957a8b4312280d4a84bba636c4f8fcbe9befb9fbf081533656e0ac32b49"
+      },
+      {
+        "path": "crates/kernel-core/src/memory.rs",
+        "sha256_lf": "5b69f2220e2e40b45f46ff099462797eaf592064e1b37390afeca4c898e89b78"
+      },
+      {
+        "path": "crates/kernel-core/src/platform.rs",
+        "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+      },
+      {
+        "path": "crates/kernel-core/src/process.rs",
+        "sha256_lf": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979"
+      },
+      {
+        "path": "crates/kernel-core/src/scheduling/ownership.rs",
+        "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+      },
+      {
+        "path": "crates/kernel-core/src/scheduling.rs",
+        "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+      },
+      {
+        "path": "crates/kernel-core/src/time.rs",
+        "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+      },
+      {
+        "path": "crates/kernel-core/src/window.rs",
+        "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+      },
+      {
+        "path": "crates/kernel-core/tests/boot_description.rs",
+        "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+      },
+      {
+        "path": "crates/kernel-core/tests/process_protocol.rs",
+        "sha256_lf": "42af412ac0878d8ca612d216f50eb04747d69f5ccf9266e824cc571d8e6f80f5"
+      },
+      {
+        "path": "crates/xtask/Cargo.toml",
+        "sha256_lf": "9bae8ae3183f724ea8508b121de3194b21a8d661b1f4f87a56b37b0cb7dec66e"
+      },
+      {
+        "path": "crates/xtask/src/main.rs",
+        "sha256_lf": "832f3eca2f16ccea003dcc35bb3ab2f0b6688b07a97086a4f0016a940ee89dfc"
+      },
+      {
+        "path": "crates/xtask/src/output.rs",
+        "sha256_lf": "8061036704d8c17c78eabbcb3b656cabccb3df8d78c8bf1a428d9eb6ffe4d78b"
+      },
+      {
+        "path": "crates/xtask/src/routing_demo.rs",
+        "sha256_lf": "c6cd0d7d67c1fd2c7e9a08f3f6eaabb96e07a4d99e829ffb4ca026a12a1f5ce8"
+      },
+      {
+        "path": "crates/xtask/tests/cli.rs",
+        "sha256_lf": "b16996f16daba63492ffe73d39dc3a99acdc961764a1aedbbc5da9b54187cbe3"
+      },
+      {
+        "path": "crates/xtask/tests/locking.rs",
+        "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+      },
+      {
+        "path": "crates/xtask/tests/native_boundary.rs",
+        "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+      },
+      {
+        "path": "crates/xtask/tests/output_writer.rs",
+        "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+      },
+      {
+        "path": "crates/xtask/tests/scheduler_boundary.rs",
+        "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+      },
+      {
+        "path": "rust-toolchain.toml",
+        "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+      }
+    ],
+    "timestamp_unix_ms": 1790977600612,
+    "worktree_dirty": true
+  }
+}

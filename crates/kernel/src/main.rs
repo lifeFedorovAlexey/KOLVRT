@@ -13,6 +13,8 @@ mod interrupt;
 mod memory;
 mod percpu;
 mod platform;
+mod process;
+mod process_workload;
 mod scheduler;
 mod smp;
 mod sync;
@@ -59,6 +61,7 @@ pub extern "C" fn kernel_main() -> ! {
     diagnostics::status("OK", "exceptions", format_args!("vectors installed"));
     memory::initialize_mmu(&d);
     memory::initialize_heap(&mut physical);
+    let mut processes = process::Registry::new();
     interrupt::initialize(&d);
     smp::start(memory::table_root());
     let frame = physical.allocate(1, 1).expect("boot memory validation");
@@ -86,7 +89,7 @@ pub extern "C" fn kernel_main() -> ! {
         format_args!("{} CPUs participating", platform::config::ACTIVE_CPUS),
     );
     #[cfg(feature = "kernel-tests")]
-    tests::run(&d, &mut physical);
+    tests::run(&d, &mut physical, &mut processes);
     #[cfg(feature = "ownership-test")]
     {
         let _foreign_owner = memory::Physical::new(&d);
@@ -104,7 +107,7 @@ pub extern "C" fn kernel_main() -> ! {
     }
     #[cfg(not(feature = "kernel-tests"))]
     {
-        let users = boot_workload::exercise(&mut physical);
+        let users = boot_workload::exercise(&mut physical, &mut processes);
         event!(
             "{{\"event\":\"el0\",\"status\":\"pass\",\"processes\":{},\"workers\":{},\"faults\":{},\"switches\":{},\"reclaimed\":{}}}",
             users.processes,
@@ -127,8 +130,13 @@ pub extern "C" fn kernel_main() -> ! {
                 }
             ),
         );
+        process_workload::exercise(&mut physical, &mut processes, |_, passed| assert!(passed));
         #[cfg(feature = "boot-payload")]
-        boot_workload::payload(&mut physical, include_bytes!(env!("KOLVRT_BOOT_PAYLOAD")));
+        boot_workload::payload(
+            &mut physical,
+            &mut processes,
+            include_bytes!(env!("KOLVRT_BOOT_PAYLOAD")),
+        );
         cpu::timer(time::deadline_after(BOOT_TIMER_DELAY));
         cpu::unmask();
         let deadline = time::deadline_after(BOOT_IRQ_TIMEOUT);

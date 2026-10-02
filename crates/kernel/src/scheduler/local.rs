@@ -109,6 +109,15 @@ impl Local {
         unsafe { operation(&mut *self.state.get()) }
     }
     pub fn inspect<R>(&self, generation: u64, operation: impl for<'a> FnOnce(&'a State) -> R) -> R {
+        self.quiescent(generation, |state| operation(state))
+    }
+    /// Coordinator-only editing after acquired completion, with the same exclusive
+    /// permit as inspection. Used to unlink roots before process completion publication.
+    pub fn quiescent<R>(
+        &self,
+        generation: u64,
+        operation: impl for<'a> FnOnce(&'a mut State) -> R,
+    ) -> R {
         crate::sync::assert_scheduler_unlocked();
         let _access = self
             .ownership
@@ -116,8 +125,8 @@ impl Local {
             .unwrap_or_else(|error| reject(error));
         let _scope = Scope::enter();
         // SAFETY: INV-RUNQUEUE: acquired Done and exclusive coordinator permit;
-        // phase cannot change while borrowed, returned values cannot borrow storage.
-        unsafe { operation(&*self.state.get()) }
+        // no owner can execute or change phase while borrowed; HRTB forbids escaped refs.
+        unsafe { operation(&mut *self.state.get()) }
     }
     pub fn complete(&self, generation: u64, quiescent: bool) {
         crate::sync::assert_scheduler_unlocked();

@@ -56,4 +56,8 @@ Markdown использует описательные имена в нижне�
 
 [Разделение scheduler Phase 3.0](kernel/scheduler.md) размещает per-CPU runtime и storage access в kernel/src/scheduler, frame/entry в arch/aarch64, а static image allocation/verification — в boot_workload.rs и boot_workload.S. Безопасные ownership и selection остаются в kernel-core; новый package или dependency не нужен.
 
+## Граница процессов Phase 3.1
+
+[Жизненный цикл процессов](kernel/processes.md) добавляет `kernel-core/src/process.rs` для безопасной идентичности и состояний, `kernel/src/process.rs` для владеющих адресными пространствами объектов и транзакционного жизненного цикла, а `kernel/src/process_workload.rs` — для проверок. Существующие загрузочные тестовые образы используют тот же механизм. Нового пакета, глобальной изменяемой таблицы процессов или универсального объекта ядра не появляется.
+
 [Английский оригинал](../../../docs/project-structure.md)

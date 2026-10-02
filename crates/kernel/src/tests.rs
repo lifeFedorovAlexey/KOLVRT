@@ -75,7 +75,7 @@ pub fn remote_fault(address: usize) {
         address as u64
     );
 }
-fn multicore(p: &mut memory::Physical) {
+fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     use percpu::{BOOT_CPU, SECONDARY_CPU};
     use smp::experiment as remote;
     let first = &percpu::CPUS[BOOT_CPU];
@@ -252,8 +252,8 @@ fn multicore(p: &mut memory::Physical) {
         remote::complete(remote::PANIC);
         panic!("secondary panic not detected");
     }
-    let users = crate::boot_workload::exercise(p);
-    let repeated_users = crate::boot_workload::exercise(p);
+    let users = crate::boot_workload::exercise(p, processes);
+    let repeated_users = crate::boot_workload::exercise(p, processes);
     report(
         "scheduler_generation_reuse",
         repeated_users.reclaimed
@@ -312,6 +312,7 @@ fn multicore(p: &mut memory::Physical) {
         "el0_privileged_instruction_rejected",
         users.fault_checks[SECONDARY_PRIVILEGED_PROBE],
     );
+    crate::process_workload::exercise(p, processes, report);
     // SAFETY: INV-REMOTE-READER: bounded control work has no borrowed pointer; shutdown drains it before CPU_OFF.
     unsafe {
         remote::submit(remote::LOCK, 0);
@@ -327,7 +328,7 @@ fn multicore(p: &mut memory::Physical) {
                 == remote::LOCK_ITERATIONS * (percpu::CPUS.len() as u64 + 1),
     );
 }
-pub fn run(d: &Description, p: &mut memory::Physical) {
+pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     TESTS_REPORTED.store(0, Ordering::Relaxed);
     report("boot_el1", cpu::el() == cpu::CURRENT_EL1);
     let uart = platform::uart(d);
@@ -517,7 +518,7 @@ pub fn run(d: &Description, p: &mut memory::Physical) {
         p99,
         raw_samples
     );
-    multicore(p);
+    multicore(p, processes);
     #[cfg(feature = "negative-test")]
     report("negative_control", cpu::el() == cpu::CURRENT_EL2);
     #[cfg(feature = "panic-test")]

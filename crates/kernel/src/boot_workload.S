@@ -81,3 +81,35 @@ user_image_start:
  svc #USER_FINISHED_TRAP
  b 6b
 user_image_end:
+
+// Narrow lifecycle fixture; no loader or public process ABI.
+.equ LIFECYCLE_EXIT, 0
+.equ LIFECYCLE_FAULT, 1
+.equ LIFECYCLE_CREATE_DENIED, 2
+.equ LIFECYCLE_UNSUPPORTED_CREATE, 0x60
+.global lifecycle_image_start,lifecycle_image_end
+lifecycle_image_start:
+ mov x20,x0
+ mov x21,x1
+ mov x22,x2
+ mov x23,x3
+ mov x24,x4
+ str x20,[x21]
+8:
+ svc #USER_SLICES_TRAP
+ cmp x0,x23
+ b.lo 8b
+ cmp x22,#LIFECYCLE_FAULT
+ b.eq 9f
+ cmp x22,#LIFECYCLE_CREATE_DENIED
+ b.eq 10f
+ mov x0,x20
+ svc #USER_FINISHED_TRAP
+ b 8b
+9:
+ ldr x0,[x24]
+ b 8b
+10:
+ svc #LIFECYCLE_UNSUPPORTED_CREATE
+ b 8b
+lifecycle_image_end:

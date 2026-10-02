@@ -37,7 +37,7 @@ pub(crate) fn corrupt_mode(context: &mut Context) {
     };
 }
 fn require_user_context(context: &Context) {
-    let valid = context.pstate & (PSTATE_MODE_MASK | super::PSTATE_IRQ_MASK) == USER_EL0T;
+    let valid = valid_user_context(context);
     #[cfg(feature = "scheduler-context-negative")]
     if !valid {
         crate::event!(
@@ -45,6 +45,9 @@ fn require_user_context(context: &Context) {
         );
     }
     assert!(valid, "invalid AArch64 EL0 context or masked user IRQ");
+}
+pub(crate) fn valid_user_context(context: &Context) -> bool {
+    context.pstate & (PSTATE_MODE_MASK | super::PSTATE_IRQ_MASK) == USER_EL0T
 }
 pub(crate) enum Trap {
     Irq,
@@ -132,10 +135,17 @@ pub unsafe extern "C" fn user_trap(frame: *mut Context, kind: u64) -> usize {
         Trap::Irq
     } else {
         let esr = cpu::user_esr();
+        let class = esr >> ESR_CLASS_SHIFT;
         Trap::Sync {
-            class: esr >> ESR_CLASS_SHIFT,
+            class,
             operation: (esr & SVC_IMMEDIATE_MASK) as u16,
-            far: cpu::user_far() as usize,
+            // FAR is not defined for SVC/sysreg/unknown exceptions. Never expose
+            // the stale address left by another process's earlier abort.
+            far: if class == ESR_DATA_ABORT_LOWER || class == ESR_INSTRUCTION_ABORT_LOWER {
+                cpu::user_far() as usize
+            } else {
+                0
+            },
         }
     };
     // SAFETY: INV-USER-CONTEXT: lower-EL vector supplies the complete aligned frame

@@ -62,4 +62,8 @@ The later [Phase 2 decision](../architecture-decisions/0015-el0-versioned-routin
 
 The later [scheduler ownership decision](../architecture-decisions/0016-scheduler-ownership.md) rejects a global scheduler lock and comment-only shared-mutable assumptions. It separates immutable setup, owned mutation and copied completion, with nonblocking CPU/IRQ/generation/phase checks and actual DEV/PROD rejection controls. It adds no EL1 service policy and makes no speed claim; future dynamic lifecycle must preserve the checked boundary.
 
+## Phase 3.1 process review
+
+The [process decision](../architecture-decisions/0017-process-lifecycle.md) compares retained generations with reused integers, process identity with session identity, linear spaces with raw self-references and conservative retirement with speculative concurrent reclaim. No unsafe process storage/global lock or supervisor/authority/routing policy is added. [Lifecycle](../kernel/processes.md) records rollback, ordering, optional bounds and limits; the DEV/PROD matrix and the physical compatibility-removal matrix pass with 65 tests per profile and 53 negative controls. No performance ranking follows.
+
 [Russian translation](../../translations/ru/docs/architecture/implementation-review.md)

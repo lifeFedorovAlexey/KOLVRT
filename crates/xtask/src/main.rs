@@ -46,6 +46,32 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
 ];
 const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
     (
+        "--process-exit-control",
+        "process-exit-negative",
+        "Transition",
+    ),
+    (
+        "--process-rollback-control",
+        "process-rollback-negative",
+        "RollbackLeak",
+    ),
+    (
+        "--process-unlink-control",
+        "process-unlink-negative",
+        "NotQuiescent",
+    ),
+    (
+        "--process-start-control",
+        "process-start-negative",
+        "Transition",
+    ),
+    ("--process-stale-control", "process-stale-negative", "Stale"),
+    (
+        "--process-reclaim-control",
+        "process-reclaim-negative",
+        "Transition",
+    ),
+    (
         "--scheduler-aarch32-control",
         "scheduler-aarch32-negative",
         "InvalidUserContext",
@@ -180,6 +206,17 @@ const TESTS: &[&str] = &[
     "el0_data_execute_rejected",
     "el0_privileged_instruction_rejected",
     "scheduler_generation_reuse",
+    "process_registry_and_cpu_ownership",
+    "process_preparation_and_admission",
+    "process_normal_exit_and_fault",
+    "process_creation_rollback",
+    "process_capacity_exhaustion",
+    "process_slot_generation_reuse",
+    "process_terminal_rejections",
+    "process_authority_boundary",
+    "process_sparse_affinity",
+    "process_bounded_stress",
+    "process_resource_reclamation",
 ];
 fn main() {
     if let Err(e) = run() {

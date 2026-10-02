@@ -1,8 +1,8 @@
 # Phase 2 routing execution contract
 
 Document status: CURRENT
-Document scope: bounded optional EL0 routing on the verified two-CPU QEMU foundation; native IPC/services remain incomplete.
-Status reference: [Admission and evidence](../architecture-decisions/0015-el0-versioned-routing.md)
+Evidence scope: bounded optional EL0 routing on the verified two-CPU QEMU foundation; native IPC/services remain incomplete.
+Current reference: [Admission and evidence](../architecture-decisions/0015-el0-versioned-routing.md)
 
 The bounded Versioned Routing & Translation slice runs in eight real EL0 processes on two CPUs. Different consumers concurrently select native, inclusive-v1, counted-v2 and the safe synthetic bug adapter. The native kernel depends only on kernel-core and does not decode legacy formats, select compatibility versions or dispatch to adapters. [ADR-0015](../architecture-decisions/0015-el0-versioned-routing.md) records placement, ownership, security and limits.
 
@@ -103,5 +103,9 @@ Preserved pure model: Route, semantic names, Profile schema/version/digest, immu
 No native → compatibility hook was connected. Routing runtime is connected outside native core. IPC, handles/capabilities, cancellation, services, security domains, arbitrary loaders, shared state-domain migration, signatures and dynamic unloading remain later work. Phase 3 candidates are the native IPC/authority slice, then a concrete service consumer; device/DMA or Linux personalities require independent contracts and evidence. Do not infer a global production security policy from this demonstration.
 
 The later [Phase 3.0 scheduler](scheduler.md) separates runtime, architectural context and bootstrap verification, with checked generations and per-CPU storage permits. This changes no adapter binding or native observation semantics. [Regression results](../../research/results/routing-phase3-regression.json) cover the current scheduler sources; original Phase 2 measurements above remain historical. The native foundation now also tests repeated queue reuse without reboot.
+
+## Phase 3.1 lifecycle regression
+
+The optional image now uses the [native process lifecycle](processes.md) for owned creation, explicit start, exact completion and quiescent reclaim. Process and dispatch generations are distinct; adapter/profile generations remain EL0-private. [Current regression](../../research/results/routing-phase31-regression.json) verifies the existing route/profile/isolation behavior. No routing choice or legacy state enters Registry; earlier records retain their exact historical sources.
 
 [Russian translation](../../translations/ru/docs/kernel/routing.md)

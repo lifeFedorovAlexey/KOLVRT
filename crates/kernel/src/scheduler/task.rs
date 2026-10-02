@@ -4,9 +4,19 @@ pub(super) const CONTEXT_READY: usize = 0;
 pub(super) const CONTEXT_RUNNING: usize = 1;
 pub(crate) const CONTEXT_EXITED: usize = 2;
 pub(crate) const CONTEXT_FAULTED: usize = 3;
-pub(super) const CONTEXT_TIMED_OUT: usize = 4;
+pub(crate) const CONTEXT_TIMED_OUT: usize = 4;
+pub(super) const CONTEXT_VACANT: usize = 5;
 #[cfg(feature = "machine-events")]
 use kernel_core::execution as abi;
+/// Small fully initialized admission descriptor; no diagnostic report storage is
+/// copied through caller stacks. The retained root belongs to the process owner.
+#[derive(Clone, Copy)]
+pub(crate) struct Admission<'a> {
+    pub identity: kernel_core::process::ProcessId,
+    pub space: &'a crate::memory::OwnedUserSpace,
+    pub context: Context,
+    pub slice_budget: Option<usize>,
+}
 #[derive(Clone, Copy)]
 pub(crate) struct Task {
     pub context: Context,
@@ -29,7 +39,9 @@ struct Definition {
     id: usize,
     generation: u64,
     root: u64,
-    slice_budget: usize,
+    slice_budget: Option<usize>,
+    process_generation: u64,
+    linked: bool,
 }
 impl Task {
     pub const ZERO: Self = Self {
@@ -38,9 +50,11 @@ impl Task {
             id: 0,
             generation: 0,
             root: 0,
-            slice_budget: 0,
+            slice_budget: None,
+            process_generation: 0,
+            linked: false,
         },
-        state: CONTEXT_READY,
+        state: CONTEXT_VACANT,
         slices: 0,
         fault_class: 0,
         fault_far: 0,
@@ -56,7 +70,7 @@ impl Task {
         generation: u64,
         root: u64,
         context: Context,
-        slice_budget: usize,
+        slice_budget: Option<usize>,
     ) -> Self {
         Self {
             context,
@@ -65,9 +79,25 @@ impl Task {
                 generation,
                 root,
                 slice_budget,
+                process_generation: generation,
+                linked: true,
             },
+            state: CONTEXT_READY,
             ..Self::ZERO
         }
+    }
+    pub fn process_generation(&self) -> u64 {
+        self.definition.process_generation
+    }
+    pub fn bind_queue(&mut self, generation: u64) {
+        self.definition.generation = generation;
+    }
+    pub fn unlink(&mut self) {
+        self.definition.root = 0;
+        self.definition.linked = false;
+    }
+    pub fn linked(&self) -> bool {
+        self.definition.linked
     }
     pub fn id(&self) -> usize {
         self.definition.id
@@ -78,7 +108,7 @@ impl Task {
     pub fn root(&self) -> u64 {
         self.definition.root
     }
-    pub fn slice_budget(&self) -> usize {
+    pub fn slice_budget(&self) -> Option<usize> {
         self.definition.slice_budget
     }
     #[cfg(feature = "scheduler-task-negative")]
@@ -92,6 +122,7 @@ impl Task {
             slices: self.slices,
             fault_class: self.fault_class,
             id: self.id(),
+            process_generation: self.process_generation(),
             fault_far: self.fault_far,
             peer_faults_at_exit: self.peer_faults_at_exit,
             #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
@@ -108,6 +139,7 @@ pub(crate) struct TaskResult {
     pub slices: usize,
     pub fault_class: u64,
     pub id: usize,
+    pub process_generation: u64,
     pub fault_far: usize,
     pub peer_faults_at_exit: usize,
     #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
@@ -118,10 +150,11 @@ pub(crate) struct TaskResult {
 impl TaskResult {
     pub const ZERO: Self = Self {
         context: Context::ZERO,
-        state: CONTEXT_READY,
+        state: CONTEXT_VACANT,
         slices: 0,
         fault_class: 0,
         id: 0,
+        process_generation: 0,
         fault_far: 0,
         peer_faults_at_exit: 0,
         #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
@@ -134,13 +167,13 @@ pub(super) struct State {
     pub tasks: [Task; TASKS],
     pub current: usize,
     pub switches: usize,
-    pub deadline: u64,
+    pub deadline: Option<u64>,
 }
 impl State {
     pub const ZERO: Self = Self {
         tasks: [Task::ZERO; TASKS],
         current: NO_TASK,
         switches: 0,
-        deadline: 0,
+        deadline: None,
     };
 }

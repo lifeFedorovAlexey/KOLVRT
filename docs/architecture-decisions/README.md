@@ -24,4 +24,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0016 — Scheduler responsibilities and enforced per-CPU ownership](0016-scheduler-ownership.md) — Accepted for bounded Phase 3.0.
 
+- [ADR-0017 — Generation-safe native process lifecycle](0017-process-lifecycle.md) — Accepted for bounded Phase 3.1.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)
