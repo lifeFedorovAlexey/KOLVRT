@@ -149,6 +149,10 @@
         "source_sha256": "41e707c67d08cfa248b63e3a3fdb9dfa118a8a892e3ed88ebcf158c46449cfa4",
         "translation_sha256": "626b0db007ef5531de54222106bc3ed760a98a4909c9d63378698eb50417879d"
       },
+      "docs/architecture/production-scheduler.md": {
+        "source_sha256": "b5b2370a63a631301057c77134b7d6ffe627933100396be5832d6a7e5c7d97c1",
+        "translation_sha256": "3cb52e2f404e0812d1de3fa6063b6837f837d3815c96c56c3079ec73748e1ee8"
+      },
       "docs/architecture/routing-model.md": {
         "source_sha256": "dea9bbbc59fac789bb5a93774f39c22e5cdc6112960b2e2db16d1004d7f53116",
         "translation_sha256": "f7474ac41f48a190af9e9c085e259c45aabf2a88d6a03087dca06a882d0debe7"
