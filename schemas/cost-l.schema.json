@@ -1,0 +1,741 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KOLVRT COST-L registry record v1",
+  "description": "Offline recurring compatibility-debt research/support record. Passing validates shape and declared consistency, not historical truth, authority or executed support.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "title": {
+      "$ref": "#/$defs/short"
+    },
+    "status": {
+      "$ref": "#/$defs/status"
+    },
+    "category": {
+      "$ref": "#/$defs/short"
+    },
+    "subsystem": {
+      "$ref": "#/$defs/short"
+    },
+    "summary": {
+      "$ref": "#/$defs/text"
+    },
+    "research_date": {
+      "$ref": "#/$defs/date"
+    },
+    "introduced_at": {
+      "$ref": "#/$defs/date"
+    },
+    "last_observed_at": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "history": {
+      "$ref": "#/$defs/history"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true
+    },
+    "evidence": {
+      "$ref": "#/$defs/evidence"
+    },
+    "native": {
+      "$ref": "#/$defs/native"
+    },
+    "compat_modules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/module"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "affected_consumers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/consumer"
+      },
+      "minItems": 0,
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "affected_driver_families": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/short"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "runtime_cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpu": {
+          "$ref": "#/$defs/metric"
+        },
+        "latency": {
+          "$ref": "#/$defs/metric"
+        },
+        "memory": {
+          "$ref": "#/$defs/metric"
+        },
+        "copies": {
+          "$ref": "#/$defs/metric"
+        },
+        "allocations": {
+          "$ref": "#/$defs/metric"
+        },
+        "context_switches": {
+          "$ref": "#/$defs/metric"
+        },
+        "throughput": {
+          "$ref": "#/$defs/metric"
+        }
+      },
+      "required": [
+        "cpu",
+        "latency",
+        "memory",
+        "copies",
+        "allocations",
+        "context_switches",
+        "throughput"
+      ]
+    },
+    "security_impact": {
+      "$ref": "#/$defs/text"
+    },
+    "authority_implications": {
+      "const": "NO_AUTHORITY_EXPANSION"
+    },
+    "complexity_impact": {
+      "$ref": "#/$defs/text"
+    },
+    "support": {
+      "$ref": "#/$defs/support"
+    },
+    "lifecycle": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      },
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true
+    },
+    "related_cost_l": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "source_cases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^KOL-PATH-[0-9]{4}$"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^EXC-[0-9]{4}$"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/short"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "benchmarks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/short"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "confidence": {
+      "enum": ["LOW", "MEDIUM", "HIGH"]
+    },
+    "proverb_ru": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/short"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "status",
+    "category",
+    "subsystem",
+    "summary",
+    "research_date",
+    "introduced_at",
+    "last_observed_at",
+    "history",
+    "sources",
+    "evidence",
+    "native",
+    "compat_modules",
+    "affected_consumers",
+    "affected_driver_families",
+    "runtime_cost",
+    "security_impact",
+    "authority_implications",
+    "complexity_impact",
+    "support",
+    "lifecycle",
+    "related_cost_l",
+    "source_cases",
+    "exceptions",
+    "tests",
+    "benchmarks",
+    "confidence",
+    "proverb_ru",
+    "open_questions"
+  ],
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "\\S"
+    },
+    "short": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "\\S"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^COST-L-[0-9]{4}$"
+    },
+    "sourceId": {
+      "type": "string",
+      "pattern": "^S[0-9]+$"
+    },
+    "status": {
+      "enum": [
+        "CANDIDATE",
+        "CONFIRMED",
+        "ACTIVE",
+        "DEPRECATED",
+        "RETIRING",
+        "RETIRED"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/sourceId"
+        },
+        "title": {
+          "$ref": "#/$defs/short"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://[^/]+/",
+          "maxLength": 2048
+        },
+        "kind": {
+          "enum": [
+            "SOURCE_CODE",
+            "COMMIT",
+            "OFFICIAL_DOCUMENTATION",
+            "MAINTAINER_DISCUSSION",
+            "BUG_REPORT",
+            "SECONDARY_ANALYSIS"
+          ]
+        },
+        "commit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "version": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/short"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "locator": {
+          "$ref": "#/$defs/text"
+        },
+        "date": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "limitations": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "url",
+        "kind",
+        "commit",
+        "version",
+        "locator",
+        "date",
+        "limitations"
+      ]
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "linux_behavior": {
+          "$ref": "#/$defs/text"
+        },
+        "historical_reason": {
+          "$ref": "#/$defs/text"
+        },
+        "root_cause": {
+          "$ref": "#/$defs/text"
+        },
+        "classification": {
+          "enum": [
+            "BUG",
+            "DESIGN_FLAW",
+            "HISTORICAL_CONSTRAINT",
+            "HARDWARE_REQUIREMENT",
+            "COMPATIBILITY_REQUIREMENT",
+            "PERFORMANCE_TRADEOFF",
+            "ACCIDENTAL_SEMANTICS",
+            "SECURITY_WORKAROUND",
+            "OTHER"
+          ]
+        },
+        "linux_versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/short"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "first_known_version": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/short"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unknown_origin_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "linux_behavior",
+        "historical_reason",
+        "root_cause",
+        "classification",
+        "linux_versions",
+        "first_known_version",
+        "unknown_origin_reason"
+      ]
+    },
+    "native": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": ["ACCEPTED", "PROPOSED", "UNKNOWN"]
+        },
+        "behavior": {
+          "$ref": "#/$defs/text"
+        },
+        "why_differs": {
+          "$ref": "#/$defs/text"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/short"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        }
+      },
+      "required": ["status", "behavior", "why_differs", "references"]
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/short"
+        },
+        "semantic_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "maxLength": 64
+        },
+        "artifact_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "scope": {
+          "$ref": "#/$defs/short"
+        }
+      },
+      "required": ["id", "semantic_version", "artifact_sha256", "scope"]
+    },
+    "module_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/short" },
+        "semantic_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "maxLength": 64
+        },
+        "scope": { "$ref": "#/$defs/short" }
+      },
+      "required": ["id", "semantic_version", "scope"]
+    },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/short"
+        },
+        "kind": {
+          "enum": [
+            "DRIVER",
+            "PACKAGE",
+            "FIXTURE",
+            "OFFLINE_RECOVERY",
+            "ARCHIVAL"
+          ]
+        },
+        "dependency": {
+          "enum": ["DIRECT", "TRANSITIVE"]
+        },
+        "module_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/module_ref"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "scope": {
+          "$ref": "#/$defs/short"
+        },
+        "support_until": {
+          "$ref": "#/$defs/date"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "dependency",
+        "module_refs",
+        "scope",
+        "support_until"
+      ]
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": ["UNKNOWN", "MEASURED"]
+        },
+        "value": {
+          "type": ["number", "null"],
+          "minimum": 0
+        },
+        "unit": {
+          "enum": ["ns", "bytes", "count", "percent", "operations/s"]
+        },
+        "scope": {
+          "$ref": "#/$defs/text"
+        },
+        "denominator": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "coverage": {
+          "enum": ["UNKNOWN", "PARTIAL", "COMPLETE"]
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/provenance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "unit",
+        "scope",
+        "denominator",
+        "coverage",
+        "provenance",
+        "reason"
+      ]
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "RESEARCH_ONLY",
+            "SUPPORTED",
+            "DEPRECATED",
+            "EXPIRED",
+            "RETIRED"
+          ]
+        },
+        "owner": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/short"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "owner_unknown_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "start": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "until": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "migration_target": {
+          "$ref": "#/$defs/text"
+        },
+        "migration_strategy": {
+          "$ref": "#/$defs/text"
+        },
+        "removal_condition": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "status",
+        "owner",
+        "owner_unknown_reason",
+        "start",
+        "until",
+        "migration_target",
+        "migration_strategy",
+        "removal_condition"
+      ]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "date": {
+          "$ref": "#/$defs/date"
+        },
+        "decision": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": ["status", "date", "decision"]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact": {
+          "$ref": "#/$defs/short"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_type": {
+          "enum": ["host_model", "host_process", "qemu", "os_runtime"]
+        }
+      },
+      "required": ["artifact", "sha256", "source_type"]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "linux_behavior": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceId"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "historical_reason": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceId"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "root_cause": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceId"
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        }
+      },
+      "required": ["linux_behavior", "historical_reason", "root_cause"]
+    }
+  }
+}

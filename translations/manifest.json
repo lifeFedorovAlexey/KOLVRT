@@ -10,8 +10,8 @@
         "translation_sha256": "48cc322fb7a25be103b5e25b25abde072f2eae1098fd69199905b93d03339c98"
       },
       "crates/repository-checks/README.md": {
-        "source_sha256": "022f788b3070232373204d75fce8ee74a3fb42b100b9d7edf38099ee4fadeaec",
-        "translation_sha256": "67f699dbead0d780417d86d5788eba97692c020e1220661f44be3e83d01ff03d"
+        "source_sha256": "6518a598b4f2d4d7abd7618b81d28c6e26dd1596123247cc5cd887db3ffabea3",
+        "translation_sha256": "d99fbc208bf9b58a7f3a4a68e92dfe433c955a464928082cd311bf018dc45108"
       },
       "docs/architecture-decisions/0001-native-authority.md": {
         "source_sha256": "cc4bef991858502a7653480709f2d1854f79964712573570c737ac7337aaa684",
@@ -85,9 +85,13 @@
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
         "translation_sha256": "a3663804370470d156dd9a698aa3ed92d567649ef0d03cf6cedef9ac18cf19e1"
       },
+      "docs/architecture/compatibility-debt.md": {
+        "source_sha256": "cbf72f524b3c8b95a2bc53cf89ee245f784a0f02504146deed1c91591392c0b1",
+        "translation_sha256": "ef16c246fcd54f0b592bfbaf2038269f754c3fd5df6d55dd7426ff7fc6b863ab"
+      },
       "docs/architecture/compatibility-model.md": {
-        "source_sha256": "c6a7424108550e00bd52442bceda7648edd502a9305f231e977e78b45b4dd4a0",
-        "translation_sha256": "5e0cbe26d5a92c9dc6639639b0e894f92007bc1d20cb41a9bbc93c13e590b0f8"
+        "source_sha256": "33b5869240769b247698658d7dc68ac15a2441f37c53d5bccaec4223bcf41cb1",
+        "translation_sha256": "c9baf97021d1e0cc3cea4dda4580b1baa0d09d09b647bce2047e0efdfb7f9fdd"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -225,6 +229,10 @@
         "source_sha256": "3adfce8258430a5f89bda378fe9b4670ddf8e0bc31160735c65d363f8c74820d",
         "translation_sha256": "a47b17b48533d5613e8e2549f7124a8617253f83409c61bcb9ea53331f604c34"
       },
+      "docs/research/issue-submissions.md": {
+        "source_sha256": "2686ed458925c7a194117912efbe9fa9250073b469fc08b14088b95ebfa7ef4a",
+        "translation_sha256": "545b7f31aecc462e17af122bfa1281c8ef78572bf3ef9d8e59366f893a369f9d"
+      },
       "docs/research/open-questions.md": {
         "source_sha256": "59ffbbc3913fc08fa17c859f21174c37944885f4bedb7def1ce3cad955078799",
         "translation_sha256": "e3bd8fc3840067959202c496b6e71e1b5f6357808413e4fc31881fd7d2df6e43"
@@ -276,6 +284,22 @@
       "docs/vision.md": {
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",
         "translation_sha256": "d1f7c6c17a88a43bb6772f044377fe34a1a0fa6830f3fc7ea31ec5ebf15e7907"
+      },
+      "research/compatibility/adapter-versus-native.md": {
+        "source_sha256": "2885315a6c0db2b86fb8cdea1c61b498bfb9ddf9201fe285a3cfcf51816db285",
+        "translation_sha256": "860abcbdba8563c5df4eb4aa6b81d7edcf15fd88587e0bbadd8e975ead4f3943"
+      },
+      "research/compatibility/high-leverage-adapters.md": {
+        "source_sha256": "fcfe707fc65063e1dd36932822db53be392dbaee89417724a0cf7e21b55f17d8",
+        "translation_sha256": "060a806c55850cb0b9c0dbda2aa768e4eb737321aafb1758718910c4b029c9e7"
+      },
+      "research/compatibility/linux-driver-api-map.md": {
+        "source_sha256": "2adf73e2f3a3f9c1d09134d7ad49d83c8c0c62d2c1b436aeed4e31b98490f77f",
+        "translation_sha256": "4560fcd303265fde9ca9dc12da23bcbe38cbb3b1252ccfb4881fc34aa965654f"
+      },
+      "research/compatibility/taxonomy.md": {
+        "source_sha256": "b90505f15dad96518d29f37069d8bf5dfadf7971823da0e915d46dd45e937618",
+        "translation_sha256": "9f38c47e8f28df1362e186c0d858f3ac685014f609047604a5a5ddce57fe4a02"
       },
       "research/fixtures/README.md": {
         "source_sha256": "0d6d0aa2e5ab8001dcb9a29d748e3ce0b68ace7e6a002ff390a87ca257f5290a",

@@ -1,0 +1,116 @@
+name: Driver Compatibility Research
+description: Investigate source dependencies and recurring semantics with pinned primary evidence.
+title: "[Driver Compatibility Research] "
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        This issue will be public. Do not paste unrestricted inventories or logs. Review and
+        sanitize the exact text and attachments locally before submitting. UNKNOWN with a reason is
+        useful evidence. Submission does not establish support or authorize a hardware survey. See
+        the [submission
+        guide](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/docs/research/issue-submissions.md),
+        [research program](https://github.com/lifeFedorovAlexey/KOLVRT/issues/44) and [COST-L
+        registry](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/research/cost-l/registry.json).
+        You may answer in English or Russian.
+  - type: textarea
+    id: driver
+    attributes:
+      label: Driver and source configuration
+      description: >-
+        Upstream repository/path, exact commit/version and configuration. Identify whether
+        observations are lexical, configured/transitive or runtime; do not turn source matches into
+        driver coverage.
+    validations:
+      required: true
+  - type: textarea
+    id: platform
+    attributes:
+      label: Safe platform/device description
+      description: >-
+        Only public model names and PCI vendor/device/subsystem IDs or USB vendor/product IDs,
+        bus/class and revision if relevant. Use UNKNOWN rather than collecting private identifiers.
+        Do not paste raw inventories.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary evidence
+      description: >-
+        Public upstream links pinned to a commit/version, exact file/section/line locators,
+        configuration and evidence gaps. UNKNOWN with a reason is acceptable.
+    validations:
+      required: true
+  - type: textarea
+    id: semantics
+    attributes:
+      label: Recurring semantic dependencies
+      description: >-
+        Map driver APIs to semantics and candidate COST-L reasons. Separate justified
+        hardware/performance/security trade-offs from legacy assumptions; include counterexamples
+        and unknown history.
+    validations:
+      required: true
+  - type: textarea
+    id: cost-l
+    attributes:
+      label: COST-L references
+      description: >-
+        Existing stable IDs use COST-L-#### (four digits; COST-L-0000 is reserved) and link to the
+        registry. For an unallocated candidate, use candidate plus an issue link; never invent an
+        assigned ID. Use UNKNOWN with a reason if unresolved.
+    validations:
+      required: true
+  - type: textarea
+    id: native
+    attributes:
+      label: Native difference and consumers
+      description: >-
+        Accepted native decision/reference or open question; named candidate consumers and required
+        behavior. No native Linux API or Driver Host implementation is implied.
+    validations:
+      required: true
+  - type: dropdown
+    id: dma-iommu
+    attributes:
+      label: DMA/IOMMU evidence
+      options:
+        - UNKNOWN - not verified
+        - Not applicable - explain in evidence
+        - Documented only - not tested
+        - Observed in the stated test - attach sanitized evidence
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Security and authority constraints
+      description: >-
+        State native-authorized effects, isolation and rejection requirements. Compatibility cannot
+        grant missing rights. Separate hardware constraints from compatibility debt; list unknowns.
+    validations:
+      required: true
+  - type: textarea
+    id: gaps
+    attributes:
+      label: Evidence gaps and next experiment
+      description: >-
+        Scope/denominator of observations, untested dependencies, historical questions and a bounded
+        next step.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-review
+    attributes:
+      label: Public submission review
+      options:
+        - label: >-
+            I reviewed every field and any attachment locally and removed secrets, serials,
+            MAC/IP/SSID, usernames, hostnames and private paths. I approve publication of exactly
+            this reviewed content.
+          required: true
+        - label: >-
+            I distinguish proposals and UNKNOWN values from executed evidence; this submission does
+            not authorize further inventory collection or publication.
+          required: true
