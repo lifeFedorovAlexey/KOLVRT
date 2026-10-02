@@ -20,4 +20,6 @@
 
 - [ADR-0014 — Фундамент EL0 execution с фиксированной affinity](0014-el0-foundation.md) — Принят для ограниченного фундамента.
 
+- [ADR-0015 — Версионированная маршрутизация в изолированных EL0 consumers](0015-el0-versioned-routing.md) — Accepted для ограниченной демонстрации Phase 2.
+
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)

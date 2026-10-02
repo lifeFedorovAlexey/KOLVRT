@@ -57,4 +57,8 @@
 
 Исходное задание сохранено историческим текстовым вложением. Исследовательские JSON сохраняют первоначальный текст анализа источников; это не переводы Markdown. Двуязычный каталог указателя случаев содержит проверенные английские и русские названия, обозначения подсистем и вопросы, связанные с контрольной суммой исследовательской записи. Изменение записи требует проверки этого каталога до повторного формирования указателей.
 
+## Обновление доказательств Phase 2
+
+Прежний audit явно исключает тогдашнюю локальную работу Phase 2. Теперь проверенные [routing contract](kernel/routing.md) и [ADR-0015](architecture-decisions/0015-el0-versioned-routing.md) описывают bounded optional EL0 slice: восемь independent consumers на двух CPU, native/v1/v2/safe-bug routes, pinned PROD profiles и изоляцию native-core dependencies. [Execution results](../../../research/results/routing-phase2.json) и [доказательства физического удаления исходников](../../../research/results/native-compat-removal.json) сохраняют точные source/artifact scopes; последняя проверка повторяет те же 53-test DEV/PROD foundation и одиннадцать negative controls без routing packages. Эти records устанавливают только свой QEMU scope. IPC, transferred authority, cancellation, general services, dynamic loading и silicon validation остаются незавершёнными; полный first native slice по-прежнему является design baseline.
+
 [Английский оригинал](../../../docs/documentation-policy.md)

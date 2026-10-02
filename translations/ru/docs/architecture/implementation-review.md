@@ -58,4 +58,6 @@ Performance tests сами по себе не обосновывают алго�
 
 Последующее [решение EL0](../architecture-decisions/0014-el0-foundation.md) принимает fixed-affinity queues, immutable roots, full local flushes и полное сохранение context. Чистый selection отделён от privileged switching. User faults завершают только свой процесс; ownership charges переживают забывание guards. IPC и compatibility остаются отложены.
 
+Более позднее [решение Phase 2](../architecture-decisions/0015-el0-versioned-routing.md) оставляет routing и legacy conversion в EL0, допускает только current-task доступ к protected execution observations и заменяет one-session admission на CAS protocol. Allocation, bounds, native root/TLBI completion и charges остаются обязательными. Fastest-path и general authority-policy claims из этого не следуют.
+
 [Английский оригинал](../../../../docs/architecture/implementation-review.md)

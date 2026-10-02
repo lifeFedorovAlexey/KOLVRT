@@ -27,3 +27,5 @@ ELF начинается с 0x40200000, оставляя до 2 MiB у нача�
 [SMP протокол](smp.md) добавляет cleaned release/acquire publication, secondary root activation, local interrupts с соответствующей affinity и подтверждённый retirement. Оба boot profile требуют настоящего secondary IPI и подтверждённого CPU_OFF до сообщения boot success.
 
 В boot event `active_cpus` означает число CPU, участвовавших в boot validation; это не снимок online CPU в момент публикации события. `secondary_shutdown_verified: true` выводится только после того, как `smp::shutdown()` наблюдает quiescent state secondary и ответ OFF от PSCI AFFINITY_INFO. Поэтому два участвовавших CPU и проверенное отключение secondary описывают последовательные этапы. Прежнее поле `secondary_off` в сохранённых записях Phase 1.1 имело тот же смысл; исторические измерения не переписываются.
+
+Явно выбранный opaque [EL0 routing payload](routing.md) исполняется после неизменного foundation workload и до verified secondary shutdown. Default native image исключает его; boot code не содержит adapter/version dispatch.

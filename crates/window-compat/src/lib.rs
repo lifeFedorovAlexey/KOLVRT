@@ -3,7 +3,7 @@
 //! Synthetic demonstration protocols, not a Linux ABI. Legacy types stay here.
 use kernel_core::window::Reduction;
 #[cfg(any(feature = "v1", feature = "v2", feature = "bug"))]
-use kernel_core::window::{Span, reduce};
+use kernel_core::window::{Backend, Local, Span};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
@@ -34,11 +34,15 @@ fn snapshot<const N: usize>(bytes: &[u8]) -> Result<[u8; N], Error> {
     bytes.try_into().map_err(|_| Error::Encoding)
 }
 #[cfg(any(feature = "v1", feature = "v2", feature = "bug"))]
-fn backend(data: &[u32], span: Span) -> Result<Reduction, Error> {
-    reduce(data, span).map_err(|_| Error::Bounds)
+fn backend(provider: &mut impl Backend, span: Span) -> Result<Reduction, Error> {
+    provider.reduce(span).map_err(|_| Error::Bounds)
 }
 #[cfg(feature = "v1")]
 pub fn v1(data: &[u32], bytes: &[u8]) -> Outcome {
+    v1_with(&mut Local(data), bytes)
+}
+#[cfg(feature = "v1")]
+pub fn v1_with(provider: &mut impl Backend, bytes: &[u8]) -> Outcome {
     let mut work = Work::default();
     let result = (|| {
         // v1: inclusive LE16 endpoints; all-ones pair is the empty sentinel.
@@ -61,12 +65,12 @@ pub fn v1(data: &[u32], bytes: &[u8]) -> Outcome {
             }
         };
         work.backend_calls = 1;
-        backend(data, span)
+        backend(provider, span)
     })();
     (result, work)
 }
 #[cfg(any(feature = "v2", feature = "bug"))]
-fn counted(data: &[u32], bytes: &[u8], empty_first: bool) -> Outcome {
+fn counted(provider: &mut impl Backend, bytes: &[u8], empty_first: bool) -> Outcome {
     let mut work = Work::default();
     let result = (|| {
         // v2: BE32 start/count, checked sum. Historical bug treats zero count as one.
@@ -80,15 +84,23 @@ fn counted(data: &[u32], bytes: &[u8], empty_first: bool) -> Outcome {
         let end = first.checked_add(count).ok_or(Error::Bounds)?;
         work.conversions += 1;
         work.backend_calls = 1;
-        backend(data, Span { start: first, end })
+        backend(provider, Span { start: first, end })
     })();
     (result, work)
 }
 #[cfg(feature = "v2")]
 pub fn v2(data: &[u32], bytes: &[u8]) -> Outcome {
-    counted(data, bytes, false)
+    v2_with(&mut Local(data), bytes)
+}
+#[cfg(feature = "v2")]
+pub fn v2_with(provider: &mut impl Backend, bytes: &[u8]) -> Outcome {
+    counted(provider, bytes, false)
 }
 #[cfg(feature = "bug")]
 pub fn empty_first(data: &[u32], bytes: &[u8]) -> Outcome {
-    counted(data, bytes, true)
+    empty_first_with(&mut Local(data), bytes)
+}
+#[cfg(feature = "bug")]
+pub fn empty_first_with(provider: &mut impl Backend, bytes: &[u8]) -> Outcome {
+    counted(provider, bytes, true)
 }

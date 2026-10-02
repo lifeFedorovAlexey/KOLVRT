@@ -22,14 +22,18 @@ jobs:
         run: ./scripts/setup-qemu.ps1
       - run: npm ci --ignore-scripts
       - run: npm run check
-      - name: Isolated Phase 2 groundwork
+      - name: Routing model contracts
         run: cargo test --locked -p routing --all-features
+      - name: Production model and absent switching
+        run: cargo test --locked -p routing --no-default-features
       - name: Architecture lint
         run: cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --features diagnostics,kernel-tests -- -D warnings
       - name: Production architecture lint
         run: cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --release --no-default-features -- -D warnings
       - name: Real kernel matrix and host failure propagation
         run: cargo xtask test
+      - name: Real EL0 routing matrix and failure propagation
+        run: cargo xtask routing test
       - uses: actions/upload-artifact@v4
         if: always()
         with:

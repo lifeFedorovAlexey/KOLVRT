@@ -1,6 +1,6 @@
 #![no_std]
 #![forbid(unsafe_code)]
-use kernel_core::window::{Reduction, Span, reduce};
+use kernel_core::window::{Backend, Local, Reduction, Span};
 use sha2::{Digest, Sha256};
 include!(concat!(env!("OUT_DIR"), "/identity.rs"));
 #[cfg(any(test, feature = "conformance"))]
@@ -267,6 +267,12 @@ impl Profile {
     }
 }
 
+/// One exclusively owned synchronous consumer.
+#[cfg_attr(
+    not(feature = "dev"),
+    doc = "Production deliberately has no rebind API.\n```compile_fail\nlet mut c = routing::Consumer::from_profile(&routing::Profile::native(), 0).unwrap();\nc.switch(routing::Route::Native).unwrap();\n```"
+)]
+#[cfg_attr(feature = "dev", doc = "DEV adds transaction-boundary rebind methods.")]
 pub struct Consumer {
     route: Route,
     generation: u32,
@@ -318,9 +324,18 @@ impl Consumer {
     pub fn call(&mut self, data: &[u32], input: Input<'_>) -> Result<(Reduction, Work), Error> {
         self.begin()?.call(data, input)
     }
+    pub fn call_with(
+        &mut self,
+        provider: &mut impl Backend,
+        input: Input<'_>,
+    ) -> Result<(Reduction, Work), Error> {
+        self.begin()?.call_with(provider, input)
+    }
 }
 /// Exclusive borrow keeps consumer identity and binding pinned until synchronous work ends.
-/// No callbacks, heap, IRQ or multi-CPU access. Drop is the transaction boundary.
+/// No heap or IRQ use. A Consumer has one exclusive owner; different consumers may run
+/// concurrently on different CPUs. The provider cannot reborrow this Consumer.
+/// Drop is the synchronous transaction boundary; no references escape a call.
 pub struct Transaction<'a> {
     consumer: &'a mut Consumer,
 }
@@ -330,6 +345,13 @@ impl Transaction<'_> {
         self.consumer.switch(route)
     }
     pub fn call(&mut self, data: &[u32], input: Input<'_>) -> Result<(Reduction, Work), Error> {
+        self.call_with(&mut Local(data), input)
+    }
+    pub fn call_with(
+        &mut self,
+        provider: &mut impl Backend,
+        input: Input<'_>,
+    ) -> Result<(Reduction, Work), Error> {
         let route = self.consumer.route;
         #[cfg(feature = "dev")]
         {
@@ -340,7 +362,7 @@ impl Transaction<'_> {
                 c.compat_calls += 1;
             }
         }
-        let (result, work) = dispatch(route, data, input);
+        let (result, work) = dispatch(route, provider, input);
         #[cfg(feature = "dev")]
         {
             let c = &mut self.consumer.counters[route as usize];
@@ -366,11 +388,15 @@ impl Drop for Transaction<'_> {
     }
 }
 
-fn dispatch(route: Route, data: &[u32], input: Input<'_>) -> (Result<Reduction, Error>, Work) {
+fn dispatch(
+    route: Route,
+    provider: &mut impl Backend,
+    input: Input<'_>,
+) -> (Result<Reduction, Error>, Work) {
     if route == Route::Native {
         return match input {
             Input::Native(span) => (
-                reduce(data, span).map_err(|_| Error::Bounds),
+                provider.reduce(span).map_err(|_| Error::Bounds),
                 Work {
                     backend_calls: 1,
                     ..Work::default()
@@ -382,14 +408,14 @@ fn dispatch(route: Route, data: &[u32], input: Input<'_>) -> (Result<Reduction, 
     let Input::Encoded(bytes) = input else {
         return (Err(Error::Encoding), Work::default());
     };
-    let _ = (data, bytes);
+    let _ = (&provider, bytes);
     match route {
         #[cfg(feature = "compat-v1")]
-        Route::Inclusive => adapted(window_compat::v1(data, bytes)),
+        Route::Inclusive => adapted(window_compat::v1_with(provider, bytes)),
         #[cfg(feature = "compat-v2")]
-        Route::Counted => adapted(window_compat::v2(data, bytes)),
+        Route::Counted => adapted(window_compat::v2_with(provider, bytes)),
         #[cfg(feature = "bug-compat")]
-        Route::EmptyFirst => adapted(window_compat::empty_first(data, bytes)),
+        Route::EmptyFirst => adapted(window_compat::empty_first_with(provider, bytes)),
         _ => (Err(Error::Unsupported), Work::default()),
     }
 }

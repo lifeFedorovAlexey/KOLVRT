@@ -90,31 +90,31 @@ Or, shorter:
 
 KOLVRT already boots as a native AArch64 kernel in QEMU.
 
-| Area                          | Status                                         |
-| ----------------------------- | ---------------------------------------------- |
-| Rust `no_std` kernel          | ✅                                             |
-| AArch64 / ARM64               | ✅ Tier 1                                      |
-| QEMU `virt` boot              | ✅                                             |
-| EL1 execution                 | ✅                                             |
-| Device Tree validation        | ✅                                             |
-| PL011 UART                    | ✅                                             |
-| Exception vectors             | ✅                                             |
-| Physical memory allocator     | ✅                                             |
-| Page tables / MMU             | ✅                                             |
-| W^X mappings                  | ✅                                             |
-| Kernel heap                   | ✅                                             |
-| GICv3                         | ✅ Both CPUs                                   |
-| ARM physical timer IRQ        | ✅                                             |
-| DEV / PROD profiles           | ✅                                             |
-| Automated kernel test harness | ✅                                             |
-| Real in-kernel tests          | ✅ 53 per profile                              |
-| Negative failure controls     | ✅                                             |
-| GDB debugging                 | ✅                                             |
-| SMP                           | ✅ Two-CPU QEMU foundation                     |
-| EL0 / userspace               | ✅ Bounded isolated-process foundation         |
-| Scheduler                     | ✅ Timer-driven, fixed per-CPU affinity        |
-| Runtime versioned routing     | 🧪 Architecture defined, not wired into kernel |
-| Linux compatibility           | ⏳ Not started                                 |
+| Area                          | Status                                                 |
+| ----------------------------- | ------------------------------------------------------ |
+| Rust `no_std` kernel          | ✅                                                     |
+| AArch64 / ARM64               | ✅ Tier 1                                              |
+| QEMU `virt` boot              | ✅                                                     |
+| EL1 execution                 | ✅                                                     |
+| Device Tree validation        | ✅                                                     |
+| PL011 UART                    | ✅                                                     |
+| Exception vectors             | ✅                                                     |
+| Physical memory allocator     | ✅                                                     |
+| Page tables / MMU             | ✅                                                     |
+| W^X mappings                  | ✅                                                     |
+| Kernel heap                   | ✅                                                     |
+| GICv3                         | ✅ Both CPUs                                           |
+| ARM physical timer IRQ        | ✅                                                     |
+| DEV / PROD profiles           | ✅                                                     |
+| Automated kernel test harness | ✅                                                     |
+| Real in-kernel tests          | ✅ 53 per profile                                      |
+| Negative failure controls     | ✅                                                     |
+| GDB debugging                 | ✅                                                     |
+| SMP                           | ✅ Two-CPU QEMU foundation                             |
+| EL0 / userspace               | ✅ Bounded isolated-process foundation                 |
+| Scheduler                     | ✅ Timer-driven, fixed per-CPU affinity                |
+| Runtime versioned routing     | ✅ Bounded EL0 vertical slice; native core independent |
+| Linux compatibility           | ⏳ Not started                                         |
 
 Both configured CPUs execute native EL1 code. The QEMU matrix checks secondary boot, per-CPU ownership, bidirectional IPI, acknowledged remote TLB retirement and multicore shutdown. Real hardware remains unverified.
 
@@ -131,16 +131,16 @@ Native ARM64 kernel foundation        ✅
 SMP correctness foundation            ✅
         │
         ▼
-EL0 + address spaces
+EL0 + address spaces                  ✅
         │
         ▼
-Scheduler + context switching
+Scheduler + context switching        ✅
         │
         ▼
-Native userspace
+Versioned Routing & Translation      ✅ bounded EL0 slice
         │
         ▼
-Versioned Routing & Translation
+Native IPC + authority + services    next
         │
         ▼
 Compatibility personalities
@@ -151,7 +151,7 @@ Linux ABI compatibility where useful
 
 Compatibility is not being wired into a single-CPU kernel and patched for SMP later.
 
-The native execution model comes first. The authorized EL0/address-space and timer-scheduler foundation is implemented for eight fixed-affinity processes on two CPUs. IPC, handles/capabilities, cancellation, services and security domains remain the next stage; routing stays disconnected. This does not complete the full native slice.
+The native execution model comes first. The authorized EL0/address-space and timer-scheduler foundation is implemented for eight fixed-affinity processes on two CPUs. Phase 2 routing now executes in an optional isolated EL0 image; native core remains independent. IPC, handles/capabilities, cancellation, services and security domains are the next native stage. This does not complete the full native slice.
 
 ---
 
@@ -537,5 +537,7 @@ Or, in the less formal project dialect:
 > **Do not spit into the kernel—you will drink from it yourself.**
 
 [EL0 foundation contract](docs/kernel/el0.md) records ownership, retirement, tests and limits; [ADR-0014](docs/architecture-decisions/0014-el0-foundation.md) reviews the mechanisms.
+
+The [Phase 2 contract](docs/kernel/routing.md) records the actual EL0 routes, profile validation, measurements, authority boundary and limits. The full IPC/service native slice remains incomplete.
 
 [Russian translation](translations/ru/README.md)

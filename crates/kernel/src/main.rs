@@ -6,6 +6,7 @@ mod arch {
     pub mod aarch64;
 }
 mod diagnostics;
+mod execution;
 mod hal;
 mod interrupt;
 mod memory;
@@ -125,6 +126,8 @@ pub extern "C" fn kernel_main() -> ! {
                 }
             ),
         );
+        #[cfg(feature = "boot-payload")]
+        scheduler::payload(&mut physical, include_bytes!(env!("KOLVRT_BOOT_PAYLOAD")));
         cpu::timer(time::deadline_after(BOOT_TIMER_DELAY));
         cpu::unmask();
         let deadline = time::deadline_after(BOOT_IRQ_TIMEOUT);

@@ -17,18 +17,33 @@ pub struct Reduction {
     pub sum: u64,
     pub words: u32,
 }
+/// A caller-scoped native window capability. The provider owns data and authorization;
+/// adapters supply only a checked half-open span, never another consumer's identity.
+pub trait Backend {
+    fn reduce(&mut self, span: Span) -> Result<Reduction, Error>;
+}
+pub struct Local<'a>(pub &'a [u32]);
+impl Backend for Local<'_> {
+    fn reduce(&mut self, span: Span) -> Result<Reduction, Error> {
+        reduce(self.0, span)
+    }
+}
 pub fn reduce(data: &[u32], span: Span) -> Result<Reduction, Error> {
+    let words = checked(data, span)?;
+    Ok(Reduction {
+        sum: words.iter().map(|&v| u64::from(v)).sum(),
+        words: words.len() as u32,
+    })
+}
+/// Native bounds validation shared by a privileged read boundary and EL0 arithmetic.
+pub fn checked(data: &[u32], span: Span) -> Result<&[u32], Error> {
     if data.len() > MAX_WORDS {
         return Err(Error::Capacity);
     }
     if span.start > span.end || span.end as usize > data.len() {
         return Err(Error::Bounds);
     }
-    let words = &data[span.start as usize..span.end as usize];
-    Ok(Reduction {
-        sum: words.iter().map(|&v| u64::from(v)).sum(),
-        words: words.len() as u32,
-    })
+    Ok(&data[span.start as usize..span.end as usize])
 }
 
 #[cfg(test)]

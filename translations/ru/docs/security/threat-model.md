@@ -66,4 +66,8 @@ DEV поддерживает bounded traces, grant inspection и явную faul
 
 Физические атаки, hostile boot/host administration и microarchitectural side channels вне текущих подтверждений. General-purpose availability, hostile firmware, настоящая IOMMU/reset containment и persistent recovery не проверены. Доверие устройству не покрывает враждебное оборудование. Будущие тесты требуют отдельно авторизованных scheduler/EL0/user-copy и контракта названного устройства.
 
+## Observation boundary Phase 2
+
+Ограниченный [EL0 routing slice](../kernel/routing.md) имеет явный [admission review каждой обязанности](../architecture-decisions/0015-el0-versioned-routing.md). Bootstrap admission разрешает только timer observations текущей задачи; caller-selected owner, pointer, delegation и general capability service отсутствуют. Native register reads повторяют width/bounds checks и инициализируют outputs; общая арифметика и вся legacy policy исполняются в EL0. Task state и roots удерживаются, пока оба CPU не восстановят native roots и не завершат TLBI. Ошибка adapter не расширяет scope и ограничена task; privileged enforcement compromise остаётся fatal. Evidence reporting — bounded instrumentation, исключённая из stripped PROD, а не authenticated deployment inspector. Trusted boot/compiler, static grants, fixed affinity, отсутствие DMA и непроверенные silicon/availability — явные ограничения. Пересмотреть capture publication, grants/revocation и inspection placement вместе с native IPC services.
+
 [Английский оригинал](../../../../docs/security/threat-model.md)

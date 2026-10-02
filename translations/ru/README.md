@@ -90,31 +90,31 @@ KOLVRT строится вокруг нескольких намеренно с�
 
 KOLVRT уже загружается как native AArch64 kernel в QEMU.
 
-| Область                            | Статус                                            |
-| ---------------------------------- | ------------------------------------------------- |
-| Rust `no_std` ядро                 | ✅                                                |
-| AArch64 / ARM64                    | ✅ Tier 1                                         |
-| Загрузка QEMU `virt`               | ✅                                                |
-| Исполнение EL1                     | ✅                                                |
-| Проверка Device Tree               | ✅                                                |
-| PL011 UART                         | ✅                                                |
-| Векторы исключений                 | ✅                                                |
-| Physical memory allocator          | ✅                                                |
-| Page tables / MMU                  | ✅                                                |
-| W^X mappings                       | ✅                                                |
-| Kernel heap                        | ✅                                                |
-| GICv3                              | ✅ Оба CPU                                        |
-| ARM physical timer IRQ             | ✅                                                |
-| DEV / PROD профили                 | ✅                                                |
-| Автоматический kernel test harness | ✅                                                |
-| Настоящие in-kernel tests          | ✅ 53 в каждом профиле                            |
-| Negative failure controls          | ✅                                                |
-| Отладка GDB                        | ✅                                                |
-| SMP                                | ✅ Основа двух CPU в QEMU                         |
-| EL0 / userspace                    | ✅ Ограниченный фундамент изолированных процессов |
-| Scheduler                          | ✅ Timer-driven с фиксированной per-CPU affinity  |
-| Runtime versioned routing          | 🧪 Архитектура определена, не подключена к kernel |
-| Linux compatibility                | ⏳ Не начата                                      |
+| Область                            | Статус                                                    |
+| ---------------------------------- | --------------------------------------------------------- |
+| Rust `no_std` ядро                 | ✅                                                        |
+| AArch64 / ARM64                    | ✅ Tier 1                                                 |
+| Загрузка QEMU `virt`               | ✅                                                        |
+| Исполнение EL1                     | ✅                                                        |
+| Проверка Device Tree               | ✅                                                        |
+| PL011 UART                         | ✅                                                        |
+| Векторы исключений                 | ✅                                                        |
+| Physical memory allocator          | ✅                                                        |
+| Page tables / MMU                  | ✅                                                        |
+| W^X mappings                       | ✅                                                        |
+| Kernel heap                        | ✅                                                        |
+| GICv3                              | ✅ Оба CPU                                                |
+| ARM physical timer IRQ             | ✅                                                        |
+| DEV / PROD профили                 | ✅                                                        |
+| Автоматический kernel test harness | ✅                                                        |
+| Настоящие in-kernel tests          | ✅ 53 в каждом профиле                                    |
+| Negative failure controls          | ✅                                                        |
+| Отладка GDB                        | ✅                                                        |
+| SMP                                | ✅ Основа двух CPU в QEMU                                 |
+| EL0 / userspace                    | ✅ Ограниченный фундамент изолированных процессов         |
+| Scheduler                          | ✅ Timer-driven с фиксированной per-CPU affinity          |
+| Runtime versioned routing          | ✅ Ограниченный EL0 vertical slice; native core независим |
+| Linux compatibility                | ⏳ Не начата                                              |
 
 Оба настроенных CPU исполняют native EL1 code. QEMU matrix проверяет secondary boot, per-CPU ownership, двусторонние IPI, подтверждённый remote TLB retirement и multicore shutdown. Настоящее hardware остаётся непроверенным.
 
@@ -131,16 +131,16 @@ Native ARM64 kernel foundation        ✅
 SMP correctness foundation            ✅
         │
         ▼
-EL0 + address spaces
+EL0 + address spaces                  ✅
         │
         ▼
-Scheduler + context switching
+Scheduler + context switching        ✅
         │
         ▼
-Native userspace
+Versioned Routing & Translation      ✅ bounded EL0 slice
         │
         ▼
-Versioned Routing & Translation
+Native IPC + authority + services    next
         │
         ▼
 Compatibility personalities
@@ -151,7 +151,7 @@ Linux ABI compatibility where useful
 
 Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
 
-Сначала native execution model. Разрешённый фундамент EL0/address spaces и timer scheduler реализован для восьми процессов с фиксированной affinity на двух CPU. IPC, handles/capabilities, cancellation, services и security domains остаются следующим этапом; routing отключён. Полный native slice этим не завершён.
+Сначала native execution model. Разрешённый фундамент EL0/address spaces и timer scheduler реализован для восьми процессов с фиксированной affinity на двух CPU. Phase 2 routing теперь исполняется в optional isolated EL0 image; native core остаётся независим. IPC, handles/capabilities, cancellation, services и security domains — следующий native этап. Полный native slice этим не завершён.
 
 ---
 
@@ -537,5 +537,7 @@ Stable userspace ABI пока отсутствует.
 > **Не плюй в ядро — сам из него пить будешь.**
 
 [Контракт фундамента EL0](docs/kernel/el0.md) фиксирует ownership, retirement, tests и ограничения; [ADR-0014](docs/architecture-decisions/0014-el0-foundation.md) рассматривает механизмы.
+
+В [контракте Phase 2](docs/kernel/routing.md) описаны настоящие EL0 routes, profile validation, measurements, authority boundary и limits. Полный IPC/service native slice остаётся незавершённым.
 
 [English source](../../README.md)

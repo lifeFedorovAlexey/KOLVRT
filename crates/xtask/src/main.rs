@@ -1,4 +1,6 @@
 mod output;
+#[cfg(feature = "route-tools")]
+mod routing_demo;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
@@ -113,6 +115,17 @@ fn run() -> Result<()> {
     let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {
         Some("audit") => audit(),
+        Some("routing") => {
+            #[cfg(feature = "route-tools")]
+            { routing_demo::run(&args[1..]) }
+            #[cfg(not(feature = "route-tools"))]
+            {
+                let status = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()))
+                    .args(["run", "--locked", "-p", "xtask", "--target-dir", "target/route-tools", "--features", "route-tools", "--"])
+                    .args(&args).status()?;
+                if status.success() { Ok(()) } else { Err("routing tool command failed".into()) }
+            }
+        }
         Some("compare") if args.len() == 3 => compare_measurements(Path::new(&args[1]), Path::new(&args[2])),
         Some("build") => {
             build(args.iter().any(|a| a == "--prod"), false, None, false)?;
@@ -221,6 +234,12 @@ fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<
     }
     if let Some(e) = extra {
         features.push(e);
+        if e == "boot-payload" {
+            c.env(
+                "KOLVRT_BOOT_PAYLOAD",
+                fs::canonicalize("target/kernel/payload.bin")?,
+            );
+        }
     }
     if !features.is_empty() {
         c.args(["--features", &features.join(",")]);
@@ -359,6 +378,9 @@ fn qemu_args(elf: &Path) -> Vec<String> {
     ]
 }
 fn execute(elf: &Path, tests: bool, machine: bool) -> Result<()> {
+    execute_mode(elf, tests, machine, false)
+}
+fn execute_mode(elf: &Path, tests: bool, machine: bool, payload: bool) -> Result<()> {
     let log = elf.with_extension("log");
     let err = elf.with_extension("stderr");
     // Never leave an earlier run's successful evidence beside a failed/human run.
@@ -408,7 +430,14 @@ fn execute(elf: &Path, tests: bool, machine: bool) -> Result<()> {
         elf.with_extension("results.json"),
         serde_json::to_string_pretty(&events)?,
     )?;
-    output::validate(&events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
+    let native_events: Vec<_> = events
+        .iter()
+        .filter(|event| {
+            !payload || !matches!(event["event"].as_str(), Some("user-report" | "user-result"))
+        })
+        .cloned()
+        .collect();
+    output::validate(&native_events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
 
     Ok(())
 }
@@ -425,8 +454,17 @@ fn walk(path: &Path, out: &mut Vec<PathBuf>) -> Result<()> {
 }
 fn source_inventory() -> Result<Value> {
     let mut files = Vec::new();
-    for directory in ["crates/kernel", "crates/kernel-core", "crates/xtask"] {
-        walk(Path::new(directory), &mut files)?;
+    for directory in [
+        "crates/kernel",
+        "crates/kernel-core",
+        "crates/xtask",
+        "crates/routing",
+        "crates/window-compat",
+        "crates/routing-demo",
+    ] {
+        if Path::new(directory).exists() {
+            walk(Path::new(directory), &mut files)?;
+        }
     }
     files.extend(
         [
@@ -595,6 +633,7 @@ fn audit() -> Result<()> {
             "aarch64-unknown-none",
             "--edges",
             "normal,build",
+            "--all-features",
             "--prefix",
             "none",
             "--format",
@@ -621,6 +660,7 @@ fn audit() -> Result<()> {
     let mut assembly = Vec::new();
     for file in files {
         let source = fs::read_to_string(&file)?;
+        enforce_native_source(&source)?;
         if file.extension().is_some_and(|e| e == "S") {
             assembly.push(json!({"path":file,"sha256":format!("{:x}",Sha256::digest(source.as_bytes())),"review":"INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE"}));
         }
@@ -664,4 +704,55 @@ fn audit() -> Result<()> {
     )?;
     println!("unsafe inventory: target/kernel/unsafe-audit.json");
     Ok(())
+}
+
+fn enforce_native_source(source: &str) -> Result<()> {
+    for line in source
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.starts_with("//"))
+    {
+        if [
+            "routing::",
+            "use routing",
+            "extern crate routing",
+            "window_compat::",
+            "use window_compat",
+            "window-compat",
+            "feature = \"compat",
+            "feature=\"compat",
+            "Input::Encoded",
+            "Route::Inclusive",
+            "Route::Counted",
+            "Route::EmptyFirst",
+        ]
+        .iter()
+        .any(|pattern| line.contains(pattern))
+        {
+            return Err("native source contains compatibility import, type or conditional".into());
+        }
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod native_architecture_tests {
+    #[test]
+    fn reject_legacy_types_imports_and_conditionals() {
+        for code in [
+            "use routing as r;",
+            "extern crate routing;",
+            "fn run() { window_compat::v1(&[], &[]); }",
+            "#[cfg(feature = \"compat-v1\")] fn special() {}",
+            "let input = Input::Encoded(bytes);",
+        ] {
+            assert!(super::enforce_native_source(code).is_err(), "{code}");
+        }
+        assert!(
+            super::enforce_native_source(
+                "// routing:: is outside native core\nuse kernel_core::window::Span;"
+            )
+            .is_ok()
+        );
+    }
 }

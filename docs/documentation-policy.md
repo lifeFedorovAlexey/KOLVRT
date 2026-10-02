@@ -56,4 +56,8 @@ The manifest records SHA-256 hashes of both reviewed texts, with CRLF normalized
 
 The original request is preserved as a historical text attachment. Research JSON retains its original source-analysis prose; it is not a Markdown translation. The bilingual case-index catalog provides reviewed English and Russian titles, subsystem labels and questions, tied to the research-record hash. A record change requires reviewing that catalog before regenerating the indexes.
 
+## Phase 2 evidence update
+
+The earlier audit explicitly excludes the then-local Phase 2 work. The now-verified [routing contract](kernel/routing.md) and [ADR-0015](architecture-decisions/0015-el0-versioned-routing.md) describe the bounded optional EL0 slice: eight independent consumers on two CPUs, native/v1/v2/safe-bug routes, pinned PROD profiles and native-core dependency isolation. [Execution results](../research/results/routing-phase2.json) and [physical source-removal evidence](../research/results/native-compat-removal.json) retain exact source/artifact scopes; the latter reruns the same 53-test DEV/PROD foundation and eleven negative controls without routing packages. These records establish only their QEMU scope. IPC, transferred authority, cancellation, general services, dynamic loading and silicon validation remain incomplete; the full first native slice is still a design baseline.
+
 [Russian translation](../translations/ru/docs/documentation-policy.md)

@@ -81,4 +81,6 @@ Phase 1.1 adds [multicore checks](docs/kernel/smp.md): bidirectional/repeated IP
 
 The [EL0 checks](docs/kernel/el0.md) require real timer-driven processes on both CPUs, same-VA private data, full architectural context, contained faults and quiescent reclamation. Root/context/forgotten-user-guard negative controls must fail. The fixed-affinity scope does not justify future migration or shared queue mutation without review.
 
+For [Phase 2 routing](docs/kernel/routing.md), run the real optional-image matrix and native-only/removal checks. Reject dependency reversal, legacy core types, unsupported profiles, unsafe switching and broadened caller effects. Keep evidence builds distinct from stripped PROD and preserve raw benchmark observations.
+
 [Russian translation](translations/ru/CONTRIBUTING.md)

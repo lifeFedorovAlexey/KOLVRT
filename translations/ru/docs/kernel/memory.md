@@ -19,3 +19,5 @@ Heap постоянно владеет 16 выровненными физиче�
 ## Multicore retirement
 
 Ownership Physical/Frame нельзя передавать или разделять; affinity checks сохраняют allocation и изменение PTE за CPU0. Это граница текущего workload, а не постоянная allocation policy. Существующая блокировка heap metadata поддерживает обычный код обоих CPU. Новые mappings отклоняются при pending retirement. Забытый Retirement guard сохраняет charge; release отклоняется даже после очистки PTE. Table locks освобождаются до ожидания. Timeout/failure является fatal и не разрешает reuse. [SMP контракт](smp.md) определяет publication, reader assumptions и ограничения identity alias.
+
+[Контракт image Phase 2](routing.md) расширяет private stacks до четырёх pages и удерживает bounded RX payload pages в том же borrowed/charged UserSpace lifetime. Firmware или user input не выбирают unchecked physical image address; construction проверяет allocation/page extents до publication.

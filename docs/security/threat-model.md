@@ -65,4 +65,8 @@ DEV supports bounded traces, grant inspection and explicit fault injection. PROD
 
 Physical attacks, hostile boot/host administration and microarchitectural side channels are outside current assurance. General-purpose availability, hostile firmware, actual IOMMU/reset containment and persistent recovery are unverified. A trusted-device assumption does not cover hostile hardware. Future tests require separately authorized scheduler/EL0/user-copy and a named device contract.
 
+## Phase 2 observation boundary
+
+The bounded [EL0 routing slice](../kernel/routing.md) has an explicit [per-responsibility admission review](../architecture-decisions/0015-el0-versioned-routing.md). Bootstrap admission grants only current-task timer observations; no caller-selected owner, pointer, delegation or general capability service exists. Native register reads repeat width/bounds checks and initialize outputs; common arithmetic and all legacy policy execute in EL0. Task state and roots survive until both CPUs restore native roots and finish TLBI. A faulty adapter cannot widen scope and is contained to its task; privileged enforcement compromise remains fatal. Evidence reporting is bounded instrumentation, removed from stripped PROD, not an authenticated deployment inspector. Trusted boot/compiler, static grants, fixed affinity, absent DMA and unverified silicon/availability are explicit limits. Reconsider capture publication, grants/revocation and inspection placement with native IPC services.
+
 [Russian translation](../../translations/ru/docs/security/threat-model.md)

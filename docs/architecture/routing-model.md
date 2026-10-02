@@ -94,4 +94,6 @@ Production does not offer experimental live switching. Authorization remains man
 on fast dispatch paths. Phase 0.2 must model conflicts, downgrades, handle transfer,
 concurrent rebinding and unloading; cases 02, 03, 17, 18, 25, 26 and 30 motivate these tests.
 
+The implemented [Phase 2 slice](../kernel/routing.md) uses independently owned EL0 consumers and synchronous transactions. General shared state-domain resolution, transferred bindings and unloading remain obligations rather than implemented capabilities.
+
 [Russian translation](../../translations/ru/docs/architecture/routing-model.md)

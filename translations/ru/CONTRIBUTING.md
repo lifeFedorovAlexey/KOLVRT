@@ -81,4 +81,6 @@ Phase 1.1 добавляет [multicore checks](docs/kernel/smp.md): двуст�
 
 [Проверки EL0](docs/kernel/el0.md) требуют настоящих timer-driven процессов на обоих CPU, same-VA private data, полного architectural context, локализации faults и quiescent reclamation. Root/context/forgotten-user-guard negative controls обязаны вызвать ошибку. Fixed-affinity scope не оправдывает будущие migration или shared queue mutation без review.
 
+Для [routing Phase 2](docs/kernel/routing.md) проверяйте настоящую optional-image matrix и native-only/removal. Отклоняйте dependency reversal, legacy core types, unsupported profiles, unsafe switching и расширение caller effects. Различайте evidence builds и stripped PROD; сохраняйте raw benchmark observations.
+
 [Английский оригинал](../../CONTRIBUTING.md)

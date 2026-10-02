@@ -20,4 +20,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0014 — Fixed-affinity EL0 execution foundation](0014-el0-foundation.md) — Accepted for the bounded foundation.
 
+- [ADR-0015 — Versioned routing in isolated EL0 consumers](0015-el0-versioned-routing.md) — Accepted for the bounded Phase 2 demonstration.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

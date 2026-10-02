@@ -59,4 +59,6 @@ Shutdown прекращает mailbox admission, завершает принят
 
 [Машинные доказательства](../../../../research/results/kernel-smp.json) сохраняют source hashes и точные результаты; [unsafe register](unsafe.md) задаёт trust boundaries. QEMU TCG подтверждает kernel integration, но не сертифицирует silicon. Busy polling, два фиксированных CPU, один outstanding retirement и fatal progress timeouts — явные ограничения.
 
+Более поздний [EL0 routing workload](routing.md) исполняет independent consumers одновременно на обоих CPU. Batch admission использует per-CPU CAS phases; completion и native-root/TLBI quiescence предшествуют CPU0 reset/reclamation. Shared routing writer и routing lock не добавляются.
+
 [English source](../../../../docs/kernel/smp.md)

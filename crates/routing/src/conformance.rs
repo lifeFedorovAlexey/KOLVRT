@@ -100,6 +100,12 @@ pub fn run(mut check: impl FnMut(&str, bool)) {
         );
         drop(tx);
         native.switch(Route::Native).unwrap();
+        let mut retained = Consumer::from_profile(&profile, 0).unwrap();
+        core::mem::forget(retained.begin().unwrap());
+        check(
+            "routing_forgotten_transaction",
+            retained.switch(Route::Native) == Err(Error::Busy) && retained.begin().is_err(),
+        );
         check("routing_safe_switch", native.generation() == generation + 1);
         let mut full = Consumer {
             generation: u32::MAX,
@@ -270,6 +276,46 @@ fn check_once(
 }
 #[cfg(test)]
 mod host {
+    #[test]
+    fn integrity_rejects_every_single_byte_mutation() {
+        let original = super::Profile::native().encode();
+        let expected = super::digest(&original);
+        for index in 0..original.len() {
+            let mut bytes = original;
+            bytes[index] ^= 1;
+            assert_eq!(
+                super::Profile::decode(&bytes, expected),
+                Err(super::Error::Integrity)
+            );
+        }
+    }
+    #[test]
+    fn native_denial_is_not_replaced_by_fallback() {
+        struct Denied;
+        impl kernel_core::window::Backend for Denied {
+            fn reduce(
+                &mut self,
+                _: kernel_core::window::Span,
+            ) -> Result<kernel_core::window::Reduction, kernel_core::window::Error> {
+                Err(kernel_core::window::Error::Bounds)
+            }
+        }
+        for route in super::Route::ALL.into_iter().filter(|r| r.available()) {
+            let profile = super::Profile::new(1, [route; super::CONSUMERS]).unwrap();
+            let mut consumer = super::Consumer::from_profile(&profile, 0).unwrap();
+            let inclusive = [0, 0, 0, 0];
+            let counted = [0, 0, 0, 0, 0, 0, 0, 1];
+            let input = match route {
+                super::Route::Native => super::Input::Native(super::Span { start: 0, end: 1 }),
+                super::Route::Inclusive => super::Input::Encoded(&inclusive),
+                _ => super::Input::Encoded(&counted),
+            };
+            assert_eq!(
+                consumer.call_with(&mut Denied, input),
+                Err(super::Error::Bounds)
+            );
+        }
+    }
     #[test]
     fn same_kernel_contracts() {
         super::run(|name, passed| assert!(passed, "{name}"));

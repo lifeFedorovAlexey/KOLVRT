@@ -58,4 +58,6 @@ The [multicore decision](../architecture-decisions/0012-multicore-retirement.md)
 
 The later [EL0 decision](../architecture-decisions/0014-el0-foundation.md) accepts fixed-affinity queues, immutable roots, full local flushes and complete context preservation. Pure selection is separated from privileged switching. User faults terminate only their process; ownership charges survive forgotten guards. IPC and compatibility remain deferred.
 
+The later [Phase 2 decision](../architecture-decisions/0015-el0-versioned-routing.md) keeps routing and legacy conversion in EL0, admits only current-task access to protected execution observations, and replaces one-session admission with a CAS protocol. Allocation, bounds, native root/TLBI completion and charges remain mandatory. No fastest-path or general authority-policy claim follows.
+
 [Russian translation](../../translations/ru/docs/architecture/implementation-review.md)

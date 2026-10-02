@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "OPEN",
+  "issue": "https://github.com/lifeFedorovAlexey/KOLVRT/issues/15",
+  "evidence": "research/results/routing-performance-trigger.json",
+  "profile": "dev-full",
+  "observations": [
+    {
+      "consumer": 1,
+      "cpu": 0,
+      "route": 3,
+      "native_median_ticks": 581,
+      "compat_median_ticks": 531,
+      "delta_percent": -8.605851979345957
+    },
+    {
+      "consumer": 1,
+      "cpu": 0,
+      "route": 2,
+      "native_median_ticks": 581,
+      "compat_median_ticks": 518,
+      "delta_percent": -10.843373493975905
+    },
+    {
+      "consumer": 1,
+      "cpu": 0,
+      "route": 1,
+      "native_median_ticks": 581,
+      "compat_median_ticks": 525,
+      "delta_percent": -9.638554216867467
+    },
+    {
+      "consumer": 3,
+      "cpu": 0,
+      "route": 3,
+      "native_median_ticks": 525,
+      "compat_median_ticks": 513,
+      "delta_percent": -2.285714285714291
+    },
+    {
+      "consumer": 3,
+      "cpu": 0,
+      "route": 1,
+      "native_median_ticks": 525,
+      "compat_median_ticks": 506,
+      "delta_percent": -3.6190476190476217
+    },
+    {
+      "consumer": 5,
+      "cpu": 1,
+      "route": 3,
+      "native_median_ticks": 581,
+      "compat_median_ticks": 525,
+      "delta_percent": -9.638554216867467
+    },
+    {
+      "consumer": 5,
+      "cpu": 1,
+      "route": 2,
+      "native_median_ticks": 581,
+      "compat_median_ticks": 531,
+      "delta_percent": -8.605851979345957
+    },
+    {
+      "consumer": 5,
+      "cpu": 1,
+      "route": 1,
+      "native_median_ticks": 581,
+      "compat_median_ticks": 531,
+      "delta_percent": -8.605851979345957
+    }
+  ],
+  "interpretation": "Investigation trigger only; no established winner; fixed warmup, preemption, TCG/host variability and tail uncertainty retained",
+  "next_checks": [
+    "Repeated paired order-counterbalanced trials",
+    "Generated-code review without weakening validation or ownership",
+    "Separate clock and scheduler overhead",
+    "ARM64 hardware validation"
+  ]
+}

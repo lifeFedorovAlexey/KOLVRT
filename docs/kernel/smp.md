@@ -59,4 +59,6 @@ Shutdown stops mailbox admission, drains accepted work, masks CPU1 IRQs, stops i
 
 [Machine evidence](../../research/results/kernel-smp.json) retains source hashes and exact results; [unsafe register](unsafe.md) states trust boundaries. QEMU TCG is kernel integration evidence, not silicon certification. Busy polling, two fixed CPUs, one outstanding retirement and fatal progress timeouts are explicit limits.
 
+The later [EL0 routing workload](routing.md) runs independent consumers concurrently on both CPUs. Batch admission uses per-CPU CAS phases; completion and native-root/TLBI quiescence precede CPU0 reset/reclamation. No shared routing writer or routing lock is introduced.
+
 [Russian translation](../../translations/ru/docs/kernel/smp.md)

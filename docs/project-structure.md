@@ -7,8 +7,11 @@ crates/
   native-protocol-model/   # no_std request/response candidate
   native-state-models/     # finite state models and host IPC experiment
   repository-checks/       # schema, links, laws, translations and reports
-  routing/                 # isolated Phase 2 types/profile and runtime candidates
-  window-compat/           # standalone optional adapter candidates, not kernel dependencies
+  routing/                 # pure model plus private EL0 binding and dispatch
+  routing-demo/           # optional separately linked EL0 executable
+  migration-advisor/      # host-only measured migration advice
+  migration-workbench/    # host-only experiment runner
+  window-compat/           # optional EL0 adapters, never kernel dependencies
   kernel-core/             # safe platform-independent bounded algorithms
   kernel/                  # native no_std AArch64 executable
     src/arch/aarch64/      # processor entry, vectors, registers and descriptors
@@ -39,7 +42,7 @@ translations/ru/          # mirrored Markdown paths
 
 ## Rationale and alternatives
 
-[Cargo recommends a flat crates directory](https://doc.rust-lang.org/cargo/reference/workspaces.html) for workspace packages. One root lockfile and target directory serve all eight packages. Package names describe purpose; the model suffix prevents mistaking a prototype for a kernel implementation. A separate tools tree and executable crates buried in research data added locations without a different build lifecycle, so they were consolidated.
+[Cargo recommends a flat crates directory](https://doc.rust-lang.org/cargo/reference/workspaces.html) for workspace packages. One root lockfile and target directory serve all eleven packages. Package names describe purpose; the model suffix prevents mistaking a prototype for a kernel implementation. A separate tools tree and executable crates buried in research data added locations without a different build lifecycle, so they were consolidated.
 
 [Decision records](https://adr.github.io/) preserve why a choice was made and its tradeoffs; specifications describe the resulting contract. [Diataxis](https://diataxis.fr/) distinguishes documentation purposes. This project applies that distinction without inventing empty tutorial directories or claiming the framework mandates this exact tree. The contribution guide is a how-to; contracts are reference material; decisions explain choices; research reports record evidence.
 
@@ -48,5 +51,7 @@ Markdown uses descriptive lower-kebab-case names except conventional README.md a
 ## Review checklist
 
 New packages require a distinct responsibility or dependency boundary. New directories require existing content with a distinct role. Moves update links, checker paths, translation mappings and commands together. Formatting is automatic through the [contribution workflow](../CONTRIBUTING.md). Local caches and build outputs stay ignored.
+
+The later routing-demo package owns the separately linked EL0 image; it is not a kernel dependency. Its host image/profile preparation and runtime acceptance live in xtask. See the [Phase 2 boundary](kernel/routing.md).
 
 [Russian translation](../translations/ru/docs/project-structure.md)

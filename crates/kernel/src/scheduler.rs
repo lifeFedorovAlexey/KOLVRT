@@ -1,11 +1,14 @@
 //! Bounded fixed-affinity EL0 foundation. Each CPU owns its ready queue and trap state.
 //! No queue locks, IRQ allocation, migration, IPC, capabilities or service model.
+#[cfg(feature = "boot-payload")]
+use crate::event;
 use crate::{cpu, memory, percpu, platform::config, time};
 use alloc::vec::Vec;
 use core::{
     cell::UnsafeCell,
     sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering},
 };
+use kernel_core::execution as abi;
 
 const TASKS: usize = config::USER_PROCESSES_PER_CPU;
 const GPRS: usize = 32;
@@ -117,6 +120,13 @@ struct Task {
     fault_far: usize,
     context_ok: bool,
     peer_faults_at_exit: usize,
+    fixture: bool,
+    slice_budget: usize,
+    observations: crate::execution::Observations,
+    #[cfg(feature = "machine-events")]
+    report: [u64; abi::REPORT_WORDS],
+    #[cfg(feature = "machine-events")]
+    report_len: usize,
 }
 impl Task {
     const ZERO: Self = Self {
@@ -132,6 +142,13 @@ impl Task {
         fault_far: 0,
         context_ok: true,
         peer_faults_at_exit: 0,
+        fixture: false,
+        slice_budget: MAX_SLICES,
+        observations: crate::execution::Observations::ZERO,
+        #[cfg(feature = "machine-events")]
+        report: [0; abi::REPORT_WORDS],
+        #[cfg(feature = "machine-events")]
+        report_len: 0,
     };
 }
 struct State {
@@ -150,8 +167,7 @@ impl State {
 }
 struct Local {
     state: UnsafeCell<State>,
-    launch: AtomicBool,
-    done: AtomicBool,
+    phase: AtomicUsize,
     preempt: AtomicBool,
     resume_sp: AtomicUsize,
 }
@@ -163,8 +179,7 @@ impl Local {
     const fn new() -> Self {
         Self {
             state: UnsafeCell::new(State::ZERO),
-            launch: AtomicBool::new(false),
-            done: AtomicBool::new(false),
+            phase: AtomicUsize::new(PHASE_IDLE),
             preempt: AtomicBool::new(false),
             resume_sp: AtomicUsize::new(0),
         }
@@ -175,6 +190,10 @@ static NATIVE_ROOT: AtomicU64 = AtomicU64::new(0);
 static START: AtomicBool = AtomicBool::new(false);
 static ARRIVED: AtomicUsize = AtomicUsize::new(0);
 static SESSION: AtomicBool = AtomicBool::new(false);
+const PHASE_IDLE: usize = 0;
+const PHASE_ADMITTED: usize = 1;
+const PHASE_RUNNING: usize = 2;
+const PHASE_DONE: usize = 3;
 const NO_CPU: usize = usize::MAX;
 static RUNNING_OWNER: [AtomicUsize; config::USER_PROCESSES] =
     [const { AtomicUsize::new(NO_CPU) }; config::USER_PROCESSES];
@@ -218,14 +237,12 @@ unsafe extern "C" {
 
 pub fn on_timer() {
     let local = &LOCALS[percpu::id()];
-    if local.launch.load(Ordering::Acquire) && !local.done.load(Ordering::Acquire) {
+    if local.phase.load(Ordering::Acquire) == PHASE_RUNNING {
         local.preempt.store(true, Ordering::Release);
     }
 }
 pub fn poll_secondary() {
-    if LOCALS[percpu::SECONDARY_CPU].launch.load(Ordering::Acquire)
-        && !LOCALS[percpu::SECONDARY_CPU].done.load(Ordering::Acquire)
-    {
+    if LOCALS[percpu::SECONDARY_CPU].phase.load(Ordering::Acquire) == PHASE_ADMITTED {
         run_local();
         cpu::unmask();
     }
@@ -249,7 +266,18 @@ fn choose(state: &mut State) -> Option<usize> {
 fn run_local() {
     cpu::mask();
     let local = &LOCALS[percpu::id()];
-    assert!(local.launch.load(Ordering::Acquire));
+    if local
+        .phase
+        .compare_exchange(
+            PHASE_ADMITTED,
+            PHASE_RUNNING,
+            Ordering::AcqRel,
+            Ordering::Acquire,
+        )
+        .is_err()
+    {
+        return;
+    }
     // SAFETY: INV-RUNQUEUE: this CPU exclusively owns state after launch; IRQ masked.
     let first = unsafe {
         let state = &mut *local.state.get();
@@ -281,13 +309,13 @@ fn run_local() {
     }
     assert_eq!(cpu::el(), cpu::CURRENT_EL1);
     memory::USER_EXECUTION_ACTIVE.fetch_sub(1, Ordering::AcqRel);
-    local.done.store(true, Ordering::Release);
+    local.phase.store(PHASE_DONE, Ordering::Release);
 }
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn user_trap(frame: *mut Context, kind: u64) -> usize {
     let local = &LOCALS[percpu::id()];
-    assert!(local.launch.load(Ordering::Acquire) && !local.done.load(Ordering::Acquire));
+    assert_eq!(local.phase.load(Ordering::Acquire), PHASE_RUNNING);
     // SAFETY: INV-USER-CONTEXT and INV-RUNQUEUE: assembly supplies complete aligned frame
     // on this CPU's EL1 stack; exceptions mask IRQ, no mutable reference survives ERET.
     let (frame, state) = unsafe { (&mut *frame, &mut *local.state.get()) };
@@ -303,7 +331,7 @@ pub unsafe extern "C" fn user_trap(frame: *mut Context, kind: u64) -> usize {
     assert_eq!(frame.pstate & PSTATE_MODE_MASK, USER_EL0T);
     // An interrupt can arrive before the image has initialized markers. Check them only
     // once it has published progress, without trusting that progress as authority.
-    if frame.gpr[REG_COUNTER] != 0 {
+    if task.fixture && frame.gpr[REG_COUNTER] != 0 {
         task.context_ok &= frame.gpr[REG_MARKER] == MARKER_BASE + task.id as u64
             && frame.gpr[REG_ID] == task.id as u64
             && frame.simd[0] == [SIMD_LOW; PAIR_WORDS]
@@ -318,15 +346,18 @@ pub unsafe extern "C" fn user_trap(frame: *mut Context, kind: u64) -> usize {
             return 0;
         }
         task.slices += 1;
+        task.observations.service_timer(task.slices);
         // SAFETY: INV-USER-SPACE: this CPU alone accesses its task's retained data page;
         // user execution is suspended, other tasks/CPUs cannot map this page at EL0.
-        unsafe {
-            core::ptr::write_volatile(
-                (task.data as *mut u64).add(DATA_TICKS_WORD),
-                task.slices as u64,
-            );
+        if task.fixture {
+            unsafe {
+                core::ptr::write_volatile(
+                    (task.data as *mut u64).add(DATA_TICKS_WORD),
+                    task.slices as u64,
+                );
+            }
         }
-        task.state = if task.slices >= MAX_SLICES {
+        task.state = if task.slices >= task.slice_budget {
             CONTEXT_TIMED_OUT
         } else {
             CONTEXT_READY
@@ -338,6 +369,12 @@ pub unsafe extern "C" fn user_trap(frame: *mut Context, kind: u64) -> usize {
     } else {
         let esr = cpu::user_esr();
         let class = esr >> ESR_CLASS_SHIFT;
+        if class == ESR_SVC64 && native_call(task, frame, (esr & SVC_IMMEDIATE_MASK) as u16) {
+            task.context = *frame;
+            // Bounded synchronous native request: no locks, allocation or retained user
+            // pointers; current task identity came from the owned runqueue, not registers.
+            return 0;
+        }
         if class == ESR_SVC64 && esr & SVC_IMMEDIATE_MASK == FINISHED_TRAP {
             task.state = CONTEXT_EXITED;
             task.peer_faults_at_exit = peer_faults;
@@ -392,7 +429,7 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
     assert_eq!(
         SESSION.compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire),
         Ok(false),
-        "one boot workload session"
+        "overlapping user workload sessions"
     );
     let before = p.available();
     let mut frames: Vec<_> = (0..config::USER_PROCESSES)
@@ -419,9 +456,14 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
         panic!("retained user frame release accepted");
     }
     START.store(false, Ordering::Release);
+    ARRIVED.store(0, Ordering::Release);
     NATIVE_ROOT.store(memory::table_root(), Ordering::Release);
     for (owner, local) in LOCALS.iter().enumerate() {
-        assert!(!local.launch.load(Ordering::Acquire) || local.done.load(Ordering::Acquire));
+        assert!(matches!(
+            local.phase.load(Ordering::Acquire),
+            PHASE_IDLE | PHASE_DONE
+        ));
+        local.phase.store(PHASE_IDLE, Ordering::Release);
         // SAFETY: INV-RUNQUEUE: no launch yet; prior execution (if any) acquired complete.
         let state = unsafe { &mut *local.state.get() };
         *state = State::ZERO;
@@ -467,19 +509,20 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
                 fault_far: 0,
                 context_ok: true,
                 peer_faults_at_exit: 0,
+                fixture: true,
+                ..Task::ZERO
             };
         }
-        local.done.store(false, Ordering::Release);
         local.preempt.store(false, Ordering::Release);
     }
     memory::USER_EXECUTION_ACTIVE.store(config::ACTIVE_CPUS, Ordering::Release);
     for local in &LOCALS {
-        local.launch.store(true, Ordering::Release);
+        local.phase.store(PHASE_ADMITTED, Ordering::Release);
     }
     crate::smp::ping(percpu::SECONDARY_CPU);
     run_local();
     crate::smp::wait(
-        || LOCALS[percpu::SECONDARY_CPU].done.load(Ordering::Acquire),
+        || LOCALS[percpu::SECONDARY_CPU].phase.load(Ordering::Acquire) == PHASE_DONE,
         "EL0 secondary completion timeout",
     );
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
@@ -495,7 +538,7 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
         fault_checks: [false; config::USER_PROCESSES],
     };
     for local in &LOCALS {
-        assert!(local.done.load(Ordering::Acquire));
+        assert_eq!(local.phase.load(Ordering::Acquire), PHASE_DONE);
         // SAFETY: INV-RUNQUEUE: acquired completion, no admission or subsequent writer.
         let state = unsafe { &*local.state.get() };
         evidence.switches += state.switches;
@@ -546,7 +589,6 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
                 }
             }
         }
-        local.launch.store(false, Ordering::Release);
     }
     drop(spaces);
     for frame in frames.drain(..) {
@@ -555,5 +597,139 @@ pub fn exercise(p: &mut memory::Physical) -> Evidence {
     evidence.reclaimed = p.available() == before;
     assert!(evidence.reclaimed, "EL0 frame leak");
     assert!(evidence.owners_released, "EL0 executing owner retained");
+    SESSION.store(false, Ordering::Release);
     evidence
+}
+
+#[cfg(feature = "boot-payload")]
+const PAYLOAD_MAX_SLICES: usize = 512;
+fn native_call(task: &mut Task, frame: &mut Context, operation: u16) -> bool {
+    if task.observations.call(operation, &mut frame.gpr) {
+        return true;
+    }
+    match operation {
+        abi::SLICES => frame.gpr[0] = task.slices as u64,
+        abi::CLOCK => {
+            frame.gpr[0] = cpu::ticks();
+            frame.gpr[1] = cpu::frequency();
+        }
+        #[cfg(feature = "machine-events")]
+        abi::REPORT => {
+            if task.report_len == task.report.len() {
+                frame.gpr[0] = abi::FULL;
+            } else {
+                task.report[task.report_len] = frame.gpr[0];
+                task.report_len += 1;
+                frame.gpr[0] = abi::OK;
+            }
+        }
+        _ => return false,
+    }
+    true
+}
+
+/// Run a trusted boot-selected opaque EL0 image. No adapter, route or profile types
+/// cross this boundary. Immutable code is retained until both native roots are restored.
+#[cfg(feature = "boot-payload")]
+pub fn payload(p: &mut memory::Physical, image: &[u8]) {
+    percpu::primary_only();
+    cpu::mask();
+    assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
+    assert_eq!(
+        SESSION.compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire),
+        Ok(false)
+    );
+    let before = p.available();
+    let pages = memory::USER_SPACE_PAGES + image.len().div_ceil(config::PAGE_BYTES);
+    let frames: Vec<_> = (0..config::USER_PROCESSES)
+        .map(|_| p.allocate(pages, 1).expect("payload memory budget"))
+        .collect();
+    let spaces: Vec<_> = frames
+        .iter()
+        .enumerate()
+        .map(|(id, frame)| memory::UserSpace::payload(frame, id, image))
+        .collect();
+    START.store(false, Ordering::Release);
+    ARRIVED.store(0, Ordering::Release);
+    NATIVE_ROOT.store(memory::table_root(), Ordering::Release);
+    for (owner, local) in LOCALS.iter().enumerate() {
+        assert!(matches!(
+            local.phase.load(Ordering::Acquire),
+            PHASE_IDLE | PHASE_DONE
+        ));
+        local.phase.store(PHASE_IDLE, Ordering::Release);
+        // SAFETY: INV-RUNQUEUE: acquired terminal phase, no admitted reader/writer; CAS
+        // admission prevents a stale secondary poll from entering an idle reset batch.
+        let state = unsafe { &mut *local.state.get() };
+        *state = State::ZERO;
+        state.deadline = time::deadline_after(RUN_TIMEOUT);
+        for (index, task) in state.tasks.iter_mut().enumerate() {
+            let id = owner * TASKS + index;
+            let mut context = Context::ZERO;
+            context.pc = config::USER_PAYLOAD_BASE as u64;
+            context.sp = memory::USER_STACK_TOP as u64;
+            context.tpidr = id as u64;
+            context.gpr[0] = id as u64;
+            *task = Task {
+                context,
+                root: spaces[id].root(),
+                data: spaces[id].data_address(),
+                id,
+                slice_budget: PAYLOAD_MAX_SLICES,
+                ..Task::ZERO
+            };
+        }
+        local.preempt.store(false, Ordering::Release);
+    }
+    memory::USER_EXECUTION_ACTIVE.store(config::ACTIVE_CPUS, Ordering::Release);
+    for local in &LOCALS {
+        local.phase.store(PHASE_ADMITTED, Ordering::Release);
+    }
+    crate::smp::ping(percpu::SECONDARY_CPU);
+    run_local();
+    crate::smp::wait(
+        || LOCALS[percpu::SECONDARY_CPU].phase.load(Ordering::Acquire) == PHASE_DONE,
+        "payload secondary completion timeout",
+    );
+    #[cfg(feature = "machine-events")]
+    for local in &LOCALS {
+        assert_eq!(local.phase.load(Ordering::Acquire), PHASE_DONE);
+        // SAFETY: INV-RUNQUEUE: acquired quiescence, immutable reports, no next admission.
+        let state = unsafe { &*local.state.get() };
+        for task in &state.tasks {
+            const REPORT_CHUNK_WORDS: usize = 64;
+            for (chunk, words) in task.report[..task.report_len]
+                .chunks(REPORT_CHUNK_WORDS)
+                .enumerate()
+            {
+                event!(
+                    "{{\"event\":\"user-report\",\"id\":{},\"offset\":{},\"words\":{:?}}}",
+                    task.id,
+                    chunk * REPORT_CHUNK_WORDS,
+                    words
+                );
+            }
+            event!(
+                "{{\"event\":\"user-result\",\"id\":{},\"state\":{},\"exit\":{},\"fault\":{},\"slices\":{},\"length\":{},\"native_attempts\":{}}}",
+                task.id,
+                task.state,
+                task.context.gpr[0],
+                task.fault_class,
+                task.slices,
+                task.report_len,
+                task.observations.attempts()
+            );
+        }
+    }
+    drop(spaces);
+    for frame in frames {
+        p.release(frame);
+    }
+    assert_eq!(p.available(), before, "payload frame leak");
+    assert!(
+        RUNNING_OWNER
+            .iter()
+            .all(|owner| owner.load(Ordering::Acquire) == NO_CPU)
+    );
+    SESSION.store(false, Ordering::Release);
 }

@@ -19,3 +19,5 @@ Contiguous allocation can fail under fragmentation despite a positive free count
 ## Multicore retirement
 
 Physical/Frame ownership cannot be transferred or shared; affinity checks enforce CPU0 allocation and PTE mutation. This is the present workload boundary, not a permanent allocation policy. Existing heap metadata locking supports ordinary code on both CPUs. New mappings fail while a retirement is pending. A forgotten Retirement guard retains its charge; release rejects it even after the PTE is cleared. Table locks are released before waiting. Timeout/failure is fatal and never allows reuse. The [SMP contract](smp.md) defines publication, reader assumptions and identity-alias limits.
+
+The [Phase 2 image contract](routing.md) extends private stacks to four pages and retains bounded RX payload pages in the same borrowed/charged UserSpace lifetime. Firmware or user input cannot choose an unchecked physical image address; construction validates allocation/page extents before publication.

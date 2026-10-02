@@ -27,6 +27,8 @@ check may be optimized away; the proof comes from invariants, not a profile name
 Progress, wakeups, lock release and lifetime must not depend on logging. Fault and
 cancellation outcomes remain consistent. Fully stripped production builds cannot provide
 dynamic measurements that were not collected: report unavailable rather than zero.
-Offline manifests still describe declared dependencies. No runtime profile exists yet.
+Offline manifests still describe declared dependencies. The bounded EL0 routing profile is implemented; it is not a global security or service policy.
+
+The [Phase 2 profile matrix](../kernel/routing.md) distinguishes PROD evidence images from stripped deployment-shaped images; no DEV switching or A/B instrumentation is required for correctness.
 
 [Russian translation](../../translations/ru/docs/architecture/execution-profiles.md)

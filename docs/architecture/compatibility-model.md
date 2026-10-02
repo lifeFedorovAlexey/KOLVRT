@@ -142,4 +142,6 @@ Neither implements a production registry, deadline clock, archived installation,
 error transport, callback/device quiescence or runtime unloading. Those require integration
 checks before claiming implementation support.
 
+The later [Phase 2 implementation](../kernel/routing.md) provides optional EL0 adapters for a concrete own-task observation workload. The earlier Phase 0 description is historical; it does not mean kernel builds are still absent.
+
 [Russian translation](../../translations/ru/docs/architecture/compatibility-model.md)

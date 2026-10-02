@@ -317,7 +317,8 @@ pub const USER_BASE: usize = 0x2000_0000;
 pub const USER_CODE: usize = USER_BASE;
 pub const USER_DATA: usize = USER_BASE + PAGE_SIZE;
 pub const USER_GUARD: usize = USER_BASE + 2 * PAGE_SIZE;
-pub const USER_STACK_TOP: usize = USER_BASE + 4 * PAGE_SIZE;
+const USER_STACK_PAGES: usize = config::USER_STACK_PAGES;
+pub const USER_STACK_TOP: usize = USER_BASE + (USER_STACK_INDEX + USER_STACK_PAGES) * PAGE_SIZE;
 const USER_STACK_INDEX: usize = 3;
 const USER_ALIAS_INDEX: usize = 16;
 const USER_ROOT_PAGE: usize = 0;
@@ -326,7 +327,7 @@ const USER_LEAVES_PAGE: usize = 2;
 const USER_CODE_PAGE: usize = 3;
 const USER_DATA_PAGE: usize = 4;
 const USER_STACK_PAGE: usize = 5;
-pub const USER_SPACE_PAGES: usize = USER_STACK_PAGE + 1;
+pub const USER_SPACE_PAGES: usize = USER_STACK_PAGE + USER_STACK_PAGES;
 static USER_CHARGES: [AtomicUsize; config::USER_PROCESSES] =
     [const { AtomicUsize::new(0) }; config::USER_PROCESSES];
 pub static USER_EXECUTION_ACTIVE: AtomicUsize = AtomicUsize::new(0);
@@ -338,10 +339,33 @@ pub struct UserSpace<'a> {
 }
 impl<'a> UserSpace<'a> {
     pub fn new(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
+        Self::image(frame, id, image, USER_CODE)
+    }
+    #[cfg(feature = "boot-payload")]
+    pub fn payload(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
+        Self::image(frame, id, image, config::USER_PAYLOAD_BASE)
+    }
+    fn image(frame: &'a Frame, id: usize, image: &[u8], entry: usize) -> Self {
         crate::percpu::primary_only();
         assert_eq!(USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
-        assert_eq!(frame.count, USER_SPACE_PAGES);
-        assert!(id < USER_CHARGES.len() && !image.is_empty() && image.len() <= PAGE_SIZE);
+        let payload = entry == config::USER_PAYLOAD_BASE;
+        let image_pages = image.len().div_ceil(PAGE_SIZE);
+        assert_eq!(
+            frame.count,
+            USER_SPACE_PAGES + if payload { image_pages } else { 0 }
+        );
+        assert!(id < USER_CHARGES.len() && !image.is_empty());
+        assert!(if payload {
+            image.len() <= config::USER_PAYLOAD_BYTES
+        } else {
+            image.len() <= PAGE_SIZE
+        });
+        let code_page = if payload {
+            USER_SPACE_PAGES
+        } else {
+            USER_CODE_PAGE
+        };
+        let code_index = (entry - USER_BASE) / PAGE_SIZE;
         assert_eq!(
             USER_CHARGES[id].compare_exchange(
                 0,
@@ -352,7 +376,7 @@ impl<'a> UserSpace<'a> {
             Ok(0)
         );
         let native = TABLES.lock();
-        // SAFETY: INV-USER-SPACE: exclusive zeroed contiguous allocation, six checked pages;
+        // SAFETY: INV-USER-SPACE: exclusive zeroed contiguous allocation, checked extents;
         // private page-table storage, no published root or user execution during construction.
         unsafe {
             let root = &mut *((frame.address + USER_ROOT_PAGE * PAGE_SIZE) as *mut Table);
@@ -364,28 +388,32 @@ impl<'a> UserSpace<'a> {
             assert_eq!(devices.0[USER_BASE >> BLOCK_SHIFT], 0);
             devices.0[USER_BASE >> BLOCK_SHIFT] =
                 (leaves as *mut Table as u64) | page::TABLE_OR_PAGE;
-            leaves.0[0] = page::user_descriptor(
-                (frame.address + USER_CODE_PAGE * PAGE_SIZE) as u64,
-                false,
-                true,
-            )
-            .unwrap();
+            for offset in 0..image_pages {
+                leaves.0[code_index + offset] = page::user_descriptor(
+                    (frame.address + (code_page + offset) * PAGE_SIZE) as u64,
+                    false,
+                    true,
+                )
+                .unwrap();
+            }
             leaves.0[1] = page::user_descriptor(
                 (frame.address + USER_DATA_PAGE * PAGE_SIZE) as u64,
                 true,
                 false,
             )
             .unwrap();
-            leaves.0[USER_STACK_INDEX] = page::user_descriptor(
-                (frame.address + USER_STACK_PAGE * PAGE_SIZE) as u64,
-                true,
-                false,
-            )
-            .unwrap();
+            for offset in 0..USER_STACK_PAGES {
+                leaves.0[USER_STACK_INDEX + offset] = page::user_descriptor(
+                    (frame.address + (USER_STACK_PAGE + offset) * PAGE_SIZE) as u64,
+                    true,
+                    false,
+                )
+                .unwrap();
+            }
             leaves.0[USER_ALIAS_INDEX + id] = leaves.0[1];
             core::ptr::copy_nonoverlapping(
                 image.as_ptr(),
-                (frame.address + USER_CODE_PAGE * PAGE_SIZE) as *mut u8,
+                (frame.address + code_page * PAGE_SIZE) as *mut u8,
                 image.len(),
             );
         }

@@ -19,6 +19,7 @@ fn native_dependency_direction_and_negative_control() {
             "--target",
             "aarch64-unknown-none",
             "--no-default-features",
+            "--all-features",
             "--edges",
             "normal,build",
             "--prefix",

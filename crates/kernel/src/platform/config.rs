@@ -12,3 +12,7 @@ pub const PHYSICAL_TIMER_IRQ: u32 = 30;
 // First EL0 foundation workload: fixed affinity, four independent processes per CPU.
 pub const USER_PROCESSES_PER_CPU: usize = 4;
 pub const USER_PROCESSES: usize = ACTIVE_CPUS * USER_PROCESSES_PER_CPU;
+// Static image/stack budgets for the pinned boot supervisor, not native ABI limits.
+pub const USER_PAYLOAD_BASE: usize = 0x2004_0000;
+pub const USER_PAYLOAD_BYTES: usize = 128 * 1024;
+pub const USER_STACK_PAGES: usize = 4;
