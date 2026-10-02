@@ -154,8 +154,8 @@
         "translation_sha256": "626b0db007ef5531de54222106bc3ed760a98a4909c9d63378698eb50417879d"
       },
       "docs/architecture/production-scheduler.md": {
-        "source_sha256": "b5b2370a63a631301057c77134b7d6ffe627933100396be5832d6a7e5c7d97c1",
-        "translation_sha256": "3cb52e2f404e0812d1de3fa6063b6837f837d3815c96c56c3079ec73748e1ee8"
+        "source_sha256": "85f553423d6b11b61dc1c72ecbe75ce6c452a2332e6230d339fc9078157c952b",
+        "translation_sha256": "50b793dc1fceac179e2da9d3805c0c38bf16590d82bb7d5afb1a29ace3524d9c"
       },
       "docs/architecture/routing-model.md": {
         "source_sha256": "dea9bbbc59fac789bb5a93774f39c22e5cdc6112960b2e2db16d1004d7f53116",

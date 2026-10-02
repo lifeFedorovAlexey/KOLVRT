@@ -1,8 +1,8 @@
 # Production scheduling и lifecycle запросов: следующий порядок реализации
 
 Document status: DESIGN BASELINE
-Document scope: последовательность реализации по указанию пользователя; production scheduler, blocking и IPC этим документом не реализованы.
-Status reference: [Текущий scheduler foundation](../kernel/scheduler.md)
+Evidence scope: последовательность реализации по указанию пользователя; этот документ не реализует промышленное планирование, блокирующее ожидание или IPC.
+Current reference: [Текущая основа планировщика](../kernel/scheduler.md)
 
 ## Scope и существующий механизм
 
@@ -11,6 +11,20 @@ Status reference: [Текущий scheduler foundation](../kernel/scheduler.md)
 После появления следующего production-механизма сохранить текущий synchronous dispatcher как bootstrap/test execution path. Не чинить его скрытым dispatch timeout, завершением каждого persistent service по фиксированному lifetime или трактовкой timeout как quiescence. Свидетельства существующего bootstrap path сохраняют отдельный scope.
 
 ## Упорядоченные условия реализации
+
+Первая правка кода добавляет `Registry::step()`: каждый закреплённый CPU возвращает
+управление после одного кванта таймера или terminal event. Живые процессы остаются
+admitted; architectural context, учёт slices, native observations и diagnostic
+report stream сохраняются до следующего шага. Сохранённый round-robin cursor даёт
+peers исполнение между шагами. Возврат не публикует завершение процесса и не
+разрешает reclamation. Синхронный `dispatch()` остаётся bootstrap completion driver.
+
+Исполняемая проверка `process_quantum_return_and_peer_progress` запускает на каждом
+CPU бесконечный EL0-цикл без cooperative yield рядом с завершающимся peer. Шаги
+возвращают управление, пока циклы живы, запрещают их reclamation, сохраняют прогресс
+цикла в регистрах и позволяют peers завершиться раньше явно запрошенного CPU
+slice budget циклов. Это основа preemption: rendezvous/barrier двух CPU пока
+сохранён; BLOCKED state, event loop и wall-time deadline protocol ещё отсутствуют.
 
 | Порядок | Механизм                        | Граница acceptance и координация                                                                                                                                                                                                                      |
 | ------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

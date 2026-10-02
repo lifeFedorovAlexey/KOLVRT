@@ -52,6 +52,9 @@ static NATIVE_ROOT: AtomicU64 = AtomicU64::new(0);
 static START: AtomicBool = AtomicBool::new(false);
 static ARRIVED: AtomicUsize = AtomicUsize::new(0);
 static SESSION: AtomicBool = AtomicBool::new(false);
+static STEP: AtomicBool = AtomicBool::new(false);
+static CURSOR: [AtomicUsize; platform_config::ACTIVE_CPUS] =
+    [const { AtomicUsize::new(NO_TASK) }; platform_config::ACTIVE_CPUS];
 static RUNNING_OWNER: [AtomicUsize; config::TOTAL_TASKS] =
     [const { AtomicUsize::new(NO_CPU) }; config::TOTAL_TASKS];
 /// Persistent native dispatch mechanism. Per-process identity is independent of
@@ -59,6 +62,18 @@ static RUNNING_OWNER: [AtomicUsize; config::TOTAL_TASKS] =
 pub(crate) fn dispatch(
     tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
+) -> Completed {
+    dispatch_inner(tasks, timeout, false)
+}
+/// Return after at most one timer quantum/terminal event per CPU, without
+/// requiring processes to terminate. This still retains the two-CPU barrier.
+pub(crate) fn step(tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
+    dispatch_inner(tasks, None, true)
+}
+fn dispatch_inner(
+    tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS],
+    timeout: Option<time::Duration>,
+    step: bool,
 ) -> Completed {
     percpu::primary_only();
     assert!(cpu::irq_masked(), "scheduler coordinator IRQ contract");
@@ -73,10 +88,14 @@ pub(crate) fn dispatch(
         .checked_add(1)
         .expect("scheduler generation exhausted");
     START.store(false, Ordering::Release);
+    STEP.store(step, Ordering::Release);
     ARRIVED.store(0, Ordering::Release);
     NATIVE_ROOT.store(memory::table_root(), Ordering::Release);
     for (owner, local) in LOCALS.iter().enumerate() {
         let mut state = State::ZERO;
+        if step {
+            state.current = CURSOR[owner].load(Ordering::Acquire);
+        }
         state.deadline = timeout.map(time::deadline_after);
         for (index, task) in state.tasks.iter_mut().enumerate() {
             let id = owner * TASKS + index;
@@ -91,6 +110,20 @@ pub(crate) fn dispatch(
                     admitted.slice_budget,
                 );
                 task.bind_queue(generation);
+                task.slices = admitted.slices;
+                task.observations = admitted.observations;
+                #[cfg(feature = "machine-events")]
+                if local.completed() {
+                    local.inspect(local.generation(), |previous| {
+                        let old = &previous.tasks[index];
+                        if old.process_generation() == admitted.identity.generation()
+                            && old.id() == id
+                        {
+                            task.report.copy_from_slice(&old.report);
+                            task.report_len = old.report_len;
+                        }
+                    });
+                }
             }
         }
         local.prepare(generation, state);
@@ -299,10 +332,10 @@ fn run_local() {
     memory::USER_EXECUTION_ACTIVE.fetch_sub(1, Ordering::AcqRel);
     let quiescent = cpu::active_root() == NATIVE_ROOT.load(Ordering::Acquire)
         && local.with(generation, |state| {
-            state
-                .tasks
-                .iter()
-                .all(|task| task.state != CONTEXT_READY && task.state != CONTEXT_RUNNING)
+            state.tasks.iter().all(|task| {
+                task.state != CONTEXT_RUNNING
+                    && (STEP.load(Ordering::Acquire) || task.state != CONTEXT_READY)
+            })
         })
         && RUNNING_OWNER[percpu::id() * TASKS..(percpu::id() + 1) * TASKS]
             .iter()
@@ -376,6 +409,16 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
             }
         }
         release_process(state.tasks[current].id());
+        if STEP.load(Ordering::Acquire) {
+            CURSOR[percpu::id()].store(current, Ordering::Release);
+            cpu::timer_stop();
+            // SAFETY: INV-USER-RETIRE: saved READY contexts remain owned by the
+            // Registry; native root/TLBI precede returning a nonterminal step.
+            unsafe {
+                cpu::activate_root(NATIVE_ROOT.load(Ordering::Acquire));
+            }
+            return local.resume_sp.load(Ordering::Acquire);
+        }
         if let Some(next) = choose(state, generation) {
             acquire_process(state.tasks[next].id());
             *frame = state.tasks[next].context;

@@ -1,6 +1,6 @@
 use super::{NO_TASK, TASKS};
 use crate::cpu::context::Context;
-pub(super) const CONTEXT_READY: usize = 0;
+pub(crate) const CONTEXT_READY: usize = 0;
 pub(super) const CONTEXT_RUNNING: usize = 1;
 pub(crate) const CONTEXT_EXITED: usize = 2;
 pub(crate) const CONTEXT_FAULTED: usize = 3;
@@ -16,6 +16,8 @@ pub(crate) struct Admission<'a> {
     pub space: &'a crate::memory::OwnedUserSpace,
     pub context: Context,
     pub slice_budget: Option<usize>,
+    pub slices: usize,
+    pub observations: crate::execution::Observations,
 }
 #[derive(Clone, Copy)]
 pub(crate) struct Task {
@@ -120,6 +122,7 @@ impl Task {
             context: self.context,
             state: self.state,
             slices: self.slices,
+            observations: self.observations,
             fault_class: self.fault_class,
             id: self.id(),
             process_generation: self.process_generation(),
@@ -137,6 +140,7 @@ pub(crate) struct TaskResult {
     pub context: Context,
     pub state: usize,
     pub slices: usize,
+    pub observations: crate::execution::Observations,
     pub fault_class: u64,
     pub id: usize,
     pub process_generation: u64,
@@ -152,6 +156,7 @@ impl TaskResult {
         context: Context::ZERO,
         state: CONTEXT_VACANT,
         slices: 0,
+        observations: crate::execution::Observations::ZERO,
         fault_class: 0,
         id: 0,
         process_generation: 0,

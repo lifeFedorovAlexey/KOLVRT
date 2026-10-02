@@ -1,8 +1,8 @@
 # Production scheduling and request lifecycle: next implementation order
 
 Document status: DESIGN BASELINE
-Document scope: user-directed implementation sequence; production scheduler, blocking and IPC are not implemented by this document.
-Status reference: [Current scheduler foundation](../kernel/scheduler.md)
+Evidence scope: user-directed implementation sequence; this document does not implement production scheduling, blocking, or IPC.
+Current reference: [Current scheduler foundation](../kernel/scheduler.md)
 
 ## Scope and existing mechanism
 
@@ -11,6 +11,20 @@ The user selected this sequence on 2026-10-03 for [native foundation #37](https:
 Keep the current synchronous dispatcher as a bootstrap/test execution path after introducing the next production mechanism. Do not repair it by adding a hidden dispatch timeout, terminating every persistent service after a fixed lifetime, or treating timeout as quiescence. Evidence for the existing bootstrap path remains separately scoped.
 
 ## Ordered implementation gates
+
+The first incremental code change adds `Registry::step()`: each fixed CPU returns
+after one timer quantum or terminal event. Surviving processes remain admitted;
+their architectural context, slice accounting, native observations and diagnostic
+report stream survive the next step. A retained round-robin cursor gives peers
+execution across steps. Returning does not publish process completion or permit
+reclamation. The synchronous `dispatch()` remains the bootstrap completion driver.
+
+The executable `process_quantum_return_and_peer_progress` check runs a
+noncooperative EL0 loop beside a finishing peer on each CPU. Steps return while
+the loops remain alive, reject their reclamation, preserve register-backed loop
+progress, and let peers finish before the loops exhaust explicitly requested CPU
+slice budgets. This is a preemption foundation: the two-CPU rendezvous/barrier
+remains, with no BLOCKED state, event loop or wall-time deadline protocol yet.
 
 | Order | Mechanism                         | Acceptance boundary and coordination                                                                                                                                                                                                                       |
 | ----- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

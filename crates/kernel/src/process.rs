@@ -32,6 +32,8 @@ struct Object {
     space: memory::OwnedUserSpace,
     context: Context,
     slice_limit: Option<usize>,
+    slices: usize,
+    observations: crate::execution::Observations,
 }
 /// Mutable CPU0-owned value, not global shared storage. Owned frames make it
 /// non-Send/non-Sync. Callers retain it independently of dispatch/workload lifetime.
@@ -166,6 +168,8 @@ impl Registry {
                 space: space.take().unwrap(),
                 context,
                 slice_limit: spec.slice_limit,
+                slices: 0,
+                observations: crate::execution::Observations::ZERO,
             });
             self.table.prepared(id).expect("transaction state");
             Ok(())
@@ -216,6 +220,18 @@ impl Registry {
     /// Internal synchronous completion driver, not a public wait ABI. No default
     /// workload deadline. The future service loop may schedule another dispatch.
     pub fn dispatch(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {
+        self.dispatch_inner(timeout, false)
+    }
+    /// Preemptible scheduling step: surviving processes stay Admitted and retain
+    /// their full context/accounting. No deadline is used to make dispatch return.
+    pub fn step(&mut self) -> scheduler::Completed {
+        self.dispatch_inner(None, true)
+    }
+    fn dispatch_inner(
+        &mut self,
+        timeout: Option<time::Duration>,
+        step: bool,
+    ) -> scheduler::Completed {
         context_contract().expect("process dispatch owner");
         let tasks = core::array::from_fn(|slot| {
             let object = self.objects[slot].as_ref()?;
@@ -227,9 +243,15 @@ impl Registry {
                 space: &object.space,
                 context: object.context,
                 slice_budget: object.slice_limit,
+                slices: object.slices,
+                observations: object.observations,
             })
         });
-        let completed = scheduler::dispatch(&tasks, timeout);
+        let completed = if step {
+            scheduler::step(&tasks)
+        } else {
+            scheduler::dispatch(&tasks, timeout)
+        };
         for result in completed.tasks.iter().filter(|r| r.process_generation != 0) {
             let object = self.objects[result.id]
                 .as_mut()
@@ -239,6 +261,13 @@ impl Registry {
                 result.process_generation,
                 "stale scheduler process completion"
             );
+            object.context = result.context;
+            object.slices = result.slices;
+            object.observations = result.observations;
+            if step && result.state == scheduler::task::CONTEXT_READY {
+                assert!(scheduler::detached(object.id));
+                continue;
+            }
             let reason = match result.state {
                 CONTEXT_EXITED => Reason::Exited(result.context.gpr[0]),
                 CONTEXT_FAULTED => Reason::Faulted {

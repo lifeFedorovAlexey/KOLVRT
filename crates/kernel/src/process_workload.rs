@@ -7,6 +7,8 @@ const NEW_EXIT_CODE: u64 = EXIT_CODE + 1;
 const MODE_EXIT: u64 = 0;
 const MODE_FAULT: u64 = 1;
 const MODE_DENIED_CREATE: u64 = 2;
+const MODE_SPIN: u64 = 3;
+const SPIN_BUDGET: usize = 8;
 const TIMER_SLICES: u64 = 1;
 const ENTRY_ARGUMENTS: usize = 5;
 const STRESS_CYCLES: usize = 32;
@@ -292,8 +294,120 @@ pub fn exercise(
         stress &= registry.live() == 0 && p.available() == before;
     }
     report("process_bounded_stress", stress);
+    quantum_progress(p, registry, &mut report);
     report(
         "process_resource_reclamation",
         registry.live() == 0 && p.available() == before,
     );
+}
+
+fn quantum_progress(
+    p: &mut memory::Physical,
+    registry: &mut Registry,
+    report: &mut impl FnMut(&str, bool),
+) {
+    let before = p.available();
+    let ids: [ProcessId; config::ACTIVE_CPUS * 2] = core::array::from_fn(|index| {
+        let spinning = index % 2 == 0;
+        let mut definition = spec(
+            index / 2,
+            if spinning { MODE_SPIN } else { MODE_EXIT },
+            EXIT_CODE + index as u64,
+        );
+        if spinning {
+            definition.slice_limit = Some(SPIN_BUDGET);
+            definition.context.gpr[19] = EXIT_CODE;
+            definition.context.simd = core::array::from_fn(|register| {
+                [EXIT_CODE + register as u64, !(EXIT_CODE + register as u64)]
+            });
+            definition.context.fpcr = 1 << 22;
+            definition.context.fpsr = 1;
+            definition.context.tpidr = EXIT_CODE + index as u64;
+        }
+        let id = create(registry, p, definition);
+        registry.start(id).unwrap();
+        id
+    });
+    let first = registry.step();
+    let mut passed = first.owners_released;
+    passed &= quantum_context(&first, &ids, registry);
+    let mut counters = [0_u64; config::ACTIVE_CPUS];
+    for (owner, counter) in counters.iter_mut().enumerate() {
+        let id = ids[owner * 2];
+        passed &= registry.state(id) == Ok(State::Admitted)
+            && registry.completion(id) == Err(Error::Transition)
+            && registry.reclaim(p, id) == Err(Error::Transition);
+        assert!(crate::scheduler::detached(id));
+        // SAFETY: INV-USER-RETIRE: step restored native roots and all writers are
+        // quiescent; the registry still retains the private space across steps.
+        *counter = unsafe {
+            core::ptr::read_volatile((registry.data_address(id).unwrap() + 8) as *const u64)
+        };
+        passed &= *counter > 0;
+    }
+    let mut peer_progress = [false; config::ACTIVE_CPUS];
+    for _ in 0..SPIN_BUDGET * 3 {
+        let result = registry.step();
+        passed &= result.owners_released;
+        passed &= quantum_context(&result, &ids, registry);
+        for owner in 0..config::ACTIVE_CPUS {
+            let spinner = ids[owner * 2];
+            let peer = ids[owner * 2 + 1];
+            if registry.state(spinner) == Ok(State::Admitted) && registry.completion(peer).is_ok() {
+                peer_progress[owner] = true;
+            }
+        }
+        if ids.iter().all(|id| registry.completion(*id).is_ok()) {
+            break;
+        }
+    }
+    for (index, id) in ids.into_iter().enumerate() {
+        let expected = if index % 2 == 0 {
+            Reason::BudgetExpired
+        } else {
+            Reason::Exited(EXIT_CODE + index as u64)
+        };
+        passed &= registry.completion(id).is_ok_and(|c| c.reason == expected);
+        passed &= tag(registry, id) == EXIT_CODE + index as u64;
+        if index % 2 == 0 {
+            // SAFETY: INV-USER-RETIRE: terminal retained space, all CPU writers
+            // quiescent; this read ends before reclamation below.
+            let counter = unsafe {
+                core::ptr::read_volatile((registry.data_address(id).unwrap() + 8) as *const u64)
+            };
+            passed &= counter > counters[index / 2];
+        }
+        registry.reclaim(p, id).unwrap();
+    }
+    report(
+        "process_quantum_return_and_peer_progress",
+        passed
+            && peer_progress.into_iter().all(|progress| progress)
+            && registry.live() == 0
+            && p.available() == before,
+    );
+}
+
+fn quantum_context(
+    result: &crate::scheduler::Completed,
+    ids: &[ProcessId],
+    registry: &Registry,
+) -> bool {
+    ids.iter().step_by(2).all(|id| {
+        let task = &result.tasks[id.slot()];
+        // CPUs may finish in different rounds. A previously completed process
+        // is intentionally absent from subsequent admissions and snapshots.
+        if task.process_generation == 0 {
+            return registry.completion(*id).is_ok();
+        }
+        let context = &task.context;
+        context.gpr[19] == EXIT_CODE
+            && context.simd.iter().enumerate().all(|(register, value)| {
+                *value == [EXIT_CODE + register as u64, !(EXIT_CODE + register as u64)]
+            })
+            && context.fpcr == 1 << 22
+            && context.fpsr == 1
+            && context.tpidr == context.gpr[20]
+            && context.sp == memory::USER_STACK_TOP as u64
+    })
 }

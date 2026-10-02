@@ -216,6 +216,7 @@ const TESTS: &[&str] = &[
     "process_authority_boundary",
     "process_sparse_affinity",
     "process_bounded_stress",
+    "process_quantum_return_and_peer_progress",
     "process_resource_reclamation",
 ];
 fn main() {

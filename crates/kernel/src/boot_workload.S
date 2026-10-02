@@ -86,6 +86,7 @@ user_image_end:
 .equ LIFECYCLE_EXIT, 0
 .equ LIFECYCLE_FAULT, 1
 .equ LIFECYCLE_CREATE_DENIED, 2
+.equ LIFECYCLE_SPIN, 3
 .equ LIFECYCLE_UNSUPPORTED_CREATE, 0x60
 .global lifecycle_image_start,lifecycle_image_end
 lifecycle_image_start:
@@ -95,6 +96,8 @@ lifecycle_image_start:
  mov x23,x3
  mov x24,x4
  str x20,[x21]
+ cmp x22,#LIFECYCLE_SPIN
+ b.eq 11f
 8:
  svc #USER_SLICES_TRAP
  cmp x0,x23
@@ -112,4 +115,8 @@ lifecycle_image_start:
 10:
  svc #LIFECYCLE_UNSUPPORTED_CREATE
  b 8b
+11:
+ add x25,x25,#1
+ str x25,[x21,#8]
+ b 11b
 lifecycle_image_end:
