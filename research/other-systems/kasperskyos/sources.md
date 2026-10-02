@@ -31,6 +31,14 @@ Access date for all entries: 2026-10-02. URLs were read through web retrieval; n
 
 ## Claim locations and limitations
 
+Closure review on 2026-10-02 reread K02–K06, K07 policy pages, K08 DMA discussion,
+S02–S04, F03/F04, R01 and L01. CE 1.2 describes combined OCap and policy checks,
+including both IPC directions; it does not support an issuance-only interpretation.
+The seL4 configuration matrix now lists AArch64 integrity/availability and confidentiality,
+while excluding device translation and boot/debug features from that scope. No seL4
+proof transfers to KOLVRT. Redox's referenced book still describes namespaces/UID/GID
+and planned capability evolution. These are documentary observations, not reproduced builds.
+
 K01/K02 ground overview and privileged-mechanism facts; K03 grounds IPC checks; K04 grounds combined authority; K05/K06 ground interface generation; K07/K09 ground policy states; K08 grounds conditional DMA discussion. S01/S02 ground capabilities and IPC; S03/S04 ground proof limits. F01–F07 ground handles, driver hosts, IOMMU semantics and compatibility placement. R01 describes Redox's documented namespace/identity design and planned capability evolution, not completed universal object-capability enforcement. L01/L02 ground hooks and DMA address distinctions. C01 supplies a capability-research counterexample to equating capabilities with microkernel placement.
 
 ## Evidence unavailable

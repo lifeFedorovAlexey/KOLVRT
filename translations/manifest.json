@@ -258,12 +258,12 @@
         "translation_sha256": "323eb1128a38f8a4dabe7a83a54f62e9b81a25de91192551501761d1fccae378"
       },
       "docs/security/inspection-model.md": {
-        "source_sha256": "f677bdbb305f1c961cb0cfeb6cbf6c910a6a555fc20f2c8b80aefaecd449d82c",
-        "translation_sha256": "0ef10358f09d7dc4b243ec7ca9c1a2b5912dfa602de828a8f4bd36bff17c4c10"
+        "source_sha256": "bb44db2439b69841824d07d10e5ebe26e2a7bb6604b1f221d7c1556a6d154292",
+        "translation_sha256": "2f49d2945fe1d1551623f251740334cf997abb06b2cb9c27c6019c7689971896"
       },
       "docs/security/threat-model.md": {
-        "source_sha256": "c6f56637001740e10c49a83dfd1e60d63b5309c3e08a6c6e05200bcc851d6898",
-        "translation_sha256": "85554e946249cc09865a008712942e01ab27b5b73f640126d3b9aa69798c561a"
+        "source_sha256": "5bb8723a1d2bd076d8cc15534c656ef0bff9176e3e861f36f48242c3383ba2a0",
+        "translation_sha256": "df59d0e75f6955f187d2002103c1dac9e0c64c7ea48687a2609855fd4f0c3a90"
       },
       "docs/vision.md": {
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",
@@ -286,36 +286,36 @@
         "translation_sha256": "c344aeb4b3026f2b5191698e8002cc6cf1bfa7820b3064d5f83729f90ff2ebbb"
       },
       "research/other-systems/kasperskyos/kolvrt-lessons.md": {
-        "source_sha256": "96c427327f6e858f956dcfacd7b3dca5361ab6f263914912338b823fb153aa4f",
-        "translation_sha256": "152b7a1f58195fbb77beec64dfb270bca733e1037727f5e2546f7a806d2e01c1"
+        "source_sha256": "1d8eca9a330ee53c16f1803a4b6953eb36946ce3e94d6a9664d3c7616e46f4a8",
+        "translation_sha256": "07ea029bd3fe8fea8118b48e16b867572b0572071faac9d1b470e94eab806bfe"
       },
       "research/other-systems/kasperskyos/microkernel.md": {
         "source_sha256": "f49937dff9f7e5b2f557bcb4f27de0e11da1bae897d74f754104220e2b675617",
         "translation_sha256": "9bf8a035328cacdd6b3c0c62b90fbfab2ff182fe52546a3c7975c23cb8a539c6"
       },
       "research/other-systems/kasperskyos/overview.md": {
-        "source_sha256": "3ea3b0e09bc0bb0248a63df84a322d052261579a9287c2202bbb31d4d17ecaaa",
-        "translation_sha256": "e68ae7750ac102634fafa987b7cee59eddf9d3f553e1a4bfa9aa417485fff093"
+        "source_sha256": "d33d698d0152e5c856ec31c4beced604251afe8a33926226334b08085272942d",
+        "translation_sha256": "511aa64a97495a632f5a82406b8a00709617586a1db87af50c0ad50e2df680f7"
       },
       "research/other-systems/kasperskyos/performance-tradeoffs.md": {
         "source_sha256": "39b1a612dc9564b64ac5ecc26515326dcfbd8ee0dc49ccb9f0a151becc378791",
         "translation_sha256": "92b87a66195cdf6e1bbfbac0fd47e20fa2a534f8ff2cd0a6867de93d23510776"
       },
       "research/other-systems/kasperskyos/security-domains.md": {
-        "source_sha256": "5a780cb09a07791a38911ffc6d428b094a3d6f62b9d62f2cb69fe09cddfa6c7f",
-        "translation_sha256": "6cf2112b85be483e96d4fbd44648d17fb6936b386333e2b5e459caf6d6e29013"
+        "source_sha256": "b771ece4ec973a4f26d1f70f0fcf81bea8b942b5f65b0c3dd50d5815ce8856bd",
+        "translation_sha256": "c70b0414141db7e92726002d450bdabcf081bd1f2ec47421425993c7021e63e3"
       },
       "research/other-systems/kasperskyos/security-policy.md": {
         "source_sha256": "f076122801c8de7978ac4f4f96a8e764d7190dfa53269523436b825ee74c474f",
         "translation_sha256": "8fc00cfc6fb3a2ee27e01370e58939ca1736eabded0312e530316e5b33a6ac17"
       },
       "research/other-systems/kasperskyos/sources.md": {
-        "source_sha256": "308de06f8b9adf297e9262fd443efc81507f7087c49a17b44fa25eab15b789bf",
-        "translation_sha256": "c3b2dc85b3b9dae155b3872ea411865b03ee43bada7176580b0563be84d808c0"
+        "source_sha256": "ec553d5a2aaa2b8fda8eebec31f67a0c6566700d330557a786ff38f1b64f90e2",
+        "translation_sha256": "b749ed43448760f006db3c64b56bafbc967cd6bc1cf1b767cc62c2336f0ef64d"
       },
       "research/other-systems/kasperskyos/tcb.md": {
-        "source_sha256": "f01f40105516997179a67ebe4bc16071cd7f06872287904ae4a48e0d4ae73e93",
-        "translation_sha256": "caa6983ea97d8365c694e16f293a86c5d02efc527344521f789ddd6a47a7a9b1"
+        "source_sha256": "6b1b0ffcc89a9d2af7d551f0d5b9ee8bf594a10f11f3a8b6c0af9a2e104fc1f0",
+        "translation_sha256": "4cfaacb3bf592ca1906d1a76fadbd0458ddd953b622d8bd53f67d7de629a32b8"
       },
       "research/other-systems/kasperskyos/threat-model.md": {
         "source_sha256": "acb13e4d11297c5679ae0ff748b2b958ab14cad9ce46821304c807e315b2fcea",

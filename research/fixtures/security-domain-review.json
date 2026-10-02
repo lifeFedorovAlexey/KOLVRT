@@ -1,0 +1,42 @@
+{
+  "id": "proposed-wifi0-service",
+  "generation": 0,
+  "privilege": "EL0",
+  "evidence_state": "proposed",
+  "grants": [
+    {
+      "issuer": "proposed native device grant authority",
+      "right": "device-scoped-operation",
+      "object_scope": "wifi0 only; deny unrelated devices and arbitrary physical memory",
+      "effect_scope": "authorized device operations only; DMA containment requires target evidence",
+      "service_private": true
+    }
+  ],
+  "compat_dependencies": [],
+  "relationships": [
+    "caller attribution and scope must survive service mediation"
+  ],
+  "devices": [
+    {
+      "owner": "proposed-wifi0-service",
+      "dma_boundary": "unknown",
+      "evidence": "No device selected; no IOMMU or reset experiment executed"
+    }
+  ],
+  "tcb": [
+    {
+      "property": "device memory containment",
+      "trusted_component": "target-specific DMA boundary",
+      "assumption": "No containment claim before hardware restriction and topology/reset validation"
+    }
+  ],
+  "provenance": {
+    "source_revision": "b030592",
+    "dirty": false,
+    "scope": "Offline research example, not a runtime inspection snapshot or issued capability",
+    "references": [
+      "docs/security/threat-model.md",
+      "research/other-systems/kasperskyos/drivers.md"
+    ]
+  }
+}

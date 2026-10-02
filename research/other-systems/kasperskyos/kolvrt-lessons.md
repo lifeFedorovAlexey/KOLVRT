@@ -1,6 +1,6 @@
 # Research conclusions and decision register
 
-Status: documentary research completed; executable isolation, DMA and comparative performance remain unverified. [Sources](sources.md) and [comparison](../../../docs/architecture/security-reference-comparison.md) ground foreign-system facts. The [boundary ADR](../../../docs/architecture-decisions/0013-security-boundaries.md) records only the two user-confirmed rules.
+Status: documentary research completed; general service isolation, hostile DMA and comparative performance remain unverified. [Sources](sources.md) and [comparison](../../../docs/architecture/security-reference-comparison.md) ground foreign-system facts. The [boundary ADR](../../../docs/architecture-decisions/0013-security-boundaries.md) records the two user-confirmed rules and subsequent narrow capability/object admission reviews.
 
 ## Mechanism dispositions
 
@@ -25,12 +25,12 @@ Default Deny and Explicit Resource Authority strengthen existing authority/admis
 
 ## Remaining questions
 
-Choose caller attribution for multi-hop services, policy-change linearization, delegation scope and whether a file service enforces scope or receives independently constrained object grants. Determine concrete IOMMU/SMMU topology, reset completeness and unsupported-device rules. Define bounded inspector authentication/redaction and trusted recovery capacity. Quantify mixed-domain scheduling and policy cost. Fallback timing, STABLE support duration and archived compat admission remain the user's unresolved issue-review questions.
+Choose caller attribution for multi-hop services, policy-change linearization, delegation scope and whether a file service enforces scope or receives independently constrained object grants. Determine concrete IOMMU/SMMU topology, reset completeness and unsupported-device rules. Define bounded inspector authentication/redaction and trusted recovery capacity. Quantify mixed-domain scheduling and policy cost. The explicit fallback and finite-support policies now have reviewed dispositions in issues #3/#4/#8/#9. Concrete stable-contract support durations, authenticated archive admission and runtime policy integration remain open implementation questions.
 
 ## Later milestones, not automatically started
 
 1. Confirm current SMP evidence and preserve its ownership/retirement constraints.
-2. Separately authorize scheduler, EL0 address spaces and fault-safe user-copy for the first native slice.
+2. Extend the existing bounded scheduler/EL0 foundation through separately scoped dynamic process/loader and fault-safe user-copy tasks (#20–#22); static boot workers do not satisfy general service prerequisites.
 3. Implement bounded IPC, caller-local grants and admission/revocation tests including unknown effects.
 4. Demonstrate isolated service faults and scoped compat effective-authority cases.
 5. Select one concrete device; establish actual DMA/IRQ/MMIO restriction and reset before an isolated driver claim.
@@ -42,6 +42,25 @@ The research set covers microkernel, domains, IPC, IDL, policy/capability compos
 
 ## Validation outcome
 
-As of 2026-10-02: Prettier, Markdownlint (148 files), documents/translations and research database checks, cargo test --locked (50 tests), native state model reproduction and git diff --check passed. Full npm run check stopped at cargo fmt in concurrently modified crates/kernel/src/arch/aarch64/mod.rs and crates/kernel/src/memory/mod.rs. Separate lint stopped at Clippy dead_code for USER_ACCESS, NOT_GLOBAL and user_descriptor in kernel page.rs included by xtask/locking. Those kernel changes are outside this research and were not repaired here. This validates the working tree, not hardware isolation; new security scenarios were not executed. Research is uncommitted; full-check acceptance remains open.
+The closure baseline is b030592. Issue #12 completes documentary research and adds
+only offline artifact checks. The proposed EL1 boundary is CPU/MMU entry, protection,
+bounded scheduling/admission and required IRQ machinery; EL0 services, adapters and
+device drivers are separate proposed domains with native-scoped grants. An EL0 mediator
+remains in the TCB for effects it alone authorizes; hostile DMA needs a verified target
+boundary, or explicit trust/unsupported status. See [TCB](tcb.md), [drivers](drivers.md)
+and the [threat model](../../../docs/security/threat-model.md).
+
+LAW-009 clarification and privileged-necessity admission are recorded in ADR-0013;
+default denial/resource authority use LAW-009/LAW-013, and containment uses LAW-042.
+No extra law, universal policy engine, object hierarchy, immunity claim or score is added.
+Issues #5/#7/#11 supply the completed admission reviews. Outstanding implementation
+work follows dependencies: processes/loader/user-copy (#20–#22), handles/grants/domains
+(#23–#25), IPC (#26), supervisor/service (#27–#28), scoped driver/storage/filesystem
+(#29–#31), then measurements and reliability (#32–#36). Research does not start them.
+Open questions remain caller attribution, live policy linearization, device topology/reset,
+inspection authentication/redaction and recovery reserves; performance needs equivalent
+workloads and recorded configurations under [the experiment protocol](performance-tradeoffs.md).
+
+Closure validation on 2026-10-02: the complete repository check stages passed on an isolated b030592 snapshot plus this change: formatting (Prettier/Taplo/rustfmt), Markdownlint, workspace Clippy and tests, model evidence and research/document/translation validation. Two new offline security-artifact tests reject malformed domain records and unsupported execution claims. No new kernel, foreign-system or DMA experiment was run; future security scenarios remain not executed. Concurrent scheduler changes are excluded from this research commit.
 
 [Russian translation](../../../translations/ru/research/other-systems/kasperskyos/kolvrt-lessons.md)

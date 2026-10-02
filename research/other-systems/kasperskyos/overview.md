@@ -14,8 +14,8 @@ The CE overview describes a separation microkernel and security monitor. [CE 1.2
 
 ## Current KOLVRT scope
 
-HEAD is a9371e7b81d6d6befc725572d9b9c697e998a14c, with an uncommitted two-CPU foundation. The [SMP contract](../../../docs/kernel/smp.md) and [retained results](../../results/kernel-smp.json) describe 39 tests per profile and eight negative controls. These are existing evidence, not tests rerun by this research. Kernel runtime has no scheduler, EL0 domains, capability syscalls or DMA isolation. Standalone synthetic routing is not integrated kernel compatibility. All future security-domain claims below are requirements, not implemented isolation.
+Reviewed implementation baseline: b030592. The committed [SMP contract](../../../docs/kernel/smp.md), [EL0 foundation](../../../docs/kernel/el0.md) and [Phase 2 routing contract](../../../docs/kernel/routing.md) distinguish their retained execution evidence. Eight fixed-affinity EL0 workers run in private address spaces on two CPUs; the optional routing payload performs bounded synchronous own-task observations and EL0 adapter arithmetic. This research does not rerun those kernel matrices. General native IPC, caller-local capability syscalls, dynamic services, hostile-device DMA containment and general-purpose availability remain unimplemented or unverified. Existing bounded task-fault containment is not evidence for those larger guarantees.
 
-The two user-confirmed decisions are no effective-authority expansion through compat and privileged necessity for EL1 admission. Other placement and policy choices remain research recommendations; unresolved fallback/support questions are not decided here.
+The two user-confirmed decisions are no effective-authority expansion through compat and privileged necessity for EL1 admission. Other placement and policy choices remain research recommendations. Issues #3, #4, #8 and #9 now record bounded support, ABI publication and explicit fallback decisions; deployment-specific support promises and runtime enforcement still require evidence.
 
 [Russian translation](../../../translations/ru/research/other-systems/kasperskyos/overview.md)

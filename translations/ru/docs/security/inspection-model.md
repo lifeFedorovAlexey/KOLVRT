@@ -10,6 +10,13 @@
 
 ## Будущие проверки
 
+Проверка документов репозитория проверяет автономный
+[предлагаемый пример](../../../../research/fixtures/security-domain-review.json) по
+схеме домена и сохраняет спецификации сценариев явно неисполненными.
+Отрицательные примеры отклоняют отсутствующую область эффектов, неизвестные поля,
+избыточные права и неподдержанные метки DMA. Это проверка артефактов, а не действующая
+диагностика или тест устройства.
+
 Отвергать unauthorized inspection и неполные поколения; проверять redaction и bounded truncation при concurrent revocation. Обязательное обеспечение остаётся при исчезновении diagnostic consumers. Schema validation доказывает только shape/bounds, а не authority, minimum privilege и hardware containment. [Спецификации сценариев](../../../../research/fixtures/security-boundaries.json) отмечены как not executed.
 
 [Английский оригинал](../../../../docs/security/inspection-model.md)

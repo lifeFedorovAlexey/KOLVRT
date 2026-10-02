@@ -1,6 +1,6 @@
 # Security threat model
 
-Status: cross-subsystem design requirements, 2026-10-02. Canonical security scope beyond the first native slice. The [first-slice model](../architecture/threat-model.md) retains its narrower acceptance contract. Current SMP evidence does not establish EL0, driver or compat isolation. [Research scope](../../research/other-systems/kasperskyos/overview.md).
+Status: cross-subsystem design requirements, 2026-10-02. Canonical security scope beyond the first native slice. The [first-slice model](../architecture/threat-model.md) retains its narrower acceptance contract. SMP evidence alone does not establish service or DMA isolation. The bounded EL0 foundation and routing observations below establish only their recorded task/adapter scope. [Research scope](../../research/other-systems/kasperskyos/overview.md).
 
 ## Objectives and trust
 

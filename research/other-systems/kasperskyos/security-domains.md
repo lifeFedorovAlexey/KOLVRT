@@ -12,6 +12,6 @@ The caller identity must come from trusted entry/transport context, never a cons
 
 ## Review and tests
 
-Admission binds domain generation, rights, quotas and a pinned semantic route. State-dependent authorization needs synchronization with admission, not a stale cached verdict. CPU isolation cannot constrain hostile DMA without a separate hardware boundary. Model forged identity, cross-domain handle import, service crash, quota exhaustion and privilege reuse after restart. Runtime memory-fault evidence requires EL0, which is not implemented now. Creation/supervision cost and general-purpose deployment scale require future measurements.
+Admission binds domain generation, rights, quotas and a pinned semantic route. State-dependent authorization needs synchronization with admission, not a stale cached verdict. CPU isolation cannot constrain hostile DMA without a separate hardware boundary. Model forged identity, cross-domain handle import, service crash, quota exhaustion and privilege reuse after restart. The committed bounded EL0 worker/routing workloads provide task-fault evidence in their recorded scope; general service IPC, grant revocation and hostile DMA containment remain unverified. Creation/supervision cost and general-purpose deployment scale require future measurements.
 
 [Russian translation](../../../translations/ru/research/other-systems/kasperskyos/security-domains.md)

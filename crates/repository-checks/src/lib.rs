@@ -5,6 +5,7 @@ pub mod database;
 pub mod documents;
 pub mod exceptions;
 pub mod report;
+pub mod security_artifacts;
 
 use serde::de::{self, Deserialize, Deserializer, MapAccess, SeqAccess, Visitor};
 use serde_json::{Map, Value};

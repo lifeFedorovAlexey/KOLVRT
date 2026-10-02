@@ -10,6 +10,12 @@ A service-private capability inventory is not a caller authority inventory. Snap
 
 ## Future checks
 
+The repository document gate validates the offline
+[proposed example](../../research/fixtures/security-domain-review.json) against the
+domain schema, and keeps the scenario specifications explicitly not executed.
+Negative fixtures reject missing effect scope, unknown fields, excess grants and
+unsupported DMA labels. This is artifact validation, not live inspection or a device test.
+
 Reject unauthorized inspection and incomplete generations; test redaction and bounded truncation under concurrent revocation. Mandatory enforcement remains when diagnostic consumers disappear. Schema validation proves shape/bounds only, not authority, minimum privilege or hardware containment. [Scenario specifications](../../research/fixtures/security-boundaries.json) are marked not executed.
 
 [Russian translation](../../translations/ru/docs/security/inspection-model.md)
