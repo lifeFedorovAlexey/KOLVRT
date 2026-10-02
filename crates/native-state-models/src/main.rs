@@ -9,6 +9,9 @@ use std::{
     time::{Duration, Instant},
 };
 
+const WORKER_TIMEOUT: Duration = Duration::from_secs(5);
+const WORKER_POLL_INTERVAL: Duration = Duration::from_millis(2);
+
 fn packet() -> Vec<u8> {
     let mut b = vec![0; 44];
     b[2] = 1;
@@ -78,8 +81,8 @@ fn isolated(input: &[u8], mode: &str) -> Result<Vec<u8>, String> {
                 }
                 break;
             }
-            Ok(None) if start.elapsed() < Duration::from_secs(5) => {
-                std::thread::sleep(Duration::from_millis(2))
+            Ok(None) if start.elapsed() < WORKER_TIMEOUT => {
+                std::thread::sleep(WORKER_POLL_INTERVAL)
             }
             other => {
                 let _ = child.kill();
