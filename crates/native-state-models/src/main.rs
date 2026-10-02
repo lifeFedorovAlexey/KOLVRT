@@ -1,4 +1,5 @@
 #![forbid(unsafe_code)]
+use native_protocol_model::{HEADER, MAX_PAYLOAD, OPERATION_SEND, request_fields, response_fields};
 use native_state_models::{Mutation, binding, lifetime, startup, wait};
 use serde_json::{Value, json};
 use std::{
@@ -12,20 +13,28 @@ use std::{
 const WORKER_TIMEOUT: Duration = Duration::from_secs(5);
 const WORKER_POLL_INTERVAL: Duration = Duration::from_millis(2);
 
+const EXPERIMENT_PAYLOAD: &[u8] = b"ping";
+const EXPERIMENT_DEADLINE: u64 = 10;
+const WORKER_CRASH_EXIT: i32 = 71;
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
 fn packet() -> Vec<u8> {
-    let mut b = vec![0; 44];
-    b[2] = 1;
-    b[4] = 44;
-    b[8] = 1;
-    b[16] = 1;
-    b[24] = 10;
-    b[32] = 4;
-    b[40..].copy_from_slice(b"ping");
+    let size = HEADER + EXPERIMENT_PAYLOAD.len();
+    let mut b = vec![0; size];
+    b[request_fields::OPERATION].copy_from_slice(&OPERATION_SEND.to_le_bytes());
+    b[request_fields::TOTAL_SIZE].copy_from_slice(&(size as u32).to_le_bytes());
+    b[request_fields::HANDLE].copy_from_slice(&1u64.to_le_bytes());
+    b[request_fields::REQUEST_ID].copy_from_slice(&1u64.to_le_bytes());
+    b[request_fields::DEADLINE].copy_from_slice(&EXPERIMENT_DEADLINE.to_le_bytes());
+    b[request_fields::PAYLOAD_SIZE]
+        .copy_from_slice(&(EXPERIMENT_PAYLOAD.len() as u32).to_le_bytes());
+    b[HEADER..].copy_from_slice(EXPERIMENT_PAYLOAD);
     b
 }
 fn echo(input: &[u8]) -> Result<Vec<u8>, String> {
     let request = native_protocol_model::decode(input, 0).map_err(|e| format!("{e:?}"))?;
-    let mut frame = [0; native_protocol_model::RESPONSE_HEADER + 256];
+    let mut frame = [0; native_protocol_model::RESPONSE_HEADER + MAX_PAYLOAD];
     let len = native_protocol_model::encode_response(
         request.request_id,
         native_protocol_model::Status::Completed,
@@ -38,15 +47,15 @@ fn echo(input: &[u8]) -> Result<Vec<u8>, String> {
 fn worker(mode: &str) -> Result<(), String> {
     let mut data = Vec::new();
     std::io::stdin()
-        .take(297)
+        .take((HEADER + MAX_PAYLOAD + 1) as u64)
         .read_to_end(&mut data)
         .map_err(|e| e.to_string())?;
     let mut response = echo(&data)?;
     if mode == "--worker-crash" {
-        std::process::exit(71);
+        std::process::exit(WORKER_CRASH_EXIT);
     }
     if mode == "--worker-malformed" {
-        response[8] ^= 1;
+        response[response_fields::REQUEST_ID.start] ^= 1;
     }
     std::io::stdout()
         .write_all(&response)
@@ -63,7 +72,7 @@ fn isolated(input: &[u8], mode: &str) -> Result<Vec<u8>, String> {
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
-        command.creation_flags(0x08000000);
+        command.creation_flags(CREATE_NO_WINDOW);
     }
     let mut child = command.spawn().map_err(|e| e.to_string())?;
     if let Err(e) = child.stdin.take().unwrap().write_all(input) {
@@ -96,7 +105,7 @@ fn isolated(input: &[u8], mode: &str) -> Result<Vec<u8>, String> {
         .stdout
         .take()
         .unwrap()
-        .take(281)
+        .take((native_protocol_model::RESPONSE_HEADER + MAX_PAYLOAD + 1) as u64)
         .read_to_end(&mut response)
         .map_err(|e| e.to_string())?;
     native_protocol_model::decode_response(&response, request.request_id)

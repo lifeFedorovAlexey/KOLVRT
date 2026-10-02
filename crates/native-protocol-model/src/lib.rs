@@ -8,6 +8,30 @@ pub const SEND: u32 = 1;
 pub const TRANSFER: u32 = 2;
 pub const KNOWN_RIGHTS: u32 = SEND | TRANSFER;
 pub const RESPONSE_HEADER: usize = 24;
+pub const PROTOCOL_VERSION: u16 = 0;
+pub const OPERATION_SEND: u16 = 1;
+
+/// Byte ranges of the candidate little-endian wire format.
+pub mod request_fields {
+    use core::ops::Range;
+    pub const VERSION: Range<usize> = 0..2;
+    pub const OPERATION: Range<usize> = 2..4;
+    pub const TOTAL_SIZE: Range<usize> = 4..8;
+    pub const HANDLE: Range<usize> = 8..16;
+    pub const REQUEST_ID: Range<usize> = 16..24;
+    pub const DEADLINE: Range<usize> = 24..32;
+    pub const PAYLOAD_SIZE: Range<usize> = 32..36;
+    pub const RESERVED: Range<usize> = 36..40;
+}
+pub mod response_fields {
+    use core::ops::Range;
+    pub const VERSION: Range<usize> = 0..2;
+    pub const STATUS: Range<usize> = 2..4;
+    pub const TOTAL_SIZE: Range<usize> = 4..8;
+    pub const REQUEST_ID: Range<usize> = 8..16;
+    pub const PAYLOAD_SIZE: Range<usize> = 16..20;
+    pub const RESERVED: Range<usize> = 20..24;
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u16)]
@@ -36,10 +60,10 @@ pub fn encode_response(
         return Err(Error::Length);
     }
     output[..size].fill(0);
-    output[2..4].copy_from_slice(&(status as u16).to_le_bytes());
-    output[4..8].copy_from_slice(&(size as u32).to_le_bytes());
-    output[8..16].copy_from_slice(&id.to_le_bytes());
-    output[16..20].copy_from_slice(&(payload.len() as u32).to_le_bytes());
+    output[response_fields::STATUS].copy_from_slice(&(status as u16).to_le_bytes());
+    output[response_fields::TOTAL_SIZE].copy_from_slice(&(size as u32).to_le_bytes());
+    output[response_fields::REQUEST_ID].copy_from_slice(&id.to_le_bytes());
+    output[response_fields::PAYLOAD_SIZE].copy_from_slice(&(payload.len() as u32).to_le_bytes());
     output[RESPONSE_HEADER..size].copy_from_slice(payload);
     Ok(size)
 }
@@ -48,10 +72,10 @@ pub fn decode_response(bytes: &[u8], expected_id: u64) -> Result<(Status, &[u8])
     if bytes.len() < RESPONSE_HEADER || bytes.len() > RESPONSE_HEADER + MAX_PAYLOAD {
         return Err(Error::Length);
     }
-    if bytes[0..2] != [0, 0] {
+    if bytes[response_fields::VERSION] != PROTOCOL_VERSION.to_le_bytes() {
         return Err(Error::Version);
     }
-    let status = match u16::from_le_bytes(bytes[2..4].try_into().unwrap()) {
+    let status = match u16::from_le_bytes(bytes[response_fields::STATUS].try_into().unwrap()) {
         0 => Status::Completed,
         1 => Status::Invalid,
         2 => Status::Denied,
@@ -62,9 +86,10 @@ pub fn decode_response(bytes: &[u8], expected_id: u64) -> Result<(Status, &[u8])
         7 => Status::Unsupported,
         _ => return Err(Error::Operation),
     };
-    let total = u32::from_le_bytes(bytes[4..8].try_into().unwrap()) as usize;
-    let id = u64::from_le_bytes(bytes[8..16].try_into().unwrap());
-    let length = u32::from_le_bytes(bytes[16..20].try_into().unwrap()) as usize;
+    let total = u32::from_le_bytes(bytes[response_fields::TOTAL_SIZE].try_into().unwrap()) as usize;
+    let id = u64::from_le_bytes(bytes[response_fields::REQUEST_ID].try_into().unwrap());
+    let length =
+        u32::from_le_bytes(bytes[response_fields::PAYLOAD_SIZE].try_into().unwrap()) as usize;
     if total != bytes.len()
         || length != bytes.len() - RESPONSE_HEADER
         || (status != Status::Completed && length != 0)
@@ -74,7 +99,7 @@ pub fn decode_response(bytes: &[u8], expected_id: u64) -> Result<(Status, &[u8])
     if id != expected_id {
         return Err(Error::Stale);
     }
-    if bytes[20..24] != [0; 4] {
+    if bytes[response_fields::RESERVED] != [0; core::mem::size_of::<u32>()] {
         return Err(Error::Reserved);
     }
     Ok((status, &bytes[RESPONSE_HEADER..]))
@@ -112,30 +137,35 @@ pub fn decode(bytes: &[u8], now: u64) -> Result<Request, Error> {
     if bytes.len() < HEADER || bytes.len() > HEADER + MAX_PAYLOAD {
         return Err(Error::Length);
     }
-    let u16_at = |i| u16::from_le_bytes([bytes[i], bytes[i + 1]]);
-    let u32_at = |i| u32::from_le_bytes(bytes[i..i + 4].try_into().unwrap());
-    let u64_at = |i| u64::from_le_bytes(bytes[i..i + 8].try_into().unwrap());
-    if u16_at(0) != 0 {
+    let u16_at =
+        |field: core::ops::Range<usize>| u16::from_le_bytes(bytes[field].try_into().unwrap());
+    let u32_at =
+        |field: core::ops::Range<usize>| u32::from_le_bytes(bytes[field].try_into().unwrap());
+    let u64_at =
+        |field: core::ops::Range<usize>| u64::from_le_bytes(bytes[field].try_into().unwrap());
+    if u16_at(request_fields::VERSION) != PROTOCOL_VERSION {
         return Err(Error::Version);
     }
-    if u16_at(2) != 1 {
+    if u16_at(request_fields::OPERATION) != OPERATION_SEND {
         return Err(Error::Operation);
     }
-    if u32_at(4) as usize != bytes.len() || u32_at(32) as usize != bytes.len() - HEADER {
+    if u32_at(request_fields::TOTAL_SIZE) as usize != bytes.len()
+        || u32_at(request_fields::PAYLOAD_SIZE) as usize != bytes.len() - HEADER
+    {
         return Err(Error::Length);
     }
-    if u32_at(36) != 0 {
+    if u32_at(request_fields::RESERVED) != 0 {
         return Err(Error::Reserved);
     }
-    let deadline = u64_at(24);
+    let deadline = u64_at(request_fields::DEADLINE);
     if deadline <= now {
         return Err(Error::Deadline);
     }
     let mut payload = [0; MAX_PAYLOAD];
     payload[..bytes.len() - HEADER].copy_from_slice(&bytes[HEADER..]);
     Ok(Request {
-        handle: u64_at(8),
-        request_id: u64_at(16),
+        handle: u64_at(request_fields::HANDLE),
+        request_id: u64_at(request_fields::REQUEST_ID),
         deadline,
         length: bytes.len() - HEADER,
         payload,
@@ -158,7 +188,7 @@ pub fn next_generation(generation: u32) -> Result<u32, Error> {
     generation.checked_add(1).ok_or(Error::Exhausted)
 }
 pub fn handle(slot: u32, generation: u32) -> u64 {
-    (u64::from(generation) << 32) | u64::from(slot)
+    (u64::from(generation) << u32::BITS) | u64::from(slot)
 }
 pub fn resolve(token: u64, slot: u32, generation: u32, live: bool) -> Result<(), Error> {
     if !live || token != handle(slot, generation) {
@@ -171,24 +201,42 @@ pub fn resolve(token: u64, slot: u32, generation: u32, live: bool) -> Result<(),
 #[cfg(test)]
 mod tests {
     use super::*;
+    const TEST_PAYLOAD: &[u8; 4] = b"ping";
+    const TEST_DEADLINE: u64 = 10;
+    const TEST_REQUEST_ID: u64 = 9;
+    const STORAGE_POISON: u8 = 0xa5;
+    const CORRUPTION_BIT: u8 = 0x80;
     #[test]
     fn response_identity_and_poisoned_storage() {
-        let mut bytes = [0xa5; RESPONSE_HEADER + MAX_PAYLOAD];
-        let n = encode_response(9, Status::Completed, b"ok", &mut bytes).unwrap();
+        let mut bytes = [STORAGE_POISON; RESPONSE_HEADER + MAX_PAYLOAD];
+        let n = encode_response(TEST_REQUEST_ID, Status::Completed, b"ok", &mut bytes).unwrap();
         assert_eq!(
-            decode_response(&bytes[..n], 9),
+            decode_response(&bytes[..n], TEST_REQUEST_ID),
             Ok((Status::Completed, &b"ok"[..]))
         );
-        assert_eq!(decode_response(&bytes[..n], 10), Err(Error::Stale));
+        assert_eq!(
+            decode_response(&bytes[..n], TEST_REQUEST_ID + 1),
+            Err(Error::Stale)
+        );
         for end in 0..n {
-            assert!(decode_response(&bytes[..end], 9).is_err());
+            assert!(decode_response(&bytes[..end], TEST_REQUEST_ID).is_err());
         }
-        for offset in [0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 22, 23] {
+        for offset in (response_fields::VERSION.start..response_fields::TOTAL_SIZE.end)
+            .chain(response_fields::PAYLOAD_SIZE.start..response_fields::RESERVED.end)
+        {
             let mut broken = bytes;
-            broken[offset] ^= 0x80;
-            assert!(decode_response(&broken[..n], 9).is_err());
+            broken[offset] ^= CORRUPTION_BIT;
+            assert!(decode_response(&broken[..n], TEST_REQUEST_ID).is_err());
         }
-        assert!(encode_response(9, Status::EffectUnknown, b"false success", &mut bytes).is_err());
+        assert!(
+            encode_response(
+                TEST_REQUEST_ID,
+                Status::EffectUnknown,
+                b"false success",
+                &mut bytes
+            )
+            .is_err()
+        );
         for status in [
             Status::Invalid,
             Status::Denied,
@@ -198,25 +246,29 @@ mod tests {
             Status::Expired,
             Status::Unsupported,
         ] {
-            let n = encode_response(9, status, &[], &mut bytes).unwrap();
-            assert_eq!(decode_response(&bytes[..n], 9), Ok((status, &[][..])));
+            let n = encode_response(TEST_REQUEST_ID, status, &[], &mut bytes).unwrap();
+            assert_eq!(
+                decode_response(&bytes[..n], TEST_REQUEST_ID),
+                Ok((status, &[][..]))
+            );
         }
     }
-    fn message() -> [u8; 44] {
-        let mut b = [0; 44];
-        b[2] = 1;
-        b[4] = 44;
-        b[24] = 10;
-        b[32] = 4;
-        b[40..].copy_from_slice(b"ping");
+    fn message() -> [u8; HEADER + TEST_PAYLOAD.len()] {
+        let mut b = [0; HEADER + TEST_PAYLOAD.len()];
+        let size = b.len() as u32;
+        b[request_fields::OPERATION].copy_from_slice(&OPERATION_SEND.to_le_bytes());
+        b[request_fields::TOTAL_SIZE].copy_from_slice(&size.to_le_bytes());
+        b[request_fields::DEADLINE].copy_from_slice(&TEST_DEADLINE.to_le_bytes());
+        b[request_fields::PAYLOAD_SIZE].copy_from_slice(&(TEST_PAYLOAD.len() as u32).to_le_bytes());
+        b[HEADER..].copy_from_slice(TEST_PAYLOAD);
         b
     }
     #[test]
     fn owns_validated_snapshot() {
         let mut b = message();
         let request = decode(&b, 0).unwrap();
-        b[40] = 0;
-        assert_eq!(b[40], 0);
+        b[HEADER] = 0;
+        assert_eq!(b[HEADER], 0);
         assert_eq!(request.payload(), b"ping");
     }
     #[test]
@@ -225,12 +277,14 @@ mod tests {
         for end in 0..b.len() {
             assert!(decode(&b[..end], 0).is_err());
         }
-        for offset in [0, 1, 2, 3, 4, 5, 6, 7, 32, 33, 34, 35, 36, 37, 38, 39] {
+        for offset in (request_fields::VERSION.start..request_fields::TOTAL_SIZE.end)
+            .chain(request_fields::PAYLOAD_SIZE.start..request_fields::RESERVED.end)
+        {
             let mut broken = b;
-            broken[offset] ^= 0x80;
+            broken[offset] ^= CORRUPTION_BIT;
             assert!(decode(&broken, 0).is_err(), "offset {offset}");
         }
-        assert_eq!(decode(&b, 10), Err(Error::Deadline));
+        assert_eq!(decode(&b, TEST_DEADLINE), Err(Error::Deadline));
         assert_eq!(
             decode(&[0; HEADER + MAX_PAYLOAD + 1], 0),
             Err(Error::Length)
@@ -238,8 +292,10 @@ mod tests {
     }
     #[test]
     fn attenuation_and_generation_exhaustion() {
-        for held in 0..16 {
-            for requested in 0..16 {
+        // Include two unknown bits as well as every known-rights combination.
+        let rights_domain = 1 << (KNOWN_RIGHTS.count_ones() + 2);
+        for held in 0..rights_domain {
+            for requested in 0..rights_domain {
                 if let Ok(grant) = delegate(held, requested) {
                     assert_eq!(grant & !held, 0);
                     assert_eq!(held & TRANSFER, TRANSFER);

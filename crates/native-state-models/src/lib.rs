@@ -5,6 +5,28 @@ use std::{
     fmt::Debug,
 };
 
+// These bounds define the explored domain, not production capacities.
+const REQUEST_ACTORS: usize = 2;
+const QUEUE_CREDITS: u8 = 1;
+const MAX_EFFECTS: u8 = 1;
+const MAX_IN_FLIGHT: u8 = 2;
+const SCHEDULER_TASKS: usize = 3;
+const DOMAIN_SLOTS: usize = 2;
+const WAIT_INITIAL: u8 = 0;
+const WAIT_PROBED: u8 = 1;
+const WAIT_REGISTERED: u8 = 2;
+const WAIT_FINISHED: u8 = 3;
+const WAIT_PENDING: u8 = 0;
+const WAIT_WOKEN: u8 = 1;
+const WAIT_TIMED_OUT: u8 = 2;
+const WAIT_CANCELLED: u8 = 3;
+const STARTUP_EMPTY: u8 = 0;
+const STARTUP_INITIALIZING: u8 = 1;
+const STARTUP_PUBLISHED: u8 = 3;
+const STARTUP_DRAINING: u8 = 4;
+const STARTUP_QUIESCENT: u8 = 5;
+const STARTUP_RELEASED: u8 = 6;
+
 pub struct Exploration {
     pub states: usize,
     pub transitions: usize,
@@ -59,24 +81,24 @@ pub enum Pending {
 }
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Lifetime {
-    pub handles: [bool; 2],
-    pub requests: [Pending; 2],
+    pub handles: [bool; REQUEST_ACTORS],
+    pub requests: [Pending; REQUEST_ACTORS],
     pub charged: u8,
     pub revoked: bool,
     pub service_alive: bool,
     pub freed: bool,
-    pub effects: [u8; 2],
+    pub effects: [u8; REQUEST_ACTORS],
 }
 impl Default for Lifetime {
     fn default() -> Self {
         Self {
-            handles: [true; 2],
-            requests: [Pending::Unsent; 2],
+            handles: [true; REQUEST_ACTORS],
+            requests: [Pending::Unsent; REQUEST_ACTORS],
             charged: 0,
             revoked: false,
             service_alive: true,
             freed: false,
-            effects: [0; 2],
+            effects: [0; REQUEST_ACTORS],
         }
     }
 }
@@ -94,9 +116,9 @@ impl Lifetime {
     pub fn invariant(&self) -> bool {
         let retained = self.requests.iter().filter(|&&p| active(p)).count();
         self.charged as usize == retained
-            && self.charged <= 1
+            && self.charged <= QUEUE_CREDITS
             && !(self.freed && (self.handles.contains(&true) || retained > 0))
-            && self.effects.iter().all(|&n| n <= 1)
+            && self.effects.iter().all(|&n| n <= MAX_EFFECTS)
             && self
                 .requests
                 .iter()
@@ -105,7 +127,7 @@ impl Lifetime {
     }
     pub fn steps(&self, mutation: Mutation) -> Vec<(&'static str, Self)> {
         let mut out = Vec::new();
-        for i in 0..2 {
+        for i in 0..REQUEST_ACTORS {
             if self.handles[i] {
                 let mut n = self.clone();
                 n.handles[i] = false;
@@ -116,7 +138,7 @@ impl Lifetime {
                 && !self.revoked
                 && self.service_alive
                 && !self.freed
-                && self.charged < 1
+                && self.charged < QUEUE_CREDITS
             {
                 let mut n = self.clone();
                 n.requests[i] = Pending::Queued;
@@ -143,7 +165,7 @@ impl Lifetime {
                 n.requests[i] = Pending::Done;
                 n.charged = n.charged.saturating_sub(1);
                 out.push(("complete after effect (cancel cannot roll back)", n));
-                if mutation == Mutation::DoubleEffect && self.effects[i] < 2 {
+                if mutation == Mutation::DoubleEffect && self.effects[i] < MAX_EFFECTS + 1 {
                     let mut n = self.clone();
                     n.effects[i] += 1;
                     out.push(("BUG retry committed effect", n));
@@ -196,44 +218,44 @@ pub struct Wait {
 pub fn wait(broken: bool) -> Exploration {
     explore(
         Wait {
-            phase: 0,
+            phase: WAIT_INITIAL,
             ready: false,
             notified: false,
             deadline: false,
-            terminal: 0,
+            terminal: WAIT_PENDING,
         },
         |s| {
             let mut out = Vec::new();
             if !s.ready {
                 let mut n = s.clone();
                 n.ready = true;
-                if n.phase == 2 {
+                if n.phase == WAIT_REGISTERED {
                     n.notified = true;
                 }
                 out.push(("publish event", n));
             }
-            if s.phase == 0 {
+            if s.phase == WAIT_INITIAL {
                 let mut n = s.clone();
                 if s.ready {
-                    n.phase = 3;
-                    n.terminal = 1;
+                    n.phase = WAIT_FINISHED;
+                    n.terminal = WAIT_WOKEN;
                 } else {
-                    n.phase = 1;
+                    n.phase = WAIT_PROBED;
                 }
                 out.push(("initial probe", n));
             }
-            if s.phase == 1 {
+            if s.phase == WAIT_PROBED {
                 let mut n = s.clone();
-                n.phase = 2;
+                n.phase = WAIT_REGISTERED;
                 if !broken && n.ready {
                     n.notified = true;
                 }
                 out.push(("register and recheck", n));
             }
-            if s.phase == 2 && s.terminal == 0 && s.notified {
+            if s.phase == WAIT_REGISTERED && s.terminal == WAIT_PENDING && s.notified {
                 let mut n = s.clone();
-                n.terminal = 1;
-                n.phase = 3;
+                n.terminal = WAIT_WOKEN;
+                n.phase = WAIT_FINISHED;
                 out.push(("wake wins", n));
             }
             if !s.deadline {
@@ -241,21 +263,21 @@ pub fn wait(broken: bool) -> Exploration {
                 n.deadline = true;
                 out.push(("deadline reached", n));
             }
-            if s.phase == 2 && s.terminal == 0 && s.deadline {
+            if s.phase == WAIT_REGISTERED && s.terminal == WAIT_PENDING && s.deadline {
                 let mut n = s.clone();
-                n.terminal = 2;
-                n.phase = 3;
+                n.terminal = WAIT_TIMED_OUT;
+                n.phase = WAIT_FINISHED;
                 out.push(("timeout wins", n));
             }
-            if s.phase == 2 && s.terminal == 0 {
+            if s.phase == WAIT_REGISTERED && s.terminal == WAIT_PENDING {
                 let mut n = s.clone();
-                n.terminal = 3;
-                n.phase = 3;
+                n.terminal = WAIT_CANCELLED;
+                n.phase = WAIT_FINISHED;
                 out.push(("cancel wins", n));
             }
             out
         },
-        |s| !(s.phase == 2 && s.ready && !s.notified),
+        |s| !(s.phase == WAIT_REGISTERED && s.ready && !s.notified),
     )
 }
 
@@ -276,7 +298,7 @@ pub fn binding(broken: bool) -> Exploration {
         },
         |s| {
             let mut out = Vec::new();
-            if s.admission && s.generation == 0 && s.in_flight < 2 {
+            if s.admission && s.generation == 0 && s.in_flight < MAX_IN_FLIGHT {
                 let mut n = s.clone();
                 n.in_flight += 1;
                 out.push(("admit old generation", n));
@@ -306,8 +328,10 @@ pub fn binding(broken: bool) -> Exploration {
 
 /// A bounded progress model: a ready task receives a turn within N dispatches.
 /// It assumes timer delivery and a bounded non-preemptible kernel section.
-pub fn round_robin(ready: [bool; 3], cursor: usize) -> Option<usize> {
-    (1..=3).map(|n| (cursor + n) % 3).find(|&i| ready[i])
+pub fn round_robin(ready: [bool; SCHEDULER_TASKS], cursor: usize) -> Option<usize> {
+    (1..=SCHEDULER_TASKS)
+        .map(|n| (cursor + n) % SCHEDULER_TASKS)
+        .find(|&i| ready[i])
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -318,49 +342,49 @@ pub struct Startup {
 pub fn startup(broken: bool) -> Exploration {
     explore(
         Startup {
-            phase: 0,
+            phase: STARTUP_EMPTY,
             in_flight: 0,
         },
         |s| {
             let mut out = Vec::new();
-            if s.phase < 3 {
+            if s.phase < STARTUP_PUBLISHED {
                 let mut n = s.clone();
                 n.phase += 1;
                 out.push(("initialize next dependency before publication", n));
             }
-            if (1..3).contains(&s.phase) {
+            if (STARTUP_INITIALIZING..STARTUP_PUBLISHED).contains(&s.phase) {
                 let mut n = s.clone();
-                n.phase = 6;
+                n.phase = STARTUP_RELEASED;
                 out.push(("unpublished initialization fails; unwind dependencies", n));
             }
-            if s.phase == 3 && s.in_flight < 2 {
+            if s.phase == STARTUP_PUBLISHED && s.in_flight < MAX_IN_FLIGHT {
                 let mut n = s.clone();
                 n.in_flight += 1;
                 out.push(("admit request", n));
             }
-            if s.phase == 3 {
+            if s.phase == STARTUP_PUBLISHED {
                 let mut n = s.clone();
-                n.phase = 4;
+                n.phase = STARTUP_DRAINING;
                 out.push(("stop admission", n));
             }
-            if s.in_flight > 0 && s.phase < 5 {
+            if s.in_flight > 0 && s.phase < STARTUP_QUIESCENT {
                 let mut n = s.clone();
                 n.in_flight -= 1;
                 out.push(("finish accepted request", n));
             }
-            if s.phase == 4 && (s.in_flight == 0 || broken) {
+            if s.phase == STARTUP_DRAINING && (s.in_flight == 0 || broken) {
                 let mut n = s.clone();
-                n.phase = 5;
+                n.phase = STARTUP_QUIESCENT;
                 out.push(("quiesce interrupt and callback sources", n));
             }
-            if s.phase == 5 {
+            if s.phase == STARTUP_QUIESCENT {
                 let mut n = s.clone();
-                n.phase = 6;
+                n.phase = STARTUP_RELEASED;
                 out.push(("release mappings", n));
             }
             out
         },
-        |s| s.phase < 5 || s.in_flight == 0,
+        |s| s.phase < STARTUP_QUIESCENT || s.in_flight == 0,
     )
 }
 
@@ -372,8 +396,8 @@ pub struct Grant {
 }
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Domain {
-    slots: [Option<Grant>; 2],
-    generations: [u32; 2],
+    slots: [Option<Grant>; DOMAIN_SLOTS],
+    generations: [u32; DOMAIN_SLOTS],
 }
 impl Domain {
     pub fn insert(&mut self, grant: Grant) -> Result<u64, native_protocol_model::Error> {
@@ -417,6 +441,10 @@ impl Domain {
 #[cfg(test)]
 mod tests {
     use super::*;
+    const ORIGINAL_OBJECT: u64 = 42;
+    const ORIGINAL_BINDING: u64 = 7;
+    const REPLACEMENT_OBJECT: u64 = 99;
+    const REPLACEMENT_BINDING: u64 = 8;
     #[test]
     fn all_lifetime_interleavings() {
         assert!(lifetime(Mutation::None).counterexample.is_none());
@@ -443,21 +471,21 @@ mod tests {
     }
     #[test]
     fn every_ready_set_has_bounded_service() {
-        for mask in 1..8 {
+        for mask in 1..(1 << SCHEDULER_TASKS) {
             let ready = core::array::from_fn(|i| mask & (1 << i) != 0);
-            for start in 0..3 {
+            for start in 0..SCHEDULER_TASKS {
                 let mut cursor = start;
-                let mut served = [false; 3];
-                for _ in 0..3 {
+                let mut served = [false; SCHEDULER_TASKS];
+                for _ in 0..SCHEDULER_TASKS {
                     cursor = round_robin(ready, cursor).unwrap();
                     served[cursor] = true;
                 }
-                for i in 0..3 {
+                for i in 0..SCHEDULER_TASKS {
                     assert!(!ready[i] || served[i]);
                 }
             }
         }
-        assert_eq!(round_robin([false; 3], 0), None);
+        assert_eq!(round_robin([false; SCHEDULER_TASKS], 0), None);
     }
     #[test]
     fn startup_and_shutdown_preserve_dependencies() {
@@ -470,31 +498,36 @@ mod tests {
         let mut b = Domain::default();
         let token = a
             .insert(Grant {
-                object: 42,
-                binding: 7,
-                rights: 3,
+                object: ORIGINAL_OBJECT,
+                binding: ORIGINAL_BINDING,
+                rights: native_protocol_model::KNOWN_RIGHTS,
             })
             .unwrap();
         assert!(b.get(token).is_err());
-        let received = a.transfer(token, &mut b, 1).unwrap();
+        let received = a
+            .transfer(token, &mut b, native_protocol_model::SEND)
+            .unwrap();
         assert_eq!(
             b.get(received).unwrap(),
             Grant {
-                object: 42,
-                binding: 7,
-                rights: 1
+                object: ORIGINAL_OBJECT,
+                binding: ORIGINAL_BINDING,
+                rights: native_protocol_model::SEND
             }
         );
-        assert!(b.transfer(received, &mut a, 3).is_err());
+        assert!(
+            b.transfer(received, &mut a, native_protocol_model::KNOWN_RIGHTS)
+                .is_err()
+        );
         a.close(token).unwrap();
         assert!(a.get(token).is_err());
         assert!(a.close(token).is_err());
-        assert_eq!(b.get(received).unwrap().object, 42);
+        assert_eq!(b.get(received).unwrap().object, ORIGINAL_OBJECT);
         let replacement = a
             .insert(Grant {
-                object: 99,
-                binding: 8,
-                rights: 1,
+                object: REPLACEMENT_OBJECT,
+                binding: REPLACEMENT_BINDING,
+                rights: native_protocol_model::SEND,
             })
             .unwrap();
         assert_ne!(replacement, token);
@@ -507,13 +540,16 @@ mod tests {
         let grant = Grant {
             object: 1,
             binding: 0,
-            rights: 3,
+            rights: native_protocol_model::KNOWN_RIGHTS,
         };
         let token = a.insert(grant).unwrap();
         b.insert(grant).unwrap();
         b.insert(grant).unwrap();
         let before = b.clone();
-        assert!(a.transfer(token, &mut b, 1).is_err());
+        assert!(
+            a.transfer(token, &mut b, native_protocol_model::SEND)
+                .is_err()
+        );
         assert_eq!(b, before);
         assert_eq!(a.get(token).unwrap(), grant);
     }
@@ -524,7 +560,7 @@ mod tests {
         let grant = Grant {
             object: 1,
             binding: 0,
-            rights: 1,
+            rights: native_protocol_model::SEND,
         };
         let token = domain.insert(grant).unwrap();
         assert_eq!(token as u32, 1);

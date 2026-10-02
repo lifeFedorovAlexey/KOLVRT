@@ -64,7 +64,12 @@ impl Drop for Temp {
 #[test]
 fn repository_data_and_documents_pass() {
     let root = root();
-    database::validate(&root, &root.join("research/cases"), 30).unwrap();
+    database::validate(
+        &root,
+        &root.join("research/cases"),
+        repository_checks::MINIMUM_RESEARCH_CASES,
+    )
+    .unwrap();
     documents::check_docs(&root).unwrap();
     documents::check_translations(&root).unwrap();
     report::report(&root, true).unwrap();
@@ -231,7 +236,9 @@ fn empty_missing_and_underfilled_databases_fail() {
     assert!(database::validate(&root(), &temp.0, 1).is_err());
     assert!(database::validate(&root(), &temp.0.join("absent"), 1).is_err());
     temp.case(&valid(), "KOL-PATH-0001.json");
-    assert!(database::validate(&root(), &temp.0, 30).is_err());
+    assert!(
+        database::validate(&root(), &temp.0, repository_checks::MINIMUM_RESEARCH_CASES).is_err()
+    );
     assert!(database::validate(&root(), &temp.0, 0).is_err());
 }
 #[test]
@@ -388,7 +395,12 @@ fn hashes_normalize_line_endings() {
 #[test]
 fn changed_case_invalidates_index_translation() {
     let root = root();
-    let cases = database::validate(&root, &root.join("research/cases"), 30).unwrap();
+    let cases = database::validate(
+        &root,
+        &root.join("research/cases"),
+        repository_checks::MINIMUM_RESEARCH_CASES,
+    )
+    .unwrap();
     let mut catalog = read_json(&root.join("research/sources/case-index-text.json")).unwrap();
     catalog["KOL-PATH-0001"]["source_sha256"] = json!("outdated");
     assert!(

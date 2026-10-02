@@ -10,6 +10,9 @@ use serde_json::{Map, Value};
 use sha2::{Digest, Sha256};
 use std::{fmt, fs, path::Path};
 
+// Minimum evidence corpus required by the Phase 0.1 research scope.
+pub const MINIMUM_RESEARCH_CASES: usize = 30;
+
 pub type CheckResult<T> = Result<T, String>;
 
 pub fn read(path: &Path) -> CheckResult<String> {

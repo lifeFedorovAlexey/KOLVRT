@@ -14,14 +14,14 @@ fn run() -> CheckResult<()> {
     }
     match command {
         "check" | "validate" | "check-docs" | "check-translations" if args.len() <= 1 => {
-            if matches!(command,"check" | "validate") { database::validate(&root, &root.join("research/cases"), 30)?; }
+            if matches!(command,"check" | "validate") { database::validate(&root, &root.join("research/cases"), repository_checks::MINIMUM_RESEARCH_CASES)?; }
             if matches!(command,"check" | "check-docs") { documents::check_docs(&root)?; }
             if matches!(command,"check" | "check-translations") { documents::check_translations(&root)?; }
             if command == "check" { report::report(&root, true)?; }
             println!("{command}: passed. Structural checks do not establish historical truth or kernel behavior.");
         }
         "validate" if args.len() == 3 && args[1] == "--directory" => {
-            database::validate(&root, &PathBuf::from(&args[2]), 30)?;
+            database::validate(&root, &PathBuf::from(&args[2]), repository_checks::MINIMUM_RESEARCH_CASES)?;
             println!("Research data validated.");
         }
         "report" if args.len() == 1 || (args.len() == 2 && args[1] == "--check") => {

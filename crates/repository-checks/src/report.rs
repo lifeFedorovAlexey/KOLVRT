@@ -141,13 +141,13 @@ pub fn render(root: &Path, cases: &[Value], catalog: &Value, locale: &str) -> Ch
                 .collect()
         })
         .collect();
-    let widths: Vec<usize> = (0..6)
+    let widths: Vec<usize> = (0..rows[0].len())
         .map(|column| {
             rows.iter()
                 .map(|row| row[column].chars().count())
                 .max()
                 .unwrap()
-                .max(3)
+                .max("---".len())
         })
         .collect();
     for (index, row) in rows.iter().enumerate() {
@@ -171,7 +171,11 @@ pub fn render(root: &Path, cases: &[Value], catalog: &Value, locale: &str) -> Ch
 }
 
 pub fn report(root: &Path, check: bool) -> CheckResult<()> {
-    let cases = database::validate(root, &root.join("research/cases"), 30)?;
+    let cases = database::validate(
+        root,
+        &root.join("research/cases"),
+        crate::MINIMUM_RESEARCH_CASES,
+    )?;
     let catalog = read_json(&root.join("research/sources/case-index-text.json"))?;
     // Render both before writing either: malformed translations cannot cause a partial update.
     let en = render(root, &cases, &catalog, "en")?;
