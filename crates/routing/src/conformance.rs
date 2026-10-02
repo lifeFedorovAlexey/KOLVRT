@@ -320,4 +320,81 @@ mod host {
     fn same_kernel_contracts() {
         super::run(|name, passed| assert!(passed, "{name}"));
     }
+
+    #[test]
+    fn public_metadata_and_profile_accessors_cover_every_variant() {
+        for route in super::Route::ALL {
+            assert!(super::Route::parse(route as u8).is_ok());
+            assert!(!route.name().is_empty());
+            assert!(!route.reason().is_empty());
+            assert_ne!(route.identity(), [0; 32]);
+        }
+
+        let routes = super::Route::ALL.map(|route| {
+            if route.available() {
+                route
+            } else {
+                super::Route::Native
+            }
+        });
+        let profile = super::Profile::new(7, routes).unwrap();
+        assert_eq!(profile.generation(), 7);
+        assert_eq!(profile.routes(), &routes);
+
+        for status in [
+            super::Status::Unknown,
+            super::Status::Legacy,
+            super::Status::Compat,
+            super::Status::Mixed,
+            super::Status::MostlyNative,
+            super::Status::Native,
+        ] {
+            assert!(!status.name().is_empty());
+            assert!(!status.color().is_empty());
+        }
+    }
+
+    #[cfg(feature = "dev")]
+    #[test]
+    fn transaction_charges_ticks_to_the_bound_route() {
+        let mut consumer = super::Consumer::from_profile(&super::Profile::native(), 0).unwrap();
+        {
+            let mut transaction = consumer.begin().unwrap();
+            transaction.charge_ticks(17);
+        }
+        assert_eq!(consumer.counters(super::Route::Native).ticks, 17);
+    }
+
+    #[test]
+    fn compat_routes_reject_native_input() {
+        let data = [1, 2, 3];
+        for route in super::Route::ALL
+            .into_iter()
+            .filter(|route| *route != super::Route::Native && route.available())
+        {
+            let profile = super::Profile::new(1, [route; super::CONSUMERS]).unwrap();
+            let mut consumer = super::Consumer::from_profile(&profile, 0).unwrap();
+            assert_eq!(
+                consumer.call(
+                    &data,
+                    super::Input::Native(kernel_core::window::Span { start: 0, end: 1 }),
+                ),
+                Err(super::Error::Encoding),
+            );
+        }
+    }
+
+    #[cfg(all(feature = "dev", not(feature = "compat-v1")))]
+    #[test]
+    fn unavailable_route_cannot_be_added_to_a_profile_or_switched_in() {
+        assert!(!super::Route::Inclusive.available());
+        assert_eq!(
+            super::Profile::new(1, [super::Route::Inclusive; super::CONSUMERS]),
+            Err(super::Error::Unsupported),
+        );
+        let mut consumer = super::Consumer::from_profile(&super::Profile::native(), 0).unwrap();
+        assert_eq!(consumer.switch(super::Route::Inclusive), Err(super::Error::Unsupported));
+        assert_eq!(consumer.route(), super::Route::Native);
+        assert_eq!(consumer.generation(), 1);
+    }
 }
