@@ -85,6 +85,49 @@ the executing endpoint. These are candidate/host checks, not a kernel capability
 typed device authority, real IPC enforcement or proof of general revocation. Those need
 separate workload decisions and integration tests before implementation claims.
 
+## Common-object admission and deferral
+
+Task, endpoint, address-space/memory lease and device primitives remain narrow.
+The lifecycle sketch above expresses ownership obligations, not a universal base
+class or executable state machine. Sharing checked arithmetic, generation validation
+or bounded accounting does not imply interchangeable authority or destruction.
+
+Before proposing a common object model, record at least two distinct concrete
+consumer workloads, their current narrow interfaces and the exact proposed shared
+mechanics. Compare authority, delegation/revocation, lifetime, effects and failures;
+include counterexamples, rejection tests, implementation scope and the option to
+defer. Reuse only demonstrated common mechanics while preserving resource-specific
+guarantees. Review under LAW-009/LAW-013 and
+[ADR-0013](../architecture-decisions/0013-security-boundaries.md); type admission
+alone cannot approve a universal object abstraction.
+
+| Dimension             | Bounded echo endpoint host workload                                                    | Private EL0 worker address space                                                                                           |
+| --------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Existing interface    | Candidate SEND/TRANSFER, caller-local generation-checked handle and owned payload      | Frame allocation and UserSpace guards in the bounded EL0 boot workload                                                     |
+| Authority             | SEND permits bounded endpoint effects; TRANSFER only attenuates known rights           | Page permissions isolate worker code/data/stack; allocation ownership grants no endpoint SEND right                        |
+| Lifetime              | Closing one handle preserves delegated handles and admitted request references         | Roots/backing frames remain retained through execution and acquired CPU completion; release needs mapping/TLBI obligations |
+| Failure               | Denied or exhausted admission is transactional; cancellation may leave effects unknown | Mapping/setup rejection preserves ownership; a worker fault terminates its execution while peers continue                  |
+| Shared mechanics      | Checked sizes, bounded capacity and explicit ownership/error reporting                 | Checked extents, bounded capacity and explicit ownership/error reporting                                                   |
+| Conflicting mechanics | Handle close does not cancel accepted work or revoke independent delegation            | Last reference alone is insufficient to prove mappings inactive or translation invalidation complete                       |
+
+Evidence scope differs: endpoint behavior is a
+[host model](../../crates/native-state-models/src/lib.rs), while the
+[EL0 foundation](../kernel/el0.md) documents real bounded worker execution.
+The [memory implementation](../../crates/kernel/src/memory/mod.rs) retains
+resource-specific guards; these are not a general user-facing memory-lease API.
+
+Counterexamples to a proposed `Object::close`/generic opcode interface: freeing a
+space when one owner closes can leave an active translation, whereas cancelling an
+endpoint on handle close breaks accepted-work and delegation semantics. A SEND grant
+cannot become permission to map memory merely because both resources have integer
+names. One generic error or teardown transition would erase these distinctions.
+
+Decision: retain separate interfaces and defer a universal hierarchy. Existing bounded
+helpers may be reused with their own validation; no new shared allocator, lifecycle
+framework or speculative file/socket/driver hierarchy is admitted. Future consumers
+may reopen the comparison with evidence. Document checks establish record consistency;
+they do not prove abstraction safety or create runtime coverage for hypothetical resources.
+
 ## Memory and I/O
 
 Read-only shared pages, writable owned buffers and device-access leases have distinct

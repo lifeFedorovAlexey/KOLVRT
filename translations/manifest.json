@@ -62,8 +62,8 @@
         "translation_sha256": "5301903454b689e10193739d764cf134d88ead0021f5611c6a1c9707b685e6fb"
       },
       "docs/architecture-decisions/0013-security-boundaries.md": {
-        "source_sha256": "1b3834ddf80c6fa0d4a130661ae7ce936efd8facef18555fc91c68490d3a449f",
-        "translation_sha256": "76e99e2d393b61349fe090eac523bc78b02f95d46c753bd6ee42f47f1aecff93"
+        "source_sha256": "7bfe96c28cd484a5f66c3f3b66e4daeb28ecf68ca6a7523463ddc95dcaa92de6",
+        "translation_sha256": "a1625dd202ffd884fc20f66a8751d09311dd7eff03ca2dac6184ec421772a24a"
       },
       "docs/architecture-decisions/0014-el0-foundation.md": {
         "source_sha256": "562b598ffa83a825050dfb9e6f2722cfb5d72c12754f1c2d81b06178c63f32ce",
@@ -130,8 +130,8 @@
         "translation_sha256": "98b138985034883c1c5a1cfef64d3fa9595233a26b0bcbf5e191bcb9ac444587"
       },
       "docs/architecture/native-model.md": {
-        "source_sha256": "0f5db67b0dd834a8fc1ad7435c3fbbefecf207cf34568358394636bf700f418c",
-        "translation_sha256": "0a44f84819abed6177a2abd90bcfbda5032df4a9c0b4642962b969a39fd074c1"
+        "source_sha256": "d9d6edef331cfba1f6d5fb2236a6d7e45e96810f819a227613aca2f738aae570",
+        "translation_sha256": "4dcdc45790fe3a06d006188d62e34d0ba0f6e403a671f6661cc698bcf84e21e0"
       },
       "docs/architecture/output-policy.md": {
         "source_sha256": "41548441fbe85999965ad305c87952bc960c7f5de9024dcf5bf61999e121819b",

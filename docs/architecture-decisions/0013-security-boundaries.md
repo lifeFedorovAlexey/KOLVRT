@@ -21,6 +21,15 @@ is also rejected. The [native model](../architecture/native-model.md) contains t
 requirements and worked decision to reuse the bounded echo endpoint rather than add an
 equivalent type. This creates no capability type, kernel grant API or new law.
 
+Issue #11 requires a separate common-object admission comparison with at least two
+distinct concrete workloads, narrow interfaces, shared/conflicting authority, lifetime
+and failure invariants, counterexamples and deferral. The
+[native model](../architecture/native-model.md) compares the host echo endpoint with
+private EL0 worker memory. Bounded arithmetic/accounting may be shared, but handle
+close, accepted requests and page/TLBI retirement are not interchangeable. Retain narrow
+primitives and defer a universal supertype/state machine; no hypothetical file/socket/
+driver hierarchy is approved. This refines LAW-009/LAW-013 without adding a law.
+
 ## Alternatives
 
 Literal equality of service and caller capability inventories; compatibility-specific grants or waivers; EL1 placement for globally authoritative services or lower IPC cost.
