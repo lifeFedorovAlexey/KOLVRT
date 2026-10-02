@@ -1,0 +1,5474 @@
+{
+  "schema_version": 1,
+  "scope": "Measured physical Windows host processes running KOLVRT routing libraries; not KOLVRT OS or physical ARM64 kernel performance",
+  "experiment_directory": "target/migration-workbench/1790963676438-41284",
+  "protocol": "physical-host-process-library-v2; 100 fresh-process pairs, independence assumed not proven; AB/BA alternating; 3..20 warmup batches of 5000 calls; stop when last3 batch durations max-min<=20percent of min; retain every warmup batch; measured50000 useful reductions; equal input, oracle, instrumentation and inherited process limits; background load and thermal state uncontrolled; no exclusions; abort and retain evidence on first process/oracle failure; failed warmup invalidates recommendation; primary metric whole-batch wall ns excluding spawn, contracts and warmup; per-process receipts retained; not KOLVRT kernel or ARM64 behavior; predeclared bootstrap2000/seed7/confidence9500/margin1000ns/p95budget100000ns/p99unavailable",
+  "request": {
+    "schema": 2,
+    "catalog": [
+      {
+        "name": "window-compat-fixture",
+        "version": 1,
+        "identity": "42de1bd2a70921e8a3f3c67a3608fd8817e6e6e65a13c1629bafaf368137aae3",
+        "provides": [
+          {
+            "capability_id": "workload.window.reduce",
+            "semantic_version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            },
+            "contract_digest": "88124153305ad9ca7f23da9a0d036d55aa8971b1b86060bdf56c3bdd9c7e4e4b"
+          }
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "name": "window-native-fixture",
+        "version": 1,
+        "identity": "e12e57268ee77bb0e8defe7f8095218be931b0f4769abe5c96312d8be28d76a4",
+        "provides": [
+          {
+            "capability_id": "workload.window.reduce",
+            "semantic_version": {
+              "major": 1,
+              "minor": 0,
+              "patch": 0
+            },
+            "contract_digest": "88124153305ad9ca7f23da9a0d036d55aa8971b1b86060bdf56c3bdd9c7e4e4b"
+          }
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ],
+    "current": "42de1bd2a70921e8a3f3c67a3608fd8817e6e6e65a13c1629bafaf368137aae3",
+    "installed": {
+      "packages": [
+        "42de1bd2a70921e8a3f3c67a3608fd8817e6e6e65a13c1629bafaf368137aae3"
+      ]
+    },
+    "requirements": [
+      [
+        {
+          "capability_id": "workload.window.reduce",
+          "min_version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          },
+          "max_version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          },
+          "contract_digest": "88124153305ad9ca7f23da9a0d036d55aa8971b1b86060bdf56c3bdd9c7e4e4b"
+        }
+      ]
+    ],
+    "retained": [],
+    "context": {
+      "machine": "physical-host/windows/x86_64/DESKTOP-QJJ5N6H",
+      "workload": "be66c2867e103fa00c88539675e5cd95f52ec5e38d9038e6d3710539f6c0aec1",
+      "kernel": "ca0c17444fdd7b8a090c30fd28dc3f3caa2493472538f11a92542981c086a13b",
+      "protocol": "3380e9c2a4b60401eda2ec9d779ac6bae26f19ab83c5ab6da53c655aadfa738f",
+      "source": "host_process"
+    },
+    "runtime": {
+      "artifact": "fa32e361f5056305c7fe58917e3c184abf970919d66f1edad51165d0abf663d6",
+      "package": "42de1bd2a70921e8a3f3c67a3608fd8817e6e6e65a13c1629bafaf368137aae3",
+      "context": {
+        "machine": "physical-host/windows/x86_64/DESKTOP-QJJ5N6H",
+        "workload": "be66c2867e103fa00c88539675e5cd95f52ec5e38d9038e6d3710539f6c0aec1",
+        "kernel": "ca0c17444fdd7b8a090c30fd28dc3f3caa2493472538f11a92542981c086a13b",
+        "protocol": "3380e9c2a4b60401eda2ec9d779ac6bae26f19ab83c5ab6da53c655aadfa738f",
+        "source": "host_process"
+      },
+      "window_start_ns": 0,
+      "window_end_ns": 2562394000,
+      "complete": true,
+      "lost_events": 0,
+      "routes": [
+        {
+          "route": "host.window.inclusive",
+          "adapter": "42de1bd2a70921e8a3f3c67a3608fd8817e6e6e65a13c1629bafaf368137aae3",
+          "generation": 1,
+          "native_admissions": 0,
+          "compat_admissions": 5000000,
+          "failed": 0,
+          "adapter_cpu_ns": null,
+          "copied_bytes": 20000000
+        }
+      ]
+    },
+    "tests": [
+      {
+        "package": "42de1bd2a70921e8a3f3c67a3608fd8817e6e6e65a13c1629bafaf368137aae3",
+        "contract": "88124153305ad9ca7f23da9a0d036d55aa8971b1b86060bdf56c3bdd9c7e4e4b",
+        "suite": "0d4c33a5a7b0f0dfa44ea4ae9a28268e77b5f682eb8361a2a52fda8d59ff384b",
+        "context": {
+          "machine": "physical-host/windows/x86_64/DESKTOP-QJJ5N6H",
+          "workload": "be66c2867e103fa00c88539675e5cd95f52ec5e38d9038e6d3710539f6c0aec1",
+          "kernel": "ca0c17444fdd7b8a090c30fd28dc3f3caa2493472538f11a92542981c086a13b",
+          "protocol": "3380e9c2a4b60401eda2ec9d779ac6bae26f19ab83c5ab6da53c655aadfa738f",
+          "source": "host_process"
+        },
+        "passed": true
+      },
+      {
+        "package": "e12e57268ee77bb0e8defe7f8095218be931b0f4769abe5c96312d8be28d76a4",
+        "contract": "88124153305ad9ca7f23da9a0d036d55aa8971b1b86060bdf56c3bdd9c7e4e4b",
+        "suite": "0d4c33a5a7b0f0dfa44ea4ae9a28268e77b5f682eb8361a2a52fda8d59ff384b",
+        "context": {
+          "machine": "physical-host/windows/x86_64/DESKTOP-QJJ5N6H",
+          "workload": "be66c2867e103fa00c88539675e5cd95f52ec5e38d9038e6d3710539f6c0aec1",
+          "kernel": "ca0c17444fdd7b8a090c30fd28dc3f3caa2493472538f11a92542981c086a13b",
+          "protocol": "3380e9c2a4b60401eda2ec9d779ac6bae26f19ab83c5ab6da53c655aadfa738f",
+          "source": "host_process"
+        },
+        "passed": true
+      }
+    ],
+    "benchmarks": [
+      {
+        "artifact": "fa32e361f5056305c7fe58917e3c184abf970919d66f1edad51165d0abf663d6",
+        "baseline_plan": "660adae75116324b5ef527da64711782d67aa9290551eb98afa59fb41abf3dd2",
+        "candidate_plan": "e56b2b45a6a72d2fcfb0a7da814aa78d4834a71848bcd9613bcd4036e6cb4027",
+        "context": {
+          "machine": "physical-host/windows/x86_64/DESKTOP-QJJ5N6H",
+          "workload": "be66c2867e103fa00c88539675e5cd95f52ec5e38d9038e6d3710539f6c0aec1",
+          "kernel": "ca0c17444fdd7b8a090c30fd28dc3f3caa2493472538f11a92542981c086a13b",
+          "protocol": "3380e9c2a4b60401eda2ec9d779ac6bae26f19ab83c5ab6da53c655aadfa738f",
+          "source": "host_process"
+        },
+        "statistics": {
+          "min_pairs": 100,
+          "bootstrap_resamples": 2000,
+          "confidence_basis_points": 9500,
+          "seed": 7,
+          "improvement_margin_ns": 1000,
+          "p95_regression_budget_ns": 100000,
+          "p99_regression_budget_ns": null
+        },
+        "stabilized": true,
+        "failures": 0,
+        "timeouts": 0,
+        "unfinished": 0,
+        "pairs": [
+          {
+            "baseline_ns": 512800,
+            "candidate_ns": 297700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 512200,
+            "candidate_ns": 298600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 591600,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 546700,
+            "candidate_ns": 296300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 514800,
+            "candidate_ns": 317300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 511600,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 509600,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 525000,
+            "candidate_ns": 297700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515200,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521300,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 528600,
+            "candidate_ns": 312000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 526900,
+            "candidate_ns": 292500,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 523100,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 514300,
+            "candidate_ns": 293700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515200,
+            "candidate_ns": 291000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 604700,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 535300,
+            "candidate_ns": 294900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 527900,
+            "candidate_ns": 302000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 566400,
+            "candidate_ns": 304000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521300,
+            "candidate_ns": 297700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 522100,
+            "candidate_ns": 295800,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 519700,
+            "candidate_ns": 299900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521900,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 542400,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 580600,
+            "candidate_ns": 516600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521500,
+            "candidate_ns": 294100,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 517700,
+            "candidate_ns": 301900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 525100,
+            "candidate_ns": 311000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 528900,
+            "candidate_ns": 298900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 537200,
+            "candidate_ns": 297900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521800,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 527300,
+            "candidate_ns": 293900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 535100,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521700,
+            "candidate_ns": 296400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 518300,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 527800,
+            "candidate_ns": 296600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 536100,
+            "candidate_ns": 296400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 610500,
+            "candidate_ns": 297700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521500,
+            "candidate_ns": 301700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 531200,
+            "candidate_ns": 297700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 514900,
+            "candidate_ns": 296600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 578400,
+            "candidate_ns": 321200,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 510600,
+            "candidate_ns": 300200,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515500,
+            "candidate_ns": 303400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 512500,
+            "candidate_ns": 297100,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 510400,
+            "candidate_ns": 291000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 509800,
+            "candidate_ns": 295300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 527200,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 529500,
+            "candidate_ns": 301300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 520600,
+            "candidate_ns": 295400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 519100,
+            "candidate_ns": 307600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 567700,
+            "candidate_ns": 293700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 519800,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 548500,
+            "candidate_ns": 295400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 511400,
+            "candidate_ns": 299200,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 516700,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 523200,
+            "candidate_ns": 303500,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515500,
+            "candidate_ns": 295100,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 520800,
+            "candidate_ns": 293700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 531100,
+            "candidate_ns": 297700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 522100,
+            "candidate_ns": 299100,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 525200,
+            "candidate_ns": 334500,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 528800,
+            "candidate_ns": 326300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 513900,
+            "candidate_ns": 295000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 570900,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 531200,
+            "candidate_ns": 296500,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 522300,
+            "candidate_ns": 299100,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 510100,
+            "candidate_ns": 307400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 560000,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 510300,
+            "candidate_ns": 301900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 514800,
+            "candidate_ns": 291000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 511500,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 714400,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 520500,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 681900,
+            "candidate_ns": 296600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 523000,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 568200,
+            "candidate_ns": 305300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 513200,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 509500,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 521900,
+            "candidate_ns": 352800,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 514600,
+            "candidate_ns": 294900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 527300,
+            "candidate_ns": 297700,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 512600,
+            "candidate_ns": 307400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 526600,
+            "candidate_ns": 513200,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 588100,
+            "candidate_ns": 319800,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 517400,
+            "candidate_ns": 293800,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 514200,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515100,
+            "candidate_ns": 295000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 511900,
+            "candidate_ns": 292300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 510100,
+            "candidate_ns": 296300,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 509800,
+            "candidate_ns": 291000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515600,
+            "candidate_ns": 548100,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 523100,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 542500,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515600,
+            "candidate_ns": 296400,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 515700,
+            "candidate_ns": 293600,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 524500,
+            "candidate_ns": 464100,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 517300,
+            "candidate_ns": 291000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 509500,
+            "candidate_ns": 290900,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": true,
+            "oracle_passed": true
+          },
+          {
+            "baseline_ns": 533500,
+            "candidate_ns": 302000,
+            "baseline_compat_admissions": 50000,
+            "candidate_compat_admissions": 0,
+            "useful_units": 50000,
+            "baseline_first": false,
+            "oracle_passed": true
+          }
+        ]
+      }
+    ],
+    "statistics": {
+      "min_pairs": 100,
+      "bootstrap_resamples": 2000,
+      "confidence_basis_points": 9500,
+      "seed": 7,
+      "improvement_margin_ns": 1000,
+      "p95_regression_budget_ns": 100000,
+      "p99_regression_budget_ns": null
+    },
+    "attestations": [
+      {
+        "role": "catalog",
+        "subject_digest": "1b77b98e453345bce5f1bebe478f7e16882ec3d7e0ae42dbb80229873e934ef9",
+        "key_id": "ephemeral-local-experiment",
+        "signature": "c6ed6ea17b0c68e02927fcbca5f0045518e116f2797edba048696601350d93f94d4812bbd3514bbd26a414b3c4af190f873bd30de421f4889e62857ab91e5d0c"
+      },
+      {
+        "role": "catalog",
+        "subject_digest": "f65bbd9c3e748bf9269313c0638ddbe44ca95f19ccb2da2652c54862808d1ee7",
+        "key_id": "ephemeral-local-experiment",
+        "signature": "b929eb18df7131744d7e5539a9467dc2411e91cfc3f2ce01e3e022aaa22529015508b5d1068f482172f87ea9ba78feda5f832695715f88a87d428dcbfe4b0a0b"
+      },
+      {
+        "role": "contract_test",
+        "subject_digest": "37e1aca7bba8910cdf0a1e9bb770ca5962294cefa49199e106c51bdf6ab6ad07",
+        "key_id": "ephemeral-local-experiment",
+        "signature": "0c2823ee1701d11426122e9e95dc0830e67622a43af64dc75dfc2ffb5e9b6f6a89c1f6ebc59525b6402b6084a452f393123a5bc1e9597e21cc742fa1f52b6800"
+      },
+      {
+        "role": "contract_test",
+        "subject_digest": "4fe1181db45744bb0aa2b10ba9079e76d15ae362038fede64f66110b653e5d61",
+        "key_id": "ephemeral-local-experiment",
+        "signature": "1fafe1c4adf153f31bdfc5b34c250d244bc65033608e3014d4ae503010bb24c7f9835f4cc5492254abf887d89a9ebf1db0f41e97f63691144df9f6fab25ac205"
+      },
+      {
+        "role": "runtime",
+        "subject_digest": "969faa8946a95293587729ccd016b386edcc64315b3573a5d4d2dc05b2d5f0d7",
+        "key_id": "ephemeral-local-experiment",
+        "signature": "fb1eb1105d607f1940d3066880ae35020356849e7f7a76d0a452b7f7f3f06f57000a1e2ae4cc6b2973b86d794bce4b3f5b027ca4a91c135ef3544d03ef438306"
+      },
+      {
+        "role": "benchmark",
+        "subject_digest": "9f5c7e5ad251253cc05e9212094990032f1c61099468d753253fcd9384ec0097",
+        "key_id": "ephemeral-local-experiment",
+        "signature": "35becf6f54b68051d3f7ab43e9db8d74fc4e25e3bf6df575bf1871414537585e1495dc72ddf45696c1e56f047f8463a0c1cff50155c7fbcceff844d51c6ed90f"
+      },
+      {
+        "role": "proposal",
+        "subject_digest": "74d2c2336baa0f906c4c37eb1c381c31f272592e4e02a533df17a8953bbcc1a6",
+        "key_id": "ephemeral-local-experiment",
+        "signature": "71f7617ce200a1b1eccb47f603b9f855b85408b13ac369b5e8a9e9e8e750bce2de483b6b30686fbaffce19d65b438ddb12abb6f2b53b2c7b20509e0df953120d"
+      }
+    ],
+    "migration_plans": [
+      {
+        "candidate": "e12e57268ee77bb0e8defe7f8095218be931b0f4769abe5c96312d8be28d76a4",
+        "plan_digest": "e56b2b45a6a72d2fcfb0a7da814aa78d4834a71848bcd9613bcd4036e6cb4027",
+        "context": {
+          "machine": "physical-host/windows/x86_64/DESKTOP-QJJ5N6H",
+          "workload": "be66c2867e103fa00c88539675e5cd95f52ec5e38d9038e6d3710539f6c0aec1",
+          "kernel": "ca0c17444fdd7b8a090c30fd28dc3f3caa2493472538f11a92542981c086a13b",
+          "protocol": "3380e9c2a4b60401eda2ec9d779ac6bae26f19ab83c5ab6da53c655aadfa738f",
+          "source": "host_process"
+        },
+        "required_changes": [
+          "change client from LE16 inclusive encoding to native half-open Span in a separately authorized next process launch"
+        ],
+        "persistent_data_change": false,
+        "rollback_strategy": {
+          "reinstall_previous": {
+            "previous_plan": "660adae75116324b5ef527da64711782d67aa9290551eb98afa59fb41abf3dd2"
+          }
+        },
+        "rollback_preconditions": [
+          "retained old executable hash and immutable dataset match; rollback process contract/oracle check passed"
+        ],
+        "irreversible_changes": []
+      }
+    ]
+  },
+  "report": {
+    "schema": 2,
+    "resolution_model": "reference_single_version",
+    "baseline": {
+      "packages": [
+        "42de1bd2a70921e8a3f3c67a3608fd8817e6e6e65a13c1629bafaf368137aae3"
+      ]
+    },
+    "baseline_digest": "660adae75116324b5ef527da64711782d67aa9290551eb98afa59fb41abf3dd2",
+    "debt": {
+      "evidence": "fa32e361f5056305c7fe58917e3c184abf970919d66f1edad51165d0abf663d6",
+      "complete": true,
+      "native_admissions": 0,
+      "compat_admissions": 5000000,
+      "compat_share": 1,
+      "costly_routes": [],
+      "unknown_cost_routes": ["host.window.inclusive@1"]
+    },
+    "candidates": [
+      {
+        "package": "e12e57268ee77bb0e8defe7f8095218be931b0f4769abe5c96312d8be28d76a4",
+        "name": "window-native-fixture",
+        "version": 1,
+        "plan": {
+          "packages": [
+            "e12e57268ee77bb0e8defe7f8095218be931b0f4769abe5c96312d8be28d76a4"
+          ]
+        },
+        "plan_digest": "e56b2b45a6a72d2fcfb0a7da814aa78d4834a71848bcd9613bcd4036e6cb4027",
+        "status": "PARTIAL_EVIDENCE_CANDIDATE",
+        "reason": "dependency solution exists; evidence gaps are explicit and no strong preference is issued",
+        "benchmark": "fa32e361f5056305c7fe58917e3c184abf970919d66f1edad51165d0abf663d6",
+        "baseline_median_ns": 521700,
+        "candidate_median_ns": 295800,
+        "assurance": {
+          "contracts_passed": true,
+          "runtime_complete": false,
+          "provenance_verified": true,
+          "statistical_gain_supported": true,
+          "rollback_documented": true,
+          "missing_checks": [
+            "runtime source/coverage does not establish a complete KOLVRT OS workload observation"
+          ]
+        },
+        "proposal": {
+          "candidate": "e12e57268ee77bb0e8defe7f8095218be931b0f4769abe5c96312d8be28d76a4",
+          "expected_gain": {
+            "independent_pairs": 100,
+            "baseline": {
+              "median_ns": 521700,
+              "p95_ns": 588100,
+              "p99_ns": null
+            },
+            "candidate": {
+              "median_ns": 295800,
+              "p95_ns": 334500,
+              "p99_ns": null
+            },
+            "mean_gain_ns": 224490,
+            "mean_gain_fraction": 0.42265056067235496,
+            "gain_interval_ns": [214194, 234335],
+            "confidence_basis_points": 9500,
+            "bootstrap_resamples": 2000,
+            "seed": 7,
+            "decision": "supported_latency_gain"
+          },
+          "required_changes": [
+            "change client from LE16 inclusive encoding to native half-open Span in a separately authorized next process launch"
+          ],
+          "rollback_strategy": {
+            "reinstall_previous": {
+              "previous_plan": "660adae75116324b5ef527da64711782d67aa9290551eb98afa59fb41abf3dd2"
+            }
+          },
+          "rollback_preconditions": [
+            "retained old executable hash and immutable dataset match; rollback process contract/oracle check passed"
+          ],
+          "irreversible_changes": [],
+          "deployment_authorized": false
+        }
+      }
+    ],
+    "preferred_observed": null,
+    "automatic_replacement": false
+  },
+  "descriptive_statistics": {
+    "independent_pairs": 100,
+    "baseline": {
+      "median_ns": 521700,
+      "p95_ns": 588100,
+      "p99_ns": null
+    },
+    "candidate": {
+      "median_ns": 295800,
+      "p95_ns": 334500,
+      "p99_ns": null
+    },
+    "mean_gain_ns": 224490,
+    "mean_gain_fraction": 0.42265056067235496,
+    "gain_interval_ns": [214194, 234335],
+    "confidence_basis_points": 9500,
+    "bootstrap_resamples": 2000,
+    "seed": 7,
+    "decision": "supported_latency_gain"
+  },
+  "rollback_receipt": {
+    "mode": "compat",
+    "checks": 26,
+    "passed": true,
+    "checksum": 101497600,
+    "iterations": 50000,
+    "warmup_ns": 153600,
+    "warmup_batches_ns": [51200, 51000, 51000],
+    "stabilized": true,
+    "elapsed_ns": 537500,
+    "native_admissions": 0,
+    "compat_admissions": 50000,
+    "copied_bytes": 200000,
+    "conversions": 150000
+  },
+  "paired_receipts": [
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 512800,
+        "candidate_ns": 297700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154300,
+        "warmup_batches_ns": [51500, 51300, 51300],
+        "stabilized": true,
+        "elapsed_ns": 512800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89900,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 512200,
+        "candidate_ns": 298600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157800,
+        "warmup_batches_ns": [51200, 55200, 51200],
+        "stabilized": true,
+        "elapsed_ns": 512200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 298600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 591600,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153300,
+        "warmup_batches_ns": [51100, 51100, 51000],
+        "stabilized": true,
+        "elapsed_ns": 591600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88800,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 546700,
+        "candidate_ns": 296300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153700,
+        "warmup_batches_ns": [51300, 51100, 51100],
+        "stabilized": true,
+        "elapsed_ns": 546700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89300,
+        "warmup_batches_ns": [29700, 29600, 29700],
+        "stabilized": true,
+        "elapsed_ns": 296300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 514800,
+        "candidate_ns": 317300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154600,
+        "warmup_batches_ns": [51600, 51300, 51400],
+        "stabilized": true,
+        "elapsed_ns": 514800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89900,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 317300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 511600,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154000,
+        "warmup_batches_ns": [51300, 51200, 51200],
+        "stabilized": true,
+        "elapsed_ns": 511600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88100,
+        "warmup_batches_ns": [29400, 29300, 29200],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 509600,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153300,
+        "warmup_batches_ns": [51100, 51000, 51100],
+        "stabilized": true,
+        "elapsed_ns": 509600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 128400,
+        "warmup_batches_ns": [40100, 29200, 29200, 29300],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 525000,
+        "candidate_ns": 297700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 160600,
+        "warmup_batches_ns": [55900, 52200, 52200],
+        "stabilized": true,
+        "elapsed_ns": 525000,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90000,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 515200,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154800,
+        "warmup_batches_ns": [51600, 51600, 51500],
+        "stabilized": true,
+        "elapsed_ns": 515200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88800,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 521300,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157000,
+        "warmup_batches_ns": [52400, 52200, 52200],
+        "stabilized": true,
+        "elapsed_ns": 521300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88800,
+        "warmup_batches_ns": [29500, 29300, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 528600,
+        "candidate_ns": 312000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155500,
+        "warmup_batches_ns": [51800, 51800, 51700],
+        "stabilized": true,
+        "elapsed_ns": 528600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 312000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 526900,
+        "candidate_ns": 292500,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 170800,
+        "warmup_batches_ns": [56400, 56900, 56500],
+        "stabilized": true,
+        "elapsed_ns": 526900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88300,
+        "warmup_batches_ns": [29500, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 292500,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 523100,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157800,
+        "warmup_batches_ns": [52700, 52500, 52500],
+        "stabilized": true,
+        "elapsed_ns": 523100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88800,
+        "warmup_batches_ns": [29500, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 514300,
+        "candidate_ns": 293700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154800,
+        "warmup_batches_ns": [51600, 51400, 51400],
+        "stabilized": true,
+        "elapsed_ns": 514300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88900,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 515200,
+        "candidate_ns": 291000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157800,
+        "warmup_batches_ns": [51400, 55300, 51000],
+        "stabilized": true,
+        "elapsed_ns": 515200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88400,
+        "warmup_batches_ns": [29400, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 291000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 604700,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 161900,
+        "warmup_batches_ns": [53900, 53800, 53700],
+        "stabilized": true,
+        "elapsed_ns": 604700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 180600,
+        "warmup_batches_ns": [29700, 62500, 29200, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 535300,
+        "candidate_ns": 294900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154500,
+        "warmup_batches_ns": [51600, 51400, 51300],
+        "stabilized": true,
+        "elapsed_ns": 535300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89100,
+        "warmup_batches_ns": [29700, 29600, 29500],
+        "stabilized": true,
+        "elapsed_ns": 294900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 527900,
+        "candidate_ns": 302000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 162700,
+        "warmup_batches_ns": [57700, 52300, 52300],
+        "stabilized": true,
+        "elapsed_ns": 527900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 91200,
+        "warmup_batches_ns": [30400, 30200, 30200],
+        "stabilized": true,
+        "elapsed_ns": 302000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 566400,
+        "candidate_ns": 304000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 167500,
+        "warmup_batches_ns": [56400, 55400, 55200],
+        "stabilized": true,
+        "elapsed_ns": 566400,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90900,
+        "warmup_batches_ns": [30300, 30100, 30000],
+        "stabilized": true,
+        "elapsed_ns": 304000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 521300,
+        "candidate_ns": 297700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154900,
+        "warmup_batches_ns": [51700, 51500, 51500],
+        "stabilized": true,
+        "elapsed_ns": 521300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90000,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 522100,
+        "candidate_ns": 295800,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157400,
+        "warmup_batches_ns": [52600, 52200, 52300],
+        "stabilized": true,
+        "elapsed_ns": 522100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89900,
+        "warmup_batches_ns": [29900, 29600, 29600],
+        "stabilized": true,
+        "elapsed_ns": 295800,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 519700,
+        "candidate_ns": 299900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155700,
+        "warmup_batches_ns": [51900, 51700, 51600],
+        "stabilized": true,
+        "elapsed_ns": 519700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88400,
+        "warmup_batches_ns": [29400, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 299900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 521900,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 160600,
+        "warmup_batches_ns": [52200, 52000, 56100],
+        "stabilized": true,
+        "elapsed_ns": 521900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88400,
+        "warmup_batches_ns": [29500, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 542400,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 158700,
+        "warmup_batches_ns": [52900, 52800, 52900],
+        "stabilized": true,
+        "elapsed_ns": 542400,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88000,
+        "warmup_batches_ns": [29400, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 580600,
+        "candidate_ns": 516600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 158000,
+        "warmup_batches_ns": [52700, 52600, 52500],
+        "stabilized": true,
+        "elapsed_ns": 580600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 165400,
+        "warmup_batches_ns": [40900, 35700, 29300, 29300, 29200],
+        "stabilized": true,
+        "elapsed_ns": 516600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 521500,
+        "candidate_ns": 294100,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157000,
+        "warmup_batches_ns": [52300, 52100, 52100],
+        "stabilized": true,
+        "elapsed_ns": 521500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 93100,
+        "warmup_batches_ns": [33900, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 294100,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 517700,
+        "candidate_ns": 301900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155900,
+        "warmup_batches_ns": [52000, 51800, 51800],
+        "stabilized": true,
+        "elapsed_ns": 517700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90800,
+        "warmup_batches_ns": [30300, 30100, 30100],
+        "stabilized": true,
+        "elapsed_ns": 301900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 525100,
+        "candidate_ns": 311000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 156900,
+        "warmup_batches_ns": [52300, 52100, 52200],
+        "stabilized": true,
+        "elapsed_ns": 525100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 93600,
+        "warmup_batches_ns": [31100, 31000, 31000],
+        "stabilized": true,
+        "elapsed_ns": 311000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 528900,
+        "candidate_ns": 298900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 159500,
+        "warmup_batches_ns": [53100, 52900, 52900],
+        "stabilized": true,
+        "elapsed_ns": 528900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90300,
+        "warmup_batches_ns": [30100, 30000, 29900],
+        "stabilized": true,
+        "elapsed_ns": 298900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 537200,
+        "candidate_ns": 297900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 160900,
+        "warmup_batches_ns": [52000, 51800, 56500],
+        "stabilized": true,
+        "elapsed_ns": 537200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90100,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 521800,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157000,
+        "warmup_batches_ns": [52400, 52300, 52200],
+        "stabilized": true,
+        "elapsed_ns": 521800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88700,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 527300,
+        "candidate_ns": 293900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155100,
+        "warmup_batches_ns": [51700, 51500, 51500],
+        "stabilized": true,
+        "elapsed_ns": 527300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88700,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 535100,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154900,
+        "warmup_batches_ns": [51700, 51500, 51500],
+        "stabilized": true,
+        "elapsed_ns": 535100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88900,
+        "warmup_batches_ns": [29500, 29400, 29600],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 521700,
+        "candidate_ns": 296400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157200,
+        "warmup_batches_ns": [52400, 52200, 52200],
+        "stabilized": true,
+        "elapsed_ns": 521700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89600,
+        "warmup_batches_ns": [29800, 29700, 29700],
+        "stabilized": true,
+        "elapsed_ns": 296400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 518300,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155800,
+        "warmup_batches_ns": [52000, 51800, 51800],
+        "stabilized": true,
+        "elapsed_ns": 518300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88700,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 527800,
+        "candidate_ns": 296600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154700,
+        "warmup_batches_ns": [51600, 51500, 51200],
+        "stabilized": true,
+        "elapsed_ns": 527800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88300,
+        "warmup_batches_ns": [29500, 29200, 29200],
+        "stabilized": true,
+        "elapsed_ns": 296600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 536100,
+        "candidate_ns": 296400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 162500,
+        "warmup_batches_ns": [56700, 52700, 52700],
+        "stabilized": true,
+        "elapsed_ns": 536100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89600,
+        "warmup_batches_ns": [29800, 29700, 29700],
+        "stabilized": true,
+        "elapsed_ns": 296400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 610500,
+        "candidate_ns": 297700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 185500,
+        "warmup_batches_ns": [62100, 64600, 57900],
+        "stabilized": true,
+        "elapsed_ns": 610500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90700,
+        "warmup_batches_ns": [30000, 29900, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 521500,
+        "candidate_ns": 301700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 161700,
+        "warmup_batches_ns": [52400, 52200, 56900],
+        "stabilized": true,
+        "elapsed_ns": 521500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90000,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 301700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 531200,
+        "candidate_ns": 297700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157300,
+        "warmup_batches_ns": [52400, 52200, 52300],
+        "stabilized": true,
+        "elapsed_ns": 531200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89900,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 514900,
+        "candidate_ns": 296600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154900,
+        "warmup_batches_ns": [51600, 51500, 51500],
+        "stabilized": true,
+        "elapsed_ns": 514900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88300,
+        "warmup_batches_ns": [29500, 29200, 29200],
+        "stabilized": true,
+        "elapsed_ns": 296600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 578400,
+        "candidate_ns": 321200,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 160400,
+        "warmup_batches_ns": [52000, 51800, 56100],
+        "stabilized": true,
+        "elapsed_ns": 578400,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88000,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 321200,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 510600,
+        "candidate_ns": 300200,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153600,
+        "warmup_batches_ns": [51300, 51100, 51100],
+        "stabilized": true,
+        "elapsed_ns": 510600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88700,
+        "warmup_batches_ns": [29500, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 300200,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 515500,
+        "candidate_ns": 303400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 159900,
+        "warmup_batches_ns": [51700, 54100, 54000],
+        "stabilized": true,
+        "elapsed_ns": 515500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 91800,
+        "warmup_batches_ns": [30700, 30400, 30400],
+        "stabilized": true,
+        "elapsed_ns": 303400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 512500,
+        "candidate_ns": 297100,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154100,
+        "warmup_batches_ns": [51400, 51300, 51300],
+        "stabilized": true,
+        "elapsed_ns": 512500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88200,
+        "warmup_batches_ns": [29600, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 297100,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 510400,
+        "candidate_ns": 291000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153600,
+        "warmup_batches_ns": [51200, 51000, 51000],
+        "stabilized": true,
+        "elapsed_ns": 510400,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87800,
+        "warmup_batches_ns": [29300, 29200, 29100],
+        "stabilized": true,
+        "elapsed_ns": 291000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 509800,
+        "candidate_ns": 295300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 244300,
+        "warmup_batches_ns": [91000, 51000, 51000, 51000],
+        "stabilized": true,
+        "elapsed_ns": 509800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89300,
+        "warmup_batches_ns": [29700, 29500, 29500],
+        "stabilized": true,
+        "elapsed_ns": 295300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 527200,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 156100,
+        "warmup_batches_ns": [52000, 51800, 51900],
+        "stabilized": true,
+        "elapsed_ns": 527200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29200, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 529500,
+        "candidate_ns": 301300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 156700,
+        "warmup_batches_ns": [52100, 52400, 52000],
+        "stabilized": true,
+        "elapsed_ns": 529500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 91400,
+        "warmup_batches_ns": [30400, 30100, 30200],
+        "stabilized": true,
+        "elapsed_ns": 301300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 520600,
+        "candidate_ns": 295400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 156700,
+        "warmup_batches_ns": [52200, 52100, 52200],
+        "stabilized": true,
+        "elapsed_ns": 520600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89300,
+        "warmup_batches_ns": [29800, 29600, 29600],
+        "stabilized": true,
+        "elapsed_ns": 295400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 519100,
+        "candidate_ns": 307600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 156200,
+        "warmup_batches_ns": [52100, 52000, 51900],
+        "stabilized": true,
+        "elapsed_ns": 519100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89800,
+        "warmup_batches_ns": [29900, 29600, 29600],
+        "stabilized": true,
+        "elapsed_ns": 307600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 567700,
+        "candidate_ns": 293700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155000,
+        "warmup_batches_ns": [51700, 51600, 51500],
+        "stabilized": true,
+        "elapsed_ns": 567700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88700,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 519800,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 497000,
+        "warmup_batches_ns": [
+          51500, 51400, 89300, 68400, 81700, 51400, 51300, 51300
+        ],
+        "stabilized": true,
+        "elapsed_ns": 519800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88700,
+        "warmup_batches_ns": [29400, 29300, 29200],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 548500,
+        "candidate_ns": 295400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 158500,
+        "warmup_batches_ns": [51300, 55400, 51400],
+        "stabilized": true,
+        "elapsed_ns": 548500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87800,
+        "warmup_batches_ns": [29300, 29100, 29200],
+        "stabilized": true,
+        "elapsed_ns": 295400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 511400,
+        "candidate_ns": 299200,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 163300,
+        "warmup_batches_ns": [51300, 51100, 60700],
+        "stabilized": true,
+        "elapsed_ns": 511400,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 166100,
+        "warmup_batches_ns": [55900, 54600, 55000],
+        "stabilized": true,
+        "elapsed_ns": 299200,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 516700,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155700,
+        "warmup_batches_ns": [51900, 51700, 51700],
+        "stabilized": true,
+        "elapsed_ns": 516700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88200,
+        "warmup_batches_ns": [29500, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 523200,
+        "candidate_ns": 303500,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155600,
+        "warmup_batches_ns": [51900, 51800, 51700],
+        "stabilized": true,
+        "elapsed_ns": 523200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89300,
+        "warmup_batches_ns": [29900, 29500, 29500],
+        "stabilized": true,
+        "elapsed_ns": 303500,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 515500,
+        "candidate_ns": 295100,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155100,
+        "warmup_batches_ns": [51700, 51600, 51500],
+        "stabilized": true,
+        "elapsed_ns": 515500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89400,
+        "warmup_batches_ns": [29700, 29600, 29600],
+        "stabilized": true,
+        "elapsed_ns": 295100,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 520800,
+        "candidate_ns": 293700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153600,
+        "warmup_batches_ns": [51200, 51000, 51100],
+        "stabilized": true,
+        "elapsed_ns": 520800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 93000,
+        "warmup_batches_ns": [33500, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 531100,
+        "candidate_ns": 297700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 159300,
+        "warmup_batches_ns": [54600, 52200, 52200],
+        "stabilized": true,
+        "elapsed_ns": 531100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90000,
+        "warmup_batches_ns": [29900, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 522100,
+        "candidate_ns": 299100,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157200,
+        "warmup_batches_ns": [52300, 52200, 52200],
+        "stabilized": true,
+        "elapsed_ns": 522100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90400,
+        "warmup_batches_ns": [30100, 29900, 30000],
+        "stabilized": true,
+        "elapsed_ns": 299100,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 525200,
+        "candidate_ns": 334500,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157900,
+        "warmup_batches_ns": [52600, 52500, 52500],
+        "stabilized": true,
+        "elapsed_ns": 525200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 116200,
+        "warmup_batches_ns": [39000, 35700, 41100],
+        "stabilized": true,
+        "elapsed_ns": 334500,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 528800,
+        "candidate_ns": 326300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155700,
+        "warmup_batches_ns": [51900, 51700, 51700],
+        "stabilized": true,
+        "elapsed_ns": 528800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88900,
+        "warmup_batches_ns": [29700, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 326300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 513900,
+        "candidate_ns": 295000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153400,
+        "warmup_batches_ns": [51200, 51000, 51000],
+        "stabilized": true,
+        "elapsed_ns": 513900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89100,
+        "warmup_batches_ns": [29700, 29600, 29500],
+        "stabilized": true,
+        "elapsed_ns": 295000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 570900,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154800,
+        "warmup_batches_ns": [51600, 51500, 51500],
+        "stabilized": true,
+        "elapsed_ns": 570900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88100,
+        "warmup_batches_ns": [29500, 29200, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 531200,
+        "candidate_ns": 296500,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 160300,
+        "warmup_batches_ns": [53600, 53200, 53200],
+        "stabilized": true,
+        "elapsed_ns": 531200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88200,
+        "warmup_batches_ns": [29500, 29300, 29200],
+        "stabilized": true,
+        "elapsed_ns": 296500,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 522300,
+        "candidate_ns": 299100,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157100,
+        "warmup_batches_ns": [52400, 52300, 52300],
+        "stabilized": true,
+        "elapsed_ns": 522300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90400,
+        "warmup_batches_ns": [30100, 30000, 29900],
+        "stabilized": true,
+        "elapsed_ns": 299100,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 510100,
+        "candidate_ns": 307400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153900,
+        "warmup_batches_ns": [51400, 51000, 51100],
+        "stabilized": true,
+        "elapsed_ns": 510100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 307400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 560000,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 158000,
+        "warmup_batches_ns": [51500, 51100, 55200],
+        "stabilized": true,
+        "elapsed_ns": 560000,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88000,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 510300,
+        "candidate_ns": 301900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153700,
+        "warmup_batches_ns": [51200, 51100, 51000],
+        "stabilized": true,
+        "elapsed_ns": 510300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 91300,
+        "warmup_batches_ns": [30500, 30300, 30200],
+        "stabilized": true,
+        "elapsed_ns": 301900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 514800,
+        "candidate_ns": 291000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 156400,
+        "warmup_batches_ns": [54200, 51000, 50900],
+        "stabilized": true,
+        "elapsed_ns": 514800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29200, 29100],
+        "stabilized": true,
+        "elapsed_ns": 291000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 511500,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153900,
+        "warmup_batches_ns": [51300, 51200, 51200],
+        "stabilized": true,
+        "elapsed_ns": 511500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29500, 29200, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 714400,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153700,
+        "warmup_batches_ns": [51200, 51100, 51100],
+        "stabilized": true,
+        "elapsed_ns": 714400,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29200, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 520500,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 300200,
+        "warmup_batches_ns": [51200, 95000, 51100, 51100, 51100],
+        "stabilized": true,
+        "elapsed_ns": 520500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29100, 29200],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 681900,
+        "candidate_ns": 296600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153300,
+        "warmup_batches_ns": [51100, 51100, 51000],
+        "stabilized": true,
+        "elapsed_ns": 681900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89100,
+        "warmup_batches_ns": [29700, 29600, 29500],
+        "stabilized": true,
+        "elapsed_ns": 296600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 523000,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157200,
+        "warmup_batches_ns": [52300, 52300, 52200],
+        "stabilized": true,
+        "elapsed_ns": 523000,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88100,
+        "warmup_batches_ns": [29500, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 568200,
+        "candidate_ns": 305300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 161800,
+        "warmup_batches_ns": [53900, 53800, 53800],
+        "stabilized": true,
+        "elapsed_ns": 568200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88000,
+        "warmup_batches_ns": [29300, 29100, 29200],
+        "stabilized": true,
+        "elapsed_ns": 305300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 513200,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154200,
+        "warmup_batches_ns": [51500, 51300, 51300],
+        "stabilized": true,
+        "elapsed_ns": 513200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88400,
+        "warmup_batches_ns": [29400, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 509500,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153300,
+        "warmup_batches_ns": [51100, 51000, 51000],
+        "stabilized": true,
+        "elapsed_ns": 509500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88200,
+        "warmup_batches_ns": [29600, 29200, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 521900,
+        "candidate_ns": 352800,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157200,
+        "warmup_batches_ns": [52400, 52200, 52200],
+        "stabilized": true,
+        "elapsed_ns": 521900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 90200,
+        "warmup_batches_ns": [30100, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 352800,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 514600,
+        "candidate_ns": 294900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154800,
+        "warmup_batches_ns": [51600, 51500, 51400],
+        "stabilized": true,
+        "elapsed_ns": 514600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89100,
+        "warmup_batches_ns": [29700, 29600, 29500],
+        "stabilized": true,
+        "elapsed_ns": 294900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 527300,
+        "candidate_ns": 297700,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 156500,
+        "warmup_batches_ns": [52200, 52100, 52000],
+        "stabilized": true,
+        "elapsed_ns": 527300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89900,
+        "warmup_batches_ns": [30000, 29800, 29800],
+        "stabilized": true,
+        "elapsed_ns": 297700,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 512600,
+        "candidate_ns": 307400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154600,
+        "warmup_batches_ns": [51500, 51300, 51300],
+        "stabilized": true,
+        "elapsed_ns": 512600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88800,
+        "warmup_batches_ns": [29500, 29300, 29400],
+        "stabilized": true,
+        "elapsed_ns": 307400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 526600,
+        "candidate_ns": 513200,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 158600,
+        "warmup_batches_ns": [52800, 52700, 52700],
+        "stabilized": true,
+        "elapsed_ns": 526600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 127800,
+        "warmup_batches_ns": [37100, 30000, 30000, 30000],
+        "stabilized": true,
+        "elapsed_ns": 513200,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 588100,
+        "candidate_ns": 319800,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 169900,
+        "warmup_batches_ns": [53700, 57800, 58100],
+        "stabilized": true,
+        "elapsed_ns": 588100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 91000,
+        "warmup_batches_ns": [30400, 30000, 30000],
+        "stabilized": true,
+        "elapsed_ns": 319800,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 517400,
+        "candidate_ns": 293800,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154200,
+        "warmup_batches_ns": [51500, 51200, 51300],
+        "stabilized": true,
+        "elapsed_ns": 517400,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88900,
+        "warmup_batches_ns": [29600, 29400, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293800,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 514200,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154800,
+        "warmup_batches_ns": [51600, 51500, 51500],
+        "stabilized": true,
+        "elapsed_ns": 514200,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88300,
+        "warmup_batches_ns": [29500, 29200, 29200],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 515100,
+        "candidate_ns": 295000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 158400,
+        "warmup_batches_ns": [51500, 55400, 51300],
+        "stabilized": true,
+        "elapsed_ns": 515100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89000,
+        "warmup_batches_ns": [29600, 29600, 29500],
+        "stabilized": true,
+        "elapsed_ns": 295000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 511900,
+        "candidate_ns": 292300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154200,
+        "warmup_batches_ns": [51400, 51200, 51200],
+        "stabilized": true,
+        "elapsed_ns": 511900,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88300,
+        "warmup_batches_ns": [29400, 29300, 29300],
+        "stabilized": true,
+        "elapsed_ns": 292300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 510100,
+        "candidate_ns": 296300,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153400,
+        "warmup_batches_ns": [51200, 51000, 51000],
+        "stabilized": true,
+        "elapsed_ns": 510100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 89700,
+        "warmup_batches_ns": [30000, 29600, 29600],
+        "stabilized": true,
+        "elapsed_ns": 296300,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 509800,
+        "candidate_ns": 291000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153500,
+        "warmup_batches_ns": [51200, 51100, 51000],
+        "stabilized": true,
+        "elapsed_ns": 509800,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87900,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 291000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 515600,
+        "candidate_ns": 548100,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153400,
+        "warmup_batches_ns": [51200, 51000, 51000],
+        "stabilized": true,
+        "elapsed_ns": 515600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 289800,
+        "warmup_batches_ns": [29700, 37600, 46600, 60400, 61000, 53300],
+        "stabilized": true,
+        "elapsed_ns": 548100,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 523100,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 164300,
+        "warmup_batches_ns": [60500, 51700, 51700],
+        "stabilized": true,
+        "elapsed_ns": 523100,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88000,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 542500,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153700,
+        "warmup_batches_ns": [51200, 51100, 51000],
+        "stabilized": true,
+        "elapsed_ns": 542500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87700,
+        "warmup_batches_ns": [29200, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 515600,
+        "candidate_ns": 296400,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 158500,
+        "warmup_batches_ns": [51500, 51300, 55400],
+        "stabilized": true,
+        "elapsed_ns": 515600,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88000,
+        "warmup_batches_ns": [29300, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 296400,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 515700,
+        "candidate_ns": 293600,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 155500,
+        "warmup_batches_ns": [51800, 51600, 51600],
+        "stabilized": true,
+        "elapsed_ns": 515700,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 94500,
+        "warmup_batches_ns": [32800, 31900, 29400],
+        "stabilized": true,
+        "elapsed_ns": 293600,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 524500,
+        "candidate_ns": 464100,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 157100,
+        "warmup_batches_ns": [52400, 52200, 52300],
+        "stabilized": true,
+        "elapsed_ns": 524500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 147800,
+        "warmup_batches_ns": [48300, 49400, 49500],
+        "stabilized": true,
+        "elapsed_ns": 464100,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 517300,
+        "candidate_ns": 291000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 154200,
+        "warmup_batches_ns": [51500, 51300, 51300],
+        "stabilized": true,
+        "elapsed_ns": 517300,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 87700,
+        "warmup_batches_ns": [29200, 29100, 29200],
+        "stabilized": true,
+        "elapsed_ns": 291000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "AB",
+      "pair": {
+        "baseline_ns": 509500,
+        "candidate_ns": 290900,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": true,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 153400,
+        "warmup_batches_ns": [51100, 51000, 50900],
+        "stabilized": true,
+        "elapsed_ns": 509500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 88000,
+        "warmup_batches_ns": [29400, 29100, 29100],
+        "stabilized": true,
+        "elapsed_ns": 290900,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    },
+    {
+      "order": "BA",
+      "pair": {
+        "baseline_ns": 533500,
+        "candidate_ns": 302000,
+        "baseline_compat_admissions": 50000,
+        "candidate_compat_admissions": 0,
+        "useful_units": 50000,
+        "baseline_first": false,
+        "oracle_passed": true
+      },
+      "baseline": {
+        "mode": "compat",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 182700,
+        "warmup_batches_ns": [58500, 60600, 63100],
+        "stabilized": true,
+        "elapsed_ns": 533500,
+        "native_admissions": 0,
+        "compat_admissions": 50000,
+        "copied_bytes": 200000,
+        "conversions": 150000
+      },
+      "candidate": {
+        "mode": "native",
+        "checks": 26,
+        "passed": true,
+        "checksum": 101497600,
+        "iterations": 50000,
+        "warmup_ns": 94100,
+        "warmup_batches_ns": [30400, 34100, 29200],
+        "stabilized": true,
+        "elapsed_ns": 302000,
+        "native_admissions": 50000,
+        "compat_admissions": 0,
+        "copied_bytes": 0,
+        "conversions": 0
+      }
+    }
+  ],
+  "limits": [
+    "Independence assumed, not demonstrated",
+    "Background load, thermals and affinity uncontrolled",
+    "No persistent data migration",
+    "No physical ARM64 KOLVRT run",
+    "Nominal bootstrap coverage only",
+    "Ephemeral local signer; production provisioning/freshness absent"
+  ]
+}

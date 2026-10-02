@@ -113,6 +113,14 @@
         "source_sha256": "7f9813cc3e28644f721a544d0610256aaabc6539a990ca851e01514414b01414",
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
+      "docs/architecture/migration-advisor.md": {
+        "source_sha256": "a7da1abe33a81574c4eda0a211de83513b36db568044a8e8c681979985540949",
+        "translation_sha256": "3c821f45ceef54e06444bccb29c726c0d6c8f3baacea3489ae2e23fe06481678"
+      },
+      "docs/architecture/migration-workbench.md": {
+        "source_sha256": "bd1a18820009cf12f852a2773de96139ac7cd1333d0f10829d69f8e7b762202d",
+        "translation_sha256": "03283b2d99d653aba0bcbc287c1312c382f5953ed109018946c647bd88b6cc99"
+      },
       "docs/architecture/native-abi.md": {
         "source_sha256": "7982d777a8e38af9800b29a794d65feb9713b0a8c15b116e63dd9f8c64373bc8",
         "translation_sha256": "11f4d68c7baeff6ff8978562aee5770d61b60c90caca102e8999e42266ac713f"

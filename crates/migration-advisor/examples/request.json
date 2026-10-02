@@ -1,0 +1,87 @@
+{
+  "schema": 2,
+  "catalog": [
+    {
+      "name": "compat-window",
+      "version": 1,
+      "identity": "0000000000000000000000000000000000000000000000000000000000000001",
+      "provides": [
+        {
+          "capability_id": "window.reduce",
+          "semantic_version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          },
+          "contract_digest": "0000000000000000000000000000000000000000000000000000000000000063"
+        }
+      ],
+      "requires": [],
+      "conflicts": []
+    },
+    {
+      "name": "native-window",
+      "version": 1,
+      "identity": "0000000000000000000000000000000000000000000000000000000000000002",
+      "provides": [
+        {
+          "capability_id": "window.reduce",
+          "semantic_version": {
+            "major": 1,
+            "minor": 0,
+            "patch": 0
+          },
+          "contract_digest": "0000000000000000000000000000000000000000000000000000000000000063"
+        }
+      ],
+      "requires": [],
+      "conflicts": []
+    }
+  ],
+  "current": "0000000000000000000000000000000000000000000000000000000000000001",
+  "installed": {
+    "packages": [
+      "0000000000000000000000000000000000000000000000000000000000000001"
+    ]
+  },
+  "requirements": [
+    [
+      {
+        "capability_id": "window.reduce",
+        "min_version": {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        },
+        "max_version": {
+          "major": 1,
+          "minor": 9,
+          "patch": 99
+        },
+        "contract_digest": "0000000000000000000000000000000000000000000000000000000000000063"
+      }
+    ]
+  ],
+  "retained": [],
+  "context": {
+    "machine": "illustrative-host-model",
+    "workload": "000000000000000000000000000000000000000000000000000000000000005a",
+    "kernel": "000000000000000000000000000000000000000000000000000000000000005b",
+    "protocol": "000000000000000000000000000000000000000000000000000000000000005c",
+    "source": "host_model"
+  },
+  "runtime": null,
+  "tests": [],
+  "benchmarks": [],
+  "statistics": {
+    "min_pairs": 100,
+    "bootstrap_resamples": 2000,
+    "confidence_basis_points": 9500,
+    "seed": 7,
+    "improvement_margin_ns": 5,
+    "p95_regression_budget_ns": 10,
+    "p99_regression_budget_ns": null
+  },
+  "attestations": [],
+  "migration_plans": []
+}
