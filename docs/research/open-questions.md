@@ -2,6 +2,8 @@
 
 Status is scoped to the [first native slice](../architecture/first-native-slice.md). Deferred work becomes mandatory when its named consumer enters scope. Implementation gates remain open until executed; a design choice is not an implementation proof.
 
+The table preserves the Phase 0 decision snapshot. Current EL1 boot, linking, MMU and IRQ evidence is documented in [kernel testing](../kernel/testing.md); [ADR-0010](../architecture-decisions/0010-kernel-foundation.md) narrows the present implementation to CPU0. EL0 services, SMP, hardware and comparative algorithm measurements remain open.
+
 | ID    | Disposition                         | Resolution or activation condition                                                                                                                                                                                                |
 | ----- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | OQ-01 | Decided for slice                   | Isolated EL0 service; [decision 0008](../architecture-decisions/0008-placement.md). DMA drivers and compatibility adapters require their own workload and threat review                                                           |

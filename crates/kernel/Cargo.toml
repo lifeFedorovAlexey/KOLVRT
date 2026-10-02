@@ -1,0 +1,23 @@
+[package]
+name = "kolvrt-kernel"
+version = "0.1.0"
+edition = "2024"
+build = "build.rs"
+
+[[bin]]
+name = "kolvrt-kernel"
+path = "src/main.rs"
+test = false
+bench = false
+
+[dependencies]
+kernel-core = { path = "../kernel-core" }
+
+[features]
+default = []
+diagnostics = []
+kernel-tests = []
+negative-test = ["kernel-tests"]
+panic-test = ["kernel-tests"]
+ownership-test = ["kernel-tests"]
+retained-mapping-test = ["kernel-tests"]

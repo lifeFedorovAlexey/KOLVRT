@@ -7,22 +7,37 @@ crates/
   native-protocol-model/   # no_std request/response candidate
   native-state-models/     # finite state models and host IPC experiment
   repository-checks/       # schema, links, laws, translations and reports
+  kernel-core/             # safe platform-independent bounded algorithms
+  kernel/                  # native no_std AArch64 executable
+    src/arch/aarch64/      # processor entry, vectors, registers and descriptors
+    src/platform/          # pinned platform discovery and validation
+    src/hal/               # checked device access
+    src/memory/            # ownership, page tables and heap
+    src/interrupt/         # GICv3 and IRQ lifecycle
+    src/sync/              # bounded locking and guards
+    src/time/              # typed deadlines
+    src/diagnostics/       # UART reporting
+  xtask/                   # host build, QEMU tests and unsafe inventory
 docs/
   architecture/           # contracts and reviewable specifications
   architecture-decisions/ # decision rationale, alternatives and consequences
   research/               # methods, indexes, reports and outstanding evidence
+  kernel/                 # implemented contracts, tests and unsafe invariants
 research/
   cases/                  # structured historical evidence
   sources/                # provenance ledger and bilingual catalog
   results/                # reproducible model output and law traceability
   requests/               # original request evidence
+  fixtures/               # generated boot-description parser input
+scripts/                  # pinned QEMU setup
+.github/workflows/        # local-equivalent CI checks
 schemas/                  # data validation contracts
 translations/ru/          # mirrored Markdown paths
 ```
 
 ## Rationale and alternatives
 
-[Cargo recommends a flat crates directory](https://doc.rust-lang.org/cargo/reference/workspaces.html) for workspace packages. One root lockfile and target directory serve all three packages. Package names describe purpose; the model suffix prevents mistaking a prototype for a kernel implementation. A separate tools tree and executable crates buried in research data added locations without a different build lifecycle, so they were consolidated.
+[Cargo recommends a flat crates directory](https://doc.rust-lang.org/cargo/reference/workspaces.html) for workspace packages. One root lockfile and target directory serve all six packages. Package names describe purpose; the model suffix prevents mistaking a prototype for a kernel implementation. A separate tools tree and executable crates buried in research data added locations without a different build lifecycle, so they were consolidated.
 
 [Decision records](https://adr.github.io/) preserve why a choice was made and its tradeoffs; specifications describe the resulting contract. [Diataxis](https://diataxis.fr/) distinguishes documentation purposes. This project applies that distinction without inventing empty tutorial directories or claiming the framework mandates this exact tree. The contribution guide is a how-to; contracts are reference material; decisions explain choices; research reports record evidence.
 

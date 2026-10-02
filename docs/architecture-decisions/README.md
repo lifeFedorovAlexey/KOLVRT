@@ -1,6 +1,6 @@
 # Architecture decisions
 
-Accepted records define Phase 0 requirements, not implemented features. Proposed records remain open.
+Records distinguish Phase 0 design requirements from the implemented kernel foundation in ADR-0010. Proposed records remain open.
 
 - [ADR-0001 — Native authority and legacy isolation](0001-native-authority.md) — Accepted.
 - [ADR-0002 — Routing by state domain](0002-stateful-routing.md) — Accepted.
@@ -11,5 +11,7 @@ Accepted records define Phase 0 requirements, not implemented features. Proposed
 - [ADR-0007 — Bug compatibility and module retirement](0007-bug-compat.md) — Accepted.
 - [ADR-0008 — Service protection domains](0008-placement.md) — Accepted for the first native slice.
 - [ADR-0009 — Native slice design baseline](0009-native-slice-baseline.md) — Accepted.
+- [ADR-0010 — Native EL1 foundation](0010-kernel-foundation.md) — Accepted.
+- [ADR-0011 — Performance and reliability method review](0011-method-review.md) — Accepted.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)
