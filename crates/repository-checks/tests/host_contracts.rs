@@ -260,7 +260,7 @@ fn law_checks_require_unique_complete_language_neutral_evidence() {
         .find(|line| line.starts_with("## LAW-"))
         .unwrap()
         .to_owned();
-    duplicate.push_str("\n");
+    duplicate.push('\n');
     duplicate.push_str(&heading);
     assert!(documents::check_laws(&duplicate).is_err());
 
