@@ -2,6 +2,17 @@
 
 Status: **Accepted**. Date: 2026-10-02.
 
+Document status: HISTORICAL
+Document scope: original Phase 1 CPU0-only milestone; accepted isolation and ownership obligations remain applicable.
+Status reference: [Later multicore milestone](0012-multicore-retirement.md)
+
+Issue #6 clarifies the historical scope without changing kernel contracts. The CPU0-only
+execution claim below belongs to the original [foundation result](../../research/results/kernel-foundation.json).
+Later [EL0 scope](0014-el0-foundation.md) is separately accepted and evidenced; the
+[first native slice](../architecture/first-native-slice.md) remains a design baseline
+for its incomplete IPC/handle/cancellation workload. Follow the [status policy](../documentation-policy.md):
+code does not automatically override an accepted contract. This adds no law or capability.
+
 ## Context
 
 The user authorized a real kernel before scheduler, userspace and compatibility. The earlier native EL0 slice remains a later milestone. A complete preceding level is allowed when SMP cannot yet be established correctly.

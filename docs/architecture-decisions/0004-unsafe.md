@@ -2,6 +2,10 @@
 
 Status: **Accepted**. Date: 2026-10-02.
 
+Document status: CURRENT
+Document scope: unsafe-boundary obligations; the original test-status claim applies only to Phase 0.
+Status reference: [Later verification evidence](../documentation-policy.md)
+
 ## Context
 
 Dirty Pipe, DMA ordering and reclamation require explicit lifetime arguments (cases 08, 10, 22).
@@ -36,7 +40,9 @@ Dependencies, generated code, Send/Sync and assembly belong in the trusted compu
 
 ## Testing
 
-Use host models, Miri where applicable, concurrency tests, QEMU and hardware. Kernel checks have not run in this phase.
+Use host models, Miri where applicable, concurrency tests, QEMU and hardware. Kernel
+checks had not run in Phase 0; later retained QEMU matrices have their own scope and
+do not certify all unsafe boundaries or physical hardware.
 
 ## Reversibility
 

@@ -256,7 +256,7 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Allowed exceptions:** Optional production counters may be absent; the value is unavailable rather than fabricated.
 
-**Enforcement:** Review metric definitions and experiment manifests; keep hardware adaptation separate from software dependence.
+**Enforcement:** Review metric definitions and experiment manifests; keep hardware adaptation separate from software dependence. Follow the [document status policy](../documentation-policy.md) and scoped ADR-0010 evidence when reporting implementation milestones.
 
 **Testing:** Check zero denominators, lost events, nested spans, censored tails and a legitimately faster compatibility result.
 

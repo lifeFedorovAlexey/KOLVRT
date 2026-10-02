@@ -222,6 +222,15 @@ pub fn check_abi_publication(
 }
 
 pub fn check_docs(root: &Path) -> CheckResult<()> {
+    for document in [
+        "docs/architecture/first-native-slice.md",
+        "docs/architecture/compatibility-model.md",
+        "docs/architecture/unsafe-policy.md",
+        "docs/architecture-decisions/0004-unsafe.md",
+        "docs/architecture-decisions/0010-kernel-foundation.md",
+    ] {
+        check_document_status(&read(&root.join(document))?)?;
+    }
     check_abi_publication(
         &read(&root.join("docs/architecture/native-abi.md"))?,
         |name| read(&root.join("docs/architecture-decisions").join(name)),
@@ -301,6 +310,37 @@ pub fn check_docs(root: &Path) -> CheckResult<()> {
         return Err("no architecture decisions found".into());
     }
     database::check_ledger(root)
+}
+
+/// Bounded metadata validation, not proof that claims match execution evidence.
+pub fn check_document_status(text: &str) -> CheckResult<()> {
+    let mut values = Vec::new();
+    for name in ["Document status", "Document scope", "Status reference"] {
+        let prefix = format!("{name}: ");
+        let fields: Vec<_> = text
+            .lines()
+            .filter_map(|s| s.strip_prefix(&prefix))
+            .collect();
+        if fields.len() != 1 || fields[0].trim().is_empty() {
+            return Err(format!("document requires exactly one nonempty {name}"));
+        }
+        values.push(fields[0].trim());
+    }
+    if !matches!(
+        values[0],
+        "CURRENT" | "DESIGN BASELINE" | "HISTORICAL" | "SUPERSEDED"
+    ) {
+        return Err("unknown document status".into());
+    }
+    let link = Regex::new(r"^\[[^\]]+\]\(([^)]+)\)$").unwrap();
+    let capture = link
+        .captures(values[2])
+        .ok_or("status reference must be a local Markdown link")?;
+    let target = &capture[1];
+    if target.starts_with(['/', '#']) || target.contains(':') || !target.ends_with(".md") {
+        return Err("status reference must name a local document".into());
+    }
+    Ok(())
 }
 
 fn locale_valid(locale: &str) -> bool {

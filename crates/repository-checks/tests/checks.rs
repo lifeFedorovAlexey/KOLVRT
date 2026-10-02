@@ -22,6 +22,29 @@ fn root() -> PathBuf {
 }
 
 #[test]
+fn document_status_requires_scope_and_local_reference() {
+    let valid = "Document status: HISTORICAL\nDocument scope: Phase 0 only\nStatus reference: [Replacement](../kernel/el0.md)\n";
+    for status in ["CURRENT", "DESIGN BASELINE", "HISTORICAL", "SUPERSEDED"] {
+        assert!(documents::check_document_status(&valid.replace("HISTORICAL", status)).is_ok());
+    }
+    for invalid in [
+        valid.replace("HISTORICAL", "DONE"),
+        valid.replace("Document scope: Phase 0 only\n", ""),
+        valid.replace("Phase 0 only", " "),
+        format!("{valid}Document status: CURRENT\n"),
+        valid.replace("../kernel/el0.md", "https://example.com/el0.md"),
+        valid.replace("../kernel/el0.md", "#implementation"),
+        valid.replace("../kernel/el0.md", "/el0.md"),
+        valid.replace(
+            "Status reference: [Replacement](../kernel/el0.md)",
+            "Status reference: none",
+        ),
+    ] {
+        assert!(documents::check_document_status(&invalid).is_err());
+    }
+}
+
+#[test]
 fn abi_publication_requires_exact_accepted_freeze() {
     let candidate =
         "ABI contract: native.request/0\nPublication stage: CANDIDATE\nABI-FREEZE: none\n";

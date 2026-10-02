@@ -1,5 +1,9 @@
 # Compatibility model
 
+Document status: CURRENT
+Document scope: software compatibility obligations; Phase 0 implementation claims are historical.
+Status reference: [Implementation evidence](../documentation-policy.md)
+
 Compat cannot issue missing consumer grants or expand effective authority. Service-private capabilities permit mediation only within native-authorized effects; [ADR-0013](../architecture-decisions/0013-security-boundaries.md) allows no compatibility waiver.
 
 A compatibility module translates an external semantic contract into the current native
@@ -56,7 +60,8 @@ Version selection uses an explicit compatibility matrix, not a highest-version h
 A binding pins both semantic version and artifact digest. Versions can coexist only with
 separate state or proven interoperability. Dependency cycles and unsupported operations
 fail explicitly before use. A native-only build removes software compatibility modules
-and passes the same native contract tests. There is no kernel build yet in Phase 0.
+and passes the same native contract tests. Phase 0 had no kernel build; the merged
+repository now has the bounded kernel implementation recorded in the status reference.
 
 Legacy layouts, error conventions, syscall tables and historical state machines stay in
 adapters. They cannot add application-version branches to the scheduler, memory manager,

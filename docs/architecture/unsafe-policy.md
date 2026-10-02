@@ -1,5 +1,9 @@
 # Rust implementation safety policy
 
+Document status: CURRENT
+Document scope: current safety obligations with historical Phase 0 verification limits.
+Status reference: [Reviewed execution scope](../documentation-policy.md)
+
 Phase 0 statements below describe the historical stage. Current checks are bounded by the [SMP contract](../kernel/smp.md). An unsafe inventory is not a risk score; safe Rust and EL0 do not themselves exclude a component from TCB. Trust is property-specific in the [system threat model](../security/threat-model.md).
 
 This policy applies to the chosen Rust implementation. It is not a language-independent
@@ -35,8 +39,10 @@ metadata. Destruction cannot free memory while a device may still access it. For
 
 Use Miri for supported host-side code, concurrency models for represented interleavings,
 QEMU for integration and real hardware/litmus tests for ordering and silicon defects.
-None proves the whole kernel. These kernel checks have not been run in Phase 0.
-Pin the compiler and relevant reference revision before the first unsafe implementation.
+None proves the whole kernel. Phase 0 had no executed kernel checks; later retained
+QEMU foundation, SMP and EL0 matrices cover only their recorded revisions and profiles.
+No physical-hardware or complete unsafe proof follows. Pin compiler and reference
+revision for each unsafe implementation and its tests.
 
 Evidence: [Rust validity rules](https://doc.rust-lang.org/reference/behavior-considered-undefined.html),
 [buffer initialization](../../research/cases/KOL-PATH-0008.json),
