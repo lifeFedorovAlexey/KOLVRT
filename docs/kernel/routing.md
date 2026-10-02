@@ -26,7 +26,7 @@ CPU0: acquire both Done → inspect bounded reports → drop charges → reclaim
 crates/kernel-core/src/execution.rs     native experimental operation contract
 crates/kernel-core/src/window.rs        native checked algorithm and Backend boundary
 crates/kernel/src/execution.rs          protected own observations and checked register reply
-crates/kernel/src/scheduler.rs          current-task attribution, SVC, admission
+crates/kernel/src/scheduler/mod.rs          current-task attribution, SVC, admission
 crates/kernel/src/memory/mod.rs         retained immutable RX image and guarded stacks
 crates/routing/src/lib.rs               profile, versions, private binding and transactions
 crates/routing/src/conformance.rs       behavior and rejection fixtures
@@ -101,5 +101,7 @@ Native-only builds run the same foundation suite. A separate pruned-workspace ch
 Preserved pure model: Route, semantic names, Profile schema/version/digest, immutable configuration, dependency rules, status definitions and native Span/Reduction. Preserved runtime candidates: Consumer/Transaction, dispatch and adapter conversion. Their backend boundary now calls the actual native capability from EL0; local providers remain conformance fixtures. No useful groundwork was rolled back. The old “no multi-CPU access” restriction becomes exclusive per-consumer ownership, while distinct consumers run concurrently. The old one-page image/stack and single boot session are replaced by bounded retained payloads and CAS admission.
 
 No native → compatibility hook was connected. Routing runtime is connected outside native core. IPC, handles/capabilities, cancellation, services, security domains, arbitrary loaders, shared state-domain migration, signatures and dynamic unloading remain later work. Phase 3 candidates are the native IPC/authority slice, then a concrete service consumer; device/DMA or Linux personalities require independent contracts and evidence. Do not infer a global production security policy from this demonstration.
+
+The later [Phase 3.0 scheduler](scheduler.md) separates runtime, architectural context and bootstrap verification, with checked generations and per-CPU storage permits. This changes no adapter binding or native observation semantics. [Regression results](../../research/results/routing-phase3-regression.json) cover the current scheduler sources; original Phase 2 measurements above remain historical. The native foundation now also tests repeated queue reuse without reboot.
 
 [Russian translation](../../translations/ru/docs/kernel/routing.md)

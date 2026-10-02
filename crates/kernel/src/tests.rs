@@ -252,7 +252,16 @@ fn multicore(p: &mut memory::Physical) {
         remote::complete(remote::PANIC);
         panic!("secondary panic not detected");
     }
-    let users = crate::scheduler::exercise(p);
+    let users = crate::boot_workload::exercise(p);
+    let repeated_users = crate::boot_workload::exercise(p);
+    report(
+        "scheduler_generation_reuse",
+        repeated_users.reclaimed
+            && repeated_users.owners_released
+            && repeated_users.processes == users.processes
+            && repeated_users.faults == users.faults
+            && repeated_users.workers == users.workers,
+    );
     report(
         "el0_processes",
         users.processes == platform::config::USER_PROCESSES,

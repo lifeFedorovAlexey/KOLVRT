@@ -44,6 +44,83 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
         "user address space retains frame",
     ),
 ];
+const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
+    (
+        "--scheduler-aarch32-control",
+        "scheduler-aarch32-negative",
+        "InvalidUserContext",
+    ),
+    (
+        "--scheduler-user-irq-control",
+        "scheduler-user-irq-negative",
+        "InvalidUserContext",
+    ),
+    (
+        "--scheduler-context-control",
+        "scheduler-context-negative",
+        "InvalidUserContext",
+    ),
+    (
+        "--scheduler-inner-lock-control",
+        "scheduler-inner-lock-negative",
+        "InnerLock",
+    ),
+    (
+        "--scheduler-start-control",
+        "scheduler-start-negative",
+        "WrongPhase",
+    ),
+    (
+        "--scheduler-task-control",
+        "scheduler-task-negative",
+        "StaleTask",
+    ),
+    (
+        "--scheduler-owner-control",
+        "scheduler-owner-negative",
+        "DuplicateOwner",
+    ),
+    (
+        "--scheduler-foreign-control",
+        "scheduler-foreign-negative",
+        "ForeignCpu",
+    ),
+    (
+        "--scheduler-reentry-control",
+        "scheduler-reentry-negative",
+        "Reentry",
+    ),
+    (
+        "--scheduler-stale-control",
+        "scheduler-stale-negative",
+        "StaleGeneration",
+    ),
+    (
+        "--scheduler-reset-control",
+        "scheduler-reset-negative",
+        "WrongPhase",
+    ),
+    (
+        "--scheduler-inspect-control",
+        "scheduler-inspect-negative",
+        "WrongPhase",
+    ),
+    (
+        "--scheduler-complete-control",
+        "scheduler-complete-negative",
+        "NotQuiescent",
+    ),
+    (
+        "--scheduler-irq-control",
+        "scheduler-irq-negative",
+        "IrqEnabled",
+    ),
+    (
+        "--scheduler-lock-control",
+        "scheduler-lock-negative",
+        "LockHeld",
+    ),
+];
 #[path = "../../kernel/src/platform/config.rs"]
 #[allow(dead_code)] // Layout constants are consumed by the target kernel.
 mod platform_config;
@@ -102,6 +179,7 @@ const TESTS: &[&str] = &[
     "el0_stack_guard",
     "el0_data_execute_rejected",
     "el0_privileged_instruction_rejected",
+    "scheduler_generation_reuse",
 ];
 fn main() {
     if let Err(e) = run() {
@@ -147,6 +225,12 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
+            for &(flag, feature, _) in SCHEDULER_CONTROLS {
+                if args.iter().any(|arg| arg == flag) {
+                    let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
+                    return execute(&elf, true, true);
+                }
+            }
             for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative"), ("--user-context-control", "user-context-negative"), ("--user-root-control", "user-root-negative"), ("--user-retirement-control", "user-retirement-negative")] {
                 if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
             }
@@ -196,7 +280,22 @@ fn run() -> Result<()> {
                     output.status.code()
                 );
             }
-            println!("EL0 foundation kernel matrix passed (two active CPUs; compatibility not connected).");
+            for prod in [false, true] {
+                for &(flag, _, error) in SCHEDULER_CONTROLS {
+                    let mut command = Command::new(env::current_exe()?);
+                    command.args(["test", flag]);
+                    if prod { command.arg("--prod"); }
+                    let output = command.output()?;
+                    let text = format!("{}{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
+                    fs::write(format!("target/kernel/{}-{flag}.log", if prod { "prod" } else { "dev" }), &text)?;
+                    let marker = format!("\"error\":\"{error}\"");
+                    if output.status.success() || !text.contains(&marker) {
+                        return Err(format!("scheduler rejection not witnessed: {flag} prod={prod}").into());
+                    }
+                    println!("scheduler rejection verified: {flag} prod={prod} error={error}");
+                }
+            }
+            println!("Native kernel matrix passed (two active CPUs; scheduler ownership enforced).");
             let label = match args.as_slice() {
                 [_] => None,
                 [_, flag, label] if flag == "--record" => Some(label.as_str()),
@@ -534,7 +633,7 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len()},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + SCHEDULER_CONTROLS.len() * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {
@@ -658,9 +757,17 @@ fn audit() -> Result<()> {
     files.sort();
     let mut locations = Vec::new();
     let mut assembly = Vec::new();
+    let mut generated_wrappers = Vec::new();
     for file in files {
         let source = fs::read_to_string(&file)?;
         enforce_native_source(&source)?;
+        generated_wrappers.extend(
+            source
+                .lines()
+                .map(str::trim)
+                .filter(|line| line.starts_with("read_reg!("))
+                .map(|line| format!("{})", line.split(',').next().unwrap())),
+        );
         if file.extension().is_some_and(|e| e == "S") {
             assembly.push(json!({"path":file,"sha256":format!("{:x}",Sha256::digest(source.as_bytes())),"review":"INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE"}));
         }
@@ -697,7 +804,7 @@ fn audit() -> Result<()> {
             runtime.push(json!({"artifact":name,"sha256":format!("{:x}",Sha256::digest(fs::read(&p)?)),"source_unsafe_coverage":"compiler-trusted; not individually proven"}));
         }
     }
-    let report = json!({"scope":"first-party source inventory with local invariant context; assembly and compiled runtime artifacts included; not a safety proof","locations":locations,"assembly":assembly,"native_dependency_tree":tree,"compiler_runtime":runtime,"generated_wrappers":["read_reg!(el)","read_reg!(ticks)","read_reg!(frequency)","read_reg!(sctlr)","read_reg!(acknowledge)"],"compiler":"Rust 1.99.0","dependency_boundary":"compiler runtime and generated instructions require compiler trust; no compatibility dependency"});
+    let report = json!({"scope":"first-party source inventory with local invariant context; assembly and compiled runtime artifacts included; not a safety proof","locations":locations,"assembly":assembly,"native_dependency_tree":tree,"compiler_runtime":runtime,"generated_wrappers":generated_wrappers,"compiler":"Rust 1.99.0","dependency_boundary":"compiler runtime and generated instructions require compiler trust; no compatibility dependency"});
     fs::write(
         "target/kernel/unsafe-audit.json",
         serde_json::to_string_pretty(&report)?,

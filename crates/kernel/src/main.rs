@@ -5,6 +5,7 @@ extern crate alloc;
 mod arch {
     pub mod aarch64;
 }
+mod boot_workload;
 mod diagnostics;
 mod execution;
 mod hal;
@@ -103,7 +104,7 @@ pub extern "C" fn kernel_main() -> ! {
     }
     #[cfg(not(feature = "kernel-tests"))]
     {
-        let users = scheduler::exercise(&mut physical);
+        let users = boot_workload::exercise(&mut physical);
         event!(
             "{{\"event\":\"el0\",\"status\":\"pass\",\"processes\":{},\"workers\":{},\"faults\":{},\"switches\":{},\"reclaimed\":{}}}",
             users.processes,
@@ -127,7 +128,7 @@ pub extern "C" fn kernel_main() -> ! {
             ),
         );
         #[cfg(feature = "boot-payload")]
-        scheduler::payload(&mut physical, include_bytes!(env!("KOLVRT_BOOT_PAYLOAD")));
+        boot_workload::payload(&mut physical, include_bytes!(env!("KOLVRT_BOOT_PAYLOAD")));
         cpu::timer(time::deadline_after(BOOT_TIMER_DELAY));
         cpu::unmask();
         let deadline = time::deadline_after(BOOT_IRQ_TIMEOUT);

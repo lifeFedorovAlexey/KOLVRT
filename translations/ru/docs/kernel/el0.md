@@ -23,7 +23,7 @@ CPU0: acquire both completions → drop space guards/charges → release frames
 | Kernel stack                            | Существующий постоянный per-CPU EL1 stack                                        | User SP не используется для kernel exception entry; под user stack находится unmapped guard page                        |
 | Setup и completion                      | Release launch, acquire consume; release done, acquire collect                   | Последовательные boot batches используют CAS admission и acquired completion; migration и hotplug support не заявляются |
 
-Scheduling policy — чистый ограниченный round-robin selector в crates/kernel-core/src/scheduling.rs. Привилегированный механизм находится в crates/kernel/src/scheduler.rs и arch/aarch64. Quantum — типизированный Duration 1 ms, выбранный scheduler; это не гарантия измеренной задержки. Ready process получает ход за один оборот при условии доставки local timer и ограниченных EL1 handlers. IRQ не требует allocation, UART logging, queue lock или lock прерванного ordinary code. Шестнадцать slices и deadline workload в две секунды ограничивают враждебные или незавершающиеся образы. Expiry помечает unfinished tasks как timed out; оно никогда не освобождает исполняющееся address space.
+Scheduling policy — чистый ограниченный round-robin selector в crates/kernel-core/src/scheduling.rs. Привилегированный механизм находится в crates/kernel/src/scheduler/mod.rs и arch/aarch64. Quantum — типизированный Duration 1 ms, выбранный scheduler; это не гарантия измеренной задержки. Ready process получает ход за один оборот при условии доставки local timer и ограниченных EL1 handlers. IRQ не требует allocation, UART logging, queue lock или lock прерванного ordinary code. Шестнадцать slices и deadline workload в две секунды ограничивают враждебные или незавершающиеся образы. Expiry помечает unfinished tasks как timed out; оно никогда не освобождает исполняющееся address space.
 
 ## Address spaces и context
 
@@ -46,5 +46,9 @@ QEMU TCG evidence не устанавливает physical weak-memory behavior,
 [ADR-0014](../architecture-decisions/0014-el0-foundation.md) фиксирует placement, alternatives и reconsideration. Существующие [Kernel Laws](../architecture/kernel-laws.md), особенно LAW-001, LAW-013, LAW-025, LAW-031 и LAW-041, не меняются: dependency isolation, retained charges, scoped platform limits и explicit progress bounds продолжают действовать.
 
 Более поздний [workload Phase 2](routing.md) использует этот native mechanism с sequential CAS-admitted batches и opaque EL0 code. Исторические EL0 records сохраняют исходные one-page/single-batch source hashes; текущие geometry и admission описаны в ADR-0015.
+
+## Обновление ownership Phase 3.0
+
+Более поздний [контракт scheduler](scheduler.md) заменяет описание queue/setup выше: проверки наблюдаемых CPU/IRQ/phase/generation и nonblocking permits контролируют все обращения к storage. AArch64 frame и static verifier разделены. EL0 сам пишет fixture tick word через существующий own-slices call; kernel IRQ больше не пишет fixture data. Runtime storage переживает fixture и payload sessions. Текущая проверка добавляет generation reuse к прежним 53 tests и ownership controls в обоих profiles. Исторические результаты выше сохраняют первоначальные source scope. Dynamic lifecycle, safe user-copy и IPC остаются отдельно разрешаемыми prerequisites Phase 3 — Native Process & Service Foundation.
 
 [Английский оригинал](../../../../docs/kernel/el0.md)

@@ -60,4 +60,6 @@ The later [EL0 decision](../architecture-decisions/0014-el0-foundation.md) accep
 
 The later [Phase 2 decision](../architecture-decisions/0015-el0-versioned-routing.md) keeps routing and legacy conversion in EL0, admits only current-task access to protected execution observations, and replaces one-session admission with a CAS protocol. Allocation, bounds, native root/TLBI completion and charges remain mandatory. No fastest-path or general authority-policy claim follows.
 
+The later [scheduler ownership decision](../architecture-decisions/0016-scheduler-ownership.md) rejects a global scheduler lock and comment-only shared-mutable assumptions. It separates immutable setup, owned mutation and copied completion, with nonblocking CPU/IRQ/generation/phase checks and actual DEV/PROD rejection controls. It adds no EL1 service policy and makes no speed claim; future dynamic lifecycle must preserve the checked boundary.
+
 [Russian translation](../../translations/ru/docs/architecture/implementation-review.md)

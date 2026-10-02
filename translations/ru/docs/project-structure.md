@@ -54,4 +54,6 @@ Markdown использует описательные имена в нижне�
 
 Более поздний пакет routing-demo владеет отдельно linked EL0 image и не является kernel dependency. Host image/profile preparation и runtime acceptance находятся в xtask. См. [границу Phase 2](kernel/routing.md).
 
+[Разделение scheduler Phase 3.0](kernel/scheduler.md) размещает per-CPU runtime и storage access в kernel/src/scheduler, frame/entry в arch/aarch64, а static image allocation/verification — в boot_workload.rs и boot_workload.S. Безопасные ownership и selection остаются в kernel-core; новый package или dependency не нужен.
+
 [Английский оригинал](../../../docs/project-structure.md)

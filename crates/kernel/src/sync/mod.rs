@@ -5,6 +5,26 @@ use core::{
 };
 // Attempt bound for this locking implementation; not a timed wait.
 const LOCK_PROGRESS_ATTEMPTS: usize = 1_000_000;
+#[cfg(target_os = "none")]
+pub fn assert_scheduler_unlocked() {
+    #[cfg(feature = "scheduler-lock-negative")]
+    if crate::percpu::current()
+        .ordinary_locks
+        .load(Ordering::Acquire)
+        != 0
+    {
+        crate::event!(
+            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"LockHeld\"}}"
+        );
+    }
+    assert_eq!(
+        crate::percpu::current()
+            .ordinary_locks
+            .load(Ordering::Acquire),
+        0,
+        "scheduler lock order contract"
+    );
+}
 /// Ordinary kernel code only; IRQ and exception handlers must not acquire this lock.
 /// Never nest locks, allocate, or call callbacks while holding a guard.
 /// Atomic exclusion/publication supports ordinary code on both active AArch64 CPUs.
@@ -25,15 +45,47 @@ impl<T> Lock<T> {
         }
     }
     pub fn try_lock(&self) -> Option<Guard<'_, T>> {
+        #[cfg(target_os = "none")]
+        {
+            #[cfg(feature = "scheduler-inner-lock-negative")]
+            if crate::percpu::current()
+                .scheduler_borrow
+                .load(Ordering::Acquire)
+            {
+                crate::event!(
+                    "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"InnerLock\"}}"
+                );
+            }
+            assert!(
+                !crate::percpu::current()
+                    .scheduler_borrow
+                    .load(Ordering::Acquire),
+                "lock inside scheduler ownership contract"
+            );
+        }
         if self.held.load(Ordering::Relaxed) {
             return None;
         }
+        #[cfg(target_os = "none")]
+        assert_eq!(
+            crate::percpu::current()
+                .ordinary_locks
+                .load(Ordering::Acquire),
+            0,
+            "ordinary lock nesting contract"
+        );
         self.held
             .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
             .ok()
-            .map(|_| Guard {
-                lock: self,
-                marker: core::marker::PhantomData,
+            .map(|_| {
+                #[cfg(target_os = "none")]
+                crate::percpu::current()
+                    .ordinary_locks
+                    .fetch_add(1, Ordering::AcqRel);
+                Guard {
+                    lock: self,
+                    marker: core::marker::PhantomData,
+                }
             })
     }
     pub fn lock(&self) -> Guard<'_, T> {
@@ -48,7 +100,7 @@ impl<T> Lock<T> {
 }
 pub struct Guard<'a, T> {
     lock: &'a Lock<T>,
-    marker: core::marker::PhantomData<&'a mut T>,
+    marker: core::marker::PhantomData<(&'a mut T, *mut ())>,
 }
 impl<T> Deref for Guard<'_, T> {
     type Target = T;
@@ -65,6 +117,14 @@ impl<T> DerefMut for Guard<'_, T> {
 }
 impl<T> Drop for Guard<'_, T> {
     fn drop(&mut self) {
+        #[cfg(target_os = "none")]
+        assert_eq!(
+            crate::percpu::current()
+                .ordinary_locks
+                .fetch_sub(1, Ordering::AcqRel),
+            1,
+            "ordinary lock nesting contract"
+        );
         self.lock.held.store(false, Ordering::Release);
     }
 }

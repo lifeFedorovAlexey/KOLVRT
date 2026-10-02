@@ -1,4 +1,5 @@
 use core::arch::{asm, global_asm};
+pub mod context;
 pub mod page;
 #[cfg(feature = "kernel-tests")]
 pub const INSTRUCTION_BYTES: usize = 4;
@@ -70,6 +71,12 @@ read_reg!(ticks, "cntpct_el0");
 read_reg!(frequency, "cntfrq_el0");
 read_reg!(sctlr, "sctlr_el1");
 read_reg!(acknowledge, "S3_0_C12_C12_0");
+read_reg!(daif, "daif");
+read_reg!(active_root, "ttbr0_el1");
+const PSTATE_IRQ_MASK: u64 = 1 << 7;
+pub fn irq_masked() -> bool {
+    daif() & PSTATE_IRQ_MASK != 0
+}
 read_reg!(mpidr, "mpidr_el1");
 read_reg!(user_esr, "esr_el1");
 read_reg!(user_far, "far_el1");

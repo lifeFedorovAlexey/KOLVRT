@@ -1,4 +1,5 @@
 //! Bounded round-robin selection policy. Ownership, context and hardware remain caller responsibilities.
+pub mod ownership;
 pub fn next_ready(current: Option<usize>, ready: &[bool]) -> Option<usize> {
     if ready.is_empty() || current.is_some_and(|index| index >= ready.len()) {
         return None;

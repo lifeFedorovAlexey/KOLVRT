@@ -68,7 +68,7 @@ Run `cargo xtask audit` to generate target/kernel/unsafe-audit.json. It inventor
 
 **Necessity and owner:** UnsafeCell and Sync implementation require exclusion.
 
-**Preconditions and verification:** Acquire/Release, guard cannot duplicate, T:Send for Lock Sync, guard Sync follows T:Sync; IRQ has no lock access. Host concurrent publication plus kernel locking tests.
+**Preconditions and verification:** Acquire/Release, guard cannot duplicate, T:Send for Lock Sync, guard is not Send/Sync and cannot cross CPUs/threads; IRQ has no lock access. Host concurrent publication plus kernel locking tests.
 
 ### INV-GIC
 
@@ -132,7 +132,7 @@ New assembly and unsafe Rust remain in target/kernel/unsafe-audit.json; machine 
 
 ### INV-USER-SPACE and INV-USER-RETIRE
 
-CPU0 initializes checked exclusively allocated table/data/code/stack/image pages and retains Frame borrows plus persistent space charges. A forgotten guard cannot permit release. Roots are immutable while admitted; each is pinned to one CPU. Both CPUs restore native root and complete local TLBI before release completion. CPU0 acquires both completions before clearing charges. Tick writes happen only while the local process is suspended; tag reads happen after all writers stop. Actual RO/NX/guard/foreign faults, peer survival, returned free count and forgotten-guard rejection cover these obligations.
+CPU0 initializes checked exclusively allocated table/data/code/stack/image pages and retains Frame borrows plus persistent space charges. A forgotten guard cannot permit release. Roots are immutable while admitted; each is pinned to one CPU. Both CPUs restore native root and complete local TLBI before release completion. CPU0 acquires both completions before clearing charges. EL0 fixture writes its own tick word; kernel IRQ does not write fixture data; tag reads happen after all writers stop. Actual RO/NX/guard/foreign faults, peer survival, returned free count and forgotten-guard rejection cover these obligations.
 
 ### INV-USER-TTBR and INV-USER-IMAGE
 
@@ -145,3 +145,5 @@ Lower-EL vectors use the per-CPU EL1 stack and complete aligned 816-byte frame; 
 This register documents local proof obligations and observed tests. It does not establish hardware correctness, all malformed-firmware cases or SMP safety. Boot firmware, toolchain, emulator and generated instructions remain trust boundaries. The [SMP contract](smp.md) limits participation to two CPUs and explicitly retained readers. No unsafe is justified by performance alone; the [method gate](../architecture/implementation-review.md) applies before acceptance.
 
 Phase 2 adds INV-DEMO-ENTRY and INV-DEMO-SVC in the separate EL0 image: a private aligned guarded stack, fixed RX entry and explicit GPR clobbers for nonpointer native calls. ELF extraction rejects malformed extents and writable globals before selection. Native SVC handlers use current-task state with IRQ masked, retain no user references and collect bounded reports only with machine-events. [ADR-0015](../architecture-decisions/0015-el0-versioned-routing.md) records authority/necessity and actual tests; native dependency closure stays unchanged.
+
+Phase 3.0 confines scheduler UnsafeCell access to preparation, mutation and inspection in local.rs. Observed CPU, masked IRQ, phase, generation and a nonblocking permit precede every dereference; higher-ranked closures prevent borrowed results. Acquired Done plus released final access precede inspection/reset, and native-root/TLBI completion precedes reclamation. Per-CPU scope/lock tracking rejects both lock directions; guards cannot cross CPUs. [Scheduler contract](scheduler.md) lists actual rejection controls and remaining gaps. No reference or permit survives ERET or waits. Context expectations are now entirely post-quiescent bootstrap verification.

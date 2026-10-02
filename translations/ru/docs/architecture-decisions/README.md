@@ -22,4 +22,6 @@
 
 - [ADR-0015 — Версионированная маршрутизация в изолированных EL0 consumers](0015-el0-versioned-routing.md) — Accepted для ограниченной демонстрации Phase 2.
 
+- [ADR-0016 — Обязанности scheduler и enforced per-CPU ownership](0016-scheduler-ownership.md) — Принят для ограниченного Phase 3.0.
+
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)

@@ -60,4 +60,6 @@ Performance tests сами по себе не обосновывают алго�
 
 Более позднее [решение Phase 2](../architecture-decisions/0015-el0-versioned-routing.md) оставляет routing и legacy conversion в EL0, допускает только current-task доступ к protected execution observations и заменяет one-session admission на CAS protocol. Allocation, bounds, native root/TLBI completion и charges остаются обязательными. Fastest-path и general authority-policy claims из этого не следуют.
 
+Более позднее [решение scheduler ownership](../architecture-decisions/0016-scheduler-ownership.md) отклоняет global scheduler lock и shared-mutable assumptions только в комментариях. Оно разделяет immutable setup, owned mutation и copied completion через nonblocking проверки CPU/IRQ/generation/phase и реальные DEV/PROD rejection controls. EL1 service policy не добавляется, ускорение не заявляется; будущий dynamic lifecycle должен сохранить проверяемую границу.
+
 [Английский оригинал](../../../../docs/architecture/implementation-review.md)

@@ -1,0 +1,91 @@
+# Scheduler ownership foundation
+
+Document status: CURRENT
+Document scope: Phase 3.0, bounded two-CPU fixed-affinity scheduler; issues #16 and #17.
+Status reference: [ADR-0016](../architecture-decisions/0016-scheduler-ownership.md)
+
+## Responsibilities
+
+Previously, scheduler.rs held queue mutation, the architectural frame, marker/fault expectations, fixture data writes, allocation, image setup and report verification. Current responsibilities are:
+
+```text
+kernel-core/src/scheduling.rs             pure round-robin selection
+kernel-core/src/scheduling/ownership.rs   safe atomic admission/access protocol
+kernel/src/scheduler/config.rs           runtime capacity, independent of fixture count
+kernel/src/scheduler/task.rs             immutable definition, runtime state, copied result
+kernel/src/scheduler/local.rs            checked storage access; only scheduler UnsafeCell
+kernel/src/scheduler/mod.rs              dispatch, preemption, native current-task lookup
+kernel/src/arch/aarch64/context.rs        frame layout, architectural entry/trap boundary
+kernel/src/arch/aarch64/entry.S           privileged vectors and context preservation
+kernel/src/boot_workload.rs               trusted images/budgets, allocation, verification
+kernel/src/boot_workload.S                static EL0 fault/register/stack fixture
+```
+
+Permanent CPU slots outlive the boot driver and its address spaces. The driver calls a reusable bounded runtime interface with retained spaces, initial contexts, slice budget and typed timeout. It neither dereferences scheduler storage nor resets queue phases directly. The kernel does not parse or select adapter policy.
+
+The fixture still runs eight private processes: two surviving workers and six contained faults. It now queries its own slices using the existing native call and writes its own tick word in EL0. No fixture pointer or expected fault/marker remains in runtime scheduling. Final saved contexts, tags, stacks, peer-fault counts and progress are checked after acquired completion. Registers are initialized before publishing progress; the verifier rejects missing progress separately. This changes fixture instructions, not its required outcomes. Timing records from the old fixture are not equivalent-workload performance baselines.
+
+## Ownership and publication
+
+```mermaid
+flowchart TD
+    C[CPU0 coordinator: retained spaces and initial contexts] --> P[Preparing: exclusive setup permit]
+    P --> A[Release Admitted: immutable task definitions]
+    A --> R[Indexed CPU claims Running]
+    R --> B[CPU + IRQ mask + generation + nonblocking permit]
+    B --> M[Mutate owned runtime state; copy architectural frame]
+    M --> E[Drop all permits and borrows before ERET]
+    E --> R
+    R --> Q[No runnable tasks: native root and completed local TLBI]
+    Q --> D[Owner released; active execution decremented; release Done]
+    D --> I[CPU0 acquires Done and released permit; copies results]
+    I --> F[Drop space guards and release frames]
+    I --> N[Next checked generation; new setup]
+```
+
+| Resource                                         | Owner and mutation                                                                | Lifetime/publication                                                                       |
+| ------------------------------------------------ | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| CPU slot                                         | Immutable indexed owner; coordinator role is explicit                             | Permanent kernel storage; caller/workload lifetime cannot destroy it                       |
+| Task definition                                  | Coordinator constructs identity, generation, root and budget; runtime has getters | Immutable after release admission; replacement only under checked preparing access         |
+| Queue, current task, saved context, observations | Indexed CPU with IRQ masked and one exclusive access permit                       | Closures cannot return storage references; no borrow spans user entry, waits or completion |
+| Completion/results                               | CPU0 reads after acquired Done and permit release                                 | Copied small results; reports copied in bounded chunks outside output/locking              |
+| Address spaces/frames                            | Current bootstrap allocator owner retains guards                                  | Both native roots/TLBI and zero executing owners before charges or frames retire           |
+
+The safe ownership protocol checks observed caller role, IRQ mask, generation and phase before the local wrapper dereferences storage. A failed access never grants a second reference. Generation increments are checked and cannot wrap; stale state and task identity cannot bind to reused slots. Preparing → Admitted → Running → Done transitions exclude live reset and premature inspection. Done is consumable only after the final permit is released. Inspection excludes concurrent replacement. Per-task running-owner CAS continues to reject duplicate execution and fixed-affinity violations.
+
+SESSION excludes overlapping bounded preparation; IRQ and dispatch never acquire it. It is an admission gate, not a queue lock. START/ARRIVED use release/acquire and participant RMWs within one generation; reset precedes admission. NATIVE_ROOT is immutable for that generation. RUNNING_OWNER uses per-task CAS/release; per-CPU scope/ordinary-lock markers are local lifetime checks.
+
+CPU0 setup is the existing bounded allocator/coordinator role, not a permanent single-writer architecture for future services. During execution each indexed CPU owns its queue. Supporting other admission callers requires extending the explicit role/phase protocol, not bypassing the wrapper.
+
+## IRQ, locks and progress
+
+Timer IRQ stops/deasserts the source, acquires only the local nonblocking access permit to record preemption, then ends the GIC interrupt. The lower-EL trap uses a separate short permit for accounting/selection. Re-entry fails immediately; no spin waiting, allocation, UART output or ordinary lock exists on the successful path. All storage scopes end before ERET and all rendezvous/completion waits occur without a scope.
+
+An ordinary lock held by the current CPU prohibits scheduler access; a scheduler storage scope prohibits acquiring an ordinary lock, including the heap lock. Guards cannot move to another CPU/thread. This has no global scheduler lock or nested lock order. It does not claim to detect arbitrary external wait dependencies or support nested IRQ. Fixed affinity, full context preservation, ASID zero/full local TLBI, typed 1 ms quantum and timer-delivery assumptions remain. Fixture limits remain sixteen slices/two seconds; the opaque payload retains its separate budget. Timeout never proves quiescence.
+
+## Unsafe and mechanical checks
+
+Scheduler storage retains exactly one unsafe Sync implementation and three UnsafeCell dereferences, all in local.rs: preparation, owned mutation and acquired inspection. The architecture boundary retains the reviewed assembly entry and raw trap-frame conversion; root activation retains privileged TTBR/TLBI operations. Boot verification retains immutable image slicing and post-quiescent volatile tag reads. All other memory, MMIO, heap, lock, firmware and register boundaries remain in the [unsafe register](unsafe.md); the complete [inventory](../../research/results/kernel-phase3-unsafe-audit.json) is not a safety proof.
+
+Compiler privacy encapsulates raw storage and immutable definitions; higher-ranked closure lifetimes prohibit returning borrowed state. Atomic permits, phase/generation checks, exact task slot identity, per-CPU lock/scope tracking and running-owner CAS enforce runtime obligations equally in DEV/PROD. Compile-time context offsets/size preserve the 816-byte assembly ABI. Initial and selected return frames must be AArch64 EL0 with user IRQ enabled before ERET. A host source guard rejects fixture policy and raw storage outside its module; it is a bounded lexical guard. Host concurrency tests exercise the same safe protocol, not hardware IRQ behavior.
+
+## Evidence and next boundary
+
+[Results](../../research/results/kernel-phase3.json) retain exact sources and artifacts: 54 tests per DEV/PROD, including all previous 53 and repeated generation/reclamation without reboot; both non-test boots; the original eleven failure controls plus fifteen scheduler controls in both profiles, 41 total. Scheduler controls exercise foreign CPU mutation, duplicate start/run, stale state/task, actual timer-path re-entry, live reset/read, premature completion, unmasked mutation, both lock directions, privileged/AArch32 seeds and masked user IRQ. [Routing regression](../../research/results/routing-phase3-regression.json) covers the unchanged optional EL0 behavior; the native matrix runs without that payload. QEMU evidence does not establish silicon weak-memory behavior or arbitrary CPU counts.
+
+Phase 3 — Native Process & Service Foundation proceeds only with separate authorization:
+
+| Stage | Scope                                          |
+| ----- | ---------------------------------------------- |
+| 3.0   | Scheduler decomposition and ownership, #16/#17 |
+| 3.1   | Dynamic process lifecycle, #20                 |
+| 3.2   | Safe user-copy, #22                            |
+| 3.3   | Handles and capabilities, #23/#24              |
+| 3.4   | Security domains, #25                          |
+| 3.5   | IPC, waits and cancellation, #26               |
+| 3.6   | Supervisor, #27                                |
+| 3.7   | First persistent EL0 service, #28              |
+
+Issue #20 can build on the enforced owner boundary, immutable setup, checked generations, copied completion and quiescent retirement. It still must implement per-process create/start/exit/fault/wait transitions, partial-creation rollback, vacant slots and process generations, persistent scheduling/admission and SMP-safe reclamation. Current queue generations identify bounded sessions, not a completed dynamic process API. No IPC, handles, capabilities, migration, work stealing or routing policy is added here. ELF #21 and ASID optimization #18 remain separate. [Master tracker](https://github.com/lifeFedorovAlexey/KOLVRT/issues/37) records prerequisite order.
+
+[Russian translation](../../translations/ru/docs/kernel/scheduler.md)

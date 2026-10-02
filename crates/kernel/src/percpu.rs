@@ -17,6 +17,8 @@ pub struct Cpu {
     pub timers: AtomicU64,
     pub ipis: AtomicU64,
     pub tlb_ack: AtomicU64,
+    pub ordinary_locks: AtomicUsize,
+    pub scheduler_borrow: core::sync::atomic::AtomicBool,
     #[cfg(feature = "kernel-tests")]
     pub expected_pc: AtomicU64,
     #[cfg(feature = "kernel-tests")]
@@ -35,6 +37,8 @@ impl Cpu {
             timers: AtomicU64::new(0),
             ipis: AtomicU64::new(0),
             tlb_ack: AtomicU64::new(0),
+            ordinary_locks: AtomicUsize::new(0),
+            scheduler_borrow: core::sync::atomic::AtomicBool::new(false),
             #[cfg(feature = "kernel-tests")]
             expected_pc: AtomicU64::new(0),
             #[cfg(feature = "kernel-tests")]

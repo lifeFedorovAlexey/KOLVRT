@@ -23,7 +23,7 @@ CPU0: acquire both completions → drop space guards/charges → release frames
 | Kernel stack                              | Existing permanent per-CPU EL1 stack                                            | User SP is never used for kernel exception entry; user stack has an unmapped lower guard page                             |
 | Setup and completion                      | Release launch, acquire consume; release done, acquire collect                  | Sequential boot batches use CAS admission and acquired completion; no migration or hotplug support is claimed             |
 
-Scheduling policy is the pure bounded round-robin selector in crates/kernel-core/src/scheduling.rs. Privileged mechanism lives in crates/kernel/src/scheduler.rs and arch/aarch64. The quantum is a typed 1 ms Duration selected by the scheduler; it is not a measured latency guarantee. A ready process receives a turn within one rotation assuming local timer delivery and bounded EL1 handlers. No IRQ allocation, UART logging, queue lock or interrupted ordinary-code lock is needed. Sixteen slices and a two-second workload deadline bound hostile/nonterminating images. Expiry marks unfinished tasks timed out; it never frees an executing address space.
+Scheduling policy is the pure bounded round-robin selector in crates/kernel-core/src/scheduling.rs. Privileged mechanism lives in crates/kernel/src/scheduler/mod.rs and arch/aarch64. The quantum is a typed 1 ms Duration selected by the scheduler; it is not a measured latency guarantee. A ready process receives a turn within one rotation assuming local timer delivery and bounded EL1 handlers. No IRQ allocation, UART logging, queue lock or interrupted ordinary-code lock is needed. Sixteen slices and a two-second workload deadline bound hostile/nonterminating images. Expiry marks unfinished tasks timed out; it never frees an executing address space.
 
 ## Address spaces and context
 
@@ -46,5 +46,9 @@ QEMU TCG evidence does not establish physical weak-memory behavior, hardware thr
 [ADR-0014](../architecture-decisions/0014-el0-foundation.md) records placement, alternatives and reconsideration. Existing [Kernel Laws](../architecture/kernel-laws.md), especially LAW-001, LAW-013, LAW-025, LAW-031 and LAW-041, are unchanged: dependency isolation, retained charges, scoped platform limits and explicit progress bounds continue to apply.
 
 The later [Phase 2 workload](routing.md) reuses this native mechanism with sequential CAS-admitted batches and opaque EL0 code. Historical EL0 records retain their original one-page/single-batch source hashes; current geometry and admission are documented in ADR-0015.
+
+## Phase 3.0 ownership update
+
+The later [scheduler contract](scheduler.md) supersedes the queue/setup description above: observed CPU/IRQ/phase/generation checks and nonblocking permits gate all storage accesses. The AArch64 frame and static verifier are separate. EL0 writes its own fixture tick word through the existing own-slices call; kernel IRQ no longer writes fixture data. Runtime storage outlives both fixture and payload sessions. Current validation adds generation reuse to the previous 53 tests and ownership controls in both profiles. Historical results above retain their original source scope. Dynamic lifecycle, safe user-copy and IPC remain separately authorized prerequisites under Phase 3 — Native Process & Service Foundation.
 
 [Russian translation](../../translations/ru/docs/kernel/el0.md)

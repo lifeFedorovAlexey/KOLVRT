@@ -60,4 +60,8 @@ The original request is preserved as a historical text attachment. Research JSON
 
 The earlier audit explicitly excludes the then-local Phase 2 work. The now-verified [routing contract](kernel/routing.md) and [ADR-0015](architecture-decisions/0015-el0-versioned-routing.md) describe the bounded optional EL0 slice: eight independent consumers on two CPUs, native/v1/v2/safe-bug routes, pinned PROD profiles and native-core dependency isolation. [Execution results](../research/results/routing-phase2.json) and [physical source-removal evidence](../research/results/native-compat-removal.json) retain exact source/artifact scopes; the latter reruns the same 53-test DEV/PROD foundation and eleven negative controls without routing packages. These records establish only their QEMU scope. IPC, transferred authority, cancellation, general services, dynamic loading and silicon validation remain incomplete; the full first native slice is still a design baseline.
 
+## Phase 3.0 evidence update
+
+[Scheduler ownership](kernel/scheduler.md) and [ADR-0016](architecture-decisions/0016-scheduler-ownership.md) supersede the comment-only runtime access model, while preserving earlier milestone evidence. [Current results](../research/results/kernel-phase3.json) retain 54 tests per profile, both non-test boots and 41 failure controls; [routing regression](../research/results/routing-phase3-regression.json) retains optional payload behavior. This does not complete dynamic lifecycle, user-copy, capabilities/domains, IPC, supervision or persistent services. Phase 3 — Native Process & Service Foundation starts with #16/#17 only; later stages require separate authorization.
+
 [Russian translation](../translations/ru/docs/documentation-policy.md)

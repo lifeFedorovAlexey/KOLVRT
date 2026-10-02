@@ -68,7 +68,7 @@
 
 **Необходимость и владелец:** UnsafeCell и реализация Sync требуют исключения.
 
-**Предусловия и проверка:** Acquire/Release, guard нельзя дублировать, T:Send для Lock Sync, guard Sync следует T:Sync; IRQ не использует lock. Host concurrent publication и kernel locking tests.
+**Предусловия и проверка:** Acquire/Release, guard нельзя дублировать, T:Send для Lock Sync, guard не является Send/Sync и не переносится между CPU/thread; IRQ не использует lock. Host concurrent publication и kernel locking tests.
 
 ### INV-GIC
 
@@ -132,7 +132,7 @@
 
 ### INV-USER-SPACE and INV-USER-RETIRE
 
-CPU0 инициализирует проверенные эксклюзивно выделенные table/data/code/stack/image pages и удерживает Frame borrows и постоянные space charges. Забытый guard не разрешает release. Roots immutable во время admission; каждый закреплён за одним CPU. Оба CPU восстанавливают native root и завершают local TLBI до release completion. CPU0 acquires оба completion до снятия charges. Tick writes происходят только при приостановленном local process; tags читаются после остановки всех writers. Настоящие RO/NX/guard/foreign faults, выживание peers, возвращённый free count и отказ forgotten-guard проверяют обязательства.
+CPU0 инициализирует проверенные эксклюзивно выделенные table/data/code/stack/image pages и удерживает Frame borrows и постоянные space charges. Забытый guard не разрешает release. Roots immutable во время admission; каждый закреплён за одним CPU. Оба CPU восстанавливают native root и завершают local TLBI до release completion. CPU0 acquires оба completion до снятия charges. EL0 fixture сам пишет tick word; kernel IRQ не пишет fixture data; tags читаются после остановки всех writers. Настоящие RO/NX/guard/foreign faults, выживание peers, возвращённый free count и отказ forgotten-guard проверяют обязательства.
 
 ### INV-USER-TTBR and INV-USER-IMAGE
 
@@ -145,3 +145,5 @@ Lower-EL vectors используют per-CPU EL1 stack и полный aligned 
 Этот реестр документирует локальные proof obligations и наблюдаемые tests. Он не доказывает аппаратную корректность, все случаи malformed firmware или SMP safety. Boot firmware, toolchain, emulator и generated instructions остаются trust boundaries. [SMP контракт](smp.md) ограничивает participation двумя CPU и явно удерживаемыми readers. Unsafe не оправдывается одной производительностью; [правило выбора метода](../architecture/implementation-review.md) применяется до принятия.
 
 Phase 2 добавляет INV-DEMO-ENTRY и INV-DEMO-SVC в отдельном EL0 image: private aligned guarded stack, fixed RX entry и explicit GPR clobbers для nonpointer native calls. ELF extraction отклоняет malformed extents и writable globals до selection. Native SVC handlers используют current-task state с IRQ masked, не удерживают user references и собирают bounded reports только с machine-events. [ADR-0015](../architecture-decisions/0015-el0-versioned-routing.md) фиксирует authority/necessity и actual tests; native dependency closure не меняется.
+
+Phase 3.0 ограничивает scheduler UnsafeCell access операциями preparation, mutation и inspection в local.rs. Наблюдаемые CPU, masked IRQ, phase, generation и nonblocking permit проверяются до каждого разыменования; higher-ranked closures запрещают borrowed results. Acquired Done и release финального access предшествуют inspection/reset, а native-root/TLBI completion — reclamation. Per-CPU scope/lock tracking отклоняет оба направления locks; guards нельзя переносить между CPU. [Контракт scheduler](scheduler.md) перечисляет реальные rejection controls и оставшиеся пробелы. Ни reference, ни permit не переживают ERET или waits. Context expectations теперь полностью относятся к bootstrap verification после quiescence.

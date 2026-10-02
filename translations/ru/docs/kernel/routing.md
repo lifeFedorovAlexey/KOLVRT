@@ -26,7 +26,7 @@ CPU0: acquire both Done → inspect bounded reports → drop charges → reclaim
 crates/kernel-core/src/execution.rs     native experimental operation contract
 crates/kernel-core/src/window.rs        native checked algorithm and Backend boundary
 crates/kernel/src/execution.rs          protected own observations and checked register reply
-crates/kernel/src/scheduler.rs          current-task attribution, SVC, admission
+crates/kernel/src/scheduler/mod.rs          current-task attribution, SVC, admission
 crates/kernel/src/memory/mod.rs         retained immutable RX image and guarded stacks
 crates/routing/src/lib.rs               profile, versions, private binding and transactions
 crates/routing/src/conformance.rs       behavior and rejection fixtures
@@ -101,5 +101,7 @@ Native-only builds исполняют ту же foundation suite. Отдельн
 Сохранённая pure model: Route, semantic names, Profile schema/version/digest, immutable configuration, dependency rules, status definitions и native Span/Reduction. Сохранённые runtime candidates: Consumer/Transaction, dispatch и adapter conversion. Их backend boundary теперь вызывает actual native capability из EL0; local providers остаются conformance fixtures. Полезная groundwork не откатывалась. Прежнее ограничение «no multi-CPU access» заменено exclusive per-consumer ownership при concurrent execution разных consumers. Прежние one-page image/stack и single boot session заменены bounded retained payloads и CAS admission.
 
 Native → compatibility hook не подключён. Routing runtime подключён вне native core. IPC, handles/capabilities, cancellation, services, security domains, arbitrary loaders, shared state-domain migration, signatures и dynamic unloading остаются дальнейшей работой. Кандидаты Phase 3: native IPC/authority slice, затем конкретный service consumer; device/DMA и Linux personalities требуют самостоятельных contracts и evidence. Демонстрация не устанавливает global production security policy.
+
+Более поздний [scheduler Phase 3.0](scheduler.md) разделяет runtime, architectural context и bootstrap verification, добавляя checked generations и per-CPU storage permits. Adapter binding и native observation semantics не меняются. [Regression results](../../../../research/results/routing-phase3-regression.json) относятся к текущим scheduler sources; первоначальные измерения Phase 2 выше остаются историческими. Native foundation теперь также проверяет повторное использование queue без reboot.
 
 [Английский оригинал](../../../../docs/kernel/routing.md)

@@ -73,9 +73,13 @@
         "source_sha256": "efd4f9dfa680399b6a6f48ea6077d3bbc5a5a047503a9bfd5e6da29b56c4adaf",
         "translation_sha256": "73e189d9d8a6f543106bd1367790f80e4bfce7d2f927a814848ff42865ee7839"
       },
+      "docs/architecture-decisions/0016-scheduler-ownership.md": {
+        "source_sha256": "3c4d27dc0b833e5db1d7df98fce60cd65b4b1155c64bd389cb24b3e655decf87",
+        "translation_sha256": "a05512c8fc53b705c4c82baa4ad6e3d75b9acfb55a2a7d195877db7d4901e6a7"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "17a2785fbb072779e890ac2e5bdf3fab6e014a28d3323eddb2f2c927a26efce2",
-        "translation_sha256": "29f6bdf53cce8cc4123a4cc91e70fe452f1251162a83ff7a45185b973c1b725f"
+        "source_sha256": "3e6ca17a05be349e6e8298a8fbd76ee496fb2b8866f00893e51d2ef54c0f9d83",
+        "translation_sha256": "677cee311f14c40f60ad067f1b2f3117c389fcc20770dfad17c85b5f0ce96d38"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
@@ -98,8 +102,8 @@
         "translation_sha256": "741cdf9baff00b5a9608ca4d22a9e18998970f7de30ab250eb91ad6f6c01454d"
       },
       "docs/architecture/implementation-review.md": {
-        "source_sha256": "ba29dac1e19901d9ff4ce6249c1f396d86bf74bb2983cd2c7e91fbbda829396d",
-        "translation_sha256": "374b89e7138e519136cd790134260668f41d3b1a082818347d50150b9897f3ab"
+        "source_sha256": "2ad168dea6eece38dc703243980f92fec3bbda9d9548971bfdaa060d86c30257",
+        "translation_sha256": "8aed7224f2451fda0ca1ec56ff0f8f6f20377ea666f028cd191d02ecc9ff718b"
       },
       "docs/architecture/kernel-admission-policy.md": {
         "source_sha256": "07fa724a7b1cf5b4aaee2b4c94a07dbd280c701765cfc7854be044cd912b00e9",
@@ -158,16 +162,16 @@
         "translation_sha256": "6a7f5fb4c33c97863d78f6f2b3113201dae8324a52a748ad8ec1f2287b449450"
       },
       "docs/documentation-policy.md": {
-        "source_sha256": "6bb89b116994489ed25b6e75c43ee8ca0601304f7dea0b8efb5787995e5fddad",
-        "translation_sha256": "2e810dd4e21efc21662b0d5079d7768476eb8a37bbbeb3ff5b80436c47bb6ab2"
+        "source_sha256": "27419a9bf8c88d6dccb7423199b8e58f3b7b461974d8f48aa9963065d9fabe5e",
+        "translation_sha256": "a24a3042ef89bbe3ac53f12f835b8543d78420dd8b35eb014757ccd001c21c07"
       },
       "docs/kernel/boot.md": {
         "source_sha256": "954bdb7cf092fab4af77f592981da339db2e14dc901ca3735864a6e29169112f",
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/el0.md": {
-        "source_sha256": "795fe176842dbce956a0fe3cfed942c9fd189cdde4d6f259fbba6066433617ed",
-        "translation_sha256": "bbe569b3ba65bb790c0da46882d744b94b2aa41369146bc88eb473185837fe1c"
+        "source_sha256": "b9314a2736b399317e29680594c39183005704f4605d31f5dfb1c4b184d85cf3",
+        "translation_sha256": "5937000180802d4710c9f14e049bbe902b0d85d8c7378cb16e7dd7a4ddf89d83"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "7ab0345bf609b17bbe42b1f8d5f332473c8245e2cfdb01582626fc3382c62ae0",
@@ -182,8 +186,12 @@
         "translation_sha256": "11ca37fba32faba9e19edf460ac90a08e52875489fc7887e00f1f400d617e3bc"
       },
       "docs/kernel/routing.md": {
-        "source_sha256": "c677d2caa43d422ab6ae18093a1a51f909026e93ff9248ece0b1a3f36579e0e6",
-        "translation_sha256": "510c5a328b82c18955b92c6c244d1fb7b5dad217d902e7003dc127b0c345a1af"
+        "source_sha256": "b0598dbca301cfce93b4a15237b1a6c99b1ba6b8aefb03cff3bb5bea5325b379",
+        "translation_sha256": "bf6186ba6dae4da9ce7e78655c604d66ed4e19bbc5e8ac2d3f11244baf2f8128"
+      },
+      "docs/kernel/scheduler.md": {
+        "source_sha256": "82b141b5cd0aa1c8e1bde20736a0b9e10c08083ca39e98df2d5a5dcaac5185ce",
+        "translation_sha256": "3309a858f6bee2f29a28ecc02cc3f79dee81f1ebea156d0f48a0e6eed4bf390c"
       },
       "docs/kernel/smp.md": {
         "source_sha256": "b0a243584c73e2205c4fb1bca8c4847a4eb28015d2ab135d3aed19d4b637e129",
@@ -198,12 +206,12 @@
         "translation_sha256": "46eae4f848da42e521436eafaf5782b716c3b4358b9b675ac2b3d3499f41a20a"
       },
       "docs/kernel/unsafe.md": {
-        "source_sha256": "8c8eed0146eabdd6939b82210d22b265e5009d5f97785553d8c54ecb12c98370",
-        "translation_sha256": "8f654083725929c083ac1905e2bb790fb7a9b8385fcb9e39e405f70c6de49e0c"
+        "source_sha256": "708873c65796c04150f2ccce1dbac84e27d0934e433388d6e143e384bfa724bf",
+        "translation_sha256": "62018bee46c245cbe2459f1996debb8361aa768d4c1a693e5fc5504be4128c6e"
       },
       "docs/project-structure.md": {
-        "source_sha256": "c6cbb42b73c510fe71f0fdaeff03e0813308f283a52afad58e50fb6e33eee6d2",
-        "translation_sha256": "40433cfdc8f3d29ca5dbaa327bebc50a0ee6f059a28430433cbcc0ff70e258cf"
+        "source_sha256": "0a54a4723d51b6ef90497d9fb7a69d2ce00fead65effa0dc2363b1ed0185e5f4",
+        "translation_sha256": "4529dcf0966a490b8da900286986ee7c3cef79b4ee290c4845a6d258ba21fb38"
       },
       "docs/research/case-database.md": {
         "source_sha256": "6332d3678734dcc64e4c5b003c42445f324b4f98e9205091a637be92d7bfe069",
@@ -262,8 +270,8 @@
         "translation_sha256": "2f49d2945fe1d1551623f251740334cf997abb06b2cb9c27c6019c7689971896"
       },
       "docs/security/threat-model.md": {
-        "source_sha256": "5bb8723a1d2bd076d8cc15534c656ef0bff9176e3e861f36f48242c3383ba2a0",
-        "translation_sha256": "df59d0e75f6955f187d2002103c1dac9e0c64c7ea48687a2609855fd4f0c3a90"
+        "source_sha256": "48855fdc32d570bebd0149a81f90ed1b009f33574145ac3be7d27cc1a4b0ff44",
+        "translation_sha256": "2665e3aa7b111e0d034e45a4723d1aceba01b5666bd53578e7406ca66f288ef6"
       },
       "docs/vision.md": {
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",

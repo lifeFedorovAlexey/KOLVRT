@@ -22,4 +22,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0015 — Versioned routing in isolated EL0 consumers](0015-el0-versioned-routing.md) — Accepted for the bounded Phase 2 demonstration.
 
+- [ADR-0016 — Scheduler responsibilities and enforced per-CPU ownership](0016-scheduler-ownership.md) — Accepted for bounded Phase 3.0.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

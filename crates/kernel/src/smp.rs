@@ -102,6 +102,11 @@ pub mod experiment {
     }
 }
 pub fn wait(mut ready: impl FnMut() -> bool, reason: &str) {
+    assert!(
+        !percpu::current().scheduler_borrow.load(Ordering::Acquire),
+        "scheduler borrow across wait"
+    );
+    crate::sync::assert_scheduler_unlocked();
     let deadline = time::deadline_after(COORDINATION_TIMEOUT);
     loop {
         assert_ne!(

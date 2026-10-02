@@ -54,4 +54,6 @@ New packages require a distinct responsibility or dependency boundary. New direc
 
 The later routing-demo package owns the separately linked EL0 image; it is not a kernel dependency. Its host image/profile preparation and runtime acceptance live in xtask. See the [Phase 2 boundary](kernel/routing.md).
 
+The [Phase 3.0 scheduler split](kernel/scheduler.md) places per-CPU runtime and storage access in kernel/src/scheduler, frame/entry in arch/aarch64, and static image allocation/verification in boot_workload.rs and boot_workload.S. Safe ownership and selection stay in kernel-core; no new package or dependency is needed.
+
 [Russian translation](../translations/ru/docs/project-structure.md)
