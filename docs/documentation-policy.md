@@ -4,7 +4,7 @@
 
 Use `Document status`, `Evidence scope` and a local `Current reference` link on documents
 whose milestones can be confused. Add `Supersedes` when a document replaces another
-decision in whole or in part. These roles are distinct from ABI publication stages.
+decision in whole or in part. These roles are distinct from ABI publication stages. Only these field names are accepted; legacy names are rejected even when combined with current metadata.
 
 | Status               | Meaning                                                                                  |
 | -------------------- | ---------------------------------------------------------------------------------------- |

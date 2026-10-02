@@ -3,8 +3,8 @@
 Статус: **Принято**. Дата: 2026-10-02.
 
 Document status: CURRENT
-Document scope: обязательства границ unsafe; исходное заявление о статусе тестов относится только к Phase 0.
-Status reference: [Последующие свидетельства проверки](../documentation-policy.md)
+Evidence scope: обязательства границ unsafe; исходное заявление о статусе тестов относится только к Phase 0.
+Current reference: [Последующие свидетельства проверки](../documentation-policy.md)
 
 ## Контекст
 

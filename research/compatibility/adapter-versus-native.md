@@ -1,8 +1,8 @@
 # Adapter versus native driver: decision rubric and worked cases
 
 Document status: CURRENT
-Document scope: source-backed research dispositions for issue #57; no admitted driver contract, implementation or execution result.
-Status reference: [Pinned corpus](linux-driver-api-map.md)
+Evidence scope: source-backed research dispositions for issue #57; no admitted driver contract, implementation or execution result.
+Current reference: [Pinned corpus](linux-driver-api-map.md)
 
 ## Evidence and decision boundary
 

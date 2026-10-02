@@ -22,22 +22,29 @@ fn root() -> PathBuf {
 }
 
 #[test]
-fn document_status_requires_scope_and_local_reference() {
-    let valid = "Document status: HISTORICAL\nDocument scope: Phase 0 only\nStatus reference: [Replacement](../kernel/el0.md)\n";
-    for status in ["CURRENT", "DESIGN BASELINE", "HISTORICAL", "SUPERSEDED"] {
+fn document_status_requires_evidence_scope_and_current_reference() {
+    let valid = "Document status: HISTORICAL\nEvidence scope: Phase 0 only\nCurrent reference: [Replacement](../kernel/el0.md)\n";
+    for status in [
+        "CURRENT",
+        "DESIGN BASELINE",
+        "HISTORICAL",
+        "HISTORICAL MILESTONE",
+        "SUPERSEDED",
+    ] {
         assert!(documents::check_document_status(&valid.replace("HISTORICAL", status)).is_ok());
     }
     for invalid in [
         valid.replace("HISTORICAL", "DONE"),
-        valid.replace("Document scope: Phase 0 only\n", ""),
+        valid.replace("Evidence scope: Phase 0 only\n", ""),
         valid.replace("Phase 0 only", " "),
         format!("{valid}Document status: CURRENT\n"),
+        "Document status: HISTORICAL\nDocument scope: Phase 0 only\nStatus reference: [Replacement](../kernel/el0.md)\n".to_owned(),
         valid.replace("../kernel/el0.md", "https://example.com/el0.md"),
         valid.replace("../kernel/el0.md", "#implementation"),
         valid.replace("../kernel/el0.md", "/el0.md"),
         valid.replace(
-            "Status reference: [Replacement](../kernel/el0.md)",
-            "Status reference: none",
+            "Current reference: [Replacement](../kernel/el0.md)",
+            "Current reference: none",
         ),
     ] {
         assert!(documents::check_document_status(&invalid).is_err());

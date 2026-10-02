@@ -1,8 +1,8 @@
 # Подача issues об оборудовании и совместимости
 
 Document status: CURRENT
-Document scope: определения форм issues и локальная проверка; без сбора оборудования и утверждений о реальном отображении GitHub.
-Status reference: [Исследовательская программа](../../research/compatibility/taxonomy.md)
+Evidence scope: определения форм issues и локальная проверка; без сбора оборудования и утверждений о реальном отображении GitHub.
+Current reference: [Исследовательская программа](../../research/compatibility/taxonomy.md)
 
 ## Выбор формы
 

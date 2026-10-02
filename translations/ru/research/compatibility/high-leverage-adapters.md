@@ -1,8 +1,8 @@
 # Исследование compatibility adapters с широким охватом
 
 Document status: CURRENT
-Document scope: начальный observed source reach и метод решений; без working adapters или coverage percentages.
-Status reference: [Сохранённые наблюдения](../../../../research/compatibility/linux-driver-api-observations.json)
+Evidence scope: начальный observed source reach и метод решений; без working adapters или coverage percentages.
+Current reference: [Сохранённые наблюдения](../../../../research/compatibility/linux-driver-api-observations.json)
 
 ## Фактическое начальное наблюдение
 

@@ -1,8 +1,8 @@
 # Hardware and compatibility issue submissions
 
 Document status: CURRENT
-Document scope: repository issue-form definitions and local validation; no hardware collection or live GitHub rendering claim.
-Status reference: [Research program](../../research/compatibility/taxonomy.md)
+Evidence scope: repository issue-form definitions and local validation; no hardware collection or live GitHub rendering claim.
+Current reference: [Research program](../../research/compatibility/taxonomy.md)
 
 ## Choose a form
 

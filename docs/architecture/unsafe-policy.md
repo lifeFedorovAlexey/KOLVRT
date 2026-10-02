@@ -1,8 +1,8 @@
 # Rust implementation safety policy
 
 Document status: CURRENT
-Document scope: current safety obligations with historical Phase 0 verification limits.
-Status reference: [Reviewed execution scope](../documentation-policy.md)
+Evidence scope: current safety obligations with historical Phase 0 verification limits.
+Current reference: [Reviewed execution scope](../documentation-policy.md)
 
 Phase 0 statements below describe the historical stage. Current checks are bounded by the [SMP contract](../kernel/smp.md). An unsafe inventory is not a risk score; safe Rust and EL0 do not themselves exclude a component from TCB. Trust is property-specific in the [system threat model](../security/threat-model.md).
 

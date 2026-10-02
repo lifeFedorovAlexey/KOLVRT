@@ -127,11 +127,15 @@ fn markdown_structure_ignores_markup_inside_fences() {
 }
 
 #[test]
-fn metadata_aliases_preserve_old_documents_but_reject_ambiguity() {
-    let old = "Document status: CURRENT\nDocument scope: bounded\nStatus reference: [record](record.md)\n";
-    assert!(check_document_status(old).is_ok());
-    assert!(check_document_status(&format!("{old}Evidence scope: another scope\n")).is_err());
-    assert!(
-        check_document_status(&format!("{old}Current reference: [other](other.md)\n")).is_err()
-    );
+fn legacy_metadata_fields_are_not_accepted_as_aliases() {
+    let legacy = "Document status: CURRENT\nDocument scope: bounded\nStatus reference: [record](record.md)\n";
+    assert!(check_document_status(legacy).is_err());
+    let current = status("CURRENT", "[record](record.md)");
+    assert!(check_document_status(&current).is_ok());
+    for obsolete in [
+        "Document scope: bounded\n",
+        "Status reference: [record](record.md)\n",
+    ] {
+        assert!(check_document_status(&format!("{current}{obsolete}")).is_err());
+    }
 }

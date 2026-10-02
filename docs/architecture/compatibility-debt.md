@@ -1,8 +1,8 @@
 # COST-L compatibility-debt registry
 
 Document status: CURRENT
-Document scope: implemented bounded offline registry and research candidates; no Linux driver support or runtime accounting.
-Status reference: [Registry implementation](../../crates/repository-checks/src/cost_l.rs)
+Evidence scope: implemented bounded offline registry and research candidates; no Linux driver support or runtime accounting.
+Current reference: [Registry implementation](../../crates/repository-checks/src/cost_l.rs)
 
 ## Identity and boundaries
 

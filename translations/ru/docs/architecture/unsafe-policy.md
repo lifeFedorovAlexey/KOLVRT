@@ -1,8 +1,8 @@
 # Политика безопасности реализации на Rust
 
 Document status: CURRENT
-Document scope: действующие обязательства безопасности с историческими пределами проверки Phase 0.
-Status reference: [Рассмотренная область выполнения](../documentation-policy.md)
+Evidence scope: действующие обязательства безопасности с историческими пределами проверки Phase 0.
+Current reference: [Рассмотренная область выполнения](../documentation-policy.md)
 
 Утверждения ниже о Phase 0 описывают исторический этап. Текущие проверки ограничены [контрактом SMP](../kernel/smp.md). Unsafe inventory не является оценкой риска; safe Rust и EL0 сами не исключают компонент из TCB. Доверие учитывается по свойствам в [общей модели угроз](../security/threat-model.md).
 

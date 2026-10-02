@@ -1,8 +1,8 @@
 # High-leverage compatibility adapter research
 
 Document status: CURRENT
-Document scope: initial observed source reach and a decision method; no working adapters or coverage percentages.
-Status reference: [Retained observations](linux-driver-api-observations.json)
+Evidence scope: initial observed source reach and a decision method; no working adapters or coverage percentages.
+Current reference: [Retained observations](linux-driver-api-observations.json)
 
 ## Actual initial observation
 

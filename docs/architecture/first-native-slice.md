@@ -1,8 +1,8 @@
 # First native slice
 
 Document status: DESIGN BASELINE
-Document scope: full isolated-task IPC/handles/cancellation workload; the scheduler is partial implementation.
-Status reference: [Partial EL0 implementation](../kernel/el0.md)
+Evidence scope: full isolated-task IPC/handles/cancellation workload; the scheduler is partial implementation.
+Current reference: [Partial EL0 implementation](../kernel/el0.md)
 
 Status: accepted EL0 workload design baseline, not a completed EL0 implementation. A native EL1 kernel and two-CPU foundation now exist; this document describes the later isolated-task workload. The slice demonstrates native isolation and bounded communication: a supervisor creates two isolated tasks, grants one endpoint, exchanges a bounded message, revokes future admission, observes cancellation or service death, and shuts down without leaked ownership. This is a correctness workload, not a performance claim.
 

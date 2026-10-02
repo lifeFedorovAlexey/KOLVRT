@@ -1,8 +1,8 @@
 # Pinned Linux driver API observations
 
 Document status: CURRENT
-Document scope: executed lexical extraction from three pinned source files; no driver execution or complete dependency analysis.
-Status reference: [Observation artifact](linux-driver-api-observations.json)
+Evidence scope: executed lexical extraction from three pinned source files; no driver execution or complete dependency analysis.
+Current reference: [Observation artifact](linux-driver-api-observations.json)
 
 ## Corpus and acquisition
 

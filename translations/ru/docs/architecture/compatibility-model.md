@@ -1,8 +1,8 @@
 # Модель совместимости
 
 Document status: CURRENT
-Document scope: обязательства программной совместимости; заявления о реализации Phase 0 исторические.
-Status reference: [Свидетельства реализации](../documentation-policy.md)
+Evidence scope: обязательства программной совместимости; заявления о реализации Phase 0 исторические.
+Current reference: [Свидетельства реализации](../documentation-policy.md)
 
 Compat не выпускает недостающие grants потребителя и не расширяет effective authority. Private capabilities сервиса допускают посредничество только в native-разрешённой области эффектов; [ADR-0013](../architecture-decisions/0013-security-boundaries.md) не допускает compat-исключений.
 

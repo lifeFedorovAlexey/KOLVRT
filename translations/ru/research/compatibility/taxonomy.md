@@ -1,8 +1,8 @@
 # Taxonomy совместимости Linux: начальная проверка доказательств
 
 Document status: CURRENT
-Document scope: семь проверенных seed mechanisms и lexical sample из трёх files; taxonomy несовместимости неполна.
-Status reference: [Сохранённые наблюдения](../../../../research/compatibility/linux-driver-api-observations.json)
+Evidence scope: семь проверенных seed mechanisms и lexical sample из трёх files; taxonomy несовместимости неполна.
+Current reference: [Сохранённые наблюдения](../../../../research/compatibility/linux-driver-api-observations.json)
 
 ## Метод и граница доказательств
 

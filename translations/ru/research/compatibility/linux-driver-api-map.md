@@ -1,8 +1,8 @@
 # Закреплённые наблюдения Linux driver API
 
 Document status: CURRENT
-Document scope: выполненное lexical extraction из трёх pinned source files; без исполнения драйверов или полного dependency analysis.
-Status reference: [Артефакт наблюдений](../../../../research/compatibility/linux-driver-api-observations.json)
+Evidence scope: выполненное lexical extraction из трёх pinned source files; без исполнения драйверов или полного dependency analysis.
+Current reference: [Артефакт наблюдений](../../../../research/compatibility/linux-driver-api-observations.json)
 
 ## Corpus и получение источников
 

@@ -3,8 +3,8 @@
 Status: **Accepted**. Date: 2026-10-02.
 
 Document status: CURRENT
-Document scope: unsafe-boundary obligations; the original test-status claim applies only to Phase 0.
-Status reference: [Later verification evidence](../documentation-policy.md)
+Evidence scope: unsafe-boundary obligations; the original test-status claim applies only to Phase 0.
+Current reference: [Later verification evidence](../documentation-policy.md)
 
 ## Context
 

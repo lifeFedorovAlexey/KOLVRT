@@ -1,8 +1,8 @@
 # Linux compatibility taxonomy: initial evidence review
 
 Document status: CURRENT
-Document scope: seven reviewed seed mechanisms and a three-file lexical sample; incomplete incompatibility taxonomy.
-Status reference: [Retained observations](linux-driver-api-observations.json)
+Evidence scope: seven reviewed seed mechanisms and a three-file lexical sample; incomplete incompatibility taxonomy.
+Current reference: [Retained observations](linux-driver-api-observations.json)
 
 ## Method and evidence boundary
 

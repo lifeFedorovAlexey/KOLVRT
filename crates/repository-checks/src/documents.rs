@@ -2,7 +2,7 @@ use crate::{CheckResult, database, finish, hash, read, read_json, write_json};
 use regex::Regex;
 use serde_json::json;
 use std::{
-    collections::BTreeSet,
+    collections::{BTreeMap, BTreeSet},
     fs,
     path::{Path, PathBuf},
 };
@@ -224,14 +224,21 @@ pub fn check_abi_publication(
 pub fn check_docs(root: &Path) -> CheckResult<()> {
     crate::exceptions::check(root)?;
     crate::security_artifacts::check(root)?;
-    for document in [
-        "docs/architecture/first-native-slice.md",
-        "docs/architecture/compatibility-model.md",
-        "docs/architecture/unsafe-policy.md",
-        "docs/architecture-decisions/0004-unsafe.md",
-        "docs/architecture-decisions/0010-kernel-foundation.md",
-    ] {
-        check_document_status(&read(&root.join(document))?)?;
+    for path in markdown(root, false)? {
+        let text = read(&path)?;
+        if text.lines().any(|line| {
+            [
+                "Document status:",
+                "Evidence scope:",
+                "Current reference:",
+                "Document scope:",
+                "Status reference:",
+            ]
+            .iter()
+            .any(|name| line.starts_with(name))
+        }) {
+            check_document_status(&text).map_err(|error| format!("{}: {error}", path.display()))?;
+        }
     }
     check_abi_publication(
         &read(&root.join("docs/architecture/native-abi.md"))?,
@@ -316,28 +323,26 @@ pub fn check_docs(root: &Path) -> CheckResult<()> {
 
 /// Bounded metadata validation, not proof that claims match execution evidence.
 pub fn check_document_status(text: &str) -> CheckResult<()> {
-    let field = |names: &[&str]| -> CheckResult<String> {
+    if text
+        .lines()
+        .any(|line| line.starts_with("Document scope:") || line.starts_with("Status reference:"))
+    {
+        return Err("legacy document metadata fields are not supported".into());
+    }
+    let field = |name: &str| -> CheckResult<String> {
         let fields: Vec<_> = text
             .lines()
-            .filter_map(|line| {
-                names
-                    .iter()
-                    .find_map(|name| line.strip_prefix(&format!("{name}: ")))
-            })
+            .filter_map(|line| line.strip_prefix(&format!("{name}: ")))
             .map(str::trim)
             .collect();
         if fields.len() != 1 || fields[0].is_empty() {
-            return Err(format!(
-                "document requires exactly one nonempty {}",
-                names[0]
-            ));
+            return Err(format!("document requires exactly one nonempty {name}"));
         }
         Ok(fields[0].to_owned())
     };
-    let status = field(&["Document status"])?;
-    // Keep committed documents valid while the metadata spelling migration is unfinished.
-    let _scope = field(&["Document scope", "Evidence scope"])?;
-    let reference = field(&["Status reference", "Current reference"])?;
+    let status = field("Document status")?;
+    let _scope = field("Evidence scope")?;
+    let reference = field("Current reference")?;
     if !matches!(
         status.as_str(),
         "CURRENT" | "DESIGN BASELINE" | "HISTORICAL" | "HISTORICAL MILESTONE" | "SUPERSEDED"
@@ -347,14 +352,14 @@ pub fn check_document_status(text: &str) -> CheckResult<()> {
     let links = Regex::new(r"\[[^\]]+\]\(([^)]+)\)").unwrap();
     let targets: Vec<_> = links
         .captures_iter(&reference)
-        .map(|c| c[1].to_owned())
+        .map(|capture| capture[1].to_owned())
         .collect();
     if targets.is_empty() {
-        return Err("status reference must contain a local link".into());
+        return Err("current reference must contain a local Markdown link".into());
     }
     for target in targets {
         if target.starts_with(['/', '#']) || target.contains(':') {
-            return Err("status reference must use local paths".into());
+            return Err("current reference must use local paths".into());
         }
     }
     Ok(())
@@ -384,6 +389,10 @@ pub fn check_translations(root: &Path) -> CheckResult<()> {
         .collect::<CheckResult<_>>()?;
     let cyrillic = Regex::new(r"[\u0400-\u04ff]").unwrap();
     let identifiers = Regex::new(r"\bLAW-\d{3}\b").unwrap();
+    let adr_metadata = Regex::new(
+        r"(?m)^(Document status|Evidence scope|Current reference|Supersedes):\s*(.*?)\s*$",
+    )
+    .unwrap();
     let mut errors = Vec::new();
     for rel in &originals {
         if cyrillic.is_match(&read(&root.join(rel))?) {
@@ -446,6 +455,44 @@ pub fn check_translations(root: &Path) -> CheckResult<()> {
                 errors.push(format!(
                     "{locale}/{rel}: heading/table/list structure differs"
                 ));
+            }
+            if rel.starts_with("docs/architecture-decisions/")
+                && rel != "docs/architecture-decisions/README.md"
+            {
+                let metadata = |text: &str| {
+                    adr_metadata
+                        .captures_iter(text)
+                        .map(|capture| (capture[1].to_owned(), capture[2].trim().to_owned()))
+                        .collect::<BTreeMap<_, _>>()
+                };
+                let en_metadata = metadata(&en);
+                let local_metadata = metadata(&local);
+                let en_keys: BTreeSet<_> = en_metadata.keys().collect();
+                let local_keys: BTreeSet<_> = local_metadata.keys().collect();
+                let same_status =
+                    en_metadata.get("Document status") == local_metadata.get("Document status");
+                let same_supersedes =
+                    en_metadata.get("Supersedes") == local_metadata.get("Supersedes");
+                let link_targets = |path: &Path, value: Option<&String>| {
+                    value
+                        .map(|value| links(root, path, value))
+                        .unwrap_or_else(|| Ok(Vec::new()))
+                };
+                let same_references = match (
+                    link_targets(&source, en_metadata.get("Current reference")),
+                    link_targets(&translated, local_metadata.get("Current reference")),
+                ) {
+                    (Ok(en_links), Ok(local_links)) => en_links == local_links,
+                    (Err(error), _) | (_, Err(error)) => {
+                        errors.push(error);
+                        false
+                    }
+                };
+                if en_keys != local_keys || !same_status || !same_supersedes || !same_references {
+                    errors.push(format!(
+                        "{locale}/{rel}: ADR status/scope/reference/supersedes metadata differs"
+                    ));
+                }
             }
             match (links(root, &source, &en), links(root, &translated, &local)) {
                 (Ok(a), Ok(b)) if a != b => {

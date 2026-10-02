@@ -393,7 +393,10 @@ mod host {
             Err(super::Error::Unsupported),
         );
         let mut consumer = super::Consumer::from_profile(&super::Profile::native(), 0).unwrap();
-        assert_eq!(consumer.switch(super::Route::Inclusive), Err(super::Error::Unsupported));
+        assert_eq!(
+            consumer.switch(super::Route::Inclusive),
+            Err(super::Error::Unsupported)
+        );
         assert_eq!(consumer.route(), super::Route::Native);
         assert_eq!(consumer.generation(), 1);
     }

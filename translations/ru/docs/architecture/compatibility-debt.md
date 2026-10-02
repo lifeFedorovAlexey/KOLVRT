@@ -1,8 +1,8 @@
 # Реестр долга совместимости COST-L
 
 Document status: CURRENT
-Document scope: реализованный ограниченный offline-реестр и исследовательские кандидаты; без поддержки Linux-драйверов и runtime-учёта.
-Status reference: [Реализация реестра](../../../../crates/repository-checks/src/cost_l.rs)
+Evidence scope: реализованный ограниченный offline-реестр и исследовательские кандидаты; без поддержки Linux-драйверов и runtime-учёта.
+Current reference: [Реализация реестра](../../../../crates/repository-checks/src/cost_l.rs)
 
 ## Идентичность и границы
 

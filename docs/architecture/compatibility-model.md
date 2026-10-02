@@ -1,8 +1,8 @@
 # Compatibility model
 
 Document status: CURRENT
-Document scope: software compatibility obligations; Phase 0 implementation claims are historical.
-Status reference: [Implementation evidence](../documentation-policy.md)
+Evidence scope: software compatibility obligations; Phase 0 implementation claims are historical.
+Current reference: [Implementation evidence](../documentation-policy.md)
 
 Compat cannot issue missing consumer grants or expand effective authority. Service-private capabilities permit mediation only within native-authorized effects; [ADR-0013](../architecture-decisions/0013-security-boundaries.md) allows no compatibility waiver.
 
