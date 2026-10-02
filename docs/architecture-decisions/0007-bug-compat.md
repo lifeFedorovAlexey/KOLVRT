@@ -8,15 +8,19 @@ An error can become a dependency, but security defects must not be preserved (ca
 
 ## Decision
 
-Fix native behavior and add regression checks. Preserve safe old semantics only in an explicit optional module backed by consumer evidence. Retire it using declared and observed dependencies.
+Fix native behavior and add regression checks. Preserve safe old semantics only in an explicit optional module backed by consumer evidence. Require owner, named consumers, creation reason, migration target, finite support window and removal condition. Explicitly name dormant/offline recovery packages, their owners and deadlines. Renew only by recorded decision with a new finite deadline; unknown hypothetical consumers cannot renew support.
+
+Separate support expiry and default-distribution removal from runtime unloading. Expiry closes unsupported admission and preserves explicit migration errors and a registry tombstone. Bound/draining code and accepted work remain retained until runtime references, callbacks, device activity and grace periods are quiescent. Archive installation is explicit and subject to security/support limits; it never restores security-invalid behavior. See the [compatibility model](../architecture/compatibility-model.md).
+
+This clarification addresses issue #3 through existing LAW-008; it does not add a law, production loader or automatic semantic-version support renewal.
 
 ## Alternatives
 
-Keep the native bug forever; break all consumers immediately; generate an adapter for every bug.
+Keep the native bug forever; break all consumers immediately; generate an adapter for every bug; remove solely on zero recent calls; ship every old module indefinitely.
 
 ## Why rejected
 
-These undermine native correctness, prevent migration, or create unsupported maintenance debt.
+These undermine native correctness, prevent migration, or create unsupported maintenance debt. Zero recent calls misses declared offline obligations; perpetual default distribution defeats bounded retirement.
 
 ## Consequences
 
@@ -36,7 +40,7 @@ Never restore unsafe behavior or unload referenced code.
 
 ## Testing
 
-Check migration and native-only operation. Zero observed consumers with incomplete coverage does not permit removal.
+Check migration and native-only operation. Zero observed calls cannot cancel unexpired declared support; incomplete coverage cannot renew an expired window. Host retirement-model negative controls detect freeing active references at expiry, admitting new unsupported work and losing a tombstone. Production registry/error transport, clock and runtime unload checks remain missing.
 
 ## Reversibility
 
