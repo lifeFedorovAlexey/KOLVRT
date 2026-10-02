@@ -382,7 +382,7 @@ fn execute(elf: &Path, tests: bool) -> Result<()> {
                 && event["el"] == 1
                 && event["timer_irq"] == true
                 && event["active_cpus"] == platform_config::ACTIVE_CPUS
-                && event["secondary_off"] == true;
+                && event["secondary_shutdown_verified"] == true;
         }
         events.push(event);
     }

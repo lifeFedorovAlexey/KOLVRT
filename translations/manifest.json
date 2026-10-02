@@ -130,8 +130,8 @@
         "translation_sha256": "b6b918584e7227c0d85a0c3a142271d71be8d7e5309b775b52ec078381113564"
       },
       "docs/kernel/boot.md": {
-        "source_sha256": "c2f3fdbfe7e77b0674455ac476e8aa3e6dab605fe54ffe586569d6e2f72b0a9d",
-        "translation_sha256": "039d68ff090a338aabdcdd87c084e376692fbdb5c4c84f5e95f8e2f9ba901c14"
+        "source_sha256": "8ceec5e034c7c24920abd7aed2130f33cd41849508355adc917f2cc139296150",
+        "translation_sha256": "ac4b4a22c610e9ba4954675cd38bffd4996c02c1dad662db32e514a12874f0dd"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "1ed6697824f82b678520015012a77d24a19177ad7eade89a8b8bac8bd9105e09",

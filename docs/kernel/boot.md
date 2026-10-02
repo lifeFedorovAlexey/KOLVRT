@@ -23,3 +23,5 @@ After UART initialization, both profiles print the project's ASCII emblem and KO
 Run `cargo xtask test`. Both DEV and PROD boot images exercise real allocation, mapping, memory access, unmapping, freeing and timer delivery before publishing a structured boot event. Missing events, panic, fatal exception or timeout fail the host command. See [testing](testing.md) and [unsafe boundaries](unsafe.md).
 
 The [SMP protocol](smp.md) adds cleaned release/acquire publication, secondary root activation, affinity-matched local interrupts and acknowledged retirement. Both boot profiles require a real secondary IPI and confirmed CPU_OFF before reporting boot success.
+
+In the boot event, `active_cpus` counts CPUs that participated in boot validation; it is not an online-CPU snapshot at event emission. `secondary_shutdown_verified: true` is emitted only after `smp::shutdown()` observes both the secondary's quiescent state and PSCI AFFINITY_INFO returning OFF. Thus two participating CPUs and verified secondary shutdown describe successive stages. The earlier `secondary_off` field in retained Phase 1.1 records has the same meaning; historical measurements are not rewritten.

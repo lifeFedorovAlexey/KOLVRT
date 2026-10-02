@@ -102,7 +102,7 @@ pub extern "C" fn kernel_main() -> ! {
         );
         smp::shutdown();
         log!(
-            "{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true,\"active_cpus\":{},\"secondary_off\":true}}\n",
+            "{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true,\"active_cpus\":{},\"secondary_shutdown_verified\":true}}\n",
             platform::config::ACTIVE_CPUS
         );
     }
