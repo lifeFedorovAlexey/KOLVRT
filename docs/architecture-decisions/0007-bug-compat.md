@@ -24,6 +24,28 @@ bounded deadline are required for renewal. Artifact revisions and successor vers
 neither renew predecessors nor authorize immediate unloading. Honor ABI-FREEZE promises;
 support expiry and quiescent reclamation remain independent under LAW-008.
 
+Issue #10 records owned exceptions in `policy/exceptions.json` (at most 128 records).
+Each stable ID names an owner, consumers or affected hardware targets, rationale,
+scope, creation/review dates, review deadline, replacement, falsifiable removal
+condition and source boundaries. Software also requires a finite support deadline.
+The synthetic empty-first route is EXC-0001; its deadlines are fixture policy, not
+a stable ABI support promise. New deviations require a record and boundary reference.
+
+The repository document gate validates required fields, unique IDs, UTC calendar
+dates and two-way references in crate source/manifests. Due reviews and expired
+software support fail CI unless a recorded disposition names its review date,
+rationale and next finite review; extending support requires a new finite deadline.
+Disposition review cannot predate the expired obligation or lie in the future.
+Hardware records name affected targets and retire when their support ends; review
+deadlines never automatically disable an essential workaround (LAW-031).
+
+CI only flags a removal/review decision. It never deletes code, unloads retained
+bindings or weakens protection (LAW-008). Structural references cannot detect every
+undeclared exception or verify owner authority, consumer evidence or the truth of a
+removal condition. Boundary/dependency review remains mandatory; comments and TODO
+searches alone cannot establish completeness. This decision uses LAW-008/LAW-031,
+without adding a duplicate law or a production registry/loader.
+
 ## Alternatives
 
 Keep the native bug forever; break all consumers immediately; generate an adapter for every bug; remove solely on zero recent calls; ship every old module indefinitely.

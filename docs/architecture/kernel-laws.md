@@ -80,7 +80,7 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Enforcement:** Require a migration state machine, dependency evidence and explicit rollback limits. [ADR-0007](../architecture-decisions/0007-bug-compat.md) requires finite owned support and per-semantic-version lifecycle records; successor publication cannot renew support or authorize unsafe unloading.
+**Enforcement:** Require a migration state machine, dependency evidence and explicit rollback limits. [ADR-0007](../architecture-decisions/0007-bug-compat.md) requires finite owned support, per-semantic-version lifecycle records and the owned exception registry; successor publication cannot renew support or authorize unsafe unloading. Exception review deadlines flag a decision and never disable essential supported-target workarounds under LAW-031.
 
 **Testing:** Exercise timeout, outstanding callbacks, dormant dependencies and failure before and after irreversible effects.
 

@@ -222,6 +222,7 @@ pub fn check_abi_publication(
 }
 
 pub fn check_docs(root: &Path) -> CheckResult<()> {
+    crate::exceptions::check(root)?;
     for document in [
         "docs/architecture/first-native-slice.md",
         "docs/architecture/compatibility-model.md",

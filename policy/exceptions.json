@@ -1,0 +1,22 @@
+{
+  "records": [
+    {
+      "id": "EXC-0001",
+      "kind": "software",
+      "owner": "KOLVRT routing maintainers",
+      "consumers": ["synthetic legacy empty-window conformance workload"],
+      "rationale": "Demonstrate explicit optional bug compatibility without changing native zero-count behavior.",
+      "scope": "bug.window.empty-first/1.0.0 through routing bug-compat and window-compat bug features; synthetic fixture only",
+      "created": "2026-10-02",
+      "reviewed": "2026-10-02",
+      "review_due": "2027-01-01",
+      "support_until": "2027-04-01",
+      "removal_condition": "Remove after the named synthetic workload migrates to native empty-window behavior and no declared fixture consumer remains; retire admission separately from draining retained bindings.",
+      "replacement": "window.native/1.0.0",
+      "boundaries": [
+        "crates/routing/src/lib.rs",
+        "crates/window-compat/src/lib.rs"
+      ]
+    }
+  ]
+}

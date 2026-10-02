@@ -3,6 +3,7 @@
 
 pub mod database;
 pub mod documents;
+pub mod exceptions;
 pub mod report;
 
 use serde::de::{self, Deserialize, Deserializer, MapAccess, SeqAccess, Visitor};

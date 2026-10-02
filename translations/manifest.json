@@ -38,8 +38,8 @@
         "translation_sha256": "d5ad04eff2d0b1d7f47d95b732bb29fc658564573580c92964304fdb296a096a"
       },
       "docs/architecture-decisions/0007-bug-compat.md": {
-        "source_sha256": "d7901b2ced9ca9b5698fc141b33bd2090f4f028fbc5b20666132ced28f4fdefb",
-        "translation_sha256": "78bff160c1044f5c2cf57f854faafb8f8525de3ee4a996ab207011b77a5d2600"
+        "source_sha256": "93e0a4f23f5bb0dae3fcbecbf4f46f054166080b33cd70c3ce4aeaa1df164afd",
+        "translation_sha256": "08ca09022248771594fa385df646923710a719f55fe4d41cc9791fbcd344b82e"
       },
       "docs/architecture-decisions/0008-placement.md": {
         "source_sha256": "386e655c6fa751f52942c204f398ed6197e861d3d89f22f3b3e83f16e95b6fe0",
@@ -106,8 +106,8 @@
         "translation_sha256": "08179f352cb61f1c18481ab8959451c187fc6cd9b3daec4d38c318e192fbd7fb"
       },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "ee92b5550f9733dba35d1c54760c4852f1cc73b6448a49cb620fd12474556adf",
-        "translation_sha256": "3d123d7f41d2654287373ce3fdc3a56c046bc77f588a6ead98cce78b31b73704"
+        "source_sha256": "8661451435e4a7a207979e59b719841b1e165dad82ee6cb09137b50de44a1828",
+        "translation_sha256": "c06060568f2f3a5be17d84c1229225c1256c8cec44874a80edbfa24a42c9625a"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",

@@ -1,6 +1,7 @@
 #![no_std]
 #![forbid(unsafe_code)]
 //! Synthetic demonstration protocols, not a Linux ABI. Legacy types stay here.
+//! EXC-0001 covers the optional empty-first bug fixture, not the native contract.
 use kernel_core::window::Reduction;
 #[cfg(any(feature = "v1", feature = "v2", feature = "bug"))]
 use kernel_core::window::{Backend, Local, Span};

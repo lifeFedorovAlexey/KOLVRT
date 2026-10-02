@@ -27,6 +27,7 @@ pub enum Route {
     Native = 0,
     Inclusive = 1,
     Counted = 2,
+    // EXC-0001: synthetic legacy empty-window contract; see policy/exceptions.json.
     EmptyFirst = 3,
 }
 impl Route {

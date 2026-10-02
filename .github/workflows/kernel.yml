@@ -22,6 +22,8 @@ jobs:
         run: ./scripts/setup-qemu.ps1
       - run: npm ci --ignore-scripts
       - run: npm run check
+      - name: Exception registry rejection fixtures
+        run: cargo test --locked -p repository-checks exceptions::tests
       - name: Routing model contracts
         run: cargo test --locked -p routing --all-features
       - name: Production model and absent switching
