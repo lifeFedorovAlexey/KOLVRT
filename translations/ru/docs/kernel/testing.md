@@ -1,5 +1,7 @@
 # Воспроизводимые проверки ядра
 
+Framing и семантика отказов следуют [политике вывода](../architecture/output-policy.md). cargo xtask run показывает human-консоль, run --prod — PROD, run --machine — framed evidence. cargo xtask test включает события в обоих профилях; console summaries скрывают JSON, а raw logs сохраняют его.
+
 Установите Rust 1.99.0 с rustfmt, clippy и target aarch64-unknown-none, Node.js 18 или новее, а на Windows — 7-Zip. Первое скачивание зависимостей и инструментов требует сети. Windows setup QEMU извлекает закреплённый installer в игнорируемый cache, проверяет SHA-512 и записывает происхождение; service не устанавливается. Другие hosts могут указать QEMU 10.1.0 через QEMU_AARCH64.
 
 ## Команды

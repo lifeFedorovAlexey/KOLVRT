@@ -1,5 +1,7 @@
 # Reproducible kernel checks
 
+Output framing and failure semantics follow the [output policy](../architecture/output-policy.md). Use cargo xtask run for the human console, run --prod for PROD and run --machine for framed evidence. cargo xtask test enables machine events in both profiles; console summaries hide JSON while raw logs retain it.
+
 Install Rust 1.99.0 with rustfmt, clippy and target aarch64-unknown-none, Node.js 18 or later, and 7-Zip on Windows. First dependency/tool download requires network access. The Windows QEMU setup extracts the pinned installer into an ignored cache, checks SHA-512 and records provenance; it does not install a service. Other hosts may provide QEMU 10.1.0 via QEMU_AARCH64.
 
 ## Commands

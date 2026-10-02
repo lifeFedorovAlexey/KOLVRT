@@ -1,3 +1,4 @@
+mod output;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
@@ -89,16 +90,22 @@ fn main() {
 fn run() -> Result<()> {
     env::set_current_dir(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))?;
     fs::create_dir_all("target/kernel")?;
-    let args: Vec<String> = env::args().skip(1).collect();
+    let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {
         Some("audit") => audit(),
         Some("compare") if args.len() == 3 => compare_measurements(Path::new(&args[1]), Path::new(&args[2])),
         Some("build") => {
-            build(args.iter().any(|a| a == "--prod"), false, None)?;
+            build(args.iter().any(|a| a == "--prod"), false, None, false)?;
             Ok(())
         }
+        Some("run") => {
+            let machine = args.iter().any(|a| a == "--machine");
+            if args.iter().skip(1).any(|a| a != "--prod" && a != "--machine") { return Err("usage: cargo xtask run [--prod] [--machine]".into()); }
+            let elf = build(args.iter().any(|a| a == "--prod"), false, None, machine)?;
+            execute(&elf, false, machine)
+        }
         Some("debug") => {
-            let elf = build(false, false, None)?;
+            let elf = build(false, false, None, false)?;
             let q = qemu()?;
             Command::new(q)
                 .args(qemu_args(&elf))
@@ -108,32 +115,32 @@ fn run() -> Result<()> {
         }
         Some("test") => {
             for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative")] {
-                if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature))?; return execute(&elf, true); }
+                if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
             }
             if args.iter().any(|a| a == "--negative-control") {
-                let elf = build(false, true, Some("negative-test"))?;
-                return execute(&elf, true);
+                let elf = build(false, true, Some("negative-test"), true)?;
+                return execute(&elf, true, true);
             }
             if args.iter().any(|a| a == "--panic-control") {
-                let elf = build(false, true, Some("panic-test"))?;
-                return execute(&elf, true);
+                let elf = build(false, true, Some("panic-test"), true)?;
+                return execute(&elf, true, true);
             }
             if args.iter().any(|a| a == "--ownership-control") {
-                let elf = build(false, true, Some("ownership-test"))?;
-                return execute(&elf, true);
+                let elf = build(false, true, Some("ownership-test"), true)?;
+                return execute(&elf, true, true);
             }
             if args.iter().any(|a| a == "--retained-mapping-control") {
-                let elf = build(false, true, Some("retained-mapping-test"))?;
-                return execute(&elf, true);
+                let elf = build(false, true, Some("retained-mapping-test"), true)?;
+                return execute(&elf, true, true);
             }
             let starting_sources = source_inventory()?;
             qemu()?;
             audit()?;
             for prod in [false, true] {
-                let elf = build(prod, true, None)?;
-                execute(&elf, true)?;
-                let elf = build(prod, false, None)?;
-                execute(&elf, false)?;
+                let elf = build(prod, true, None, true)?;
+                execute(&elf, true, true)?;
+                let elf = build(prod, false, None, true)?;
+                execute(&elf, false, true)?;
             }
             for &(flag, marker) in NEGATIVE_CONTROLS {
                 let output = Command::new(env::current_exe()?)
@@ -165,10 +172,10 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask test [--record LABEL] | compare BASELINE CANDIDATE | build [--prod] | audit | debug".into()),
+        _ => Err("usage: cargo xtask test [--record LABEL] | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
-fn build(prod: bool, tests: bool, extra: Option<&str>) -> Result<PathBuf> {
+fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<PathBuf> {
     let mut c = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()));
     c.args([
         "build",
@@ -183,6 +190,9 @@ fn build(prod: bool, tests: bool, extra: Option<&str>) -> Result<PathBuf> {
         c.arg("--release");
     }
     let mut features = Vec::new();
+    if machine {
+        features.push("machine-events");
+    }
     if !prod {
         features.push("diagnostics");
     }
@@ -267,7 +277,18 @@ fn build(prod: bool, tests: bool, extra: Option<&str>) -> Result<PathBuf> {
         format!("target/kernel/{name}-build.json"),
         serde_json::to_string_pretty(&report)?,
     )?;
-    println!("{report}");
+    print!(
+        "{}",
+        output::console_text(
+            &format!(
+                "[OK] build: {} ({} bytes ELF; {} bytes loaded)\n",
+                dest.display(),
+                bytes.len(),
+                loaded
+            ),
+            output::stdout_color()
+        )
+    );
     Ok(dest)
 }
 fn qemu() -> Result<PathBuf> {
@@ -317,9 +338,14 @@ fn qemu_args(elf: &Path) -> Vec<String> {
         elf.to_string_lossy().into(),
     ]
 }
-fn execute(elf: &Path, tests: bool) -> Result<()> {
+fn execute(elf: &Path, tests: bool, machine: bool) -> Result<()> {
     let log = elf.with_extension("log");
     let err = elf.with_extension("stderr");
+    // Never leave an earlier run's successful evidence beside a failed/human run.
+    let result = elf.with_extension("results.json");
+    if result.exists() {
+        fs::remove_file(&result)?;
+    }
     let emulator = qemu()?;
     let version = Command::new(&emulator).arg("--version").output()?;
     fs::write(
@@ -350,57 +376,20 @@ fn execute(elf: &Path, tests: bool) -> Result<()> {
         thread::sleep(QEMU_POLL_INTERVAL);
     }
     let text = fs::read_to_string(&log)?;
-    print!("{text}");
-    let mut names = BTreeSet::new();
-    let mut suite = false;
-    let mut boot = false;
-    let mut events = Vec::new();
-    for line in text.lines().filter(|l| l.starts_with('{')) {
-        let event: Value = serde_json::from_str(line)?;
-        if event["event"] == "fatal" || event["event"] == "panic" || event["status"] == "fail" {
-            events.push(event.clone());
-            fs::write(
-                elf.with_extension("results.json"),
-                serde_json::to_string_pretty(&events)?,
-            )?;
-            return Err(format!("kernel failure: {line}").into());
+    print!("{}", output::console_text(&text, output::stdout_color()));
+    if !machine {
+        if text.contains("@KOLVRT") || text.contains("[FAIL]") {
+            return Err("human console failure or unexpected machine record".into());
         }
-        if event["event"] == "test" {
-            let name = event["name"].as_str().ok_or("test missing name")?;
-            if event["status"] != "pass" || !names.insert(name.to_string()) {
-                return Err("invalid test event".into());
-            }
-        }
-        if event["event"] == "suite" {
-            if suite || event["status"] != "pass" || event["tests"] != TESTS.len() {
-                return Err("invalid suite".into());
-            }
-            suite = true;
-        }
-        if event["event"] == "boot" {
-            boot = event["status"] == "pass"
-                && event["el"] == 1
-                && event["timer_irq"] == true
-                && event["active_cpus"] == platform_config::ACTIVE_CPUS
-                && event["secondary_shutdown_verified"] == true;
-        }
-        events.push(event);
+        return Ok(());
     }
-    if tests {
-        let expected = TESTS
-            .iter()
-            .map(|name| name.to_string())
-            .collect::<BTreeSet<_>>();
-        if !suite || names != expected {
-            return Err("missing or unexpected real kernel tests".into());
-        }
-    } else if !boot {
-        return Err("missing actual boot result".into());
-    }
+    let events = output::parse(&text)?;
     fs::write(
         elf.with_extension("results.json"),
         serde_json::to_string_pretty(&events)?,
     )?;
+    output::validate(&events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
+
     Ok(())
 }
 fn walk(path: &Path, out: &mut Vec<PathBuf>) -> Result<()> {

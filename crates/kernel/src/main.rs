@@ -18,6 +18,8 @@ mod tests;
 mod time;
 use arch::aarch64 as cpu;
 const BOOT_MEMORY_PATTERN: u64 = 0x4b4f4c565254; // ASCII "KOLVRT".
+const KIBIBYTE_BYTES: usize = 1024;
+const MEBIBYTE_BYTES: u64 = (KIBIBYTE_BYTES * KIBIBYTE_BYTES) as u64;
 #[cfg(not(feature = "kernel-tests"))]
 const BOOT_TIMER_DELAY: time::Duration = time::Duration::from_millis(10);
 #[cfg(not(feature = "kernel-tests"))]
@@ -30,18 +32,28 @@ pub extern "C" fn kernel_main() -> ! {
     diagnostics::initialize(d.uart.base as usize);
     diagnostics::boot_banner();
     log!(
-        "KOLVRT EL{} UART online\n",
+        "KOLVRT | {} | AArch64 | EL{}\n",
+        if cfg!(feature = "diagnostics") {
+            "DEV"
+        } else {
+            "PROD"
+        },
         cpu::el() >> cpu::CURRENT_EL_SHIFT
     );
+    diagnostics::status("OK", "console", format_args!("UART ready"));
     cpu::vectors();
     let mut physical = memory::Physical::new(&d);
-    #[cfg(feature = "diagnostics")]
-    log!(
-        "boot: RAM={:#x}+{:#x} free_pages={} vectors installed\n",
-        d.ram.base,
-        d.ram.size,
-        physical.available()
+    diagnostics::status(
+        "OK",
+        "memory",
+        format_args!(
+            "{} MiB RAM; {} free pages ({} KiB/page)",
+            d.ram.size / MEBIBYTE_BYTES,
+            physical.available(),
+            platform::config::PAGE_BYTES / KIBIBYTE_BYTES
+        ),
     );
+    diagnostics::status("OK", "exceptions", format_args!("vectors installed"));
     memory::initialize_mmu(&d);
     memory::initialize_heap(&mut physical);
     interrupt::initialize(&d);
@@ -55,10 +67,20 @@ pub extern "C" fn kernel_main() -> ! {
     mapping.unmap();
     physical.release(frame);
     assert!(physical.available() > 0);
-    #[cfg(feature = "diagnostics")]
-    log!(
-        "boot: MMU W^X heap GICv3 physical timer ready; active_cpus={}\n",
-        platform::config::ACTIVE_CPUS
+    diagnostics::status(
+        "OK",
+        "protection",
+        format_args!("MMU enabled; W^X enforced; heap initialized"),
+    );
+    diagnostics::status(
+        "OK",
+        "interrupts",
+        format_args!("GICv3 and physical timer initialized"),
+    );
+    diagnostics::status(
+        "OK",
+        "SMP",
+        format_args!("{} CPUs participating", platform::config::ACTIVE_CPUS),
     );
     #[cfg(feature = "kernel-tests")]
     tests::run(&d, &mut physical);
@@ -100,12 +122,35 @@ pub extern "C" fn kernel_main() -> ! {
             },
             "boot IPI timeout",
         );
+        diagnostics::status(
+            "OK",
+            "verification",
+            format_args!("timer interrupt and secondary IPI confirmed"),
+        );
         smp::shutdown();
-        log!(
-            "{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true,\"active_cpus\":{},\"secondary_shutdown_verified\":true}}\n",
+        diagnostics::status(
+            "OK",
+            "shutdown",
+            format_args!("secondary CPU shutdown verified"),
+        );
+        event!(
+            "{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true,\"active_cpus\":{},\"secondary_shutdown_verified\":true}}",
             platform::config::ACTIVE_CPUS
         );
     }
+    let dropped = diagnostics::dropped();
+    if dropped != 0 {
+        diagnostics::status(
+            "WARN",
+            "output",
+            format_args!("{} records lost; evidence may be incomplete", dropped),
+        );
+    }
+    diagnostics::status(
+        "OK",
+        "boot",
+        format_args!("validation complete; powering off (not a running system)"),
+    );
     cpu::timer_stop();
     cpu::mask();
     cpu::poweroff();
@@ -139,12 +184,21 @@ pub extern "C" fn fatal_exception(esr: u64, far: u64, pc: u64) -> ! {
     }
     cpu::mask();
     cpu::timer_stop();
-    log!(
-        "{{\"event\":\"fatal\",\"status\":\"fail\",\"esr\":{}}}\n",
+    event!(
+        "{{\"event\":\"fatal\",\"status\":\"fail\",\"esr\":{}}}",
         esr
     );
+    diagnostics::status(
+        "FAIL",
+        "exception",
+        format_args!("unhandled synchronous exception"),
+    );
     #[cfg(feature = "diagnostics")]
-    log!("exception: FAR={:#x} ELR={:#x}\n", far, pc);
+    diagnostics::status(
+        "DEBUG",
+        "exception",
+        format_args!("ESR={:#x} FAR={:#x} ELR={:#x}", esr, far, pc),
+    );
     #[cfg(not(feature = "diagnostics"))]
     let _ = (far, pc);
     cpu::poweroff();
@@ -156,9 +210,24 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     }
     cpu::mask();
     cpu::timer_stop();
-    log!(
-        "{{\"event\":\"panic\",\"status\":\"fail\"}}\nPANIC: {}\n",
-        info
-    );
+    event!("{{\"event\":\"panic\",\"status\":\"fail\"}}");
+    diagnostics::status("FAIL", "panic", format_args!("kernel halted"));
+    #[cfg(feature = "diagnostics")]
+    if let Some(location) = info.location() {
+        diagnostics::status(
+            "DEBUG",
+            "panic",
+            format_args!(
+                "{}:{}: {}",
+                location.file(),
+                location.line(),
+                info.message()
+            ),
+        );
+    } else {
+        diagnostics::status("DEBUG", "panic", format_args!("{}", info.message()));
+    }
+    #[cfg(not(feature = "diagnostics"))]
+    let _ = info;
     cpu::poweroff();
 }

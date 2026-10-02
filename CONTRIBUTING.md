@@ -1,5 +1,7 @@
 # Project checks and formatting
 
+Use the [output policy](docs/architecture/output-policy.md) for console messages, diagnostics and machine events. Human prose is not a machine ABI.
+
 Use standard tool defaults: rustfmt for Rust, Prettier for Markdown/JSON/YAML, Taplo for TOML, Clippy for Rust diagnostics, and Markdownlint for document structure. Versions are pinned in `rust-toolchain.toml` and `package-lock.json`. Node.js 18 or later runs document tools; project research tools remain Rust. No Python is required.
 
 Use tables for short, comparable values. Put long explanations, implementation boundaries and verification gaps in sections or lists so both the rendered document and its Markdown source remain readable.

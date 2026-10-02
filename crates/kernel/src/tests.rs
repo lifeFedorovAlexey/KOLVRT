@@ -1,5 +1,5 @@
 use crate::time::Duration;
-use crate::{cpu, interrupt, log, memory, percpu, platform, smp, sync};
+use crate::{cpu, event, interrupt, memory, percpu, platform, smp, sync};
 use alloc::{boxed::Box, vec::Vec};
 use core::sync::atomic::{AtomicUsize, Ordering};
 static TESTS_REPORTED: AtomicUsize = AtomicUsize::new(0);
@@ -34,11 +34,14 @@ unsafe extern "C" {
     static probe_break_pc: u8;
 }
 fn report(name: &str, passed: bool) {
-    log!(
-        "{{\"event\":\"test\",\"name\":\"{}\",\"status\":\"{}\"}}\n",
+    event!(
+        "{{\"event\":\"test\",\"name\":\"{}\",\"status\":\"{}\"}}",
         name,
         if passed { "pass" } else { "fail" }
     );
+    if !passed {
+        crate::diagnostics::status("FAIL", "test", format_args!("{}", name));
+    }
     assert!(passed, "kernel test failed: {}", name);
     TESTS_REPORTED.fetch_add(1, Ordering::Relaxed);
 }
@@ -444,8 +447,8 @@ pub fn run(d: &Description, p: &mut memory::Physical) {
     }
     let raw_samples = samples;
     let [median, p95, p99] = kernel_core::quantiles(&mut samples).unwrap();
-    log!(
-        "{{\"event\":\"measurement\",\"scope\":\"lock_uncontended\",\"units\":\"timer_ticks\",\"frequency\":{},\"warmup\":{},\"iterations\":{},\"median\":{},\"p95\":{},\"p99\":{},\"samples\":{:?}}}\n",
+    event!(
+        "{{\"event\":\"measurement\",\"scope\":\"lock_uncontended\",\"units\":\"timer_ticks\",\"frequency\":{},\"warmup\":{},\"iterations\":{},\"median\":{},\"p95\":{},\"p99\":{},\"samples\":{:?}}}",
         cpu::frequency(),
         LOCK_MEASUREMENT_WARMUP,
         LOCK_MEASUREMENT_SAMPLES,
@@ -460,8 +463,17 @@ pub fn run(d: &Description, p: &mut memory::Physical) {
     #[cfg(feature = "panic-test")]
     panic!("panic reporting negative control");
     #[cfg(not(any(feature = "negative-test", feature = "panic-test")))]
-    log!(
-        "{{\"event\":\"suite\",\"status\":\"pass\",\"tests\":{}}}\n",
+    crate::diagnostics::status(
+        "OK",
+        "tests",
+        format_args!(
+            "{} kernel checks passed",
+            TESTS_REPORTED.load(Ordering::Relaxed)
+        ),
+    );
+    #[cfg(not(any(feature = "negative-test", feature = "panic-test")))]
+    event!(
+        "{{\"event\":\"suite\",\"status\":\"pass\",\"tests\":{}}}",
         TESTS_REPORTED.load(Ordering::Relaxed)
     );
 }

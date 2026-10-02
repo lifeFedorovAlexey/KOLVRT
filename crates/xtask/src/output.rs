@@ -1,0 +1,296 @@
+use serde_json::Value;
+use std::collections::BTreeSet;
+use std::io::{self, IsTerminal};
+
+const PREFIX: &str = "@KOLVRT/1 ";
+const RECORD_BYTES: usize = 4096;
+type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+
+#[derive(Clone, Copy)]
+pub enum ColorMode {
+    Auto,
+    Always,
+    Never,
+}
+
+pub fn color_arguments(args: Vec<String>) -> Result<Vec<String>> {
+    let mut chosen = false;
+    let mut remaining = Vec::new();
+    for arg in args {
+        if arg.starts_with("--color") {
+            if chosen {
+                return Err("duplicate --color option".into());
+            }
+            match arg.as_str() {
+                "--color=auto" | "--color=always" | "--color=never" => {}
+                _ => return Err("use --color=auto|always|never".into()),
+            }
+            chosen = true;
+        } else {
+            remaining.push(arg);
+        }
+    }
+    Ok(remaining)
+}
+
+fn color_enabled(mode: ColorMode, terminal: bool, no_color: bool, dumb: bool) -> bool {
+    match mode {
+        ColorMode::Always => true,
+        ColorMode::Never => false,
+        ColorMode::Auto => terminal && !no_color && !dumb,
+    }
+}
+
+pub fn stdout_color() -> bool {
+    let mode = std::env::args()
+        .find_map(|arg| match arg.as_str() {
+            "--color=always" => Some(ColorMode::Always),
+            "--color=never" => Some(ColorMode::Never),
+            "--color=auto" => Some(ColorMode::Auto),
+            _ => None,
+        })
+        .unwrap_or(ColorMode::Auto);
+    color_enabled(
+        mode,
+        io::stdout().is_terminal(),
+        std::env::var_os("NO_COLOR").is_some_and(|value| !value.is_empty()),
+        std::env::var("TERM").is_ok_and(|value| value == "dumb"),
+    )
+}
+
+/// Color is presentation only; labels and evidence are unchanged.
+pub fn console_text(text: &str, color: bool) -> String {
+    let plain = human_text(text);
+    if !color {
+        return plain;
+    }
+    let mut rendered = String::new();
+    for line in plain.split_inclusive('\n') {
+        if let Some(rest) = line.strip_prefix("KOLVRT |") {
+            rendered.push_str("\x1b[1;32mKOLVRT\x1b[0m |");
+            rendered.push_str(rest);
+            continue;
+        }
+        let badge = line.strip_prefix('[').and_then(|s| s.split_once(']'));
+        let style = badge.and_then(|(label, _)| match label {
+            "OK" | "NATIVE" => Some("32"),
+            "FAIL" | "COMPAT" => Some("31"),
+            "WARN" | "MIXED" => Some("33"),
+            "MOSTLY_NATIVE" => Some("92"),
+            "LEGACY" => Some("38;5;130"),
+            "INFO" => Some("36"),
+            "DEBUG" | "UNKNOWN" => Some("90"),
+            _ => None,
+        });
+        if let (Some((label, rest)), Some(style)) = (badge, style) {
+            rendered.push_str(&format!("\x1b[{style}m[{label}]\x1b[0m{rest}"));
+        } else {
+            rendered.push_str(line);
+        }
+    }
+    rendered
+}
+
+/// Human presentation never prints the machine stream, including malformed versions.
+pub fn human_text(text: &str) -> String {
+    text.split_inclusive('\n')
+        .filter(|line| !line.starts_with("@KOLVRT"))
+        .collect()
+}
+
+/// Complete newline-framed records only. Human prose is not an evidence source.
+pub fn parse(text: &str) -> Result<Vec<Value>> {
+    let mut events = Vec::new();
+    for line in text.split_inclusive('\n') {
+        if !line.starts_with("@KOLVRT") {
+            continue;
+        }
+        if !line.ends_with('\n') || line.len() > RECORD_BYTES {
+            return Err("truncated or oversized kernel event".into());
+        }
+        let payload = line
+            .strip_prefix(PREFIX)
+            .ok_or("unsupported kernel event framing/version")?;
+        let event: Value = serde_json::from_str(payload)?;
+        if !event.is_object() || event["event"].as_str().is_none() {
+            return Err("invalid kernel event object".into());
+        }
+        events.push(event);
+    }
+    Ok(events)
+}
+
+pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -> Result<()> {
+    let mut names = BTreeSet::new();
+    let mut terminal = false;
+    let mut measurement = false;
+    let mut el0 = false;
+    for event in events {
+        if matches!(event["event"].as_str(), Some("fatal" | "panic")) || event["status"] == "fail" {
+            return Err(format!("kernel failure: {event}").into());
+        }
+        if terminal {
+            return Err("event after terminal kernel result".into());
+        }
+        match event["event"].as_str() {
+            Some("test") if tests => {
+                let name = event["name"].as_str().ok_or("test missing name")?;
+                if event["status"] != "pass" || !expected.contains(&name) || !names.insert(name) {
+                    return Err("invalid or duplicate test event".into());
+                }
+            }
+            Some("measurement") if tests => {
+                if measurement
+                    || event["scope"] != "lock_uncontended"
+                    || event["units"] != "timer_ticks"
+                    || event["frequency"].as_u64().is_none_or(|v| v == 0)
+                    || ["warmup", "iterations", "median", "p95", "p99"]
+                        .iter()
+                        .any(|field| event[field].as_u64().is_none())
+                    || event["samples"].as_array().is_none_or(|samples| {
+                        samples.is_empty() || samples.iter().any(|v| v.as_u64().is_none())
+                    })
+                {
+                    return Err("invalid or duplicate measurement event".into());
+                }
+                measurement = true;
+            }
+            Some("el0") if !tests && event["status"] == "pass" => {
+                if el0
+                    || event["reclaimed"] != true
+                    || ["processes", "workers", "faults", "switches"]
+                        .iter()
+                        .any(|field| event[field].as_u64().is_none())
+                {
+                    return Err("invalid or duplicate EL0 event".into());
+                }
+                el0 = true;
+            }
+            Some("suite") if tests => {
+                if event["status"] != "pass"
+                    || event["tests"].as_u64() != Some(expected.len() as u64)
+                    || names != expected.iter().copied().collect()
+                {
+                    return Err("missing or unexpected real kernel tests".into());
+                }
+                terminal = true;
+            }
+            Some("boot") if !tests => {
+                if event["status"] != "pass"
+                    || event["el"] != 1
+                    || event["timer_irq"] != true
+                    || event["active_cpus"].as_u64() != Some(cpus as u64)
+                    || event["secondary_shutdown_verified"] != true
+                {
+                    return Err("invalid boot result".into());
+                }
+                terminal = true;
+            }
+            _ => return Err("unknown or out-of-scope kernel event".into()),
+        }
+    }
+    if !terminal {
+        return Err("missing terminal kernel result".into());
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+    #[test]
+    fn colors_preserve_labels_and_never_enter_evidence() {
+        let text = "KOLVRT | DEV | AArch64 | EL1\n[OK] console: ready\n[FAIL] panic: halted\n[LEGACY] declared dependency\n[COMPAT] observed scope\n[MIXED] observed scope\n[MOSTLY_NATIVE] budget met\n[NATIVE] verified scope\n@KOLVRT/1 {\"event\":\"panic\",\"status\":\"fail\"}\n";
+        let plain = console_text(text, false);
+        assert!(!plain.contains('\x1b'));
+        assert!(!plain.contains("@KOLVRT"));
+        let colored = console_text(text, true);
+        for (label, style) in [
+            ("OK", "32"),
+            ("FAIL", "31"),
+            ("LEGACY", "38;5;130"),
+            ("COMPAT", "31"),
+            ("MIXED", "33"),
+            ("MOSTLY_NATIVE", "92"),
+            ("NATIVE", "32"),
+        ] {
+            assert!(colored.contains(&format!("\x1b[{style}m[{label}]\x1b[0m")));
+        }
+        assert!(!colored.contains("@KOLVRT"));
+        assert_eq!(
+            parse(text).unwrap(),
+            vec![json!({"event":"panic","status":"fail"})]
+        );
+        assert_eq!(
+            console_text("[INFO] state: NATIVE unknown\n", true),
+            "\x1b[36m[INFO]\x1b[0m state: NATIVE unknown\n"
+        );
+    }
+    #[test]
+    fn color_modes_respect_redirects_and_explicit_overrides() {
+        assert!(color_enabled(ColorMode::Auto, true, false, false));
+        for (terminal, no_color, dumb) in [
+            (false, false, false),
+            (true, true, false),
+            (true, false, true),
+        ] {
+            assert!(!color_enabled(ColorMode::Auto, terminal, no_color, dumb));
+        }
+        assert!(color_enabled(ColorMode::Always, false, true, true));
+        assert!(!color_enabled(ColorMode::Never, true, false, false));
+        assert_eq!(
+            color_arguments(vec!["run".into(), "--prod".into(), "--color=always".into()]).unwrap(),
+            vec!["run", "--prod"]
+        );
+        assert!(color_arguments(vec!["run".into(), "--color=magic".into()]).is_err());
+        assert!(color_arguments(vec!["--color=auto".into(), "--color=never".into()]).is_err());
+    }
+    fn boot() -> Value {
+        json!({"event":"boot","status":"pass","el":1,"timer_irq":true,"active_cpus":2,"secondary_shutdown_verified":true})
+    }
+    #[test]
+    fn framing_rejects_lost_or_malformed_evidence() {
+        let valid = format!("[OK] console: ready\n{PREFIX}{}\n", boot());
+        let events = parse(&valid).unwrap();
+        validate(&events, false, &[], 2).unwrap();
+        assert_eq!(human_text(&valid), "[OK] console: ready\n");
+        for text in [
+            valid.trim_end().to_owned(),
+            "@KOLVRT/2 {}\n".into(),
+            format!("{PREFIX}{{\n"),
+            format!("{PREFIX}[]\n"),
+            format!("{PREFIX}{}\n", "x".repeat(RECORD_BYTES)),
+        ] {
+            assert!(parse(&text).is_err());
+        }
+        assert!(validate(&parse("{\"event\":\"boot\"}\n").unwrap(), false, &[], 2).is_err());
+    }
+    #[test]
+    fn terminal_is_not_overwritable_and_failures_win() {
+        for events in [
+            vec![],
+            vec![boot(), boot()],
+            vec![boot(), json!({"event":"panic","status":"fail"})],
+            vec![json!({"event":"unknown"})],
+        ] {
+            assert!(validate(&events, false, &[], 2).is_err());
+        }
+        let mut wrong = boot();
+        wrong["secondary_shutdown_verified"] = json!(false);
+        assert!(validate(&[wrong], false, &[], 2).is_err());
+    }
+    #[test]
+    fn suite_requires_actual_unique_tests_before_terminal() {
+        let test = json!({"event":"test","name":"real","status":"pass"});
+        let suite = json!({"event":"suite","status":"pass","tests":1});
+        validate(&[test.clone(), suite.clone()], true, &["real"], 2).unwrap();
+        for events in [
+            vec![suite.clone()],
+            vec![test.clone(), test.clone(), suite.clone()],
+            vec![test.clone(), suite.clone(), test.clone()],
+        ] {
+            assert!(validate(&events, true, &["real"], 2).is_err());
+        }
+    }
+}
