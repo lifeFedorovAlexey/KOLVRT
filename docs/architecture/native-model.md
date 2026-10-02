@@ -4,9 +4,13 @@ This is a design model; the current kernel foundation does not implement the com
 
 ## Boundaries
 
-The core owns task and address-space lifetimes, scheduling mechanisms, memory ownership,
-authorization, communication and waiting primitives, resource accounting and necessary
-device abstractions. The initial service is isolated at EL0 under [decision 0008](../architecture-decisions/0008-placement.md). Placement of file services, networking, device drivers and compatibility adapters requires later workload-specific decisions.
+The core provides irreducible privileged enforcement for task/address-space lifetimes,
+scheduling, memory protection, authorization and bounded communication/waiting. Ownership,
+authoritative state and resource coordination do not automatically belong in EL1: an EL0
+service can be their arbiter using narrow existing primitives. Each new privileged
+responsibility, including a device abstraction, requires the admission record in the
+[kernel admission policy](kernel-admission-policy.md); only its demonstrated minimum
+mechanism is admitted, while service policy defaults to EL0. The initial service is isolated at EL0 under [decision 0008](../architecture-decisions/0008-placement.md). Placement of file services, networking, device drivers and compatibility adapters requires later workload-specific decisions.
 A library boundary alone does not establish memory isolation.
 
 Native consumers use native contracts directly. Legacy consumers enter a versioned

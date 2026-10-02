@@ -32,6 +32,23 @@ TCB is per property and includes relevant safe/generated code, services and hard
 | Compromised driver/malicious DMA    | Scoped MMIO/IRQ/DMA, hardware restriction, reset and leases; unrestricted DMA is not contained                      |
 | Replay/unknown effects              | One terminal arbiter, no automatic replay when absence of effects is unknown                                        |
 
+## Privileged placement and failure review
+
+Every new EL1 responsibility must demonstrate privileged necessity under the
+[admission policy](../architecture/kernel-admission-policy.md), including an EL0 service
+using existing narrow primitives. Authoritative state and coordination do not themselves
+require EL1. Review the exact invariant, smallest mechanism, caller/effect scope,
+resource charges and consequences of compromise before changing placement. Service
+policy defaults to EL0; it can remain in the property-specific TCB without becoming privileged.
+
+A compromised service must not publish arbitrary page tables, acquire broader grants
+or reclaim memory retained by readers/devices. Negative obligations include forged scope,
+stale identity, exhausted quotas, premature release, missing acknowledgement and unsafe
+timeout recovery. Existing bounded MMU/SMP checks establish only their recorded scope;
+general mapping-grant admission and hostile DMA remain unverified. Failure of trusted
+privileged enforcement is fatal to its kernel domain. A faster path cannot replace that
+failure boundary without an explicit ADR, updated threat model and preserved guarantees.
+
 ## Compatibility invariant
 
 EffectiveAuthority_via_compat(C, O) is a subset of NativeAuthorizedAuthority(C, O) at the native contract's authorization point. Include effects induced through services, not just C's handles. A service can use independent grants only for caller-authorized effects. Missing authority yields DENIED/AUTHORITY_REQUIRED; additional consumer rights require separate native authorization before admission. No compatibility waiver. Nested/split operations, restart/rebind and PROD routing preserve this invariant. [Decision](../architecture-decisions/0013-security-boundaries.md).

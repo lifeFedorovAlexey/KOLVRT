@@ -304,7 +304,7 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Allowed exceptions:** A privileged component may share the kernel failure domain only with an explicit trusted-base justification; its failure is then fatal to that domain.
 
-**Enforcement:** Record isolation, termination, supervisor responsibility, recovery state and externally observable failure.
+**Enforcement:** Record isolation, termination, supervisor responsibility, recovery state and externally observable failure. [ADR-0008](../architecture-decisions/0008-placement.md) and the [admission policy](kernel-admission-policy.md) require privileged necessity for each EL1 responsibility; performance or authoritative state alone cannot revise a protection boundary.
 
 **Testing:** Kill a service before and after acceptance, reject malformed replies, preserve supervisor operation and restart without inheriting old handles.
 

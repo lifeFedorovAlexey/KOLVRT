@@ -42,8 +42,8 @@
         "translation_sha256": "8aa2daf6bdd3c098a38debbf961d57de917e3bffe295a9f9eb368da2598fdafa"
       },
       "docs/architecture-decisions/0008-placement.md": {
-        "source_sha256": "99d3161bec12593cd4f0aad1cdfaf3c5dc39bd82d5d8941777da0d6d261097e4",
-        "translation_sha256": "cc16a09a11c560c0b4bfb10deb801bb019085a81ad9e2634218e9de66435e786"
+        "source_sha256": "386e655c6fa751f52942c204f398ed6197e861d3d89f22f3b3e83f16e95b6fe0",
+        "translation_sha256": "047880ed789c10390f6c1b61483d874d17d1d20738a321865f7704064f1c548f"
       },
       "docs/architecture-decisions/0009-native-slice-baseline.md": {
         "source_sha256": "6be1c5df400d9bb2a768808c3891d4bb8cd5c7a3989b1513b912f35c34e9fac7",
@@ -98,12 +98,12 @@
         "translation_sha256": "61899d48fa4604b1c7e1fa38d2229feeb0759725120659251804d39a0b1e4e07"
       },
       "docs/architecture/kernel-admission-policy.md": {
-        "source_sha256": "b1f9282451f67dd829d028c73a6a6a8c2b891e57620d3d68ce300ac8a5d350c9",
-        "translation_sha256": "d71dc83f28794c0c25f22b29edaa8f99c5e068f1d8c240af1ab8dffa34cfc1dd"
+        "source_sha256": "07fa724a7b1cf5b4aaee2b4c94a07dbd280c701765cfc7854be044cd912b00e9",
+        "translation_sha256": "08179f352cb61f1c18481ab8959451c187fc6cd9b3daec4d38c318e192fbd7fb"
       },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "9353577b40fe70d027e6361cc11c5dd17f7f792e5385674de9a4fdc44a1ccce1",
-        "translation_sha256": "7128a644fa4d1744ceceb7165abb3179d78f896b24e90bd555868cfba065b8a4"
+        "source_sha256": "bac23288ccd2cef2e33cd7548b66da67502f5d5ca6318047502e117a173a04cb",
+        "translation_sha256": "7552fa9412a22055014ae524fb09e3c81f8c1010fc36cb52426df80d821aa4f7"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",
@@ -126,8 +126,8 @@
         "translation_sha256": "f5d9cdd32e3a7a8df8f714b861e8cbe2818f953e4273ba55ab348d3a7dc04edc"
       },
       "docs/architecture/native-model.md": {
-        "source_sha256": "24ea1e9c1bba7c5614def2efd07c2f2dbb898b1f51cf93739746abc509f46393",
-        "translation_sha256": "90b58ff05ec99f64f49c6c68ce717131232b7e7001daf2f42cb933d29c9135bf"
+        "source_sha256": "65a67ac61d7b1683cfe59cc7070c2010f455865548510b09685c63929e889abe",
+        "translation_sha256": "71b0129d1210b26664d0e3e0501e3f808b752534cbe8f0f8d1b5773864897232"
       },
       "docs/architecture/output-policy.md": {
         "source_sha256": "41548441fbe85999965ad305c87952bc960c7f5de9024dcf5bf61999e121819b",
@@ -254,8 +254,8 @@
         "translation_sha256": "0ef10358f09d7dc4b243ec7ca9c1a2b5912dfa602de828a8f4bd36bff17c4c10"
       },
       "docs/security/threat-model.md": {
-        "source_sha256": "999f88265f8072446b5b624df0a54abd215cd09099e4ff0259e59665b8fd4364",
-        "translation_sha256": "0aaa251ca453469156a117820893c65ee0559e80fbc24318532b07beaf09f693"
+        "source_sha256": "d82fab138e5b8ceea9b06d6875255f5f823bcc7526731bcbaaf05f05dc0e41f1",
+        "translation_sha256": "0df710512918c9573c85e2a094f91b67d91b07c0fde7b8647fee55b22f505277"
       },
       "docs/vision.md": {
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",
