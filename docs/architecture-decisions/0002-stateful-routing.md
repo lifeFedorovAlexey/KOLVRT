@@ -14,6 +14,14 @@ Admission intersects package, process, driver, device and administrator constrai
 
 This clarification addresses issue #2 under LAW-003, LAW-004, LAW-005 and LAW-009. It adds no law or general resolver implementation.
 
+Issue #9 strengthens LAW-004: deny fallback unless trusted scoped policy authorizes a
+finite alternate transition. Preserve authority, quotas and shared state; differing
+semantics require consumer opt-in and a new binding. PROD needs explicit production
+authorization and a mandatory visible result independent of optional diagnostics.
+Committed or unknown effects cannot authorize blind replay. Supported drain/commit or
+restart contracts govern rebinding; production gains no experimental live-switch permission.
+The routing model states synthetic-host checks and remaining runtime gaps.
+
 ## Alternatives
 
 Arbitrary per-call routing; one process-wide flag; routing by application name; a flat key containing admission constraints; a generic routing graph.

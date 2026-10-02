@@ -79,6 +79,30 @@ Transferred handles retain object identity and behavior binding; receiver defaul
 not reinterpret existing state. Cross-domain import requires a gateway that checks
 rights and semantics. Unsupported combinations fail. Shared resources have one arbiter.
 
+## Explicit alternate transitions
+
+Fallback is denied by default. Before use, trusted policy must authorize a named
+alternate and its preconditions; production requires explicit production authorization.
+Admission constraints still apply. An alternate cannot widen rights, bypass quotas or
+reinterpret an existing shared-state domain.
+
+| Transition                                           | Preconditions                                                                                                 | Result                                                          |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Native to equivalent native replica                  | Failure before admission, preserved contract, authority and quotas, compatible drained domain, new generation | Explicit new binding                                            |
+| Native to a different compat contract                | The same checks plus explicit consumer opt-in                                                                 | Explicit new semantic binding                                   |
+| Committed or unknown-effect request to any alternate | No blind replay is allowed                                                                                    | Explicit failure; reconcile effects under the original contract |
+
+DEV reports authorized transitions loudly. PROD exposes them in the mandatory
+operation/binding result or bounded status record, independently of optional logging.
+Profiles preserve the same correctness conditions. These rules do not authorize
+experimental production live switching; supported rebinding follows the drain and
+commit protocol below.
+
+The host `native-state-models::fallback` fixture checks this finite policy with synthetic
+assertions and returns an explicit transition result. It does not authenticate policy,
+execute requests, publish production status or implement a kernel alternate router.
+Runtime integration and trusted verification of the asserted preconditions remain open.
+
 ## Controlled migration
 
 1. Check migration support, semantic equivalence and operator authority.

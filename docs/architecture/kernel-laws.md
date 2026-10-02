@@ -38,7 +38,7 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 ## LAW-004 — Explicit semantic binding
 
-**Rule:** A binding pins a supported semantic version and a separate implementation identity. Missing, conflicting or ambiguous requirements fail explicitly; no silent fallback or version downgrade is allowed.
+**Rule:** A binding pins a supported semantic version and a separate implementation identity. Missing, conflicting or ambiguous requirements fail explicitly; no silent fallback or version downgrade is allowed. An alternate requires explicit trusted policy, preserved authority/state and visible outcome; different semantics require consumer opt-in and a new valid binding. Unknown effects never authorize blind replay. Profiles cannot waive these requirements.
 
 **Rationale:** An implementation update and a semantic change are different events.
 

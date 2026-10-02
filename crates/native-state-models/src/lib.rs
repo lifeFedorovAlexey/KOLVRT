@@ -1,5 +1,6 @@
 //! Finite transition systems; exhaustive over their stated domains, not a kernel proof.
 #![forbid(unsafe_code)]
+pub mod fallback;
 pub mod retirement;
 use std::{
     collections::{BTreeMap, VecDeque},
