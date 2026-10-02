@@ -55,4 +55,6 @@ Production scheduler возвращается в event loop, даже когда
 
 Это будущие требования executable tests, а не сохранённые успешные результаты. Использовать реальное two-CPU QEMU DEV/PROD execution, meaningful negative controls, exact-source receipts и отдельный physical-hardware scope при необходимости. Host protocol tests дополняют execution evidence. ASID optimization #18, ELF #21 и benchmark/reliability tooling — отдельные работы, которые не оправдывают обход safety gates выше.
 
+Для первого quantum-step increment сохранён [QEMU receipt точных исходников](../../../../research/results/scheduler-quantum-step.json): прошли 66 проверок на каждый профиль DEV/PROD и 53 host rejection controls. Это свидетельство ограниченного шага и существующего foundation; остальные механизмы и полные условия admission требуют своих свидетельств.
+
 [Английский оригинал](../../../../docs/architecture/production-scheduler.md)

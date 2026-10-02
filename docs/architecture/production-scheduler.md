@@ -55,4 +55,6 @@ A production scheduler returns to its event loop even when a peer remains alive 
 
 These are future executable-test requirements, not recorded passing results. Use real two-CPU QEMU DEV/PROD execution, meaningful negative controls, exact-source receipts and separate physical-hardware scope where applicable. Host protocol tests complement execution evidence. ASID optimization #18, ELF #21 and benchmark/reliability tooling are separate work and do not justify bypassing the safety gates above.
 
+The first quantum-step increment has an [exact-source QEMU receipt](../../research/results/scheduler-quantum-step.json): 66 checks per DEV/PROD profile and 53 host rejection controls passed. This covers the bounded step and existing foundation; the remaining mechanisms and full admission gates require their own evidence.
+
 [Russian translation](../../translations/ru/docs/architecture/production-scheduler.md)
