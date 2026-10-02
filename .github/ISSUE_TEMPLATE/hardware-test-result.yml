@@ -1,0 +1,132 @@
+name: Hardware Test Result
+description: Report exactly what was executed, including host-only and unexecuted results.
+title: "[Hardware Test Result] "
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        This issue will be public. Do not paste unrestricted inventories or logs. Review and
+        sanitize the exact text and attachments locally before submitting. UNKNOWN with a reason is
+        useful evidence. Submission does not establish support or authorize a hardware survey. See
+        the [submission
+        guide](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/docs/research/issue-submissions.md),
+        [research program](https://github.com/lifeFedorovAlexey/KOLVRT/issues/44) and [COST-L
+        registry](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/research/cost-l/registry.json).
+        You may answer in English or Russian.
+  - type: dropdown
+    id: execution
+    attributes:
+      label: Execution scope
+      options:
+        - Host collection only - not a KOLVRT hardware test
+        - QEMU execution
+        - Physical KOLVRT boot only
+        - Physical KOLVRT device operation
+        - NOT RUN - proposed test
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Platform role
+      options:
+        - research_host
+        - boot_target
+        - UNKNOWN - explain below
+    validations:
+      required: true
+  - type: textarea
+    id: platform
+    attributes:
+      label: Safe platform/device description
+      description: >-
+        Only public model names and PCI vendor/device/subsystem IDs or USB vendor/product IDs,
+        bus/class and revision if relevant. Use UNKNOWN rather than collecting private identifiers.
+        Do not paste raw inventories.
+    validations:
+      required: true
+  - type: textarea
+    id: build
+    attributes:
+      label: Exact KOLVRT test context
+      description: >-
+        Commit SHA, build command/features, PROD or DIAGNOSTIC profile, toolchain and platform
+        configuration. For host-only collection or a proposed test use NOT RUN and describe the gap.
+        No private paths.
+    validations:
+      required: true
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Observed outcome
+      options:
+        - PASS within the stated scope
+        - FAIL within the stated scope
+        - INCONCLUSIVE
+        - NOT RUN
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Reproduction and bounded evidence
+      description: >-
+        Steps, expected/observed behavior, commands using placeholders, guarantees actually
+        exercised and gaps. Include only locally sanitized and reviewed minimal log excerpts; raw
+        logs, screenshots and attachments may contain identifiers. No automatic upload is requested.
+    validations:
+      required: true
+  - type: dropdown
+    id: dma-iommu
+    attributes:
+      label: DMA/IOMMU evidence
+      options:
+        - UNKNOWN - not verified
+        - Not applicable - explain in evidence
+        - Documented only - not tested
+        - Observed in the stated test - attach sanitized evidence
+    validations:
+      required: true
+  - type: textarea
+    id: protection
+    attributes:
+      label: Protection evidence and limitations
+      description: >-
+        Exact DMA/IOMMU, IRQ, reset/quiescence and authority guarantees exercised, if any.
+        Documented availability is not tested isolation. Use UNKNOWN with a reason for each
+        unverified guarantee.
+    validations:
+      required: true
+  - type: textarea
+    id: cost-l
+    attributes:
+      label: COST-L references
+      description: >-
+        Existing stable IDs use COST-L-#### (four digits; COST-L-0000 is reserved) and link to the
+        registry. For an unallocated candidate, use candidate plus an issue link; never invent an
+        assigned ID. Use UNKNOWN with a reason if unresolved.
+    validations:
+      required: true
+  - type: textarea
+    id: gaps
+    attributes:
+      label: Untested behavior and next step
+      description: >-
+        Separate emulator, physical boot and device-operation claims. State missing checks, hardware
+        protection constraints and bounded follow-up.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-review
+    attributes:
+      label: Public submission review
+      options:
+        - label: >-
+            I reviewed every field and any attachment locally and removed secrets, serials,
+            MAC/IP/SSID, usernames, hostnames and private paths. I approve publication of exactly
+            this reviewed content.
+          required: true
+        - label: >-
+            I distinguish proposals and UNKNOWN values from executed evidence; this submission does
+            not authorize further inventory collection or publication.
+          required: true

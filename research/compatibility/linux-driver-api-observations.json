@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "research_date": "2026-10-03",
+  "linux_version": "v6.12",
+  "linux_commit": "adc218676eef25575469234709c2d87185ca223a",
+  "observation_kind": "lexical_source_references",
+  "corpus_scope": "Three intentionally selected network/USB-storage/VirtIO-block translation units; convenience sample, not representative coverage.",
+  "limitations": [
+    "No preprocessing, macro expansion, build configuration, transitive closure or runtime execution.",
+    "A reference or declaration is not a call, incompatibility, working adapter or driver support.",
+    "No observed reference does not prove absence; listed symbols are an incomplete reviewed vocabulary.",
+    "Counts are per-source lexical observations; no compatibility percentage or synthetic runtime cost."
+  ],
+  "samples": [
+    {
+      "upstream_path": "drivers/net/ethernet/intel/igb/igb_main.c",
+      "url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/net/ethernet/intel/igb/igb_main.c",
+      "normalized_source_sha256": "02d70acc747b5dbedb229dad4ec09e0bc1988dda4c43f46dbb914965efa62e6e",
+      "families": {
+        "allocation": [
+          {
+            "symbol": "kzalloc",
+            "lexical_occurrences": 3,
+            "first_lines": [1176, 1180, 2680],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "kcalloc",
+            "lexical_occurrences": 5,
+            "first_lines": [3752, 3771, 4068, 4079, 5107],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "kfree",
+            "lexical_occurrences": 14,
+            "first_lines": [
+              1117, 1119, 2470, 2724, 2751, 3643, 3644, 3711, 3713, 3818, 3820,
+              3896, 3897, 5117
+            ],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "GFP_KERNEL",
+            "lexical_occurrences": 9,
+            "first_lines": [
+              1176, 1180, 2680, 3753, 3773, 4070, 4080, 4280, 4441
+            ],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "GFP_ATOMIC",
+            "lexical_occurrences": 1,
+            "first_lines": [5107],
+            "locators_truncated": false
+          }
+        ],
+        "locking": [
+          {
+            "symbol": "spin_lock",
+            "lexical_occurrences": 9,
+            "first_lines": [
+              2182, 2465, 2688, 2735, 5661, 6603, 6863, 10141, 10156
+            ],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "spin_lock_irqsave",
+            "lexical_occurrences": 3,
+            "first_lines": [3710, 6950, 8038],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "spin_unlock_irqrestore",
+            "lexical_occurrences": 3,
+            "first_lines": [3716, 6952, 8052],
+            "locators_truncated": false
+          }
+        ],
+        "irq": [
+          {
+            "symbol": "request_irq",
+            "lexical_occurrences": 4,
+            "first_lines": [909, 939, 1410, 1420],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "free_irq",
+            "lexical_occurrences": 5,
+            "first_lines": [951, 955, 1436, 1439, 1442],
+            "locators_truncated": false
+          }
+        ],
+        "deferred_work": [
+          {
+            "symbol": "INIT_WORK",
+            "lexical_occurrences": 2,
+            "first_lines": [3402, 3403],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "schedule_work",
+            "lexical_occurrences": 13,
+            "first_lines": [
+              1583, 2128, 4193, 5491, 5641, 5654, 5675, 6485, 6569, 6989, 7013,
+              8096, 8141
+            ],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "cancel_work_sync",
+            "lexical_occurrences": 3,
+            "first_lines": [3866, 3867, 6521],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "timer_setup",
+            "lexical_occurrences": 2,
+            "first_lines": [3399, 3400],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "mod_timer",
+            "lexical_occurrences": 7,
+            "first_lines": [5611, 5634, 5708, 5711, 7033, 8106, 8152],
+            "locators_truncated": false
+          }
+        ],
+        "dma": [
+          {
+            "symbol": "dma_map_single",
+            "lexical_occurrences": 2,
+            "first_lines": [6208, 6368],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "dma_unmap_single",
+            "lexical_occurrences": 3,
+            "first_lines": [4902, 6318, 8277],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "dma_unmap_page",
+            "lexical_occurrences": 4,
+            "first_lines": [4924, 6306, 6424, 8298],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "dma_alloc_coherent",
+            "lexical_occurrences": 2,
+            "first_lines": [4279, 4440],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "dma_free_coherent",
+            "lexical_occurrences": 2,
+            "first_lines": [4862, 4981],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "dma_set_mask_and_coherent",
+            "lexical_occurrences": 1,
+            "first_lines": [3205],
+            "locators_truncated": false
+          }
+        ],
+        "pci": [
+          {
+            "symbol": "pci_disable_device",
+            "lexical_occurrences": 4,
+            "first_lines": [3656, 3900, 9420, 9595],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "pci_set_master",
+            "lexical_occurrences": 3,
+            "first_lines": [3216, 9480, 9620],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "pci_iomap",
+            "lexical_occurrences": 1,
+            "first_lines": [3236],
+            "locators_truncated": false
+          }
+        ],
+        "power_management": [
+          {
+            "symbol": "pm_runtime_get_sync",
+            "lexical_occurrences": 2,
+            "first_lines": [4128, 4238],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "pm_runtime_put_sync",
+            "lexical_occurrences": 1,
+            "first_lines": [4247],
+            "locators_truncated": false
+          }
+        ],
+        "device_model": [
+          {
+            "symbol": "dev_get_drvdata",
+            "lexical_occurrences": 2,
+            "first_lines": [7156, 9523],
+            "locators_truncated": false
+          }
+        ],
+        "ioctl": [
+          {
+            "symbol": "ndo_eth_ioctl",
+            "lexical_occurrences": 1,
+            "first_lines": [3023],
+            "locators_truncated": false
+          }
+        ],
+        "network": [
+          {
+            "symbol": "netif_napi_add",
+            "lexical_occurrences": 1,
+            "first_lines": [1191],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "napi_schedule",
+            "lexical_occurrences": 3,
+            "first_lines": [7071, 8112, 8158],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "napi_complete_done",
+            "lexical_occurrences": 1,
+            "first_lines": [8219],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "netif_tx_stop_all_queues",
+            "lexical_occurrences": 1,
+            "first_lines": [2157],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "register_netdev",
+            "lexical_occurrences": 1,
+            "first_lines": [3514],
+            "locators_truncated": false
+          }
+        ]
+      }
+    },
+    {
+      "upstream_path": "drivers/usb/storage/usb.c",
+      "url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/usb/storage/usb.c",
+      "normalized_source_sha256": "687610467c65ca47576486cd1510b2fa7be7e40a60f5c2ec379794f311437fca",
+      "families": {
+        "allocation": [
+          {
+            "symbol": "kmalloc",
+            "lexical_occurrences": 1,
+            "first_lines": [540],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "kfree",
+            "lexical_occurrences": 2,
+            "first_lines": [906, 914],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "GFP_KERNEL",
+            "lexical_occurrences": 3,
+            "first_lines": [540, 545, 860],
+            "locators_truncated": false
+          }
+        ],
+        "locking": [
+          {
+            "symbol": "mutex_lock",
+            "lexical_occurrences": 5,
+            "first_lines": [256, 275, 312, 394, 987],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "mutex_unlock",
+            "lexical_occurrences": 6,
+            "first_lines": [266, 280, 329, 403, 496, 996],
+            "locators_truncated": false
+          }
+        ],
+        "deferred_work": [
+          {
+            "symbol": "INIT_DELAYED_WORK",
+            "lexical_occurrences": 1,
+            "first_lines": [1051],
+            "locators_truncated": false
+          }
+        ],
+        "usb": [
+          {
+            "symbol": "usb_alloc_urb",
+            "lexical_occurrences": 1,
+            "first_lines": [860],
+            "locators_truncated": false
+          }
+        ]
+      }
+    },
+    {
+      "upstream_path": "drivers/block/virtio_blk.c",
+      "url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/block/virtio_blk.c",
+      "normalized_source_sha256": "5fa798b0643db3d0b75af30923e9adaca258249503f3dd9f770db636477ac49f",
+      "families": {
+        "allocation": [
+          {
+            "symbol": "kmalloc",
+            "lexical_occurrences": 1,
+            "first_lines": [1459],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "kcalloc",
+            "lexical_occurrences": 1,
+            "first_lines": [1004],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "kfree",
+            "lexical_occurrences": 9,
+            "first_lines": [236, 875, 1034, 1035, 1037, 1555, 1557, 1583, 1605],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "GFP_KERNEL",
+            "lexical_occurrences": 8,
+            "first_lines": [551, 580, 826, 1000, 1004, 1005, 1454, 1459],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "GFP_ATOMIC",
+            "lexical_occurrences": 2,
+            "first_lines": [158, 172],
+            "locators_truncated": false
+          }
+        ],
+        "locking": [
+          {
+            "symbol": "mutex_lock",
+            "lexical_occurrences": 3,
+            "first_lines": [680, 843, 1574],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "mutex_unlock",
+            "lexical_occurrences": 3,
+            "first_lines": [718, 865, 1585],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "spin_lock_irqsave",
+            "lexical_occurrences": 4,
+            "first_lines": [360, 443, 481, 1213],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "spin_unlock_irqrestore",
+            "lexical_occurrences": 5,
+            "first_lines": [375, 452, 459, 496, 1228],
+            "locators_truncated": false
+          }
+        ],
+        "deferred_work": [
+          {
+            "symbol": "INIT_WORK",
+            "lexical_occurrences": 1,
+            "first_lines": [1469],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "queue_work",
+            "lexical_occurrences": 1,
+            "first_lines": [960],
+            "locators_truncated": false
+          }
+        ],
+        "sysfs": [
+          {
+            "symbol": "DEVICE_ATTR_RW",
+            "lexical_occurrences": 1,
+            "first_lines": [1133],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "DEVICE_ATTR_RO",
+            "lexical_occurrences": 1,
+            "first_lines": [915],
+            "locators_truncated": false
+          }
+        ],
+        "block": [
+          {
+            "symbol": "blk_mq_alloc_disk",
+            "lexical_occurrences": 1,
+            "first_lines": [1510],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "blk_mq_start_request",
+            "lexical_occurrences": 1,
+            "first_lines": [422],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "blk_mq_end_request",
+            "lexical_occurrences": 1,
+            "first_lines": [348],
+            "locators_truncated": false
+          },
+          {
+            "symbol": "blk_mq_free_tag_set",
+            "lexical_occurrences": 2,
+            "first_lines": [1552, 1572],
+            "locators_truncated": false
+          }
+        ]
+      }
+    }
+  ],
+  "family_source_reach": {
+    "allocation": 3,
+    "locking": 3,
+    "irq": 1,
+    "deferred_work": 3,
+    "dma": 1,
+    "pci": 1,
+    "usb": 1,
+    "firmware": 0,
+    "power_management": 1,
+    "device_model": 1,
+    "sysfs": 1,
+    "ioctl": 1,
+    "network": 1,
+    "block": 1
+  }
+}

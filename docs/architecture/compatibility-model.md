@@ -144,4 +144,10 @@ checks before claiming implementation support.
 
 The later [Phase 2 implementation](../kernel/routing.md) provides optional EL0 adapters for a concrete own-task observation workload. The earlier Phase 0 description is historical; it does not mean kernel builds are still absent.
 
+## Compatibility-debt evidence
+
+The [COST-L registry](compatibility-debt.md) assigns stable identities to recurring incompatibility causes, separately from module versions, KOL-PATH source cases and EXC deviations. It provides implemented offline schema/lifecycle/support validation and research-only candidate records. UNKNOWN cost remains distinct from measured zero; records never issue authority or authorize unloading.
+
+Production module-to-COST-L manifest enforcement remains issue #47; accounting and runtime inspection remain later work. Researching a Linux API does not activate support or turn current synthetic routing examples into Linux-driver evidence. Preserve this model's finite support and quiescent retirement obligations when integrating records.
+
 [Russian translation](../../translations/ru/docs/architecture/compatibility-model.md)

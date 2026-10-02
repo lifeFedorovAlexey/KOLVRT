@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "id": "COST-L-0002",
+  "title": "sysfs text attributes as a stable machine-consumed ABI",
+  "status": "CANDIDATE",
+  "category": "ABI",
+  "subsystem": "sysfs/device attributes",
+  "summary": "Source-backed research candidate for a recurring semantic dependency. No active KOLVRT consumer, compatibility implementation or measured cost is claimed.",
+  "research_date": "2026-10-03",
+  "introduced_at": "2026-10-02",
+  "last_observed_at": null,
+  "history": {
+    "linux_behavior": "sysfs exposes attributes as text and treats attribute names and directory structure as a documented kernel/userspace ABI.",
+    "historical_reason": "Simple attributes expose kernel object information to userspace with a documented interface.",
+    "root_cause": "Consumers can depend on text syntax, path topology and attribute lifecycle, beyond the underlying device operation.",
+    "classification": "COMPATIBILITY_REQUIREMENT",
+    "linux_versions": ["v6.12"],
+    "first_known_version": null,
+    "unknown_origin_reason": "The pinned documentation establishes the described behavior, not its first introducing release/commit. Historical origin requires separate investigation."
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Linux v6.12: filesystems/sysfs.rst",
+      "url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/Documentation/filesystems/sysfs.rst",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "commit": "adc218676eef25575469234709c2d87185ca223a",
+      "version": "v6.12",
+      "locator": "Attributes; Documentation",
+      "date": null,
+      "limitations": "Pinned documentation reviewed; original introduction/publication date, representative driver users and historical causality remain unverified."
+    }
+  ],
+  "evidence": {
+    "linux_behavior": ["S1"],
+    "historical_reason": ["S1"],
+    "root_cause": ["S1"]
+  },
+  "native": {
+    "status": "PROPOSED",
+    "behavior": "Native boundaries use explicit typed/versioned contracts. A native device-status service and a sysfs personality have not been admitted or implemented.",
+    "why_differs": "If actual consumers need the Linux text ABI, conversion belongs in an EL0 compatibility service rather than defining native device semantics.",
+    "references": [
+      "docs/architecture/native-model.md",
+      "docs/architecture/native-abi.md"
+    ]
+  },
+  "compat_modules": [],
+  "affected_consumers": [],
+  "affected_driver_families": [],
+  "runtime_cost": {
+    "cpu": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "ns",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "latency": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "ns",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "memory": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "bytes",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "copies": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "count",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "allocations": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "count",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "context_switches": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "count",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "throughput": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "operations/s",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    }
+  },
+  "security_impact": "Text access must mediate only caller-authorized device effects; readable attributes are not ambient authority.",
+  "authority_implications": "NO_AUTHORITY_EXPANSION",
+  "complexity_impact": "Requires per-attribute version/lifecycle evidence, not a universal filesystem facade or synthetic support count.",
+  "support": {
+    "status": "RESEARCH_ONLY",
+    "owner": null,
+    "owner_unknown_reason": "No supported implementation/consumer owner has been assigned.",
+    "start": null,
+    "until": null,
+    "migration_target": "Replace text/path-dependent consumption with the admitted native typed status contract; no replacement is implemented yet.",
+    "migration_strategy": "Identify named consumers and the accepted native contract before proposing compatibility; native rewrite or deferral remain options.",
+    "removal_condition": "No implementation currently exists. Any future implementation needs finite support, named consumers including offline/archival paths and proven quiescence; retain this historical record even if the candidate is rejected."
+  },
+  "lifecycle": [
+    {
+      "status": "CANDIDATE",
+      "date": "2026-10-02",
+      "decision": "Assign stable research identity after reviewing pinned semantic evidence; support/incompatibility confirmation remains open."
+    }
+  ],
+  "related_cost_l": [],
+  "source_cases": [],
+  "exceptions": [],
+  "tests": [],
+  "benchmarks": [],
+  "confidence": "LOW",
+  "proverb_ru": "Что пером в sysfs написано — топором из ABI не вырубишь.",
+  "open_questions": [
+    "Which named consumers rely on which documented attributes and lifecycle events?",
+    "What narrow native device-status contract is required, and are its semantics equivalent?",
+    "What is the first introducing release/commit?",
+    "Who owns any future supported implementation and finite migration window?"
+  ]
+}

@@ -1,0 +1,114 @@
+name: Compatibility Adapter Proposal
+description: Propose a bounded adapter for concrete consumers and compare native implementation.
+title: "[Compatibility Adapter Proposal] "
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        This issue will be public. Do not paste unrestricted inventories or logs. Review and
+        sanitize the exact text and attachments locally before submitting. UNKNOWN with a reason is
+        useful evidence. Submission does not establish support or authorize a hardware survey. See
+        the [submission
+        guide](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/docs/research/issue-submissions.md),
+        [research program](https://github.com/lifeFedorovAlexey/KOLVRT/issues/44) and [COST-L
+        registry](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/research/cost-l/registry.json).
+        You may answer in English or Russian.
+  - type: textarea
+    id: contract
+    attributes:
+      label: External contract and proposed module
+      description: >-
+        Public upstream contract and exact version; proposed module ID/semantic version/scope.
+        Distinguish planned artifacts from implemented modules.
+    validations:
+      required: true
+  - type: textarea
+    id: cost-l
+    attributes:
+      label: COST-L references
+      description: >-
+        Existing stable IDs use COST-L-#### (four digits; COST-L-0000 is reserved) and link to the
+        registry. For an unallocated candidate, use candidate plus an issue link; never invent an
+        assigned ID. Use UNKNOWN with a reason if unresolved.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary evidence
+      description: >-
+        Public upstream links pinned to a commit/version, exact file/section/line locators,
+        configuration and evidence gaps. UNKNOWN with a reason is acceptable.
+    validations:
+      required: true
+  - type: textarea
+    id: coverage
+    attributes:
+      label: Consumers and shared coverage evidence
+      description: >-
+        Named consumers, common semantic needs, sample/denominator and evidence. No unsupported
+        percentage or claim that lexical matches establish driver support.
+    validations:
+      required: true
+  - type: textarea
+    id: lifetime
+    attributes:
+      label: Bounded state and lifetime
+      description: >-
+        State/storage bounds, ownership, concurrency/context rules, cancellation/reset, quiescence
+        and removal dependencies. Explain migration and how stale requests are rejected.
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Security and authority constraints
+      description: >-
+        State native-authorized effects, isolation and rejection requirements. Compatibility cannot
+        grant missing rights. Separate hardware constraints from compatibility debt; list unknowns.
+    validations:
+      required: true
+  - type: dropdown
+    id: dma-iommu
+    attributes:
+      label: DMA/IOMMU evidence
+      options:
+        - UNKNOWN - not verified
+        - Not applicable - explain in evidence
+        - Documented only - not tested
+        - Observed in the stated test - attach sanitized evidence
+    validations:
+      required: true
+  - type: textarea
+    id: support
+    attributes:
+      label: Owner, support and costs
+      description: >-
+        Proposed owner or UNKNOWN, start and first unsupported date, required tests/benchmarks and
+        measurement provenance. Unknown CPU/memory/latency costs must remain UNKNOWN.
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Native rewrite alternative and decision gaps
+      description: >-
+        Compare adapter and native implementation, behavior required by real consumers,
+        maintenance/removal costs, hardware protection and unanswered questions. An issue does not
+        approve implementation or authority expansion.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-review
+    attributes:
+      label: Public submission review
+      options:
+        - label: >-
+            I reviewed every field and any attachment locally and removed secrets, serials,
+            MAC/IP/SSID, usernames, hostnames and private paths. I approve publication of exactly
+            this reviewed content.
+          required: true
+        - label: >-
+            I distinguish proposals and UNKNOWN values from executed evidence; this submission does
+            not authorize further inventory collection or publication.
+          required: true
