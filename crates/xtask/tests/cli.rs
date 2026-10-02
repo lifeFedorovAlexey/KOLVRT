@@ -46,3 +46,19 @@ fn audit_subcommand_writes_a_parseable_inventory() {
     assert!(value["locations"].is_array());
     assert!(value["assembly"].is_array());
 }
+
+#[test]
+fn compare_subcommand_revalidates_retained_measurements_without_claiming_a_winner() {
+    let evidence = "research/results/kernel-phase2.json";
+    let output = run(&["compare", evidence, evidence]);
+    assert!(
+        output.status.success(),
+        "stdout={} stderr={}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert_eq!(stdout.matches("observations only").count(), 2);
+    assert!(stdout.contains("\"baseline_ticks\""));
+    assert!(stdout.contains("\"candidate_ticks\""));
+}
