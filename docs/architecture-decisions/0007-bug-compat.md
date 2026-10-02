@@ -14,6 +14,16 @@ Separate support expiry and default-distribution removal from runtime unloading.
 
 This clarification addresses issue #3 through existing LAW-008; it does not add a law, production loader or automatic semantic-version support renewal.
 
+Issue #8 makes support per semantic contract/version for both native contracts and
+adapters: require introduced, deprecated, support_until, known_consumers and replacement
+fields linked to owner/migration/removal records. Before deprecation, explicitly unset
+fields are permitted under the stated publication/support policy; experimental versions
+claim no long-term guarantee. After deprecation, a finite deadline and named replacement
+or explicit end-of-service decision are mandatory. Reviewed consumer evidence and a new
+bounded deadline are required for renewal. Artifact revisions and successor versions
+neither renew predecessors nor authorize immediate unloading. Honor ABI-FREEZE promises;
+support expiry and quiescent reclamation remain independent under LAW-008.
+
 ## Alternatives
 
 Keep the native bug forever; break all consumers immediately; generate an adapter for every bug; remove solely on zero recent calls; ship every old module indefinitely.

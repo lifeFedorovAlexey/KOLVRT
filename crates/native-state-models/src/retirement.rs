@@ -10,10 +10,14 @@ pub enum Mutation {
     FreeAtDeadline,
     AdmitAfterDeadline,
     ForgetTombstone,
+    RenewOnSuccessor,
+    FreeOnSuccessor,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Module {
+    successor_created: bool,
+    deadline_was_reached: bool,
     deadline_reached: bool,
     references: u8,
     requests: u8,
@@ -25,6 +29,8 @@ struct Module {
 pub fn retirement(mutation: Mutation) -> Exploration {
     explore(
         Module {
+            successor_created: false,
+            deadline_was_reached: false,
             deadline_reached: false,
             references: 0,
             requests: 0,
@@ -34,9 +40,21 @@ pub fn retirement(mutation: Mutation) -> Exploration {
         },
         |s| {
             let mut out = Vec::new();
+            if !s.successor_created {
+                let mut n = s.clone();
+                n.successor_created = true;
+                if matches!(mutation, Mutation::RenewOnSuccessor) {
+                    n.deadline_reached = false;
+                }
+                if matches!(mutation, Mutation::FreeOnSuccessor) {
+                    n.removed = true;
+                }
+                out.push(("introduce independent successor version", n));
+            }
             if !s.deadline_reached {
                 let mut n = s.clone();
                 n.deadline_reached = true;
+                n.deadline_was_reached = true;
                 n.tombstone = !matches!(mutation, Mutation::ForgetTombstone);
                 out.push(("support deadline reached; close admission", n));
             }
@@ -78,7 +96,8 @@ pub fn retirement(mutation: Mutation) -> Exploration {
             out
         },
         |s| {
-            (!s.removed || (s.references == 0 && s.requests == 0))
+            (!s.removed || (s.deadline_reached && s.references == 0 && s.requests == 0))
+                && (!s.deadline_was_reached || s.deadline_reached)
                 && (!s.deadline_reached || s.tombstone)
                 && !s.admitted_after_deadline
         },
@@ -109,5 +128,13 @@ mod tests {
                 .counterexample
                 .is_some()
         );
+    }
+
+    #[test]
+    fn successor_neither_renews_support_nor_authorizes_removal() {
+        assert!(retirement(Mutation::None).counterexample.is_none());
+        for mutation in [Mutation::RenewOnSuccessor, Mutation::FreeOnSuccessor] {
+            assert!(retirement(mutation).counterexample.is_some());
+        }
     }
 }

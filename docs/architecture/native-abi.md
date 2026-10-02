@@ -25,6 +25,11 @@ It cannot erase separately declared support. Authority checks, memory safety and
 outcome guarantees remain mandatory at every stage. Stable support is finite under the
 [compatibility lifecycle](compatibility-model.md); a successor does not renew it.
 
+The per-contract/version [lifecycle record](compatibility-model.md) also applies to native
+contracts: `introduced`, `deprecated`, `support_until`, `known_consumers` and `replacement`
+are independent of artifact revisions. The freeze decision must preserve those support
+guarantees; introducing a successor does not renew or prematurely retire this version.
+
 ## ABI-FREEZE gate
 
 STABLE requires a separate accepted ABI-FREEZE ADR per named contract/version containing:

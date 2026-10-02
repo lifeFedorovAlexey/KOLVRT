@@ -74,6 +74,44 @@ descriptions. A silicon workaround can affect code generation or platform operat
 it is not necessarily dynamically unloadable. Dropping a mandatory workaround drops
 the affected target. [Cortex-A53 843419](../../research/cases/KOL-PATH-0011.json) is an example.
 
+## Semantic-version lifecycle records
+
+Maintain one lifecycle record per named semantic contract/version for both native public
+contracts and compatibility adapters. Artifact digests and build revisions identify
+implementations; changing them does not reset semantic support, create a new version
+or extend a deadline. Link each record to its owner, migration and module-removal records.
+
+| Field             | Requirement                                                                                                                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `introduced`      | Recorded introduction date or release in a declared ordering domain.                                                                                                                     |
+| `deprecated`      | Explicitly unset before deprecation; after deprecation, its actual date/release.                                                                                                         |
+| `support_until`   | Finite deadline for promised support, mandatory on deprecation. Experimental/unpromised versions may explicitly leave it unset before deprecation and must state no long-term guarantee. |
+| `known_consumers` | Named supported consumers, including declared dormant/offline packages and their obligations; unknown hypothetical programs do not renew support.                                        |
+| `replacement`     | Named target contract/version and migration record, or an explicit no-replacement/end-of-service decision on deprecation. Before deprecation, explicitly pending is permitted.           |
+
+The record also identifies contract/version, publication stage and support domain. PUBLIC
+and STABLE native contracts retain their explicit provisional or ABI-FREEZE support
+guarantees: an unset field cannot erase a promise. Deprecation must not shorten a promised
+window. Experimental status is explicit absence of long-term support, not permission to
+weaken running authority, ownership or outcomes.
+
+Renewal requires reviewed named-consumer evidence, owner, migration plan and a new finite
+deadline in the same domain; retain the prior record and decision. Missing evidence or
+the existence of v2 is not renewal. Introducing v2 neither terminates v1 before its
+promised deadline nor retains it indefinitely. At expiry, use explicit errors and the
+tombstone; runtime reclamation still requires draining references and accepted work.
+An ABI-FREEZE amendment cannot silently alter supported semantics or erase its support
+promise. Independent versions may coexist only under compatible state/authority rules.
+
+The current native request v0 is CANDIDATE, introduced by the first-slice decision on
+2026-10-02, with deprecation unset, no declared long-term support deadline, the host echo
+fixture as its known consumer and replacement explicitly pending. It has no ABI-FREEZE.
+This documents its design status, not a production lifecycle registry. On any future
+deprecation, even this unpromised candidate needs a recorded deadline and replacement
+or end-of-service decision before removal. Version-creation checks in the host retirement
+model reject successor-based renewal and premature removal; registry and negotiation
+integration remain unimplemented. See [ADR-0007](../architecture-decisions/0007-bug-compat.md).
+
 ## Bug-compatibility lifecycle
 
 1. Establish the cause, correct the native specification and add a regression test.

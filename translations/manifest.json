@@ -38,8 +38,8 @@
         "translation_sha256": "d5ad04eff2d0b1d7f47d95b732bb29fc658564573580c92964304fdb296a096a"
       },
       "docs/architecture-decisions/0007-bug-compat.md": {
-        "source_sha256": "95b84c8e2b08a47d2bf5724a1e8567726a5376ff5eef80a3ac37981e1b095c43",
-        "translation_sha256": "8aa2daf6bdd3c098a38debbf961d57de917e3bffe295a9f9eb368da2598fdafa"
+        "source_sha256": "d7901b2ced9ca9b5698fc141b33bd2090f4f028fbc5b20666132ced28f4fdefb",
+        "translation_sha256": "78bff160c1044f5c2cf57f854faafb8f8525de3ee4a996ab207011b77a5d2600"
       },
       "docs/architecture-decisions/0008-placement.md": {
         "source_sha256": "386e655c6fa751f52942c204f398ed6197e861d3d89f22f3b3e83f16e95b6fe0",
@@ -78,8 +78,8 @@
         "translation_sha256": "a3663804370470d156dd9a698aa3ed92d567649ef0d03cf6cedef9ac18cf19e1"
       },
       "docs/architecture/compatibility-model.md": {
-        "source_sha256": "bf37a1864ae0bc127ad1deb192231d4527d4b169fb1565e23296c4237ceac80f",
-        "translation_sha256": "6c5eb82d3cd0747bb19fe9175da645eb3d6a373a43a17e7e8aed249c38885b9d"
+        "source_sha256": "d75a3b9abef8dce83c64abb495e311864b0bd1dca2f477059ee3be670967dd4a",
+        "translation_sha256": "71d4350144a39f6bd4fc9a254a3bc3979e79b06c255afca2836081f711ef8ae9"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -102,8 +102,8 @@
         "translation_sha256": "08179f352cb61f1c18481ab8959451c187fc6cd9b3daec4d38c318e192fbd7fb"
       },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "f4a4866d57f6d96bcd19537213d2a9801bc4d082c615b5f37abd6fce5125ce9c",
-        "translation_sha256": "39fd3a9bf0c85ace1f2761c2cf9f9a0929e03c8ef5c60319d8b56780f99d79e3"
+        "source_sha256": "2cd8527f67b67da76122dc79dc6519d135137299ede22801a7488f54e9fba397",
+        "translation_sha256": "5f8f3f760058d0d81a44020d972f45eb945e48bce1ef0bda3d3cabd8cce0fec2"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",
@@ -122,8 +122,8 @@
         "translation_sha256": "03283b2d99d653aba0bcbc287c1312c382f5953ed109018946c647bd88b6cc99"
       },
       "docs/architecture/native-abi.md": {
-        "source_sha256": "d5ed53963c3e5198098cc4a2aa02d8a036133b04bd9c7bd4de9500fd58c83d64",
-        "translation_sha256": "f5d9cdd32e3a7a8df8f714b861e8cbe2818f953e4273ba55ab348d3a7dc04edc"
+        "source_sha256": "27bd46ca3abcfd7c339a563e89968e21be3f80a9273ee878939be18b050968e4",
+        "translation_sha256": "98b138985034883c1c5a1cfef64d3fa9595233a26b0bcbf5e191bcb9ac444587"
       },
       "docs/architecture/native-model.md": {
         "source_sha256": "0f5db67b0dd834a8fc1ad7435c3fbbefecf207cf34568358394636bf700f418c",
