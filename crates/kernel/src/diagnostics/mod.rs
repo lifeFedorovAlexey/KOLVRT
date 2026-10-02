@@ -38,6 +38,7 @@ impl Write for Writer {
     }
 }
 pub fn print(args: fmt::Arguments<'_>) {
+    assert!(!crate::percpu::is_secondary(), "CPU0-owned UART");
     let _ = Writer.write_fmt(args);
 }
 #[macro_export]

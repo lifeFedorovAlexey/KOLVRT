@@ -1,6 +1,6 @@
 # GICv3 и синхронизация
 
-Проверенные платформой дескрипторы DTB задают distributor и redistributor. CPU0 использует первый redistributor frame для закреплённой топологии с affinity zero. Инициализация пробуждает его, настраивает nonsecure Group 1, physical timer PPI 30 с level trigger, приоритет и системный CPU interface при замаскированном IRQ. Опрос регистров имеет конечный предел итераций.
+Проверенные платформой дескрипторы DTB задают distributor и redistributor. Каждый CPU сканирует ограниченный регион и сопоставляет GICR_TYPER affinity со своим MPIDR; неподдерживаемый VLPI stride или отсутствующая affinity завершаются ошибкой. Инициализация пробуждает его, настраивает nonsecure Group 1, physical timer PPI 30 с level trigger, приоритет и системный CPU interface при замаскированном IRQ. Опрос регистров имеет конечный предел итераций.
 
 ## Жизненный цикл IRQ
 
@@ -9,3 +9,7 @@ Acknowledge возвращает настоящий INTID. Обработка т
 ## Блокировки
 
 Ограниченный TTAS lock ожидает через relaxed loads и использует Acquire CAS с Release unlock. Время жизни guard защищает доступ UnsafeCell; ограничения Send/Sync соответствуют защищаемому типу. Host tests проверяют публикацию четырьмя конкурентными потоками. IRQ никогда не берёт этот lock, не выделяет память и не пишет UART. Поэтому прерванный код не блокируется навсегда из-за IRQ, ожидающего его собственный lock. Миллион spin iterations — предел отказа, а не гарантия реального времени или доказательство справедливости. [Ревью](../architecture/implementation-review.md) фиксирует альтернативы.
+
+## Multicore delivery
+
+CPU0 однократно инициализирует distributor. Каждый CPU инициализирует только собственный redistributor, timer PPI и именованный coordination SGI. SGI target encoding сохраняет affinity levels и проверяет поддерживаемый target range. IRQ фиксирует настоящую delivery и pending TLB generation; обычный код подтверждает retirement после завершения readers и local TLBI. IRQ не захватывает table/heap locks и не пишет UART. Настоящие tests покрывают оба направления IPI, повторную delivery, независимые timers и Acquire/Release publication shared pair. См. [SMP](smp.md).

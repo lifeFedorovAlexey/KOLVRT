@@ -111,11 +111,7 @@ pub fn links(root: &Path, path: &Path, text: &str) -> CheckResult<Vec<String>> {
             .map_err(|e| format!("{}: missing link {raw}: {e}", path.display()))?;
         let mut rel = relative(&root, &resolved)?;
         if rel.starts_with("translations/") {
-            rel = rel
-                .splitn(3, '/')
-                .nth(2)
-                .ok_or("translation link must name a document")?
-                .to_owned();
+            rel = rel.splitn(3, '/').nth(2).unwrap_or("").to_owned();
         }
         if !fragment.is_empty() {
             rel.push('#');

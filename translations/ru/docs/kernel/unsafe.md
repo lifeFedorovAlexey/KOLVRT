@@ -38,13 +38,13 @@
 
 **Необходимость и владелец:** Diagnostic output использует raw PL011 registers.
 
-**Предусловия и проверка:** Адрес публикуется после проверки, только CPU0, без IRQ logging, bounded polling. Настоящие serial events, наблюдаемые host.
+**Предусловия и проверка:** Адрес публикуется после проверки, принудительно только CPU0, без IRQ logging, bounded polling; secondary failure публикуется atomics. Настоящие serial events, наблюдаемые host.
 
 ### INV-FRAME
 
 **Необходимость и владелец:** Zeroing и доступ к mapped RAM требуют raw addresses.
 
-**Предусловия и проверка:** Единственный physical pool, закрытый линейный Frame, initialized nonreserved RAM, borrowed Mapping, завершённый unmap/TLBI до free. Exhaustion/reuse/map/permission tests.
+**Предусловия и проверка:** Physical pool только CPU0, непередаваемый закрытый линейный Frame, initialized nonreserved RAM, borrowed Mapping/Retirement и remote reader acknowledgement до free. Exhaustion/reuse/map/permission tests и premature-release controls.
 
 ### INV-MMU
 
@@ -56,7 +56,7 @@
 
 **Необходимость и владелец:** Retirement владения требует architectural completion.
 
-**Предусловия и проверка:** Только CPU0; publication barrier, invalidation, completion barrier, instruction synchronization. Unmap fault и reuse tests; remote readers не заявляются.
+**Предусловия и проверка:** CPU0 PTE writer освобождает table lock до ожидания. CPU1 подтверждает только после завершения reader и local invalidation/barriers. Generation проверяется; один retirement; failure не разрешает release. Настоящий remote fault и omitted-TLBI control.
 
 ### INV-HEAP
 
@@ -74,7 +74,7 @@
 
 **Необходимость и владелец:** Конструирование device registers предполагает platform topology.
 
-**Предусловия и проверка:** CPU0 affinity zero, первый redistributor, IRQ masked при setup, bounded RWP checks. Настоящие PPI masking/delivery/rearm tests.
+**Предусловия и проверка:** CPU0 инициализирует distributor; каждый CPU сопоставляет GICR_TYPER с полной MPIDR affinity в проверенном ограниченном регионе. Неподдерживаемый VLPI stride отклоняется; IRQ masked при local setup, bounded RWP checks. PPI обоих CPU и повторные bidirectional SGI tests.
 
 ### INV-IRQ
 
@@ -100,6 +100,34 @@
 
 **Предусловия и проверка:** Только kernel-test feature, точная регистрация PC/resume, bounded recovery, без PROD recovery. RO/NX/unmap и SIMD negative controls.
 
+## Границы Phase 1.1
+
+### INV-SECONDARY
+
+**Необходимость и владелец:** PSCI entry требует assembly; CPU1 владеет отдельным постоянным linker stack. Без BSS/shared initialization. Проверки настоящих EL1/MMU и stack bounds.
+
+### INV-BOOT-PUBLISH
+
+**Предусловия и проверка:** CPU0 публикует READY, очищает linked RAM и root tables до PoC с Cortex-A57 cache line, завершает DSB SY до CPU_ON. CPU1 включает тот же root до acquire shared publication. Boot обоих профилей; coherent-platform pin не доказывает произвольную hardware coherence.
+
+### INV-CPUON
+
+**Предусловия и проверка:** Проверенный DTB SMC conduit, CPU affinity и aligned native entry/root. SMCCC x0-x3 clobbers объявлены, PSCI result проверяется. CPU_OFF вызывается после quiescence; CPU0 также проверяет AFFINITY_INFO.
+
+### INV-PERCPU
+
+**Предусловия и проверка:** MPIDR сопоставляется с immutable affinity table. Stack pointer только наблюдается; mutable state и probes находятся в per-CPU atomics. Distinct ID/stack и независимые timer/fault tests.
+
+### INV-GIC-AFFINITY и INV-SGI
+
+**Предусловия и проверка:** Ограниченный validated MMIO region, GICR_TYPER match, проверенные SGI target bits. Publication до SGI и точный acknowledged INTID для EOI. Повторные IPI в обоих направлениях и timers.
+
+### INV-SHOOTDOWN и INV-REMOTE-READER
+
+**Предусловия и проверка:** Remote tests сохраняют borrowed Mapping/Frame до completion или acknowledged retirement; raw submission является unsafe test API. Reader admission исключается при retirement. IRQ только публикует generation. Ordinary quiescence, local TLBI, DSB/ISB и release acknowledgement предшествуют reclaim. Retained charge защищает от забытых guards. Delayed-reader, premature-release, omitted-ACK и omitted-TLBI controls.
+
+Новое assembly и unsafe Rust остаются в target/kernel/unsafe-audit.json; машинные counts — inventory, а не доказательство.
+
 ## Границы доказательств
 
-Этот реестр документирует локальные proof obligations и наблюдаемые tests. Он не доказывает аппаратную корректность, все случаи malformed firmware или SMP safety. Boot firmware, toolchain, emulator и generated instructions остаются trust boundaries. Добавление CPU нарушает single-owner assumptions и требует [SMP review](smp.md). Unsafe не оправдывается одной производительностью; [правило выбора метода](../architecture/implementation-review.md) применяется до принятия.
+Этот реестр документирует локальные proof obligations и наблюдаемые tests. Он не доказывает аппаратную корректность, все случаи malformed firmware или SMP safety. Boot firmware, toolchain, emulator и generated instructions остаются trust boundaries. [SMP контракт](smp.md) ограничивает participation двумя CPU и явно удерживаемыми readers. Unsafe не оправдывается одной производительностью; [правило выбора метода](../architecture/implementation-review.md) применяется до принятия.

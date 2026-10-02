@@ -1,8 +1,8 @@
 # Загрузка native-ядра
 
-Текущая реализация загружает самостоятельное ядро EL1 без userspace, scheduler и compatibility paths. [Решение о фундаменте](../architecture-decisions/0010-kernel-foundation.md) определяет принятые границы.
+Текущая реализация загружает самостоятельное ядро EL1 с двумя активными CPU, без userspace, scheduler и compatibility paths. [Решение о фундаменте](../architecture-decisions/0010-kernel-foundation.md) определяет принятые границы.
 
-QEMU 10.1.0 использует `virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off`, Cortex-A57, TCG, два настроенных CPU и 256 MiB RAM. Работает только CPU0; CPU1 остаётся выключенным. Обнаружение платформы изолировано в `crates/kernel/src/platform`; архитектурные регистры и векторы находятся в `arch/aarch64`. Имена каталогов описывают обязанности и не означают импорт другой ОС.
+QEMU 10.1.0 использует `virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off`, Cortex-A57, TCG, два настроенных CPU и 256 MiB RAM. CPU0 и CPU1 исполняют native EL1 code; CPU1 запускается через PSCI CPU_ON с отдельным stack. Обнаружение платформы изолировано в `crates/kernel/src/platform`; архитектурные регистры и векторы находятся в `arch/aarch64`. Имена каталогов описывают обязанности и не означают импорт другой ОС.
 
 ## Последовательность
 
@@ -21,3 +21,5 @@ ELF начинается с 0x40200000, оставляя до 2 MiB у нача�
 ## Проверка
 
 Запустите `cargo xtask test`. Загрузочные образы DEV и PROD действительно выполняют выделение, отображение, доступ к памяти, снятие отображения, освобождение и доставку таймерного IRQ перед публикацией структурированного события загрузки. Отсутствие событий, panic, fatal exception или timeout завершают host command ошибкой. См. [тестирование](testing.md) и [unsafe-границы](unsafe.md).
+
+[SMP протокол](smp.md) добавляет cleaned release/acquire publication, secondary root activation, local interrupts с соответствующей affinity и подтверждённый retirement. Оба boot profile требуют настоящего secondary IPI и подтверждённого CPU_OFF до сообщения boot success.

@@ -13,7 +13,7 @@ npm run check
 cargo xtask test
 ```
 
-The xtask matrix builds with locked dependencies, runs 23 real kernel tests in each profile and separately boots DEV and PROD without test features. Negative assertion, panic, second physical owner and retained-mapping release images are child host commands: all four must exit nonzero with the expected evidence. The positive matrix fails if any control incorrectly succeeds. JSON events must contain the exact test set and final suite count. Missing results, emulator error or a 30-second timeout fail the command.
+The xtask matrix builds with locked dependencies, runs 39 real kernel tests in each profile and separately boots DEV and PROD without test features. Negative assertion, panic, second physical owner, retained-mapping release, secondary panic, retiring-frame release, missing acknowledgement and omitted remote TLBI images are child host commands: all eight must exit nonzero with the expected evidence. The positive matrix fails if any control incorrectly succeeds. JSON events must contain the exact test set and final suite count. Missing results, emulator error or a 30-second timeout fail the command.
 
 Artifacts under target/kernel include ELF, SHA-256 and feature/size build reports, full QEMU version/arguments, UART logs, structured results and unsafe inventory. ELF bytes include debug information; load_bytes counts PT_LOAD file payload; memory_bytes includes zero-filled storage. PROD uses release optimization and retains debug information for inspection; diagnostics and kernel-tests are absent in its boot image.
 
@@ -36,3 +36,7 @@ Use a separately installed AArch64-capable GDB. QEMU pauses before entry with -S
 ## Scope of evidence
 
 Host tests check safe algorithms, malformed DTB rejection, descriptor encoding and concurrent lock publication. In-kernel tests check hardware-visible translation faults and timer IRQ, including complete SIMD restoration. Model checks remain Phase 0 design evidence. CI mirrors local checks in .github/workflows/kernel.yml; a configured workflow is not a completed remote CI run. See [unsafe report interpretation](unsafe.md) and [CPU boundary](smp.md).
+
+## SMP controls
+
+The same protocol runs with diagnostics on/off. The matrix requires 16 named SMP tests and actual CPU_OFF, not only an ONLINE flag. Additional flags are `--secondary-panic-control`, `--retirement-control`, `--shootdown-control` and `--remote-tlbi-control`. Each is expected to fail; the positive runner checks both nonzero status and the failure marker. The omitted-TLBI image must fail after CPU1 reads the mapping. `cargo test --locked` also rejects native dependency reversal. Standalone Phase 2 checks are `cargo test --locked -p routing --all-features` and `cargo test --locked -p routing --no-default-features`; neither connects to the kernel.

@@ -14,4 +14,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 - [ADR-0010 — Native EL1 foundation](0010-kernel-foundation.md) — Accepted.
 - [ADR-0011 — Performance and reliability method review](0011-method-review.md) — Accepted.
 
+- [ADR-0012 — Multicore ownership and acknowledged retirement](0012-multicore-retirement.md) — Accepted for two-CPU QEMU.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

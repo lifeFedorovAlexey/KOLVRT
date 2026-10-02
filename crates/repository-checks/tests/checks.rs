@@ -79,6 +79,19 @@ fn valid_record_passes() {
     assert!(database::case_errors(validator(), &valid(), "KOL-PATH-0001.json").is_empty());
 }
 #[test]
+fn localized_root_navigation_is_a_directory_link() {
+    let temp = Temp::new();
+    temp.put("README.md", "root");
+    temp.put("translations/ru/README.md", "translated");
+    let links = documents::links(
+        &temp.0,
+        &temp.0.join("README.md"),
+        "[Russian tree](translations/ru/)",
+    )
+    .unwrap();
+    assert_eq!(links, vec![""]);
+}
+#[test]
 fn every_required_field_is_enforced() {
     let schema = read_json(&root().join("schemas/research-case.schema.json")).unwrap();
     for field in schema["required"].as_array().unwrap() {

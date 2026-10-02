@@ -3,7 +3,6 @@ pub mod page;
 #[cfg(feature = "kernel-tests")]
 pub const INSTRUCTION_BYTES: usize = 4;
 pub const CURRENT_EL_SHIFT: u32 = 2;
-#[cfg(feature = "kernel-tests")]
 pub const CURRENT_EL1: u64 = 1 << 2;
 #[cfg(feature = "negative-test")]
 pub const CURRENT_EL2: u64 = 2 << 2;
@@ -24,6 +23,23 @@ const ICC_SRE_ENABLE: u64 = 1;
 const ICC_PMR_ALL_PRIORITIES: u64 = 255;
 const ICC_IGRPEN1_ENABLE: u64 = 1;
 const PSCI_SYSTEM_OFF: u64 = 0x84000008;
+const PSCI_CPU_ON: u64 = 0xc4000003;
+const PSCI_CPU_OFF: u64 = 0x84000002;
+const PSCI_AFFINITY_INFO: u64 = 0xc4000004;
+const CACHE_LINE_BYTES: usize = 64; // Cortex-A57 platform pin.
+const AFFINITY_LEVEL_BITS: u32 = 8;
+const AFFINITY_LEVEL_MASK: u64 = u8::MAX as u64;
+const MPIDR_AFF1_SHIFT: u32 = AFFINITY_LEVEL_BITS;
+const MPIDR_AFF2_SHIFT: u32 = 2 * AFFINITY_LEVEL_BITS;
+const MPIDR_AFF3_SHIFT: u32 = 32;
+const SGI_AFF1_SHIFT: u32 = 16;
+const SGI_INTID_SHIFT: u32 = 24;
+const SGI_AFF2_SHIFT: u32 = 32;
+const SGI_AFF3_SHIFT: u32 = 48;
+const SGI_TARGET_COUNT: u64 = 16;
+pub const PSCI_SUCCESS: i64 = 0;
+pub const PSCI_AFFINITY_ON: i64 = 0;
+pub const PSCI_AFFINITY_OFF: i64 = 1;
 #[cfg(feature = "kernel-tests")]
 pub const ESR_EC_SHIFT: u32 = 26;
 #[cfg(feature = "kernel-tests")]
@@ -54,6 +70,80 @@ read_reg!(ticks, "cntpct_el0");
 read_reg!(frequency, "cntfrq_el0");
 read_reg!(sctlr, "sctlr_el1");
 read_reg!(acknowledge, "S3_0_C12_C12_0");
+read_reg!(mpidr, "mpidr_el1");
+pub fn affinity() -> u64 {
+    mpidr() & kernel_core::platform::MPIDR_AFFINITY_MASK
+}
+pub fn stack_pointer() -> usize {
+    let sp;
+    // SAFETY: INV-PERCPU: observes this CPU's current aligned stack, never dereferences it.
+    unsafe {
+        asm!("mov {}, sp", out(reg) sp, options(nomem, nostack));
+    }
+    sp
+}
+pub fn barrier() {
+    // SAFETY: INV-TLB: complete published memory effects before signalling/completion.
+    unsafe {
+        asm!("dsb ish", "isb", options(nostack));
+    }
+}
+pub fn local_invalidate() {
+    // SAFETY: INV-SHOOTDOWN: calling CPU is at a reader-quiescent boundary; all prior loads finish before acknowledgement.
+    unsafe {
+        asm!(
+            "dsb ish",
+            "tlbi vmalle1",
+            "dsb ish",
+            "isb",
+            options(nostack)
+        );
+    }
+}
+pub fn clean_boot(start: usize, end: usize) {
+    // SAFETY: INV-BOOT-PUBLISH: CPU0-owned linked RAM, Cortex-A57 64-byte lines; clean tables/publication to PoC for MMU-off secondary.
+    unsafe {
+        for at in (start & !(CACHE_LINE_BYTES - 1)..end).step_by(CACHE_LINE_BYTES) {
+            asm!("dc cvac, {}", in(reg) at, options(nostack));
+        }
+        asm!("dsb sy", options(nostack));
+    }
+}
+fn psci(function: u64, arg1: u64, arg2: u64, arg3: u64) -> i64 {
+    let result;
+    // SAFETY: INV-CPUON: validated SMC conduit; PSCI/SMCCC preserve x4-x18 for these calls, x0-x3 declared clobbered.
+    unsafe {
+        asm!("smc #0", inlateout("x0") function => result, inlateout("x1") arg1 => _, inlateout("x2") arg2 => _, inlateout("x3") arg3 => _, options(nostack));
+    }
+    result
+}
+pub fn start_cpu(affinity: u64, entry: usize, root: u64) -> i64 {
+    psci(PSCI_CPU_ON, affinity, entry as u64, root)
+}
+pub fn affinity_state(affinity: u64) -> i64 {
+    psci(PSCI_AFFINITY_INFO, affinity, 0, 0)
+}
+pub fn cpu_off() -> ! {
+    let _ = psci(PSCI_CPU_OFF, 0, 0, 0);
+    loop {
+        core::hint::spin_loop();
+    }
+}
+pub fn send_sgi(affinity: u64, id: u8) {
+    assert!(
+        u64::from(id) < SGI_TARGET_COUNT && (affinity & AFFINITY_LEVEL_MASK) < SGI_TARGET_COUNT,
+        "SGI target range"
+    );
+    let value = ((affinity >> MPIDR_AFF3_SHIFT & AFFINITY_LEVEL_MASK) << SGI_AFF3_SHIFT)
+        | ((affinity >> MPIDR_AFF2_SHIFT & AFFINITY_LEVEL_MASK) << SGI_AFF2_SHIFT)
+        | (u64::from(id) << SGI_INTID_SHIFT)
+        | ((affinity >> MPIDR_AFF1_SHIFT & AFFINITY_LEVEL_MASK) << SGI_AFF1_SHIFT)
+        | (1 << (affinity & AFFINITY_LEVEL_MASK));
+    // SAFETY: INV-SGI: affinity is a validated participating CPU; Group1 SGI, published mailbox before device signal.
+    unsafe {
+        asm!("dsb ishst", "msr S3_0_C12_C11_5, {}", "isb", in(reg) value, options(nostack));
+    }
+}
 pub fn vectors() {
     unsafe extern "C" {
         static vectors: u8;
@@ -64,7 +154,7 @@ pub fn vectors() {
     }
 }
 pub fn mask() {
-    // SAFETY: INV-IRQ: single active CPU; masking cannot release an IRQ-owned resource.
+    // SAFETY: INV-IRQ: affects only the calling CPU; masking cannot release an IRQ-owned resource.
     unsafe {
         asm!("msr daifset, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nomem, nostack));
     }
@@ -97,18 +187,6 @@ pub fn cpu_interface() {
     // SAFETY: INV-IRQ: nonsecure Group 1, redistributor initialized, IRQs still masked.
     unsafe {
         asm!("dsb sy", "msr S3_0_C12_C12_5,{sre}", "isb", "msr S3_0_C4_C6_0,{priority}", "msr S3_0_C12_C12_4,xzr", "msr S3_0_C12_C12_3,xzr", "msr S3_0_C12_C12_7,{enable}", "isb", sre=in(reg) ICC_SRE_ENABLE, priority=in(reg) ICC_PMR_ALL_PRIORITIES, enable=in(reg) ICC_IGRPEN1_ENABLE, options(nostack));
-    }
-}
-pub fn invalidate() {
-    // SAFETY: INV-TLB: only CPU0 participates; store publication precedes global invalidation.
-    unsafe {
-        asm!(
-            "dsb ishst",
-            "tlbi vmalle1is",
-            "dsb ish",
-            "isb",
-            options(nostack)
-        );
     }
 }
 pub fn enable_mmu(root: u64) {

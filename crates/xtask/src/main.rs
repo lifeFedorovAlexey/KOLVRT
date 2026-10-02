@@ -25,6 +25,16 @@ const ELF_WRITE: u32 = 2;
 const UNSAFE_CONTEXT_PRECEDING_LINES: usize = 4;
 const QEMU_TIMEOUT: Duration = Duration::from_secs(30);
 const QEMU_POLL_INTERVAL: Duration = Duration::from_millis(20);
+const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
+    ("--negative-control", "negative_control"),
+    ("--panic-control", "panic reporting negative control"),
+    ("--ownership-control", "physical pool already owned"),
+    ("--retained-mapping-control", "mapped frame release"),
+    ("--secondary-panic-control", "secondary CPU failure"),
+    ("--retirement-control", "retiring frame release"),
+    ("--shootdown-control", "remote TLB acknowledgement timeout"),
+    ("--remote-tlbi-control", "secondary CPU failure"),
+];
 #[path = "../../kernel/src/platform/config.rs"]
 #[allow(dead_code)] // Layout constants are consumed by the target kernel.
 mod platform_config;
@@ -53,6 +63,22 @@ const TESTS: &[&str] = &[
     "interrupt_delivery",
     "timer_rearm",
     "irq_simd_context",
+    "smp_secondary_boot",
+    "smp_cpu_identity",
+    "smp_separate_stacks",
+    "smp_ipi_forward",
+    "smp_ipi_reverse",
+    "smp_ipi_repeated",
+    "smp_lock_publication",
+    "smp_mapping_visible",
+    "smp_retirement_pending",
+    "smp_no_premature_reuse",
+    "smp_remote_ack",
+    "smp_remote_tlb_invalidation",
+    "smp_safe_reuse",
+    "smp_simultaneous_timers",
+    "smp_percpu_independent",
+    "smp_orderly_shutdown",
 ];
 fn main() {
     if let Err(e) = run() {
@@ -81,6 +107,9 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
+            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative")] {
+                if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature))?; return execute(&elf, true); }
+            }
             if args.iter().any(|a| a == "--negative-control") {
                 let elf = build(false, true, Some("negative-test"))?;
                 return execute(&elf, true);
@@ -106,12 +135,7 @@ fn run() -> Result<()> {
                 let elf = build(prod, false, None)?;
                 execute(&elf, false)?;
             }
-            for (flag, marker) in [
-                ("--negative-control", "negative_control"),
-                ("--panic-control", "panic reporting negative control"),
-                ("--ownership-control", "physical pool already owned"),
-                ("--retained-mapping-control", "mapped frame release"),
-            ] {
+            for &(flag, marker) in NEGATIVE_CONTROLS {
                 let output = Command::new(env::current_exe()?)
                     .args(["test", flag])
                     .output()?;
@@ -132,7 +156,7 @@ fn run() -> Result<()> {
                     output.status.code()
                 );
             }
-            println!("Phase 1 kernel matrix passed (single active CPU; SMP deferred).");
+            println!("Phase 1.1 kernel matrix passed (two active CPUs; compatibility not connected).");
             let label = match args.as_slice() {
                 [_] => None,
                 [_, flag, label] if flag == "--record" => Some(label.as_str()),
@@ -354,7 +378,11 @@ fn execute(elf: &Path, tests: bool) -> Result<()> {
             suite = true;
         }
         if event["event"] == "boot" {
-            boot = event["status"] == "pass" && event["el"] == 1 && event["timer_irq"] == true;
+            boot = event["status"] == "pass"
+                && event["el"] == 1
+                && event["timer_irq"] == true
+                && event["active_cpus"] == platform_config::ACTIVE_CPUS
+                && event["secondary_off"] == true;
         }
         events.push(event);
     }
@@ -459,7 +487,7 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":4},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len()},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {

@@ -7,8 +7,8 @@ pub use config::RAM_BASE;
 pub const RAM_SIZE: u64 = config::RAM_BYTES as u64;
 const MAX_BOOT_DESCRIPTION_BYTES: usize = 0x200000;
 pub fn discover_boot() -> Description {
-    assert_eq!(config::ACTIVE_CPUS, 1);
-    assert_eq!(config::CONFIGURED_CPUS, 2);
+    assert_eq!(config::ACTIVE_CPUS, kernel_core::platform::MAX_BOOT_CPUS);
+    assert_eq!(config::CONFIGURED_CPUS, config::ACTIVE_CPUS);
     // SAFETY: INV-FDT: pinned ELF boot places immutable DTB at RAM start, first 40 bytes RAM.
     let header = unsafe { core::slice::from_raw_parts(RAM_BASE as *const u8, FDT_HEADER_BYTES) };
     let size = u32::from_be_bytes(
@@ -32,6 +32,10 @@ pub fn discover_boot() -> Description {
         }
     }
     assert_eq!(d.timer_irq, PHYSICAL_TIMER_IRQ);
+    assert!(
+        d.psci_smc && d.cpu_count == config::ACTIVE_CPUS,
+        "SMP platform contract"
+    );
     d
 }
 #[cfg(feature = "kernel-tests")]

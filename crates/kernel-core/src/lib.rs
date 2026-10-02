@@ -4,6 +4,7 @@
 pub mod memory;
 pub mod platform;
 pub mod time;
+pub mod window;
 
 /// Nearest-rank quantiles; samples are timer ticks, not processor cycles.
 pub fn quantiles(samples: &mut [u64]) -> Option<[u64; 3]> {

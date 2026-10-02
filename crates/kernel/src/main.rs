@@ -9,7 +9,9 @@ mod diagnostics;
 mod hal;
 mod interrupt;
 mod memory;
+mod percpu;
 mod platform;
+mod smp;
 mod sync;
 #[cfg(feature = "kernel-tests")]
 mod tests;
@@ -20,20 +22,11 @@ const BOOT_MEMORY_PATTERN: u64 = 0x4b4f4c565254; // ASCII "KOLVRT".
 const BOOT_TIMER_DELAY: time::Duration = time::Duration::from_millis(10);
 #[cfg(not(feature = "kernel-tests"))]
 const BOOT_IRQ_TIMEOUT: time::Duration = time::Duration::from_secs(1);
-#[cfg(feature = "kernel-tests")]
-use core::sync::atomic::AtomicU64;
 use core::sync::atomic::Ordering;
-#[cfg(feature = "kernel-tests")]
-static EXPECTED_PC: AtomicU64 = AtomicU64::new(0);
-#[cfg(feature = "kernel-tests")]
-static EXPECTED_RESUME: AtomicU64 = AtomicU64::new(0);
-#[cfg(feature = "kernel-tests")]
-static FAULT_ESR: AtomicU64 = AtomicU64::new(0);
-#[cfg(feature = "kernel-tests")]
-static FAULT_FAR: AtomicU64 = AtomicU64::new(0);
 #[unsafe(no_mangle)]
 pub extern "C" fn kernel_main() -> ! {
     let d = platform::discover_boot();
+    percpu::initialize(&d);
     diagnostics::initialize(d.uart.base as usize);
     diagnostics::boot_banner();
     log!(
@@ -52,6 +45,7 @@ pub extern "C" fn kernel_main() -> ! {
     memory::initialize_mmu(&d);
     memory::initialize_heap(&mut physical);
     interrupt::initialize(&d);
+    smp::start(memory::table_root());
     let frame = physical.allocate(1, 1).expect("boot memory validation");
     let mut mapping =
         memory::map(&frame, memory::DYNAMIC_BASE, true, false).expect("boot page mapping");
@@ -62,7 +56,10 @@ pub extern "C" fn kernel_main() -> ! {
     physical.release(frame);
     assert!(physical.available() > 0);
     #[cfg(feature = "diagnostics")]
-    log!("boot: MMU W^X heap GICv3 physical timer ready; active_cpus=1\n");
+    log!(
+        "boot: MMU W^X heap GICv3 physical timer ready; active_cpus={}\n",
+        platform::config::ACTIVE_CPUS
+    );
     #[cfg(feature = "kernel-tests")]
     tests::run(&d, &mut physical);
     #[cfg(feature = "ownership-test")]
@@ -85,12 +82,29 @@ pub extern "C" fn kernel_main() -> ! {
         cpu::timer(time::deadline_after(BOOT_TIMER_DELAY));
         cpu::unmask();
         let deadline = time::deadline_after(BOOT_IRQ_TIMEOUT);
-        while interrupt::DELIVERED.load(Ordering::Acquire) == 0 && cpu::ticks() < deadline {
+        while interrupt::delivered().load(Ordering::Acquire) == 0 && cpu::ticks() < deadline {
             core::hint::spin_loop();
         }
         cpu::mask();
-        assert!(interrupt::DELIVERED.load(Ordering::Acquire) > 0);
-        log!("{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true}}\n");
+        assert!(interrupt::delivered().load(Ordering::Acquire) > 0);
+        let before = percpu::CPUS[percpu::SECONDARY_CPU]
+            .ipis
+            .load(Ordering::Acquire);
+        smp::ping(percpu::SECONDARY_CPU);
+        smp::wait(
+            || {
+                percpu::CPUS[percpu::SECONDARY_CPU]
+                    .ipis
+                    .load(Ordering::Acquire)
+                    > before
+            },
+            "boot IPI timeout",
+        );
+        smp::shutdown();
+        log!(
+            "{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true,\"active_cpus\":{},\"secondary_off\":true}}\n",
+            platform::config::ACTIVE_CPUS
+        );
     }
     cpu::timer_stop();
     cpu::mask();
@@ -101,7 +115,9 @@ pub extern "C" fn synchronous(esr: u64, far: u64, pc: u64) -> u64 {
     #[cfg(feature = "kernel-tests")]
     {
         let ec = esr >> cpu::ESR_EC_SHIFT;
-        if EXPECTED_PC
+        let local = percpu::current();
+        if local
+            .expected_pc
             .compare_exchange(pc, 0, Ordering::AcqRel, Ordering::Acquire)
             .is_ok()
             && pc != 0
@@ -109,15 +125,18 @@ pub extern "C" fn synchronous(esr: u64, far: u64, pc: u64) -> u64 {
                 || ec == cpu::ESR_EC_BRK
                 || ec == cpu::ESR_EC_INSTRUCTION_ABORT_CURRENT_EL)
         {
-            FAULT_ESR.store(esr, Ordering::Release);
-            FAULT_FAR.store(far, Ordering::Release);
-            return EXPECTED_RESUME.load(Ordering::Acquire);
+            local.fault_esr.store(esr, Ordering::Release);
+            local.fault_far.store(far, Ordering::Release);
+            return local.expected_resume.load(Ordering::Acquire);
         }
     }
     fatal_exception(esr, far, pc)
 }
 #[unsafe(no_mangle)]
 pub extern "C" fn fatal_exception(esr: u64, far: u64, pc: u64) -> ! {
+    if percpu::is_secondary() {
+        smp::secondary_failure();
+    }
     cpu::mask();
     cpu::timer_stop();
     log!(
@@ -132,6 +151,9 @@ pub extern "C" fn fatal_exception(esr: u64, far: u64, pc: u64) -> ! {
 }
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+    if percpu::is_secondary() {
+        smp::secondary_failure();
+    }
     cpu::mask();
     cpu::timer_stop();
     log!(

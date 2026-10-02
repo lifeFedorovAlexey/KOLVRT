@@ -1,8 +1,8 @@
 # Native kernel boot
 
-The current implementation boots a native EL1 kernel, without userspace, scheduler or compatibility paths. [Foundation decision](../architecture-decisions/0010-kernel-foundation.md) defines the accepted scope.
+The current implementation boots a native EL1 kernel, with two active CPUs, without userspace, scheduler or compatibility paths. [Foundation decision](../architecture-decisions/0010-kernel-foundation.md) defines the accepted scope.
 
-QEMU 10.1.0 uses `virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off`, Cortex-A57, TCG, two configured CPUs and 256 MiB RAM. Only CPU0 runs; CPU1 remains powered off. Platform discovery is isolated in `crates/kernel/src/platform`; architecture registers and vectors live in `arch/aarch64`. Directory names describe responsibilities and do not import another operating system.
+QEMU 10.1.0 uses `virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off`, Cortex-A57, TCG, two configured CPUs and 256 MiB RAM. Both CPU0 and CPU1 execute native EL1 code; CPU1 starts through PSCI CPU_ON with a separate stack. Platform discovery is isolated in `crates/kernel/src/platform`; architecture registers and vectors live in `arch/aarch64`. Directory names describe responsibilities and do not import another operating system.
 
 ## Sequence
 
@@ -21,3 +21,5 @@ After UART initialization, both profiles print the project's ASCII emblem and KO
 ## Verification
 
 Run `cargo xtask test`. Both DEV and PROD boot images exercise real allocation, mapping, memory access, unmapping, freeing and timer delivery before publishing a structured boot event. Missing events, panic, fatal exception or timeout fail the host command. See [testing](testing.md) and [unsafe boundaries](unsafe.md).
+
+The [SMP protocol](smp.md) adds cleaned release/acquire publication, secondary root activation, affinity-matched local interrupts and acknowledged retirement. Both boot profiles require a real secondary IPI and confirmed CPU_OFF before reporting boot success.

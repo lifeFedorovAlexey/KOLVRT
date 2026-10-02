@@ -7,7 +7,8 @@ use core::{
 const LOCK_PROGRESS_ATTEMPTS: usize = 1_000_000;
 /// Ordinary kernel code only; IRQ and exception handlers must not acquire this lock.
 /// Never nest locks, allocate, or call callbacks while holding a guard.
-/// Atomic exclusion supports concurrent host threads; kernel SMP is not enabled.
+/// Atomic exclusion/publication supports ordinary code on both active AArch64 CPUs.
+/// QEMU tests exercise handoff; hardware weak-memory and fairness remain unproven.
 /// The owner must run and release within LOCK_PROGRESS_ATTEMPTS; failure panics,
 /// rather than promising fairness or waiting indefinitely. IRQs are not masked here.
 pub struct Lock<T> {

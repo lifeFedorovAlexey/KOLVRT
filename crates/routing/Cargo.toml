@@ -1,0 +1,20 @@
+[package]
+name = "routing"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+kernel-core = { path = "../kernel-core" }
+sha2 = { version = "=0.10.9", default-features = false }
+window-compat = { path = "../window-compat", optional = true, default-features = false }
+
+[features]
+default = []
+dev = []
+conformance = []
+compat-v1 = ["dep:window-compat", "window-compat/v1"]
+compat-v2 = ["dep:window-compat", "window-compat/v2"]
+bug-compat = ["dep:window-compat", "window-compat/bug"]
+
+[build-dependencies]
+sha2 = "=0.10.9"

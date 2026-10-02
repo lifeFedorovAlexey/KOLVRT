@@ -75,4 +75,6 @@ cpu::timer(time::deadline_after(TEST_TIMER_DELAY));
 
 Проверки на основной системе запускать через `cargo test --locked`, проверки ядра — через `cargo xtask test`, проверки документации — через `cargo run --locked -p repository-checks -- check`. Успех форматтера, инвентаризации исходников или проверки документов не доказывает выполнение этих обязательств поведения.
 
+Phase 1.1 добавляет [multicore checks](docs/kernel/smp.md): двусторонние/повторные IPI, настоящую publication общего lock, задержанное reader acknowledgement, remote translation fault, защищённый retirement/reuse и quiescent CPU_OFF. [Решение](docs/architecture-decisions/0012-multicore-retirement.md) явно ограничивает physical ownership и требует review до добавления writers. Host tests не сертифицируют physical weak-memory behavior.
+
 [Английский оригинал](../../CONTRIBUTING.md)

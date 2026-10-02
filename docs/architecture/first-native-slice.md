@@ -1,6 +1,6 @@
 # First native slice
 
-Status: accepted design baseline for Phase 1 planning. No kernel has been implemented. The slice demonstrates native isolation and bounded communication: a supervisor creates two isolated tasks, grants one endpoint, exchanges a bounded message, revokes future admission, observes cancellation or service death, and shuts down without leaked ownership. This is a correctness workload, not a performance claim.
+Status: accepted EL0 workload design baseline, not a completed EL0 implementation. A native EL1 kernel and two-CPU foundation now exist; this document describes the later isolated-task workload. The slice demonstrates native isolation and bounded communication: a supervisor creates two isolated tasks, grants one endpoint, exchanges a bounded message, revokes future admission, observes cancellation or service death, and shuts down without leaked ownership. This is a correctness workload, not a performance claim.
 
 ## Observable acceptance
 

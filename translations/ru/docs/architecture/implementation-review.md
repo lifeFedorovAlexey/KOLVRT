@@ -24,11 +24,11 @@ Performance tests сами по себе не обосновывают алго�
 
 **Ревью надёжности и граница принятия:** Статические таблицы занимают 133 страницы (532 KiB); map не выделяет таблицы. Настоящие RO/NX/unmap faults проверяют права.
 
-### Полный TLBI после изменения mappings
+### Подтверждённый полный local TLBI после изменения mappings
 
 **Альтернативы и стоимость:** Инвалидация по VA уменьшает потерю несвязанных трансляций.
 
-**Ревью надёжности и граница принятия:** Консервативный завершённый порядок до reuse; ограниченная нагрузка одного CPU. Адресная оптимизация требует собственных отрицательных тестов и сравнительных измерений.
+**Ревью надёжности и граница принятия:** Консервативный завершённый порядок и явное remote reader acknowledgement до reuse; ограниченная нагрузка двух CPU. Адресная оптимизация требует собственных отрицательных тестов и сравнительных измерений.
 
 ### TTAS Acquire/Release lock
 
@@ -53,5 +53,7 @@ Performance tests сами по себе не обосновывают алго�
 ## Принятие реализации
 
 Проверьте generated features и права PT_LOAD, граничную арифметику, время жизни aliases, ABI регистров, порядок источника IRQ/EOI, распространение отказов и семантическую эквивалентность DEV/PROD. Сохраняйте raw measurements и negative controls. Автоматический unsafe inventory находит границы, но не доказывает их. Существенные решения фиксируются в [ADR-0010](../architecture-decisions/0010-kernel-foundation.md), правило — в [ADR-0011](../architecture-decisions/0011-method-review.md). Scheduler, userspace и compatibility остаются вне разрешённого milestone.
+
+[Multicore решение](../architecture-decisions/0012-multicore-retirement.md) рассматривает PSCI publication, CPU ownership, interrupts с корректной affinity, acknowledgement в обычном коде и quiescent shutdown. Настоящие SMP tests дополняют host lock evidence; новый global lock или спекулятивный reclamation algorithm не нужны.
 
 [Английский оригинал](../../../../docs/architecture/implementation-review.md)

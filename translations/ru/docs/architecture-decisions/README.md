@@ -14,4 +14,6 @@
 - [ADR-0010 — Самостоятельный фундамент EL1](0010-kernel-foundation.md) — Принято.
 - [ADR-0011 — Ревью методов по производительности и надёжности](0011-method-review.md) — Принято.
 
+- [ADR-0012 — Multicore ownership и подтверждённый retirement](0012-multicore-retirement.md) — Принят для двух CPU в QEMU.
+
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)

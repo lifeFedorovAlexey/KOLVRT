@@ -7,6 +7,8 @@ crates/
   native-protocol-model/   # no_std request/response candidate
   native-state-models/     # finite state models and host IPC experiment
   repository-checks/       # schema, links, laws, translations and reports
+  routing/                 # isolated Phase 2 types/profile and runtime candidates
+  window-compat/           # standalone optional adapter candidates, not kernel dependencies
   kernel-core/             # safe platform-independent bounded algorithms
   kernel/                  # native no_std AArch64 executable
     src/arch/aarch64/      # processor entry, vectors, registers and descriptors
@@ -37,7 +39,7 @@ translations/ru/          # mirrored Markdown paths
 
 ## Rationale and alternatives
 
-[Cargo recommends a flat crates directory](https://doc.rust-lang.org/cargo/reference/workspaces.html) for workspace packages. One root lockfile and target directory serve all six packages. Package names describe purpose; the model suffix prevents mistaking a prototype for a kernel implementation. A separate tools tree and executable crates buried in research data added locations without a different build lifecycle, so they were consolidated.
+[Cargo recommends a flat crates directory](https://doc.rust-lang.org/cargo/reference/workspaces.html) for workspace packages. One root lockfile and target directory serve all eight packages. Package names describe purpose; the model suffix prevents mistaking a prototype for a kernel implementation. A separate tools tree and executable crates buried in research data added locations without a different build lifecycle, so they were consolidated.
 
 [Decision records](https://adr.github.io/) preserve why a choice was made and its tradeoffs; specifications describe the resulting contract. [Diataxis](https://diataxis.fr/) distinguishes documentation purposes. This project applies that distinction without inventing empty tutorial directories or claiming the framework mandates this exact tree. The contribution guide is a how-to; contracts are reference material; decisions explain choices; research reports record evidence.
 

@@ -2,12 +2,12 @@
   "locales": {
     "ru": {
       "CONTRIBUTING.md": {
-        "source_sha256": "821376711003baff7589597eed063c10b7d6a46469d743210a5db43c420ab31d",
-        "translation_sha256": "b11443625ec0504ca82459f66dc48a765ceee05620b9d680ff7647af6957a0bf"
+        "source_sha256": "8fb41c87650c9b3989cf282054d8ad006d4e391aef2efa0d47d92d61c7bef90d",
+        "translation_sha256": "8edb90cce67cedab098346eda5022fe055d8281b6629a783d861e8c75abeaa14"
       },
       "README.md": {
-        "source_sha256": "2a6cf27b02deda96b1c03e8da71131ed8685509a0bb74e85bd11e9c0280c0d80",
-        "translation_sha256": "32bc6ffd42be7d4a0c83080a64fdd16b85a920e7f2df274aaadb75d435abbc38"
+        "source_sha256": "c7485c740a0dd30a99677affe9ddb37d4e2f6c04563f18a9acdb99a7cf2b56d1",
+        "translation_sha256": "34d9a019b35ac39e08a4a6065f7335c844beac93a69aafb33a5c6d71af77720f"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "022f788b3070232373204d75fce8ee74a3fb42b100b9d7edf38099ee4fadeaec",
@@ -57,9 +57,13 @@
         "source_sha256": "38f861b3d04746089a3613138285ae73e9f2493ca2fe91828bf3d7bab4bc19f5",
         "translation_sha256": "3a2f9ec59826aec479e376a3e250023ac89ef85ef8fe54771b5152c8a93a2ad9"
       },
+      "docs/architecture-decisions/0012-multicore-retirement.md": {
+        "source_sha256": "36ab1a3271ba14d1cf1e21bdd25aaf580d5bae8d1b03f258cd86650ffdf67215",
+        "translation_sha256": "5301903454b689e10193739d764cf134d88ead0021f5611c6a1c9707b685e6fb"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "1592e810173a15b157e29e5dd915c86b8a60c0c3f026935c36520f0ac7199a1d",
-        "translation_sha256": "4bcca02b3cc54f0dd1b47ba317c8a7eaba3f30287024987da916982de132cbdd"
+        "source_sha256": "2b3ff158879cc3040b5c6b460848f63576c9e93bfafba099b7cd2e03e5f0079f",
+        "translation_sha256": "a8bf2d83aca9d5b836a9ff20b63f6fc5cfe092cd48bdd3db4d1ad8d3ea09fc04"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
@@ -78,12 +82,12 @@
         "translation_sha256": "dfa7a5b23a1e91f0a7241d410c81017bbca6a692a0ea9239db31e9645a9f795b"
       },
       "docs/architecture/first-native-slice.md": {
-        "source_sha256": "d6150282cee869a81b6abde17e00d01502503ee524c562b26f0a759ae8e4bc75",
-        "translation_sha256": "2da01dfc68d87bcdd6306c99190b8387bd19647859bd30d65d5582c18f521087"
+        "source_sha256": "c8951cb7b2ba6ae989a8ca6dfc7e5f5131dfd4344bd362a528850008f82d6b38",
+        "translation_sha256": "12accaab8549d16d33b96e035dbc65902b7c6616c023a3928263d029b22add63"
       },
       "docs/architecture/implementation-review.md": {
-        "source_sha256": "6f8104e6b666f41172ff2d5f300cebd6423ea868f13d5bd57b3341910adad617",
-        "translation_sha256": "0a0b8de499af1c2f061810426fe5d94057ebb5d630fd58a7c49c37435a7d8623"
+        "source_sha256": "ea7e3d83ddd9817f821326accddfff777a68e8f133e3cbf9728ae84430f2166d",
+        "translation_sha256": "e0de2fc8baea306d684a1624d084513e64e0756bb5cac9a40671f7356a9ff718"
       },
       "docs/architecture/kernel-laws.md": {
         "source_sha256": "d8ca93512a263d0b36e1c347755c0cef8e18306896708008a12c509b1f1ea731",
@@ -106,8 +110,8 @@
         "translation_sha256": "b1729cc0f83dd231a693e09d7ea8a73df0ae039e3477cbfd4c8ffbfe9b189046"
       },
       "docs/architecture/platform-contract.md": {
-        "source_sha256": "1362a828acd942db40c76707f5e306f06ef8395c8e94c31d04bfa2823552b0c8",
-        "translation_sha256": "3c454f58b3d00cf0da1a73ee16a454d7581bf2a38b1bc7d6bf39bdb0ad9194fc"
+        "source_sha256": "c3bd6ff49af9614331074176b41f5556da2b0234dff4084eb57f11354a345feb",
+        "translation_sha256": "ee629b18a735c2266677c9d46db76c51194b75dd6eec703a68b40864f5ac6403"
       },
       "docs/architecture/routing-model.md": {
         "source_sha256": "b93f71f7c9ccadab1c122ac73894257e1026769b14b5cbb2346ff7a2c9b0c812",
@@ -126,40 +130,40 @@
         "translation_sha256": "b6b918584e7227c0d85a0c3a142271d71be8d7e5309b775b52ec078381113564"
       },
       "docs/kernel/boot.md": {
-        "source_sha256": "69a9b41bfc4370aadb85a98d3a2dfcfe3636dddb45770fc1f79e9da0e5881def",
-        "translation_sha256": "626d0abd7209af65786f6239b3f01b701b4064ac7d8d57ee5c44df7ebaedb749"
+        "source_sha256": "c2f3fdbfe7e77b0674455ac476e8aa3e6dab605fe54ffe586569d6e2f72b0a9d",
+        "translation_sha256": "039d68ff090a338aabdcdd87c084e376692fbdb5c4c84f5e95f8e2f9ba901c14"
       },
       "docs/kernel/exceptions.md": {
-        "source_sha256": "8e6016b33531f31f16451ebdaf5f2a76011d4868c8939a4809df6c91de8208e5",
-        "translation_sha256": "412d0876338f1334de8cf0419ea1a6b766518aa53e3b0e95466942b28e4bc2b5"
+        "source_sha256": "1ed6697824f82b678520015012a77d24a19177ad7eade89a8b8bac8bd9105e09",
+        "translation_sha256": "a52bb914f632b05632e0ebf95ec2bc0c1c443cf8041590d5f6fa952ce3f65481"
       },
       "docs/kernel/interrupts.md": {
-        "source_sha256": "e3ad4fb44e853b332c95c539b43eb0beef995ca4d6e6aaec07de4a09dfeb494a",
-        "translation_sha256": "50619c55f8afb3919d4c1374d2bad95206405a95c59c58bb630ec7ef9a4f17dc"
+        "source_sha256": "d12ae6adecac427f352bac5421fe81d690747c34c659e986c3b5473f53a2b84d",
+        "translation_sha256": "7370e7d58f507adb1038fa33e4d6171a3a74486b0fee5b00f1e66d7515eccbc9"
       },
       "docs/kernel/memory.md": {
-        "source_sha256": "68e960cb25e99ee398b048d5923461d1f988f9a18d822d517256b2657d63eccf",
-        "translation_sha256": "9e8974d9690d0e454841675e8cdf6802d6a6994f1db1eff19e22851d4d4ee80f"
+        "source_sha256": "f4d5699ba95b716032423da93c84e051f6b0226855046a4e4196a13f877a605f",
+        "translation_sha256": "8a52c1f077d7945904eeb1c00aef2e4493b2fb6b34b7329937882dc8a7a4fd9c"
       },
       "docs/kernel/smp.md": {
-        "source_sha256": "bab4dbcb0d962cfd09600c88191f462f34d434c581c30c2701a99932f362fd32",
-        "translation_sha256": "cb290bcaaeb897464643efb68ab72a303f37eed61290527d0dcbed46b784be01"
+        "source_sha256": "eebe8a7d93801e9f34a3195628d6d951c21ab092893cfd73f2c64c7a424a8940",
+        "translation_sha256": "56fb7e69c1ff69d949315aa2976e15bc94f83dfb4d543ef521dbce722cf54b8c"
       },
       "docs/kernel/testing.md": {
-        "source_sha256": "b6cd214b3529ac63ab4ae041a0cb7eba3a3a6b771665ccdbbb1a2a24e6a8f05e",
-        "translation_sha256": "0ceb4d77765cafbe27fe4d408cb59d6d1049fbf410307548181cb414e8ce483d"
+        "source_sha256": "5cee3017c3c33581965f44d304f44edabe9629e47f578bea42f28a551925928b",
+        "translation_sha256": "803ff5a4630c2d8d2ac786e7c57731eaf020f76595f4a9092f1a630b9821461e"
       },
       "docs/kernel/time.md": {
         "source_sha256": "462d6b1a36e874e592b1c3d888ceb26f03254f21a8d5971755637682462a824e",
         "translation_sha256": "46eae4f848da42e521436eafaf5782b716c3b4358b9b675ac2b3d3499f41a20a"
       },
       "docs/kernel/unsafe.md": {
-        "source_sha256": "4fbbc3864618322a1561eccec077ed27fccaa5016f8887df25d4efac84cf5874",
-        "translation_sha256": "83c2a71ee61132e5b3da1d1b424502c74c093b39c0bb7466a3668f2d1adbf998"
+        "source_sha256": "b1847d9ec229834438ee892d556d93c90c073e6bbd9ccfb6ef9774296f58f64f",
+        "translation_sha256": "d48d69def2e575179dff5bb0b101196656e841cda0c5e711e3e88d5b5641c234"
       },
       "docs/project-structure.md": {
-        "source_sha256": "30c322af4ed55cba3053a8a5a70086a288a5302e91f6d978c3795307c0889f94",
-        "translation_sha256": "8297cfd4c287660521a53ac4bf40729797d17428219536030e7c4444d2780087"
+        "source_sha256": "84bf788989a68967287836621e6e4580167cdf0695dd696a2e2af407b48fa6de",
+        "translation_sha256": "b427bf02653054aa439f2775b2d602159477023d1ce69a7f5592c02ec1019e64"
       },
       "docs/research/case-database.md": {
         "source_sha256": "6332d3678734dcc64e4c5b003c42445f324b4f98e9205091a637be92d7bfe069",
@@ -188,6 +192,10 @@
       "docs/research/phase-0-review.md": {
         "source_sha256": "5ac56b3ebd04194eed920084f4479975bf5c7a80146826e81744cc6fc8dc68eb",
         "translation_sha256": "af5ec59a62dd1915ff8c79468fa2cb7cfca992874d3b87cf99d8ebb76c7593c1"
+      },
+      "docs/research/phase-1-1-review.md": {
+        "source_sha256": "72f40597e7ce9bb22c9c259ee31fdd7827d9a9e5a2b8774b5f1bd81f438f9b05",
+        "translation_sha256": "ed9b2dd253bf58eb2d7e79cc1d0e88eb03a48e9880516045e20bff7579dbe67d"
       },
       "docs/research/phase-1-review.md": {
         "source_sha256": "f424790afbe0a150083d8ea3a229390ae1ec711fa7a77df8244b63022e119a9d",

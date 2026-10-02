@@ -24,11 +24,11 @@ This gate implements LAW-040, LAW-036 and LAW-041. A conflict with a Kernel Law 
 
 **Reliability review and acceptance boundary:** Static table storage is 133 pages (532 KiB); no table allocation in map. Real RO/NX/unmap faults verify permissions.
 
-### Full TLBI after mapping changes
+### Acknowledged full local TLBI after mapping changes
 
 **Alternatives and cost:** Per-VA invalidation reduces unrelated translation loss.
 
-**Reliability review and acceptance boundary:** Conservative completed ordering before reuse; limited single-CPU workload. Targeted optimization requires its own negative tests and comparative measurements.
+**Reliability review and acceptance boundary:** Conservative completed ordering and explicit remote reader acknowledgement before reuse; bounded two-CPU workload. Targeted optimization requires its own negative tests and comparative measurements.
 
 ### TTAS Acquire/Release lock
 
@@ -53,5 +53,7 @@ Initialization, retirement, device ordering and progress are treated as independ
 ## Implementation acceptance
 
 Inspect generated features and PT_LOAD permissions, boundary arithmetic, alias lifetime, register ABI, IRQ source/EOI ordering, failure propagation and DEV/PROD semantic equivalence. Keep raw measurements and negative controls. Automated unsafe inventory locates boundaries; it does not prove them. Record material choices in [ADR-0010](../architecture-decisions/0010-kernel-foundation.md) and policy in [ADR-0011](../architecture-decisions/0011-method-review.md). Scheduler, userspace and compatibility remain outside the authorized milestone.
+
+The [multicore decision](../architecture-decisions/0012-multicore-retirement.md) reviews PSCI publication, CPU ownership, affinity-correct interrupts, ordinary-code acknowledgement and quiescent shutdown. Real SMP tests supplement host lock evidence; no new global lock or speculative reclamation algorithm is needed.
 
 [Russian translation](../../translations/ru/docs/architecture/implementation-review.md)

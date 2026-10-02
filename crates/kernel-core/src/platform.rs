@@ -23,6 +23,9 @@ const MAX_RESERVED_REGIONS: usize = 32;
 const MAX_NODE_PROPERTIES: usize = 32;
 const MAX_NODE_DEPTH: usize = 16;
 const ADDRESS_SIZE_CELLS: u32 = 2;
+const CPU_ADDRESS_CELLS_NARROW: u32 = 1;
+const CPU_SIZE_CELLS: u32 = 0;
+const CPU_NODE_DEPTH: usize = 2; // /cpus/cpu@... below the root.
 pub const FDT_MAGIC: u32 = 0xd00dfeed;
 const GIC_IRQ_TYPE_PPI: u32 = 1;
 const GIC_IRQ_TRIGGER_MASK: u32 = 15;
@@ -32,6 +35,8 @@ const GIC_PPI_END: u32 = 32;
 const PL011_REGISTER_SIZE: u64 = 0x1000;
 const GICD_REGISTER_SIZE: u64 = 0x10000;
 const GICR_FRAME_SIZE: u64 = 0x20000;
+pub const MPIDR_AFFINITY_MASK: u64 = 0xff00ffffff;
+pub const MAX_BOOT_CPUS: usize = 2;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Region {
     pub base: u64,
@@ -51,6 +56,9 @@ pub struct Description {
     pub timer_irq: u32,
     pub reserved: [Region; MAX_RESERVED_REGIONS],
     pub reserved_count: usize,
+    pub cpu_affinities: [u64; MAX_BOOT_CPUS],
+    pub cpu_count: usize,
+    pub psci_smc: bool,
 }
 fn word(b: &[u8], i: usize) -> Result<u32, &'static str> {
     Ok(u32::from_be_bytes(
@@ -92,6 +100,11 @@ struct Node<'a> {
     properties: [&'a [u8]; MAX_NODE_PROPERTIES],
     property_count: usize,
     disabled: bool,
+    enable_method: &'a [u8],
+    method: &'a [u8],
+    device_type: &'a [u8],
+    address_cells: Option<u32>,
+    size_cells: Option<u32>,
 }
 
 /// Bounded FDT v17 decoder for the pinned virt topology. Unknown devices are not enabled.
@@ -135,6 +148,9 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
         timer_irq: 0,
         reserved: [Region::default(); MAX_RESERVED_REGIONS],
         reserved_count: 0,
+        cpu_affinities: [0; MAX_BOOT_CPUS],
+        cpu_count: 0,
+        psci_smc: false,
     };
     let mut rp = r;
     loop {
@@ -198,6 +214,43 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
                 depth -= 1;
                 let n = nodes[depth];
                 let matches = |v: &[u8]| n.compatible.split(|&c| c == 0).any(|x| x == v);
+                if n.name.starts_with(b"cpu@") && !n.disabled {
+                    if depth != CPU_NODE_DEPTH {
+                        return Err("unsupported CPU topology");
+                    }
+                    let parent = nodes[depth - 1];
+                    if parent.name != b"cpus"
+                        || n.device_type != b"cpu\0"
+                        || parent.size_cells != Some(CPU_SIZE_CELLS)
+                        || !matches!(
+                            parent.address_cells,
+                            Some(CPU_ADDRESS_CELLS_NARROW | ADDRESS_SIZE_CELLS)
+                        )
+                        || n.reg.len() != parent.address_cells.unwrap_or(0) as usize * CELL_BYTES
+                        || n.enable_method != b"psci\0"
+                        || out.cpu_count == out.cpu_affinities.len()
+                    {
+                        return Err("unsupported CPU topology");
+                    }
+                    let affinity = match n.reg.len() {
+                        CELL_BYTES => u64::from(word(n.reg, 0)?),
+                        WIDE_BYTES => wide(n.reg, 0)?,
+                        _ => return Err("CPU affinity width"),
+                    };
+                    if affinity & !MPIDR_AFFINITY_MASK != 0
+                        || out.cpu_affinities[..out.cpu_count].contains(&affinity)
+                    {
+                        return Err("CPU affinity");
+                    }
+                    out.cpu_affinities[out.cpu_count] = affinity;
+                    out.cpu_count += 1;
+                }
+                if matches(b"arm,psci-0.2") || matches(b"arm,psci-1.0") {
+                    if out.psci_smc || n.method != b"smc\0" {
+                        return Err("PSCI conduit");
+                    }
+                    out.psci_smc = true;
+                }
                 let relevant = n.name.starts_with(b"memory@")
                     || matches(b"arm,pl011")
                     || matches(b"arm,gic-v3")
@@ -287,13 +340,30 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
                         n.compatible = data;
                     }
                     b"reg" => n.reg = data,
-                    b"interrupts" => n.irq = data,
-                    b"#address-cells" | b"#size-cells"
-                        if (depth == 1 || n.reserved)
-                            && (len != CELL_BYTES || word(data, 0)? != ADDRESS_SIZE_CELLS) =>
-                    {
-                        return Err("unsupported cells");
+                    b"enable-method" => n.enable_method = data,
+                    b"method" => n.method = data,
+                    b"device_type" => n.device_type = data,
+                    b"#address-cells" => {
+                        if len != CELL_BYTES {
+                            return Err("address cells width");
+                        }
+                        let value = word(data, 0)?;
+                        n.address_cells = Some(value);
+                        if (depth == 1 || n.reserved) && value != ADDRESS_SIZE_CELLS {
+                            return Err("unsupported cells");
+                        }
                     }
+                    b"#size-cells" => {
+                        if len != CELL_BYTES {
+                            return Err("size cells width");
+                        }
+                        let value = word(data, 0)?;
+                        n.size_cells = Some(value);
+                        if (depth == 1 || n.reserved) && value != ADDRESS_SIZE_CELLS {
+                            return Err("unsupported cells");
+                        }
+                    }
+                    b"interrupts" => n.irq = data,
                     _ => (),
                 }
             }

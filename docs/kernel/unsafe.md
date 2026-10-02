@@ -38,13 +38,13 @@ Run `cargo xtask audit` to generate target/kernel/unsafe-audit.json. It inventor
 
 **Necessity and owner:** Diagnostic output uses raw PL011 registers.
 
-**Preconditions and verification:** Address published after validation, CPU0 only, no IRQ logging, bounded polling. Real host-observed serial events.
+**Preconditions and verification:** Address published after validation, enforced CPU0-only writer, no IRQ logging, bounded polling; secondary failure publishes atomics. Real host-observed serial events.
 
 ### INV-FRAME
 
 **Necessity and owner:** Zeroing and mapped RAM access require raw addresses.
 
-**Preconditions and verification:** Sole physical pool, private linear Frame, initialized nonreserved RAM, borrowed Mapping, completed unmap/TLBI before free. Exhaustion/reuse/map/permission tests.
+**Preconditions and verification:** CPU0-only physical pool, non-transferable private linear Frame, initialized nonreserved RAM, borrowed Mapping/Retirement and remote reader acknowledgement before free. Exhaustion/reuse/map/permission tests and premature-release controls.
 
 ### INV-MMU
 
@@ -56,7 +56,7 @@ Run `cargo xtask audit` to generate target/kernel/unsafe-audit.json. It inventor
 
 **Necessity and owner:** Ownership retirement requires architectural completion.
 
-**Preconditions and verification:** CPU0 only; publication barrier, invalidation, completion barrier, instruction synchronization. Unmap fault and reuse tests; no remote-reader claim.
+**Preconditions and verification:** CPU0 PTE writer releases the table lock before waiting. CPU1 acknowledges only after reader completion and local invalidation/barriers. Checked generation, one retirement; failure never permits release. Actual remote fault and omitted-TLBI control.
 
 ### INV-HEAP
 
@@ -74,7 +74,7 @@ Run `cargo xtask audit` to generate target/kernel/unsafe-audit.json. It inventor
 
 **Necessity and owner:** Device register construction assumes platform topology.
 
-**Preconditions and verification:** CPU0 affinity zero, first redistributor, IRQ masked during setup, bounded RWP checks. Real PPI masking/delivery/rearm tests.
+**Preconditions and verification:** CPU0 initializes distributor; each CPU matches GICR_TYPER to full MPIDR affinity in the validated bounded region. Unsupported VLPI stride fails; IRQ masked during local setup, bounded RWP checks. Both CPUs PPI and repeated bidirectional SGI tests.
 
 ### INV-IRQ
 
@@ -100,6 +100,34 @@ Run `cargo xtask audit` to generate target/kernel/unsafe-audit.json. It inventor
 
 **Preconditions and verification:** Kernel-test feature only, exact PC/resume registration, bounded recovery, no PROD recovery. RO/NX/unmap and SIMD negative controls.
 
+## Phase 1.1 boundaries
+
+### INV-SECONDARY
+
+**Necessity and owner:** PSCI entry needs assembly; CPU1 owns a separate permanent linker stack. No BSS/shared initialization. Actual EL1/MMU and stack-bound checks.
+
+### INV-BOOT-PUBLISH
+
+**Preconditions and verification:** CPU0 publishes READY, cleans linked RAM and root tables to PoC using the Cortex-A57 cache line, completes DSB SY before CPU_ON. CPU1 enables that root before acquiring shared publication. Both profile boots; coherent-platform pin does not prove arbitrary hardware coherence.
+
+### INV-CPUON
+
+**Preconditions and verification:** Validated DTB SMC conduit, CPU affinity and aligned native entry/root. SMCCC x0-x3 clobbers declared, PSCI result checked. CPU_OFF follows quiescence; CPU0 also checks AFFINITY_INFO.
+
+### INV-PERCPU
+
+**Preconditions and verification:** MPIDR matches the immutable affinity table. Stack pointer is observed only; mutable state and probes use per-CPU atomics. Distinct ID/stack and independent timer/fault tests.
+
+### INV-GIC-AFFINITY and INV-SGI
+
+**Preconditions and verification:** Bounded validated MMIO region, GICR_TYPER match, checked SGI target bits. Publication before SGI and exact acknowledged INTID for EOI. Repeated bidirectional IPIs and timers.
+
+### INV-SHOOTDOWN and INV-REMOTE-READER
+
+**Preconditions and verification:** Remote tests retain borrowed Mapping/Frame until completion or acknowledged retirement; raw submission is an unsafe test API. Reader admission is excluded during retirement. IRQ only publishes generation. Ordinary quiescence, local TLBI, DSB/ISB and release acknowledgement precede reclaim. Retained charge protects forgotten guards. Delayed-reader, premature-release, omitted-ACK and omitted-TLBI controls.
+
+New assembly and unsafe Rust remain in target/kernel/unsafe-audit.json; machine counts are inventory, not proof.
+
 ## Limits
 
-This register documents local proof obligations and observed tests. It does not establish hardware correctness, all malformed-firmware cases or SMP safety. Boot firmware, toolchain, emulator and generated instructions remain trust boundaries. Adding a CPU invalidates single-owner assumptions and requires [SMP review](smp.md). No unsafe is justified by performance alone; the [method gate](../architecture/implementation-review.md) applies before acceptance.
+This register documents local proof obligations and observed tests. It does not establish hardware correctness, all malformed-firmware cases or SMP safety. Boot firmware, toolchain, emulator and generated instructions remain trust boundaries. The [SMP contract](smp.md) limits participation to two CPUs and explicitly retained readers. No unsafe is justified by performance alone; the [method gate](../architecture/implementation-review.md) applies before acceptance.

@@ -1,6 +1,6 @@
 [workspace]
-members = ["crates/repository-checks", "crates/native-protocol-model", "crates/native-state-models", "crates/kernel-core", "crates/kernel", "crates/xtask"]
-default-members = ["crates/repository-checks", "crates/native-protocol-model", "crates/native-state-models", "crates/kernel-core", "crates/xtask"]
+members = ["crates/repository-checks", "crates/native-protocol-model", "crates/native-state-models", "crates/kernel-core", "crates/kernel", "crates/xtask", "crates/routing", "crates/window-compat"]
+default-members = ["crates/repository-checks", "crates/native-protocol-model", "crates/native-state-models", "crates/kernel-core", "crates/xtask", "crates/routing", "crates/window-compat"]
 resolver = "3"
 
 [profile.dev]

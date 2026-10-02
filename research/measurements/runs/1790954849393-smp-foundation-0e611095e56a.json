@@ -1,0 +1,728 @@
+{
+  "claim": "TCG timer observations; not proof of fastest algorithm or hardware throughput",
+  "correctness": {
+    "matrix": "passed",
+    "negative_host_controls": 4,
+    "tests_per_profile": 39
+  },
+  "git_commit": "a9371e7b81d6d6befc725572d9b9c697e998a14c",
+  "label": "smp-foundation",
+  "method_review": "docs/architecture/implementation-review.md",
+  "profiles": {
+    "dev": {
+      "boot_build": {
+        "artifact": "target/kernel/dev-boot.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 1712456,
+        "features": ["diagnostics"],
+        "load_bytes": 114639,
+        "memory_bytes": 1199983,
+        "sha256": "a1d234a2b72f61da5f1c981b68c6f32c99d9171c98b145b50c453f2f36ac366f",
+        "target": "aarch64-unknown-none"
+      },
+      "measurement": {
+        "event": "measurement",
+        "frequency": 62500000,
+        "iterations": 64,
+        "median": 31,
+        "p95": 38,
+        "p99": 38,
+        "samples": [
+          31, 32, 38, 31, 37, 31, 31, 38, 31, 32, 38, 25, 31, 32, 31, 31, 31,
+          32, 31, 37, 38, 32, 25, 25, 32, 31, 31, 31, 32, 31, 31, 31, 32, 31,
+          25, 32, 31, 31, 31, 32, 31, 31, 31, 32, 31, 31, 31, 32, 31, 31, 31,
+          32, 31, 31, 31, 32, 25, 31, 32, 31, 31, 31, 32, 31
+        ],
+        "scope": "lock_uncontended",
+        "units": "timer_ticks",
+        "warmup": 8
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "fe8876ecfef3993f9a7fcc1f84f0232db9b533e7a6d5e4b8eae586ed4300ea9f",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "test_build": {
+        "artifact": "target/kernel/dev-tests.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 1928632,
+        "features": ["diagnostics", "kernel-tests"],
+        "load_bytes": 169383,
+        "memory_bytes": 1254663,
+        "sha256": "fe8876ecfef3993f9a7fcc1f84f0232db9b533e7a6d5e4b8eae586ed4300ea9f",
+        "target": "aarch64-unknown-none"
+      },
+      "test_events": [
+        {
+          "event": "test",
+          "name": "boot_el1",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "uart_mmio",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "exception_vectors",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_discovery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_allocator",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "allocation_free",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_map",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "invalid_mapping_rejection",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_unmap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "permissions",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "execute_never",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "mmu",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_exclusion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_release",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "monotonic_time",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_masking",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_delivery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "timer_rearm",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "irq_simd_context",
+          "status": "pass"
+        },
+        {
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 64,
+          "median": 31,
+          "p95": 38,
+          "p99": 38,
+          "samples": [
+            31, 32, 38, 31, 37, 31, 31, 38, 31, 32, 38, 25, 31, 32, 31, 31, 31,
+            32, 31, 37, 38, 32, 25, 25, 32, 31, 31, 31, 32, 31, 31, 31, 32, 31,
+            25, 32, 31, 31, 31, 32, 31, 31, 31, 32, 31, 31, 31, 32, 31, 31, 31,
+            32, 31, 31, 31, 32, 25, 31, 32, 31, 31, 31, 32, 31
+          ],
+          "scope": "lock_uncontended",
+          "units": "timer_ticks",
+          "warmup": 8
+        },
+        {
+          "event": "test",
+          "name": "smp_secondary_boot",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_cpu_identity",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_separate_stacks",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_forward",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_reverse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_repeated",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_lock_publication",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_mapping_visible",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_retirement_pending",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_no_premature_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_ack",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_tlb_invalidation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_safe_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_simultaneous_timers",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_percpu_independent",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_orderly_shutdown",
+          "status": "pass"
+        },
+        {
+          "event": "suite",
+          "status": "pass",
+          "tests": 39
+        }
+      ]
+    },
+    "prod": {
+      "boot_build": {
+        "artifact": "target/kernel/prod-boot.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 317664,
+        "features": [],
+        "load_bytes": 46736,
+        "memory_bytes": 1127984,
+        "sha256": "83a43db31cd5d83d5c9cf5cbe937c62a072672920239bf243652ea1b030748dc",
+        "target": "aarch64-unknown-none"
+      },
+      "measurement": {
+        "event": "measurement",
+        "frequency": 62500000,
+        "iterations": 64,
+        "median": 6,
+        "p95": 7,
+        "p99": 7,
+        "samples": [
+          0, 7, 0, 6, 0, 6, 0, 6, 0, 7, 0, 6, 0, 6, 7, 6, 6, 7, 6, 6, 6, 6, 7,
+          6, 6, 7, 6, 6, 6, 6, 7, 6, 6, 7, 6, 6, 6, 6, 7, 6, 6, 6, 0, 6, 0, 7,
+          0, 6, 0, 6, 0, 6, 0, 7, 0, 6, 6, 6, 7, 6, 6, 7, 6, 6
+        ],
+        "scope": "lock_uncontended",
+        "units": "timer_ticks",
+        "warmup": 8
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "a74702fddf89261d0cd0247756f8b7df7abd3cfab833944533300b2ba8df7696",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "test_build": {
+        "artifact": "target/kernel/prod-tests.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 461112,
+        "features": ["kernel-tests"],
+        "load_bytes": 76980,
+        "memory_bytes": 1158164,
+        "sha256": "a74702fddf89261d0cd0247756f8b7df7abd3cfab833944533300b2ba8df7696",
+        "target": "aarch64-unknown-none"
+      },
+      "test_events": [
+        {
+          "event": "test",
+          "name": "boot_el1",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "uart_mmio",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "exception_vectors",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_discovery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_allocator",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "allocation_free",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_map",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "invalid_mapping_rejection",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_unmap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "permissions",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "execute_never",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "mmu",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_exclusion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_release",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "monotonic_time",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_masking",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_delivery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "timer_rearm",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "irq_simd_context",
+          "status": "pass"
+        },
+        {
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 64,
+          "median": 6,
+          "p95": 7,
+          "p99": 7,
+          "samples": [
+            0, 7, 0, 6, 0, 6, 0, 6, 0, 7, 0, 6, 0, 6, 7, 6, 6, 7, 6, 6, 6, 6, 7,
+            6, 6, 7, 6, 6, 6, 6, 7, 6, 6, 7, 6, 6, 6, 6, 7, 6, 6, 6, 0, 6, 0, 7,
+            0, 6, 0, 6, 0, 6, 0, 7, 0, 6, 6, 6, 7, 6, 6, 7, 6, 6
+          ],
+          "scope": "lock_uncontended",
+          "units": "timer_ticks",
+          "warmup": 8
+        },
+        {
+          "event": "test",
+          "name": "smp_secondary_boot",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_cpu_identity",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_separate_stacks",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_forward",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_reverse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_repeated",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_lock_publication",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_mapping_visible",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_retirement_pending",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_no_premature_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_ack",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_tlb_invalidation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_safe_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_simultaneous_timers",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_percpu_independent",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_orderly_shutdown",
+          "status": "pass"
+        },
+        {
+          "event": "suite",
+          "status": "pass",
+          "tests": 39
+        }
+      ]
+    }
+  },
+  "schema_version": 1,
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "e35e55e9077cff48f3f29cab6f30f27a0c6f3eee552b2acb7de3b111b62826c2"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "c491ca44dd68e9795e5db25e7a6e495843efc9ee6a2655bb10373eccd1f73ebb"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "140bf272617cf80981a571afb07ad1841e608567000549d2e1ab202273246e7a"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "804601354bc33d45a004c471e7760f2a3e48ed65b7983b739a6913744aed73d4"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "62b98396e16306a9cbadc0b59cad2a974e331d90586795ab32b9d13a53665e04"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "07fb7fba9d0efa26f94573a17fa23fcb715217626111222f7c469ffed483afcd"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "95821ed40e8cb91b2f4710d42b31de2a1b610763d0c59c6fe8c83315c9397c53"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "e2308ec82f764fd0642334208e3872eedf3ddf9df986de24ee90959d6789bb91"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "76774e33d58415fb178c36235e58c929ee5a6a9bae290eb9aa4f583ad33610f6"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "54a18d703a69a2797573d952b23f341add8f26ac49d5a9f3b9dbc2601a54f8b4"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "19f5fed625c37948e7500bf505a9980a45fdb9bb2bff07c04af2232be6a7740c"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "a8adf2e8c936fb0a3b3b95897751766e33d109bf48a8a13d669b1be452b5660d"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "e09e6cddcf7d4aff47037a82563424e62fcb2df40a06345d2c7ddf3b3c2c3a1d"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "b66546736f7f9a248fb78a6be2047371da9e2e922fb379a80b92a3603cc6e946"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "4e9c055643a8996a309cfb79f58b7b0e88e944b68f2267d10e4433bdab526ab8"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "8f15cb396ac58afa6e2adbb730719132e77519bd4dd481476269b5780f904d15"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "29a3a3a1b5438648fb315f01779d94d3522c965ab0e5d9a2247c935d7d1db180"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "0da518b1b8c47ee49c4b37351cc613c9b6600fe04e756fb34af8b7081e4ee69e"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "90b5d368c945c30444a92595acded6b429eb661b8784c75db059a02b5236dd7e"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "5b69f2220e2e40b45f46ff099462797eaf592064e1b37390afeca4c898e89b78"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "6bd4fba657720cfd058f0a50b4ba5b93b74f06e5fe295b17a49caf9761b538fe"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "62e31f306f020bea549017b050a9376745f25c452488662b6be880ae32a9d591"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "c847bf906341111e8cc65600ad07e9707472e2d802da6c4602711045b65a405b"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "ca0d974fda70e55c08e32d46ee1740833fc01f4fdfd7c8b41bdd06c4a5488c71"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "b47a7e2f2a3ea54f342ad9ca1ce1569865e7d30161f6616c06caa0478936a084"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    }
+  ],
+  "timestamp_unix_ms": 1790954849393,
+  "worktree_dirty": true
+}

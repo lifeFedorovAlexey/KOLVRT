@@ -14,6 +14,7 @@ SECTIONS {
  .bss (NOLOAD) : { *(.bss .bss.*) *(COMMON) }
  . = ALIGN(PAGE_BYTES); __bss_end = .;
  .stack (NOLOAD) : { . += KERNEL_STACK_BYTES; __stack_top = .; }
+ .secondary_stack (NOLOAD) : { __secondary_stack_bottom = .; . += KERNEL_STACK_BYTES; __secondary_stack_top = .; }
  . = ALIGN(PAGE_BYTES); __kernel_end = .;
  /DISCARD/ : { *(.eh_frame*) *(.comment*) }
 }

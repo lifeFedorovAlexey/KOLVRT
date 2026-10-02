@@ -1,17 +1,17 @@
 # First platform contract
 
-The design target is AArch64 EL1 with EL0 tasks, little-endian data, 4 KiB translation granules and two processors. CPU state and page-table permissions separate privileged code from tasks; writable pages are non-executable and executable pages are not writable. User faults terminate the task; privileged faults halt rather than resume unknown state. The current [kernel foundation](../kernel/boot.md) implements EL1 on CPU0; EL0 tasks and secondary CPU activation remain later obligations.
+The design target is AArch64 EL1 with EL0 tasks, little-endian data, 4 KiB translation granules and two processors. CPU state and page-table permissions separate privileged code from tasks; writable pages are non-executable and executable pages are not writable. User faults terminate the task; privileged faults halt rather than resume unknown state. The current [kernel foundation](../kernel/boot.md) implements EL1 on both CPUs; EL0 tasks remain a later obligation.
 
 ## Reproducible target
 
-| Item                | Selected baseline                                               | Verification                                          |
-| ------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
-| Compiler            | Rust 1.99.0, commit b940084d7eb6a299eb4bfeb8e34901bc051e7ac4    | Installed and executed                                |
-| Compiler backend    | LLVM 23.1.1 bundled with that compiler                          | Reported by rustc -vV                                 |
-| Target              | aarch64-unknown-none                                            | Candidate no_std protocol checked successfully        |
-| Linker              | rust-lld bundled with the same pinned compiler                  | DEV and PROD ELF linked and booted                    |
-| Emulator design pin | QEMU 10.1.0, virt-10.1, cortex-a57, TCG, 2 CPUs, 256 MiB, GICv3 | Installed; one active CPU; real kernel tests executed |
-| Optional devices    | No PCIe, disk, network or DMA consumer in the first slice       | Activate only with a device contract and tests        |
+| Item                | Selected baseline                                               | Verification                                           |
+| ------------------- | --------------------------------------------------------------- | ------------------------------------------------------ |
+| Compiler            | Rust 1.99.0, commit b940084d7eb6a299eb4bfeb8e34901bc051e7ac4    | Installed and executed                                 |
+| Compiler backend    | LLVM 23.1.1 bundled with that compiler                          | Reported by rustc -vV                                  |
+| Target              | aarch64-unknown-none                                            | Candidate no_std protocol checked successfully         |
+| Linker              | rust-lld bundled with the same pinned compiler                  | DEV and PROD ELF linked and booted                     |
+| Emulator design pin | QEMU 10.1.0, virt-10.1, cortex-a57, TCG, 2 CPUs, 256 MiB, GICv3 | Installed; two active CPUs; real kernel tests executed |
+| Optional devices    | No PCIe, disk, network or DMA consumer in the first slice       | Activate only with a device contract and tests         |
 
 The emulator pin is a reproducible design reference, not a recommendation for exposing an old emulator to hostile guest code. Before execution, verify the selected binary's provenance and compatibility or explicitly revise the pin. Do not silently substitute `virt`, `max`, host acceleration or another version. Setup checks the pinned Windows archive SHA-512; [kernel testing](../kernel/testing.md) records full version, arguments and ELF digests. Hardware execution remains unverified.
 

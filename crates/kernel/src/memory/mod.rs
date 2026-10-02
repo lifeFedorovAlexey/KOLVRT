@@ -61,9 +61,11 @@ pub fn kernel_bounds() -> (usize, usize) {
 pub struct Physical {
     pool: Pool<{ config::PHYSICAL_BITMAP_WORDS }>,
     base: usize,
+    owner: core::marker::PhantomData<*mut ()>,
 }
 impl Physical {
     pub fn new(d: &Description) -> Self {
+        crate::percpu::primary_only();
         assert!(
             PHYSICAL_OWNER
                 .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
@@ -73,6 +75,7 @@ impl Physical {
         let mut p = Self {
             pool: Pool::empty(),
             base: d.ram.base as usize,
+            owner: core::marker::PhantomData,
         };
         p.pool.initialize(d.ram.size as usize / PAGE_SIZE).unwrap();
         let (_, end) = kernel_bounds();
@@ -92,17 +95,24 @@ impl Physical {
         self.pool.reserve(first, end - first).unwrap();
     }
     pub fn allocate(&mut self, count: usize, align: usize) -> Option<Frame> {
+        crate::percpu::primary_only();
         self.pool.allocate(count, align).ok().map(|i| {
             let address = self.base + i * PAGE_SIZE;
-            // SAFETY: INV-FRAME: exclusively claimed ordinary RAM, outside reserved regions; no published mapping or IRQ reader.
+            // SAFETY: INV-FRAME: CPU0-only allocation, exclusively claimed RAM; prior retirement acknowledged before pool reuse, no IRQ reader.
             unsafe {
                 core::ptr::write_bytes(address as *mut u8, 0, count * PAGE_SIZE);
             }
-            Frame { address, count }
+            Frame {
+                address,
+                count,
+                owner: core::marker::PhantomData,
+            }
         })
     }
     /// Consumes ownership only after the caller has unmapped and invalidated all aliases.
     pub fn release(&mut self, frame: Frame) {
+        crate::percpu::primary_only();
+        assert!(self.reclaimable(&frame), "retiring frame release");
         let t = TABLES.lock();
         assert!(
             !t.test_pages
@@ -121,10 +131,16 @@ impl Physical {
     pub fn available(&self) -> usize {
         self.pool.available()
     }
+    pub fn reclaimable(&self, frame: &Frame) -> bool {
+        let retiring = RETIRING_FRAME.load(Ordering::Acquire);
+        retiring == 0
+            || !(frame.address..frame.address + frame.count * PAGE_SIZE).contains(&retiring)
+    }
 }
 pub struct Frame {
     address: usize,
     count: usize,
+    owner: core::marker::PhantomData<*mut ()>,
 }
 impl Frame {
     #[cfg(feature = "kernel-tests")]
@@ -133,6 +149,7 @@ impl Frame {
     }
 }
 pub fn initialize_mmu(d: &Description) {
+    crate::percpu::primary_only();
     RAM_START.store(d.ram.base as usize, Ordering::Release);
     RAM_END.store(d.ram.end().unwrap() as usize, Ordering::Release);
     let mut t = TABLES.lock();
@@ -166,6 +183,16 @@ pub fn initialize_mmu(d: &Description) {
     }
     cpu::enable_mmu(&raw const t.root as u64);
 }
+pub fn table_root() -> u64 {
+    crate::percpu::primary_only();
+    let t = TABLES.lock();
+    &raw const t.root as u64
+}
+static RETIRING_FRAME: AtomicUsize = AtomicUsize::new(0);
+#[cfg(feature = "kernel-tests")]
+pub fn retirement_pending() -> bool {
+    RETIRING_FRAME.load(Ordering::Acquire) != 0
+}
 pub struct Mapping<'a> {
     frame: &'a Frame,
     index: usize,
@@ -177,7 +204,11 @@ pub fn map(
     writable: bool,
     executable: bool,
 ) -> Result<Mapping<'_>, kernel_core::memory::Error> {
+    crate::percpu::primary_only();
     let pa = frame.address;
+    if RETIRING_FRAME.load(Ordering::Acquire) != 0 {
+        return Err(kernel_core::memory::Error::Occupied);
+    }
     let descriptor = cpu::page::descriptor(pa as u64, writable, executable)?;
     let (start, end) = kernel_bounds();
     if !(RAM_START.load(Ordering::Acquire)..RAM_END.load(Ordering::Acquire)).contains(&pa)
@@ -194,29 +225,39 @@ pub fn map(
         return Err(kernel_core::memory::Error::Occupied);
     }
     t.test_pages.0[index] = descriptor;
-    cpu::invalidate();
+    drop(t);
+    let generation = crate::smp::request_invalidation();
+    crate::smp::finish_invalidation(generation);
     Ok(Mapping {
         frame,
         index,
         writable,
     })
 }
-impl Mapping<'_> {
+impl<'a> Mapping<'a> {
     pub fn address(&self) -> usize {
         DYNAMIC_BASE + self.index * PAGE_SIZE
     }
     pub fn unmap(self) {
-        drop(self);
+        drop(self.retire());
+    }
+    pub fn retire(self) -> Retirement<'a> {
+        let frame = self.frame;
+        let index = self.index;
+        core::mem::forget(self);
+        retire_mapping(frame, index)
     }
     pub fn read_word(&self) -> u64 {
-        // SAFETY: INV-FRAME: owned initialized RAM, mapping retained by guard; no other active CPU or IRQ accesses it.
+        crate::percpu::primary_only();
+        // SAFETY: INV-FRAME: CPU0 access through retained guard; remote immutable reader is explicitly coordinated, IRQ never accesses mappings.
         unsafe { core::ptr::read_volatile(self.address() as *const u64) }
     }
     pub fn write_word(&mut self, value: u64) -> Result<(), kernel_core::memory::Error> {
+        crate::percpu::primary_only();
         if !self.writable {
             return Err(kernel_core::memory::Error::Invalid);
         }
-        // SAFETY: INV-FRAME: retained writable aligned mapping, single CPU; volatile access creates no borrowed alias.
+        // SAFETY: INV-FRAME: CPU0-owned write; caller must complete before publishing a remote read; no shared mutable Rust alias or IRQ access.
         unsafe {
             core::ptr::write_volatile(self.address() as *mut u64, value);
         }
@@ -225,13 +266,40 @@ impl Mapping<'_> {
 }
 impl Drop for Mapping<'_> {
     fn drop(&mut self) {
-        let mut t = TABLES.lock();
-        assert_eq!(
-            t.test_pages.0[self.index] & page::OUTPUT_ADDRESS_MASK,
-            self.frame.address as u64
-        );
-        t.test_pages.0[self.index] = 0;
-        cpu::invalidate();
+        drop(retire_mapping(self.frame, self.index));
+    }
+}
+fn retire_mapping(frame: &Frame, index: usize) -> Retirement<'_> {
+    crate::percpu::primary_only();
+    assert_eq!(
+        RETIRING_FRAME.compare_exchange(0, frame.address, Ordering::AcqRel, Ordering::Acquire),
+        Ok(0),
+        "one pending frame retirement"
+    );
+    let mut t = TABLES.lock();
+    assert_eq!(
+        t.test_pages.0[index] & page::OUTPUT_ADDRESS_MASK,
+        frame.address as u64
+    );
+    t.test_pages.0[index] = 0;
+    drop(t);
+    let generation = crate::smp::request_invalidation();
+    Retirement { frame, generation }
+}
+pub struct Retirement<'a> {
+    frame: &'a Frame,
+    generation: u64,
+}
+impl Retirement<'_> {
+    #[cfg(feature = "kernel-tests")]
+    pub fn acknowledged(&self) -> bool {
+        crate::smp::acknowledged(self.generation)
+    }
+}
+impl Drop for Retirement<'_> {
+    fn drop(&mut self) {
+        crate::smp::finish_invalidation(self.generation);
+        assert_eq!(RETIRING_FRAME.swap(0, Ordering::AcqRel), self.frame.address);
     }
 }
 static HEAP_BASE: AtomicUsize = AtomicUsize::new(0);

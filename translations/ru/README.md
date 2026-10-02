@@ -1,34 +1,539 @@
 # KOLVRT
 
-**Kernel Outside Legacy, Versioned Routing & Translation** — исследовательский проект операционной системы с приоритетом ARM64 и первоначальной реализацией на Rust. Нулевой этап определяет проверенную собственную проектную основу и свидетельства для первого сквозного сценария. **Самостоятельное ядро EL1 теперь загружается и тестируется в QEMU; активен один CPU.**
+## Kernel Outside Legacy, Versioned Routing & Translation
 
-Ядро не должно подстраиваться под наследуемые системы. Совместимость с ними должна подстраиваться под ядро. KOLVRT определяет собственную модель объектов, полномочий, времени жизни и исполнения. Внешние системы служат материалом для исследования механизмов отказа, а не требованиями продукта или архитектурами для наследования. Возможность должна продвигать конкретную нагрузку KOLVRT, обязательство правильности или потребность платформы; популярность и выживание не доказывают пригодность.
+> **Legacy может работать. Оно не определяет устройство ядра.**
 
-- [Ревью нулевого этапа](docs/research/phase-0-review.md), [первый собственный сценарий](docs/architecture/first-native-slice.md), [структура репозитория](docs/project-structure.md).
-- [Загрузка ядра](docs/kernel/boot.md), [проверки ядра](docs/kernel/testing.md), [ревью методов](docs/architecture/implementation-review.md), [unsafe-инварианты](docs/kernel/unsafe.md).
-- [Замысел](docs/vision.md), [законы ядра](docs/architecture/kernel-laws.md), [пересмотр законов](docs/architecture/law-review.md).
-- [Собственная модель](docs/architecture/native-model.md), [совместимость](docs/architecture/compatibility-model.md), [маршрутизация](docs/architecture/routing-model.md).
-- [Профили исполнения](docs/architecture/execution-profiles.md), [политика безопасности Rust](docs/architecture/unsafe-policy.md).
-- [Измерения производительности](docs/architecture/benchmarking.md), [диагностика](docs/architecture/diagnostics.md).
-- [Указатель случаев](docs/research/case-index.md), [исследовательские записи](docs/research/case-database.md).
-- [Архитектурные решения](docs/architecture-decisions/README.md), [другие системы](docs/research/reference-systems.md).
-- [Метод исследования](docs/research/research-method.md), [охват](docs/research/reference-coverage.md), [источники](docs/research/source-ledger.md).
-- [Открытые вопросы](docs/research/open-questions.md), [план этапа 0.2](docs/research/phase-0-2.md).
-- [Отчёт этапа 0.1](docs/research/phase-0-1-report.md), [документация и переводы](docs/documentation-policy.md).
+KOLVRT — **ядро операционной системы на Rust с ARM64 как основной платформой**.
 
-Дата исследования: **2026-10-02**. Неизвестные вводящие изменения и даты обозначены явно. Документальные выводы не являются воспроизведёнными ошибками. Записи моделей Phase 0 остаются проектными свидетельствами; текущие запуски ядра генерируются xtask.
+Проект начинается с намеренно неудобного вопроса:
 
-## Проверки
+**Как выглядело бы современное ядро, если бы десятилетия исторического поведения перестали считаться вечным архитектурным законом?**
 
-Установить закреплённый инструментарий Rust через rustup и Node.js 18 или новее, затем выполнить из корня репозитория:
+KOLVRT не является форком Linux.
+
+Это не Linux, переписанный на Rust.
+
+Это не попытка повторить внутреннее устройство Linux с более безопасным синтаксисом.
+
+Linux и другие зрелые ОС используются как **свидетельства**: десятилетия ошибок, регрессий, hardware quirks, удачных идей, неудачных абстракций и решений совместимости, которые стоит изучить.
+
+Затем KOLVRT принимает собственное решение.
+
+**Ядро остаётся чистым. Совместимость адаптируется вокруг него.**
+
+---
+
+## Идея
+
+Традиционная совместимость обычно накапливается внутри:
 
 ```text
-npm ci --ignore-scripts
-npm run check
+old software
+     │
+     ▼
+special case
+     │
+     ▼
+another special case
+     │
+     ▼
+kernel
 ```
 
-Для первой сборки требуется загрузить зависимости. Сама проверка работает без сети и никогда не загружает и не запускает средства воспроизведения уязвимостей. [Форматирование и участие](CONTRIBUTING.md), отдельные команды и порядок проверки переводов описаны в [инструкции инструментария](crates/repository-checks/README.md).
+KOLVRT намерен вынести её наружу:
 
-Запустите `cargo xtask test` после настройки платформы, описанной выше. SMP, scheduler, userspace и compatibility не начинаются автоматически. Лицензия проекта ещё не выбрана; сторонние материалы сохраняют исходные лицензии.
+```text
+                         ┌───────────────┐
+legacy software ───────► │ compat v1/v2  │ ──────┐
+                         └───────────────┘       │
+                                                 ▼
+native software ─────────────────────────► Native API
+                                                 │
+                                                 ▼
+                                          ┌────────────┐
+                                          │   KOLVRT   │
+                                          │   kernel   │
+                                          └────────────┘
+```
 
-[Английский оригинал](../../README.md)
+Если старому ПО нужно старое поведение, ему место в **версионированном слое совместимости**.
+
+Если ядро когда-то предоставило ошибочное поведение и ПО стало от него зависеть, native поведение исправляется. Совместимость с ошибкой находится вне native core.
+
+Постоянный шрам не нужен лишь потому, что кто-то когда-то зависел от раны.
+
+---
+
+## Зачем это существует
+
+KOLVRT строится вокруг нескольких намеренно строгих идей:
+
+- **Native поведение является источником истины.**
+- **Legacy semantics не относятся к native kernel API.**
+- **Совместимость явная, версионированная и удаляемая.**
+- **Разные приложения, драйверы и подсистемы могут одновременно использовать разные routes.**
+- **Стоимость совместимости должна быть измерима.**
+- **Старое поведение сохраняется лишь там, где оно кому-то требуется.**
+- **Ошибки ядра исправляются, а не превращаются в вечную архитектуру.**
+- **Предпочтителен safe Rust; `unsafe` — аудируемая граница, а не удобство.**
+- **ARM64 имеет Tier 1.**
+- **Другие ОС — источники для исследования, а не готовые схемы.**
+
+Или короче:
+
+> **Не переделывайте ядро под ошибочные предположения. Переводите предположения.**
+
+---
+
+## Текущее состояние
+
+KOLVRT уже загружается как native AArch64 kernel в QEMU.
+
+| Область                            | Статус                                            |
+| ---------------------------------- | ------------------------------------------------- |
+| Rust `no_std` ядро                 | ✅                                                |
+| AArch64 / ARM64                    | ✅ Tier 1                                         |
+| Загрузка QEMU `virt`               | ✅                                                |
+| Исполнение EL1                     | ✅                                                |
+| Проверка Device Tree               | ✅                                                |
+| PL011 UART                         | ✅                                                |
+| Векторы исключений                 | ✅                                                |
+| Physical memory allocator          | ✅                                                |
+| Page tables / MMU                  | ✅                                                |
+| W^X mappings                       | ✅                                                |
+| Kernel heap                        | ✅                                                |
+| GICv3                              | ✅ Оба CPU                                        |
+| ARM physical timer IRQ             | ✅                                                |
+| DEV / PROD профили                 | ✅                                                |
+| Автоматический kernel test harness | ✅                                                |
+| Настоящие in-kernel tests          | ✅ 39 в каждом профиле                            |
+| Negative failure controls          | ✅                                                |
+| Отладка GDB                        | ✅                                                |
+| SMP                                | ✅ Основа двух CPU в QEMU                         |
+| EL0 / userspace                    | ⏳                                                |
+| Scheduler                          | ⏳                                                |
+| Runtime versioned routing          | 🧪 Архитектура определена, не подключена к kernel |
+| Linux compatibility                | ⏳ Не начата                                      |
+
+Оба настроенных CPU исполняют native EL1 code. QEMU matrix проверяет secondary boot, per-CPU ownership, двусторонние IPI, подтверждённый remote TLB retirement и multicore shutdown. Настоящее hardware остаётся непроверенным.
+
+---
+
+## Что дальше
+
+Порядок разработки выбран намеренно:
+
+```text
+Native ARM64 kernel foundation        ✅
+        │
+        ▼
+SMP correctness foundation            ✅
+        │
+        ▼
+EL0 + address spaces
+        │
+        ▼
+Scheduler + context switching
+        │
+        ▼
+Native userspace
+        │
+        ▼
+Versioned Routing & Translation
+        │
+        ▼
+Compatibility personalities
+        │
+        ▼
+Linux ABI compatibility where useful
+```
+
+Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
+
+Сначала native execution model. Следующий разрешённый milestone — Phase 2 routing integration после review сохранённого groundwork; долгосрочная схема не разрешает автоматически начинать EL0 или scheduler.
+
+---
+
+## Versioned Routing & Translation
+
+Долгосрочная модель — **не**:
+
+```text
+SYSTEM = NATIVE
+```
+
+или:
+
+```text
+SYSTEM = COMPAT
+```
+
+Routing должен иметь точную область действия.
+
+Например:
+
+```text
+Browser
+├── memory          → native
+├── filesystem      → native
+├── networking      → native
+└── old_sync_api    → compat-v2
+
+Database
+└── everything      → native
+
+Old driver
+└── device API      → compat-v1
+
+New driver
+└── device API      → native
+```
+
+Native и compatibility consumers могут сосуществовать.
+
+Совместимость не становится свойством всей операционной системы.
+
+---
+
+## Совместимость имеет стоимость. Измеряйте её
+
+KOLVRT не намерен искусственно замедлять совместимость.
+
+Это было бы обманом.
+
+Diagnostic builds должны показывать **настоящую стоимость** translation. Следующие layout и числа служат лишь иллюстрацией; это не результаты измерений:
+
+```text
+Component: example-driver
+
+Route: COMPAT v2
+
+Calls                  1,842,991
+Translations             291,440
+Extra copies              18,202
+
+                COMPAT       NATIVE
+median latency   14.2 µs      9.1 µs
+p99              31.8 µs     19.7 µs
+CPU               3.8 %       2.9 %
+memory           18.4 MB      14.1 MB
+```
+
+Если native быстрее, разработчик видит, что даёт миграция.
+
+Если compatibility быстрее, **это повод исследовать performance bug native path**.
+
+Без искусственных штрафов.
+
+Без маркетинговых benchmarks.
+
+Без сокрытия неудобных чисел.
+
+---
+
+## DEV и PROD решают разные задачи
+
+KOLVRT проектируется с двумя execution profiles.
+
+### DEV / DIAGNOSTIC
+
+Для исследования:
+
+- проверки invariants
+- подробные свидетельства panic
+- tracing
+- учёт compatibility
+- исследование routes
+- A/B measurements
+- fault injection
+- аудит unsafe boundaries
+- performance counters
+
+### PROD
+
+Для исполнения уже проверенной configuration:
+
+- release optimization
+- без экспериментального route switching
+- без ненужной diagnostic instrumentation
+- только необходимые compatibility modules
+- предопределённый routing
+- минимальный runtime overhead
+
+Это **не отдельные ядра**.
+
+Одна архитектура должна работать в обоих режимах.
+
+---
+
+## Linux — источник исследования, а не религия
+
+KOLVRT ведёт структурированную базу реальных механизмов отказа ОС.
+
+Проект изучает:
+
+- регрессии Linux kernel
+- ограничения ABI
+- историческое поведение, ставшее требованием совместимости
+- нарушения memory safety
+- ошибки concurrency
+- сложность driver model
+- hardware quirks
+- security fixes
+- находки syzkaller / syzbot
+- устаревшие и выведенные из использования interfaces
+- проектные решения других ОС
+
+Каждый интересный случай должен в итоге ответить:
+
+```text
+Что произошло?
+Почему это произошло?
+Было ли это ошибкой?
+Какие ограничения существовали тогда?
+Сохраняются ли эти ограничения?
+Что сделал бы KOLVRT?
+Относится ли это к native behavior?
+Относится ли это к compatibility?
+Нужно ли это вообще?
+```
+
+Выживание свидетельствует, что что-то работало.
+
+Это **не свидетельство того, что это нужно копировать**.
+
+---
+
+## Законы ядра
+
+Архитектура KOLVRT ограничена явными **Kernel Laws**.
+
+Они не дают архитектуре постепенно деградировать до набора разумных исключений.
+
+Примеры принципов:
+
+```text
+Native semantics не должны зависеть от compatibility semantics.
+
+Compatibility должна удаляться без нарушения native execution.
+
+Unsafe code должен иметь явный invariant.
+
+Наблюдаемое legacy behavior не становится native specification автоматически.
+
+Hardware quirks не должны молча становиться общей архитектурой.
+
+Compatibility requirement должен назвать своего consumer.
+
+Заявления performance требуют измерений.
+```
+
+Полные нормативные правила находятся здесь:
+
+[`docs/architecture/kernel-laws.md`](docs/architecture/kernel-laws.md)
+
+---
+
+## Unsafe требует объяснения
+
+Разработка ядра неизбежно пересекает границы, которые Rust не может доказать.
+
+KOLVRT не утверждает обратного.
+
+Каждая необходимая `unsafe` boundary должна ответить:
+
+```text
+Почему здесь нужен unsafe?
+Какой invariant обеспечивает корректность?
+Кто устанавливает этот invariant?
+Кто может его нарушить?
+Как это проверяется?
+```
+
+Проект генерирует unsafe inventory в составе kernel verification.
+
+См.:
+
+[`docs/kernel/unsafe.md`](docs/kernel/unsafe.md)
+
+---
+
+## Быстрый старт
+
+### Требования
+
+Текущая основа разработки:
+
+- Rust **1.99.0**
+- target `aarch64-unknown-none`
+- `rustfmt`
+- `clippy`
+- Node.js **18+**
+- QEMU **10.1.0**
+- 7-Zip на Windows для автоматической настройки QEMU
+
+### Настройка Windows
+
+```powershell
+rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
+rustup target add aarch64-unknown-none --toolchain 1.99.0
+
+./scripts/setup-qemu.ps1
+
+npm ci --ignore-scripts
+npm run check
+cargo xtask test
+```
+
+### Запуск матрицы проверок
+
+```bash
+cargo xtask test
+```
+
+Test command собирает и запускает настоящие AArch64 kernel images в QEMU.
+
+Отсутствие event, panic, fatal exception, ошибка emulator или timeout завершают host command ошибкой.
+
+### Отладка с GDB
+
+```bash
+cargo xtask debug
+```
+
+Затем:
+
+```text
+aarch64-none-elf-gdb target/kernel/dev-boot.elf
+
+(gdb) target remote 127.0.0.1:1234
+(gdb) break kernel_main
+(gdb) continue
+(gdb) info registers
+(gdb) bt
+```
+
+---
+
+## Тесты должны обнаруживать ошибки ядра
+
+Текущая матрица выполняет **39 настоящих kernel tests в DEV и PROD test profiles**.
+
+Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
+
+Это различие существенно.
+
+Зелёный test suite, не обнаруживающий намеренно внесённую ошибку, — украшение.
+
+Tests KOLVRT проверяют настоящее kernel behavior: allocation, mapping, memory access, unmapping, freeing, exception paths и timer delivery.
+
+Генерируемые artifacts включают:
+
+- ELF images
+- SHA-256 hashes
+- UART logs
+- structured test events
+- аргументы и версию QEMU
+- отчёты build size
+- отчёты features
+- unsafe inventory
+- measurement samples
+
+---
+
+## Структура репозитория
+
+```text
+.
+├── crates/          Rust implementation
+├── docs/            architecture and kernel documentation
+├── research/        source-backed OS research and measurements
+├── schemas/         machine-readable research schemas
+├── scripts/         development/bootstrap tooling
+├── translations/    translated project documentation
+└── assets/          project branding
+```
+
+Начните здесь:
+
+- [`Vision`](docs/vision.md)
+- [`Kernel Laws`](docs/architecture/kernel-laws.md)
+- [`Native model`](docs/architecture/native-model.md)
+- [`Compatibility model`](docs/architecture/compatibility-model.md)
+- [`Routing model`](docs/architecture/routing-model.md)
+- [`Kernel boot`](docs/kernel/boot.md)
+- [`Testing`](docs/kernel/testing.md)
+- [`SMP boundary`](docs/kernel/smp.md)
+- [`Unsafe boundaries`](docs/kernel/unsafe.md)
+- [`Architecture decisions`](docs/architecture-decisions/)
+- [`Research`](../../research/)
+
+Русская документация:
+
+[`translations/ru/`](.)
+
+---
+
+## Участие в разработке
+
+KOLVRT находится на раннем этапе.
+
+Архитектурные изменения приветствуются.
+
+Бездоказательные архитектурные заявления — нет.
+
+Предлагая исключение совместимости на уровне kernel, ответьте:
+
+1. Кому нужно это поведение?
+2. Почему оно не может находиться вне native core?
+3. Каков lifetime исключения?
+4. Как измеряется его использование?
+5. Как оно удаляется?
+6. Что защищает native consumers от его стоимости?
+
+Правила formatting, checks и участия описаны здесь:
+
+[`CONTRIBUTING.md`](CONTRIBUTING.md)
+
+---
+
+## Экспериментальность означает экспериментальность
+
+KOLVRT — активно разрабатываемый исследовательский проект ОС.
+
+Это ещё не general-purpose production ОС.
+
+Stable userspace ABI пока отсутствует.
+
+Обещания Linux compatibility пока нет.
+
+Широкая hardware support пока не заявляется.
+
+Заявления должны следовать свидетельствам.
+
+Нереализованные возможности должны быть названы в документации.
+
+Неизмеренные возможности не должны иметь benchmark number.
+
+Без доказательства SMP safety возможность нельзя называть SMP-safe.
+
+---
+
+## Лицензия
+
+Лицензия проекта ещё не выбрана.
+
+Сторонние материалы сохраняют свои лицензии.
+
+---
+
+## Итоговое правило
+
+> **Совместимость разрешена. Legacy изолировано. Native остаётся чистым.**
+
+Или на менее формальном языке проекта:
+
+> **Не плюй в ядро — сам из него пить будешь.**
+
+[English source](../../README.md)

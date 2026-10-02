@@ -56,7 +56,7 @@ _start:
 2:
  cmp x1, x2
  b.hs 3f
- str xzr, [x1], #8
+ str xzr, [x1], #GPR_BYTES
  b 2b
 3:
  mov x1, #CPACR_FPEN_FULL_ACCESS
@@ -65,6 +65,41 @@ _start:
  bl kernel_main
 park:
  wfe
+ b park
+
+// INV-SECONDARY: PSCI context in x0 is the cleaned native table root; no BSS initialization.
+// Dedicated permanent stack; MMU and coherent publication established before shared Rust access.
+.global secondary_entry
+secondary_entry:
+ msr daifset, #DAIF_MASK_ALL
+ mov x19, x0
+ mrs x1, CurrentEL
+ cmp x1, #CURRENT_EL2
+ b.ne 4f
+ mov x1, #HCR_RW_AARCH64
+ msr hcr_el2, x1
+ mov x1, #CNTHCTL_EL1_COUNTER_TIMER_ACCESS
+ msr cnthctl_el2, x1
+ msr cntvoff_el2, xzr
+ mov x1, #ICC_SRE_EL2_SRE_ENABLE
+ msr S3_4_C12_C9_5, x1
+ adr x1, 4f
+ msr elr_el2, x1
+ mov x1, #SPSR_MASKED_EL1H
+ msr spsr_el2, x1
+ eret
+4:
+ mrs x1, CurrentEL
+ cmp x1, #CURRENT_EL1
+ b.ne park
+ msr spsel, #SPSEL_SP_EL1
+ ldr x1, =__secondary_stack_top
+ mov sp, x1
+ mov x1, #CPACR_FPEN_FULL_ACCESS
+ msr cpacr_el1, x1
+ isb
+ mov x0, x19
+ bl secondary_main
  b park
 
 // INV-VECTOR: SP_EL1 aligned 16; preserve GPR, SIMD, FPCR/FPSR; pinned target enables NEON.

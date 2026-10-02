@@ -75,4 +75,6 @@ For changes at these boundaries, maintain the following links and gaps. Existing
 
 Run host checks with `cargo test --locked`, kernel checks with `cargo xtask test`, and documentation checks with `cargo run --locked -p repository-checks -- check`. A passing formatter, source inventory or document checker does not prove these behavioral obligations.
 
+Phase 1.1 adds [multicore checks](docs/kernel/smp.md): bidirectional/repeated IPI, actual shared-lock publication, delayed reader acknowledgement, remote translation fault, guarded retirement/reuse and quiescent CPU_OFF. The [decision](docs/architecture-decisions/0012-multicore-retirement.md) keeps physical ownership explicitly scoped and requires review before adding writers. Host tests do not certify physical weak-memory behavior.
+
 [Russian translation](translations/ru/CONTRIBUTING.md)

@@ -13,7 +13,7 @@ npm run check
 cargo xtask test
 ```
 
-Матрица xtask собирается с locked dependencies, выполняет 23 настоящих kernel tests в каждом профиле и отдельно загружает DEV и PROD без test features. Образы отрицательной assertion, panic, второго physical owner и освобождения retained mapping запускаются дочерними host commands: все четыре обязаны завершиться с ненулевым кодом и ожидаемыми свидетельствами. Положительная матрица отказывает, если какой-либо контроль ошибочно проходит. JSON events обязаны содержать точный набор тестов и итоговое количество suite. Отсутствие результатов, ошибка эмулятора или timeout в 30 секунд завершают команду ошибкой.
+Матрица xtask собирается с locked dependencies, выполняет 39 настоящих kernel tests в каждом профиле и отдельно загружает DEV и PROD без test features. Образы отрицательной assertion, panic, второго physical owner, освобождения retained mapping, secondary panic, release retiring frame, отсутствия acknowledgement и пропуска remote TLBI запускаются дочерними host commands: все восемь обязаны завершиться с ненулевым кодом и ожидаемыми свидетельствами. Положительная матрица отказывает, если какой-либо контроль ошибочно проходит. JSON events обязаны содержать точный набор тестов и итоговое количество suite. Отсутствие результатов, ошибка эмулятора или timeout в 30 секунд завершают команду ошибкой.
 
 Артефакты в target/kernel включают ELF, SHA-256 и build reports features/размеров, полную версию и аргументы QEMU, UART logs, structured results и unsafe inventory. ELF bytes включают debug information; load_bytes считает файловую нагрузку PT_LOAD; memory_bytes включает обнуляемую память. PROD использует release optimization и сохраняет debug information для исследования; diagnostics и kernel-tests отсутствуют в его boot image.
 
@@ -36,3 +36,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 ## Границы свидетельств
 
 Host tests проверяют безопасные алгоритмы, отклонение повреждённого DTB, кодирование дескрипторов и конкурентную публикацию lock. In-kernel tests проверяют наблюдаемые аппаратурой translation faults и timer IRQ, включая полное восстановление SIMD. Model checks остаются проектными свидетельствами Phase 0. CI повторяет local checks в .github/workflows/kernel.yml; настроенный workflow не является выполненным remote CI run. См. [трактовку unsafe report](unsafe.md) и [границу CPU](smp.md).
+
+## SMP controls
+
+Одинаковый протокол работает с diagnostics и без них. Матрица требует 16 именованных SMP tests и настоящего CPU_OFF, а не только ONLINE flag. Дополнительные flags: `--secondary-panic-control`, `--retirement-control`, `--shootdown-control` и `--remote-tlbi-control`. Каждый обязан завершиться ошибкой; положительный runner проверяет и ненулевой статус, и failure marker. Образ без TLBI должен завершаться ошибкой после чтения mapping CPU1. `cargo test --locked` также отклоняет native dependency reversal. Standalone checks Phase 2: `cargo test --locked -p routing --all-features` и `cargo test --locked -p routing --no-default-features`; они не подключаются к kernel.

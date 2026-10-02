@@ -663,6 +663,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "routing"
+version = "0.1.0"
+dependencies = [
+ "kernel-core",
+ "sha2",
+ "window-compat",
+]
+
+[[package]]
 name = "rustversion"
 version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -898,6 +907,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23f0c9c52aa7cd7d77769a4cfe2a9adb1b331f489a41d912ce14513d5ab995c6"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "window-compat"
+version = "0.1.0"
+dependencies = [
+ "kernel-core",
 ]
 
 [[package]]
