@@ -285,9 +285,13 @@
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",
         "translation_sha256": "d1f7c6c17a88a43bb6772f044377fe34a1a0fa6830f3fc7ea31ec5ebf15e7907"
       },
+      "research/compatibility/adapter-versus-native.md": {
+        "source_sha256": "2885315a6c0db2b86fb8cdea1c61b498bfb9ddf9201fe285a3cfcf51816db285",
+        "translation_sha256": "860abcbdba8563c5df4eb4aa6b81d7edcf15fd88587e0bbadd8e975ead4f3943"
+      },
       "research/compatibility/high-leverage-adapters.md": {
-        "source_sha256": "7ddd17d62d79a7fc8b7483819b0399c83f8844dcfa6e3c7e6360eadf9dc16a95",
-        "translation_sha256": "cd70a590162893ff9dcfce5e8801ad902b93afba64ad9137abc3488d2e5e8cc8"
+        "source_sha256": "fcfe707fc65063e1dd36932822db53be392dbaee89417724a0cf7e21b55f17d8",
+        "translation_sha256": "060a806c55850cb0b9c0dbda2aa768e4eb737321aafb1758718910c4b029c9e7"
       },
       "research/compatibility/linux-driver-api-map.md": {
         "source_sha256": "2adf73e2f3a3f9c1d09134d7ad49d83c8c0c62d2c1b436aeed4e31b98490f77f",

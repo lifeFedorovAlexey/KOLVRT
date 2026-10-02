@@ -32,7 +32,7 @@ No weighted security/debt score or invented 10/20/40-family percentage is produc
 
 Allocation-context COST-L-0001 is a research candidate, not an implemented adapter proposal. Context-coupled locking/deferred work remain dossiers to split by actual state/progress assumptions. DMA ownership is a counterexample to blanket legacy criticism: the upstream guide already specifies map/unmap lifetime and barriers. Preserve the [seed dispositions](taxonomy.md).
 
-Issue #57 owns the complete adapter-versus-native-rewrite rubric and worked acceptance decisions; this method is input, not a duplicate implementation. Issue #55 owns confirmed driver/debt graph edges. #45 remains open for configured/transitive and historical analysis. #59 considers host grouping/crash containment only after native service/device contracts are explicit; its prototype is not authorized here.
+The [adapter-versus-native rubric and worked VirtIO/USB cases](adapter-versus-native.md) deliver the initial #57 research assessment, explicit rejection criteria and conditions for revisiting deferred implementation. Issue #55 owns confirmed driver/debt graph edges. #45 remains open for configured/transitive and historical analysis. #59 considers host grouping/crash containment only after native service/device contracts are explicit; its prototype is not authorized here.
 
 Benchmark contracts reuse #49/#50 and the existing migration advisor. Compare equal useful results, authority, outcomes and lifetime; retain raw provenance and honestly faster compatibility. Observed source counts are not costs. No Linux Driver Host, driver port, physical inventory or runtime compatibility is delivered.
 
