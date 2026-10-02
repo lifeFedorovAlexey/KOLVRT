@@ -1,0 +1,751 @@
+Ты начинаешь новый проект операционной системы:
+
+# KOLVRT
+Kernel Outside Legacy, Versioned Routing & Translation
+
+Это новый ARM64-first kernel на Rust.
+
+KOLVRT НЕ является:
+- переписыванием Linux на Rust;
+- форком Linux;
+- попыткой сохранить внутреннюю архитектуру Linux;
+- попыткой обеспечить совместимость ценой загрязнения ядра.
+
+Linux используется как крупнейшая база накопленного инженерного опыта: удачных решений, неудачных решений, исторических компромиссов, багов, regression policy, hardware quirks и последствий обратной совместимости.
+
+Главная задача Phase 0 — НЕ писать ядро.
+
+Сначала необходимо понять, какие проблемы накопились в Linux и других зрелых системах, почему они появились, какие из них действительно являются ошибками, какие — вынужденными компромиссами, и какие архитектурные правила KOLVRT должны предотвращать повторение этих проблем.
+
+---
+
+# 1. ОСНОВНАЯ ФИЛОСОФИЯ
+
+Главный закон:
+
+**The kernel must not adapt itself to legacy. Legacy compatibility must adapt itself to the kernel.**
+
+Native kernel является источником истины.
+
+Legacy compatibility никогда не должна определять внутреннюю архитектуру ядра.
+
+Если старое приложение, драйвер или API требует исторически неправильного поведения:
+
+ПЛОХО:
+
+legacy component
+    ↓
+special-case inside kernel
+    ↓
+kernel forever carries legacy
+
+ПРАВИЛЬНО:
+
+legacy component
+    ↓
+versioned compatibility shim
+    ↓
+translation/routing
+    ↓
+clean native kernel
+
+При этом рядом одновременно может существовать:
+
+native component
+    ↓
+native API
+    ↓
+clean native kernel
+
+---
+
+# 2. COMPATIBILITY НЕ ЯВЛЯЕТСЯ ГЛОБАЛЬНЫМ РЕЖИМОМ
+
+Категорически запрещено проектировать систему так:
+
+system = native
+
+или
+
+system = compatibility
+
+Разные компоненты должны одновременно использовать разные маршруты.
+
+Пример:
+
+Application A:
+- memory -> native
+- filesystem -> native
+- networking -> native
+- old synchronization API -> compat-v2
+
+Application B:
+- полностью native
+
+Application C:
+- Linux compatibility personality
+
+Driver A:
+- native
+
+Driver B:
+- compat-hardware-v3
+
+Маршрутизация должна потенциально существовать на уровнях:
+
+- executable/package;
+- process;
+- driver;
+- device;
+- subsystem;
+- API family;
+- protocol/version;
+- конкретной compatibility capability.
+
+Не усложняй routing без необходимости, но архитектура не должна предполагать один глобальный compatibility switch.
+
+---
+
+# 3. LEGACY QUARANTINE
+
+Legacy-код не должен переноситься:
+
+- в native driver;
+- в native syscall implementation;
+- в scheduler;
+- в memory manager;
+- в VFS core;
+- в native ABI;
+- в HAL только ради совместимости.
+
+Историческая кривизна должна находиться в явно обозначенном compatibility module.
+
+Compatibility module должен быть:
+
+- отдельным;
+- заменяемым;
+- версионируемым;
+- измеряемым;
+- отключаемым;
+- удаляемым;
+- необязательным для native build.
+
+Удаление compatibility module из build не должно ломать native path.
+
+---
+
+# 4. БАГИ САМОГО KOLVRT
+
+Этот принцип распространяется и на будущие ошибки KOLVRT.
+
+Если KOLVRT v3 имеет ошибочное поведение, а приложение начало от него зависеть:
+
+НЕЛЬЗЯ сохранять ошибку в native kernel навсегда.
+
+Необходимо:
+
+1. определить root cause;
+2. исправить native behavior;
+3. написать regression test;
+4. если реальная совместимость необходима — создать bug-compat module;
+5. зарегистрировать старую семантику как versioned compatibility behavior;
+6. измерять число зависимых consumers;
+7. предоставить путь миграции;
+8. удалить compatibility implementation, когда зависимостей больше нет.
+
+Native specification всегда описывает правильное текущее поведение.
+
+---
+
+# 5. COMPATIBILITY DEBT ДОЛЖЕН БЫТЬ ВИДЕН
+
+KOLVRT должен превращать legacy из невидимого архитектурного долга в измеримую характеристику.
+
+Спроектировать возможность измерять минимум:
+
+- native calls;
+- compatibility calls;
+- долю native execution;
+- долю compatibility execution;
+- активные compatibility modules;
+- consumers каждого module;
+- CPU time;
+- wall latency;
+- allocations;
+- memory footprint;
+- copies;
+- context switches;
+- lock contention;
+- translations;
+- serialization/deserialization;
+- syscall/API frequency;
+- throughput.
+
+Не допускается искусственно замедлять compatibility path.
+
+Если compatibility implementation быстрее native — система обязана показать это честно.
+
+Это означает, что native implementation требует анализа и оптимизации.
+
+---
+
+# 6. A/B MIGRATION BENCHMARKS
+
+Одной из главных особенностей KOLVRT должна стать возможность сравнить:
+
+current compatibility path
+
+с
+
+target native path
+
+на одном workload.
+
+Разработчик должен видеть не лозунг "native лучше", а реальные числа.
+
+Спроектировать benchmark methodology:
+
+- identical workload;
+- warm-up;
+- достаточное количество iterations;
+- median;
+- p95;
+- p99;
+- variance/deviation;
+- CPU;
+- RAM;
+- latency;
+- throughput;
+- allocations;
+- context switches;
+- copies;
+- locks;
+- архитектурные counters там, где доступны.
+
+Никакого cherry-picking.
+
+---
+
+# 7. NATIVE / COMPAT SCORE
+
+Diagnostic tooling должен показывать степень зависимости компонента от compatibility infrastructure.
+
+Цветовая философия:
+
+heavy legacy:
+brown -> red
+
+mixed:
+yellow
+
+native-oriented:
+light green -> green
+
+Цвет никогда не является единственным индикатором.
+
+Обязательные текстовые состояния:
+
+LEGACY
+COMPAT
+MIXED
+MOSTLY_NATIVE
+NATIVE
+
+Score оценивает НЕ качество приложения.
+
+Score означает только его зависимость от compatibility mechanisms.
+
+Не придумывай произвольный маркетинговый score.
+
+Исследуй, можно ли корректно выразить это одним числом.
+
+Если нет — предложи multidimensional metrics вместо фиктивного числа.
+
+---
+
+# 8. SYSTEM PROFILES
+
+Минимум два режима.
+
+## DEV / DIAGNOSTIC
+
+Предназначен для разработки и исследования.
+
+Возможности:
+
+- detailed tracing;
+- live routing inspection;
+- переключение native/compat, когда оно безопасно;
+- A/B benchmark;
+- invariant checks;
+- assertions;
+- compatibility dependency graph;
+- counters;
+- performance instrumentation;
+- fault injection;
+- debugging;
+- verbose errors;
+- safety diagnostics.
+
+## PROD
+
+Production execution.
+
+Особенности:
+
+- routing уже определён;
+- compatibility modules заранее выбраны;
+- ненужная diagnostics instrumentation отсутствует;
+- live experimental switching отсутствует;
+- минимальный overhead;
+- никаких fake checks "на всякий случай";
+- оптимизация execution path.
+
+DEV и PROD используют одну архитектуру и одну codebase.
+
+Нельзя иметь отдельный "настоящий prod kernel", архитектурно отличный от development kernel.
+
+Разрешается compile-time elimination diagnostics.
+
+Также проанализируй необходимость STAGING profile.
+
+---
+
+# 9. TARGET PLATFORM
+
+Primary architecture:
+
+AArch64 / ARM64.
+
+Первичная среда разработки:
+
+QEMU `virt`.
+
+На начальном этапе ориентироваться на:
+
+- AArch64;
+- 64-bit only;
+- EL1;
+- MMU;
+- GICv3;
+- ARM Generic Timer;
+- SMP;
+- Device Tree;
+- UART;
+- VirtIO;
+- PCIe там, где это разумно для дальнейшей архитектуры.
+
+x86_64 может быть добавлен позже как Tier 2.
+
+Core kernel не должен зависеть от AArch64 настолько, чтобы второй architecture port потребовал переписывания core subsystems.
+
+---
+
+# 10. IMPLEMENTATION LANGUAGE
+
+Rust.
+
+Основная часть kernel должна использовать safe Rust.
+
+Unsafe допускается только там, где это объективно необходимо.
+
+Для каждого unsafe участка обязательно:
+
+- минимальный scope;
+- SAFETY comment;
+- documented invariant;
+- причина невозможности safe implementation;
+- тесты;
+- reviewability.
+
+Создай отдельную unsafe policy.
+
+Запрещено использовать unsafe просто для удобства.
+
+---
+
+# 11. PHASE 0 — LINUX ARCHAEOLOGY
+
+Проведи систематический анализ Linux.
+
+Не делай обзор "вообще".
+
+Нужна база конкретных инженерных случаев.
+
+Исследовать:
+
+- Linux kernel documentation;
+- git history;
+- LKML;
+- kernel regressions;
+- stable userspace ABI;
+- obsolete ABI;
+- removed ABI;
+- deprecated APIs;
+- syscalls;
+- scheduler;
+- memory management;
+- VFS;
+- networking;
+- synchronization;
+- IPC;
+- driver model;
+- DMA;
+- interrupts;
+- ARM64;
+- Device Tree;
+- ACPI;
+- PCI/PCIe;
+- USB;
+- block subsystem;
+- security model;
+- namespaces;
+- cgroups;
+- historical CVEs;
+- syzkaller;
+- syzbot;
+- real regression fixes.
+
+Особенно искать случаи:
+
+- баг нельзя нормально исправить из-за compatibility;
+- historical behavior стало API;
+- старый ABI мешает redesign;
+- hardware workaround проник в generic core;
+- workaround пережил само железо;
+- performance workaround создал architectural debt;
+- semantic bug стал observable behavior;
+- unsafe memory model вызвал долгосрочные последствия;
+- сложность подсистемы поддерживается в основном историей.
+
+---
+
+# 12. НЕ СЧИТАТЬ ВСЁ В LINUX ОШИБКОЙ
+
+Для каждого case необходимо ответить:
+
+1. Что реально произошло?
+2. Когда решение появилось?
+3. Почему оно было принято?
+4. Какие ограничения существовали тогда?
+5. Существуют ли они сегодня?
+6. Это:
+   - bug;
+   - design flaw;
+   - security issue;
+   - hardware necessity;
+   - performance tradeoff;
+   - compatibility requirement;
+   - deliberate architecture decision?
+7. Какие последствия изменения поведения?
+8. Как Linux решил проблему?
+9. Почему решение нельзя/можно сделать лучше?
+10. Как KOLVRT должен поступить?
+11. Нужно ли поведение native kernel?
+12. Нужно ли поведение compatibility layer?
+13. Нужно ли оно вообще?
+
+Нельзя делать выводы на основании только мнения автора статьи.
+
+Предпочитать primary sources.
+
+---
+
+# 13. ИСТОЧНИКИ
+
+Приоритет:
+
+1. source code / git commit;
+2. official kernel documentation;
+3. bug report;
+4. syzbot/syzkaller reproducer;
+5. CVE details;
+6. LKML discussion;
+7. maintainer discussion;
+8. external technical analysis.
+
+Каждый significant claim должен иметь источник.
+
+Фиксировать:
+
+- URL;
+- repository;
+- commit;
+- tag/version;
+- date;
+- subsystem;
+- date of research.
+
+Если network access отсутствует — не придумывать источники.
+
+Пометить case как unresolved и явно указать, что необходимо проверить.
+
+---
+
+# 14. KERNEL PATHOLOGY DATABASE
+
+Создай:
+
+research/pathology/
+
+Каждый case — отдельная структурированная запись.
+
+ID:
+
+KOL-PATH-0001
+KOL-PATH-0002
+...
+
+Schema минимум:
+
+id
+title
+subsystem
+category
+linux_versions
+first_known_version
+status
+sources
+historical_context
+original_reason
+root_cause
+observable_behavior
+compatibility_dependency
+security_impact
+performance_impact
+complexity_impact
+hardware_dependency
+linux_current_solution
+remaining_problem
+kolvrt_decision
+kolvrt_native_semantics
+compatibility_required
+compatibility_scope
+migration_strategy
+tests_required
+benchmarks_required
+confidence
+open_questions
+
+Categories минимум:
+
+MEMORY_SAFETY
+CONCURRENCY
+ABI_LEGACY
+API_DESIGN
+HISTORICAL_BEHAVIOR
+DRIVER_MODEL
+HARDWARE_QUIRK
+PERFORMANCE
+SECURITY
+RESOURCE_MANAGEMENT
+ARCHITECTURAL_DEBT
+REGRESSION
+COMPATIBILITY
+
+---
+
+# 15. DECISION CLASSIFICATION
+
+Каждый case должен завершаться одним из:
+
+NATIVE_FIX
+COMPAT_ONLY
+HARDWARE_TRANSLATION
+ACCEPTED_TRADEOFF
+RESEARCH_REQUIRED
+NOT_APPLICABLE
+
+Никаких неявных решений.
+
+---
+
+# 16. ИССЛЕДОВАТЬ ДРУГИЕ ОС
+
+Также изучить подходы:
+
+- Fuchsia / Zircon / Starnix;
+- Redox OS;
+- seL4;
+- Theseus OS;
+- FreeBSD Linuxulator;
+- WSL1 architecture;
+- другие современные Rust/kernel research projects.
+
+Не копировать их.
+
+Для каждого определить:
+
+- удачные идеи;
+- ограничения;
+- реальные результаты;
+- провалы;
+- применимость к KOLVRT.
+
+---
+
+# 17. KERNEL LAWS
+
+На основе research создать:
+
+docs/architecture/KERNEL_LAWS.md
+
+Это нормативный документ проекта.
+
+Начальная версия: ориентировочно 30–50 правил.
+
+Формат:
+
+LAW-001
+Title
+
+Rule:
+...
+
+Rationale:
+...
+
+Historical evidence:
+...
+
+Prevents:
+...
+
+Allowed exceptions:
+...
+
+Enforcement:
+...
+
+Testing:
+...
+
+Правила должны быть техническими и проверяемыми.
+
+Не создавать лозунги вместо инженерных требований.
+
+---
+
+# 18. ADR
+
+Создать:
+
+docs/adr/
+
+Любое важное архитектурное решение оформлять ADR:
+
+Context
+Decision
+Alternatives
+Why rejected
+Consequences
+Compatibility impact
+Performance impact
+Security impact
+Testing
+Reversibility
+
+---
+
+# 19. НИКАКИХ ЗАГЛУШЕК
+
+Запрещено:
+
+- TODO вместо необходимой реализации;
+- fake implementation;
+- hardcoded PASS;
+- placeholder architecture;
+- "temporarily return success";
+- фиктивные benchmark numbers;
+- выдуманные research sources;
+- implementation "на потом" внутри готового path.
+
+Если задача слишком большая — сделать меньший законченный vertical slice.
+
+---
+
+# 20. СТРУКТУРА РЕПОЗИТОРИЯ
+
+На Phase 0 создать минимум:
+
+README.md
+
+docs/
+  vision.md
+  architecture/
+    KERNEL_LAWS.md
+    native-model.md
+    compatibility-model.md
+    routing-model.md
+    execution-profiles.md
+    unsafe-policy.md
+    benchmarking.md
+  adr/
+  research/
+
+research/
+  linux/
+  other-systems/
+  pathology/
+  sources/
+
+schemas/
+  pathology/
+
+tools/
+  pathology/
+
+---
+
+# 21. АВТОМАТИЧЕСКАЯ ПРОВЕРКА RESEARCH
+
+Сделать validator для pathology database.
+
+Он должен проверять:
+
+- уникальный ID;
+- обязательные поля;
+- наличие source;
+- decision classification;
+- native semantics;
+- compatibility decision;
+- tests requirement;
+- benchmark requirement.
+
+Research должен быть пригоден для дальнейшего машинного анализа.
+
+---
+
+# 22. DEFINITION OF DONE: PHASE 0.1
+
+Phase 0.1 завершена только если:
+
+1. создан repository structure;
+2. существует vision document;
+3. формально описана philosophy KOLVRT;
+4. native/compat model документирован;
+5. DEV/PROD model документирован;
+6. unsafe policy создана;
+7. pathology schema создана;
+8. validator работает;
+9. разобрано минимум 30 конкретных Linux cases;
+10. cases имеют primary sources там, где они доступны;
+11. cases содержат KOLVRT decisions;
+12. существует initial KERNEL_LAWS;
+13. ключевые решения оформлены ADR;
+14. unresolved questions перечислены отдельно;
+15. никаких выдуманных benchmark результатов;
+16. никакого полноценного kernel implementation.
+
+В конце:
+
+- запусти проверки;
+- покажи repository tree;
+- перечисли ADR;
+- выведи таблицу pathology cases;
+- сгруппируй их по decision;
+- покажи Kernel Laws;
+- отдельно покажи спорные/unresolved решения;
+- предложи Phase 0.2 research backlog.
+
+НЕ начинай Phase 1 автоматически.
