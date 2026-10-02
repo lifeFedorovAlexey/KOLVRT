@@ -2,11 +2,10 @@
   "local_check_status": "passed; formatting, lint, host tests, models, documents, translations",
   "remote_ci_status": "configured; not dispatched",
   "clean_checkout": {
-    "commit": "d693d6a569110e5c85416b5e3e9fb39406501624",
-    "workspace_head": "2aa1ea2b6021c29d0648e263ff31a3e95f0633aa",
-    "scope": "local candidate snapshot; original repository HEAD not changed",
-    "snapshot": "D:\\KOLVRT\\target\\checkout-verify\\snapshot-20261002-142740",
-    "checkout": "D:\\KOLVRT\\target\\checkout-verify\\snapshot-20261002-142740-formatted-checkout"
+    "checkout": "D:\\KOLVRT\\target\\checkout-verify\\final-20261002-145929",
+    "commit": "a09472ba89947eb4adb00bd2f66ceb8b48a962e0",
+    "scope": "clean checkout of the original repository committed HEAD",
+    "clean_before_and_after": true
   },
   "local_check_command": "npm run check",
   "dev_boot": {
@@ -51,8 +50,8 @@
     "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
     "timeout_seconds": 30
   },
-  "clean_checkout_kernel_matrix": "passed; both profiles, boot images and four negative controls",
-  "date_utc": "2026-10-02T14:56:35.9259812Z",
+  "clean_checkout_kernel_matrix": "Passed at original repository commit a09472b; both profiles, real boot images, ASCII banner and four failure controls",
+  "date_utc": "2026-10-02T15:04:11.3915365Z",
   "prod_boot": {
     "artifact": "target/kernel/prod-boot.elf",
     "compiler": "1.99.0",
@@ -378,7 +377,7 @@
       "tests": 23
     }
   ],
-  "clean_checkout_host_tests": "Base candidate 44 passed; final 45-test committed checkout verification pending",
+  "clean_checkout_host_tests": "45 passed; npm run check passed; clean before and after checks",
   "reproducibility_scope": "Clean candidate builds and executes; full ELF differs across source paths because debug information is retained. No bit-for-bit reproducibility claim.",
   "source_hashes": [
     {

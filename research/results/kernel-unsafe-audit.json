@@ -322,6 +322,6 @@
       "text": "#![forbid(unsafe_code)]"
     }
   ],
-  "native_dependency_tree": "kolvrt-kernel v0.1.0 (D:\\KOLVRT\\crates\\kernel)\nkernel-core v0.1.0 (D:\\KOLVRT\\crates\\kernel-core)\n",
+  "native_dependency_tree": "kolvrt-kernel v0.1.0 (D:\\KOLVRT\\target\\checkout-verify\\final-20261002-145929\\crates\\kernel)\nkernel-core v0.1.0 (D:\\KOLVRT\\target\\checkout-verify\\final-20261002-145929\\crates\\kernel-core)\n",
   "scope": "first-party source inventory with local invariant context; assembly and compiled runtime artifacts included; not a safety proof"
 }
