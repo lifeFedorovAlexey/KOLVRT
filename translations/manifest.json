@@ -134,8 +134,8 @@
         "translation_sha256": "4dcdc45790fe3a06d006188d62e34d0ba0f6e403a671f6661cc698bcf84e21e0"
       },
       "docs/architecture/output-policy.md": {
-        "source_sha256": "41548441fbe85999965ad305c87952bc960c7f5de9024dcf5bf61999e121819b",
-        "translation_sha256": "0f365c277d9bc0a72999a40dcaf3580542f6834fad90fa9c6883d276f6ac47a5"
+        "source_sha256": "d23c27275fa886c36714f53552add03a46f987e47a37a2b7b01ec59971c09d52",
+        "translation_sha256": "34e910ee27f78a02baa22e29a80a764d7a08a8259dbcd413b02213bacd825253"
       },
       "docs/architecture/platform-contract.md": {
         "source_sha256": "41e707c67d08cfa248b63e3a3fdb9dfa118a8a892e3ed88ebcf158c46449cfa4",

@@ -1,3 +1,4 @@
+use serde::de::{self, Deserialize, Deserializer, MapAccess, SeqAccess, Visitor};
 use serde_json::Value;
 use std::collections::BTreeSet;
 use std::io::{self, IsTerminal};
@@ -94,7 +95,7 @@ pub fn console_text(text: &str, color: bool) -> String {
 /// Human presentation never prints the machine stream, including malformed versions.
 pub fn human_text(text: &str) -> String {
     text.split_inclusive('\n')
-        .filter(|line| !line.starts_with("@KOLVRT"))
+        .filter(|line| !line.contains("@KOLVRT"))
         .collect()
 }
 
@@ -103,6 +104,9 @@ pub fn parse(text: &str) -> Result<Vec<Value>> {
     let mut events = Vec::new();
     for line in text.split_inclusive('\n') {
         if !line.starts_with("@KOLVRT") {
+            if line.contains("@KOLVRT") {
+                return Err("kernel event marker outside record boundary".into());
+            }
             continue;
         }
         if !line.ends_with('\n') || line.len() > RECORD_BYTES {
@@ -111,13 +115,72 @@ pub fn parse(text: &str) -> Result<Vec<Value>> {
         let payload = line
             .strip_prefix(PREFIX)
             .ok_or("unsupported kernel event framing/version")?;
-        let event: Value = serde_json::from_str(payload)?;
+        let event = serde_json::from_str::<UniqueJson>(payload)?.0;
         if !event.is_object() || event["event"].as_str().is_none() {
             return Err("invalid kernel event object".into());
         }
         events.push(event);
     }
     Ok(events)
+}
+
+/// Reject ambiguous evidence rather than letting the last duplicate key win.
+struct UniqueJson(Value);
+impl<'de> Deserialize<'de> for UniqueJson {
+    fn deserialize<D: Deserializer<'de>>(d: D) -> std::result::Result<Self, D::Error> {
+        struct UniqueVisitor;
+        impl<'de> Visitor<'de> for UniqueVisitor {
+            type Value = UniqueJson;
+            fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+                f.write_str("JSON with unique object keys")
+            }
+            fn visit_bool<E: de::Error>(self, v: bool) -> std::result::Result<UniqueJson, E> {
+                Ok(UniqueJson(v.into()))
+            }
+            fn visit_i64<E: de::Error>(self, v: i64) -> std::result::Result<UniqueJson, E> {
+                Ok(UniqueJson(v.into()))
+            }
+            fn visit_u64<E: de::Error>(self, v: u64) -> std::result::Result<UniqueJson, E> {
+                Ok(UniqueJson(v.into()))
+            }
+            fn visit_f64<E: de::Error>(self, v: f64) -> std::result::Result<UniqueJson, E> {
+                serde_json::Number::from_f64(v)
+                    .map(|n| UniqueJson(Value::Number(n)))
+                    .ok_or_else(|| E::custom("nonfinite number"))
+            }
+            fn visit_str<E: de::Error>(self, v: &str) -> std::result::Result<UniqueJson, E> {
+                Ok(UniqueJson(v.into()))
+            }
+            fn visit_unit<E: de::Error>(self) -> std::result::Result<UniqueJson, E> {
+                Ok(UniqueJson(Value::Null))
+            }
+            fn visit_seq<A: SeqAccess<'de>>(
+                self,
+                mut a: A,
+            ) -> std::result::Result<UniqueJson, A::Error> {
+                let mut values = Vec::new();
+                while let Some(UniqueJson(v)) = a.next_element()? {
+                    values.push(v);
+                }
+                Ok(UniqueJson(Value::Array(values)))
+            }
+            fn visit_map<A: MapAccess<'de>>(
+                self,
+                mut a: A,
+            ) -> std::result::Result<UniqueJson, A::Error> {
+                let mut values = serde_json::Map::new();
+                while let Some(key) = a.next_key::<String>()? {
+                    if values.contains_key(&key) {
+                        return Err(de::Error::custom(format!("duplicate event key: {key}")));
+                    }
+                    let UniqueJson(value) = a.next_value()?;
+                    values.insert(key, value);
+                }
+                Ok(UniqueJson(Value::Object(values)))
+            }
+        }
+        d.deserialize_any(UniqueVisitor)
+    }
 }
 
 pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -> Result<()> {
@@ -281,6 +344,21 @@ mod tests {
         assert!(validate(&parse("{\"event\":\"boot\"}\n").unwrap(), false, &[], 2).is_err());
     }
     #[test]
+    fn ambiguous_keys_and_embedded_frames_are_rejected() {
+        for payload in [
+            r#"{"event":"panic","status":"fail","status":"pass"}"#,
+            r#"{"event":"panic","status":"fail","detail":{"owner":1,"owner":2}}"#,
+            r#"{"event":"panic","status":"fail","detail":[{"owner":1,"owner":2}]}"#,
+        ] {
+            assert!(parse(&format!("{PREFIX}{payload}\n")).is_err());
+        }
+        let partial =
+            format!("[OK] partial line{PREFIX}{{\"event\":\"panic\",\"status\":\"fail\"}}\n");
+        assert!(parse(&partial).is_err());
+        assert!(human_text(&partial).is_empty());
+        assert!(parse(&format!("{PREFIX}{{\"event\":\"panic\",\"status\":\"fail\",\"detail\":{{\"note\":\"escaped \\\"quote\\\"\"}}}}\n")).is_ok());
+    }
+    #[test]
     fn terminal_is_not_overwritable_and_failures_win() {
         for events in [
             vec![],
@@ -293,6 +371,30 @@ mod tests {
         let mut wrong = boot();
         wrong["secondary_shutdown_verified"] = json!(false);
         assert!(validate(&[wrong], false, &[], 2).is_err());
+    }
+    #[test]
+    fn retained_qemu_output_still_validates_without_human_json() {
+        // Revalidate actual retained observations, without claiming a new QEMU run.
+        let evidence: Value =
+            serde_json::from_str(include_str!("../../../research/results/output-policy.json"))
+                .unwrap();
+        for profile in ["dev", "prod"] {
+            for kind in ["boot", "tests"] {
+                let capture = &evidence["profiles"][profile][kind];
+                let events = capture["events"].as_array().unwrap();
+                let stream: String = events.iter().map(|e| format!("{PREFIX}{e}\n")).collect();
+                let parsed = parse(&stream).unwrap();
+                let names: Vec<_> = events
+                    .iter()
+                    .filter(|e| e["event"] == "test")
+                    .map(|e| e["name"].as_str().unwrap())
+                    .collect();
+                validate(&parsed, kind == "tests", &names, 2).unwrap();
+                assert!(human_text(&stream).is_empty());
+            }
+        }
+        let panic = evidence["panic"]["events"].as_array().unwrap();
+        assert!(validate(panic, false, &[], 2).is_err());
     }
     #[test]
     fn suite_requires_actual_unique_tests_before_terminal() {

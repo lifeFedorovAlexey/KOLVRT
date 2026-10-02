@@ -58,6 +58,13 @@ CPU0 alone writes, with no IRQ-handler output. CPU1 records failure through the 
 
 ## Verification and extension
 
+Closure review for issue #13 confirms the committed UART/runner implementation and
+retained QEMU captures. The parser additionally rejects duplicate JSON keys at every
+nesting level and reserved event markers embedded in a partial human line; neither
+ambiguous fields nor a lost newline may hide failure evidence. The human renderer
+suppresses every line containing the reserved marker. Host tests revalidate the actual
+retained DEV/PROD boot, suite and panic payloads; this is not a new kernel execution.
+
 Host checks reject truncated/oversized/malformed framing, wrong versions, missing/duplicate terminal results, missing/duplicate tests and failures after success. Kernel matrix checks both profiles and actual failure propagation; human runs check the absence of event records. UART preflight bounds are implementation limits, not proof of timing on silicon. Future concurrent logging, external strings or transports require a new bounded ownership/escaping argument; this policy does not introduce a logging framework.
 
 Actual before/after provenance, DEV/PROD events and panic output are retained in the [output verification record](../../research/results/output-policy.json). The before excerpt is user-reported; after examples are actual QEMU captures.

@@ -1128,6 +1128,7 @@ version = "0.1.0"
 dependencies = [
  "kernel-core",
  "routing",
+ "serde",
  "serde_json",
  "sha2",
 ]
