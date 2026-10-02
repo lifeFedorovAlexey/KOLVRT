@@ -11,6 +11,10 @@ static UART: AtomicUsize = AtomicUsize::new(0);
 pub fn initialize(base: usize) {
     UART.store(base, Ordering::Release);
 }
+pub fn boot_banner() {
+    // Fixed ASCII asset: no image decoding, formatting allocation or profile divergence.
+    let _ = Writer.write_str(include_str!("../../../../assets/branding/boot-logo.txt"));
+}
 struct Writer;
 impl Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {

@@ -35,6 +35,7 @@ static FAULT_FAR: AtomicU64 = AtomicU64::new(0);
 pub extern "C" fn kernel_main() -> ! {
     let d = platform::discover_boot();
     diagnostics::initialize(d.uart.base as usize);
+    diagnostics::boot_banner();
     log!(
         "KOLVRT EL{} UART online\n",
         cpu::el() >> cpu::CURRENT_EL_SHIFT

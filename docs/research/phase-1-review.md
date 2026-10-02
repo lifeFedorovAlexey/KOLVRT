@@ -47,12 +47,12 @@ ELF entry → EL1 → validated boot description → UART → vectors → physic
 
 ## Results and sizes
 
-44 host tests passed. Both DEV and PROD passed 23 real in-kernel tests. Separate boot images passed. Assertion, panic, second-owner and retained-mapping controls returned host exit 1. Phase 0 state-model evidence and negative controls also reproduced; these remain distinct from kernel execution.
+45 host tests passed. Both DEV and PROD passed 23 real in-kernel tests. Separate boot images passed. Assertion, panic, second-owner and retained-mapping controls returned host exit 1. Phase 0 state-model evidence and negative controls also reproduced; these remain distinct from kernel execution. A deterministic allocator test also checks ownership equivalence and linear scan work against a rescanning reference. [Measurement history](../../research/measurements/README.md) records real samples and rejects inconsistent comparisons.
 
 | Boot image | ELF bytes | PT_LOAD file bytes | PT_LOAD memory bytes |
 | ---------- | --------: | -----------------: | -------------------: |
-| DEV        |   1606696 |              94559 |               913759 |
-| PROD       |    261128 |              36100 |               851204 |
+| DEV        |   1611120 |              95571 |               914771 |
+| PROD       |    266368 |              37484 |               852588 |
 
 ELF retains debug information. Absolute source paths affect debug bytes and full ELF hash across checkouts; this establishes reproducible build and execution, not bit-for-bit binary identity. The figures identify the saved workspace artifacts; other checkout ELF sizes may differ slightly. Timing samples are TCG counter ticks, not hardware throughput or comparative algorithm superiority.
 

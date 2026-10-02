@@ -16,6 +16,8 @@ ELF entry → mask IRQ → EL2 to EL1h if necessary → stack and BSS
 
 The ELF starts at 0x40200000, leaving up to 2 MiB at RAM base 0x40000000 for QEMU's DTB. The 256 KiB stack is aligned; the vector table is aligned to 2 KiB. ELF PT_LOAD segments and page permissions enforce W^X. QEMU loads ELF directly; no Linux boot protocol, syscall table or Linux source is linked.
 
+After UART initialization, both profiles print the project's ASCII emblem and KOLVRT name. The original user-supplied PNG is retained at assets/branding/logo.png; assets/branding/boot-logo.txt is compiled as immutable text. Boot performs no image decoding or heap allocation for the banner. Human-readable output precedes structured test events.
+
 ## Verification
 
 Run `cargo xtask test`. Both DEV and PROD boot images exercise real allocation, mapping, memory access, unmapping, freeing and timer delivery before publishing a structured boot event. Missing events, panic, fatal exception or timeout fail the host command. See [testing](testing.md) and [unsafe boundaries](unsafe.md).

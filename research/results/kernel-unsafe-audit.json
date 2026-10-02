@@ -113,7 +113,7 @@
     },
     {
       "context": "        if base == 0 {\n            return Err(fmt::Error);\n        }\n        // SAFETY: INV-UART: published only after DT validation; sole CPU polled writer, no IRQ logging.\n        let uart = unsafe { Registers::new(base, UART_REGISTER_SIZE) };",
-      "line": 22,
+      "line": 26,
       "path": "crates/kernel/src\\diagnostics\\mod.rs",
       "text": "let uart = unsafe { Registers::new(base, UART_REGISTER_SIZE) };"
     },
@@ -173,13 +173,13 @@
     },
     {
       "context": "    cpu::timer_stop();\n    cpu::mask();\n    cpu::poweroff();\n}\n#[unsafe(no_mangle)]",
-      "line": 98,
+      "line": 99,
       "path": "crates/kernel/src\\main.rs",
       "text": "#[unsafe(no_mangle)]"
     },
     {
       "context": "        }\n    }\n    fatal_exception(esr, far, pc)\n}\n#[unsafe(no_mangle)]",
-      "line": 118,
+      "line": 119,
       "path": "crates/kernel/src\\main.rs",
       "text": "#[unsafe(no_mangle)]"
     },

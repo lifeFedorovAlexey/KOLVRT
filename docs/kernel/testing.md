@@ -17,6 +17,8 @@ The xtask matrix builds with locked dependencies, runs 23 real kernel tests in e
 
 Artifacts under target/kernel include ELF, SHA-256 and feature/size build reports, full QEMU version/arguments, UART logs, structured results and unsafe inventory. ELF bytes include debug information; load_bytes counts PT_LOAD file payload; memory_bytes includes zero-filled storage. PROD uses release optimization and retains debug information for inspection; diagnostics and kernel-tests are absent in its boot image.
 
+Each successful test run also validates raw measurement samples and recomputes their quantiles. Use `cargo xtask test --record LABEL` to preserve a run for later comparison; see [measurement history](../../research/measurements/README.md). The host allocator test checks linear scan work against the same implementation with its cursor disabled. These checks do not imply that every algorithm is globally fastest.
+
 ## Debugging
 
 ```text

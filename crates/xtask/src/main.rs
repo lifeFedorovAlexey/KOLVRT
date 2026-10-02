@@ -6,7 +6,7 @@ use std::{
     path::{Path, PathBuf},
     process::{Command, Stdio},
     thread,
-    time::{Duration, Instant},
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 // ELF64 little-endian header and PT_LOAD fields.
 const ELF_CLASS_OFFSET: usize = 4;
@@ -66,6 +66,7 @@ fn run() -> Result<()> {
     let args: Vec<String> = env::args().skip(1).collect();
     match args.first().map(String::as_str) {
         Some("audit") => audit(),
+        Some("compare") if args.len() == 3 => compare_measurements(Path::new(&args[1]), Path::new(&args[2])),
         Some("build") => {
             build(args.iter().any(|a| a == "--prod"), false, None)?;
             Ok(())
@@ -96,6 +97,7 @@ fn run() -> Result<()> {
                 let elf = build(false, true, Some("retained-mapping-test"))?;
                 return execute(&elf, true);
             }
+            let starting_sources = source_inventory()?;
             qemu()?;
             audit()?;
             for prod in [false, true] {
@@ -131,9 +133,15 @@ fn run() -> Result<()> {
                 );
             }
             println!("Phase 1 kernel matrix passed (single active CPU; SMP deferred).");
+            let label = match args.as_slice() {
+                [_] => None,
+                [_, flag, label] if flag == "--record" => Some(label.as_str()),
+                _ => return Err("usage: cargo xtask test [--record LABEL]".into()),
+            };
+            archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask test | build [--prod] | audit | debug".into()),
+        _ => Err("usage: cargo xtask test [--record LABEL] | compare BASELINE CANDIDATE | build [--prod] | audit | debug".into()),
     }
 }
 fn build(prod: bool, tests: bool, extra: Option<&str>) -> Result<PathBuf> {
@@ -375,6 +383,166 @@ fn walk(path: &Path, out: &mut Vec<PathBuf>) -> Result<()> {
         } else {
             out.push(p);
         }
+    }
+    Ok(())
+}
+fn source_inventory() -> Result<Value> {
+    let mut files = Vec::new();
+    for directory in ["crates/kernel", "crates/kernel-core", "crates/xtask"] {
+        walk(Path::new(directory), &mut files)?;
+    }
+    files.extend(
+        [
+            "Cargo.toml",
+            "Cargo.lock",
+            "rust-toolchain.toml",
+            ".cargo/config.toml",
+            "assets/branding/boot-logo.txt",
+        ]
+        .map(PathBuf::from),
+    );
+    files.sort();
+    let mut inventory = Vec::new();
+    for file in files {
+        let text = fs::read_to_string(&file)?.replace("\r\n", "\n");
+        inventory.push(json!({"path":file.to_string_lossy().replace('\\',"/"),"sha256_lf":format!("{:x}",Sha256::digest(text.as_bytes()))}));
+    }
+    Ok(json!(inventory))
+}
+fn read_json(path: impl AsRef<Path>) -> Result<Value> {
+    Ok(serde_json::from_slice(&fs::read(path)?)?)
+}
+fn validate_samples(measurement: &Value) -> Result<()> {
+    if measurement["units"] != "timer_ticks"
+        || measurement["frequency"].as_u64().is_none_or(|v| v == 0)
+    {
+        return Err("invalid measurement units/frequency".into());
+    }
+    let mut samples = measurement["samples"]
+        .as_array()
+        .ok_or("missing raw samples")?
+        .iter()
+        .map(|v| v.as_u64().ok_or("invalid sample"))
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    if measurement["iterations"].as_u64() != Some(samples.len() as u64)
+        || measurement["warmup"].as_u64().is_none()
+    {
+        return Err("invalid iteration/warmup metadata".into());
+    }
+    let quantiles = kernel_core::quantiles(&mut samples).ok_or("empty samples")?;
+    for (name, expected) in ["median", "p95", "p99"].into_iter().zip(quantiles) {
+        if measurement[name].as_u64() != Some(expected) {
+            return Err("quantile disagrees with raw samples".into());
+        }
+    }
+    Ok(())
+}
+fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result<()> {
+    if source_inventory()? != *starting_sources {
+        return Err("source changed during kernel matrix; measurement rejected".into());
+    }
+    let mut profiles = serde_json::Map::new();
+    for profile in ["dev", "prod"] {
+        let events = read_json(format!("target/kernel/{profile}-tests.results.json"))?;
+        let measurement = events
+            .as_array()
+            .ok_or("invalid event list")?
+            .iter()
+            .find(|event| event["event"] == "measurement")
+            .ok_or("missing real kernel measurement")?
+            .clone();
+        validate_samples(&measurement)?;
+        profiles.insert(profile.into(), json!({"measurement":measurement,"test_build":read_json(format!("target/kernel/{profile}-tests-build.json"))?,"boot_build":read_json(format!("target/kernel/{profile}-boot-build.json"))?,"run":read_json(format!("target/kernel/{profile}-tests.run.json"))?,"test_events":events}));
+    }
+    let revision = Command::new("git").args(["rev-parse", "HEAD"]).output()?;
+    let dirty = Command::new("git")
+        .args(["status", "--porcelain"])
+        .output()?;
+    let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":4},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let text = serde_json::to_string_pretty(&record)?;
+    fs::write("target/kernel/measurement.json", &text)?;
+    if let Some(label) = label {
+        if label.is_empty()
+            || label.len() > 64
+            || !label
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
+        {
+            return Err(
+                "record label must be 1..64 ASCII letters/digits/hyphens/underscores".into(),
+            );
+        }
+        fs::create_dir_all("research/measurements/runs")?;
+        let digest = format!(
+            "{:x}",
+            Sha256::digest(serde_json::to_vec(starting_sources)?)
+        );
+        let path = format!(
+            "research/measurements/runs/{timestamp}-{label}-{}.json",
+            &digest[..12]
+        );
+        use std::io::Write;
+        let mut file = fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)?;
+        file.write_all(text.as_bytes())?;
+        println!("Recorded verified kernel measurements: {path}");
+    }
+    Ok(())
+}
+fn compare_measurements(baseline: &Path, candidate: &Path) -> Result<()> {
+    let baseline = read_json(baseline)?;
+    let candidate = read_json(candidate)?;
+    if baseline["schema_version"] != 1 || candidate["schema_version"] != 1 {
+        return Err("unknown measurement schema".into());
+    }
+    for profile in ["dev", "prod"] {
+        let old = &baseline["profiles"][profile];
+        let new = &candidate["profiles"][profile];
+        for record in [&baseline, &candidate] {
+            if record["correctness"]["matrix"] != "passed" {
+                return Err("comparison requires recorded correctness checks".into());
+            }
+        }
+        for field in [
+            "qemu_version",
+            "arguments",
+            "active_cpus",
+            "configured_cpus",
+            "accelerator",
+        ] {
+            if old["run"][field].is_null() || old["run"][field] != new["run"][field] {
+                return Err(format!("incomparable {profile} environment: {field}").into());
+            }
+        }
+        for field in ["compiler", "target", "features"] {
+            if old["test_build"][field].is_null()
+                || old["test_build"][field] != new["test_build"][field]
+            {
+                return Err(format!("incomparable build: {field}").into());
+            }
+        }
+        let old = &old["measurement"];
+        let new = &new["measurement"];
+        validate_samples(old)?;
+        validate_samples(new)?;
+        for field in ["scope", "units", "frequency", "warmup", "iterations"] {
+            if old[field].is_null() || old[field] != new[field] {
+                return Err(format!("incomparable measurement: {field}").into());
+            }
+        }
+        let mut deltas = serde_json::Map::new();
+        for quantile in ["median", "p95", "p99"] {
+            let a = old[quantile].as_u64().unwrap();
+            let b = new[quantile].as_u64().unwrap();
+            deltas.insert(quantile.into(),json!({"baseline_ticks":a,"candidate_ticks":b,"delta_ticks":(i128::from(b)-i128::from(a)).to_string(),"delta_percent":if a==0 {None} else {Some((b as f64/a as f64-1.0)*100.0)}}));
+        }
+        println!(
+            "{}",
+            json!({"profile":profile,"baseline":baseline["label"],"candidate":candidate["label"],"observed_differences":deltas,"claim":"observations only; repeated comparative runs and reliability review required before adoption"})
+        );
     }
     Ok(())
 }

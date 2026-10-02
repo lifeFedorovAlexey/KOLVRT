@@ -47,12 +47,12 @@ ELF entry → EL1 → проверенное boot description → UART → vecto
 
 ## Результаты и размеры
 
-Прошли 44 host tests. DEV и PROD прошли по 23 настоящих in-kernel tests. Отдельные boot images прошли. Контроли assertion, panic, второго owner и retained mapping вернули host exit 1. State-model evidence и negative controls Phase 0 также воспроизведены; они остаются отдельными от выполнения ядра.
+Прошли 45 host tests. DEV и PROD прошли по 23 настоящих in-kernel tests. Отдельные boot images прошли. Контроли assertion, panic, второго owner и retained mapping вернули host exit 1. State-model evidence и negative controls Phase 0 также воспроизведены; они остаются отдельными от выполнения ядра. Детерминированный тест allocator также проверяет эквивалентность владения и линейное сканирование относительно пересканирующего reference. [История измерений](../../research/measurements/README.md) сохраняет настоящие samples и отклоняет несогласованные сравнения.
 
 | Boot image | ELF bytes | PT_LOAD file bytes | PT_LOAD memory bytes |
 | ---------- | --------: | -----------------: | -------------------: |
-| DEV        |   1606696 |              94559 |               913759 |
-| PROD       |    261128 |              36100 |               851204 |
+| DEV        |   1611120 |              95571 |               914771 |
+| PROD       |    266368 |              37484 |               852588 |
 
 ELF сохраняет debug information. Абсолютные пути исходников влияют на debug bytes и полный ELF hash между checkouts; подтверждается воспроизводимость сборки и выполнения, а не побитовая идентичность binary. Числа относятся к сохранённым workspace artifacts; размеры ELF другого checkout могут немного отличаться. Timing samples — TCG counter ticks, а не аппаратный throughput и не сравнительное превосходство алгоритмов.
 

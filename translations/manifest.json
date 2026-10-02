@@ -126,8 +126,8 @@
         "translation_sha256": "b6b918584e7227c0d85a0c3a142271d71be8d7e5309b775b52ec078381113564"
       },
       "docs/kernel/boot.md": {
-        "source_sha256": "e2d7d044d3e25f75d5478f824b0a6ac3c83fb0321a5fc8de81cb1d618ab0bc0a",
-        "translation_sha256": "686027e7e9cf88a7c38ac5ce19da33dd6d193cc217c4b2320cda461d85c002b3"
+        "source_sha256": "69a9b41bfc4370aadb85a98d3a2dfcfe3636dddb45770fc1f79e9da0e5881def",
+        "translation_sha256": "626d0abd7209af65786f6239b3f01b701b4064ac7d8d57ee5c44df7ebaedb749"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "8e6016b33531f31f16451ebdaf5f2a76011d4868c8939a4809df6c91de8208e5",
@@ -146,8 +146,8 @@
         "translation_sha256": "cb290bcaaeb897464643efb68ab72a303f37eed61290527d0dcbed46b784be01"
       },
       "docs/kernel/testing.md": {
-        "source_sha256": "4412143b8d12e81b47dcff687dfe0288ecf1a32f367f09ee4e20053082cdff99",
-        "translation_sha256": "c15641159cbb6ba19685f46a831d7e2262c971b96e836c912c6cf8ced23d6d32"
+        "source_sha256": "b6cd214b3529ac63ab4ae041a0cb7eba3a3a6b771665ccdbbb1a2a24e6a8f05e",
+        "translation_sha256": "0ceb4d77765cafbe27fe4d408cb59d6d1049fbf410307548181cb414e8ce483d"
       },
       "docs/kernel/time.md": {
         "source_sha256": "462d6b1a36e874e592b1c3d888ceb26f03254f21a8d5971755637682462a824e",
@@ -190,8 +190,8 @@
         "translation_sha256": "af5ec59a62dd1915ff8c79468fa2cb7cfca992874d3b87cf99d8ebb76c7593c1"
       },
       "docs/research/phase-1-review.md": {
-        "source_sha256": "6c9ecb7e43aa3fd7bbc4b12060bd9efcefb39a051c4207f90af2ba9ca056f9a3",
-        "translation_sha256": "de989cd26f59c07c4dcf2efa0d6be49b7f5e73af255c5b79c18792013ad2b310"
+        "source_sha256": "f424790afbe0a150083d8ea3a229390ae1ec711fa7a77df8244b63022e119a9d",
+        "translation_sha256": "3b1eed23b88138f836c2420c149fa829627b1b145141f55fbb9661edc603f576"
       },
       "docs/research/reference-coverage.md": {
         "source_sha256": "604c0030cb184406c6ed0e1b474cf78f782e4ada0988641c84d99c6d5383b54d",
@@ -216,6 +216,10 @@
       "research/fixtures/README.md": {
         "source_sha256": "0d6d0aa2e5ab8001dcb9a29d748e3ce0b68ace7e6a002ff390a87ca257f5290a",
         "translation_sha256": "671be294e4800e83fd6fcc16bc2c98de59f33acc81f95faf12edff7b2a4d5ace"
+      },
+      "research/measurements/README.md": {
+        "source_sha256": "9849826a0ff6ed1c48c88d167783c23c50d9a5c264d3e45088acd2493a0e60d2",
+        "translation_sha256": "95f1a2e43c0e5f70ba0ac370c9a3facb1037364079d61e37983b1e1bebfc9c4b"
       }
     }
   },

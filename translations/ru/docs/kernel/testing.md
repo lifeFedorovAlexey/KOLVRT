@@ -17,6 +17,8 @@ cargo xtask test
 
 Артефакты в target/kernel включают ELF, SHA-256 и build reports features/размеров, полную версию и аргументы QEMU, UART logs, structured results и unsafe inventory. ELF bytes включают debug information; load_bytes считает файловую нагрузку PT_LOAD; memory_bytes включает обнуляемую память. PROD использует release optimization и сохраняет debug information для исследования; diagnostics и kernel-tests отсутствуют в его boot image.
 
+Каждый успешный test run также проверяет raw measurement samples и пересчитывает их quantiles. Используйте `cargo xtask test --record LABEL` для сохранения запуска и дальнейшего сравнения; см. [историю измерений](../../research/measurements/README.md). Host test allocator проверяет линейный объём сканирования относительно той же реализации с отключённым cursor. Эти проверки не означают, что каждый алгоритм глобально самый быстрый.
+
 ## Отладка
 
 ```text

@@ -12,11 +12,11 @@
   "dev_boot": {
     "artifact": "target/kernel/dev-boot.elf",
     "compiler": "1.99.0",
-    "elf_bytes": 1606696,
+    "elf_bytes": 1611120,
     "features": ["diagnostics"],
-    "load_bytes": 94559,
-    "memory_bytes": 913759,
-    "sha256": "0e3fcad09a3b806db02af28668f59a34a531de9d8adbc21253983c7ca1de686a",
+    "load_bytes": 95571,
+    "memory_bytes": 914771,
+    "sha256": "5d3bb06fc27bab5f4429d9793442dd1a59e642d31e3c28894f884ffeaaa5f8fa",
     "target": "aarch64-unknown-none"
   },
   "prod_run": {
@@ -46,21 +46,21 @@
       "target/kernel/prod-tests.elf"
     ],
     "configured_cpus": 2,
-    "elf_sha256": "4db84d0ee2b309de8812a481fbf55afd00114fa3fef7485bd0dee53d4ef2088e",
+    "elf_sha256": "e31c8e1c5162c9f8bfc270c02c8f0c85f6741aeabe01a06eff3c3fd573e3abdc",
     "measurement_claim": "emulator timer ticks; not hardware throughput",
     "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
     "timeout_seconds": 30
   },
   "clean_checkout_kernel_matrix": "passed; both profiles, boot images and four negative controls",
-  "date_utc": "2026-10-02T14:33:19.4855707Z",
+  "date_utc": "2026-10-02T14:56:35.9259812Z",
   "prod_boot": {
     "artifact": "target/kernel/prod-boot.elf",
     "compiler": "1.99.0",
-    "elf_bytes": 261128,
+    "elf_bytes": 266368,
     "features": [],
-    "load_bytes": 36100,
-    "memory_bytes": 851204,
-    "sha256": "c3c70ec15b61d2d4931c120ccbc7c8b857a1384bce5cdb4b9cf083d031444d7d",
+    "load_bytes": 37484,
+    "memory_bytes": 852588,
+    "sha256": "da25482f0b79c756bcf018a1442aa4a275bacfcfe5f7d68f277e2b0ba7b24f58",
     "target": "aarch64-unknown-none"
   },
   "scope": "Native EL1 foundation; one active CPU; no scheduler/userspace/compatibility",
@@ -186,12 +186,12 @@
       "frequency": 62500000,
       "iterations": 64,
       "median": 6,
-      "p95": 7,
-      "p99": 7,
+      "p95": 13,
+      "p99": 13,
       "samples": [
-        0, 6, 7, 6, 0, 7, 0, 6, 7, 6, 6, 0, 6, 6, 6, 6, 0, 6, 0, 7, 6, 6, 7, 0,
-        6, 7, 6, 6, 0, 6, 0, 6, 6, 7, 6, 0, 7, 0, 6, 7, 0, 6, 0, 6, 6, 6, 6, 0,
-        6, 0, 7, 6, 0, 7, 0, 6, 7, 6, 6, 0, 6, 0, 6, 6
+        7, 13, 13, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 13, 6, 6, 6, 6, 6, 6, 6, 6,
+        6, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 13,
+        6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 12, 6, 6, 6, 6, 6, 6
       ],
       "scope": "lock_uncontended",
       "units": "timer_ticks",
@@ -359,14 +359,14 @@
       "event": "measurement",
       "frequency": 62500000,
       "iterations": 64,
-      "median": 38,
-      "p95": 44,
-      "p99": 100,
+      "median": 56,
+      "p95": 62,
+      "p99": 69,
       "samples": [
-        38, 37, 38, 32, 38, 38, 38, 37, 37, 50, 38, 38, 37, 37, 37, 37, 37, 38,
-        38, 38, 38, 38, 37, 37, 37, 37, 37, 37, 38, 38, 38, 100, 44, 38, 38, 38,
-        38, 38, 38, 38, 38, 38, 37, 37, 37, 43, 37, 38, 38, 44, 38, 38, 38, 38,
-        44, 37, 31, 37, 37, 37, 37, 37, 44, 38
+        56, 62, 57, 56, 69, 62, 57, 56, 56, 56, 57, 56, 56, 56, 50, 57, 56, 56,
+        56, 57, 56, 56, 56, 57, 50, 56, 56, 50, 56, 57, 56, 56, 56, 57, 56, 50,
+        50, 50, 50, 57, 56, 50, 56, 56, 57, 56, 50, 62, 50, 57, 56, 50, 56, 56,
+        57, 50, 50, 56, 56, 50, 56, 56, 57, 57
       ],
       "scope": "lock_uncontended",
       "units": "timer_ticks",
@@ -378,28 +378,36 @@
       "tests": 23
     }
   ],
-  "clean_checkout_host_tests": "44 passed; clean before and after checks",
+  "clean_checkout_host_tests": "Base candidate 44 passed; final 45-test committed checkout verification pending",
   "reproducibility_scope": "Clean candidate builds and executes; full ELF differs across source paths because debug information is retained. No bit-for-bit reproducibility claim.",
   "source_hashes": [
     {
-      "path": "crates/kernel/build.rs",
-      "sha256_lf": "804601354bc33d45a004c471e7760f2a3e48ed65b7983b739a6913744aed73d4"
+      "path": ".cargo/config.toml",
+      "sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "efb21d511fc35b098a6e8d772d5119a05b8c18fbf4943697d758834bc600da29"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "892b4485e67d0b013e6edbf27d07470e2c6482eac57b08c5355e316f788d1e61"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
     },
     {
       "path": "crates/kernel/Cargo.toml",
       "sha256_lf": "83230a0045e3c995c622c32cc23f8301d4b9abaa425cdc0da5f11b7271517d9a"
     },
     {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "804601354bc33d45a004c471e7760f2a3e48ed65b7983b739a6913744aed73d4"
+    },
+    {
       "path": "crates/kernel/linker.ld",
       "sha256_lf": "198aa9ff1992a6a70ce25dadcc666bc1f2b5300123eab826b87f31714a9ce3c6"
-    },
-    {
-      "path": "crates/kernel/src/main.rs",
-      "sha256_lf": "7f7f5b27bdd8e7f49062dd3cb31595cbeab1a032dcf4b05bba9ea684df96fd8b"
-    },
-    {
-      "path": "crates/kernel/src/tests.rs",
-      "sha256_lf": "a7373427c6a564e9745b3de6f0f758b0f9264548fc3aed5354937324fada1d84"
     },
     {
       "path": "crates/kernel/src/arch/aarch64/entry.S",
@@ -415,7 +423,7 @@
     },
     {
       "path": "crates/kernel/src/diagnostics/mod.rs",
-      "sha256_lf": "1812188e81438298ea1e70252900112723fdfd13f4c1e7c1b6e5e218bce69d67"
+      "sha256_lf": "1c27209b28759cd85718c7964687dcbd7d55eb3fd27821581593d58e1e71df1c"
     },
     {
       "path": "crates/kernel/src/hal/mod.rs",
@@ -424,6 +432,10 @@
     {
       "path": "crates/kernel/src/interrupt/mod.rs",
       "sha256_lf": "3cb6e89d7f0d3af052534bc5f4debff271698c36d0f0b9c618d7f3f823bdb1d6"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "0a2d3c7453371baaab7f374909dc3b364a7e495a99159a6740a4563fd3807504"
     },
     {
       "path": "crates/kernel/src/memory/mod.rs",
@@ -442,6 +454,10 @@
       "sha256_lf": "8f15cb396ac58afa6e2adbb730719132e77519bd4dd481476269b5780f904d15"
     },
     {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "a7373427c6a564e9745b3de6f0f758b0f9264548fc3aed5354937324fada1d84"
+    },
+    {
       "path": "crates/kernel/src/time/mod.rs",
       "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
     },
@@ -455,7 +471,7 @@
     },
     {
       "path": "crates/kernel-core/src/memory.rs",
-      "sha256_lf": "68ad151896670b529a21e285dc598284b311d9f8e9ad4febe5dec4526b4424b6"
+      "sha256_lf": "5b69f2220e2e40b45f46ff099462797eaf592064e1b37390afeca4c898e89b78"
     },
     {
       "path": "crates/kernel-core/src/platform.rs",
@@ -471,15 +487,19 @@
     },
     {
       "path": "crates/xtask/Cargo.toml",
-      "sha256_lf": "06e0ca626b874242ff65477e351babc7f2cc029b9f950971ed1865c30d2ad940"
+      "sha256_lf": "ca0d974fda70e55c08e32d46ee1740833fc01f4fdfd7c8b41bdd06c4a5488c71"
     },
     {
       "path": "crates/xtask/src/main.rs",
-      "sha256_lf": "bc504c8f81862a3105207cb10e9a8569f9247901b602ee1eb0de3f45a55e8c05"
+      "sha256_lf": "bf8d3d56650b0ca3dbc7123eaeca307af11af460a016e33a8dfa002ffab2febb"
     },
     {
       "path": "crates/xtask/tests/locking.rs",
       "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
     }
   ],
   "dev_run": {
@@ -509,9 +529,11 @@
       "target/kernel/dev-tests.elf"
     ],
     "configured_cpus": 2,
-    "elf_sha256": "9f4dcb768d3eafb2bfe1b2eb735d0c6e9b4518bbc59b4477f8cb374c52c0f644",
+    "elf_sha256": "d0acc8915e7bc90f2cff72aa36a3847a43108c98b147e3b2696cd5fd099f7925",
     "measurement_claim": "emulator timer ticks; not hardware throughput",
     "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
     "timeout_seconds": 30
-  }
+  },
+  "logo_verification": "DEV/PROD UART banner observed; full kernel matrix passed",
+  "measurement_verification": "History saved from verified matrix; self-comparison passed; forged quantile rejected with host exit 1; deterministic allocator work test passed"
 }

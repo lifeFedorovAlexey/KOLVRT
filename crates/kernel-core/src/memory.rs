@@ -13,6 +13,8 @@ pub struct Pool<const N: usize> {
     units: usize,
     free: usize,
     next: usize,
+    #[cfg(test)]
+    inspected_units: core::cell::Cell<usize>,
 }
 impl<const N: usize> Pool<N> {
     pub const fn empty() -> Self {
@@ -21,6 +23,8 @@ impl<const N: usize> Pool<N> {
             units: 0,
             free: 0,
             next: 0,
+            #[cfg(test)]
+            inspected_units: core::cell::Cell::new(0),
         }
     }
     pub fn initialize(&mut self, units: usize) -> Result<(), Error> {
@@ -32,6 +36,8 @@ impl<const N: usize> Pool<N> {
         Ok(())
     }
     fn busy(&self, i: usize) -> bool {
+        #[cfg(test)]
+        self.inspected_units.set(self.inspected_units.get() + 1);
         self.used[i / BITS_PER_WORD] & (1 << (i % BITS_PER_WORD)) != 0
     }
     fn set(&mut self, i: usize, value: bool) {
@@ -109,6 +115,34 @@ impl<const N: usize> Pool<N> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn cursor_preserves_ownership_and_linear_scan_work() {
+        const UNITS: usize = 256;
+        let mut candidate = Pool::<4>::empty();
+        let mut rescan_reference = Pool::<4>::empty();
+        candidate.initialize(UNITS).unwrap();
+        rescan_reference.initialize(UNITS).unwrap();
+        for expected in 0..UNITS {
+            // Test-only counterfactual: same allocator, cursor optimization disabled.
+            rescan_reference.next = 0;
+            assert_eq!(candidate.allocate(1, 1), Ok(expected));
+            assert_eq!(rescan_reference.allocate(1, 1), Ok(expected));
+            assert_eq!(candidate.available(), rescan_reference.available());
+        }
+        let fast_work = candidate.inspected_units.get();
+        let rescan_work = rescan_reference.inspected_units.get();
+        assert_eq!(fast_work, 2 * UNITS); // One search and one ownership update per unit.
+        assert_eq!(rescan_work, fast_work + UNITS * (UNITS - 1) / 2);
+        let before_exhaustion = candidate.inspected_units.get();
+        assert_eq!(candidate.allocate(1, 1), Err(Error::Exhausted));
+        assert_eq!(candidate.inspected_units.get(), before_exhaustion);
+        for unit in 0..UNITS {
+            candidate.release(unit, 1).unwrap();
+            rescan_reference.release(unit, 1).unwrap();
+        }
+        assert_eq!(candidate.available(), UNITS);
+        assert_eq!(rescan_reference.available(), UNITS);
+    }
     #[test]
     fn exhaustion_reuse_and_transactional_rejection() {
         let mut pool = Pool::<1>::empty();
