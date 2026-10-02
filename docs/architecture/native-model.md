@@ -36,6 +36,55 @@ Evidence: [process identity](../../research/cases/KOL-PATH-0019.json),
 [close outcomes](../../research/cases/KOL-PATH-0001.json),
 [reference resurrection](../../research/cases/KOL-PATH-0030.json).
 
+## Capability-type admission
+
+A capability type defines an authority contract, not a typed ioctl or protocol opcode.
+Before adding one, record an ADR-reviewed admission with the fields below. Driver-specific
+convenience, a new command encoding or an implementation class does not establish new
+authority. Conversely, do not merge unrelated authority models into a universal capability
+with arbitrary opcodes/payloads. Operations and their authorized effects remain finite
+and bounded; payload contents never mint rights or select an unchecked authority path.
+
+| Record field                | Required justification                                                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Named workload              | Actual consumer, resource and useful operation requiring authorization.                                                               |
+| Authority distinction       | Specific difference in resource/operation authority, scope, delegation/attenuation, revocation or lifetime; not just a protocol name. |
+| Existing bounded interfaces | Enumerate existing types/operations and explain precisely why they cannot safely express the requirement; if they can, reuse them.    |
+| Issuer and scope            | Who grants authority, caller/object/effect limits, quota owner and denied cases; no compat-created missing rights.                    |
+| Delegation                  | Permitted recipients, attenuation and nondelegable rights; transferred identity cannot be replaced by receiver defaults.              |
+| Revocation and lifetime     | Admission linearization, accepted-work semantics, retained references, close/reuse and restart behavior.                              |
+| Threat and failure          | Forgery, confused deputy, payload/opcode bypass, escalation, resource exhaustion and compromise containment.                          |
+| Validation and limits       | Negative authority/delegation tests, actual execution scope, unsupported cases and remaining implementation gaps.                     |
+
+Review against LAW-009 and LAW-013 under
+[ADR-0013](../architecture-decisions/0013-security-boundaries.md). This gate does not
+admit a universal object model or privileged implementation; placement has its own gate.
+
+### Worked decision: candidate bounded echo endpoint
+
+The named workload is the existing first-slice host echo fixture: a caller sends at most
+256 bytes to one bound endpoint and optionally delegates its handle. The candidate has
+one bounded SEND operation with SEND and TRANSFER rights. A second "echo-driver" type
+for the same resource, effects, scope and lifetime is rejected: the existing endpoint
+interface already expresses the requirement. A different wire layout belongs to protocol
+versioning, not a new authority type. Arbitrary driver-command passthrough is also rejected:
+it would introduce effects absent from the endpoint grant and cannot be justified by an opcode.
+
+SEND does not authorize delegation; TRANSFER permits only a subset of held known rights.
+Transfer preserves object and binding identity; receiver capacity failure or denied rights
+must leave both domains unchanged. Closing the sender handle does not revoke an independently
+delegated handle; generations prevent a stale sender handle from naming a replacement.
+General descendant revocation is not implemented by this host fixture.
+
+The [decoder and attenuation checks](../../crates/native-protocol-model/src/lib.rs)
+reject every unsupported operation and unknown rights bit. The
+[host domain tests](../../crates/native-state-models/src/lib.rs) check transactional
+rejection, attenuation and preserved identity. A decoded request is not authorization:
+caller-local lookup, required SEND rights and admission serialization still belong to
+the executing endpoint. These are candidate/host checks, not a kernel capability issuer,
+typed device authority, real IPC enforcement or proof of general revocation. Those need
+separate workload decisions and integration tests before implementation claims.
+
 ## Memory and I/O
 
 Read-only shared pages, writable owned buffers and device-access leases have distinct

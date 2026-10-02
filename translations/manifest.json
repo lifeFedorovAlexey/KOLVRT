@@ -62,8 +62,8 @@
         "translation_sha256": "5301903454b689e10193739d764cf134d88ead0021f5611c6a1c9707b685e6fb"
       },
       "docs/architecture-decisions/0013-security-boundaries.md": {
-        "source_sha256": "f041b8ab06ab4146ee3c0ae5e872caa6f4e73204edd3f54d4ca907d7c01ae556",
-        "translation_sha256": "3edc9048430ee99a876789e928a3c2ebf2af326a11e1c92fdd37781605fa5348"
+        "source_sha256": "1b3834ddf80c6fa0d4a130661ae7ce936efd8facef18555fc91c68490d3a449f",
+        "translation_sha256": "76e99e2d393b61349fe090eac523bc78b02f95d46c753bd6ee42f47f1aecff93"
       },
       "docs/architecture-decisions/0014-el0-foundation.md": {
         "source_sha256": "562b598ffa83a825050dfb9e6f2722cfb5d72c12754f1c2d81b06178c63f32ce",
@@ -102,8 +102,8 @@
         "translation_sha256": "08179f352cb61f1c18481ab8959451c187fc6cd9b3daec4d38c318e192fbd7fb"
       },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "da10a1e0bd82a8177b7e7b5ae4c47e6683948ac9b2f7a9dea55594888fe96768",
-        "translation_sha256": "3d16d9e2ec8d17f470914bcfe4efb992ad1a4a854749bbeab50c0727d9221a33"
+        "source_sha256": "f4a4866d57f6d96bcd19537213d2a9801bc4d082c615b5f37abd6fce5125ce9c",
+        "translation_sha256": "39fd3a9bf0c85ace1f2761c2cf9f9a0929e03c8ef5c60319d8b56780f99d79e3"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",
@@ -126,8 +126,8 @@
         "translation_sha256": "f5d9cdd32e3a7a8df8f714b861e8cbe2818f953e4273ba55ab348d3a7dc04edc"
       },
       "docs/architecture/native-model.md": {
-        "source_sha256": "65a67ac61d7b1683cfe59cc7070c2010f455865548510b09685c63929e889abe",
-        "translation_sha256": "71b0129d1210b26664d0e3e0501e3f808b752534cbe8f0f8d1b5773864897232"
+        "source_sha256": "0f5db67b0dd834a8fc1ad7435c3fbbefecf207cf34568358394636bf700f418c",
+        "translation_sha256": "0a44f84819abed6177a2abd90bcfbda5032df4a9c0b4642962b969a39fd074c1"
       },
       "docs/architecture/output-policy.md": {
         "source_sha256": "41548441fbe85999965ad305c87952bc960c7f5de9024dcf5bf61999e121819b",

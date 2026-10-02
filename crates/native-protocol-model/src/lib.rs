@@ -272,6 +272,33 @@ mod tests {
         assert_eq!(request.payload(), b"ping");
     }
     #[test]
+    fn endpoint_has_no_arbitrary_command_escape_hatch() {
+        let mut request = message();
+        for operation in 0..=u16::MAX {
+            request[request_fields::OPERATION].copy_from_slice(&operation.to_le_bytes());
+            if operation == OPERATION_SEND {
+                assert!(decode(&request, 0).is_ok());
+            } else {
+                assert_eq!(decode(&request, 0), Err(Error::Operation));
+            }
+        }
+    }
+
+    #[test]
+    fn every_unknown_right_and_redelegation_escalation_is_denied() {
+        for bit in 0..u32::BITS {
+            let unknown = 1u32 << bit;
+            if unknown & KNOWN_RIGHTS == 0 {
+                assert_eq!(delegate(KNOWN_RIGHTS | unknown, SEND), Err(Error::Rights));
+                assert_eq!(delegate(KNOWN_RIGHTS, SEND | unknown), Err(Error::Rights));
+            }
+        }
+        let received = delegate(KNOWN_RIGHTS, SEND).unwrap();
+        assert_eq!(delegate(received, SEND), Err(Error::Rights));
+        assert_eq!(delegate(received, KNOWN_RIGHTS), Err(Error::Rights));
+        assert_eq!(delegate(TRANSFER, SEND), Err(Error::Rights));
+    }
+    #[test]
     fn unsupported_versions_never_decode_as_current_contract() {
         let mut request = message();
         let mut response = [0; RESPONSE_HEADER];

@@ -554,6 +554,46 @@ mod tests {
         assert_eq!(b, before);
         assert_eq!(a.get(token).unwrap(), grant);
     }
+
+    #[test]
+    fn denied_delegation_does_not_publish_or_replace_identity() {
+        use native_protocol_model::{Error, KNOWN_RIGHTS, SEND, TRANSFER};
+        for (held, requested) in [(SEND, SEND), (TRANSFER, SEND), (KNOWN_RIGHTS, u32::MAX)] {
+            let mut sender = Domain::default();
+            let mut receiver = Domain::default();
+            let token = sender
+                .insert(Grant {
+                    object: ORIGINAL_OBJECT,
+                    binding: ORIGINAL_BINDING,
+                    rights: held,
+                })
+                .unwrap();
+            let sender_before = sender.clone();
+            let receiver_before = receiver.clone();
+            assert_eq!(
+                sender.transfer(token, &mut receiver, requested),
+                Err(Error::Rights)
+            );
+            assert_eq!(sender, sender_before);
+            assert_eq!(receiver, receiver_before);
+            sender.close(token).unwrap();
+            let replacement = sender
+                .insert(Grant {
+                    object: REPLACEMENT_OBJECT,
+                    binding: REPLACEMENT_BINDING,
+                    rights: KNOWN_RIGHTS,
+                })
+                .unwrap();
+            assert_ne!(replacement, token);
+            let before_stale = sender.clone();
+            assert_eq!(
+                sender.transfer(token, &mut receiver, SEND),
+                Err(Error::Stale)
+            );
+            assert_eq!(sender, before_stale);
+            assert_eq!(receiver, receiver_before);
+        }
+    }
     #[test]
     fn exhausted_generation_retires_only_its_slot() {
         let mut domain = Domain::default();

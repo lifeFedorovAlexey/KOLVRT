@@ -12,6 +12,15 @@ For consumer C and operation O, EffectiveAuthority_via_compat(C,O) must be a sub
 
 Global state ownership, authority and coordination alone do not justify EL1. Require proof that EL0 using existing narrow privileged primitives cannot safely enforce the invariant; admit only the irreducible privileged mechanism. Performance alone is insufficient. The [admission policy](../architecture/kernel-admission-policy.md) records that argument.
 
+Issue #7 extends the boundary review to capability-type admission under LAW-009 and
+LAW-013. Require a named workload and a demonstrated resource/operation, scope,
+delegation, revocation or lifetime distinction that existing bounded interfaces cannot
+express safely. Record issuer/effects, threat analysis and negative tests. Protocol opcodes
+and driver convenience alone are insufficient; an arbitrary-command universal capability
+is also rejected. The [native model](../architecture/native-model.md) contains the record
+requirements and worked decision to reuse the bounded echo endpoint rather than add an
+equivalent type. This creates no capability type, kernel grant API or new law.
+
 ## Alternatives
 
 Literal equality of service and caller capability inventories; compatibility-specific grants or waivers; EL1 placement for globally authoritative services or lower IPC cost.

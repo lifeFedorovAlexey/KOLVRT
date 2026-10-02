@@ -112,7 +112,7 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Enforcement:** Specify creation, upgrade, cancellation and destruction transitions for each object.
+**Enforcement:** Specify creation, upgrade, cancellation and destruction transitions for each object. The [capability admission record](native-model.md) and [ADR-0013](../architecture-decisions/0013-security-boundaries.md) require a demonstrated authority/lifetime distinction before adding a type; this also enforces LAW-009.
 
 **Testing:** Explore last-release/upgrade races, name reuse, unrelated close and stalled readers.
 
