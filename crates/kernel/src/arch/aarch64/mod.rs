@@ -71,6 +71,8 @@ read_reg!(frequency, "cntfrq_el0");
 read_reg!(sctlr, "sctlr_el1");
 read_reg!(acknowledge, "S3_0_C12_C12_0");
 read_reg!(mpidr, "mpidr_el1");
+read_reg!(user_esr, "esr_el1");
+read_reg!(user_far, "far_el1");
 pub fn affinity() -> u64 {
     mpidr() & kernel_core::platform::MPIDR_AFFINITY_MASK
 }
@@ -207,5 +209,23 @@ pub fn poweroff() -> ! {
     }
     loop {
         core::hint::spin_loop();
+    }
+}
+
+/// # Safety
+/// Root owns live aligned tables and preserves this CPU's kernel code/stack mappings.
+/// IRQ is masked; caller retains the address space until all CPUs leave it. No ASID reuse
+/// without completed local invalidation. The foundation pins each space to one CPU.
+pub unsafe fn activate_root(root: u64) {
+    // SAFETY: INV-USER-TTBR: caller retains root; ASID zero, full local invalidation on every switch.
+    unsafe {
+        asm!("dsb ish", "msr ttbr0_el1, {}", "isb", "tlbi vmalle1", "dsb ish", "isb", in(reg) root, options(nostack));
+    }
+}
+pub fn publish_instructions(start: usize, end: usize) {
+    clean_boot(start, end);
+    // SAFETY: INV-USER-IMAGE: completed code writes to PoC before global inner-shareable I-cache invalidation.
+    unsafe {
+        asm!("ic ialluis", "dsb ish", "isb", options(nostack));
     }
 }

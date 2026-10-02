@@ -107,12 +107,12 @@ KOLVRT уже загружается как native AArch64 kernel в QEMU.
 | ARM physical timer IRQ             | ✅                                                |
 | DEV / PROD профили                 | ✅                                                |
 | Автоматический kernel test harness | ✅                                                |
-| Настоящие in-kernel tests          | ✅ 39 в каждом профиле                            |
+| Настоящие in-kernel tests          | ✅ 53 в каждом профиле                            |
 | Negative failure controls          | ✅                                                |
 | Отладка GDB                        | ✅                                                |
 | SMP                                | ✅ Основа двух CPU в QEMU                         |
-| EL0 / userspace                    | ⏳                                                |
-| Scheduler                          | ⏳                                                |
+| EL0 / userspace                    | ✅ Ограниченный фундамент изолированных процессов |
+| Scheduler                          | ✅ Timer-driven с фиксированной per-CPU affinity  |
 | Runtime versioned routing          | 🧪 Архитектура определена, не подключена к kernel |
 | Linux compatibility                | ⏳ Не начата                                      |
 
@@ -151,7 +151,7 @@ Linux ABI compatibility where useful
 
 Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
 
-Сначала native execution model. Следующий разрешённый milestone — Phase 2 routing integration после review сохранённого groundwork; долгосрочная схема не разрешает автоматически начинать EL0 или scheduler.
+Сначала native execution model. Разрешённый фундамент EL0/address spaces и timer scheduler реализован для восьми процессов с фиксированной affinity на двух CPU. IPC, handles/capabilities, cancellation, services и security domains остаются следующим этапом; routing отключён. Полный native slice этим не завершён.
 
 ---
 
@@ -418,7 +418,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Тесты должны обнаруживать ошибки ядра
 
-Текущая матрица выполняет **39 настоящих kernel tests в DEV и PROD test profiles**.
+Текущая матрица выполняет **53 настоящих kernel tests в DEV и PROD test profiles**.
 
 Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
 
@@ -535,5 +535,7 @@ Stable userspace ABI пока отсутствует.
 Или на менее формальном языке проекта:
 
 > **Не плюй в ядро — сам из него пить будешь.**
+
+[Контракт фундамента EL0](docs/kernel/el0.md) фиксирует ownership, retirement, tests и ограничения; [ADR-0014](docs/architecture-decisions/0014-el0-foundation.md) рассматривает механизмы.
 
 [English source](../../README.md)

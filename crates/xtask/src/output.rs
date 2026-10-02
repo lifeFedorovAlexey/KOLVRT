@@ -156,11 +156,15 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 measurement = true;
             }
             Some("el0") if !tests && event["status"] == "pass" => {
+                let processes = cpus * crate::platform_config::USER_PROCESSES_PER_CPU;
                 if el0
                     || event["reclaimed"] != true
-                    || ["processes", "workers", "faults", "switches"]
-                        .iter()
-                        .any(|field| event[field].as_u64().is_none())
+                    || event["processes"].as_u64() != Some(processes as u64)
+                    || event["workers"].as_u64() != Some(cpus as u64)
+                    || event["faults"].as_u64() != Some((processes - cpus) as u64)
+                    || event["switches"]
+                        .as_u64()
+                        .is_none_or(|switches| switches <= processes as u64)
                 {
                     return Err("invalid or duplicate EL0 event".into());
                 }
@@ -177,6 +181,7 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
             }
             Some("boot") if !tests => {
                 if event["status"] != "pass"
+                    || !el0
                     || event["el"] != 1
                     || event["timer_irq"] != true
                     || event["active_cpus"].as_u64() != Some(cpus as u64)
@@ -249,9 +254,18 @@ mod tests {
     fn boot() -> Value {
         json!({"event":"boot","status":"pass","el":1,"timer_irq":true,"active_cpus":2,"secondary_shutdown_verified":true})
     }
+    fn el0() -> Value {
+        let cpus = crate::platform_config::ACTIVE_CPUS;
+        let processes = crate::platform_config::USER_PROCESSES;
+        json!({"event":"el0","status":"pass","processes":processes,"workers":cpus,"faults":processes-cpus,"switches":processes * 2,"reclaimed":true})
+    }
     #[test]
     fn framing_rejects_lost_or_malformed_evidence() {
-        let valid = format!("[OK] console: ready\n{PREFIX}{}\n", boot());
+        let valid = format!(
+            "[OK] console: ready\n{PREFIX}{}\n{PREFIX}{}\n",
+            el0(),
+            boot()
+        );
         let events = parse(&valid).unwrap();
         validate(&events, false, &[], 2).unwrap();
         assert_eq!(human_text(&valid), "[OK] console: ready\n");

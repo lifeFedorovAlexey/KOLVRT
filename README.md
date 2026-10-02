@@ -107,12 +107,12 @@ KOLVRT already boots as a native AArch64 kernel in QEMU.
 | ARM physical timer IRQ        | ✅                                             |
 | DEV / PROD profiles           | ✅                                             |
 | Automated kernel test harness | ✅                                             |
-| Real in-kernel tests          | ✅ 39 per profile                              |
+| Real in-kernel tests          | ✅ 53 per profile                              |
 | Negative failure controls     | ✅                                             |
 | GDB debugging                 | ✅                                             |
 | SMP                           | ✅ Two-CPU QEMU foundation                     |
-| EL0 / userspace               | ⏳                                             |
-| Scheduler                     | ⏳                                             |
+| EL0 / userspace               | ✅ Bounded isolated-process foundation         |
+| Scheduler                     | ✅ Timer-driven, fixed per-CPU affinity        |
 | Runtime versioned routing     | 🧪 Architecture defined, not wired into kernel |
 | Linux compatibility           | ⏳ Not started                                 |
 
@@ -151,7 +151,7 @@ Linux ABI compatibility where useful
 
 Compatibility is not being wired into a single-CPU kernel and patched for SMP later.
 
-The native execution model comes first. The next authorized milestone is Phase 2 routing integration after review of the preserved groundwork; the longer-term diagram does not authorize automatic EL0 or scheduler work.
+The native execution model comes first. The authorized EL0/address-space and timer-scheduler foundation is implemented for eight fixed-affinity processes on two CPUs. IPC, handles/capabilities, cancellation, services and security domains remain the next stage; routing stays disconnected. This does not complete the full native slice.
 
 ---
 
@@ -418,7 +418,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Tests are supposed to fail when the kernel is wrong
 
-The current matrix runs **39 real kernel tests in both DEV and PROD test profiles**.
+The current matrix runs **53 real kernel tests in both DEV and PROD test profiles**.
 
 It also runs negative controls that are required to fail correctly.
 
@@ -535,5 +535,7 @@ Third-party materials retain their respective licenses.
 Or, in the less formal project dialect:
 
 > **Do not spit into the kernel—you will drink from it yourself.**
+
+[EL0 foundation contract](docs/kernel/el0.md) records ownership, retirement, tests and limits; [ADR-0014](docs/architecture-decisions/0014-el0-foundation.md) reviews the mechanisms.
 
 [Russian translation](translations/ru/README.md)

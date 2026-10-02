@@ -11,6 +11,7 @@ mod interrupt;
 mod memory;
 mod percpu;
 mod platform;
+mod scheduler;
 mod smp;
 mod sync;
 #[cfg(feature = "kernel-tests")]
@@ -101,6 +102,29 @@ pub extern "C" fn kernel_main() -> ! {
     }
     #[cfg(not(feature = "kernel-tests"))]
     {
+        let users = scheduler::exercise(&mut physical);
+        event!(
+            "{{\"event\":\"el0\",\"status\":\"pass\",\"processes\":{},\"workers\":{},\"faults\":{},\"switches\":{},\"reclaimed\":{}}}",
+            users.processes,
+            users.workers,
+            users.faults,
+            users.switches,
+            users.reclaimed
+        );
+        diagnostics::status(
+            "OK",
+            "EL0",
+            format_args!(
+                "{} processes; {} contained faults; {}",
+                users.processes,
+                users.faults,
+                if users.reclaimed {
+                    "resources reclaimed"
+                } else {
+                    "resources retained"
+                }
+            ),
+        );
         cpu::timer(time::deadline_after(BOOT_TIMER_DELAY));
         cpu::unmask();
         let deadline = time::deadline_after(BOOT_IRQ_TIMEOUT);

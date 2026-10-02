@@ -113,6 +113,14 @@ impl Physical {
     pub fn release(&mut self, frame: Frame) {
         crate::percpu::primary_only();
         assert!(self.reclaimable(&frame), "retiring frame release");
+        assert!(
+            USER_CHARGES.iter().all(|charge| {
+                let address = charge.load(Ordering::Acquire);
+                address == 0
+                    || !(frame.address..frame.address + frame.count * PAGE_SIZE).contains(&address)
+            }),
+            "user address space retains frame"
+        );
         let t = TABLES.lock();
         assert!(
             !t.test_pages
@@ -206,7 +214,9 @@ pub fn map(
 ) -> Result<Mapping<'_>, kernel_core::memory::Error> {
     crate::percpu::primary_only();
     let pa = frame.address;
-    if RETIRING_FRAME.load(Ordering::Acquire) != 0 {
+    if RETIRING_FRAME.load(Ordering::Acquire) != 0
+        || USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0
+    {
         return Err(kernel_core::memory::Error::Occupied);
     }
     let descriptor = cpu::page::descriptor(pa as u64, writable, executable)?;
@@ -303,6 +313,112 @@ impl Drop for Retirement<'_> {
     }
 }
 static HEAP_BASE: AtomicUsize = AtomicUsize::new(0);
+pub const USER_BASE: usize = 0x2000_0000;
+pub const USER_CODE: usize = USER_BASE;
+pub const USER_DATA: usize = USER_BASE + PAGE_SIZE;
+pub const USER_GUARD: usize = USER_BASE + 2 * PAGE_SIZE;
+pub const USER_STACK_TOP: usize = USER_BASE + 4 * PAGE_SIZE;
+const USER_STACK_INDEX: usize = 3;
+const USER_ALIAS_INDEX: usize = 16;
+const USER_ROOT_PAGE: usize = 0;
+const USER_DEVICES_PAGE: usize = 1;
+const USER_LEAVES_PAGE: usize = 2;
+const USER_CODE_PAGE: usize = 3;
+const USER_DATA_PAGE: usize = 4;
+const USER_STACK_PAGE: usize = 5;
+pub const USER_SPACE_PAGES: usize = USER_STACK_PAGE + 1;
+static USER_CHARGES: [AtomicUsize; config::USER_PROCESSES] =
+    [const { AtomicUsize::new(0) }; config::USER_PROCESSES];
+pub static USER_EXECUTION_ACTIVE: AtomicUsize = AtomicUsize::new(0);
+/// CPU0 owns setup/reclamation. Borrow plus persistent charge protects forgotten guards.
+/// The scheduler may publish a root only under its separate unsafe lifetime contract.
+pub struct UserSpace<'a> {
+    frame: &'a Frame,
+    id: usize,
+}
+impl<'a> UserSpace<'a> {
+    pub fn new(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
+        crate::percpu::primary_only();
+        assert_eq!(USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
+        assert_eq!(frame.count, USER_SPACE_PAGES);
+        assert!(id < USER_CHARGES.len() && !image.is_empty() && image.len() <= PAGE_SIZE);
+        assert_eq!(
+            USER_CHARGES[id].compare_exchange(
+                0,
+                frame.address,
+                Ordering::AcqRel,
+                Ordering::Acquire
+            ),
+            Ok(0)
+        );
+        let native = TABLES.lock();
+        // SAFETY: INV-USER-SPACE: exclusive zeroed contiguous allocation, six checked pages;
+        // private page-table storage, no published root or user execution during construction.
+        unsafe {
+            let root = &mut *((frame.address + USER_ROOT_PAGE * PAGE_SIZE) as *mut Table);
+            let devices = &mut *((frame.address + USER_DEVICES_PAGE * PAGE_SIZE) as *mut Table);
+            let leaves = &mut *((frame.address + USER_LEAVES_PAGE * PAGE_SIZE) as *mut Table);
+            root.0.copy_from_slice(&native.root.0);
+            devices.0.copy_from_slice(&native.devices.0);
+            root.0[DEVICE_ROOT_INDEX] = (devices as *mut Table as u64) | page::TABLE_OR_PAGE;
+            assert_eq!(devices.0[USER_BASE >> BLOCK_SHIFT], 0);
+            devices.0[USER_BASE >> BLOCK_SHIFT] =
+                (leaves as *mut Table as u64) | page::TABLE_OR_PAGE;
+            leaves.0[0] = page::user_descriptor(
+                (frame.address + USER_CODE_PAGE * PAGE_SIZE) as u64,
+                false,
+                true,
+            )
+            .unwrap();
+            leaves.0[1] = page::user_descriptor(
+                (frame.address + USER_DATA_PAGE * PAGE_SIZE) as u64,
+                true,
+                false,
+            )
+            .unwrap();
+            leaves.0[USER_STACK_INDEX] = page::user_descriptor(
+                (frame.address + USER_STACK_PAGE * PAGE_SIZE) as u64,
+                true,
+                false,
+            )
+            .unwrap();
+            leaves.0[USER_ALIAS_INDEX + id] = leaves.0[1];
+            core::ptr::copy_nonoverlapping(
+                image.as_ptr(),
+                (frame.address + USER_CODE_PAGE * PAGE_SIZE) as *mut u8,
+                image.len(),
+            );
+        }
+        drop(native);
+        cpu::publish_instructions(frame.address, frame.address + frame.count * PAGE_SIZE);
+        Self { frame, id }
+    }
+    pub fn root(&self) -> u64 {
+        self.frame.address as u64
+    }
+    pub fn data_address(&self) -> usize {
+        self.frame.address + USER_DATA_PAGE * PAGE_SIZE
+    }
+    pub fn alias(id: usize) -> usize {
+        USER_BASE + (USER_ALIAS_INDEX + id) * PAGE_SIZE
+    }
+}
+impl Drop for UserSpace<'_> {
+    fn drop(&mut self) {
+        crate::percpu::primary_only();
+        assert_eq!(
+            USER_EXECUTION_ACTIVE.load(Ordering::Acquire),
+            0,
+            "active user space retirement"
+        );
+        // Execution admission has ended; every participating CPU restored native root and
+        // completed full local TLBI before its release completion. Charge is last to go.
+        assert_eq!(
+            USER_CHARGES[self.id].swap(0, Ordering::AcqRel),
+            self.frame.address
+        );
+    }
+}
 static HEAP_PLAN: Lock<Pool<HEAP_BITMAP_WORDS>> = Lock::new(Pool::empty());
 pub fn initialize_heap(p: &mut Physical) {
     let frame = p

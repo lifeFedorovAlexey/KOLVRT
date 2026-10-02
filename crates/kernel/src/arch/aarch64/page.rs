@@ -10,6 +10,16 @@ pub const NORMAL_MEMORY_INDEX: u64 = 1 << 2;
 pub const READ_ONLY: u64 = 1 << 7;
 pub const USER_EXECUTE_NEVER: u64 = 1 << 54;
 pub const PRIVILEGED_EXECUTE_NEVER: u64 = 1 << 53;
+pub const USER_ACCESS: u64 = 1 << 6;
+pub const NOT_GLOBAL: u64 = 1 << 11;
+pub fn user_descriptor(pa: u64, writable: bool, executable: bool) -> Result<u64, Error> {
+    let kernel = descriptor(pa, writable, executable)?;
+    Ok((kernel & !USER_EXECUTE_NEVER)
+        | USER_ACCESS
+        | NOT_GLOBAL
+        | PRIVILEGED_EXECUTE_NEVER
+        | if executable { 0 } else { USER_EXECUTE_NEVER })
+}
 pub fn descriptor(pa: u64, writable: bool, executable: bool) -> Result<u64, Error> {
     if pa & PAGE_OFFSET_MASK != 0 || pa >= PHYSICAL_ADDRESS_LIMIT || (writable && executable) {
         return Err(Error::Invalid);
@@ -30,6 +40,21 @@ pub fn descriptor(pa: u64, writable: bool, executable: bool) -> Result<u64, Erro
 #[cfg(test)]
 mod tests {
     const TEST_PAGE_ADDRESS: u64 = 0x4000_0000;
+    #[test]
+    fn user_permissions_preserve_privilege_and_wx_boundaries() {
+        let code = super::user_descriptor(TEST_PAGE_ADDRESS, false, true).unwrap();
+        let data = super::user_descriptor(TEST_PAGE_ADDRESS, true, false).unwrap();
+        for entry in [code, data] {
+            assert_ne!(entry & super::USER_ACCESS, 0);
+            assert_ne!(entry & super::NOT_GLOBAL, 0);
+            assert_ne!(entry & super::PRIVILEGED_EXECUTE_NEVER, 0);
+        }
+        assert_ne!(code & super::READ_ONLY, 0);
+        assert_eq!(code & super::USER_EXECUTE_NEVER, 0);
+        assert_eq!(data & super::READ_ONLY, 0);
+        assert_ne!(data & super::USER_EXECUTE_NEVER, 0);
+        assert!(super::user_descriptor(TEST_PAGE_ADDRESS, true, true).is_err());
+    }
     #[test]
     fn negative_permissions_and_alignment() {
         let descriptor = super::descriptor(TEST_PAGE_ADDRESS, false, false).unwrap();

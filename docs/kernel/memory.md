@@ -10,6 +10,8 @@ Map rejects misalignment, W+X, executable dynamic data, kernel aliases, out-of-r
 
 ## Heap
 
+The [EL0 foundation](el0.md) additionally retains six-page UserSpace allocations. Borrowed frames plus persistent per-space charges protect table/code/data/stack lifetime even if a guard is forgotten. Roots are immutable while admitted, user aliases cannot access kernel mappings, and both CPUs restore the native root with local TLBI before charges can be removed. Native mapping mutation fails while the user batch is active; this is a scoped admission rule, not permanent CPU0 ownership for future workloads.
+
 The heap permanently owns 16 aligned physical pages: 64 KiB, 64-byte allocation quantum, 128-byte bitmap. Allocation is bounded, checks alignment and returns null on exhaustion. A lock protects allocation metadata; IRQ handlers never enter the allocator. Deallocation requires the original live pointer and exact Layout, as required by GlobalAlloc.
 
 Contiguous allocation can fail under fragmentation despite a positive free count. Quantization wastes up to 63 bytes per rounded allocation, with additional alignment fragmentation. This bounded foundation is not a claim to be the fastest allocator for future workloads. [Decision review](../architecture/implementation-review.md) compares alternatives. Tests exercise exhaustion, reuse, collision, actual translation and permission faults.

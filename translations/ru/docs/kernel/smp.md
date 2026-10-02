@@ -1,6 +1,6 @@
 # Основа корректности двух CPU
 
-Phase 1.1 запускает два AArch64 EL1 CPU в закреплённой QEMU virt. Scheduler, EL0 и runtime compatibility не подключены. [ADR-0012](../architecture-decisions/0012-multicore-retirement.md) фиксирует решение; [обзор Phase 1](../research/phase-1-review.md) остаётся историческим этапом CPU0.
+Phase 1.1 запускает два AArch64 EL1 CPU в закреплённой QEMU virt. Последующий [фундамент EL0](el0.md) добавляет fixed-affinity queues на обоих CPU; runtime compatibility остаётся отключённым. [ADR-0012](../architecture-decisions/0012-multicore-retirement.md) фиксирует решение; [обзор Phase 1](../research/phase-1-review.md) остаётся историческим этапом CPU0.
 
 ## Запуск и публикация
 

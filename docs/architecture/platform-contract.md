@@ -1,6 +1,6 @@
 # First platform contract
 
-The design target is AArch64 EL1 with EL0 tasks, little-endian data, 4 KiB translation granules and two processors. CPU state and page-table permissions separate privileged code from tasks; writable pages are non-executable and executable pages are not writable. User faults terminate the task; privileged faults halt rather than resume unknown state. The current [kernel foundation](../kernel/boot.md) implements EL1 on both CPUs; EL0 tasks remain a later obligation.
+The design target is AArch64 EL1 with EL0 tasks, little-endian data, 4 KiB translation granules and two processors. CPU state and page-table permissions separate privileged code from tasks; writable pages are non-executable and executable pages are not writable. User faults terminate the task; privileged faults halt rather than resume unknown state. The current [kernel foundation](../kernel/boot.md) implements EL1 on both CPUs; The bounded [EL0 foundation](../kernel/el0.md) now executes isolated processes; the IPC/service workload remains a later obligation.
 
 ## Reproducible target
 

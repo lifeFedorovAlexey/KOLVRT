@@ -13,3 +13,5 @@ Acknowledge возвращает настоящий INTID. Обработка т
 ## Multicore delivery
 
 CPU0 однократно инициализирует distributor. Каждый CPU инициализирует только собственный redistributor, timer PPI и именованный coordination SGI. SGI target encoding сохраняет affinity levels и проверяет поддерживаемый target range. IRQ фиксирует настоящую delivery и pending TLB generation; обычный код подтверждает retirement после завершения readers и local TLBI. IRQ не захватывает table/heap locks и не пишет UART. Настоящие tests покрывают оба направления IPI, повторную delivery, независимые timers и Acquire/Release publication shared pair. См. [SMP](smp.md).
+
+Lower-EL timer delivery запрашивает bounded deferred selection после остановки source и EOI. [EL0 switch](el0.md) выполняется с masked IRQ, не берёт queue locks и ничего не выделяет; одна SGI delivery не расходует timer slice.

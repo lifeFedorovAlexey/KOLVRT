@@ -3,6 +3,7 @@
 
 pub mod memory;
 pub mod platform;
+pub mod scheduling;
 pub mod time;
 pub mod window;
 

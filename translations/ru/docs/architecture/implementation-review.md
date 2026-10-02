@@ -56,4 +56,6 @@ Performance tests сами по себе не обосновывают алго�
 
 [Multicore решение](../architecture-decisions/0012-multicore-retirement.md) рассматривает PSCI publication, CPU ownership, interrupts с корректной affinity, acknowledgement в обычном коде и quiescent shutdown. Настоящие SMP tests дополняют host lock evidence; новый global lock или спекулятивный reclamation algorithm не нужны.
 
+Последующее [решение EL0](../architecture-decisions/0014-el0-foundation.md) принимает fixed-affinity queues, immutable roots, full local flushes и полное сохранение context. Чистый selection отделён от privileged switching. User faults завершают только свой процесс; ownership charges переживают забывание guards. IPC и compatibility остаются отложены.
+
 [Английский оригинал](../../../../docs/architecture/implementation-review.md)

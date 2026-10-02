@@ -13,3 +13,5 @@ The bounded TTAS lock waits through relaxed loads and uses Acquire CAS with Rele
 ## Multicore delivery
 
 CPU0 initializes the distributor once. Each CPU initializes only its own redistributor, timer PPI and named coordination SGI. SGI target encoding preserves affinity levels and checks the supported target range. IRQ records actual delivery and pending TLB generation; ordinary code acknowledges retirement after readers finish and local TLBI completes. No IRQ takes table/heap locks or writes UART. Real tests cover both IPI directions, repeated delivery, independent timers and Acquire/Release shared-pair publication. See [SMP](smp.md).
+
+Lower-EL timer delivery requests bounded deferred selection after source stop and EOI. The [EL0 switch](el0.md) runs with IRQ masked, takes no queue locks and allocates nothing; SGI delivery alone does not consume a timer slice.

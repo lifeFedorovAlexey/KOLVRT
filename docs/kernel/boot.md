@@ -2,7 +2,7 @@
 
 Console and event presentation follow the [output policy](../architecture/output-policy.md). Default images show completed milestones with units and no raw JSON. Structured evidence is explicitly enabled; the runner retains it in log/result files.
 
-The current implementation boots a native EL1 kernel, with two active CPUs, without userspace, scheduler or compatibility paths. [Foundation decision](../architecture-decisions/0010-kernel-foundation.md) defines the accepted scope.
+The current implementation boots a native EL1 kernel with two participating CPUs and executes the bounded [EL0 scheduling workload](el0.md). Compatibility remains disconnected. [Foundation decision](../architecture-decisions/0010-kernel-foundation.md) records the earlier EL1 milestone.
 
 QEMU 10.1.0 uses `virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off`, Cortex-A57, TCG, two configured CPUs and 256 MiB RAM. Both CPU0 and CPU1 execute native EL1 code; CPU1 starts through PSCI CPU_ON with a separate stack. Platform discovery is isolated in `crates/kernel/src/platform`; architecture registers and vectors live in `arch/aarch64`. Directory names describe responsibilities and do not import another operating system.
 

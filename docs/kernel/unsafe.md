@@ -130,4 +130,16 @@ New assembly and unsafe Rust remain in target/kernel/unsafe-audit.json; machine 
 
 ## Limits
 
+### INV-USER-SPACE and INV-USER-RETIRE
+
+CPU0 initializes six exclusively allocated pages and retains Frame borrows plus persistent space charges. A forgotten guard cannot permit release. Roots are immutable while admitted; each is pinned to one CPU. Both CPUs restore native root and complete local TLBI before release completion. CPU0 acquires both completions before clearing charges. Tick writes happen only while the local process is suspended; tag reads happen after all writers stop. Actual RO/NX/guard/foreign faults, peer survival, returned free count and forgotten-guard rejection cover these obligations.
+
+### INV-USER-TTBR and INV-USER-IMAGE
+
+Privileged root/barrier instructions require live aligned tables preserving kernel PC/SP. ASID zero requires full local invalidation on each switch and before reclamation. Trusted immutable linker extents are copied into checked owned pages, cleaned to PoC and published with instruction-cache maintenance before launch. Root-switch omission must fail. No loader, migration, ASID reuse or physical cache-coherency proof is claimed.
+
+### INV-USER-CONTEXT and INV-RUNQUEUE
+
+Lower-EL vectors use the per-CPU EL1 stack and complete aligned 816-byte frame; compile-time offsets match assembly. Kernel ABI/SP/TLS is restored on return. Each CPU exclusively mutates its UnsafeCell queue with IRQ masked; no reference spans user execution. Setup precedes release launch; acquire done precedes inspection. One boot session prevents reset races. Per-process ownership CAS and fixed affinity reject duplicate/wrong-CPU execution. IRQ takes no locks and allocates nothing. User register expectations belong to the verifier, not authority logic. Actual GPR/SIMD/FP/TLS/stack checks, timer switching and corrupted-context rejection validate this scope. See the [EL0 contract](el0.md).
+
 This register documents local proof obligations and observed tests. It does not establish hardware correctness, all malformed-firmware cases or SMP safety. Boot firmware, toolchain, emulator and generated instructions remain trust boundaries. The [SMP contract](smp.md) limits participation to two CPUs and explicitly retained readers. No unsafe is justified by performance alone; the [method gate](../architecture/implementation-review.md) applies before acceptance.

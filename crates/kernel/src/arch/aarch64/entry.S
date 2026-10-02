@@ -8,6 +8,28 @@
 .equ CONTEXT_FPCR, (CONTEXT_SIMD_BASE + 32 * SIMD_BYTES)
 .equ CONTEXT_FPSR, (CONTEXT_FPCR + GPR_BYTES)
 .equ CONTEXT_BYTES, (CONTEXT_FPSR + GPR_BYTES)
+.equ USER_ELR, CONTEXT_BYTES
+.equ USER_SPSR, (USER_ELR + GPR_BYTES)
+.equ USER_SP, (USER_SPSR + GPR_BYTES)
+.equ USER_TPIDR, (USER_SP + GPR_BYTES)
+.equ USER_META_BYTES, (4 * GPR_BYTES)
+.equ USER_CONTEXT_BYTES, (CONTEXT_BYTES + USER_META_BYTES)
+.equ USER_CONTEXT_PAIR_BYTES, (2 * GPR_BYTES)
+.equ USER_TICKS_OFFSET, GPR_BYTES
+.equ USER_TAG_OFFSET, (2 * GPR_BYTES)
+.equ USER_FPCR_ROUND_SHIFT, 22
+.equ USER_FPSR_INEXACT_SHIFT, 4
+.equ USER_ROUNDING_MASK, 3
+.equ USER_FINISH_SLICES, 3
+.equ USER_WORKER_FINISH_SLICES, 5
+.equ USER_FINISHED_TRAP, 0x4e
+.equ USER_MODE_READ, 1
+.equ USER_MODE_WRITE, 2
+.equ USER_MODE_EXECUTE, 3
+.equ USER_MODE_PRIVILEGED, 4
+.equ USER_SIMD_LOW, 0x55
+.equ USER_SIMD_HIGH, 0x66
+.equ USER_TRAP_IRQ, 1
 .equ PROBE_BRK_TAG, 0x4b
 .equ PROBE_SIMD_LOW_PATTERN, 0x55
 .equ PROBE_SIMD_HIGH_PATTERN, 0x66
@@ -118,8 +140,8 @@ slot sync_vector
 slot irq_vector
 slot fatal_vector
 slot fatal_vector
-slot fatal_vector
-slot fatal_vector
+slot user_sync_vector
+slot user_irq_vector
 slot fatal_vector
 slot fatal_vector
 slot fatal_vector
@@ -144,6 +166,7 @@ slot fatal_vector
  stp x26,x27,[sp,#(CONTEXT_GPR_BASE + 26 * GPR_BYTES)]
  stp x28,x29,[sp,#(CONTEXT_GPR_BASE + 28 * GPR_BYTES)]
  str x30,[sp,#(CONTEXT_GPR_BASE + 30 * GPR_BYTES)]
+ str xzr,[sp,#(CONTEXT_GPR_BASE + 31 * GPR_BYTES)]
  stp q0,q1,[sp,#(CONTEXT_SIMD_BASE + 0 * SIMD_BYTES)]
  stp q2,q3,[sp,#(CONTEXT_SIMD_BASE + 2 * SIMD_BYTES)]
  stp q4,q5,[sp,#(CONTEXT_SIMD_BASE + 4 * SIMD_BYTES)]
@@ -165,7 +188,7 @@ slot fatal_vector
  str x9,[sp,#CONTEXT_FPCR]
  str x10,[sp,#CONTEXT_FPSR]
 .endm
-.macro restore
+.macro restore extra=0
  ldp q0,q1,[sp,#(CONTEXT_SIMD_BASE + 0 * SIMD_BYTES)]
  ldp q2,q3,[sp,#(CONTEXT_SIMD_BASE + 2 * SIMD_BYTES)]
  ldp q4,q5,[sp,#(CONTEXT_SIMD_BASE + 4 * SIMD_BYTES)]
@@ -202,7 +225,7 @@ slot fatal_vector
  ldp x26,x27,[sp,#(CONTEXT_GPR_BASE + 26 * GPR_BYTES)]
  ldp x28,x29,[sp,#(CONTEXT_GPR_BASE + 28 * GPR_BYTES)]
  ldr x30,[sp,#(CONTEXT_GPR_BASE + 30 * GPR_BYTES)]
- add sp,sp,#CONTEXT_BYTES
+ add sp,sp,#(CONTEXT_BYTES + \extra)
  eret
 .endm
 sync_vector:
@@ -223,6 +246,137 @@ fatal_vector:
  mrs x1,far_el1
  mrs x2,elr_el1
  bl fatal_exception
+
+// INV-USER-CONTEXT: full GPR/SIMD/FP and exception state; EL1 stack never uses user SP.
+.macro save_user
+ sub sp,sp,#USER_META_BYTES
+ save
+ mrs x9,elr_el1
+ mrs x10,spsr_el1
+ str x9,[sp,#USER_ELR]
+ str x10,[sp,#USER_SPSR]
+ mrs x9,sp_el0
+ mrs x10,tpidr_el0
+ str x9,[sp,#USER_SP]
+ str x10,[sp,#USER_TPIDR]
+.endm
+.macro return_user
+ ldr x9,[sp,#USER_ELR]
+ ldr x10,[sp,#USER_SPSR]
+ msr elr_el1,x9
+ msr spsr_el1,x10
+ ldr x9,[sp,#USER_SP]
+ ldr x10,[sp,#USER_TPIDR]
+ msr sp_el0,x9
+ msr tpidr_el0,x10
+ restore USER_META_BYTES
+.endm
+user_sync_vector:
+ save_user
+ mov x0,sp
+ mov x1,xzr
+ bl user_trap
+ cbnz x0,user_kernel_return
+ return_user
+user_irq_vector:
+ save_user
+ bl interrupt_entry
+ mov x0,sp
+ mov x1,#USER_TRAP_IRQ
+ bl user_trap
+ cbnz x0,user_kernel_return
+ return_user
+.global run_user
+run_user:
+ save_user
+ mov x9,sp
+ stlr x9,[x1]
+ sub sp,sp,#USER_CONTEXT_BYTES
+ mov x9,sp
+ mov x12,#(USER_CONTEXT_BYTES / USER_CONTEXT_PAIR_BYTES)
+1:
+ ldp x10,x11,[x0],#USER_CONTEXT_PAIR_BYTES
+ stp x10,x11,[x9],#USER_CONTEXT_PAIR_BYTES
+ subs x12,x12,#1
+ b.ne 1b
+ return_user
+user_kernel_return:
+ mov sp,x0
+ ldr x9,[sp,#USER_SP]
+ ldr x10,[sp,#USER_TPIDR]
+ msr sp_el0,x9
+ msr tpidr_el0,x10
+ adr x9,user_kernel_resumed
+ msr elr_el1,x9
+ mov x9,#SPSR_MASKED_EL1H
+ msr spsr_el1,x9
+ restore USER_META_BYTES
+user_kernel_resumed:
+ ret
+
+// Trusted static workload image copied into each separately owned RX page. No loader/ABI.
+.section .text.user_images,"ax"
+.balign 4
+.global user_image_start,user_image_end
+user_image_start:
+ mov x20,x4
+ mov x21,x0
+ mov x22,x2
+ mov x23,x3
+ mov x24,x1
+ mov x19,xzr
+ movi v0.16b,#USER_SIMD_LOW
+ movi v31.16b,#USER_SIMD_HIGH
+ and x7,x21,#USER_ROUNDING_MASK
+ lsl x7,x7,#USER_FPCR_ROUND_SHIFT
+ msr fpcr,x7
+ and x7,x21,#1
+ lsl x7,x7,#USER_FPSR_INEXACT_SHIFT
+ msr fpsr,x7
+ str x20,[x24,#USER_TAG_OFFSET]
+ str x20,[sp,#-STACK_ALIGNMENT]!
+1:
+ add x19,x19,#1
+ str x19,[x24]
+ ldr x5,[x24,#USER_TICKS_OFFSET]
+ cbnz x23,7f
+ cmp x5,#USER_WORKER_FINISH_SLICES
+ b.lo 1b
+ b 2f
+7:
+ cmp x5,#USER_FINISH_SLICES
+ b.lo 1b
+ cbz x23,2f
+ cmp x23,#USER_MODE_WRITE
+ b.eq 3f
+ cmp x23,#USER_MODE_EXECUTE
+ b.eq 4f
+ cmp x23,#USER_MODE_PRIVILEGED
+ b.eq 5f
+ ldr x0,[x22]
+ b 6f
+3:
+ str x20,[x22]
+ b 6f
+4:
+ br x22
+5:
+ mrs x0,sctlr_el1
+6:
+ mov x0,xzr
+ svc #USER_FINISHED_TRAP
+ b 6b
+2:
+ ldr x0,[sp],#STACK_ALIGNMENT
+ cmp x0,x20
+ cset x0,eq
+ mrs x6,tpidr_el0
+ cmp x6,x21
+ cset x6,eq
+ and x0,x0,x6
+ svc #USER_FINISHED_TRAP
+ b 6b
+user_image_end:
 
 // INV-PROBE: test-only exact fault PCs; handler resumes only these instructions.
 .section .text.probes,"ax"

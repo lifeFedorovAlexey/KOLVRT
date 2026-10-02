@@ -132,5 +132,6 @@ pub extern "C" fn interrupt_entry() {
         core::arch::asm!("movi v0.16b, #{low}","movi v31.16b, #{high}","msr fpcr,{fpcr}","msr fpsr,{fpsr}",low=const TEST_SIMD_LOW_CLOBBER,high=const TEST_SIMD_HIGH_CLOBBER,fpcr=in(reg) TEST_FPCR_ALTERNATE_ROUNDING,fpsr=in(reg) TEST_FPSR_INEXACT,out("v0") _,out("v31") _,options(nostack));
     }
     delivered().fetch_add(1, Ordering::Release);
+    crate::scheduler::on_timer();
     cpu::end_irq(id);
 }

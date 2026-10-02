@@ -18,4 +18,6 @@
 
 - [ADR-0013 — Effective authority и необходимость привилегий](0013-security-boundaries.md) — Принят только для правил границ.
 
+- [ADR-0014 — Фундамент EL0 execution с фиксированной affinity](0014-el0-foundation.md) — Принят для ограниченного фундамента.
+
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)

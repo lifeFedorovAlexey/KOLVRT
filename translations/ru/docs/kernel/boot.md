@@ -2,7 +2,7 @@
 
 Консоль и события следуют [политике вывода](../architecture/output-policy.md). Обычные образы показывают завершённые этапы с единицами без сырого JSON. Structured evidence включается явно и сохраняется раннером в log/result files.
 
-Текущая реализация загружает самостоятельное ядро EL1 с двумя активными CPU, без userspace, scheduler и compatibility paths. [Решение о фундаменте](../architecture-decisions/0010-kernel-foundation.md) определяет принятые границы.
+Текущая реализация загружает самостоятельное ядро EL1 с двумя участвующими CPU и исполняет ограниченный [EL0 scheduling workload](el0.md). Compatibility остаётся отключённым. [Решение о фундаменте](../architecture-decisions/0010-kernel-foundation.md) фиксирует предыдущий этап EL1.
 
 QEMU 10.1.0 использует `virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off`, Cortex-A57, TCG, два настроенных CPU и 256 MiB RAM. CPU0 и CPU1 исполняют native EL1 code; CPU1 запускается через PSCI CPU_ON с отдельным stack. Обнаружение платформы изолировано в `crates/kernel/src/platform`; архитектурные регистры и векторы находятся в `arch/aarch64`. Имена каталогов описывают обязанности и не означают импорт другой ОС.
 

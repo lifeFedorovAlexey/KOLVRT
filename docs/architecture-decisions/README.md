@@ -18,4 +18,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0013 — Effective authority and privileged necessity](0013-security-boundaries.md) — Accepted for boundary rules only.
 
+- [ADR-0014 — Fixed-affinity EL0 execution foundation](0014-el0-foundation.md) — Accepted for the bounded foundation.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

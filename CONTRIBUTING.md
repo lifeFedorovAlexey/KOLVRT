@@ -79,4 +79,6 @@ Run host checks with `cargo test --locked`, kernel checks with `cargo xtask test
 
 Phase 1.1 adds [multicore checks](docs/kernel/smp.md): bidirectional/repeated IPI, actual shared-lock publication, delayed reader acknowledgement, remote translation fault, guarded retirement/reuse and quiescent CPU_OFF. The [decision](docs/architecture-decisions/0012-multicore-retirement.md) keeps physical ownership explicitly scoped and requires review before adding writers. Host tests do not certify physical weak-memory behavior.
 
+The [EL0 checks](docs/kernel/el0.md) require real timer-driven processes on both CPUs, same-VA private data, full architectural context, contained faults and quiescent reclamation. Root/context/forgotten-user-guard negative controls must fail. The fixed-affinity scope does not justify future migration or shared queue mutation without review.
+
 [Russian translation](translations/ru/CONTRIBUTING.md)

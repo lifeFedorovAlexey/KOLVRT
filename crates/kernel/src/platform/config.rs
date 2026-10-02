@@ -9,3 +9,6 @@ pub const DYNAMIC_BASE: usize = 0x80000000;
 pub const CONFIGURED_CPUS: usize = 2;
 pub const ACTIVE_CPUS: usize = 2;
 pub const PHYSICAL_TIMER_IRQ: u32 = 30;
+// First EL0 foundation workload: fixed affinity, four independent processes per CPU.
+pub const USER_PROCESSES_PER_CPU: usize = 4;
+pub const USER_PROCESSES: usize = ACTIVE_CPUS * USER_PROCESSES_PER_CPU;

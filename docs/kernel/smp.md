@@ -1,6 +1,6 @@
 # Two-CPU correctness foundation
 
-Phase 1.1 runs two AArch64 EL1 CPUs in pinned QEMU virt. No scheduler, EL0 or runtime compatibility is connected. [ADR-0012](../architecture-decisions/0012-multicore-retirement.md) records the decision; [Phase 1 review](../research/phase-1-review.md) remains the historical CPU0 milestone.
+Phase 1.1 runs two AArch64 EL1 CPUs in pinned QEMU virt. The later [EL0 foundation](el0.md) adds fixed-affinity queues on both CPUs; runtime compatibility stays disconnected. [ADR-0012](../architecture-decisions/0012-multicore-retirement.md) records the decision; [Phase 1 review](../research/phase-1-review.md) remains the historical CPU0 milestone.
 
 ## Boot and publication
 

@@ -186,6 +186,7 @@ pub extern "C" fn secondary_main(root: u64) -> ! {
                 experiment::DONE.store(command, Ordering::Release);
             }
         }
+        crate::scheduler::poll_secondary();
         if STOP.load(Ordering::Acquire) {
             cpu::mask();
             cpu::timer_stop();

@@ -35,6 +35,12 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
     ("--retirement-control", "retiring frame release"),
     ("--shootdown-control", "remote TLB acknowledgement timeout"),
     ("--remote-tlbi-control", "secondary CPU failure"),
+    ("--user-context-control", "user register context lost"),
+    ("--user-root-control", "user address-space alias leaked"),
+    (
+        "--user-retirement-control",
+        "user address space retains frame",
+    ),
 ];
 #[path = "../../kernel/src/platform/config.rs"]
 #[allow(dead_code)] // Layout constants are consumed by the target kernel.
@@ -80,6 +86,20 @@ const TESTS: &[&str] = &[
     "smp_simultaneous_timers",
     "smp_percpu_independent",
     "smp_orderly_shutdown",
+    "el0_processes",
+    "el0_timer_switches",
+    "el0_user_stacks",
+    "el0_memory_isolation",
+    "el0_fault_containment",
+    "el0_quiescent_reclamation",
+    "el0_context_preservation",
+    "el0_smp_ownership",
+    "el0_kernel_memory_rejected",
+    "el0_foreign_memory_rejected",
+    "el0_code_write_rejected",
+    "el0_stack_guard",
+    "el0_data_execute_rejected",
+    "el0_privileged_instruction_rejected",
 ];
 fn main() {
     if let Err(e) = run() {
@@ -114,7 +134,7 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
-            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative")] {
+            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative"), ("--user-context-control", "user-context-negative"), ("--user-root-control", "user-root-negative"), ("--user-retirement-control", "user-retirement-negative")] {
                 if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
             }
             if args.iter().any(|a| a == "--negative-control") {
@@ -163,7 +183,7 @@ fn run() -> Result<()> {
                     output.status.code()
                 );
             }
-            println!("Phase 1.1 kernel matrix passed (two active CPUs; compatibility not connected).");
+            println!("EL0 foundation kernel matrix passed (two active CPUs; compatibility not connected).");
             let label = match args.as_slice() {
                 [_] => None,
                 [_, flag, label] if flag == "--record" => Some(label.as_str()),
@@ -602,7 +622,7 @@ fn audit() -> Result<()> {
     for file in files {
         let source = fs::read_to_string(&file)?;
         if file.extension().is_some_and(|e| e == "S") {
-            assembly.push(json!({"path":file,"sha256":format!("{:x}",Sha256::digest(source.as_bytes())),"review":"INV-ENTRY, INV-VECTOR, INV-PROBE"}));
+            assembly.push(json!({"path":file,"sha256":format!("{:x}",Sha256::digest(source.as_bytes())),"review":"INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE"}));
         }
         for (i, line) in source.lines().enumerate() {
             if line.contains("unsafe") && !line.trim_start().starts_with("//") {

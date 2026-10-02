@@ -79,4 +79,6 @@ cpu::timer(time::deadline_after(TEST_TIMER_DELAY));
 
 Phase 1.1 добавляет [multicore checks](docs/kernel/smp.md): двусторонние/повторные IPI, настоящую publication общего lock, задержанное reader acknowledgement, remote translation fault, защищённый retirement/reuse и quiescent CPU_OFF. [Решение](docs/architecture-decisions/0012-multicore-retirement.md) явно ограничивает physical ownership и требует review до добавления writers. Host tests не сертифицируют physical weak-memory behavior.
 
+[Проверки EL0](docs/kernel/el0.md) требуют настоящих timer-driven процессов на обоих CPU, same-VA private data, полного architectural context, локализации faults и quiescent reclamation. Root/context/forgotten-user-guard negative controls обязаны вызвать ошибку. Fixed-affinity scope не оправдывает будущие migration или shared queue mutation без review.
+
 [Английский оригинал](../../CONTRIBUTING.md)

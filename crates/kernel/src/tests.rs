@@ -252,6 +252,57 @@ fn multicore(p: &mut memory::Physical) {
         remote::complete(remote::PANIC);
         panic!("secondary panic not detected");
     }
+    let users = crate::scheduler::exercise(p);
+    report(
+        "el0_processes",
+        users.processes == platform::config::USER_PROCESSES,
+    );
+    report("el0_timer_switches", users.switches > users.processes);
+    report(
+        "el0_user_stacks",
+        users.workers == platform::config::ACTIVE_CPUS,
+    );
+    report(
+        "el0_memory_isolation",
+        users.faults == users.processes - users.workers,
+    );
+    report(
+        "el0_fault_containment",
+        users.workers == platform::config::ACTIVE_CPUS && users.faults > 0,
+    );
+    report("el0_quiescent_reclamation", users.reclaimed);
+    report(
+        "el0_context_preservation",
+        users.workers == platform::config::ACTIVE_CPUS,
+    );
+    report("el0_smp_ownership", users.owners_released);
+    const PRIMARY_KERNEL_PROBE: usize = 1;
+    const PRIMARY_FOREIGN_PROBE: usize = 2;
+    const PRIMARY_CODE_PROBE: usize = 3;
+    const SECONDARY_GUARD_PROBE: usize = platform::config::USER_PROCESSES_PER_CPU + 1;
+    const SECONDARY_EXECUTE_PROBE: usize = platform::config::USER_PROCESSES_PER_CPU + 2;
+    const SECONDARY_PRIVILEGED_PROBE: usize = platform::config::USER_PROCESSES_PER_CPU + 3;
+    report(
+        "el0_kernel_memory_rejected",
+        users.fault_checks[PRIMARY_KERNEL_PROBE],
+    );
+    report(
+        "el0_foreign_memory_rejected",
+        users.fault_checks[PRIMARY_FOREIGN_PROBE],
+    );
+    report(
+        "el0_code_write_rejected",
+        users.fault_checks[PRIMARY_CODE_PROBE],
+    );
+    report("el0_stack_guard", users.fault_checks[SECONDARY_GUARD_PROBE]);
+    report(
+        "el0_data_execute_rejected",
+        users.fault_checks[SECONDARY_EXECUTE_PROBE],
+    );
+    report(
+        "el0_privileged_instruction_rejected",
+        users.fault_checks[SECONDARY_PRIVILEGED_PROBE],
+    );
     // SAFETY: INV-REMOTE-READER: bounded control work has no borrowed pointer; shutdown drains it before CPU_OFF.
     unsafe {
         remote::submit(remote::LOCK, 0);

@@ -130,4 +130,16 @@
 
 ## Границы доказательств
 
+### INV-USER-SPACE and INV-USER-RETIRE
+
+CPU0 инициализирует шесть exclusively allocated pages и удерживает Frame borrows и постоянные space charges. Забытый guard не разрешает release. Roots immutable во время admission; каждый закреплён за одним CPU. Оба CPU восстанавливают native root и завершают local TLBI до release completion. CPU0 acquires оба completion до снятия charges. Tick writes происходят только при приостановленном local process; tags читаются после остановки всех writers. Настоящие RO/NX/guard/foreign faults, выживание peers, возвращённый free count и отказ forgotten-guard проверяют обязательства.
+
+### INV-USER-TTBR and INV-USER-IMAGE
+
+Privileged root/barrier instructions требуют live aligned tables, сохраняющие kernel PC/SP. ASID zero требует full local invalidation при каждом switch и перед reclamation. Trusted immutable linker extents копируются в checked owned pages, очищаются до PoC и публикуются с instruction-cache maintenance до launch. Пропуск root-switch должен вызвать ошибку. Loader, migration, ASID reuse и доказательство physical cache-coherency не заявляются.
+
+### INV-USER-CONTEXT and INV-RUNQUEUE
+
+Lower-EL vectors используют per-CPU EL1 stack и полный aligned frame размером 816 байт; compile-time offsets совпадают с assembly. Kernel ABI/SP/TLS восстанавливается при возврате. Каждый CPU исключительно изменяет свою UnsafeCell queue с masked IRQ; ссылки не переживают user execution. Setup предшествует release launch; acquire done предшествует inspection. Одна boot session исключает reset races. Per-process ownership CAS и fixed affinity запрещают duplicate/wrong-CPU execution. IRQ не берёт locks и ничего не выделяет. Ожидаемые user registers относятся к verifier, а не authority logic. Настоящие GPR/SIMD/FP/TLS/stack checks, timer switching и отказ corrupted-context проверяют эти границы. См. [контракт EL0](el0.md).
+
 Этот реестр документирует локальные proof obligations и наблюдаемые tests. Он не доказывает аппаратную корректность, все случаи malformed firmware или SMP safety. Boot firmware, toolchain, emulator и generated instructions остаются trust boundaries. [SMP контракт](smp.md) ограничивает participation двумя CPU и явно удерживаемыми readers. Unsafe не оправдывается одной производительностью; [правило выбора метода](../architecture/implementation-review.md) применяется до принятия.

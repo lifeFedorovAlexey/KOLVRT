@@ -31,4 +31,6 @@ No filesystem, network stack, persistent transactions, DMA-capable driver, hardw
 
 The [threat model](threat-model.md), [candidate ABI](native-abi.md), [platform contract](platform-contract.md) and [law audit](law-audit.md) define the design baseline. Phase 0 verifies finite host models and encoding; Phase 1 must implement and test real privilege separation, faults, interrupts and page tables before claiming this workload works in KOLVRT.
 
+The later [EL0 foundation](../kernel/el0.md) implements isolated processes and timer scheduling on both CPUs. The IPC/handles/cancellation/service workload above remains unimplemented and requires its own acceptance checks.
+
 [Russian translation](../../translations/ru/docs/architecture/first-native-slice.md)

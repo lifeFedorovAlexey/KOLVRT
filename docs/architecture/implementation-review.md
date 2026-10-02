@@ -56,4 +56,6 @@ Inspect generated features and PT_LOAD permissions, boundary arithmetic, alias l
 
 The [multicore decision](../architecture-decisions/0012-multicore-retirement.md) reviews PSCI publication, CPU ownership, affinity-correct interrupts, ordinary-code acknowledgement and quiescent shutdown. Real SMP tests supplement host lock evidence; no new global lock or speculative reclamation algorithm is needed.
 
+The later [EL0 decision](../architecture-decisions/0014-el0-foundation.md) accepts fixed-affinity queues, immutable roots, full local flushes and complete context preservation. Pure selection is separated from privileged switching. User faults terminate only their process; ownership charges survive forgotten guards. IPC and compatibility remain deferred.
+
 [Russian translation](../../translations/ru/docs/architecture/implementation-review.md)
