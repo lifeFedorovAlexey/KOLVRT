@@ -1,3 +1,8 @@
+//! Coverage-domain note: the host-library `cargo llvm-cov` aggregate excludes
+//! the AArch64 kernel package and `xtask`'s binary entrypoint/router files.
+//! These process tests exercise selected host CLI paths separately; kernel
+//! coverage belongs to QEMU-backed kernel tests and must be reported separately.
+
 use std::{
     path::Path,
     process::{Command, Output},
