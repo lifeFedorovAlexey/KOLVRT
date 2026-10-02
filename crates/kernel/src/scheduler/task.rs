@@ -5,6 +5,7 @@ pub(super) const CONTEXT_RUNNING: usize = 1;
 pub(crate) const CONTEXT_EXITED: usize = 2;
 pub(crate) const CONTEXT_FAULTED: usize = 3;
 pub(crate) const CONTEXT_TIMED_OUT: usize = 4;
+pub(crate) const CONTEXT_BLOCKED: usize = 6;
 pub(super) const CONTEXT_VACANT: usize = 5;
 #[cfg(feature = "machine-events")]
 use kernel_core::execution as abi;
@@ -18,6 +19,7 @@ pub(crate) struct Admission<'a> {
     pub slice_budget: Option<usize>,
     pub slices: usize,
     pub observations: crate::execution::Observations,
+    pub blocked: bool,
 }
 #[derive(Clone, Copy)]
 pub(crate) struct Task {

@@ -34,6 +34,7 @@ struct Object {
     slice_limit: Option<usize>,
     slices: usize,
     observations: crate::execution::Observations,
+    blocked: bool,
 }
 /// Mutable CPU0-owned value, not global shared storage. Owned frames make it
 /// non-Send/non-Sync. Callers retain it independently of dispatch/workload lifetime.
@@ -170,7 +171,9 @@ impl Registry {
                 slice_limit: spec.slice_limit,
                 slices: 0,
                 observations: crate::execution::Observations::ZERO,
+                blocked: false,
             });
+            scheduler::reset_event(id);
             self.table.prepared(id).expect("transaction state");
             Ok(())
         })();
@@ -227,6 +230,30 @@ impl Registry {
     pub fn step(&mut self) -> scheduler::Completed {
         self.dispatch_inner(None, true)
     }
+    /// Trusted bootstrap notification, not an EL0 send API. Identity lookup and
+    /// coordinator ownership precede touching the retained event of this generation.
+    pub fn signal(&mut self, id: ProcessId) -> Result<bool, Error> {
+        context_contract()?;
+        if self.table.state(id)? != State::Admitted {
+            return Err(Error::Transition);
+        }
+        let object = self.objects[id.slot()].as_mut().ok_or(Error::Stale)?;
+        let fresh = scheduler::event(id.slot()).signal();
+        if object.blocked && scheduler::event(id.slot()).consume() {
+            object.blocked = false;
+        }
+        Ok(fresh)
+    }
+    pub fn blocked(&self, id: ProcessId) -> Result<bool, Error> {
+        context_contract()?;
+        if self.table.state(id)? != State::Admitted {
+            return Err(Error::Transition);
+        }
+        Ok(self.objects[id.slot()]
+            .as_ref()
+            .ok_or(Error::Stale)?
+            .blocked)
+    }
     fn dispatch_inner(
         &mut self,
         timeout: Option<time::Duration>,
@@ -245,6 +272,7 @@ impl Registry {
                 slice_budget: object.slice_limit,
                 slices: object.slices,
                 observations: object.observations,
+                blocked: object.blocked,
             })
         });
         let completed = if step {
@@ -264,6 +292,14 @@ impl Registry {
             object.context = result.context;
             object.slices = result.slices;
             object.observations = result.observations;
+            object.blocked = result.state == scheduler::task::CONTEXT_BLOCKED;
+            if object.blocked && scheduler::event(object.id.slot()).consume() {
+                object.blocked = false;
+            }
+            if step && result.state == scheduler::task::CONTEXT_BLOCKED {
+                assert!(scheduler::detached(object.id));
+                continue;
+            }
             if step && result.state == scheduler::task::CONTEXT_READY {
                 assert!(scheduler::detached(object.id));
                 continue;

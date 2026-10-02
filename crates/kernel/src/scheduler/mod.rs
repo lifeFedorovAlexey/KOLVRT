@@ -55,6 +55,18 @@ static SESSION: AtomicBool = AtomicBool::new(false);
 static STEP: AtomicBool = AtomicBool::new(false);
 static CURSOR: [AtomicUsize; platform_config::ACTIVE_CPUS] =
     [const { AtomicUsize::new(NO_TASK) }; platform_config::ACTIVE_CPUS];
+const WAIT_OWN_EVENT: u16 = 0x55;
+static EVENTS: [kernel_core::wait::Event; config::TOTAL_TASKS] =
+    [const { kernel_core::wait::Event::new() }; config::TOTAL_TASKS];
+pub(crate) fn event(slot: usize) -> &'static kernel_core::wait::Event {
+    &EVENTS[slot]
+}
+pub(crate) fn reset_event(id: kernel_core::process::ProcessId) {
+    percpu::primary_only();
+    assert!(cpu::irq_masked());
+    assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
+    event(id.slot()).reset();
+}
 static RUNNING_OWNER: [AtomicUsize; config::TOTAL_TASKS] =
     [const { AtomicUsize::new(NO_CPU) }; config::TOTAL_TASKS];
 /// Persistent native dispatch mechanism. Per-process identity is independent of
@@ -112,6 +124,10 @@ fn dispatch_inner(
                 task.bind_queue(generation);
                 task.slices = admitted.slices;
                 task.observations = admitted.observations;
+                if admitted.blocked {
+                    assert!(step, "blocked processes require step driver");
+                    task.state = task::CONTEXT_BLOCKED;
+                }
                 #[cfg(feature = "machine-events")]
                 if local.completed() {
                     local.inspect(local.generation(), |previous| {
@@ -386,13 +402,24 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
             else {
                 unreachable!()
             };
-            if class == ESR_SVC64 && native_call(task, frame, operation) {
+            if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire) {
+                frame.gpr[0] = abi::OK;
+                task.context = *frame;
+                if !event(task.id()).register() {
+                    return 0;
+                }
+                task.state = task::CONTEXT_BLOCKED;
+                // Registration precedes the state publication; a signal racing
+                // this recheck remains latched for the coordinator after return.
+                if event(task.id()).consume() {
+                    task.state = CONTEXT_READY;
+                }
+            } else if class == ESR_SVC64 && native_call(task, frame, operation) {
                 task.context = *frame;
                 // Bounded synchronous native request: no locks, allocation or retained user
                 // pointers; current task identity came from the owned runqueue, not registers.
                 return 0;
-            }
-            if class == ESR_SVC64 && operation == abi::FINISH {
+            } else if class == ESR_SVC64 && operation == abi::FINISH {
                 task.state = CONTEXT_EXITED;
                 task.peer_faults_at_exit = peer_faults;
             } else {

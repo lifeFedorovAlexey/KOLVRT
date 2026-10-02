@@ -8,6 +8,7 @@ const MODE_EXIT: u64 = 0;
 const MODE_FAULT: u64 = 1;
 const MODE_DENIED_CREATE: u64 = 2;
 const MODE_SPIN: u64 = 3;
+const MODE_WAIT: u64 = 4;
 const SPIN_BUDGET: usize = 8;
 const TIMER_SLICES: u64 = 1;
 const ENTRY_ARGUMENTS: usize = 5;
@@ -295,6 +296,7 @@ pub fn exercise(
     }
     report("process_bounded_stress", stress);
     quantum_progress(p, registry, &mut report);
+    blocking_progress(p, registry, &mut report);
     report(
         "process_resource_reclamation",
         registry.live() == 0 && p.available() == before,
@@ -410,4 +412,92 @@ fn quantum_context(
             && context.tpidr == context.gpr[20]
             && context.sp == memory::USER_STACK_TOP as u64
     })
+}
+
+fn blocking_progress(
+    p: &mut memory::Physical,
+    registry: &mut Registry,
+    report: &mut impl FnMut(&str, bool),
+) {
+    let before = p.available();
+    let ids: [ProcessId; config::ACTIVE_CPUS] = core::array::from_fn(|owner| {
+        let id = create(
+            registry,
+            p,
+            spec(owner, MODE_WAIT, EXIT_CODE + owner as u64),
+        );
+        registry.start(id).unwrap();
+        id
+    });
+    let mut passed = registry.signal(ids[0]) == Ok(true) && registry.signal(ids[0]) == Ok(false);
+    for _ in 0..12 {
+        advance(registry);
+        if ids.iter().all(|id| registry.blocked(*id) == Ok(true)) {
+            break;
+        }
+    }
+    passed &= ids.iter().all(|id| registry.blocked(*id) == Ok(true));
+    let idle = registry.step();
+    passed &= idle.switches == 0 && idle.owners_released;
+    for id in ids {
+        passed &= registry.completion(id) == Err(Error::Transition)
+            && registry.reclaim(p, id) == Err(Error::Transition);
+        registry.signal(id).unwrap();
+    }
+    for _ in 0..12 {
+        advance(registry);
+        if registry.completion(ids[0]).is_ok() && registry.blocked(ids[1]) == Ok(true) {
+            break;
+        }
+    }
+    passed &= registry
+        .completion(ids[0])
+        .is_ok_and(|c| c.reason == Reason::Exited(EXIT_CODE))
+        && registry.blocked(ids[1]) == Ok(true);
+    registry.signal(ids[1]).unwrap();
+    for _ in 0..12 {
+        advance(registry);
+        if registry.completion(ids[1]).is_ok() {
+            break;
+        }
+    }
+    for (owner, id) in ids.into_iter().enumerate() {
+        passed &= registry
+            .completion(id)
+            .is_ok_and(|c| c.reason == Reason::Exited(EXIT_CODE + owner as u64));
+        passed &= registry.signal(id) == Err(Error::Transition);
+        registry.reclaim(p, id).unwrap();
+    }
+    let replacement = create(registry, p, spec(0, MODE_WAIT, EXIT_CODE));
+    registry.start(replacement).unwrap();
+    passed &= registry.signal(ids[0]) == Err(Error::Stale);
+    for _ in 0..12 {
+        advance(registry);
+        if registry.blocked(replacement) == Ok(true) {
+            break;
+        }
+    }
+    passed &= registry.blocked(replacement) == Ok(true);
+    // Two distinct notifications release the two waits, retaining the second
+    // notification even though it arrives before the next registration.
+    registry.signal(replacement).unwrap();
+    registry.signal(replacement).unwrap();
+    for _ in 0..12 {
+        advance(registry);
+        if registry.completion(replacement).is_ok() {
+            break;
+        }
+    }
+    passed &= registry.completion(replacement).is_ok();
+    registry.reclaim(p, replacement).unwrap();
+    report(
+        "process_wait_block_and_wakeup",
+        passed && registry.live() == 0 && p.available() == before,
+    );
+}
+
+// Keep discarded large snapshots in one short-lived fixture frame, rather than
+// reserving one debug-build stack temporary for every call site in the scenario.
+fn advance(registry: &mut Registry) {
+    registry.step();
 }

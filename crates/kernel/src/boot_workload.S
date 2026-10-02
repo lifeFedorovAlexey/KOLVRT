@@ -87,6 +87,8 @@ user_image_end:
 .equ LIFECYCLE_FAULT, 1
 .equ LIFECYCLE_CREATE_DENIED, 2
 .equ LIFECYCLE_SPIN, 3
+.equ LIFECYCLE_WAIT, 4
+.equ LIFECYCLE_WAIT_TRAP, 0x55
 .equ LIFECYCLE_UNSUPPORTED_CREATE, 0x60
 .global lifecycle_image_start,lifecycle_image_end
 lifecycle_image_start:
@@ -96,6 +98,8 @@ lifecycle_image_start:
  mov x23,x3
  mov x24,x4
  str x20,[x21]
+ cmp x22,#LIFECYCLE_WAIT
+ b.eq 12f
  cmp x22,#LIFECYCLE_SPIN
  b.eq 11f
 8:
@@ -119,4 +123,15 @@ lifecycle_image_start:
  add x25,x25,#1
  str x25,[x21,#8]
  b 11b
+12:
+ mov x26,#2
+13:
+ svc #LIFECYCLE_WAIT_TRAP
+ add x25,x25,#1
+ str x25,[x21,#8]
+ subs x26,x26,#1
+ b.ne 13b
+ mov x0,x20
+ svc #USER_FINISHED_TRAP
+ b 13b
 lifecycle_image_end:
