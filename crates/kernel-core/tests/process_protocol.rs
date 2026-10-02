@@ -5,7 +5,8 @@ fn reservation_validates_cpu_range_and_uses_only_its_slots() {
     let mut table = Table::<3>::default();
 
     assert_eq!(table.reserve(1..1), Err(Error::ForeignCpu));
-    assert_eq!(table.reserve(2..1), Err(Error::ForeignCpu));
+    let reversed = core::ops::Range { start: 2, end: 1 };
+    assert_eq!(table.reserve(reversed), Err(Error::ForeignCpu));
     assert_eq!(table.reserve(0..4), Err(Error::ForeignCpu));
     assert_eq!(
         table.reserve(usize::MAX..usize::MAX),
