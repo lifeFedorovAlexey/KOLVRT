@@ -1,0 +1,65 @@
+{
+  "id": "KOL-PATH-0021",
+  "title": "Autogroup: nice действует внутри task group",
+  "subsystem": "Scheduler",
+  "category": ["PERFORMANCE", "HISTORICAL_BEHAVIOR"],
+  "linux_versions": "Man-pages указывает autogroup с 2.6.38 и explains влияние sessions на nice.",
+  "first_known_version": "2.6.38 (autogroup)",
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S21",
+      "title": "sched",
+      "url": "https://man7.org/linux/man-pages/man7/sched.7.html",
+      "repository": "https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git",
+      "commit": null,
+      "tag_version": "man-pages-6.19",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "The autogroup feature; The nice value and group scheduling",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Scheduler"
+    }
+  ],
+  "historical_context": "Man-pages указывает autogroup с 2.6.38 и explains влияние sessions на nice.",
+  "original_reason": "Защитить интерактивную задачу от большого batch job.",
+  "root_cause": "Групповое распределение CPU изменяет область действия относительного приоритета.",
+  "observable_behavior": "nice двух единственных процессов в разных autogroups не задаёт обычное межпроцессное соотношение.",
+  "compatibility_dependency": "Изменение grouping policy меняет performance expectations, хотя syscall ABI тот же.",
+  "security_impact": "CPU starvation возможен при ошибке policy.",
+  "performance_impact": "Компромисс responsiveness/throughput.",
+  "complexity_impact": "Observable policy требует диагностики.",
+  "hardware_dependency": "SMP topology влияет на результаты.",
+  "linux_current_solution": "Autogroup и cgroup CPU policy документированы; cgroup assignment может override autogroup.",
+  "remaining_problem": "Выбрать native fairness objectives и bounded starvation до выбора алгоритма.",
+  "constraints_then": "Desktop responsiveness.",
+  "constraints_now": "Цель сохраняется, implicit terminal heuristic не обязателен.",
+  "change_consequences": "Изменение grouping policy меняет performance expectations, хотя syscall ABI тот же.",
+  "improvement_assessment": "Вывод KOLVRT: Приоритет всегда имеет видимый scheduling domain; group weight и task weight — отдельные параметры. Scheduler не выводит policy молча из terminal session. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "ACCEPTED_TRADEOFF",
+  "kolvrt_native_semantics": "Приоритет всегда имеет видимый scheduling domain; group weight и task weight — отдельные параметры. Scheduler не выводит policy молча из terminal session.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "linux.sched.autogroup/v1; session resource domain",
+  "migration_strategy": "Personality переводит session grouping в explicit domains; native tools показывают обе weights.",
+  "tests_required": [
+    "Одинаковые jobs в одной и двух domains дают документированные shares при contention.",
+    "Изменение session не меняет native task domain без policy action."
+  ],
+  "benchmarks_required": [
+    "Interactive latency под batch load, fairness и tail starvation; не только aggregate throughput."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Выбрать native fairness objectives и bounded starvation до выбора алгоритма."
+  ],
+  "evidence": {
+    "historical_context": ["S21"],
+    "original_reason": ["S21"],
+    "root_cause": ["S21"],
+    "observable_behavior": ["S21"],
+    "compatibility_dependency": ["S21"],
+    "linux_current_solution": ["S21"]
+  }
+}

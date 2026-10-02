@@ -1,49 +1,45 @@
-# ADR-0008 — Adapter and driver protection domains
+# ADR-0008 — Service protection domains
 
-Status: **Proposed — RESEARCH_REQUIRED**. Date: 2026-10-02.
+Status: **Accepted for the first native slice**. Date: 2026-10-02.
 
 ## Context
 
-Reference systems use different boundaries; their existence does not establish suitability for KOLVRT. A library boundary alone does not provide isolation.
+A library boundary cannot contain memory corruption. The [threat model](../architecture/threat-model.md) treats application and service failures as separate from privileged mechanism failures. The [host experiment](../../research/results/native-state-models.json) compares identical request and response frames inside one process and across a child-process pipe.
 
 ## Decision
 
-Specify interfaces now. Keep kernel versus user-space placement open until an IPC prototype and threat model exist. A privileged adapter needs separate justification.
+Place the initial bounded echo service in a separate EL0 address space. Keep authority validation, request arbitration, scheduling and memory protection privileged. The supervisor observes failure and may create a fresh service; it never silently retries an operation with unknown effects. This accepts a protection boundary, not a generic driver-placement rule.
 
 ## Alternatives
 
-All adapters in the kernel; all in user space; arbitrary per-operation placement.
+An in-process service; moving all device drivers and adapters out of the kernel immediately.
 
 ## Why rejected
 
-These enlarge the trusted base, may need complex native primitives, or break ownership without a shared state model.
+The former cannot enforce the required failure boundary. The latter adds DMA, device-reset and compatibility requirements absent from the first workload. Neither follows from a popularity comparison between operating systems.
 
 ## Consequences
 
-Phase 0.2 compares two real host implementations of one operation, then records the placement decision. Do not present fake kernel paths.
+The first slice must implement genuine address-space isolation and bounded messages. Device and compatibility placement remains deferred until a concrete consumer and threat analysis exist.
 
 ## Compatibility impact
 
-Some external API families require one compatibility domain. Placement does not change the semantic contract.
+No foreign ABI is part of the first slice. Later adapters preserve whole state-domain identity.
 
 ## Performance impact
 
-Measure copies, context switches, CPU time and p99 without choosing a winner in advance.
+The host experiment establishes frame equivalence and failure observation only. It does not rank latency, copies or throughput. Measure these on the eventual implementation before optimizing the boundary.
 
 ## Security impact
 
-Model malicious adapters and devices. An in-process boundary is not a sandbox.
+The host child uses the same account and is not a security sandbox. EL0 isolation, user-copy and access revocation remain implementation acceptance tests.
 
 ## Testing
 
-Check fault containment, crash recovery, cancellation, shared-handle transfer and quotas.
+Both paths return identical bytes; a child crash is observed, the supervisor survives, a fresh service responds, and an invalid response ID is rejected. Finite models separately cover cancellation, lifetime and transfer. No combined kernel execution has occurred.
 
 ## Reversibility
 
-Keep the decision open and design public contracts to allow changing placement while preserving guarantees.
-
-## Evidence
-
-[Cases and sources](../research/CASE_INDEX.md); [other systems](../../research/other-systems/COMPARISON.md).
+Moving a service into a privileged domain requires a new decision that revises the threat model and proves preservation of authority and outcome contracts.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0008-placement.md)

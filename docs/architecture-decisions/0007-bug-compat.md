@@ -44,6 +44,6 @@ A supported module may return as a new artifact before support expires; the nati
 
 ## Evidence
 
-[Cases and sources](../research/CASE_INDEX.md); [other systems](../../research/other-systems/COMPARISON.md).
+[Cases and sources](../research/case-index.md); [other systems](../research/reference-systems.md).
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0007-bug-compat.md)

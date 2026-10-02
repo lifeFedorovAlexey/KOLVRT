@@ -49,19 +49,19 @@ variance after the experiment.
 
 ## Measurements
 
-| Measurement | Definition |
-|---|---|
-| Wall latency | Admission to terminal outcome; queue and service times separately |
-| Throughput | Successful useful units per wall second, with errors |
-| Processor cost | Exclusive execution time, attributable deferred work and separate cycle counts |
-| Memory | Private, shared and pinned bytes plus peak use; no duplicate shared-page accounting |
-| Allocation | Count, bytes, peak live bytes, allocator and size distribution |
-| Context switches | Voluntary and involuntary, with scheduler scope |
-| Copies | Count and bytes at declared instrumented boundaries |
-| Locks | Acquisitions, contention count and wait-time distribution |
-| Translation | Adapter entries, conversions, serialized and deserialized bytes |
-| Hardware counters | Supported events, encoding, multiplexing and sampling error |
-| Observer cost | Matched instrumentation-on/off runs and lost-event counts |
+| Measurement       | Definition                                                                          |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| Wall latency      | Admission to terminal outcome; queue and service times separately                   |
+| Throughput        | Successful useful units per wall second, with errors                                |
+| Processor cost    | Exclusive execution time, attributable deferred work and separate cycle counts      |
+| Memory            | Private, shared and pinned bytes plus peak use; no duplicate shared-page accounting |
+| Allocation        | Count, bytes, peak live bytes, allocator and size distribution                      |
+| Context switches  | Voluntary and involuntary, with scheduler scope                                     |
+| Copies            | Count and bytes at declared instrumented boundaries                                 |
+| Locks             | Acquisitions, contention count and wait-time distribution                           |
+| Translation       | Adapter entries, conversions, serialized and deserialized bytes                     |
+| Hardware counters | Supported events, encoding, multiplexing and sampling error                         |
+| Observer cost     | Matched instrumentation-on/off runs and lost-event counts                           |
 
 Do not subtract noisy observer cost and claim an exact corrected value. Report uncertainty.
 Unavailable counters remain unavailable. Separate adapter cost, shared native service

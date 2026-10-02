@@ -1,0 +1,66 @@
+{
+  "id": "KOL-PATH-0025",
+  "title": "Robust futex: cleanup по списку вместо всех VMA",
+  "subsystem": "Synchronization / IPC",
+  "category": ["PERFORMANCE", "RESOURCE_MANAGEMENT"],
+  "linux_versions": "Robust-futex design document описывает отказ от VMA scan на exit в пользу per-thread robust list.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S25",
+      "title": "Robust futexes",
+      "url": "https://docs.kernel.org/locking/robust-futexes.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Background; old VMA-based approach; robust list solution",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Synchronization / IPC"
+    }
+  ],
+  "historical_context": "Robust-futex design document описывает отказ от VMA scan на exit в пользу per-thread robust list.",
+  "original_reason": "После смерти владельца межпроцессного mutex требуется уведомить waiters.",
+  "root_cause": "VMA-based approach делал exit cost зависимым от числа mappings, не числа held locks.",
+  "observable_behavior": "Robust list и pending operation позволяют kernel обработать owner death.",
+  "compatibility_dependency": "ABI включает layout списка и протокол обновления; простая замена несовместима с pthreads.",
+  "security_impact": "Недоверенный список может вызвать DoS.",
+  "performance_impact": "Нельзя превращать fast userspace lock в syscall на каждый acquire без измерения.",
+  "complexity_impact": "Owner died не означает восстановленность application data.",
+  "hardware_dependency": "Atomic operations и shared memory.",
+  "linux_current_solution": "Userspace robust list регистрируется на thread, kernel обходит её при exit.",
+  "remaining_problem": "Выбрать native registration protocol, сохраняющий uncontended fast path.",
+  "constraints_then": "Нужно совместить fast path и recovery.",
+  "constraints_now": "Ограничение актуально, дизайн списка не обязан быть native ABI.",
+  "change_consequences": "ABI включает layout списка и протокол обновления; простая замена несовместима с pthreads.",
+  "improvement_assessment": "Вывод KOLVRT: Owner-death notification — явная часть synchronization contract; cleanup имеет лимит работы и не доверяет user linked-list pointers. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "Owner-death notification — явная часть synchronization contract; cleanup имеет лимит работы и не доверяет user linked-list pointers.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "linux.sync.robust-futex/v1; shared-memory synchronization domain",
+  "migration_strategy": "Adapter проверяет bounded list, pending slot и сообщает owner died через native primitive.",
+  "tests_required": [
+    "Owner killed между list insert и acquire; waiters получают корректный outcome.",
+    "Cycles, unmapped next pointer, limit exhaustion не зависают в kernel."
+  ],
+  "benchmarks_required": [
+    "Exit time по held-lock count и VMA count отдельно; uncontended syscall frequency."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Выбрать native registration protocol, сохраняющий uncontended fast path.",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S25"],
+    "original_reason": ["S25"],
+    "root_cause": ["S25"],
+    "observable_behavior": ["S25"],
+    "compatibility_dependency": ["S25"],
+    "linux_current_solution": ["S25"]
+  }
+}

@@ -3,17 +3,17 @@
 A compatibility module translates an external semantic contract into the current native
 contract. It is a separately identifiable, replaceable, versioned and removable dependency. Such a module is justified only by a concrete KOLVRT consumer. Studying a foreign interface does not commit the project to supporting it.
 
-| Manifest field | Obligation |
-|---|---|
-| Behavior identity and semantic version | Immutable definition of supported behavior |
-| Implementation digest | Exact executable artifact, independent of the semantic version |
-| Owner and source cases | Responsibility and engineering evidence |
-| Input and native protocols | Supported versions, encoding and errors |
-| Required rights and resource limits | Minimal grants and bounded memory, pins and queues |
-| State domain and dependencies | Shared state and transitive module requirements |
-| Security boundary | Actual isolation or explicitly privileged execution |
-| Metrics and consumer identity | Attribution, lifetime accounting and retention |
-| Migration and removal | Admission control, draining, conversion and rollback limits |
+| Manifest field                         | Obligation                                                     |
+| -------------------------------------- | -------------------------------------------------------------- |
+| Behavior identity and semantic version | Immutable definition of supported behavior                     |
+| Implementation digest                  | Exact executable artifact, independent of the semantic version |
+| Owner and source cases                 | Responsibility and engineering evidence                        |
+| Input and native protocols             | Supported versions, encoding and errors                        |
+| Required rights and resource limits    | Minimal grants and bounded memory, pins and queues             |
+| State domain and dependencies          | Shared state and transitive module requirements                |
+| Security boundary                      | Actual isolation or explicitly privileged execution            |
+| Metrics and consumer identity          | Attribution, lifetime accounting and retention                 |
+| Migration and removal                  | Admission control, draining, conversion and rollback limits    |
 
 Version selection uses an explicit compatibility matrix, not a highest-version heuristic.
 A binding pins both semantic version and artifact digest. Versions can coexist only with
@@ -30,7 +30,7 @@ may require one indivisible personality domain rather than independent call adap
 Hardware translation is separate. Firmware frontends produce validated native device
 descriptions. A silicon workaround can affect code generation or platform operations;
 it is not necessarily dynamically unloadable. Dropping a mandatory workaround drops
-the affected target. [Cortex-A53 843419](../../research/pathology/KOL-PATH-0011.json) is an example.
+the affected target. [Cortex-A53 843419](../../research/cases/KOL-PATH-0011.json) is an example.
 
 ## Bug-compatibility lifecycle
 

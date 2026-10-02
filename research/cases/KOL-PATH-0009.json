@@ -1,0 +1,66 @@
+{
+  "id": "KOL-PATH-0009",
+  "title": "GUP pinning: ссылка не равна DMA lease",
+  "subsystem": "Memory / DMA",
+  "category": ["RESOURCE_MANAGEMENT", "API_DESIGN"],
+  "linux_versions": "Документирован переход от обычных references к отдельному FOLL_PIN учёту; для больших folios используется отдельный pincount.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S09",
+      "title": "pin_user_pages",
+      "url": "https://docs.kernel.org/core-api/pin_user_pages.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "FOLL_PIN; FOLL_LONGTERM; CASE 2: RDMA",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Memory / DMA"
+    }
+  ],
+  "historical_context": "Документирован переход от обычных references к отдельному FOLL_PIN учёту; для больших folios используется отдельный pincount.",
+  "original_reason": "DMA требует удержания физической памяти дольше обычного доступа CPU.",
+  "root_cause": "Обычный refcount не сообщает MM, что migration/writeback ограничены DMA.",
+  "observable_behavior": "Long-term pins требуют дополнительных ограничений, включая неподдерживаемые DAX случаи.",
+  "compatibility_dependency": "Изменение internal pin API требует адаптации callers, но не сохранения старой ошибочной модели.",
+  "security_impact": "DMA после free нарушает изоляцию.",
+  "performance_impact": "Pinned memory ухудшает reclaim.",
+  "complexity_impact": "Учитывать отдельный lifetime устройства.",
+  "hardware_dependency": "IOMMU и noncoherent devices меняют реализацию.",
+  "linux_current_solution": "pin_user_pages отделён от get_user_pages; long-term pins — более строгий случай.",
+  "remaining_problem": "Какая политика bounded long-term pins допустима для future RDMA?",
+  "constraints_then": "Необходимость DMA и ограниченные metadata страницы.",
+  "constraints_now": "DMA остаётся; refcount API не обязан быть Linux-совместимым.",
+  "change_consequences": "Изменение internal pin API требует адаптации callers, но не сохранения старой ошибочной модели.",
+  "improvement_assessment": "Вывод KOLVRT: DmaLease хранит pages, direction, device domain и quota; release разрешён после завершения DMA или доказанного reset. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "DmaLease хранит pages, direction, device domain и quota; release разрешён после завершения DMA или доказанного reset.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "Legacy driver adapter: convert pin request to checked DmaLease",
+  "migration_strategy": "Запретить untracked pin; native driver получает typed lease.",
+  "tests_required": [
+    "Unmap/migration во время DMA не освобождает backing pages.",
+    "Достижение pin quota и device timeout безопасно возвращают ошибку."
+  ],
+  "benchmarks_required": [
+    "Pin/unpin CPU, locked RAM high-water и reclaim latency."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Какая политика bounded long-term pins допустима для future RDMA?",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S09"],
+    "original_reason": ["S09"],
+    "root_cause": ["S09"],
+    "observable_behavior": ["S09"],
+    "compatibility_dependency": ["S09"],
+    "linux_current_solution": ["S09"]
+  }
+}

@@ -4,15 +4,15 @@ Development, staging and production use one architecture, codebase and native se
 Profiles control diagnostics and experimental operations, not authorization, ownership,
 ordering, resource limits or correctness.
 
-| Capability | Development | Staging | Production |
-|---|---|---|---|
-| Detailed tracing and route inspection | Authorized, bounded | Bounded or sampled | Explicitly enabled bounded counters only |
-| Diagnostic assertions | Full | Full or targeted within a budget | Optional diagnostics may be removed |
-| Mandatory request validation | Always | Always | Always |
-| Fault injection | Explicit activation | Isolated pre-release tests | Absent |
-| Experimental live rebinding | Quiescent domains only | Controlled rehearsal | Absent |
-| A/B experiments | Isolated workload copies | Representative fixtures | Separate test environment or offline replay |
-| Dependency information | Full graph | Full manifest | Bound manifest, no per-call graph traversal |
+| Capability                            | Development              | Staging                          | Production                                  |
+| ------------------------------------- | ------------------------ | -------------------------------- | ------------------------------------------- |
+| Detailed tracing and route inspection | Authorized, bounded      | Bounded or sampled               | Explicitly enabled bounded counters only    |
+| Diagnostic assertions                 | Full                     | Full or targeted within a budget | Optional diagnostics may be removed         |
+| Mandatory request validation          | Always                   | Always                           | Always                                      |
+| Fault injection                       | Explicit activation      | Isolated pre-release tests       | Absent                                      |
+| Experimental live rebinding           | Quiescent domains only   | Controlled rehearsal             | Absent                                      |
+| A/B experiments                       | Isolated workload copies | Representative fixtures          | Separate test environment or offline replay |
+| Dependency information                | Full graph               | Full manifest                    | Bound manifest, no per-call graph traversal |
 
 Staging uses production optimization, allocation policies and route manifests with
 bounded observability. It is a configuration, not another kernel architecture. Diagnostic

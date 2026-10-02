@@ -16,14 +16,14 @@ A binding records native operations, adapter chain, semantic version, artifact d
 dependency closure, state domain, rights, limits, profile and generation. Unsupported
 families do not silently fall back to compatibility. Routing cannot increase authority.
 
-| Level | Initial role |
-|---|---|
-| Package or executable | Declared behavior requirements and inherited defaults |
-| Process | Personality, policy and bound handles |
-| Driver or device | Protocol and scoped hardware translation |
-| Subsystem or API family | Public route selector |
-| Protocol and version | Immutable semantic contract |
-| Compatibility capability | Narrow deviation with proven state independence |
+| Level                    | Initial role                                          |
+| ------------------------ | ----------------------------------------------------- |
+| Package or executable    | Declared behavior requirements and inherited defaults |
+| Process                  | Personality, policy and bound handles                 |
+| Driver or device         | Protocol and scoped hardware translation              |
+| Subsystem or API family  | Public route selector                                 |
+| Protocol and version     | Immutable semantic contract                           |
+| Compatibility capability | Narrow deviation with proven state independence       |
 
 Start with a finite family table, not a universal routing graph. Splitting individual
 capabilities requires a decision with shared-state analysis. An AArch64 compatibility environment

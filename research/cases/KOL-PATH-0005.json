@@ -1,0 +1,65 @@
+{
+  "id": "KOL-PATH-0005",
+  "title": "ioctl time32: переход времени через 2038",
+  "subsystem": "Time / UAPI",
+  "category": ["ABI_LEGACY", "API_DESIGN"],
+  "linux_versions": "Документация ioctl описывает несовместимость старых timeval/timespec с 64-bit time_t на 32-bit системах.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S05",
+      "title": "ioctl based interfaces",
+      "url": "https://docs.kernel.org/driver-api/ioctl.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Timestamps; 32-bit compat mode; Information leaks",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Time / UAPI"
+    }
+  ],
+  "historical_context": "Документация ioctl описывает несовместимость старых timeval/timespec с 64-bit time_t на 32-bit системах.",
+  "original_reason": "Время экспортировалось через типы, зависящие от ABI.",
+  "root_cause": "Размер long/time_t в wire layout не является устойчивым контрактом.",
+  "observable_behavior": "Нужны переводы старых временных структур и новые явные типы.",
+  "compatibility_dependency": "Изменять layout существующей команды нельзя без риска для binaries.",
+  "security_impact": "Overflow может обходить срок действия.",
+  "performance_impact": "Цена conversion должна измеряться.",
+  "complexity_impact": "64-bit CPU сам не исправляет чужой wire ABI.",
+  "hardware_dependency": "Native target AArch64; проблема legacy time32 протоколов.",
+  "linux_current_solution": "Рекомендованы явные 64-bit представления и осознанный выбор clock.",
+  "remaining_problem": "Нужен ли реальный consumer time32 в Phase 0.2?",
+  "constraints_then": "32-bit long.",
+  "constraints_now": "На native ARM64 ограничение снимается явными типами; старые payload могут остаться.",
+  "change_consequences": "Изменять layout существующей команды нельзя без риска для binaries.",
+  "improvement_assessment": "Вывод KOLVRT: Native deadline: signed 64-bit seconds + checked nanoseconds и clock domain; относительное ожидание преобразуется в monotonic deadline один раз. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "COMPAT_ONLY",
+  "kolvrt_native_semantics": "Native deadline: signed 64-bit seconds + checked nanoseconds и clock domain; относительное ожидание преобразуется в monotonic deadline один раз.",
+  "compatibility_required": "YES",
+  "compatibility_scope": "time32 payload translation только внутри legacy protocol; 32-bit execution не входит в начальный target",
+  "migration_strategy": "Отказ с overflow вместо truncation; native consumers используют явные типы.",
+  "tests_required": [
+    "До/после 2038, отрицательное время, nanos вне диапазона, overflow conversion."
+  ],
+  "benchmarks_required": [
+    "Конвертация времени отдельно от timer wait; CPU/call."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Нужен ли реальный consumer time32 в Phase 0.2?",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S05"],
+    "original_reason": ["S05"],
+    "root_cause": ["S05"],
+    "observable_behavior": ["S05"],
+    "compatibility_dependency": ["S05"],
+    "linux_current_solution": ["S05"]
+  }
+}

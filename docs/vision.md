@@ -24,7 +24,7 @@ Software compatibility is optional in a native build. A workaround for faulty ha
 may still be mandatory on an affected native target. Removing that workaround also
 removes support for that target unless another correct implementation exists.
 
-KOLVRT requirements come from its intended workloads, native correctness and target hardware. External failure histories help identify risks, but do not select the architecture. Account for survivorship bias: visible surviving projects overrepresent some choices, while abandoned approaches and unreported failures are missing. Seek disconfirming cases, alternative mechanisms and conditions of applicability. Prefer the smallest design that satisfies a measurable KOLVRT need; defer features with no demonstrated consumer. See the [research method](research/RESEARCH_METHOD.md).
+KOLVRT requirements come from its intended workloads, native correctness and target hardware. External failure histories help identify risks, but do not select the architecture. Account for survivorship bias: visible surviving projects overrepresent some choices, while abandoned approaches and unreported failures are missing. Seek disconfirming cases, alternative mechanisms and conditions of applicability. Prefer the smallest design that satisfies a measurable KOLVRT need; defer features with no demonstrated consumer. See the [research method](research/research-method.md).
 
 A KOLVRT bug must be corrected in the native specification and implementation with a
 regression test. A demonstrated need for safe old behavior may justify a separate
@@ -34,7 +34,7 @@ not prove the absence of dormant or offline consumers.
 Phase 0 delivers research records, sources, requirements, architecture decisions and
 test obligations. It does not deliver a boot stub, a kernel, drivers, compatibility implementations
 or invented performance results. Normative requirements describe future implementation
-obligations; they do not claim that execution tests already pass. The [next research phase](research/PHASE_0_2.md)
+obligations; they do not claim that execution tests already pass. The [next research phase](research/phase-0-2.md)
 does not authorize starting Phase 1 automatically.
 
 [Russian translation](../translations/ru/docs/vision.md)

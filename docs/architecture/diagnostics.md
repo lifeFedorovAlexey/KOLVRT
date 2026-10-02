@@ -28,13 +28,13 @@ Do not expose foreign credentials or user payload through diagnostics.
 
 ## Text states
 
-| State | Required evidence | Color hint |
-|---|---|---|
-| LEGACY | Only legacy entry contracts are declared; no native contract is declared | Brown |
-| COMPAT | Every used entry family in the complete observation scope requires an adapter | Red |
-| MIXED | Both routes occur; no declared migration budget is met | Yellow |
-| MOSTLY_NATIVE | Mixed routes meet an explicit consumer-specific multidimensional migration budget | Light green |
-| NATIVE | No direct or transitive software compatibility dependency in the stated support scope; sufficient coverage | Green |
+| State         | Required evidence                                                                                          | Color hint  |
+| ------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
+| LEGACY        | Only legacy entry contracts are declared; no native contract is declared                                   | Brown       |
+| COMPAT        | Every used entry family in the complete observation scope requires an adapter                              | Red         |
+| MIXED         | Both routes occur; no declared migration budget is met                                                     | Yellow      |
+| MOSTLY_NATIVE | Mixed routes meet an explicit consumer-specific multidimensional migration budget                          | Light green |
+| NATIVE        | No direct or transitive software compatibility dependency in the stated support scope; sufficient coverage | Green       |
 
 Insufficient evidence produces an additional UNKNOWN state. Otherwise classify NATIVE,
 then manifest-defined LEGACY, then COMPAT, then MOSTLY_NATIVE or MIXED. Always identify

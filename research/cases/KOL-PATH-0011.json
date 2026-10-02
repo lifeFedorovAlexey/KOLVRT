@@ -1,0 +1,66 @@
+{
+  "id": "KOL-PATH-0011",
+  "title": "Cortex-A53 843419: linker workaround",
+  "subsystem": "ARM64",
+  "category": ["HARDWARE_QUIRK"],
+  "linux_versions": "В Linux v6.12 Kconfig 843419 применяется к Cortex-A53 до r0p4 включительно.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S11",
+      "title": "ARM64 Kconfig v6.12",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.12/arch/arm64/Kconfig",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": "v6.12",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "ARM64_ERRATUM_843419 and ARM64_ERRATUM_845719",
+      "kind": "SOURCE_CODE",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "ARM64"
+    }
+  ],
+  "historical_context": "В Linux v6.12 Kconfig 843419 применяется к Cortex-A53 до r0p4 включительно.",
+  "original_reason": "Некоторые ADRP sequences дают неправильный адрес последующего доступа.",
+  "root_cause": "Silicon erratum, не userspace ABI.",
+  "observable_behavior": "Нужна замена уязвимых последовательностей кода.",
+  "compatibility_dependency": "Удаление workaround при поддержке затронутого CPU делает native execution некорректным.",
+  "security_impact": "Неверный адрес создаёт нарушение memory safety.",
+  "performance_impact": "Изменяется instruction layout.",
+  "complexity_impact": "Нужна привязка к toolchain, а не if в MM core.",
+  "hardware_dependency": "Cortex-A53 <= r0p4; QEMU не доказывает исправление silicon errata.",
+  "linux_current_solution": "Kconfig задаёт linker --fix-cortex-a53-843419 и PLT support.",
+  "remaining_problem": "Точная первая версия workaround и применимость к выбранному Rust linker ещё не проверены.",
+  "constraints_then": "Ошибка CPU.",
+  "constraints_now": "На affected silicon остаётся; на QEMU применение не обосновано.",
+  "change_consequences": "Удаление workaround при поддержке затронутого CPU делает native execution некорректным.",
+  "improvement_assessment": "Вывод KOLVRT: Platform erratum manifest задаёт CPU revisions и обязательную codegen transformation; native memory semantics неизменны. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "HARDWARE_TRANSLATION",
+  "kolvrt_native_semantics": "Platform erratum manifest задаёт CPU revisions и обязательную codegen transformation; native memory semantics неизменны.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "platform.arm64.a53-843419/v1; build/toolchain, не process route",
+  "migration_strategy": "Для unsupported CPU отказаться от загрузки; убрать модуль можно только вместе с поддержкой affected target.",
+  "tests_required": [
+    "Проверка linker output на опасные ADRP patterns.",
+    "Reject affected target без нужной toolchain capability."
+  ],
+  "benchmarks_required": [
+    "Code size, I-cache counters и latency на настоящем affected CPU."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Точная первая версия workaround и применимость к выбранному Rust linker ещё не проверены.",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S11"],
+    "original_reason": ["S11"],
+    "root_cause": ["S11"],
+    "observable_behavior": ["S11"],
+    "compatibility_dependency": ["S11"],
+    "linux_current_solution": ["S11"]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "KOL-PATH-0027",
+  "title": "PCI MSI: неисправный bridge требует scoped fallback",
+  "subsystem": "PCIe / interrupts",
+  "category": ["HARDWARE_QUIRK", "DRIVER_MODEL"],
+  "linux_versions": "MSI guide описывает global, bridge и per-device disable; для nForce/HT2000 встречается enable через config space.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S27",
+      "title": "PCI MSI guide",
+      "url": "https://docs.kernel.org/PCI/msi-howto.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "MSI quirks: globally, bridge, device; Spinlocks",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "PCIe / interrupts"
+    }
+  ],
+  "historical_context": "MSI guide описывает global, bridge и per-device disable; для nForce/HT2000 встречается enable через config space.",
+  "original_reason": "Оборудование может заявлять MSI, но не маршрутизировать его корректно.",
+  "root_cause": "Advertised capability не гарантирует корректный hardware path.",
+  "observable_behavior": "MSI может быть отключён для affected bridge subtree или устройства.",
+  "compatibility_dependency": "Нельзя снять workaround на affected hardware ради чистоты API.",
+  "security_impact": "Потеря interrupt вызывает hung device; неправильная IRQ locking ведёт к deadlock.",
+  "performance_impact": "Fallback может снизить throughput.",
+  "complexity_impact": "Quirk registry имеет owner и removal criteria.",
+  "hardware_dependency": "PCI host bridge/device; GICv3 ITS support требует отдельного исследования.",
+  "linux_current_solution": "PCI quirks и vector allocation fallback; legacy MSI APIs deprecated.",
+  "remaining_problem": "Когда PCIe нужен первому VirtIO target и кто реализует MSI translation?",
+  "constraints_then": "Hardware bugs и limited vectors.",
+  "constraints_now": "Ограничения сохраняются на affected hardware.",
+  "change_consequences": "Нельзя снять workaround на affected hardware ради чистоты API.",
+  "improvement_assessment": "Вывод KOLVRT: InterruptProvider выбирает подтверждённый mode по device/bridge manifest; affected subtree scope явный, native driver получает interrupt token. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "HARDWARE_TRANSLATION",
+  "kolvrt_native_semantics": "InterruptProvider выбирает подтверждённый mode по device/bridge manifest; affected subtree scope явный, native driver получает interrupt token.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "platform.pci.msi-quirks/v1; bridge subtree или device",
+  "migration_strategy": "При невозможности безопасного IRQ mode driver не запускается; глобальный fallback только с machine-wide evidence.",
+  "tests_required": [
+    "Broken bridge fixture не отключает MSI у независимого bridge.",
+    "Недостаток vectors, teardown с pending interrupt, multiple-vector lock reentry."
+  ],
+  "benchmarks_required": [
+    "MSI-X против INTx при одинаковой нагрузке: ISR CPU, latency, contention."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Когда PCIe нужен первому VirtIO target и кто реализует MSI translation?",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S27"],
+    "original_reason": ["S27"],
+    "root_cause": ["S27"],
+    "observable_behavior": ["S27"],
+    "compatibility_dependency": ["S27"],
+    "linux_current_solution": ["S27"]
+  }
+}

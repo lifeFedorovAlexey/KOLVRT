@@ -1,0 +1,9 @@
+[package]
+name = "native-state-models"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+native-protocol-model = { path = "../native-protocol-model" }
+serde_json = "=1.0.145"

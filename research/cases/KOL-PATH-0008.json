@@ -1,0 +1,79 @@
+{
+  "id": "KOL-PATH-0008",
+  "title": "Dirty Pipe: неинициализированные flags буфера",
+  "subsystem": "IPC / pipes / page cache",
+  "category": ["MEMORY_SAFETY", "SECURITY", "REGRESSION"],
+  "linux_versions": "Отчёт автора связывает exploitability с 5.8; исправления: 5.16.11, 5.15.25, 5.10.102. Fix указывает более старое происхождение missing initialization.",
+  "first_known_version": "5.8 (exploitable behavior)",
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S07",
+      "title": "Initialize pipe_buffer flags",
+      "url": "https://github.com/torvalds/linux/commit/9d2231c5d74e13b2a0546fee6737ee4446017903",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": "9d2231c5d74e13b2a0546fee6737ee4446017903",
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Commit message; copy_page_to_iter_pipe and push_pipe diff",
+      "kind": "COMMIT",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "IPC / pipes / page cache"
+    },
+    {
+      "id": "S08",
+      "title": "Dirty Pipe: report by discoverer",
+      "url": "https://dirtypipe.cm4all.com/",
+      "repository": "https://github.com/torvalds/linux",
+      "commit": null,
+      "tag_version": null,
+      "date": "2022-03-07",
+      "research_date": "2026-10-02",
+      "locator": "Abstract; Man staring at kernel code; timeline",
+      "kind": "BUG_REPORT",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "IPC / pipes / page cache"
+    }
+  ],
+  "historical_context": "Отчёт автора связывает exploitability с 5.8; исправления: 5.16.11, 5.15.25, 5.10.102. Fix указывает более старое происхождение missing initialization.",
+  "original_reason": "splice переиспользует ссылки на страницы для сокращения copies.",
+  "root_cause": "Новый pipe_buffer получал старые flags; поздний refactor сделал флаг merge значимым для чужой страницы.",
+  "observable_behavior": "Read-only file data могло быть изменено через pipe/page cache.",
+  "compatibility_dependency": "Совместимость не оправдывает запись без разрешения.",
+  "security_impact": "Порча данных и privilege escalation по отчёту автора.",
+  "performance_impact": "Zero-copy полезен, но не отменяет ownership.",
+  "complexity_impact": "Типы должны выражать provenance backing page.",
+  "hardware_dependency": "Не ARM-specific.",
+  "linux_current_solution": "9d2231c инициализирует flags в двух путях создания pipe buffers.",
+  "remaining_problem": "Проверить model test всех constructor/reuse переходов до выбора native zero-copy API.",
+  "constraints_then": "Производительность zero-copy.",
+  "constraints_now": "Требование остаётся; insecure flags не нужны.",
+  "change_consequences": "Совместимость не оправдывает запись без разрешения.",
+  "improvement_assessment": "Вывод KOLVRT: Read-only shared page и writable owned buffer — разные типы; конструктор задаёт все metadata, merge требует права записи на backing object. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "Read-only shared page и writable owned buffer — разные типы; конструктор задаёт все metadata, merge требует права записи на backing object.",
+  "compatibility_required": "NO",
+  "compatibility_scope": "NONE",
+  "migration_strategy": "Сохранить zero-copy API с корректными permissions; запретить уязвимый путь во всех profiles.",
+  "tests_required": [
+    "Recycle buffer после каждого типа backing page; попытка merge в read-only page отклоняется.",
+    "Partial initialization/error paths не публикуют объект."
+  ],
+  "benchmarks_required": [
+    "splice-like shared transfer против copy: throughput, copies, pinned footprint."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Проверить model test всех constructor/reuse переходов до выбора native zero-copy API."
+  ],
+  "evidence": {
+    "historical_context": ["S07", "S08"],
+    "original_reason": ["S07", "S08"],
+    "root_cause": ["S07", "S08"],
+    "observable_behavior": ["S07", "S08"],
+    "compatibility_dependency": ["S07", "S08"],
+    "linux_current_solution": ["S07", "S08"]
+  }
+}

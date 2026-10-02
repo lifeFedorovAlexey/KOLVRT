@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KOLVRT pathology record v1",
+  "description": "Facts cite sources. KOLVRT semantics, tests and benchmarks are design requirements, not executed results.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^KOL-PATH-[0-9]{4}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "subsystem": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "linux_versions": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "first_known_version": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "status": {
+      "enum": ["ANALYZED_WITH_OPEN_QUESTIONS", "ANALYZED", "UNRESOLVED"]
+    },
+    "research_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "historical_context": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "original_reason": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "root_cause": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "observable_behavior": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "compatibility_dependency": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "security_impact": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "performance_impact": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "complexity_impact": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "hardware_dependency": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "linux_current_solution": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "remaining_problem": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "constraints_then": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "constraints_now": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "change_consequences": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "improvement_assessment": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "kolvrt_decision": {
+      "enum": [
+        "NATIVE_FIX",
+        "COMPAT_ONLY",
+        "HARDWARE_TRANSLATION",
+        "ACCEPTED_TRADEOFF",
+        "RESEARCH_REQUIRED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "kolvrt_native_semantics": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "compatibility_required": {
+      "enum": ["YES", "NO", "CONDITIONAL", "UNRESOLVED"]
+    },
+    "compatibility_scope": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "migration_strategy": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "confidence": {
+      "enum": ["LOW", "MEDIUM", "HIGH"]
+    },
+    "category": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "MEMORY_SAFETY",
+          "CONCURRENCY",
+          "ABI_LEGACY",
+          "API_DESIGN",
+          "HISTORICAL_BEHAVIOR",
+          "DRIVER_MODEL",
+          "HARDWARE_QUIRK",
+          "PERFORMANCE",
+          "SECURITY",
+          "RESOURCE_MANAGEMENT",
+          "ARCHITECTURAL_DEBT",
+          "REGRESSION",
+          "COMPATIBILITY"
+        ]
+      }
+    },
+    "tests_required": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "benchmarks_required": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^S[0-9]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://"
+          },
+          "repository": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://"
+          },
+          "commit": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-f]{7,40}$"
+          },
+          "tag_version": {
+            "type": ["string", "null"],
+            "minLength": 1
+          },
+          "date": {
+            "type": ["string", "null"],
+            "format": "date"
+          },
+          "research_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "kind": {
+            "enum": [
+              "SOURCE_CODE",
+              "COMMIT",
+              "OFFICIAL_DOCUMENTATION",
+              "BUG_REPORT",
+              "REPRODUCER",
+              "CVE",
+              "MAINTAINER_DISCUSSION",
+              "SECONDARY_ANALYSIS"
+            ]
+          },
+          "provenance_limitations": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "subsystem": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "url",
+          "repository",
+          "commit",
+          "tag_version",
+          "date",
+          "research_date",
+          "locator",
+          "kind",
+          "provenance_limitations",
+          "subsystem"
+        ]
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "historical_context": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "original_reason": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "root_cause": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "observable_behavior": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "compatibility_dependency": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "linux_current_solution": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "historical_context",
+        "original_reason",
+        "root_cause",
+        "observable_behavior",
+        "compatibility_dependency",
+        "linux_current_solution"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "subsystem",
+    "linux_versions",
+    "first_known_version",
+    "status",
+    "research_date",
+    "historical_context",
+    "original_reason",
+    "root_cause",
+    "observable_behavior",
+    "compatibility_dependency",
+    "security_impact",
+    "performance_impact",
+    "complexity_impact",
+    "hardware_dependency",
+    "linux_current_solution",
+    "remaining_problem",
+    "constraints_then",
+    "constraints_now",
+    "change_consequences",
+    "improvement_assessment",
+    "kolvrt_decision",
+    "kolvrt_native_semantics",
+    "compatibility_required",
+    "compatibility_scope",
+    "migration_strategy",
+    "confidence",
+    "category",
+    "tests_required",
+    "benchmarks_required",
+    "open_questions",
+    "sources",
+    "evidence"
+  ]
+}

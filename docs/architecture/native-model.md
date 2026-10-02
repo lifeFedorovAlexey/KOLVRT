@@ -4,8 +4,7 @@
 
 The core owns task and address-space lifetimes, scheduling mechanisms, memory ownership,
 authorization, communication and waiting primitives, resource accounting and necessary
-device abstractions. Placement of file services, networking, drivers and compatibility
-adapters remains open in [decision 0008](../architecture-decisions/0008-placement.md).
+device abstractions. The initial service is isolated at EL0 under [decision 0008](../architecture-decisions/0008-placement.md). Placement of file services, networking, device drivers and compatibility adapters requires later workload-specific decisions.
 A library boundary alone does not establish memory isolation.
 
 Native consumers use native contracts directly. Legacy consumers enter a versioned
@@ -19,7 +18,7 @@ or filesystem objects. Dependency checks must include generated code and build f
 An object identity is distinct from its displayed integer name. A handle carries checked
 identity, type and rights, with protection against reuse. Copying or delegating it cannot
 add rights. Revocation specifies separately whether it stops new requests and how it
-affects accepted requests. The wire encoding is not yet selected.
+affects accepted requests. The first-slice [wire candidate](native-abi.md) is versioned and tested.
 
 Creation publishes a fully initialized object or nothing. Its lifecycle is
 `Constructing -> Live -> Retiring -> Dead`; upgrading a weak reference cannot resurrect
@@ -27,9 +26,9 @@ a retiring object. Requests retain required references until terminal completion
 Closing consumes a handle once even when late I/O reports an error. Cancellation does
 not promise rollback: the outcome must state whether an external effect occurred.
 
-Evidence: [process identity](../../research/pathology/KOL-PATH-0019.json),
-[close outcomes](../../research/pathology/KOL-PATH-0001.json),
-[reference resurrection](../../research/pathology/KOL-PATH-0030.json).
+Evidence: [process identity](../../research/cases/KOL-PATH-0019.json),
+[close outcomes](../../research/cases/KOL-PATH-0001.json),
+[reference resurrection](../../research/cases/KOL-PATH-0030.json).
 
 ## Memory and I/O
 

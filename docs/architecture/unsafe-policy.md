@@ -15,23 +15,21 @@ Core crates use `#![forbid(unsafe_code)]` except approved boundary crates, which
 `#![deny(unsafe_op_in_unsafe_fn)]`. Include dependencies, generated code, macro expansions,
 assembly and unsafe trait implementations in the inventory.
 
-| Invariant record | Required information |
-|---|---|
-| Identity and owner | Stable ID, source locations and responsible reviewer |
-| Necessity | Why a safe implementation is unavailable at this boundary |
-| Preconditions | Bounds, alignment, initialization, provenance, ownership and aliasing |
-| Temporal assumptions | Lifetimes, preemption, interrupt context, affinity and ordering |
-| External agents | Devices, firmware, foreign callbacks and mutable user memory |
-| Guarantees | Safe-caller contract including errors, cancellation and destruction |
-| Proof boundary | Assumptions outside language checks and supporting evidence |
-| Tests and review | Negative cases, failures, interleavings and independent boundary review |
+| Invariant record     | Required information                                                    |
+| -------------------- | ----------------------------------------------------------------------- |
+| Identity and owner   | Stable ID, source locations and responsible reviewer                    |
+| Necessity            | Why a safe implementation is unavailable at this boundary               |
+| Preconditions        | Bounds, alignment, initialization, provenance, ownership and aliasing   |
+| Temporal assumptions | Lifetimes, preemption, interrupt context, affinity and ordering         |
+| External agents      | Devices, firmware, foreign callbacks and mutable user memory            |
+| Guarantees           | Safe-caller contract including errors, cancellation and destruction     |
+| Proof boundary       | Assumptions outside language checks and supporting evidence             |
+| Tests and review     | Negative cases, failures, interleavings and independent boundary review |
 
 Volatile access is not atomic and does not replace a barrier. A `Send` or `Sync`
 implementation needs explicit multiprocessor and interrupt reasoning. Do not publish
 `MaybeUninit` contents before observable bytes are initialized. Reused buffers reset
-metadata. Destruction cannot free memory while a device may still access it. Panic and
-unwinding policy remains open; cleanup cannot assume unwinding across interrupts or
-foreign calls without a supported contract.
+metadata. Destruction cannot free memory while a device may still access it. For the first slice, privileged panic halts and no unwinding crosses interrupts or foreign calls. Bounded allocation failure returns an explicit error; service death is observed by its supervisor. See the [threat model](threat-model.md).
 
 Use Miri for supported host-side code, concurrency models for represented interleavings,
 QEMU for integration and real hardware/litmus tests for ordering and silicon defects.
@@ -39,9 +37,9 @@ None proves the whole kernel. These kernel checks have not been run in Phase 0.
 Pin the compiler and relevant reference revision before the first unsafe implementation.
 
 Evidence: [Rust validity rules](https://doc.rust-lang.org/reference/behavior-considered-undefined.html),
-[buffer initialization](../../research/pathology/KOL-PATH-0008.json),
-[device ordering](../../research/pathology/KOL-PATH-0010.json),
-[reclamation](../../research/pathology/KOL-PATH-0022.json),
-[reference upgrade](../../research/pathology/KOL-PATH-0030.json).
+[buffer initialization](../../research/cases/KOL-PATH-0008.json),
+[device ordering](../../research/cases/KOL-PATH-0010.json),
+[reclamation](../../research/cases/KOL-PATH-0022.json),
+[reference upgrade](../../research/cases/KOL-PATH-0030.json).
 
 [Russian translation](../../translations/ru/docs/architecture/unsafe-policy.md)

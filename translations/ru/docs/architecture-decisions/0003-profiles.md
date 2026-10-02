@@ -44,6 +44,6 @@ PROD исключает внедрение сбоев и эксперимент�
 
 ## Основания
 
-[Случаи и источники](../research/CASE_INDEX.md); [другие системы](../../research/other-systems/COMPARISON.md).
+[Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0003-profiles.md)

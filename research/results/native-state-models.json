@@ -1,0 +1,76 @@
+{
+  "models": {
+    "binding": {
+      "reachable_states": 7,
+      "transitions": 10,
+      "violations": 0
+    },
+    "lifetime": {
+      "reachable_states": 492,
+      "transitions": 1272,
+      "violations": 0
+    },
+    "startup": {
+      "reachable_states": 11,
+      "transitions": 16,
+      "violations": 0
+    },
+    "wait": {
+      "reachable_states": 25,
+      "transitions": 36,
+      "violations": 0
+    }
+  },
+  "negative_controls": {
+    "duplicate_effect": [
+      "admit A",
+      "commit effect",
+      "BUG retry committed effect",
+      "violation: Lifetime { handles: [true, true], requests: [Effect, Unsent], charged: 1, revoked: false, service_alive: true, freed: false, effects: [2, 0] }"
+    ],
+    "lost_charge": [
+      "admit A",
+      "commit effect",
+      "violation: Lifetime { handles: [true, true], requests: [Effect, Unsent], charged: 0, revoked: false, service_alive: true, freed: false, effects: [1, 0] }"
+    ],
+    "lost_wakeup": [
+      "initial probe",
+      "publish event",
+      "register and recheck",
+      "violation: Wait { phase: 2, ready: true, notified: false, deadline: false, terminal: 0 }"
+    ],
+    "premature_free": [
+      "close A",
+      "admit B",
+      "close B",
+      "reclaim storage",
+      "violation: Lifetime { handles: [false, false], requests: [Unsent, Queued], charged: 1, revoked: false, service_alive: true, freed: true, effects: [0, 0] }"
+    ],
+    "premature_retirement": [
+      "admit old generation",
+      "stop entire domain",
+      "commit new binding and retire old code",
+      "violation: Binding { admission: true, in_flight: 1, generation: 1, old_released: true }"
+    ],
+    "shutdown_with_requests": [
+      "initialize next dependency before publication",
+      "initialize next dependency before publication",
+      "initialize next dependency before publication",
+      "admit request",
+      "stop admission",
+      "quiesce interrupt and callback sources",
+      "violation: Startup { phase: 5, in_flight: 1 }"
+    ]
+  },
+  "placement": {
+    "child_failure_observed": true,
+    "fresh_service_succeeded": true,
+    "malformed_response_rejected": true,
+    "performance_claim": false,
+    "same_payload_result": true,
+    "sandbox_claim": false,
+    "supervisor_survived": true
+  },
+  "schema_version": 1,
+  "scope": "Finite host models and process-boundary experiment; no kernel or hardware proof"
+}

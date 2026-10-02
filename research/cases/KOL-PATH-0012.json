@@ -1,0 +1,66 @@
+{
+  "id": "KOL-PATH-0012",
+  "title": "Device Tree bindings — внешний ABI",
+  "subsystem": "Firmware / Device Tree",
+  "category": ["ABI_LEGACY", "HARDWARE_QUIRK", "COMPATIBILITY"],
+  "linux_versions": "DT ABI document требует совместимости новых kernels со старыми DT и стабильности bindings.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S12",
+      "title": "Devicetree ABI",
+      "url": "https://docs.kernel.org/devicetree/bindings/ABI.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Entire short document",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Firmware / Device Tree"
+    }
+  ],
+  "historical_context": "DT ABI document требует совместимости новых kernels со старыми DT и стабильности bindings.",
+  "original_reason": "DT может поставляться отдельно от kernel.",
+  "root_cause": "Исправление binding в source tree не обновляет firmware уже поставленного устройства.",
+  "observable_behavior": "Kernel должен понимать применимые старые bindings.",
+  "compatibility_dependency": "Переименование property без translation может сделать устройство недоступным.",
+  "security_impact": "Недоверенный firmware input не выдаёт произвольный MMIO доступ.",
+  "performance_impact": "Boot-time translation можно не держать на hot path.",
+  "complexity_impact": "Stable input ABI отдельно от внутренней схемы.",
+  "hardware_dependency": "Firmware deployment и реальные платы.",
+  "linux_current_solution": "Linux рассматривает DT bindings как ABI и требует осторожности при изменениях.",
+  "remaining_problem": "Какие bindings входят в первоначальный support manifest кроме QEMU virt?",
+  "constraints_then": "Отдельная поставка firmware.",
+  "constraints_now": "Сохраняется; принудительно перепрошивать все устройства нельзя.",
+  "change_consequences": "Переименование property без translation может сделать устройство недоступным.",
+  "improvement_assessment": "Вывод KOLVRT: DT decoder переводит binding/version в валидированный PlatformDescription; core не читает legacy property names. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "HARDWARE_TRANSLATION",
+  "kolvrt_native_semantics": "DT decoder переводит binding/version в валидированный PlatformDescription; core не читает legacy property names.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "platform.dt.binding/<compatible>/version, device scope",
+  "migration_strategy": "Старый DT fixture проходит adapter; новый native descriptor един для DT и future ACPI.",
+  "tests_required": [
+    "Golden DT fixtures старых bindings.",
+    "Fuzz lengths, phandles, cycles, MMIO overlap и interrupts."
+  ],
+  "benchmarks_required": [
+    "Boot parse time и retained descriptor memory; не включать parsing в syscall cost."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Какие bindings входят в первоначальный support manifest кроме QEMU virt?",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S12"],
+    "original_reason": ["S12"],
+    "root_cause": ["S12"],
+    "observable_behavior": ["S12"],
+    "compatibility_dependency": ["S12"],
+    "linux_current_solution": ["S12"]
+  }
+}

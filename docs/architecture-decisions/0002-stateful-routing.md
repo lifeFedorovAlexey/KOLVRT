@@ -44,6 +44,6 @@ Resolver implementation may change while pinned semantic bindings remain compati
 
 ## Evidence
 
-[Cases and sources](../research/CASE_INDEX.md); [other systems](../../research/other-systems/COMPARISON.md).
+[Cases and sources](../research/case-index.md); [other systems](../research/reference-systems.md).
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0002-stateful-routing.md)

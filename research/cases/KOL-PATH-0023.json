@@ -1,0 +1,65 @@
+{
+  "id": "KOL-PATH-0023",
+  "title": "Удаление числового _sysctl ABI",
+  "subsystem": "Syscalls / configuration",
+  "category": ["ABI_LEGACY", "COMPATIBILITY"],
+  "linux_versions": "Man-pages: syscall появился в 1.3.57 и удалён в 5.5; proc/sys предоставлял альтернативный интерфейс.",
+  "first_known_version": "5.5 (removal)",
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S23",
+      "title": "sysctl",
+      "url": "https://man7.org/linux/man-pages/man2/sysctl.2.html",
+      "repository": "https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git",
+      "commit": null,
+      "tag_version": "man-pages-6.19",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "HISTORY; BUGS: object names; removal",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Syscalls / configuration"
+    }
+  ],
+  "historical_context": "Man-pages: syscall появился в 1.3.57 и удалён в 5.5; proc/sys предоставлял альтернативный интерфейс.",
+  "original_reason": "Экспортировать системные параметры через syscall с numeric path.",
+  "root_cause": "Числовые object names имели нестабильность и не были предпочтительным API.",
+  "observable_behavior": "Удалённый syscall не является вечным обязательством Linux.",
+  "compatibility_dependency": "Пользователи старого ABI должны перейти на другой интерфейс; распространённость consumers здесь не измерялась.",
+  "security_impact": "Configuration writes требуют authority.",
+  "performance_impact": "Не hot path по предположению; подтвердить workload.",
+  "complexity_impact": "Не переносить числовое дерево в core.",
+  "hardware_dependency": "Syscall availability зависела от architecture/config.",
+  "linux_current_solution": "Syscall удалён; документация рекомендует proc/sys.",
+  "remaining_problem": "Есть ли востребованный consumer этого removed ABI? Если нет, модуль не реализовывать.",
+  "constraints_then": "Старый numeric control ABI.",
+  "constraints_now": "Наличие успешного удаления опровергает тезис, что Linux не может удалить никакой ABI.",
+  "change_consequences": "Пользователи старого ABI должны перейти на другой интерфейс; распространённость consumers здесь не измерялась.",
+  "improvement_assessment": "Вывод KOLVRT: Native configuration — типизированные named properties с explicit revision и permissions; numeric Linux sysctl не входит в core. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "COMPAT_ONLY",
+  "kolvrt_native_semantics": "Native configuration — типизированные named properties с explicit revision и permissions; numeric Linux sysctl не входит в core.",
+  "compatibility_required": "YES",
+  "compatibility_scope": "linux.sysctl.obsolete/v1 только при подтверждённом consumer",
+  "migration_strategy": "Поддерживать только allowlist сопоставлений; неизвестное возвращает Unsupported, не success.",
+  "tests_required": [
+    "Неизвестный numeric path отвергается без side effects.",
+    "Mapping не предоставляет больше прав, чем native property."
+  ],
+  "benchmarks_required": [
+    "Lookup/conversion CPU и allocation per configuration request."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Есть ли востребованный consumer этого removed ABI? Если нет, модуль не реализовывать."
+  ],
+  "evidence": {
+    "historical_context": ["S23"],
+    "original_reason": ["S23"],
+    "root_cause": ["S23"],
+    "observable_behavior": ["S23"],
+    "compatibility_dependency": ["S23"],
+    "linux_current_solution": ["S23"]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "KOL-PATH-0001": {
-    "source_sha256": "eb7723c405c80a4fe4b6b0d0cb32e606f93a75bfb831ce82e418c0a9a82fafc3",
+    "source_sha256": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
     "en": {
       "title": "close(): error after descriptor release",
       "subsystem": "VFS",
@@ -19,7 +19,7 @@
     }
   },
   "KOL-PATH-0002": {
-    "source_sha256": "e2312b90ecc4a8fffd426c82e4faf6482e460b56899e06d5561e3b56f12df647",
+    "source_sha256": "db1c5219328b188bd049731fcfe7a8c78bd171b0ae0d6abc2ee8702f9c836675",
     "en": {
       "title": "POSIX locks: any close releases process locks",
       "subsystem": "VFS locking",
@@ -36,7 +36,7 @@
     }
   },
   "KOL-PATH-0003": {
-    "source_sha256": "0478252b411371edfe11728065e9531045a3016b89d887f32f538226d2714be0",
+    "source_sha256": "9df75d09e6da02f5fb5525b202c6bc04be96433100820967bcaae9d9415c730f",
     "en": {
       "title": "epoll: duplication and open-file lifetime",
       "subsystem": "Event notification",
@@ -53,7 +53,7 @@
     }
   },
   "KOL-PATH-0004": {
-    "source_sha256": "3eac6fd4eb8980ae9da43f2bd756ab034c11ffb9b643cdd448f0fcd63c22311d",
+    "source_sha256": "f5fd3df6f46e9aa390ac1ce6565fd1183812a07243e6925759a4927ce16c7f24",
     "en": {
       "title": "select: fd_set limits belong to libc",
       "subsystem": "System calls / libc",
@@ -72,7 +72,7 @@
     }
   },
   "KOL-PATH-0005": {
-    "source_sha256": "f5c7e80d663a31bbf9de79567769fcb9d06f3a2b6a022f8b2ed741f23fe63318",
+    "source_sha256": "d28a1358fb0e536d1d667aed08239544fe0de2f640e2c41eae6d26d25d922159",
     "en": {
       "title": "ioctl time32 and the year 2038",
       "subsystem": "Time / userspace API",
@@ -91,7 +91,7 @@
     }
   },
   "KOL-PATH-0006": {
-    "source_sha256": "5bab2b12b4306abd88f9a9a3be00a371644f32038c40dab4e1a7f3ca78980ce4",
+    "source_sha256": "93cb9c9b2493ba676f059afc74d708a811eee2602f3376d8e581e916b34e0336",
     "en": {
       "title": "ioctl: padding, pointers and compatibility layouts",
       "subsystem": "Driver userspace API",
@@ -110,7 +110,7 @@
     }
   },
   "KOL-PATH-0007": {
-    "source_sha256": "78da8da3d4bfec04dea0668b53827fc9832cd35ce85152c9986e01b5982b3117",
+    "source_sha256": "da1cb09ca9c190092220feda001c03322e2e5e14fb8ede9c915920ed0b50d703",
     "en": {
       "title": "Dirty COW: a fix reverted because of s390",
       "subsystem": "Memory management",
@@ -129,7 +129,7 @@
     }
   },
   "KOL-PATH-0008": {
-    "source_sha256": "5f8be329c679a33b08e0a5ea87d768fae5d6d08ffb0be62a7603661614db0f2e",
+    "source_sha256": "f1b77e2f2f7c888e574d1563e3bd33481e3557e355631232eb1d99f2bb7035b6",
     "en": {
       "title": "Dirty Pipe: uninitialized buffer flags",
       "subsystem": "IPC / pipes / page cache",
@@ -146,7 +146,7 @@
     }
   },
   "KOL-PATH-0009": {
-    "source_sha256": "e6c5a73dd614525d6426ba3c4c32afd0ec3e79f7a67f4adaa887ddf16515a8a1",
+    "source_sha256": "63775f84bb7c139be66d99f829fb86e0c976f0cdf28bbe17b3293b605bd2fb22",
     "en": {
       "title": "GUP pinning: a reference is not a DMA lease",
       "subsystem": "Memory / DMA",
@@ -165,7 +165,7 @@
     }
   },
   "KOL-PATH-0010": {
-    "source_sha256": "47964f5a443eabf67f976077c39ad734e54527b49f8f753c37feae53acb4455a",
+    "source_sha256": "80685e6186eb88b93f6fbd1b2179622081b64671d304d0607cd3dff7b86d6d71",
     "en": {
       "title": "Coherent DMA still requires barriers",
       "subsystem": "DMA / memory ordering",
@@ -184,7 +184,7 @@
     }
   },
   "KOL-PATH-0011": {
-    "source_sha256": "20899ff594a9796a690c944feda4513483ee07103200f10b00a5308c04b95d27",
+    "source_sha256": "ad1f1a0c71b3e49587fc88eb87d041b6c1dc637f2e7cc30461e2ed3f1c27db76",
     "en": {
       "title": "Cortex-A53 843419: linker workaround",
       "subsystem": "ARM64",
@@ -203,7 +203,7 @@
     }
   },
   "KOL-PATH-0012": {
-    "source_sha256": "b5a3572df9be25fa987d27c2d083bd02fbbb96e4214a3305fc46617018dd42d7",
+    "source_sha256": "d5663443206a0a6a36c942d5ca1afc1c81dd5cce14df518d897fc0b112af4252",
     "en": {
       "title": "Device tree bindings as an external ABI",
       "subsystem": "Firmware / device tree",
@@ -222,7 +222,7 @@
     }
   },
   "KOL-PATH-0013": {
-    "source_sha256": "0e7a578aedad9768abb1fa7e9157e7b225381ff575e0892157cf0cfa8bc9062f",
+    "source_sha256": "6d00df7cf81f9a9a79c9f1dbd733454dadd21a7283701e75faf1f153d55a5763",
     "en": {
       "title": "ACPI _OSI: OS identity instead of capabilities",
       "subsystem": "Firmware / ACPI",
@@ -241,7 +241,7 @@
     }
   },
   "KOL-PATH-0014": {
-    "source_sha256": "4fb771049fcff412f0bcdf4a1345de73bfa5bb8854d0be49ac7e31e8c9f9d4b1",
+    "source_sha256": "d4f8919252eaf5e9afc54102e1dddd6985210eb620fd5907894a84bb66ad7cc9",
     "en": {
       "title": "USB persistence: descriptors do not prove identity",
       "subsystem": "USB / suspend",
@@ -260,7 +260,7 @@
     }
   },
   "KOL-PATH-0015": {
-    "source_sha256": "ddbe0d46e2c9c97c799b5bcb2d4fe03dac32f5811cab647c11afad190f32b66e",
+    "source_sha256": "fd6516813ac629bc8aef9571d908b23ec23643651f9f8e380ff7fa98f34d9374",
     "en": {
       "title": "blk-mq: scalable queues do not guarantee ordering",
       "subsystem": "Block I/O",
@@ -279,7 +279,7 @@
     }
   },
   "KOL-PATH-0016": {
-    "source_sha256": "5c99e763ba7a7c6c0a37c296a63e23a28e5b3ae65941116178d64b9508a68db2",
+    "source_sha256": "6cf548088cc35d47374fe4836323b6d3f948f9da4a96d1d0f35d3cc16e040938",
     "en": {
       "title": "cgroup v1: incompatible controller hierarchies",
       "subsystem": "Resource management",
@@ -298,7 +298,7 @@
     }
   },
   "KOL-PATH-0017": {
-    "source_sha256": "59531b07ad08b8aea272b3b72ff26df5c48281f99030f1225eb85deb31912faf",
+    "source_sha256": "947ed6bea2123407a2fc66c1b6bf022888e7a00d9fdbdf5027945aac0f953f27",
     "en": {
       "title": "User namespaces: dropping groups increased access",
       "subsystem": "Namespaces / security",
@@ -315,7 +315,7 @@
     }
   },
   "KOL-PATH-0018": {
-    "source_sha256": "2e9ff64586442ea5271c4dfa80be67dd1b6b50e19ed54b33e3bc59810646b015",
+    "source_sha256": "149758a9533d01c85f4bf68ffee8c5da1feb054f0ac41d29ee2817af11786009",
     "en": {
       "title": "Seccomp notification: mutable-pointer TOCTOU",
       "subsystem": "Security / syscall mediation",
@@ -334,7 +334,7 @@
     }
   },
   "KOL-PATH-0019": {
-    "source_sha256": "9c0b29925b670f3fb2f21510eea6228cd50fca6bfcaa657034727236b04758c1",
+    "source_sha256": "2f5c394ce7fa616aecd7dcc1b66dd1ad261ce019dbcf7e634ba0b07acf71b4c8",
     "en": {
       "title": "PID reuse: pidfd and atomic creation",
       "subsystem": "Process lifecycle",
@@ -351,7 +351,7 @@
     }
   },
   "KOL-PATH-0020": {
-    "source_sha256": "059fc23039f669ce33aeb8bb61766aeb506b4c63222d821f459c8a2f372040b4",
+    "source_sha256": "674fb6cdf584708fe8e01b3860a016d421164813459518e3dc200b3fb2e4bd70",
     "en": {
       "title": "clone3: sized structure replaces overloaded arguments",
       "subsystem": "Process / syscall ABI",
@@ -368,7 +368,7 @@
     }
   },
   "KOL-PATH-0021": {
-    "source_sha256": "b0def4cd91dff46171fdd762530e71560047fd1ffd69d1272960b88f03f63628",
+    "source_sha256": "fb86359929056c3b00fe100eb29285053541a7110777c3214c32cf20a8d49b86",
     "en": {
       "title": "Autogroup: nice applies within a task group",
       "subsystem": "Scheduler",
@@ -385,7 +385,7 @@
     }
   },
   "KOL-PATH-0022": {
-    "source_sha256": "dc59f828a052a76ac81de97bc10a0d242696fe9f3d7d79a49b1c8a2995150553",
+    "source_sha256": "43b5ee3401e40724d136baa328da1e57c2df61e465f3da6bc3d4b648dd81e217",
     "en": {
       "title": "RCU: unlinking does not permit freeing",
       "subsystem": "Concurrency / reclamation",
@@ -404,7 +404,7 @@
     }
   },
   "KOL-PATH-0023": {
-    "source_sha256": "77d49476b53704235777b1d619755a75066afe488d105652e19c8caf5034e1de",
+    "source_sha256": "6c7c4189832253d176a5ed6a7beb73ae869d08f9bffa93bfd721ccc00fda46f6",
     "en": {
       "title": "Removal of the numeric _sysctl ABI",
       "subsystem": "System calls / configuration",
@@ -421,7 +421,7 @@
     }
   },
   "KOL-PATH-0024": {
-    "source_sha256": "8560e96a8da1206998f02ddf92cbfa88bd36398f1234c5870ccab15ba9abc0fe",
+    "source_sha256": "e1d226db036c67713763069d7cfa8a634afa080a7c0e3602def344563250e077",
     "en": {
       "title": "SO_REUSEPORT: shared ports require common authority",
       "subsystem": "Networking",
@@ -438,7 +438,7 @@
     }
   },
   "KOL-PATH-0025": {
-    "source_sha256": "e67a0089bcb550067f05b01e31fb4539e1e3f1f12140f396663a7f9fe54779a0",
+    "source_sha256": "eb68d78df3e6cffbeed134e20caa0d6c4d51e96df6e876abeb6abde03b7c1ef7",
     "en": {
       "title": "Robust futexes: list cleanup instead of scanning all VMAs",
       "subsystem": "Synchronization / IPC",
@@ -457,7 +457,7 @@
     }
   },
   "KOL-PATH-0026": {
-    "source_sha256": "7ca9f1d038f67ea10b947491066e605c909712e2a038bb5b593f6725c8d980ec",
+    "source_sha256": "2670fdfbd1cb51bdf9c090e1ecdec93a04dead511713c036e7d7a068abc51c8a",
     "en": {
       "title": "futex_waitv: waiting on multiple addresses",
       "subsystem": "Synchronization / IPC",
@@ -476,7 +476,7 @@
     }
   },
   "KOL-PATH-0027": {
-    "source_sha256": "112e87af9bef511f45aab7b42fc21a0331a43a067a1991b7a20add930376a790",
+    "source_sha256": "6a196793db5d881305428010d76bc8101debdea4aaf9a010e78ed5a0d5d07c15",
     "en": {
       "title": "PCI MSI: broken bridges require scoped fallback",
       "subsystem": "PCIe / interrupts",
@@ -495,7 +495,7 @@
     }
   },
   "KOL-PATH-0028": {
-    "source_sha256": "313d609dcffada45706645f60555053effcd2e990c9cc052c6efee2bae95b8d1",
+    "source_sha256": "c70965e948c429e071e8f5feada8cfeb17aee96051e9883b4446e80190e7f63a",
     "en": {
       "title": "USB internal API redesign without a permanent driver ABI",
       "subsystem": "Driver model",
@@ -514,7 +514,7 @@
     }
   },
   "KOL-PATH-0029": {
-    "source_sha256": "8fc4a5e91e2645811515f10d3bcbfc1b8bc20e3017d003d9c3c155816ffae420",
+    "source_sha256": "b7cb24ba0ff72d1c17e8d1dedc1415f61613e651a2c58e7d8d5a1d25cf63efac",
     "en": {
       "title": "Removal of mandatory file locking",
       "subsystem": "VFS locking",
@@ -531,7 +531,7 @@
     }
   },
   "KOL-PATH-0030": {
-    "source_sha256": "98c1a30d74d6cdd557c0c9fd820b711426c0b0e47356a18c6eed610370388734",
+    "source_sha256": "0c49a1a3abd78d1eb81fc9df7659ab8b09d5f7bde8bd8b0cb2f097258e9e1fcc",
     "en": {
       "title": "epoll fix regression: a dying file cannot be resurrected",
       "subsystem": "VFS / eventpoll / fuzzing",

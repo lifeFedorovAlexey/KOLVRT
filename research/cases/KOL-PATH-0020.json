@@ -1,0 +1,65 @@
+{
+  "id": "KOL-PATH-0020",
+  "title": "clone3: размерная структура вместо перегрузки аргументов",
+  "subsystem": "Process / syscall ABI",
+  "category": ["ABI_LEGACY", "API_DESIGN"],
+  "linux_versions": "clone3 добавлен в Linux 5.3; имеет struct clone_args и size.",
+  "first_known_version": "5.3 (clone3)",
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S20",
+      "title": "clone",
+      "url": "https://man7.org/linux/man-pages/man2/clone.2.html",
+      "repository": "https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git",
+      "commit": null,
+      "tag_version": "man-pages-6.19",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "clone3(); struct clone_args; HISTORY",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Process / syscall ABI"
+    }
+  ],
+  "historical_context": "clone3 добавлен в Linux 5.3; имеет struct clone_args и size.",
+  "original_reason": "clone multiplexed flags и arch-dependent calling conventions ограничивали расширение.",
+  "root_cause": "Flags и параметры старого entry point трудно расширять независимо.",
+  "observable_behavior": "clone3 предоставляет более расширяемое описание создания task.",
+  "compatibility_dependency": "Старые binaries всё ещё вызывают clone, его формат нельзя заменить на месте.",
+  "security_impact": "Неверный sharing scope нарушает isolation.",
+  "performance_impact": "Extensibility добавляет parser.",
+  "complexity_impact": "Не закреплять C/Rust struct layout как wire contract.",
+  "hardware_dependency": "Linux clone ABI различается между архитектурами.",
+  "linux_current_solution": "Новый syscall сосуществует со старым.",
+  "remaining_problem": "Нужен ли native fork или только explicit address-space snapshot primitive?",
+  "constraints_then": "Ограниченное syscall register ABI.",
+  "constraints_now": "Новые структуры решают часть extensibility; полная fork semantics сложнее.",
+  "change_consequences": "Старые binaries всё ещё вызывают clone, его формат нельзя заменить на месте.",
+  "improvement_assessment": "Вывод KOLVRT: SpawnRequest содержит explicit size/version, отдельные rights и known flags; unknown required fields отклоняются, reserved zero проверяется. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "SpawnRequest содержит explicit size/version, отдельные rights и known flags; unknown required fields отклоняются, reserved zero проверяется.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "linux.process.clone/v1; целая process personality",
+  "migration_strategy": "Не обещать fork эквивалентом простого spawn; unsupported sharing combinations возвращают ошибку.",
+  "tests_required": [
+    "Truncated/oversized payload, unknown flags, invalid sharing combination.",
+    "Failure creation не оставляет видимых half-created task."
+  ],
+  "benchmarks_required": [
+    "Spawn latency, allocations и validation cost по размерам request."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Нужен ли native fork или только explicit address-space snapshot primitive?"
+  ],
+  "evidence": {
+    "historical_context": ["S20"],
+    "original_reason": ["S20"],
+    "root_cause": ["S20"],
+    "observable_behavior": ["S20"],
+    "compatibility_dependency": ["S20"],
+    "linux_current_solution": ["S20"]
+  }
+}

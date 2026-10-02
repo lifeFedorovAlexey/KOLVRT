@@ -44,6 +44,6 @@ QEMU virt удобен для начала. Описания устройств,
 
 ## Основания
 
-[Случаи и источники](../research/CASE_INDEX.md); [другие системы](../../research/other-systems/COMPARISON.md).
+[Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0005-platform.md)

@@ -1,31 +1,32 @@
 # KOLVRT
 
-**Kernel Outside Legacy, Versioned Routing & Translation** — исследовательский проект операционной системы с приоритетом ARM64 и первоначальной реализацией на Rust. Этап 0.1 определяет собственные контракты, архитектуру и основания проектных решений. **Реализации ядра пока нет.**
+**Kernel Outside Legacy, Versioned Routing & Translation** — исследовательский проект операционной системы с приоритетом ARM64 и первоначальной реализацией на Rust. Нулевой этап определяет проверенную собственную проектную основу и свидетельства для первого сквозного сценария. **Реализации ядра пока нет.**
 
 Ядро не должно подстраиваться под наследуемые системы. Совместимость с ними должна подстраиваться под ядро. KOLVRT определяет собственную модель объектов, полномочий, времени жизни и исполнения. Внешние системы служат материалом для исследования механизмов отказа, а не требованиями продукта или архитектурами для наследования. Возможность должна продвигать конкретную нагрузку KOLVRT, обязательство правильности или потребность платформы; популярность и выживание не доказывают пригодность.
 
-- [Замысел](docs/vision.md), [законы ядра](docs/architecture/KERNEL_LAWS.md), [пересмотр законов](docs/architecture/LAW_REVIEW.md).
+- [Ревью нулевого этапа](docs/research/phase-0-review.md), [первый собственный сценарий](docs/architecture/first-native-slice.md), [структура репозитория](docs/project-structure.md).
+- [Замысел](docs/vision.md), [законы ядра](docs/architecture/kernel-laws.md), [пересмотр законов](docs/architecture/law-review.md).
 - [Собственная модель](docs/architecture/native-model.md), [совместимость](docs/architecture/compatibility-model.md), [маршрутизация](docs/architecture/routing-model.md).
 - [Профили исполнения](docs/architecture/execution-profiles.md), [политика безопасности Rust](docs/architecture/unsafe-policy.md).
 - [Измерения производительности](docs/architecture/benchmarking.md), [диагностика](docs/architecture/diagnostics.md).
-- [Указатель случаев](docs/research/CASE_INDEX.md), [исследовательские записи](research/pathology/README.md).
-- [Архитектурные решения](docs/architecture-decisions/README.md), [другие системы](research/other-systems/COMPARISON.md).
-- [Метод исследования](docs/research/RESEARCH_METHOD.md), [охват](research/reference-analysis/COVERAGE.md), [источники](research/sources/README.md).
-- [Открытые вопросы](docs/research/OPEN_QUESTIONS.md), [план этапа 0.2](docs/research/PHASE_0_2.md).
-- [Отчёт этапа 0.1](docs/research/PHASE_0_1_REPORT.md), [документация и переводы](DOCUMENTATION.md).
+- [Указатель случаев](docs/research/case-index.md), [исследовательские записи](docs/research/case-database.md).
+- [Архитектурные решения](docs/architecture-decisions/README.md), [другие системы](docs/research/reference-systems.md).
+- [Метод исследования](docs/research/research-method.md), [охват](docs/research/reference-coverage.md), [источники](docs/research/source-ledger.md).
+- [Открытые вопросы](docs/research/open-questions.md), [план этапа 0.2](docs/research/phase-0-2.md).
+- [Отчёт этапа 0.1](docs/research/phase-0-1-report.md), [документация и переводы](docs/documentation-policy.md).
 
 Дата исследования: **2026-10-02**. Неизвестные вводящие изменения и даты обозначены явно. Документальные выводы не являются воспроизведёнными ошибками. Проверки ядра — будущие требования, а не выполненные запуски.
 
 ## Проверки
 
-Установить закреплённый инструментарий Rust через rustup, затем выполнить из корня репозитория:
+Установить закреплённый инструментарий Rust через rustup и Node.js 18 или новее, затем выполнить из корня репозитория:
 
 ```text
-cargo test --locked
-cargo run --locked -p research-checks -- check
+npm ci --ignore-scripts
+npm run check
 ```
 
-Для первой сборки требуется загрузить зависимости. Сама проверка работает без сети и никогда не загружает и не запускает средства воспроизведения уязвимостей. Отдельные команды и порядок проверки переводов описаны в [инструкции инструментария](tools/research-checks/README.md).
+Для первой сборки требуется загрузить зависимости. Сама проверка работает без сети и никогда не загружает и не запускает средства воспроизведения уязвимостей. [Форматирование и участие](CONTRIBUTING.md), отдельные команды и порядок проверки переводов описаны в [инструкции инструментария](crates/repository-checks/README.md).
 
 Этап 1 не начинается автоматически. Лицензия проекта ещё не выбрана; сторонние материалы сохраняют исходные лицензии.
 

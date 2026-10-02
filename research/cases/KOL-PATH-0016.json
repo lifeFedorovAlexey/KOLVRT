@@ -1,0 +1,66 @@
+{
+  "id": "KOL-PATH-0016",
+  "title": "cgroup v1: несовместимые иерархии controllers",
+  "subsystem": "Resource management",
+  "category": ["ARCHITECTURAL_DEBT", "RESOURCE_MANAGEMENT"],
+  "linux_versions": "Документация v2 объясняет стоимость произвольных v1 hierarchies и ограничение сотрудничества controllers.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S16",
+      "title": "cgroup v2",
+      "url": "https://docs.kernel.org/admin-guide/cgroup-v2.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Issues with v1 and Rationales for v2: Multiple Hierarchies",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Resource management"
+    }
+  ],
+  "historical_context": "Документация v2 объясняет стоимость произвольных v1 hierarchies и ограничение сотрудничества controllers.",
+  "original_reason": "Несколько hierarchies обещали гибкость администрирования.",
+  "root_cause": "Controllers не могли рассчитывать на общую topology; userspace дублировал управление.",
+  "observable_behavior": "Resource membership и coordination усложнялись.",
+  "compatibility_dependency": "Прямой переход меняет интерфейсы управления и требует миграции userspace.",
+  "security_impact": "Resource leakage и обход quota.",
+  "performance_impact": "Coordination может добавить latency.",
+  "complexity_impact": "Unified identity не означает один scheduling algorithm.",
+  "hardware_dependency": "SMP и NUMA позже.",
+  "linux_current_solution": "v2 использует unified hierarchy и новые правила delegation.",
+  "remaining_problem": "Как отнести shared file cache и DMA leases к нескольким consumers?",
+  "constraints_then": "Независимое развитие controllers.",
+  "constraints_now": "Нужда в разных policies остаётся, произвольная topology не обязательна.",
+  "change_consequences": "Прямой переход меняет интерфейсы управления и требует миграции userspace.",
+  "improvement_assessment": "Вывод KOLVRT: Resource domain имеет единый identity и accounting parent; отдельные policies используют этот identity, не создавая скрытых независимых ownership деревьев. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "Resource domain имеет единый identity и accounting parent; отдельные policies используют этот identity, не создавая скрытых независимых ownership деревьев.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "linux.cgroup/v1 или v2; personality resource domain",
+  "migration_strategy": "v1 layouts переводить только при выразимости; конфликтующие memberships отклонять с объяснением.",
+  "tests_required": [
+    "Charge каждой allocation имеет одного owner.",
+    "Nested domain removal не теряет outstanding charges."
+  ],
+  "benchmarks_required": [
+    "CPU+memory+I/O pressure: fairness, reclaim latency и accounting overhead."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Как отнести shared file cache и DMA leases к нескольким consumers?",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S16"],
+    "original_reason": ["S16"],
+    "root_cause": ["S16"],
+    "observable_behavior": ["S16"],
+    "compatibility_dependency": ["S16"],
+    "linux_current_solution": ["S16"]
+  }
+}

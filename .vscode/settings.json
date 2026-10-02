@@ -1,0 +1,20 @@
+{
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 4,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+  "[toml]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false
+  }
+}

@@ -9,6 +9,7 @@ Accepted records define Phase 0 requirements, not implemented features. Proposed
 - [ADR-0005 — ARM64-first platform contracts](0005-platform.md) — Accepted.
 - [ADR-0006 — Dependency measurements and fair comparisons](0006-metrics.md) — Accepted.
 - [ADR-0007 — Bug compatibility and module retirement](0007-bug-compat.md) — Accepted.
-- [ADR-0008 — Adapter and driver protection domains](0008-placement.md) — Proposed — RESEARCH_REQUIRED.
+- [ADR-0008 — Service protection domains](0008-placement.md) — Accepted for the first native slice.
+- [ADR-0009 — Native slice design baseline](0009-native-slice-baseline.md) — Accepted.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

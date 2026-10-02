@@ -1,0 +1,65 @@
+{
+  "id": "KOL-PATH-0029",
+  "title": "Удалённая mandatory file locking",
+  "subsystem": "VFS locking",
+  "category": ["ABI_LEGACY", "SECURITY", "COMPATIBILITY"],
+  "linux_versions": "Man-pages: mandatory locking стала optional в 4.5 и полностью не поддерживается с 5.15.",
+  "first_known_version": "5.15 (removal)",
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S02",
+      "title": "fcntl_locking(2)",
+      "url": "https://man7.org/linux/man-pages/man2/F_GETLK.2const.html",
+      "repository": "https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git",
+      "commit": null,
+      "tag_version": "man-pages-6.19",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Process-associated locks; Open file description locks; Mandatory locking",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "VFS locking"
+    }
+  ],
+  "historical_context": "Man-pages: mandatory locking стала optional в 4.5 и полностью не поддерживается с 5.15.",
+  "original_reason": "Принудительно блокировать file I/O по record locks.",
+  "root_cause": "Документированные race conditions делали Linux implementation ненадёжной.",
+  "observable_behavior": "Ожидаемая mandatory exclusion не была надёжной.",
+  "compatibility_dependency": "Удаление затрагивает редких consumers; их наличие для KOLVRT не подтверждено.",
+  "security_impact": "Ложное обещание exclusion хуже явного отказа.",
+  "performance_impact": "Overhead отсутствующей функции не измеряется.",
+  "complexity_impact": "Не восстанавливать unused API без consumer.",
+  "hardware_dependency": "Нет.",
+  "linux_current_solution": "Linux удалил feature вместо вечного сохранения.",
+  "remaining_problem": "Нужен ли consumer с mandatory locking и выражается ли его требование через lease?",
+  "constraints_then": "Legacy file-lock semantics.",
+  "constraints_now": "Нет доказанной нужды в совместимости именно этой функции.",
+  "change_consequences": "Удаление затрагивает редких consumers; их наличие для KOLVRT не подтверждено.",
+  "improvement_assessment": "Вывод KOLVRT: Не вводить Linux mandatory mode в native VFS. Если нужен exclusive access, проектировать explicit lease с определёнными mmap/I/O semantics. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NOT_APPLICABLE",
+  "kolvrt_native_semantics": "Не вводить Linux mandatory mode в native VFS. Если нужен exclusive access, проектировать explicit lease с определёнными mmap/I/O semantics.",
+  "compatibility_required": "NO",
+  "compatibility_scope": "NONE",
+  "migration_strategy": "Отклонять требование неподдерживаемой mandatory semantics; предложить cooperative locks или future verified lease.",
+  "tests_required": [
+    "Negotiation обязательной неподдерживаемой semantics возвращает Unsupported.",
+    "Нет silent downgrade mandatory в advisory."
+  ],
+  "benchmarks_required": [
+    "Неприменимо к удалённой функции: сравнение возможно только после отдельного lease ADR; benchmark сейчас не требуется."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Нужен ли consumer с mandatory locking и выражается ли его требование через lease?"
+  ],
+  "evidence": {
+    "historical_context": ["S02"],
+    "original_reason": ["S02"],
+    "root_cause": ["S02"],
+    "observable_behavior": ["S02"],
+    "compatibility_dependency": ["S02"],
+    "linux_current_solution": ["S02"]
+  }
+}

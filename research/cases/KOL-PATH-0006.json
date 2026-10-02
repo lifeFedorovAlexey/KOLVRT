@@ -1,0 +1,66 @@
+{
+  "id": "KOL-PATH-0006",
+  "title": "ioctl: padding, pointers и compat layout",
+  "subsystem": "Driver UAPI",
+  "category": ["ABI_LEGACY", "MEMORY_SAFETY", "DRIVER_MODEL"],
+  "linux_versions": "Документация ioctl предупреждает о layout различиях и утечках через padding.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S05",
+      "title": "ioctl based interfaces",
+      "url": "https://docs.kernel.org/driver-api/ioctl.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Timestamps; 32-bit compat mode; Information leaks",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Driver UAPI"
+    }
+  ],
+  "historical_context": "Документация ioctl предупреждает о layout различиях и утечках через padding.",
+  "original_reason": "Гибкий driver-specific командный интерфейс.",
+  "root_cause": "C struct layout и embedded pointers зависят от ABI; padding может не быть инициализирован.",
+  "observable_behavior": "Одна команда может требовать compat_ioctl и явного marshalling.",
+  "compatibility_dependency": "Переопределение старой команды ломает существующие вызовы.",
+  "security_impact": "Исключить kernel padding disclosure.",
+  "performance_impact": "Копирование может стоить дороже прямого доступа.",
+  "complexity_impact": "Единый wire codec уменьшает число ad hoc compat веток.",
+  "hardware_dependency": "Различия alignment и word width.",
+  "linux_current_solution": "Рекомендованы fixed-width fields, явное padding и обнуление данных перед copy_to_user.",
+  "remaining_problem": "Сколько zero-copy типов можно доказать безопасными без неявного Rust layout ABI?",
+  "constraints_then": "C ABI и vendor-specific команды.",
+  "constraints_now": "Нужда в extensible driver API остаётся; native layout можно задать заново.",
+  "change_consequences": "Переопределение старой команды ломает существующие вызовы.",
+  "improvement_assessment": "Вывод KOLVRT: Native сообщения имеют заданные byte order, длину и reserved=0; user pointers не сохраняются как ссылки; типизированный decoder выдаёт owned request. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "Native сообщения имеют заданные byte order, длину и reserved=0; user pointers не сохраняются как ссылки; типизированный decoder выдаёт owned request.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "Конкретная legacy ioctl family, версия layout",
+  "migration_strategy": "Вводить новый protocol ID; старый декодер остаётся только в adapter.",
+  "tests_required": [
+    "Fuzz длины, alignment, reserved bits, nested pointers и short copy.",
+    "Выходные bytes полностью инициализированы."
+  ],
+  "benchmarks_required": [
+    "Стоимость decoder, copies и serialization на малых и больших request."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Сколько zero-copy типов можно доказать безопасными без неявного Rust layout ABI?",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": ["S05"],
+    "original_reason": ["S05"],
+    "root_cause": ["S05"],
+    "observable_behavior": ["S05"],
+    "compatibility_dependency": ["S05"],
+    "linux_current_solution": ["S05"]
+  }
+}
