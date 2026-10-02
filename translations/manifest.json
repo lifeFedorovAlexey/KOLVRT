@@ -229,6 +229,10 @@
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
         "translation_sha256": "df700031cb5de4d9fa389fd931078a33e0e18518f0d0b8372814eca0768b4099"
       },
+      "docs/kernel/wait.md": {
+        "source_sha256": "941bb971e521a80a2d05871200eb1a0c88bd92f072c2c0e578b8cbdb44febec6",
+        "translation_sha256": "78a5d533e9db0e2700eec2e4f022156955d39b35d425069200d8a3560224310e"
+      },
       "docs/research/case-database.md": {
         "source_sha256": "6332d3678734dcc64e4c5b003c42445f324b4f98e9205091a637be92d7bfe069",
         "translation_sha256": "2604969832242318be384fc7cff2ed88ddfdd5d7ee24db33b8aa596775726816"
