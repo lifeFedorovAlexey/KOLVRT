@@ -1,51 +1,33 @@
-# Pathology database
+# Engineering case database
 
-Одна запись — один JSON `KOL-PATH-NNNN.json`. Числа не переиспользуются после удаления;
-case можно supersede с сохранением истории Git. Schema: [case.schema.json](../../schemas/pathology/case.schema.json).
-Таблица: [CASE_INDEX](../../docs/research/CASE_INDEX.md).
+Each record is a `KOL-PATH-NNNN.json` file. Never reuse retired IDs; supersede records while preserving Git history. See the [schema](../../schemas/pathology/case.schema.json) and [case index](../../docs/research/CASE_INDEX.md).
 
-Pathology — название базы инженерных случаев, не verdict «всё в Linux неправильно».
-Записи включают необходимые hardware constraints, полезные redesign и accepted tradeoffs.
-В `category` можно несколько признаков; `kolvrt_decision` строго одно из шести решений.
-`NATIVE_FIX` для нового KOLVRT означает preventive native design, не уже исправленный KOLVRT bug.
-`COMPAT_ONLY` не требует немедленно реализовать module без подтверждённого consumer.
-`HARDWARE_TRANSLATION` может быть необходим для native target.
+The database includes defects, necessary hardware constraints, successful redesigns and accepted tradeoffs. `category` may contain several classifications; `kolvrt_decision` contains one decision. NATIVE_FIX means preventive native design, not an implemented KOLVRT fix. COMPAT_ONLY does not authorize an unused module. HARDWARE_TRANSLATION may be necessary for a native target.
 
-`status=ANALYZED_WITH_OPEN_QUESTIONS` означает законченный документальный разбор с
-перечисленными ограничениями. Не означает reproducer executed или complete git archaeology.
-`confidence=MEDIUM` отражает источники плюс непроверенную применимость к ещё не существующему
-KOLVRT. HIGH требовал бы дополнительной исторической проверки/воспроизведения релевантного
-поведения. Нельзя повышать confidence за сам факт прохождения schema validation.
+ANALYZED_WITH_OPEN_QUESTIONS means a completed documentary analysis with stated limits, not a reproduced bug or complete Git history. MEDIUM confidence includes unverified applicability to a future KOLVRT. HIGH requires additional historical verification or relevant reproduction; schema validation cannot raise confidence.
 
-`first_known_version` может обозначать первое подтверждённое изменение/альтернативу,
-что явно написано в строке; это не обязательно introducing version самого старого бага.
-Неизвестная introducing version = null + open question. `date` источника не подменяется
-датой research. `linux_current_solution` — решение, подтверждённое прочитанным источником,
-а не assertion, что просмотрена каждая последующая версия Linux.
+`first_known_version` may identify a confirmed change or alternative rather than the original introduction; its text says which. Unknown introduction is null with an open question. Source dates are not research dates. `linux_current_solution` describes the solution supported by the read source, not every subsequent Linux release.
 
-## Соответствие 13 вопросам задания
+## Research questions
 
-| Вопрос | Поля |
+| Question | Fields |
 |---|---|
-| Что произошло? | observable_behavior, root_cause |
-| Когда? | historical_context, linux_versions, first_known_version, sources |
-| Почему? | original_reason |
-| Тогдашние ограничения | constraints_then |
-| Сохранились ли? | constraints_now |
-| Как классифицировать? | category; root_cause различает bug/tradeoff/necessity |
-| Последствия изменения | change_consequences, compatibility_dependency |
-| Ответ Linux | linux_current_solution |
-| Можно ли лучше? | improvement_assessment, remaining_problem |
-| Ответ KOLVRT | kolvrt_decision |
+| What happened? | observable_behavior, root_cause |
+| When? | historical_context, linux_versions, first_known_version, sources |
+| Why? | original_reason |
+| Constraints then | constraints_then |
+| Constraints now | constraints_now |
+| Classification | category, root_cause |
+| Consequences of change | change_consequences, compatibility_dependency |
+| Linux response | linux_current_solution |
+| Improvement potential | improvement_assessment, remaining_problem |
+| KOLVRT decision | kolvrt_decision |
 | Native semantics | kolvrt_native_semantics |
-| Нужен ли compat? | compatibility_required, compatibility_scope |
-| Нужно ли вообще? | decision + migration_strategy, особенно NOT_APPLICABLE |
+| Compatibility need | compatibility_required, compatibility_scope |
+| Is it needed at all? | kolvrt_decision, migration_strategy |
 
-`evidence` связывает исторические поля с source IDs. Security/performance/complexity/hardware
-impact — техническая оценка описанного механизма; прогнозы KOLVRT не являются измерениями
-Linux или цитатами maintainer. Проектные решения, tests и benchmarks — авторские требования.
-При отсутствии applicable benchmark следует записать причину, не пустой список.
+`evidence` links historical fields to source IDs. Impact assessments are engineering analysis, not measured KOLVRT results or maintainer quotations. Design decisions, required tests and benchmarks are project requirements. Explain an inapplicable benchmark instead of leaving an empty list.
 
-Изменение записи: проверить source, уточнить locator/provenance, обновить decision и
-confidence, добавить migration/test implication, выполнить validator и обновить report.
-Автоматическая проверка не подтверждает правдивость URL contents и не заменяет review.
+When changing a record, review sources, locators, provenance, decision, confidence and migration/testing implications. Validate and refresh the bilingual index as described in the [tooling guide](../../tools/research-checks/README.md). Checks do not establish source truth or replace review. Original JSON research prose is retained; English and Russian Markdown use reviewed index text.
+
+[Russian translation](../../translations/ru/research/pathology/README.md)

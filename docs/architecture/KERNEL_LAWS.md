@@ -1,645 +1,279 @@
-# KERNEL LAWS — v0.1
+# Kernel laws
 
-Статус: нормативные требования к будущему KOLVRT. Приняты для Phase 0; runtime ещё не реализован.
-Historical evidence — конкретные случаи, а выводы и enforcement — требования KOLVRT, не заявления об уже выполненных tests.
-Исключение не может отменять memory safety/authorization. Изменение закона требует нового ADR с контрпримером и тестом.
+These are language-independent architectural obligations, not a numbered design target. The set has no required size. Stable IDs preserve history; gaps are intentional. Enforcement and tests are obligations for future implementations, not claims of completed kernel tests.
 
-## LAW-001 — Native contract is authoritative
+Each law addresses a distinct review obligation. Consolidated requirements and implementation-specific policies are traced in the [law review](LAW_REVIEW.md). Changing a law requires an architecture decision with evidence and tests.
 
-**Rule:** Native operation не ветвится по legacy consumer/version.
+## LAW-001 — Native authority and dependency isolation
 
-**Rationale:** Иначе внешняя история становится неустранимой внутренней зависимостью.
+**Rule:** Native behavior is defined by current native contracts; core implementations must not depend on legacy layouts, adapters or consumer-version branches. Internal implementation layouts are not a permanent external ABI.
 
-**Historical evidence:** [KOL-PATH-0006](../../research/pathology/KOL-PATH-0006.json), [KOL-PATH-0028](../../research/pathology/KOL-PATH-0028.json).
+**Rationale:** Compatibility requirements must remain removable without freezing internal design.
 
-**Prevents:** Скрытые legacy special cases в native core.
+**Historical evidence:** [KOL-PATH-0006](../../research/pathology/KOL-PATH-0006.json), [KOL-PATH-0028](../../research/pathology/KOL-PATH-0028.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Legacy dependencies that prevent native-only operation.
 
-**Enforcement:** Review API surface и dependency graph.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Один native request даёт одинаковый outcome при разных manifests.
+**Enforcement:** Audit dependency closure, generated interfaces and exported layouts.
 
-## LAW-002 — Compatibility is a dependency direction
+**Testing:** Remove all software adapters and run the unchanged native contract suite.
 
-**Rule:** Core не импортирует compat crates, types, generated layouts или features.
+## LAW-003 — Concurrent native and compatibility routes
 
-**Rationale:** Quarantine требует проверяемой границы.
+**Rule:** Routing must support different consumers and API families concurrently; one global compatibility mode must not determine their behavior.
 
-**Historical evidence:** [KOL-PATH-0006](../../research/pathology/KOL-PATH-0006.json), [KOL-PATH-0028](../../research/pathology/KOL-PATH-0028.json).
+**Rationale:** A migration can involve only part of a workload.
 
-**Prevents:** Невозможность собрать native без compatibility dependencies.
+**Historical evidence:** [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json), [KOL-PATH-0020](../../research/pathology/KOL-PATH-0020.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Mutual exclusion of native and legacy consumers.
 
-**Enforcement:** Cargo graph и generated-code audit в будущем CI.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Native-only build и contract suite без adapters.
+**Enforcement:** Review route selection scope and manifest constraints.
 
-## LAW-003 — No global compatibility mode
+**Testing:** Run native, mixed and personality-bound consumers together without changing a global switch.
 
-**Rule:** Binding выбирается по consumer/family/state domain, не одним global flag.
+## LAW-004 — Explicit semantic binding
 
-**Rationale:** Сосуществование интерфейсов требует локального выбора.
+**Rule:** A binding pins a supported semantic version and a separate implementation identity. Missing, conflicting or ambiguous requirements fail explicitly; no silent fallback or version downgrade is allowed.
 
-**Historical evidence:** [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json), [KOL-PATH-0020](../../research/pathology/KOL-PATH-0020.json).
+**Rationale:** An implementation update and a semantic change are different events.
 
-**Prevents:** Взаимное исключение native и legacy consumers на одной системе.
+**Historical evidence:** [KOL-PATH-0020](../../research/pathology/KOL-PATH-0020.json), [KOL-PATH-0023](../../research/pathology/KOL-PATH-0023.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Unannounced behavior changes during dispatch.
 
-**Enforcement:** Resolver schema и review config.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** A mixed, B native, C personality работают одновременно.
+**Enforcement:** Resolve dependency closure and permission intersections before binding.
 
-## LAW-004 — Bind once, fail explicitly
+**Testing:** Missing modules, conflicting policies and unsupported versions never execute a substitute contract.
 
-**Rule:** Bind закрепляет version/digest; unsupported и ambiguous routes возвращают ошибку.
+## LAW-005 — Shared-state consistency
 
-**Rationale:** Молчаливый fallback меняет контракт.
+**Rule:** Operations sharing state use compatible bindings and one object identity. Handle transfer cannot reinterpret existing state through receiver defaults.
 
-**Historical evidence:** [KOL-PATH-0020](../../research/pathology/KOL-PATH-0020.json), [KOL-PATH-0023](../../research/pathology/KOL-PATH-0023.json).
+**Rationale:** Call-level independence cannot be assumed from API names.
 
-**Prevents:** Неявную смену semantics при обновлении module registry.
+**Historical evidence:** [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json), [KOL-PATH-0003](../../research/pathology/KOL-PATH-0003.json), [KOL-PATH-0017](../../research/pathology/KOL-PATH-0017.json), [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Split lock, descriptor, credential or synchronization state.
 
-**Enforcement:** Resolver проверяет dependency closure до launch.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Missing module и два кандидата не приводят к запуску.
+**Enforcement:** Declare state domains and explicit cross-domain conversion contracts.
 
-## LAW-005 — State determines routing granularity
+**Testing:** Reject incompatible close/lock and wait/wake bindings and unauthorized handle imports.
 
-**Rule:** Все операции над общей state machine используют согласованный binding.
+## LAW-008 — Controlled evolution and retirement
 
-**Rationale:** Close, dup и locks невозможно произвольно разделить.
+**Rule:** Correct native bugs with regression tests. Retain safe old behavior only for demonstrated consumers in separate modules. Rebinding and unloading require stopped admission, drained state and atomic commitment; referenced code cannot be removed.
 
-**Historical evidence:** [KOL-PATH-0001](../../research/pathology/KOL-PATH-0001.json), [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json), [KOL-PATH-0003](../../research/pathology/KOL-PATH-0003.json).
+**Rationale:** Changing behavior or code does not erase existing state or consumers.
 
-**Prevents:** Разные представления ownership одного объекта.
+**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0022](../../research/pathology/KOL-PATH-0022.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Permanent native bugs, half-migrated domains and callbacks into unloaded code.
 
-**Enforcement:** Каждая family объявляет state domain.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Split close/lock и wait/wake отклоняется.
+**Enforcement:** Require a migration state machine, dependency evidence and explicit rollback limits.
 
-## LAW-006 — Quiescence before switching
+**Testing:** Exercise timeout, outstanding callbacks, dormant dependencies and failure before and after irreversible effects.
 
-**Rule:** Rebind требует admission stop, drain, conversion и atomic generation commit.
+## LAW-009 — Authority cannot grow through translation
 
-**Rationale:** Замена кода не меняет безопасно уже опубликованное состояние.
+**Rule:** Translation, identity mapping and delegation cannot increase native rights or bypass memory protection and quotas. Unsafe historical behavior is not a compatibility entitlement.
 
-**Historical evidence:** [KOL-PATH-0003](../../research/pathology/KOL-PATH-0003.json), [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json).
+**Rationale:** Compatibility mechanisms operate within the same protection contract.
 
-**Prevents:** Выполнение половины протокола на старом и половины на новом backend.
+**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0017](../../research/pathology/KOL-PATH-0017.json), [KOL-PATH-0018](../../research/pathology/KOL-PATH-0018.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Privilege gains disguised as old semantics.
 
-**Enforcement:** Migration state machine review.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Rebind с pending waiter отказывает или drains; timeout сохраняет старый route.
+**Enforcement:** Review rights transitions and grants at every adapter boundary.
 
-## LAW-007 — No live-reference unload
+**Testing:** Attempt nested delegation, group dropping and malicious legacy requests; authority must not increase.
 
-**Rule:** Module не удаляется при bound consumers, callbacks или in-flight state.
+## LAW-013 — Explicit identity and lifetime ownership
 
-**Rationale:** Удалённый код не должен оставаться целью completion.
+**Rule:** Authority-bearing objects, locks and event registrations have explicit identities and owners. Release consumes ownership once; reused names do not retarget operations. Retiring objects cannot be resurrected or freed while readers or requests retain access.
 
-**Historical evidence:** [KOL-PATH-0022](../../research/pathology/KOL-PATH-0022.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json).
+**Rationale:** Visibility, ownership and storage reclamation are distinct lifecycle properties.
 
-**Prevents:** Вызов кода выгруженного adapter.
+**Historical evidence:** [KOL-PATH-0001](../../research/pathology/KOL-PATH-0001.json), [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json), [KOL-PATH-0003](../../research/pathology/KOL-PATH-0003.json), [KOL-PATH-0019](../../research/pathology/KOL-PATH-0019.json), [KOL-PATH-0022](../../research/pathology/KOL-PATH-0022.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Double release, unrelated lock removal, stale events and use after free.
 
-**Enforcement:** Manifest + reference/grace accounting.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Concurrent unload/completion не вызывает use-after-free.
+**Enforcement:** Specify creation, upgrade, cancellation and destruction transitions for each object.
 
-## LAW-008 — Fix native bugs first
+**Testing:** Explore last-release/upgrade races, name reuse, unrelated close and stalled readers.
 
-**Rule:** Native fix сопровождается regression test; старое поведение получает отдельный bug-compat ID только при нужде.
+## LAW-018 — Validated boundary data
 
-**Rationale:** Без этого исправление превращается в постоянную ветку.
+**Rule:** External messages define widths, lengths, versions, byte order and reserved fields. Initialize all observable data before publication. Validate bounds, provenance, permissions and lifetimes; authorization and execution use the same immutable data. Time includes a clock domain and checked conversion. Unchecked boundary operations require documented assumptions, necessity, review and negative tests.
 
-**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json).
+**Rationale:** Neither a convenient data layout nor an earlier check proves that later access is valid.
 
-**Prevents:** Вечное сохранение ошибочной native semantics.
+**Historical evidence:** [KOL-PATH-0005](../../research/pathology/KOL-PATH-0005.json), [KOL-PATH-0006](../../research/pathology/KOL-PATH-0006.json), [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0018](../../research/pathology/KOL-PATH-0018.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Layout drift, data leaks, stale buffer flags, overflow, authorization loss and check/use races.
 
-**Enforcement:** ADR и consumer evidence перед bug-compat.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Fixture проходит исправленный native и явно выбранную безопасную старую semantics.
+**Enforcement:** Audit boundary contracts and maintain a reviewable inventory of unverified assumptions.
 
-## LAW-009 — Security is not negotiable compatibility
+**Testing:** Fuzz malformed messages, reuse poisoned buffers, mutate foreign memory and test clock/size overflow.
 
-**Rule:** Adapter не ослабляет native permissions, memory protection и quotas.
+## LAW-020 — Device memory ownership and ordering
 
-**Rationale:** Изоляцию нельзя продавать как версию поведения.
+**Rule:** Device access uses an accounted memory lease distinct from a processor reference. Release waits for completion or proven reset. Publication and ownership transitions include required ordering and cache maintenance even on coherent memory.
 
-**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0017](../../research/pathology/KOL-PATH-0017.json), [KOL-PATH-0018](../../research/pathology/KOL-PATH-0018.json).
+**Rationale:** External agents outlive ordinary call scopes and observe memory independently.
 
-**Prevents:** Повторное введение vulnerability как compatibility feature.
+**Historical evidence:** [KOL-PATH-0009](../../research/pathology/KOL-PATH-0009.json), [KOL-PATH-0010](../../research/pathology/KOL-PATH-0010.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Device writes after free and partially visible descriptors.
 
-**Enforcement:** Security review всех required grants.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Враждебный legacy request не повышает права.
+**Enforcement:** Review device ownership transitions, pin quotas and platform ordering contracts.
 
-## LAW-010 — Version behavior independently of code
+**Testing:** Test device timeout, concurrent unmapping, noncoherent memory and weak-order publication.
 
-**Rule:** Semantic version и implementation digest хранятся отдельно.
+## LAW-025 — Single resource authority and accounting
 
-**Rationale:** Security fix может сохранять контракт при новом artifact.
+**Rule:** Shared resources use one authoritative ownership and quota arbiter across native and compatibility clients. Every charge has an identified owner or an explicit shared-accounting rule; queues and retained resources have limits.
 
-**Historical evidence:** [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0020](../../research/pathology/KOL-PATH-0020.json).
+**Rationale:** Independent ledgers can each grant exclusive access or lose shared costs.
 
-**Prevents:** Смешение protocol compatibility и identity исполняемого artifact.
+**Historical evidence:** [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json), [KOL-PATH-0016](../../research/pathology/KOL-PATH-0016.json), [KOL-PATH-0024](../../research/pathology/KOL-PATH-0024.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Conflicting grants, uncharged retention and quota bypass.
 
-**Enforcement:** Signed/pinned release manifest design.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Замена digest не выдаётся за новую semantics и наоборот.
+**Enforcement:** Review resource-domain identity, charge transfer and removal.
 
-## LAW-011 — Typed extensible wire format
+**Testing:** Compete across personalities, exhaust quotas and remove domains with outstanding shared charges.
 
-**Rule:** Public payload имеет size/version, fixed widths, byte order и checked reserved fields.
+## LAW-026 — Observable outcomes are explicit
 
-**Rationale:** Host language layout не является устойчивым ABI.
+**Rule:** Contracts distinguish acceptance, completion, durable effect, cancellation and failure. Required I/O ordering is explicit. Owner death is reported without claiming that protected application data has been repaired.
 
-**Historical evidence:** [KOL-PATH-0005](../../research/pathology/KOL-PATH-0005.json), [KOL-PATH-0006](../../research/pathology/KOL-PATH-0006.json), [KOL-PATH-0020](../../research/pathology/KOL-PATH-0020.json).
+**Rationale:** A successful intermediate step does not establish the final guarantee.
 
-**Prevents:** ABI drift, padding leaks и неоднозначный decoding.
+**Historical evidence:** [KOL-PATH-0001](../../research/pathology/KOL-PATH-0001.json), [KOL-PATH-0015](../../research/pathology/KOL-PATH-0015.json), [KOL-PATH-0025](../../research/pathology/KOL-PATH-0025.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** False durable success, assumed rollback and silent owner-death recovery.
 
-**Enforcement:** Codec review и schema conformance.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Fuzz truncated, oversized, endian и unknown-required fields.
+**Enforcement:** Review terminal result types and external-effect boundaries.
 
-## LAW-012 — Time carries a clock domain
+**Testing:** Reorder completions, fail flush, cancel after effects and kill synchronization owners.
 
-**Rule:** Deadline содержит clock domain и checked 64-bit representation; conversion не truncates.
+## LAW-027 — Visible scheduling scope
 
-**Rationale:** Ширина времени и выбор clock — разные гарантии.
+**Rule:** Priority and fairness parameters identify their scheduling domain. Group weights and task weights are separate; unrelated session changes do not silently replace native policy.
 
-**Historical evidence:** [KOL-PATH-0005](../../research/pathology/KOL-PATH-0005.json), [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json).
+**Rationale:** Relative priority has no useful meaning without its competition scope.
 
-**Prevents:** Time overflow и ожидание по неправильным часам.
+**Historical evidence:** [KOL-PATH-0021](../../research/pathology/KOL-PATH-0021.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Unexplained priority behavior and hidden grouping heuristics.
 
-**Enforcement:** API type review.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** 2038, overflow, realtime jumps и monotonic deadlines.
+**Enforcement:** Expose policy domains and review scheduler interfaces.
 
-## LAW-013 — Object identity is not an integer name
+**Testing:** Compare identical competing tasks in one and multiple domains against declared shares.
 
-**Rule:** Authority operations используют handle identity; recycled display ID не достаточен.
+## LAW-030 — Atomic waiting and rollback of preparation
 
-**Rationale:** Повторный lookup может обратиться к другому объекту.
+**Rule:** Waiting protocols define atomic registration, rechecking and notification. Partial preparation is undone; concurrent wake, cancellation and deadline expiry produce one defined terminal outcome.
 
-**Historical evidence:** [KOL-PATH-0001](../../research/pathology/KOL-PATH-0001.json), [KOL-PATH-0019](../../research/pathology/KOL-PATH-0019.json).
+**Rationale:** Sequential waits do not implement atomic wait-any semantics.
 
-**Prevents:** Ошибочное действие над переиспользованным PID/fd.
+**Historical evidence:** [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Lost wakeups, leaked registrations and duplicate completion.
 
-**Enforcement:** Handle table design review.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Exit/reuse/signal и fd reuse не меняют адресата.
+**Enforcement:** Review the concurrency model before implementation.
 
-## LAW-014 — Close consumes once
+**Testing:** Insert wakeups between every preparation step and race cancellation with timeouts.
 
-**Rule:** Release outcome отделён от I/O result; повтор close не нужен для определения ownership.
+## LAW-031 — Scoped platform adaptation
 
-**Rationale:** Ошибка completion не должна создавать неопределённый lifetime.
+**Rule:** Firmware input is validated and translated into native descriptors. Workarounds identify affected hardware, obligations, owners and removal conditions. Reconnection revokes old identity unless a recovery protocol proves continuity; matching descriptions alone is insufficient.
 
-**Historical evidence:** [KOL-PATH-0001](../../research/pathology/KOL-PATH-0001.json).
+**Rationale:** Hardware and firmware constraints are real but must not become unbounded generic exceptions.
 
-**Prevents:** Двойное закрытие нового объекта после поздней ошибки старого.
+**Historical evidence:** [KOL-PATH-0011](../../research/pathology/KOL-PATH-0011.json), [KOL-PATH-0012](../../research/pathology/KOL-PATH-0012.json), [KOL-PATH-0013](../../research/pathology/KOL-PATH-0013.json), [KOL-PATH-0014](../../research/pathology/KOL-PATH-0014.json), [KOL-PATH-0027](../../research/pathology/KOL-PATH-0027.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Global quirks, core dependence on firmware formats and device substitution under old handles.
 
-**Enforcement:** Consuming API и result type.
+**Allowed exceptions:** Machine-wide scope requires evidence of a machine-wide defect. A mandatory workaround may be inseparable from support for the affected target.
 
-**Testing:** Поздняя EIO сохраняется без повторного закрытия.
+**Enforcement:** Audit support manifests, parser boundaries and device generations.
 
-## LAW-015 — Explicit lock ownership
+**Testing:** Test affected and unaffected devices, malformed firmware and replacement devices with identical descriptors.
 
-**Rule:** Native lock имеет owner token; unrelated close не снимает его.
+## LAW-035 — Profiles preserve correctness
 
-**Rationale:** Implicit process-wide ownership усложняет локальное рассуждение.
+**Rule:** Execution profiles share native semantics, mandatory checks and failure outcomes. Optional diagnostics can disappear; progress, lifetime and protection cannot depend on them.
 
-**Historical evidence:** [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json).
+**Rationale:** Instrumentation can alter timing but must not implement correctness.
 
-**Prevents:** Снятие блокировки побочным close в библиотеке.
+**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0010](../../research/pathology/KOL-PATH-0010.json), [KOL-PATH-0018](../../research/pathology/KOL-PATH-0018.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Production-only safety failures and architecture forks.
 
-**Enforcement:** Lock arbiter contract.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Другой fd того же файла не снимает lock.
+**Enforcement:** Use one contract suite across profiles and optimization settings.
 
-## LAW-016 — Wait registration has lifetime
+**Testing:** Compare diagnostic-on/off outcomes and inject supported failures in controlled test builds.
 
-**Rule:** Registration token имеет cancel/drain и generation; stale events не переадресуются.
+## LAW-036 — Honest observations and comparisons
 
-**Rationale:** Subscription и номер fd имеют разные lifetimes.
+**Rule:** Metrics state scope, units, denominator, coverage and attribution. Missing data is unknown, not zero. Comparisons use equivalent work and guarantees, predeclared sampling, retained raw results and reported failures; neither route receives an artificial advantage.
 
-**Historical evidence:** [KOL-PATH-0003](../../research/pathology/KOL-PATH-0003.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json).
+**Rationale:** A dependency label or favorable average cannot establish cost or correctness.
 
-**Prevents:** Доставку stale event новому объекту.
+**Historical evidence:** [KOL-PATH-0015](../../research/pathology/KOL-PATH-0015.json), [KOL-PATH-0021](../../research/pathology/KOL-PATH-0021.json), [KOL-PATH-0025](../../research/pathology/KOL-PATH-0025.json), [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Invented scores, double accounting, cherry-picking and hidden tail failures.
 
-**Enforcement:** Event contract review.
+**Allowed exceptions:** Optional production counters may be absent; the value is unavailable rather than fabricated.
 
-**Testing:** dup/close/cancel/reuse interleavings.
+**Enforcement:** Review metric definitions and experiment manifests; keep hardware adaptation separate from software dependence.
 
-## LAW-017 — No resurrection
+**Testing:** Check zero denominators, lost events, nested spans, censored tails and a legitimately faster compatibility result.
 
-**Rule:** Weak upgrade не создаёт strong reference из Retiring/Dead.
+## LAW-040 — Evidence and reviewable architectural change
 
-**Rationale:** Наличие pointer под RCU не означает живой объект.
+**Rule:** Every architectural obligation has a concrete failure or constraint, evidence, scope and a falsifiable test. Distinguish historical facts, inferences and proposals. Add or remove laws because obligations change, never to meet a numerical quota; record the disposition of superseded requirements.
 
-**Historical evidence:** [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json).
+**Rationale:** A language choice, desired list length or another project surviving is not engineering evidence. Selection bias can hide failed alternatives and unreported defects.
 
-**Prevents:** Воскрешение объекта после начала destruction.
+**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0028](../../research/pathology/KOL-PATH-0028.json), [KOL-PATH-0029](../../research/pathology/KOL-PATH-0029.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json)
 
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
+**Prevents:** Slogans, unsupported claims and silent loss of requirements during consolidation.
 
-**Enforcement:** Refcount/epoch wrapper safety proof.
+**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Testing:** Model-check last-drop versus upgrade.
+**Enforcement:** Review source records, requirement mapping and architecture decisions. Require a concrete KOLVRT need, disconfirming evidence, applicability limits and a comparison with deferring the feature.
 
-## LAW-018 — Initialize before publish
+**Testing:** Reject missing evidence, unmapped prior obligations and fabricated execution claims; permit any justified nonempty law set.
 
-**Rule:** Все observable fields и bytes задаются до публикации и после reuse.
-
-**Rationale:** Старые metadata могут изменить permissions новой страницы.
-
-**Historical evidence:** [KOL-PATH-0006](../../research/pathology/KOL-PATH-0006.json), [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json).
-
-**Prevents:** Использование старых flags или kernel stack bytes новым объектом.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Constructor-only publication; unsafe audit.
-
-**Testing:** Poisoned allocator и recycled buffer fixtures.
-
-## LAW-019 — COW is not authorization
-
-**Rule:** COW state не снимает write permission checks и не смешивается с request rights.
-
-**Rationale:** Fault retry не должен терять начальный смысл операции.
-
-**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json).
-
-**Prevents:** Обход write permissions через COW retry.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** MM state transition review.
-
-**Testing:** Concurrent COW/unmap/write и software dirty backend.
-
-## LAW-020 — Pinning is a lease
-
-**Rule:** DMA pin отличается от CPU reference, имеет owner, quota и termination contract.
-
-**Rationale:** Free/migration не могут игнорировать внешнего writer.
-
-**Historical evidence:** [KOL-PATH-0009](../../research/pathology/KOL-PATH-0009.json).
-
-**Prevents:** Освобождение страницы до завершения device access.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** DmaLease API review.
-
-**Testing:** Device timeout и unmap не освобождают reachable pages.
-
-## LAW-021 — Coherence is not ordering
-
-**Rule:** DMA publication содержит требуемые barriers и cache ownership transitions.
-
-**Rationale:** Coherent allocation не упорядочивает descriptor writes.
-
-**Historical evidence:** [KOL-PATH-0010](../../research/pathology/KOL-PATH-0010.json).
-
-**Prevents:** Чтение устройством частично опубликованного descriptor.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Platform primitive contract + instruction audit.
-
-**Testing:** Weak-memory litmus и noncoherent backend.
-
-## LAW-022 — Zero-copy retains provenance
-
-**Rule:** Page sharing не передаёт право записи без explicit grant.
-
-**Rationale:** Экономия copies не отменяет backing-page ownership.
-
-**Historical evidence:** [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0009](../../research/pathology/KOL-PATH-0009.json).
-
-**Prevents:** Запись через alias в read-only backing page.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Buffer type/provenance review.
-
-**Testing:** Read-only page нельзя сделать mergeable writable buffer.
-
-## LAW-023 — Validate the executed snapshot
-
-**Rule:** Authorization и execution используют один immutable request либо доказанный pin protocol.
-
-**Rationale:** Mutable foreign pointers допускают TOCTOU.
-
-**Historical evidence:** [KOL-PATH-0018](../../research/pathology/KOL-PATH-0018.json).
-
-**Prevents:** TOCTOU между policy decision и исполнением.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Decoder-to-executor dataflow audit.
-
-**Testing:** Mutation после проверки не меняет выполненную операцию.
-
-## LAW-024 — Delegation is monotonic in rights
-
-**Rule:** Identity mapping и dropping metadata не расширяют native grants.
-
-**Rationale:** POSIX credential изменения не всегда уменьшают доступ.
-
-**Historical evidence:** [KOL-PATH-0017](../../research/pathology/KOL-PATH-0017.json).
-
-**Prevents:** Расширение прав через credential/namespace преобразование.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Capability lattice review.
-
-**Testing:** Nested delegation и restrictive group fixture.
-
-## LAW-025 — Shared resource has one arbiter
-
-**Rule:** Native и compat consumers одного lock/endpoint/resource согласуют ownership через один authority.
-
-**Rationale:** Два независимых ledgers могут выдать конфликтующие разрешения.
-
-**Historical evidence:** [KOL-PATH-0002](../../research/pathology/KOL-PATH-0002.json), [KOL-PATH-0016](../../research/pathology/KOL-PATH-0016.json), [KOL-PATH-0024](../../research/pathology/KOL-PATH-0024.json).
-
-**Prevents:** Два конфликтующих разрешения на один shared resource.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Shared-object gateway review.
-
-**Testing:** Cross-personality conflict даёт один разрешённый owner.
-
-## LAW-026 — Queue topology is not ordering
-
-**Rule:** I/O API явно описывает dependencies, completion и durability.
-
-**Rationale:** Multiqueue completion не обязана следовать submit order.
-
-**Historical evidence:** [KOL-PATH-0015](../../research/pathology/KOL-PATH-0015.json).
-
-**Prevents:** Ложную durability и зависимости от случайного completion order.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Block protocol conformance.
-
-**Testing:** Reordered completion и flush failure fixtures.
-
-## LAW-027 — Scheduling policy is visible
-
-**Rule:** Priority всегда сопровождается domain; group и task weights различны.
-
-**Rationale:** Implicit grouping меняет ожидания от nice.
-
-**Historical evidence:** [KOL-PATH-0021](../../research/pathology/KOL-PATH-0021.json).
-
-**Prevents:** Необъяснимую смену fairness из-за скрытой группировки.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Diagnostics и scheduler API review.
-
-**Testing:** Один workload в разных domains имеет объяснимые shares.
-
-## LAW-028 — Reclamation waits for readers
-
-**Rule:** Removed shared object не освобождается до доказанного завершения readers.
-
-**Rationale:** Removal и reclamation — разные события.
-
-**Historical evidence:** [KOL-PATH-0022](../../research/pathology/KOL-PATH-0022.json).
-
-**Prevents:** Use-after-free у reader старой версии.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Guard/lifetime proof и bounded backlog policy.
-
-**Testing:** Stalled reader, CPU offline и cancellation.
-
-## LAW-029 — Owner death is an outcome
-
-**Rule:** Synchronization сообщает owner death и не обещает восстановление application data.
-
-**Rationale:** Уведомить waiter не значит починить защищаемое состояние.
-
-**Historical evidence:** [KOL-PATH-0025](../../research/pathology/KOL-PATH-0025.json).
-
-**Prevents:** Вечное ожидание погибшего owner и ложное обещание восстановленных данных.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Wait outcome type и recovery protocol review.
-
-**Testing:** Kill owner во всех registration/acquire переходах.
-
-## LAW-030 — Wait-any cannot lose wakeups
-
-**Rule:** Registration/recheck/wake реализуют единый atomic protocol; partial setup откатывается.
-
-**Rationale:** Последовательные waits не эквивалентны multiwait.
-
-**Historical evidence:** [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json).
-
-**Prevents:** Lost wakeup и утечку partial registrations.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Concurrency model перед реализацией.
-
-**Testing:** Wake между каждым шагом setup и cancel/deadline race.
-
-## LAW-031 — Hardware workarounds are scoped
-
-**Rule:** Каждый quirk содержит affected IDs/revisions, owner, native invariant и removal condition.
-
-**Rationale:** Workaround нужен hardware domain, а не всем приложениям.
-
-**Historical evidence:** [KOL-PATH-0011](../../research/pathology/KOL-PATH-0011.json), [KOL-PATH-0027](../../research/pathology/KOL-PATH-0027.json).
-
-**Prevents:** Разрастание device-specific обходов по generic core.
-
-**Allowed exceptions:** Machine-wide scope допустим только при evidence о machine-wide fault; workaround может быть обязательным для native target.
-
-**Enforcement:** Platform support manifest audit.
-
-**Testing:** Unaffected device не получает quirk; affected не запускается без него.
-
-## LAW-032 — Firmware input is translated
-
-**Rule:** DT/ACPI input валидируется в frontend и преобразуется в native descriptor.
-
-**Rationale:** Внешний firmware ABI не должен стать core layout.
-
-**Historical evidence:** [KOL-PATH-0012](../../research/pathology/KOL-PATH-0012.json), [KOL-PATH-0013](../../research/pathology/KOL-PATH-0013.json).
-
-**Prevents:** Зависимость core от внешних firmware property names.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Frontend parser schema и core import audit.
-
-**Testing:** Legacy DT fixture и malformed phandle/AML input.
-
-## LAW-033 — Reconnect is not identity proof
-
-**Rule:** Смена power session отзывает generation без доказанного recovery identity.
-
-**Rationale:** Совпадение descriptors не гарантирует тот же device.
-
-**Historical evidence:** [KOL-PATH-0014](../../research/pathology/KOL-PATH-0014.json).
-
-**Prevents:** Передачу старых полномочий новому физическому устройству.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Device lifecycle/security review.
-
-**Testing:** Подмена USB с тем же VID/PID не наследует handles.
-
-## LAW-034 — No stable internal Rust binary ABI promise
-
-**Rule:** Native private types не экспортируются внешним drivers как вечный layout.
-
-**Rationale:** Внутреннее исправление должно оставаться возможным.
-
-**Historical evidence:** [KOL-PATH-0028](../../research/pathology/KOL-PATH-0028.json).
-
-**Prevents:** Фиксацию ошибочных внутренних layouts ради binary drivers.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Public API/FFI surface review.
-
-**Testing:** Old protocol adapter работает без доступа к private layout.
-
-## LAW-035 — Profiles preserve semantics
-
-**Rule:** DEV/STAGING/PROD имеют одинаковые mandatory checks и outcomes.
-
-**Rationale:** Диагностика не является механизмом корректности.
-
-**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0010](../../research/pathology/KOL-PATH-0010.json), [KOL-PATH-0018](../../research/pathology/KOL-PATH-0018.json).
-
-**Prevents:** Release-only нарушение безопасности после удаления diagnostics.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Один contract suite для всех profiles.
-
-**Testing:** Diagnostics on/off и optimized/unoptimized дают одинаковый oracle.
-
-## LAW-036 — Telemetry states its denominator
-
-**Rule:** Каждая доля указывает scope, window, coverage и attribution; unknown не ноль.
-
-**Rationale:** Fast path и редкий обязательный compat call искажают единый score.
-
-**Historical evidence:** [KOL-PATH-0025](../../research/pathology/KOL-PATH-0025.json), [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json).
-
-**Prevents:** Фиктивный native score и двойной учёт nested work.
-
-**Allowed exceptions:** Counters могут отсутствовать в PROD; тогда значение unavailable, не фиктивное измерение.
-
-**Enforcement:** Metrics schema и report review.
-
-**Testing:** Zero calls, disabled counters и dropped events дают unknown.
-
-## LAW-037 — Measure compatibility without bias
-
-**Rule:** Оба paths получают одинаковые safety, limits и workload; native не получает искусственной форы.
-
-**Rationale:** Performance tradeoff должен подтверждаться экспериментом.
-
-**Historical evidence:** [KOL-PATH-0015](../../research/pathology/KOL-PATH-0015.json), [KOL-PATH-0021](../../research/pathology/KOL-PATH-0021.json), [KOL-PATH-0028](../../research/pathology/KOL-PATH-0028.json).
-
-**Prevents:** Предопределённого победителя benchmark.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Predeclared benchmark manifest.
-
-**Testing:** Faster compat result сохраняется в report без штрафов.
-
-## LAW-038 — Report tails and failures
-
-**Rule:** A/B публикует raw runs, warm-up, p95/p99, variance и errors без cherry-picking.
-
-**Rationale:** Среднее скрывает очереди, contention и failure cost.
-
-**Historical evidence:** [KOL-PATH-0015](../../research/pathology/KOL-PATH-0015.json), [KOL-PATH-0021](../../research/pathology/KOL-PATH-0021.json), [KOL-PATH-0026](../../research/pathology/KOL-PATH-0026.json).
-
-**Prevents:** Скрытие tail latency и неуспешных операций.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Benchmark artifact review.
-
-**Testing:** Timeout-heavy fixture не даёт ложный low latency winner.
-
-## LAW-039 — Unsafe needs a local proof obligation
-
-**Rule:** Каждый unsafe имеет SAFETY, invariant, necessity, boundary tests и review.
-
-**Rationale:** Язык не проверяет assumptions устройства или foreign memory.
-
-**Historical evidence:** [KOL-PATH-0008](../../research/pathology/KOL-PATH-0008.json), [KOL-PATH-0010](../../research/pathology/KOL-PATH-0010.json), [KOL-PATH-0022](../../research/pathology/KOL-PATH-0022.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json).
-
-**Prevents:** Непроверяемый unsafe surface и неявные hardware assumptions.
-
-**Allowed exceptions:** Boundary unsafe разрешён именно при выполнении unsafe policy; это не разрешение unsafe для удобства.
-
-**Enforcement:** Unsafe inventory и boundary-crate lint.
-
-**Testing:** Negative cases aliasing, initialization, teardown и SMP.
-
-## LAW-040 — Evidence gates architectural claims
-
-**Rule:** Каждый case имеет primary source, decision, native semantics, tests и benchmark requirement.
-
-**Rationale:** Название pathology не делает Linux решение ошибкой.
-
-**Historical evidence:** [KOL-PATH-0007](../../research/pathology/KOL-PATH-0007.json), [KOL-PATH-0028](../../research/pathology/KOL-PATH-0028.json), [KOL-PATH-0029](../../research/pathology/KOL-PATH-0029.json), [KOL-PATH-0030](../../research/pathology/KOL-PATH-0030.json).
-
-**Prevents:** Архитектурные решения на основе лозунгов и выдуманной истории.
-
-**Allowed exceptions:** Нет неявных исключений. Изменение требования — только новым ADR до реализации.
-
-**Enforcement:** Phase 0.1 JSON validator + ручная проверка источников.
-
-**Testing:** Malformed/contradictory records отклоняются; неизвестная история помечается явно.
+[Russian translation](../../translations/ru/docs/architecture/KERNEL_LAWS.md)

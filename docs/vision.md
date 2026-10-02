@@ -1,39 +1,40 @@
-# Vision — Phase 0.1
+# KOLVRT vision
 
-KOLVRT начинает с контрактов, а не с boot stub. Источник истины — текущая native
-specification. Совместимость является явно выбранным versioned поведением вокруг неё.
-Существование shim не разрешает обходить native memory safety, authorization, ownership
-или resource accounting. Невыразимое безопасно поведение отклоняется явно.
+KOLVRT means **Kernel Outside Legacy, Versioned Routing & Translation**. It is a new
+ARM64-first operating-system project, initially implemented in Rust. Its architectural
+requirements do not depend on that implementation language. Phase 0 establishes
+contracts and evidence before kernel implementation.
 
-Основная платформа: AArch64, 64-bit only, EL1, MMU, SMP, GICv3, ARM Generic Timer,
-Device Tree, UART, VirtIO на QEMU virt. PCIe рассматривается как расширение транспорта;
-ACPI и x86_64 — последующие порты, не предпосылки первого запуска.
+The kernel must not adapt itself to legacy. Legacy compatibility must adapt itself to
+the kernel. The current native specification is authoritative. Versioned adapters may
+preserve required older semantics, but cannot weaken memory safety, authorization,
+resource accounting or ownership. Behavior that cannot be expressed safely is rejected.
 
-Совместимость не глобальный режим. Разные executable, process, driver, device и API
-families одновременно могут иметь разные routes. Минимальная единица смены маршрута
-определяется общим состоянием и протоколом, а не удобством UI.
+Compatibility is not a system-wide mode. Packages, processes, drivers, devices and API
+families may use different routes concurrently. Shared state determines which operations
+must remain bound together. A module has an identity, semantic version, implementation
+digest, owner, consumers, resource limits, measurements and a removal contract.
 
-Native core не содержит legacy syscall numbers, старые layouts и условные ветки по
-версии приложения. Compatibility modules имеют identity, version, owner, consumers,
-метрики, ограничения, migration/removal contract. Native-only build не зависит от них.
-Аппаратная необходимость отличается от программного legacy: CPU erratum может быть
-обязателен для корректной работы даже полностью native build на affected CPU.
+The initial target is AArch64, 64-bit execution at EL1, MMU, SMP, GICv3, the Arm Generic
+Timer, Device Tree, UART and VirtIO on QEMU virt. PCIe is a possible transport extension;
+ACPI and x86_64 are later considerations. Platform details must not require rewriting
+core subsystems for another architecture.
 
-Linux policy защищает реально работающих пользователей от регрессий; KOLVRT не
-объявляет эту цель ошибкой. Предлагаемое отличие — изоляция сохраняемой семантики и
-видимость цены, а не обещание совместимости без затрат. См. [Linux regression policy](https://docs.kernel.org/process/handling-regressions.html)
-и [внутренние интерфейсы Linux](https://docs.kernel.org/process/stable-api-nonsense.html).
+Software compatibility is optional in a native build. A workaround for faulty hardware
+may still be mandatory on an affected native target. Removing that workaround also
+removes support for that target unless another correct implementation exists.
 
-Ошибку самого KOLVRT исправляют в native specification/implementation вместе с
-regression test. Если безопасное старое поведение действительно нужно consumer,
-оно получает bug-compat ID и migration plan. Ошибка, нарушающая isolation, не может
-вернуться как привилегия shim. Наличие потребителей измеряется по declared dependencies
-и наблюдениям; ноль вызовов за короткое окно не доказывает отсутствие зависимости.
+KOLVRT requirements come from its intended workloads, native correctness and target hardware. External failure histories help identify risks, but do not select the architecture. Account for survivorship bias: visible surviving projects overrepresent some choices, while abandoned approaches and unreported failures are missing. Seek disconfirming cases, alternative mechanisms and conditions of applicability. Prefer the smallest design that satisfies a measurable KOLVRT need; defer features with no demonstrated consumer. See the [research method](research/RESEARCH_METHOD.md).
 
-Цели Phase 0.1: структурированные cases, источники, проверяемые laws, модели и ADR.
-Не цели: kernel implementation, Linux binary compatibility implementation, driver port,
-выбор scheduler по вкусу, performance claims без измерений, полная историческая
-реконструкция каждой подсистемы. [Backlog](research/PHASE_0_2.md) перечисляет следующие доказательства.
+A KOLVRT bug must be corrected in the native specification and implementation with a
+regression test. A demonstrated need for safe old behavior may justify a separate
+bug-compatibility module, a migration plan and eventual removal. No recent calls does
+not prove the absence of dormant or offline consumers.
 
-Все MUST/обязан/запрещено в architecture documents — нормативные требования к будущим
-реализациям. Документы не утверждают, что runtime эти требования уже выполняет.
+Phase 0 delivers research records, sources, requirements, architecture decisions and
+test obligations. It does not deliver a boot stub, a kernel, drivers, compatibility implementations
+or invented performance results. Normative requirements describe future implementation
+obligations; they do not claim that execution tests already pass. The [next research phase](research/PHASE_0_2.md)
+does not authorize starting Phase 1 automatically.
+
+[Russian translation](../translations/ru/docs/vision.md)

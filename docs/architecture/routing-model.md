@@ -1,74 +1,61 @@
-# Routing model v0.1
+# Routing model
 
-Один глобальный compatibility switch запрещён. DEV/PROD — профили исполнения,
-а не выбор native/compat. Resolve происходит при launch/bind, dispatch использует
-зафиксированный route. Dynamic discovery на каждом syscall не требуется.
+There is no global compatibility switch. Execution profiles do not select semantics.
+Resolve a route at launch or binding; dispatch uses the pinned result instead of
+discovering a new implementation on every call.
 
-## Входы и результат resolver
+## Resolution
 
-Ключ: `(consumer, API family, protocol, requested semantic version, capability,
-state-domain identity, device identity?)`. Package manifest задаёт defaults;
-process manifest сужает их; driver/device policies добавляют ограничения; administrator
-policy ограничивает допустимые modules/rights. Порядок не является «last write wins»:
-сначала пересечение разрешений, затем один exact compatible route. Два допустимых
-неупорядоченных выбора требуют явной pinning policy, иначе bind отклоняется.
+The key includes consumer, API family, protocol, semantic version, capability, state
+domain and optional device identity. Packages declare defaults; process policies narrow
+them; driver, device and administrator policies impose additional constraints. Intersect
+permissions before choosing one compatible route. Conflicts are not last-writer-wins:
+ambiguous choices require an explicit selection policy or fail binding.
 
-Результат: immutable `RouteBinding` с native operation set, adapter chain (обычно 0 или 1),
-semantic version, artifact digest, dependency closure, state-domain ID, rights,
-limits, profile и route generation. Неподдерживаемая family не падает молча в compat.
-Разрешение native route не может быть отозвано в пользу более привилегированного adapter.
+A binding records native operations, adapter chain, semantic version, artifact digest,
+dependency closure, state domain, rights, limits, profile and generation. Unsupported
+families do not silently fall back to compatibility. Routing cannot increase authority.
 
-## Уровни и пределы свободы
-
-| Уровень | Начальная роль |
+| Level | Initial role |
 |---|---|
-| Executable/package | Declared behavior requirements; inherited defaults |
-| Process | Bound handles, process personality и policy restrictions |
-| Driver/device | Protocol binding и scoped hardware translator |
-| Subsystem/API family | Минимальный public routing selector |
-| Protocol/version | Immutable semantic contract |
-| Compatibility capability | Узкое отклонение с доказанным state independence |
+| Package or executable | Declared behavior requirements and inherited defaults |
+| Process | Personality, policy and bound handles |
+| Driver or device | Protocol and scoped hardware translation |
+| Subsystem or API family | Public route selector |
+| Protocol and version | Immutable semantic contract |
+| Compatibility capability | Narrow deviation with proven state independence |
 
-Не строить универсальный graph router до доказанного workload. Первоначальная модель —
-конечная family table с fixed bindings. Capability-level split разрешён ADR только после
-анализа общего состояния. Process ABI personality и CPU execution architecture различны:
-Linux AArch64 personality не означает поддержку x86 или AArch32 instruction sets.
+Start with a finite family table, not a universal routing graph. Splitting individual
+capabilities requires a decision with shared-state analysis. An AArch64 compatibility environment
+does not promise execution of x86 or AArch32 instructions.
 
-Примеры допустимого намерения:
+## Shared state
 
-| Consumer | memory | files | network | synchronization |
-|---|---|---|---|---|
-| A | native | native | native | old-sync-v2 в отдельной synchronization domain |
-| B | native | native | native | native |
-| C | Linux personality | Linux personality | Linux personality | Linux personality |
+One process may use native memory, files and networking with an older synchronization
+adapter, while another is entirely native and a third uses a required external contract. This
+example is valid only if shared-memory identity and lifetime remain consistent.
 
-Это иллюстрация binding, не существующие modules. A возможен только если старый sync
-adapter и native memory разделяют согласованный shared-memory identity и lifetime.
-File operations, locks и epoll часто связаны общей fd/OFD graph; независимо переключить
-только close нельзя. Credentials, namespace и authorization образуют security domain.
-Read/write одного stream используют один protocol state. Переименование selector не
-делает состояния независимыми.
+File access, close, duplication, locks and event subscriptions can share one descriptor
+graph. Credentials, namespaces and authorization form a security domain. Operations on
+one stream share protocol state. These relationships constrain route granularity.
 
-## Shared objects и миграция
+Transferred handles retain object identity and behavior binding; receiver defaults do
+not reinterpret existing state. Cross-domain import requires a gateway that checks
+rights and semantics. Unsupported combinations fail. Shared resources have one arbiter.
 
-При передаче handle получатель получает object identity и immutable behavior binding,
-а не право заново интерпретировать state по своим package defaults. Export/import между
-domains выполняется явным gateway, который проверяет rights и semantics; невыразимое
-сочетание отклоняется. Поддержка mixed consumers не разрешает два независимых lock arbiters.
+## Controlled migration
 
-Безопасное DEV переключение выполняется как transaction:
+1. Check migration support, semantic equivalence and operator authority.
+2. Stop admission across the entire affected state domain.
+3. Drain requests, waiters, callbacks, locks and device I/O; timeout retains the old binding.
+4. Snapshot or explicitly convert state and validate its invariants.
+5. Publish the new binding generation atomically across all domain entry points.
+6. Resume admission; retain old code until references and required grace periods end.
 
-1. Проверить migration capability, semantic equivalence scope и права оператора.
-2. Перекрыть admission новых operations на всей state domain.
-3. Drain in-flight requests, waiters, callbacks, locks и device I/O; timeout оставляет старый binding.
-4. Снять snapshot или выполнить явно описанную state conversion; проверить invariants.
-5. Атомарно опубликовать binding generation для всех входов domain.
-6. Открыть admission; старый adapter удалить лишь после завершения references/grace period.
+Failures before commitment preserve the old domain. External effects limit rollback.
+If state cannot be converted or quiescence cannot be reached, restart is required.
+Production does not offer experimental live switching. Authorization remains mandatory
+on fast dispatch paths. Phase 0.2 must model conflicts, downgrades, handle transfer,
+concurrent rebinding and unloading; cases 02, 03, 17, 18, 25, 26 and 30 motivate these tests.
 
-Ошибки до commit оставляют старую domain работоспособной. После externally visible
-actions откат не обещается. Если quiescence не достижим или формат состояния несовместим,
-миграция требует restart. PROD не предоставляет experimental live switching.
-Security checks нужны в любом profile, включая fast dispatch.
-
-Phase 0.2 должен model-check resolver conflicts, downgrade attempts, handle transfer,
-concurrent rebind и unload. Основание: cases 02, 03, 17, 18, 25, 26, 30.
+[Russian translation](../../translations/ru/docs/architecture/routing-model.md)

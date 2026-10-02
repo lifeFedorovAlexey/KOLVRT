@@ -1,26 +1,25 @@
-# Спорные и unresolved решения
+# Open questions
 
-Эти вопросы не замаскированы реализацией. Phase 0.1 фиксирует contracts и evidence;
-открытый выбор не даёт права заполнить working path заглушкой.
+Phase 0.1 records contracts and evidence. Open decisions do not permit placeholders in working paths.
 
-| ID | Вопрос | Текущее решение | Доказательство для закрытия |
-|---|---|---|---|
-| OQ-01 | Kernel/userspace placement adapters и drivers | ADR-0008 Proposed | Threat model + две реализации одного host workload, latency и containment |
-| OQ-02 | Нативные fork/signals/process primitives | Spawn handle принят; fork открыт | Linux personality state graph и точные нужные primitives |
-| OQ-03 | Mixed fd/locks/credentials domains | Независимый per-call split запрещён | Model-check interop и explicit gateway semantics |
-| OQ-04 | USB persistence identity | Case 14 RESEARCH_REQUIRED; conservative reconnect | Device replacement/recovery model без false identity |
-| OQ-05 | Shared accounting | Один identity; charge attribution открыта | Shared cache, DMA и deferred work ledger model |
-| OQ-06 | RCU/epoch/refcount выбор | API lifetime requirement принят, алгоритм открыт | Contention model + bounded memory reclamation |
-| OQ-07 | Native scheduler objectives | Visible domains приняты, алгоритм открыт | Fairness/latency objectives и adversarial workloads |
-| OQ-08 | Arm barriers/MMU/GIC/timer/VirtIO specification | Linux evidence только исходная база | Arm и VirtIO primary spec clauses, litmus и pin версии |
-| OQ-09 | QEMU/toolchain exact versions | Не выбраны | Reproducible environment manifest; EL1/GICv3/SMP capabilities |
-| OQ-10 | Unsafe panic/unwind/allocation policy | Не выбрана | Error/context matrix; не unwind через недоказанную FFI/interrupt границу |
-| OQ-11 | Compat consumers и retirement windows | Только evidence-driven | Реальный workload inventory; offline/dormant dependency accounting |
-| OQ-12 | MOSTLY_NATIVE budgets | Нет глобальных arbitrary thresholds | Consumer migration SLO, coverage и multidimensional limits |
-| OQ-13 | Исторические даты/commits | Null честно сохранён | Introducing/fix/revert chain и tag containment для каждого case |
-| OQ-14 | Syzbot no-op fix bisection, LKML access | Case 30 causal claim ограничен | Local isolated replay и доступный maintainer thread |
-| OQ-15 | Hardware support и лицензия | Нет обещания всех плат; license не выбрана | Product scope и явное решение владельца проекта |
+| ID | Question | Evidence needed |
+|---|---|---|
+| OQ-01 | Adapter and driver placement | ADR-0008 remains proposed; compare threats, latency and fault containment in two host implementations. |
+| OQ-02 | Native process primitives | Spawn handles are accepted; define isolation, creation and notification needs from native workloads. Fork or foreign signal semantics require a demonstrated consumer before expanding the contract. |
+| OQ-03 | Shared state domains | Independent per-call splitting is forbidden; model-check descriptor, lock and credential gateways. |
+| OQ-04 | USB persistence identity | Case 14 remains RESEARCH_REQUIRED; model replacement and recovery without false identity. |
+| OQ-05 | Shared accounting | Keep one object identity; define charge attribution for shared cache, DMA and deferred work. |
+| OQ-06 | Memory reclamation | Lifetime obligations are accepted; choose RCU, epochs or reference counts after contention and bounded-reclamation models. |
+| OQ-07 | Scheduler objectives | Visible domains are accepted; specify fairness, latency and adversarial workloads before choosing an algorithm. |
+| OQ-08 | Platform specifications | Pin Arm and VirtIO clauses for barriers, MMU, GIC, timers and SMP; Linux evidence is only a starting point. |
+| OQ-09 | Kernel build environment | Pin kernel Rust/LLVM/linker/QEMU, machine and CPU capabilities. The pinned host checker does not settle this choice. |
+| OQ-10 | Panic, unwinding and allocation | Define an error/context matrix; never unwind through unproven foreign or interrupt boundaries. |
+| OQ-11 | Compatibility retirement | Inventory real workloads and offline or dormant dependencies before setting retirement windows. |
+| OQ-12 | MOSTLY_NATIVE budgets | No global arbitrary threshold; require consumer migration objectives, coverage and multidimensional limits. |
+| OQ-13 | Historical provenance | Preserve unknown values; establish introducing, fixing and reverting commits and containing tags per case. |
+| OQ-14 | Syzbot causality and LKML | Case 30 needs isolated replay of the no-op fix bisection and access to the maintainer discussion. |
+| OQ-15 | Hardware scope and license | No promise to support every board; product scope and a project-owner licensing decision are required. |
 
-Все case-specific вопросы автоматически перечислены в [CASE_INDEX](CASE_INDEX.md).
-Сравнение других систем имеет отдельные ограничения: [COMPARISON](../../research/other-systems/COMPARISON.md).
-Ни одно «unknown» не означает, что соответствующего Linux commit или проверки не существует.
+Case-specific questions appear in the [case index](CASE_INDEX.md). [Other-system findings](../../research/other-systems/COMPARISON.md) retain their own limitations. Unknown does not mean that a Linux commit or test does not exist.
+
+[Russian translation](../../translations/ru/docs/research/OPEN_QUESTIONS.md)

@@ -1,77 +1,72 @@
-# A/B migration benchmark methodology
+# Migration benchmark methodology
 
-Здесь только методология. **Benchmark runs и результаты отсутствуют.** Native не считается
-быстрее заранее; artificial delays, неравные quotas и отключение safety только для одного
-пути запрещены. Более быстрый compat path — результат, требующий анализа native path.
+This is a methodology, not measured results. Native execution is not presumed faster.
+Artificial delays, unequal quotas and weaker safety for one path are prohibited. A
+faster compatibility path is reported honestly and motivates native-path analysis.
 
-## Предусловия
+## Experimental contract
 
-Перед запуском сформулировать workload, correctness oracle, semantic differences, primary
-metric, нагрузку и stopping rule. Если native и compat дают разные observable effects,
-сначала определить эквивалентный полезный результат и отдельно оценить стоимость translation.
-Сравнение разных guarantees, например durable и buffered write, не является A/B одной задачи.
+Before running, specify the workload, correctness oracle, semantic differences, primary
+metric, offered load and stopping rule. Compare equivalent useful results. Buffered
+and durable writes do not provide the same guarantee; quantify semantic translation
+separately rather than hiding that difference in a speed ratio.
 
-Оба пути получают одинаковые inputs, resource limits, scheduling domains, memory layout
-policy и device setup. Fixtures сбрасываются между paired runs. Shadow execution не
-дублирует реальные writes, messages или payments: replay в независимых snapshots.
-Порядок A/B и B/A чередуется или randomized с сохранённым seed. Не запускать одновременно
-на одном contended device, если сравнивается isolated latency.
+Use identical inputs, resource limits, scheduling domains, memory policies and devices.
+Reset fixtures between paired runs. Replay external effects in independent snapshots;
+do not duplicate real writes, messages or payments. Alternate A/B and B/A or randomize
+with a recorded seed. Do not contend on one device when measuring isolated latency.
 
-Записывать exact kernel/adapter digests, route manifests, Rust/compiler/linker flags,
-QEMU machine/CPU/version/accelerator или hardware stepping/firmware, RAM, SMP/affinity,
-frequency governor, thermal state, interrupt placement, background load и instrumentation.
-QEMU throughput не переносится на silicon без измерения. CPU pinning не применяется
-только к одной стороне. Cold-start и steady-state — отдельные эксперименты.
+Record exact kernel and adapter digests, route manifests, compiler/linker flags, emulator
+version/machine/CPU/accelerator or hardware stepping/firmware, RAM, processor count,
+affinity, frequency policy, temperature, interrupt placement, background load and probes.
+Separate cold-start and steady-state experiments. Emulator throughput does not establish
+silicon throughput. Apply processor affinity symmetrically.
 
-## Sampling и статистика
+## Sampling and statistics
 
-Warm-up criterion задаётся до запуска: например стабилизация нескольких окон с заданным
-допуском и максимальным числом окон. Сохранять warm-up samples с marker, но не смешивать
-их со steady-state distribution. Нестабильный warm-up даёт invalid run, а не удобный tail cut.
+Predeclare warm-up stabilization tolerance, windows and a maximum duration. Retain marked
+warm-up samples separately. Failed stabilization invalidates a run; it is not permission
+to discard inconvenient slow samples.
 
-Начальная экспериментальная политика: минимум 30 независимых paired runs и для оценки
-p99 минимум 10000 completions на сторону внутри заявленного steady-state scope. Это
-начальные lower bounds, не гарантия статистической точности. Pilot оценивает autocorrelation
-и необходимый budget до основного эксперимента. Если tail samples/independent runs
-недостаточно, p99/CI обозначить inconclusive. Stopping rule запрещено менять после взгляда
-на победителя; sequential testing требует заранее описанного метода.
+Select sample size from the desired uncertainty, observed dependence and tail coverage,
+using a pilot before the main experiment. A fixed number of runs cannot guarantee a
+reliable p99. Insufficient independent runs or tail observations produce an inconclusive
+result. Do not alter the stopping rule after seeing the winner; sequential inference
+needs its own declared method.
 
-Отчёт включает n, run duration, median, p95, p99, mean, sample variance и standard deviation.
-Для percentile использовать заранее закреплённый estimator, например nearest-rank
-`sorted[ceil(p*n)-1]`; не менять estimator между сторонами. Для confidence intervals
-использовать paired/bootstrap по независимым runs или blocks, а не считать каждый
-correlated request независимым. Сохранять и absolute difference, и ratio, и uncertainty.
-При baseline=0 ratio undefined. Не усреднять per-run p99 как будто это pooled p99:
-показывать distribution per-run quantiles и отдельно явно названный pooled estimator.
+Report sample count, run duration, median, p95, p99, mean, sample variance and standard
+deviation. Fix the quantile estimator, for example `sorted[ceil(p*n)-1]`, in advance.
+Confidence intervals use independent paired runs or dependence-aware blocks rather than
+treating correlated requests as independent. Show absolute differences, ratios and
+uncertainty. A ratio to zero is undefined. Per-run quantile distributions and pooled
+quantiles are different statistics; an average of p99 values is not a pooled p99.
 
-Timeouts, errors, dropped requests и unfinished operations не исключаются из denominator.
-Публиковать их counts и latency censoring; если tail censored, честный p99 может быть
-только lower bound. Не скрывать outliers; исключения допустимы только по predeclared
-invalid-run criteria с причиной и полными raw samples. Multiple workloads публикуются
-полностью; summary weights фиксируются заранее. Regression margins задаются по product
-requirements, а не подгоняются под measured variance.
+Keep timeouts, failures, dropped and unfinished requests in accounting. Report censoring;
+a censored tail may permit only a lower bound. Do not hide outliers. Exclusions need
+predeclared invalid-run criteria, reasons and retained raw samples. Publish all workloads
+and predeclared summary weights. Regression margins come from requirements, not observed
+variance after the experiment.
 
-## Метрики
+## Measurements
 
-| Метрика | Определение |
+| Measurement | Definition |
 |---|---|
-| Wall latency | admission -> terminal outcome; queue time и service time отдельно |
-| Throughput | successful useful units / wall seconds; errors рядом |
-| CPU | exclusive thread/kernel CPU и attributable deferred work; cycles отдельно |
-| RAM | private resident, shared mappings, pinned bytes, high-water; не суммировать shared pages повторно |
-| Allocations | count, allocated bytes, peak live bytes; allocator и размерный профиль |
-| Context switches | voluntary/involuntary; scheduler scope фиксирован |
-| Copies | bytes + count по явно instrumented copy boundary |
-| Locks | acquisition count, contended count, wait time distribution |
-| Translations | adapter entries, conversion count, bytes serialized/deserialized |
-| PMU | cycles, instructions, cache/TLB misses если доступны; event encoding, multiplexing и sampling error |
-| Observer overhead | matched runs instrumentation on/off и lost-event counters |
+| Wall latency | Admission to terminal outcome; queue and service times separately |
+| Throughput | Successful useful units per wall second, with errors |
+| Processor cost | Exclusive execution time, attributable deferred work and separate cycle counts |
+| Memory | Private, shared and pinned bytes plus peak use; no duplicate shared-page accounting |
+| Allocation | Count, bytes, peak live bytes, allocator and size distribution |
+| Context switches | Voluntary and involuntary, with scheduler scope |
+| Copies | Count and bytes at declared instrumented boundaries |
+| Locks | Acquisitions, contention count and wait-time distribution |
+| Translation | Adapter entries, conversions, serialized and deserialized bytes |
+| Hardware counters | Supported events, encoding, multiplexing and sampling error |
+| Observer cost | Matched instrumentation-on/off runs and lost-event counts |
 
-Нельзя вычитать noisy observer overhead и выдавать результат за точное измерение.
-Показывать наблюдаемую разницу и uncertainty. Unsupported counter = unavailable.
-Разделять adapter cost, shared native backend cost и end-to-end cost; их нельзя смешивать
-в единственный «compat slowdown». Requirements конкретных workloads есть в JSON cases.
+Do not subtract noisy observer cost and claim an exact corrected value. Report uncertainty.
+Unavailable counters remain unavailable. Separate adapter cost, shared native service
+cost and end-to-end cost. A run artifact contains its manifest, workload digest, oracle
+result, raw samples, rejected-run log, analysis version and report. Implement a benchmark
+runner only when two real comparable paths exist. Case records specify workload-specific obligations.
 
-Артефакт будущего run: machine-readable manifest, workload digest, oracle result,
-raw samples, rejected-run log, aggregate script version и итоговый report. Реализация
-benchmark runner начинается только после появления двух настоящих сравниваемых paths.
+[Russian translation](../../translations/ru/docs/architecture/benchmarking.md)

@@ -1,80 +1,72 @@
-# Native model v0.1
+# Native model
 
-## Границы
+## Boundaries
 
-Native core отвечает за task/address-space lifecycle, scheduler mechanism, memory
-ownership, capability authorization, IPC/wait primitives, resource accounting и
-необходимые device abstractions. Размещение VFS, network stack и drivers по protection
-domains ещё не выбрано: [ADR-0008](../adr/0008-placement.md). Разделение модулей само
-по себе не является доказательством изоляции памяти.
+The core owns task and address-space lifetimes, scheduling mechanisms, memory ownership,
+authorization, communication and waiting primitives, resource accounting and necessary
+device abstractions. Placement of file services, networking, drivers and compatibility
+adapters remains open in [decision 0008](../architecture-decisions/0008-placement.md).
+A library boundary alone does not establish memory isolation.
 
-```mermaid
-flowchart TD
-  N[Native consumer] --> A[Native API contract]
-  L[Legacy consumer] --> C[Versioned adapter]
-  C --> A
-  A --> K[Ownership · rights · accounting · lifecycle]
-  K --> P[Platform contracts]
-  D[DT or ACPI input] --> T[Firmware translation]
-  T --> P
-  Q[Scoped hardware errata] --> P
-```
+Native consumers use native contracts directly. Legacy consumers enter a versioned
+adapter and then the same native contracts. Firmware parsers and hardware workarounds
+implement platform contracts. The core must not import compatibility types, layouts or
+implementation dependencies. Adapters do not receive private memory-manager, scheduler
+or filesystem objects. Dependency checks must include generated code and build features.
 
-Core импортирует platform interfaces, platform implementations используют AArch64
-registers. Core не импортирует compat. Adapter использует только публичный native
-contract и не получает ссылки на private MM/scheduler/VFS objects. Будущий dependency
-check обязан проверять Cargo graph, generated bindings и feature closure, а не имена папок.
+## Objects and authority
 
-## Объекты и полномочия
+An object identity is distinct from its displayed integer name. A handle carries checked
+identity, type and rights, with protection against reuse. Copying or delegating it cannot
+add rights. Revocation specifies separately whether it stops new requests and how it
+affects accepted requests. The wire encoding is not yet selected.
 
-Object identity отделена от отображаемых чисел. Handle — проверяемая ссылка с rights,
-type и защитой от reuse; конкретное encoding пока не фиксируется как ABI. Copy handle
-не добавляет rights. Delegation может только уменьшать полномочия. Revocation policy
-должна явно различать прекращение новых operations и уже принятые in-flight requests.
+Creation publishes a fully initialized object or nothing. Its lifecycle is
+`Constructing -> Live -> Retiring -> Dead`; upgrading a weak reference cannot resurrect
+a retiring object. Requests retain required references until terminal completion.
+Closing consumes a handle once even when late I/O reports an error. Cancellation does
+not promise rollback: the outcome must state whether an external effect occurred.
 
-Create возвращает полностью инициализированный объект либо не публикует его вовсе.
-State machine: `Constructing -> Live -> Retiring -> Dead`. Upgrade в strong reference
-из Retiring/Dead запрещён. Request держит необходимые references до terminal completion.
-Close потребляет handle независимо от позднего I/O diagnostic. Cancellation не равна
-rollback; результат показывает, произошло ли внешнее действие.
+Evidence: [process identity](../../research/pathology/KOL-PATH-0019.json),
+[close outcomes](../../research/pathology/KOL-PATH-0001.json),
+[reference resurrection](../../research/pathology/KOL-PATH-0030.json).
 
-Основание: [pidfd](../../research/pathology/KOL-PATH-0019.json),
-[close](../../research/pathology/KOL-PATH-0001.json),
-[epoll regression](../../research/pathology/KOL-PATH-0030.json).
+## Memory and I/O
 
-## Память и I/O
+Read-only shared pages, writable owned buffers and device-access leases have distinct
+contracts. Copy-on-write does not grant write authority. Device access retains pinned
+memory until completion or a proven device reset. Cache coherence does not replace
+ordering barriers. Foreign pointers require bounds, initialization, alignment, lifetime,
+aliasing, mutation and fault-handling guarantees before becoming ordinary references.
+Validation and execution use the same owned request snapshot or a proven immutable view.
 
-Native `ReadOnlyPage`, `WritableBuffer`, `DmaLease` обозначают разные ownership contracts,
-а не готовые Rust types. Copy-on-write не меняет authorization. Device access держит
-pin lease до завершения или подтверждённого reset. Cache coherence не освобождает от
-publication barriers. User pointer никогда не становится обычным `&T` без lifetime,
-alignment, aliasing, fault и mutation proof; request decoder формирует owned snapshot.
+Native and compatibility clients of a shared file lock or endpoint use one authoritative
+arbiter. Zero-copy transfer retains backing-page ownership and permissions. Write
+acceptance, completion, durable storage and close are separate outcomes. Completion
+order is not implicitly submission order.
 
-File locks и endpoint ownership имеют один authoritative arbiter для native и compat.
-Два adapters не могут независимо обещать exclusive ownership одного shared object.
-Zero-copy допускается только с доказанными permissions и lifetime backing pages.
-Durability отделена от write acceptance и close; block completion order не обещается.
+## Time and errors
 
-## Время и ошибки
+External timestamps use signed 64-bit seconds, nanoseconds in 0..999999999 and a clock
+domain. Conversions detect overflow. Waiting defaults to monotonic deadlines; conversion
+from a relative duration happens once. Clock changes are never implicit.
 
-Внешнее время: signed 64-bit seconds, nanoseconds в диапазоне 0..999999999 и clock
-domain; внутреннее представление может отличаться. Deadline overflow возвращает ошибку.
-Monotonic clock — default для ожиданий. Перестановка или перевод clock domain не молчаливы.
-Unsupported, PermissionDenied, InvalidRequest, ResourceExhausted, Cancelled и I/O failure
-различаются; Linux errno mapping принадлежит adapter. Ошибка не может означать fake success.
+Unsupported operations, denied authority, invalid requests, exhausted resources,
+cancellation and I/O failures have distinct results. Legacy error-number conversion
+belongs to adapters. No error path reports fabricated success.
 
-## ARM64 target contract
+## Platform contract
 
-Первый platform implementation должен предоставить boot descriptor parsing, EL1 trap
-entry/exit, MMU map/unmap/TLB synchronization, CPU startup/shutdown, interrupt tokens,
-timer deadline и MMIO/DMA primitives. SMP TLB shootdown и interrupt context являются
-частью contract, а не будущей правкой однопроцессорной модели.
+The initial AArch64 backend must cover boot descriptions, EL1 exceptions, memory mapping,
+translation invalidation, processor startup and shutdown, interrupt handles, deadlines,
+device registers and direct memory access. Multiprocessor translation invalidation and
+interrupt context belong to the initial contract, not a later repair to a single-CPU model.
 
-QEMU virt — семейство версионированных machine models; нужно закрепить точные QEMU
-version, machine, CPU, accelerator, memory, SMP, GICv3 и transports в Phase 0.2.
-Адреса устройств обнаруживаются через DT, не предполагаются постоянными. См.
-[QEMU virt documentation](https://www.qemu.org/docs/master/system/arm/virt.html).
-QEMU tests не доказывают реальные timing, silicon errata, DMA coherency или PMU costs.
+Pin exact QEMU version, machine, CPU, accelerator, memory, processor count, GICv3 and
+transports before platform experiments. Discover devices from Device Tree rather than
+assuming stable addresses. See [QEMU virt](https://www.qemu.org/docs/master/system/arm/virt.html).
+Emulation does not prove silicon errata handling, real timing, device coherence or
+hardware-counter costs. Core contract tests need a mock backend and eventually another
+architecture implementation; portability is not proven merely by having an interface.
 
-Для второго порта core contract suite должен исполняться с mock backend и отдельной
-architecture implementation; переносимость нельзя объявить доказанной до такого порта.
+[Russian translation](../../translations/ru/docs/architecture/native-model.md)

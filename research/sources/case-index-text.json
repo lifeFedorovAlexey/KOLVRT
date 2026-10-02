@@ -1,0 +1,552 @@
+{
+  "KOL-PATH-0001": {
+    "source_sha256": "eb7723c405c80a4fe4b6b0d0cb32e606f93a75bfb831ce82e418c0a9a82fafc3",
+    "en": {
+      "title": "close(): error after descriptor release",
+      "subsystem": "VFS",
+      "open_questions": [
+        "How does native completion report an error after destroying the last handle?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "close(): ошибка после освобождения дескриптора",
+      "subsystem": "Виртуальная файловая система",
+      "open_questions": [
+        "Как собственное завершение сообщает ошибку после уничтожения последнего дескриптора?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0002": {
+    "source_sha256": "e2312b90ecc4a8fffd426c82e4faf6482e460b56899e06d5561e3b56f12df647",
+    "en": {
+      "title": "POSIX locks: any close releases process locks",
+      "subsystem": "VFS locking",
+      "open_questions": [
+        "Deadlock detection semantics for native lock tokens remain open."
+      ]
+    },
+    "ru": {
+      "title": "Блокировки POSIX: любое закрытие снимает блокировки процесса",
+      "subsystem": "Блокировки виртуальной файловой системы",
+      "open_questions": [
+        "Семантика обнаружения взаимоблокировки для собственных токенов блокировок остаётся открытой."
+      ]
+    }
+  },
+  "KOL-PATH-0003": {
+    "source_sha256": "0478252b411371edfe11728065e9531045a3016b89d887f32f538226d2714be0",
+    "en": {
+      "title": "epoll: duplication and open-file lifetime",
+      "subsystem": "Event notification",
+      "open_questions": [
+        "Should native nested wait sets be allowed? Not before cycle analysis."
+      ]
+    },
+    "ru": {
+      "title": "epoll: дублирование и время жизни открытого файла",
+      "subsystem": "Уведомления о событиях",
+      "open_questions": [
+        "Разрешать ли собственные вложенные наборы ожидания? Не до анализа циклов."
+      ]
+    }
+  },
+  "KOL-PATH-0004": {
+    "source_sha256": "3eac6fd4eb8980ae9da43f2bd756ab034c11ffb9b643cdd448f0fcd63c22311d",
+    "en": {
+      "title": "select: fd_set limits belong to libc",
+      "subsystem": "System calls / libc",
+      "open_questions": [
+        "Choose a native multiple-wait bound by memory and fairness, not FD_SETSIZE.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "select: ограничения fd_set находятся в libc",
+      "subsystem": "Системные вызовы / libc",
+      "open_questions": [
+        "Выбрать предел собственного множественного ожидания по памяти и справедливости, а не FD_SETSIZE.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0005": {
+    "source_sha256": "f5c7e80d663a31bbf9de79567769fcb9d06f3a2b6a022f8b2ed741f23fe63318",
+    "en": {
+      "title": "ioctl time32 and the year 2038",
+      "subsystem": "Time / userspace API",
+      "open_questions": [
+        "Is there an actual time32 consumer in Phase 0.2?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "ioctl time32 и 2038 год",
+      "subsystem": "Время / пользовательский интерфейс",
+      "open_questions": [
+        "Есть ли реальный потребитель time32 на этапе 0.2?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0006": {
+    "source_sha256": "5bab2b12b4306abd88f9a9a3be00a371644f32038c40dab4e1a7f3ca78980ce4",
+    "en": {
+      "title": "ioctl: padding, pointers and compatibility layouts",
+      "subsystem": "Driver userspace API",
+      "open_questions": [
+        "Which zero-copy types can be proved safe without an implicit Rust layout ABI?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "ioctl: заполнение, указатели и размещение данных совместимости",
+      "subsystem": "Пользовательский интерфейс драйверов",
+      "open_questions": [
+        "Для каких типов без копирования можно доказать безопасность без неявного двоичного интерфейса размещения Rust?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0007": {
+    "source_sha256": "78da8da3d4bfec04dea0668b53827fc9832cd35ce85152c9986e01b5982b3117",
+    "en": {
+      "title": "Dirty COW: a fix reverted because of s390",
+      "subsystem": "Memory management",
+      "open_questions": [
+        "Reproduce the causal chain on historical commits in an isolated VM; the fix has not been run.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Dirty COW: отмена исправления из-за s390",
+      "subsystem": "Управление памятью",
+      "open_questions": [
+        "Воспроизвести причинную цепочку исторических коммитов в изолированной виртуальной машине; исправление не запускалось.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0008": {
+    "source_sha256": "5f8be329c679a33b08e0a5ea87d768fae5d6d08ffb0be62a7603661614db0f2e",
+    "en": {
+      "title": "Dirty Pipe: uninitialized buffer flags",
+      "subsystem": "IPC / pipes / page cache",
+      "open_questions": [
+        "Model all constructor and reuse transitions before choosing a native zero-copy API."
+      ]
+    },
+    "ru": {
+      "title": "Dirty Pipe: неинициализированные флаги буфера",
+      "subsystem": "Межпроцессное взаимодействие / каналы / кеш страниц",
+      "open_questions": [
+        "Проверить модель всех переходов создания и повторного использования до выбора собственного интерфейса без копирования."
+      ]
+    }
+  },
+  "KOL-PATH-0009": {
+    "source_sha256": "e6c5a73dd614525d6426ba3c4c32afd0ec3e79f7a67f4adaa887ddf16515a8a1",
+    "en": {
+      "title": "GUP pinning: a reference is not a DMA lease",
+      "subsystem": "Memory / DMA",
+      "open_questions": [
+        "Which bounded long-term pinning policy can support future RDMA?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Закрепление GUP: ссылка не является арендой DMA",
+      "subsystem": "Память / DMA",
+      "open_questions": [
+        "Какая политика ограниченного долговременного закрепления допустима для будущего RDMA?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0010": {
+    "source_sha256": "47964f5a443eabf67f976077c39ad734e54527b49f8f753c37feae53acb4455a",
+    "en": {
+      "title": "Coherent DMA still requires barriers",
+      "subsystem": "DMA / memory ordering",
+      "open_questions": [
+        "Choose barriers from Arm and VirtIO transport specifications in Phase 0.2.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Когерентный DMA всё равно требует барьеров",
+      "subsystem": "DMA / порядок операций памяти",
+      "open_questions": [
+        "Выбрать барьеры по спецификациям Arm и транспорта VirtIO на этапе 0.2.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0011": {
+    "source_sha256": "20899ff594a9796a690c944feda4513483ee07103200f10b00a5308c04b95d27",
+    "en": {
+      "title": "Cortex-A53 843419: linker workaround",
+      "subsystem": "ARM64",
+      "open_questions": [
+        "The first workaround version and applicability to the selected Rust linker remain unverified.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Cortex-A53 843419: обходное решение компоновщика",
+      "subsystem": "ARM64",
+      "open_questions": [
+        "Первая версия обходного решения и применимость к выбранному компоновщику Rust остаются непроверенными.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0012": {
+    "source_sha256": "b5a3572df9be25fa987d27c2d083bd02fbbb96e4214a3305fc46617018dd42d7",
+    "en": {
+      "title": "Device tree bindings as an external ABI",
+      "subsystem": "Firmware / device tree",
+      "open_questions": [
+        "Which bindings enter the initial support manifest beyond QEMU virt?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Привязки дерева устройств как внешний двоичный интерфейс",
+      "subsystem": "Встроенное ПО / дерево устройств",
+      "open_questions": [
+        "Какие привязки входят в первоначальный манифест поддержки помимо QEMU virt?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0013": {
+    "source_sha256": "0e7a578aedad9768abb1fa7e9157e7b225381ff575e0892157cf0cfa8bc9062f",
+    "en": {
+      "title": "ACPI _OSI: OS identity instead of capabilities",
+      "subsystem": "Firmware / ACPI",
+      "open_questions": [
+        "The AML runtime and its isolation remain open choices.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "ACPI _OSI: идентичность ОС вместо возможностей",
+      "subsystem": "Встроенное ПО / ACPI",
+      "open_questions": [
+        "Выбор среды исполнения AML и её изоляции остаётся открытым.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0014": {
+    "source_sha256": "4fb771049fcff412f0bcdf4a1345de73bfa5bb8854d0be49ac7e31e8c9f9d4b1",
+    "en": {
+      "title": "USB persistence: descriptors do not prove identity",
+      "subsystem": "USB / suspend",
+      "open_questions": [
+        "Is acceptable identity evidence possible without cryptographic device identification?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Восстановление USB: дескрипторы не доказывают идентичность",
+      "subsystem": "USB / приостановка",
+      "open_questions": [
+        "Возможно ли приемлемое подтверждение идентичности без криптографической идентификации устройства?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0015": {
+    "source_sha256": "ddbe0d46e2c9c97c799b5bcb2d4fe03dac32f5811cab647c11afad190f32b66e",
+    "en": {
+      "title": "blk-mq: scalable queues do not guarantee ordering",
+      "subsystem": "Block I/O",
+      "open_questions": [
+        "Does the first VirtIO target need multiple queues or a minimal backend?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "blk-mq: масштабируемые очереди не гарантируют порядок",
+      "subsystem": "Блочный ввод-вывод",
+      "open_questions": [
+        "Нужны ли первой платформе VirtIO несколько очередей или достаточно минимальной реализации?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0016": {
+    "source_sha256": "5c99e763ba7a7c6c0a37c296a63e23a28e5b3ae65941116178d64b9508a68db2",
+    "en": {
+      "title": "cgroup v1: incompatible controller hierarchies",
+      "subsystem": "Resource management",
+      "open_questions": [
+        "How should shared file cache and DMA leases be charged across consumers?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "cgroup v1: несовместимые иерархии контроллеров",
+      "subsystem": "Управление ресурсами",
+      "open_questions": [
+        "Как распределять затраты общего файлового кеша и аренды DMA между потребителями?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0017": {
+    "source_sha256": "59531b07ad08b8aea272b3b72ff26df5c48281f99030f1225eb85deb31912faf",
+    "en": {
+      "title": "User namespaces: dropping groups increased access",
+      "subsystem": "Namespaces / security",
+      "open_questions": [
+        "Define the relationship between POSIX denial semantics and native authority grants."
+      ]
+    },
+    "ru": {
+      "title": "Пространства имён пользователей: удаление групп расширяло доступ",
+      "subsystem": "Пространства имён / безопасность",
+      "open_questions": [
+        "Определить соотношение семантики запретов POSIX и выдачи собственных полномочий."
+      ]
+    }
+  },
+  "KOL-PATH-0018": {
+    "source_sha256": "2e9ff64586442ea5271c4dfa80be67dd1b6b50e19ed54b33e3bc59810646b015",
+    "en": {
+      "title": "Seccomp notification: mutable-pointer TOCTOU",
+      "subsystem": "Security / syscall mediation",
+      "open_questions": [
+        "Which Linux continuation modes are possible without falsely promising a sandbox?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Уведомления seccomp: TOCTOU изменяемых указателей",
+      "subsystem": "Безопасность / посредничество системных вызовов",
+      "open_questions": [
+        "Какие режимы продолжения Linux возможны без ложного обещания изоляции?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0019": {
+    "source_sha256": "9c0b29925b670f3fb2f21510eea6228cd50fca6bfcaa657034727236b04758c1",
+    "en": {
+      "title": "PID reuse: pidfd and atomic creation",
+      "subsystem": "Process lifecycle",
+      "open_questions": [
+        "Define process-handle revocation and lifetime after process exit."
+      ]
+    },
+    "ru": {
+      "title": "Повторное использование PID: pidfd и атомарное создание",
+      "subsystem": "Жизненный цикл процесса",
+      "open_questions": [
+        "Определить отзыв дескриптора процесса и его время жизни после завершения процесса."
+      ]
+    }
+  },
+  "KOL-PATH-0020": {
+    "source_sha256": "059fc23039f669ce33aeb8bb61766aeb506b4c63222d821f459c8a2f372040b4",
+    "en": {
+      "title": "clone3: sized structure replaces overloaded arguments",
+      "subsystem": "Process / syscall ABI",
+      "open_questions": [
+        "Is native fork needed, or only an explicit address-space snapshot primitive?"
+      ]
+    },
+    "ru": {
+      "title": "clone3: структура с размером вместо перегруженных аргументов",
+      "subsystem": "Процессы / двоичный интерфейс системных вызовов",
+      "open_questions": [
+        "Нужен ли собственный fork или только явный примитив снимка адресного пространства?"
+      ]
+    }
+  },
+  "KOL-PATH-0021": {
+    "source_sha256": "b0def4cd91dff46171fdd762530e71560047fd1ffd69d1272960b88f03f63628",
+    "en": {
+      "title": "Autogroup: nice applies within a task group",
+      "subsystem": "Scheduler",
+      "open_questions": [
+        "Choose fairness objectives and bounded starvation before the algorithm."
+      ]
+    },
+    "ru": {
+      "title": "Автогруппировка: nice действует внутри группы задач",
+      "subsystem": "Планировщик",
+      "open_questions": [
+        "Выбрать цели справедливости и ограничение голодания до алгоритма."
+      ]
+    }
+  },
+  "KOL-PATH-0022": {
+    "source_sha256": "dc59f828a052a76ac81de97bc10a0d242696fe9f3d7d79a49b1c8a2995150553",
+    "en": {
+      "title": "RCU: unlinking does not permit freeing",
+      "subsystem": "Concurrency / reclamation",
+      "open_questions": [
+        "Choose RCU, epochs or reference counts for the initial handle table after modeling.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "RCU: удаление ссылки не разрешает освобождение",
+      "subsystem": "Конкурентность / освобождение памяти",
+      "open_questions": [
+        "Выбрать RCU, эпохи или подсчёт ссылок для первоначальной таблицы дескрипторов после моделирования.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0023": {
+    "source_sha256": "77d49476b53704235777b1d619755a75066afe488d105652e19c8caf5034e1de",
+    "en": {
+      "title": "Removal of the numeric _sysctl ABI",
+      "subsystem": "System calls / configuration",
+      "open_questions": [
+        "Is there a real consumer of this removed ABI? Without one, do not implement a module."
+      ]
+    },
+    "ru": {
+      "title": "Удаление числового двоичного интерфейса _sysctl",
+      "subsystem": "Системные вызовы / конфигурация",
+      "open_questions": [
+        "Есть ли реальный потребитель удалённого двоичного интерфейса? Без него не реализовывать модуль."
+      ]
+    }
+  },
+  "KOL-PATH-0024": {
+    "source_sha256": "8560e96a8da1206998f02ddf92cbfa88bd36398f1234c5870ccab15ba9abc0fe",
+    "en": {
+      "title": "SO_REUSEPORT: shared ports require common authority",
+      "subsystem": "Networking",
+      "open_questions": [
+        "Which native join/revocation policy handles credential changes?"
+      ]
+    },
+    "ru": {
+      "title": "SO_REUSEPORT: общие порты требуют общих полномочий",
+      "subsystem": "Сеть",
+      "open_questions": [
+        "Какая собственная политика присоединения и отзыва нужна при изменении учётных данных?"
+      ]
+    }
+  },
+  "KOL-PATH-0025": {
+    "source_sha256": "e67a0089bcb550067f05b01e31fb4539e1e3f1f12140f396663a7f9fe54779a0",
+    "en": {
+      "title": "Robust futexes: list cleanup instead of scanning all VMAs",
+      "subsystem": "Synchronization / IPC",
+      "open_questions": [
+        "Choose a native registration protocol preserving the uncontended fast path.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Устойчивые futex: очистка по списку вместо обхода всех областей памяти",
+      "subsystem": "Синхронизация / межпроцессное взаимодействие",
+      "open_questions": [
+        "Выбрать собственный протокол регистрации, сохраняющий быстрый путь без конкуренции.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0026": {
+    "source_sha256": "7ca9f1d038f67ea10b947491066e605c909712e2a038bb5b593f6725c8d980ec",
+    "en": {
+      "title": "futex_waitv: waiting on multiple addresses",
+      "subsystem": "Synchronization / IPC",
+      "open_questions": [
+        "Define native bounds and fairness when the first item is always ready.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "futex_waitv: ожидание нескольких адресов",
+      "subsystem": "Синхронизация / межпроцессное взаимодействие",
+      "open_questions": [
+        "Определить собственные пределы и справедливость при постоянно готовом первом элементе.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0027": {
+    "source_sha256": "112e87af9bef511f45aab7b42fc21a0331a43a067a1991b7a20add930376a790",
+    "en": {
+      "title": "PCI MSI: broken bridges require scoped fallback",
+      "subsystem": "PCIe / interrupts",
+      "open_questions": [
+        "When does the initial VirtIO target need PCIe, and who implements MSI translation?",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "PCI MSI: неисправные мосты требуют ограниченного запасного пути",
+      "subsystem": "PCIe / прерывания",
+      "open_questions": [
+        "Когда первой платформе VirtIO нужен PCIe и кто реализует преобразование MSI?",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0028": {
+    "source_sha256": "313d609dcffada45706645f60555053effcd2e990c9cc052c6efee2bae95b8d1",
+    "en": {
+      "title": "USB internal API redesign without a permanent driver ABI",
+      "subsystem": "Driver model",
+      "open_questions": [
+        "Find specific USB commits from the historical document; driver placement remains open.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Переработка внутренних интерфейсов USB без вечного двоичного интерфейса драйверов",
+      "subsystem": "Модель драйверов",
+      "open_questions": [
+        "Найти конкретные коммиты USB из исторического документа; размещение драйверов остаётся открытым.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  },
+  "KOL-PATH-0029": {
+    "source_sha256": "8fc4a5e91e2645811515f10d3bcbfc1b8bc20e3017d003d9c3c155816ffae420",
+    "en": {
+      "title": "Removal of mandatory file locking",
+      "subsystem": "VFS locking",
+      "open_questions": [
+        "Does a consumer need mandatory locking, and can a lease express that requirement?"
+      ]
+    },
+    "ru": {
+      "title": "Удаление обязательных файловых блокировок",
+      "subsystem": "Блокировки виртуальной файловой системы",
+      "open_questions": [
+        "Нужны ли потребителю обязательные блокировки и можно ли выразить требование арендой?"
+      ]
+    }
+  },
+  "KOL-PATH-0030": {
+    "source_sha256": "98c1a30d74d6cdd557c0c9fd820b711426c0b0e47356a18c6eed610370388734",
+    "en": {
+      "title": "epoll fix regression: a dying file cannot be resurrected",
+      "subsystem": "VFS / eventpoll / fuzzing",
+      "open_questions": [
+        "Repeat bisection: the dashboard has an unverifiable no-op fix result and the LKML discussion was unavailable.",
+        "Establish the introducing commit/tag from Git history; the read source confirms the mechanism but not its exact introduction date."
+      ]
+    },
+    "ru": {
+      "title": "Регрессия исправления epoll: завершающий жизнь файл нельзя воскресить",
+      "subsystem": "Виртуальная файловая система / eventpoll / нечёткое тестирование",
+      "open_questions": [
+        "Повторить двоичный поиск: панель содержит непроверяемый результат исправления без изменения поведения, а обсуждение LKML было недоступно.",
+        "Установить вводящий коммит или метку по истории Git; прочитанный источник подтверждает механизм, но не точную дату его появления."
+      ]
+    }
+  }
+}

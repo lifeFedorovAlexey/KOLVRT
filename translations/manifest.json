@@ -1,0 +1,135 @@
+{
+  "locales": {
+    "ru": {
+      "DOCUMENTATION.md": {
+        "source_sha256": "99665c959b5f6d9dced5a4f67bc42b0d1909bd021ab64d7632ea47c5b5db236f",
+        "translation_sha256": "98a24d1cc8fe0524a4e6361cce09c5026259254d67eae76c796183d3fb50c72b"
+      },
+      "README.md": {
+        "source_sha256": "c31dd43c37ed5e4d7e93949ab5c3c71ccc3c0f81b3c57633bfe6e4f513ae49ea",
+        "translation_sha256": "f5e36633de558db96b6c759f1973d24b7422312fc233d7d25c200b4589f9d82d"
+      },
+      "docs/architecture-decisions/0001-native-authority.md": {
+        "source_sha256": "3b5ec075252733bab70cc634cb0c33e41fc734d242b1899eb38c9c9963dc7b51",
+        "translation_sha256": "9b7a31c0026203879450041726175566956f1b3625899b14293513167819621d"
+      },
+      "docs/architecture-decisions/0002-stateful-routing.md": {
+        "source_sha256": "d303b20dd941deb3a3680f67404f7fe15e760ad213cc2476806e5b7e9f086a35",
+        "translation_sha256": "a15396ad425af53616c02ef9a291de2dea5d644d2297abf1ffa6cfca3a11824a"
+      },
+      "docs/architecture-decisions/0003-profiles.md": {
+        "source_sha256": "c1d738a2b6c380002991026c267ff5f2960761bf6f193649f46e95a5d783982b",
+        "translation_sha256": "3805be045945f26d0ba64cb2689df837e6afd97365d7a3211bf9cd147840fa75"
+      },
+      "docs/architecture-decisions/0004-unsafe.md": {
+        "source_sha256": "f020677a9dd9d518c0d8150a085f05af192b92b4e28b65d115a4aba3032d6cdc",
+        "translation_sha256": "96da4e3acca60bea2cc69aa63ab1cc9e3d44aa747e41e26bca61e0c27c34ae6c"
+      },
+      "docs/architecture-decisions/0005-platform.md": {
+        "source_sha256": "4a29d9aa7e25aecc44bae9a96a5cbcc23f649cf2252d588c1418f318d0330f15",
+        "translation_sha256": "e5cdc582a44892c710e11af08b90c3f069d94f8aef51d81dadc52f183b4d7fbc"
+      },
+      "docs/architecture-decisions/0006-metrics.md": {
+        "source_sha256": "e8d0b9235cc6ccf4b3040cf880b74702d5e736fbd73f97bb570f738b2ae30b91",
+        "translation_sha256": "7b1b10e0794f460022cd03c43b7562cb7a1dac5d4f36c184b737b9872ed9056e"
+      },
+      "docs/architecture-decisions/0007-bug-compat.md": {
+        "source_sha256": "0b132042ea5eeedae7f7758de36ee8fec695c336f7ae4ea0f073497399667cb3",
+        "translation_sha256": "3249e0cc2a2d1f5cf1f71cd8ef34b7249a3f13f5f24d597afbb52d5ffdc7f4d5"
+      },
+      "docs/architecture-decisions/0008-placement.md": {
+        "source_sha256": "d8428c16d881af2d1ed37a069d3eddaa008429614757f3d9df13db05d7664675",
+        "translation_sha256": "c40ed0c78b3f9b60437161e97a6019e6141889b3fb7e5c0163185271db42bc3b"
+      },
+      "docs/architecture-decisions/README.md": {
+        "source_sha256": "b9c83b9ee6d9128a155497b73ea0cdb72796d26cdf4808e7120a850fed42cb76",
+        "translation_sha256": "c697abd3a8fc102bdf219e07bb683e6fae7e634ee33a3e458378a4fb72dc18a8"
+      },
+      "docs/architecture/KERNEL_LAWS.md": {
+        "source_sha256": "ce4027ab01d8beddde072c9483e05e5a025961c5d5a9845623142e96e1650ecb",
+        "translation_sha256": "679c6038bc985e7c535d1e102acc65d11fc0ebc42478d59282064f525c18f2e2"
+      },
+      "docs/architecture/LAW_REVIEW.md": {
+        "source_sha256": "5b992ddde011f553e5d5c573cf9ebe2029e2179c2e93dc2d1120ee8419404a4b",
+        "translation_sha256": "9cd6912ef26ef1901c26ca30d8fc2a83ffa2b306dbc13a8a5c12e87a0b6481d2"
+      },
+      "docs/architecture/benchmarking.md": {
+        "source_sha256": "d0737bbb2bfa181d605b6790a921df6862b81cfb3ab24f2948dd3071bcbd9a30",
+        "translation_sha256": "3dd584b8a9cbd800678b455b935521371671ca6884a67cda093d01d01697b753"
+      },
+      "docs/architecture/compatibility-model.md": {
+        "source_sha256": "4dddd4c0eb0f07a64818304e804dff1a4bdf290f251691926e2a78997e377db7",
+        "translation_sha256": "5d7aa8a14d5d4edba175c3af544b2f98d2afa4dd585bcbc49fd9f66b5b43a1fc"
+      },
+      "docs/architecture/diagnostics.md": {
+        "source_sha256": "5f1880a9676654d63000317b022f4424e46ab525c15b494f00d1415b261a51dd",
+        "translation_sha256": "7373d9b6b4cce0c4c09359388b5e4fec1dcb9c81a579c85a3b8b34f13a33b21d"
+      },
+      "docs/architecture/execution-profiles.md": {
+        "source_sha256": "6ec747b8e0f869791d72876a8c8c1ffaff9982e978ed5f2cbeefe4225b833645",
+        "translation_sha256": "79189afeb8e30c7d4eb23e88ff4554a52f7228891d7de7fa97b147a028405770"
+      },
+      "docs/architecture/native-model.md": {
+        "source_sha256": "b55069ace01d24dd88af1cdea49ecfc73a6d9cba3cddf1989214f00885642bd8",
+        "translation_sha256": "9d2e0390a4232f219e0103f55a23c95892d28d0c49b6ff78bc3dee2443232ca3"
+      },
+      "docs/architecture/routing-model.md": {
+        "source_sha256": "11834afa9adf4f4d40caec00794d4a69549bfc3eb94b159b327b15055449fb00",
+        "translation_sha256": "aa8a7cab97ffa3cd5f3c70d384df844777be4b04a0f7aefe67bbbc7a220f2f56"
+      },
+      "docs/architecture/unsafe-policy.md": {
+        "source_sha256": "e48c50cfd2365f73c9bc28aa7e0f2b7d481abd984c82095d5a2dfebf012995f8",
+        "translation_sha256": "7a40aa9d1779fe6b915f376becaa9a2ed617b006f3da7a793061b0494fd5c14f"
+      },
+      "docs/research/CASE_INDEX.md": {
+        "source_sha256": "228851befe4c70635c119bca1ae565d05ade9f72cc9de85b0cd487a3a90e6258",
+        "translation_sha256": "5c424ea6378f1ed8f7e989d81a4c84ee15bf296de163b411891ad1be42e1e1fb"
+      },
+      "docs/research/OPEN_QUESTIONS.md": {
+        "source_sha256": "035fd7863e20693d36bf1b195a32dfde04da3c8143758dd9f4b2ffd420af1d51",
+        "translation_sha256": "f439c21ad86cb5e451a2196bfcd6d53cb54fc68b2550149c31047bbeef445644"
+      },
+      "docs/research/PHASE_0_1_REPORT.md": {
+        "source_sha256": "de4a2a5d761bb573e80de095b2cebd36c2efc7efbb0b09352969b1da5b7808d2",
+        "translation_sha256": "bd05f90f66241985c91ddacf66dcf6471be81e2f3957da6acc4080b83fb963bc"
+      },
+      "docs/research/PHASE_0_2.md": {
+        "source_sha256": "07ad71884f3be04e9f818571c3348942fba99bd50689e3b066419f60fcd41425",
+        "translation_sha256": "cce83daf2ae9c96125a909c2232e49604a565d5517a95f5af0482164f5408c4f"
+      },
+      "docs/research/RESEARCH_METHOD.md": {
+        "source_sha256": "b73fc1c6accae3c45550c83b315e4c880ce08465f9dec3171ad07f2fd4de0ac8",
+        "translation_sha256": "dc5e78ab733b1f49a97c265df4bae4c0ab77ddf3956bad641e3a61d024f8b268"
+      },
+      "docs/vision.md": {
+        "source_sha256": "41074b092a300ab201125d6f3ca3269d9fd987f1db786ceb5aab2368e1422a28",
+        "translation_sha256": "39bb58290e42754fda4bcfc11f5c2af2c5df0d18d0488b62696d1e736b7d0103"
+      },
+      "research/other-systems/COMPARISON.md": {
+        "source_sha256": "13701ba2b1c25b9f516492144ba9c7eb090d0f03c1e7c3036eed8445e35e94aa",
+        "translation_sha256": "aabfb2853d38d9e54f6f96d52b547574fe8dfb2c85161708c615b11c9a184294"
+      },
+      "research/pathology/README.md": {
+        "source_sha256": "df53edee1d0c9bbbc677112623a9cda6dabdd80955d83eda81ea608e832da225",
+        "translation_sha256": "6f720b9db36e942279195701ba7b9c6cfaccf9ec7f4bf896965f70f8bb9675bd"
+      },
+      "research/reference-analysis/COVERAGE.md": {
+        "source_sha256": "7c8aa4c9f2c64c016bb3a8b18bdd28a62484a3e92b1f927e2894bb73a53e52a5",
+        "translation_sha256": "92b8755a0c72122c6efafa5cbfc7b84eeb88cee1c52833c7c4531936060097d6"
+      },
+      "research/sources/README.md": {
+        "source_sha256": "1a3ac05c3ef42e2c1e4b809003ed77d0d1f80b525b4857707d9fb22f84d17d7a",
+        "translation_sha256": "58b73072831dada43ab51d72a0311cf9fb2e6656ce7de5d39e0e6667fb5bdea6"
+      },
+      "schemas/pathology/README.md": {
+        "source_sha256": "aebdf2b3e9fe0f0681419f09a8bd9901c7cf8c0719c4d42de0e84b7bbdf6e0f7",
+        "translation_sha256": "29b79e308845af95c0587a2c8f5a21da03c3c3ce07562dfe22c24045c2676200"
+      },
+      "tools/research-checks/README.md": {
+        "source_sha256": "fc6b5fce58cb5cd8374d3ed8e9d680045c362041e560218e7380ec541f39cc02",
+        "translation_sha256": "f39693c5d73c63d64c301b8a7d09404303cd0420572a34a3f8f2e44c24e49a14"
+      }
+    }
+  },
+  "source_language": "en"
+}

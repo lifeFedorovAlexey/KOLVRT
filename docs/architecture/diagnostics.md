@@ -1,56 +1,51 @@
-# Dependency diagnostics: vector вместо искусственного score
+# Compatibility dependency diagnostics
 
-Единственное число не определяет степень зависимости: редкий compat call может быть
-необходим для boot, а миллионы дешёвых переводов могут занимать мало CPU. Call share,
-CPU share, memory и возможность удалить module — разные свойства. Не суммировать их
-с произвольными весами и не называть качество приложения.
+Do not collapse dependency into an arbitrary weighted score. A rare compatibility call
+can be mandatory for startup, while frequent translations can consume little processor
+time. Call shares, execution cost, retained memory and module removability are distinct.
+The diagnostics describe dependence, not application quality.
 
-Для каждого consumer, route generation и observation window показывать:
+## Measurement contract
 
-- Declared required modules и version/digest, transitive dependency graph, active bindings,
-  unique consumer count и consumers с пока ненаблюдавшимися paths.
-- `C_native` и `C_compat`: внешние admitted API operations по входному binding; completed,
-  failed, cancelled и in-flight отдельно. Calls adapter -> native backend не считаются
-  новыми внешними native calls.
-- `compat_call_share = C_compat / (C_native + C_compat)`; при нулевом знаменателе unknown.
-  Native share — complement только при полной классификации выбранного scope.
-- Exclusive CPU time по execution domain: compat adapter, native backend, consumer,
-  unattributed. Compat CPU share имеет явно выбранный denominator, например всё
-  attributable service CPU; native backend под compat учитывается как native backend,
-  но request route остаётся compat. Это не «доля native приложения».
-- Wall latency по request route, throughput, allocations/bytes, private/shared/pinned
-  footprint, copies/bytes, context switches, lock contention, translations, serialization
-  и deserialization counts/bytes, syscall/API family frequency.
-- Coverage, sampling rate, dropped events, disabled counters, missing asynchronous
-  attribution и observation scope. Unknown не превращается в ноль.
+For each consumer, route generation and observation window report declared and transitive
+dependencies, loaded modules, active bindings, unique consumers and unobserved required paths.
+Count externally admitted native and compatibility operations separately from completed,
+failed, cancelled and in-flight operations. Adapter calls into the native backend are not
+additional external native operations.
 
-Асинхронные work items наследуют causal request/module IDs; shared work attribution
-указывает метод распределения или остаётся unattributed. Exclusive spans предотвращают
-double-count nested CPU; wall intervals разных requests могут перекрываться и не суммируются
-как время всего процесса. Вывод counters не раскрывает user payload или чужие credentials.
+Compatibility call share is compatibility admissions divided by all classified external
+admissions. A zero denominator is unknown. Native share is its complement only with full
+classification. Exclusive processor time distinguishes adapter, native backend, consumer
+and unattributed work. A compatibility request can use native backend time without becoming
+a native entry operation. State the processor-share denominator explicitly.
 
-## Текстовые состояния
+Also report latency, throughput, allocation count and bytes, private/shared/pinned memory,
+copies, context switches, lock contention, translations, serialization/deserialization
+and API frequency. Record scope, coverage, sampling, lost events and missing attribution.
+Asynchronous work inherits causal identifiers. Unassignable shared work stays unattributed.
+Nested spans must not duplicate processor time; overlapping wall times are not a process total.
+Do not expose foreign credentials or user payload through diagnostics.
 
-Это описательные labels поверх вектора, не универсальная ранжирующая шкала. Scope всегда
-назван: package declared dependency, process observed workload либо device binding.
+## Text states
 
-| Label | Доказательство | Цветовая подсказка |
+| State | Required evidence | Color hint |
 |---|---|---|
-| LEGACY | Consumer объявляет только legacy entry contracts, native contract не заявлен | brown |
-| COMPAT | Все используемые в полном scope entry families требуют adapter; native entry возможен вне scope | red |
-| MIXED | В scope есть native и compat routes; нижеописанный migration budget не задан/не выполнен | yellow |
-| MOSTLY_NATIVE | MIXED и выполнен явно заданный consumer migration budget по calls/CPU/dependencies с coverage | light green |
-| NATIVE | В объявленном support scope нет прямых/транзитивных software compat dependencies; coverage достаточен | green |
+| LEGACY | Only legacy entry contracts are declared; no native contract is declared | Brown |
+| COMPAT | Every used entry family in the complete observation scope requires an adapter | Red |
+| MIXED | Both routes occur; no declared migration budget is met | Yellow |
+| MOSTLY_NATIVE | Mixed routes meet an explicit consumer-specific multidimensional migration budget | Light green |
+| NATIVE | No direct or transitive software compatibility dependency in the stated support scope; sufficient coverage | Green |
 
-Приоритет классификации: недостаточные сведения -> `UNKNOWN` как дополнительный diagnostic
-status; затем NATIVE, затем LEGACY по manifest, затем COMPAT, затем MOSTLY_NATIVE либо MIXED.
-UNKNOWN не замещает пять обязательных состояний, а запрещает ложный вывод при missing data.
-Для fully stripped PROD возможен только declared-state label с явной пометкой, без
-выдуманных dynamic shares. MOSTLY_NATIVE требует опубликованных thresholds и rationale
-конкретного migration plan; общесистемного «95 баллов» не существует.
+Insufficient evidence produces an additional UNKNOWN state. Otherwise classify NATIVE,
+then manifest-defined LEGACY, then COMPAT, then MOSTLY_NATIVE or MIXED. Always identify
+whether the scope is a package declaration, observed process workload or device binding.
+Every color has a text label, values, units and confidence. Hardware workarounds form a
+separate dimension; they do not turn native applications into legacy applications.
 
-Hardware errata вынесены в отдельную ось `hardware_translations`: native consumer на
-неидеальном CPU не становится LEGACY приложением. Loaded, bound и called module counts
-различаются. Даже zero observed compat calls при declared dependency не дают NATIVE.
-Все цвета сопровождаются label, числом/единицей, scope и confidence. Faster compat path
-показывается без штрафа score. [Benchmark methodology](benchmarking.md) определяет сравнение.
+Fully stripped production can show declared dependencies, not invented dynamic shares.
+MOSTLY_NATIVE needs published thresholds and a rationale from that consumer's migration
+plan, not a universal marketing percentage. Zero observed calls cannot erase a declared
+dependency. Loaded, bound and called module counts differ. Report a faster compatibility
+implementation without a score penalty; use the [benchmark methodology](benchmarking.md).
+
+[Russian translation](../../translations/ru/docs/architecture/diagnostics.md)

@@ -1,59 +1,52 @@
-# Compatibility model v0.1
+# Compatibility model
 
-Compatibility module — самостоятельный adapter внешней семантики на текущий native
-contract. Его manifest содержит:
+A compatibility module translates an external semantic contract into the current native
+contract. It is a separately identifiable, replaceable, versioned and removable dependency. Such a module is justified only by a concrete KOLVRT consumer. Studying a foreign interface does not commit the project to supporting it.
 
-| Поле | Значение |
+| Manifest field | Obligation |
 |---|---|
-| behavior_id, semantic_version | Неизменяемое описание поддерживаемого поведения |
-| implementation_digest | Точный исполняемый artifact; patch update не меняет незаметно semantics |
-| owner, source_cases | Ответственность и обоснование из pathology |
-| input_protocol, native_contract | Поддерживаемые диапазоны, marshalling и errors |
-| required_rights, resource_limits | Минимальные grants, память, pins, queues |
-| state_domain, dependencies | Совместно владеемое состояние и transitively required modules |
-| security_boundary | Process isolation либо явно указанное выполнение в privileged domain |
-| metrics_id, consumer_identity | Атрибуция, lifetime counters, retention policy |
-| lifecycle, migration, removal | Drain, state conversion, rollback и критерии удаления |
+| Behavior identity and semantic version | Immutable definition of supported behavior |
+| Implementation digest | Exact executable artifact, independent of the semantic version |
+| Owner and source cases | Responsibility and engineering evidence |
+| Input and native protocols | Supported versions, encoding and errors |
+| Required rights and resource limits | Minimal grants and bounded memory, pins and queues |
+| State domain and dependencies | Shared state and transitive module requirements |
+| Security boundary | Actual isolation or explicitly privileged execution |
+| Metrics and consumer identity | Attribution, lifetime accounting and retention |
+| Migration and removal | Admission control, draining, conversion and rollback limits |
 
-Semantic version сравнивается по explicit compatibility matrix, не по предположению
-«больше — лучше». Решение resolver закрепляет точную пару version/digest. Две версии
-могут жить одновременно только при изолированном state либо доказанном interop.
-Цикл dependencies, unsupported operation и конфликтный route — явная ошибка до запуска.
+Version selection uses an explicit compatibility matrix, not a highest-version heuristic.
+A binding pins both semantic version and artifact digest. Versions can coexist only with
+separate state or proven interoperability. Dependency cycles and unsupported operations
+fail explicitly before use. A native-only build removes software compatibility modules
+and passes the same native contract tests. There is no kernel build yet in Phase 0.
 
-Native-only build исключает software compat modules вместе с их dependencies и проходит
-тот же native contract suite. Это требование к будущему build graph, не существующая
-kernel build: Phase 0.1 не содержит Cargo kernel crates.
+Legacy layouts, error conventions, syscall tables and historical state machines stay in
+adapters. They cannot add application-version branches to the scheduler, memory manager,
+filesystem core, hardware abstraction layer or native drivers. Adapters cannot add rights
+or bypass protection. Fork, signals, credentials, descriptors and shared synchronization
+may require one indivisible personality domain rather than independent call adapters.
 
-## Quarantine и hardware
+Hardware translation is separate. Firmware frontends produce validated native device
+descriptions. A silicon workaround can affect code generation or platform operations;
+it is not necessarily dynamically unloadable. Dropping a mandatory workaround drops
+the affected target. [Cortex-A53 843419](../../research/pathology/KOL-PATH-0011.json) is an example.
 
-Legacy layouts, errno rules, syscall tables, process-wide locks и старые protocol state
-machines принадлежат adapters. Нельзя добавлять в native scheduler, MM, VFS, HAL или
-driver `if old_application` ради них. Adapter не может расширять grants или выключать
-memory protection. Не всё переводится: Linux fork, signals, credentials, shared fd и
-futex state могут требовать целой personality domain.
+## Bug-compatibility lifecycle
 
-Hardware translation отдельно: старый DT/ACPI frontend преобразует входной descriptor;
-erratum module может преобразовывать codegen или операции platform backend. Если без
-workaround железо неправильно, удаление workaround одновременно исключает affected target.
-Это не нарушение native-only software build. Для Cortex-A53 843419 независимый динамически
-выгружаемый process shim вообще непригоден: [case 11](../../research/pathology/KOL-PATH-0011.json).
+1. Establish the cause, correct the native specification and add a regression test.
+2. Demonstrate an actual consumer of the old behavior before adding a module.
+3. Prove that the retained semantics does not weaken native security or ownership.
+4. Assign a separate behavior identity, explicit opt-in and conformance fixture.
+5. Provide migration instructions and equivalent-workload measurements.
+6. Publish a support window before deprecation and account for affected consumers.
+7. Remove the implementation only after declared dependencies, active bindings and
+   in-flight state are gone and observation coverage is sufficient.
 
-## Bug-compat lifecycle
+Dormant packages and offline recovery tools remain relevant even with no recent calls.
+Keep a registry tombstone after implementation removal so an old manifest receives an
+understandable error. The lifecycle is `Available -> Bound -> Draining -> Unbound -> Removable`.
+Unloading bound or draining code is forbidden. Rollback is guaranteed only before an
+irreversible effect; later failures require explicit recovery rather than blind retries.
 
-1. Root cause, исправленный native contract и regression test фиксируются вместе.
-2. Определяется реальный consumer старой семантики; гипотетическая совместимость не повод писать модуль.
-3. Security review проверяет выразимость старого поведения без ослабления native invariants.
-4. Безопасное поведение получает отдельный bug-compat ID, fixture и opt-in manifest.
-5. Consumers получают migration guide и A/B measurement с semantic oracle.
-6. Module становится deprecated только с явным support window и уведомлением consumers.
-7. Удаление требует нуля declared зависимостей в support scope, достаточного observation
-   coverage, отсутствия in-flight state и успешного native-only build.
-
-Отсутствие recent calls не равно отсутствию consumers: offline packages, dormant paths и
-recovery tools должны учитываться. Registry хранит definition и tombstone даже после
-удаления implementation, чтобы старый manifest получал понятную ошибку.
-
-Пример жизненного цикла — модель, не реализованный loader:
-`Available -> Bound -> Draining -> Unbound -> Removable`.
-Unload во время Bound/Draining запрещён. Ошибка миграции возвращает старый route только
-до irreversible side effect; после него требуются recovery/explicit failure, не blind retry.
+[Russian translation](../../translations/ru/docs/architecture/compatibility-model.md)

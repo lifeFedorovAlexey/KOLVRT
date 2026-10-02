@@ -1,0 +1,287 @@
+{
+  "previous_revision": "ebdbbd3",
+  "previous_ids": [
+    "LAW-001",
+    "LAW-002",
+    "LAW-003",
+    "LAW-004",
+    "LAW-005",
+    "LAW-006",
+    "LAW-007",
+    "LAW-008",
+    "LAW-009",
+    "LAW-010",
+    "LAW-011",
+    "LAW-012",
+    "LAW-013",
+    "LAW-014",
+    "LAW-015",
+    "LAW-016",
+    "LAW-017",
+    "LAW-018",
+    "LAW-019",
+    "LAW-020",
+    "LAW-021",
+    "LAW-022",
+    "LAW-023",
+    "LAW-024",
+    "LAW-025",
+    "LAW-026",
+    "LAW-027",
+    "LAW-028",
+    "LAW-029",
+    "LAW-030",
+    "LAW-031",
+    "LAW-032",
+    "LAW-033",
+    "LAW-034",
+    "LAW-035",
+    "LAW-036",
+    "LAW-037",
+    "LAW-038",
+    "LAW-039",
+    "LAW-040"
+  ],
+  "dispositions": [
+    {
+      "previous": "LAW-001",
+      "target": "LAW-001",
+      "reason": "Compatibility requirements must remain removable without freezing internal design.",
+      "reason_ru": "Требования совместимости должны оставаться удаляемыми, не замораживая внутреннюю архитектуру."
+    },
+    {
+      "previous": "LAW-002",
+      "target": "LAW-001",
+      "reason": "Compatibility requirements must remain removable without freezing internal design.",
+      "reason_ru": "Требования совместимости должны оставаться удаляемыми, не замораживая внутреннюю архитектуру."
+    },
+    {
+      "previous": "LAW-003",
+      "target": "LAW-003",
+      "reason": "A migration can involve only part of a workload.",
+      "reason_ru": "Переход может затрагивать лишь часть нагрузки."
+    },
+    {
+      "previous": "LAW-004",
+      "target": "LAW-004",
+      "reason": "An implementation update and a semantic change are different events.",
+      "reason_ru": "Обновление реализации и изменение поведения — разные события."
+    },
+    {
+      "previous": "LAW-005",
+      "target": "LAW-005",
+      "reason": "Call-level independence cannot be assumed from API names.",
+      "reason_ru": "Независимость вызовов не следует из названий интерфейсов."
+    },
+    {
+      "previous": "LAW-006",
+      "target": "LAW-008",
+      "reason": "Changing behavior or code does not erase existing state or consumers.",
+      "reason_ru": "Изменение поведения или кода не уничтожает существующее состояние и потребителей."
+    },
+    {
+      "previous": "LAW-007",
+      "target": "LAW-008",
+      "reason": "Changing behavior or code does not erase existing state or consumers.",
+      "reason_ru": "Изменение поведения или кода не уничтожает существующее состояние и потребителей."
+    },
+    {
+      "previous": "LAW-008",
+      "target": "LAW-008",
+      "reason": "Changing behavior or code does not erase existing state or consumers.",
+      "reason_ru": "Изменение поведения или кода не уничтожает существующее состояние и потребителей."
+    },
+    {
+      "previous": "LAW-009",
+      "target": "LAW-009",
+      "reason": "Compatibility mechanisms operate within the same protection contract.",
+      "reason_ru": "Механизмы совместимости действуют внутри того же контракта защиты."
+    },
+    {
+      "previous": "LAW-010",
+      "target": "LAW-004",
+      "reason": "An implementation update and a semantic change are different events.",
+      "reason_ru": "Обновление реализации и изменение поведения — разные события."
+    },
+    {
+      "previous": "LAW-011",
+      "target": "LAW-018",
+      "reason": "Neither a convenient data layout nor an earlier check proves that later access is valid.",
+      "reason_ru": "Ни удобный формат данных, ни более ранняя проверка не доказывают допустимость последующего доступа."
+    },
+    {
+      "previous": "LAW-012",
+      "target": "LAW-018",
+      "reason": "Neither a convenient data layout nor an earlier check proves that later access is valid.",
+      "reason_ru": "Ни удобный формат данных, ни более ранняя проверка не доказывают допустимость последующего доступа."
+    },
+    {
+      "previous": "LAW-013",
+      "target": "LAW-013",
+      "reason": "Visibility, ownership and storage reclamation are distinct lifecycle properties.",
+      "reason_ru": "Видимость, владение и освобождение хранилища — разные свойства жизненного цикла."
+    },
+    {
+      "previous": "LAW-014",
+      "target": "LAW-013",
+      "reason": "Visibility, ownership and storage reclamation are distinct lifecycle properties.",
+      "reason_ru": "Видимость, владение и освобождение хранилища — разные свойства жизненного цикла."
+    },
+    {
+      "previous": "LAW-015",
+      "target": "LAW-013",
+      "reason": "Visibility, ownership and storage reclamation are distinct lifecycle properties.",
+      "reason_ru": "Видимость, владение и освобождение хранилища — разные свойства жизненного цикла."
+    },
+    {
+      "previous": "LAW-016",
+      "target": "LAW-013",
+      "reason": "Visibility, ownership and storage reclamation are distinct lifecycle properties.",
+      "reason_ru": "Видимость, владение и освобождение хранилища — разные свойства жизненного цикла."
+    },
+    {
+      "previous": "LAW-017",
+      "target": "LAW-013",
+      "reason": "Visibility, ownership and storage reclamation are distinct lifecycle properties.",
+      "reason_ru": "Видимость, владение и освобождение хранилища — разные свойства жизненного цикла."
+    },
+    {
+      "previous": "LAW-018",
+      "target": "LAW-018",
+      "reason": "Neither a convenient data layout nor an earlier check proves that later access is valid.",
+      "reason_ru": "Ни удобный формат данных, ни более ранняя проверка не доказывают допустимость последующего доступа."
+    },
+    {
+      "previous": "LAW-019",
+      "target": "LAW-018",
+      "reason": "Neither a convenient data layout nor an earlier check proves that later access is valid.",
+      "reason_ru": "Ни удобный формат данных, ни более ранняя проверка не доказывают допустимость последующего доступа."
+    },
+    {
+      "previous": "LAW-020",
+      "target": "LAW-020",
+      "reason": "External agents outlive ordinary call scopes and observe memory independently.",
+      "reason_ru": "Внешние участники переживают обычную область вызова и наблюдают память независимо."
+    },
+    {
+      "previous": "LAW-021",
+      "target": "LAW-020",
+      "reason": "External agents outlive ordinary call scopes and observe memory independently.",
+      "reason_ru": "Внешние участники переживают обычную область вызова и наблюдают память независимо."
+    },
+    {
+      "previous": "LAW-022",
+      "target": "LAW-018",
+      "reason": "Neither a convenient data layout nor an earlier check proves that later access is valid.",
+      "reason_ru": "Ни удобный формат данных, ни более ранняя проверка не доказывают допустимость последующего доступа."
+    },
+    {
+      "previous": "LAW-023",
+      "target": "LAW-018",
+      "reason": "Neither a convenient data layout nor an earlier check proves that later access is valid.",
+      "reason_ru": "Ни удобный формат данных, ни более ранняя проверка не доказывают допустимость последующего доступа."
+    },
+    {
+      "previous": "LAW-024",
+      "target": "LAW-009",
+      "reason": "Compatibility mechanisms operate within the same protection contract.",
+      "reason_ru": "Механизмы совместимости действуют внутри того же контракта защиты."
+    },
+    {
+      "previous": "LAW-025",
+      "target": "LAW-025",
+      "reason": "Independent ledgers can each grant exclusive access or lose shared costs.",
+      "reason_ru": "Независимые реестры могут одновременно выдать исключительный доступ или потерять общие затраты."
+    },
+    {
+      "previous": "LAW-026",
+      "target": "LAW-026",
+      "reason": "A successful intermediate step does not establish the final guarantee.",
+      "reason_ru": "Успешный промежуточный шаг не устанавливает окончательную гарантию."
+    },
+    {
+      "previous": "LAW-027",
+      "target": "LAW-027",
+      "reason": "Relative priority has no useful meaning without its competition scope.",
+      "reason_ru": "Относительный приоритет не имеет полезного смысла без области конкуренции."
+    },
+    {
+      "previous": "LAW-028",
+      "target": "LAW-013",
+      "reason": "Visibility, ownership and storage reclamation are distinct lifecycle properties.",
+      "reason_ru": "Видимость, владение и освобождение хранилища — разные свойства жизненного цикла."
+    },
+    {
+      "previous": "LAW-029",
+      "target": "LAW-026",
+      "reason": "A successful intermediate step does not establish the final guarantee.",
+      "reason_ru": "Успешный промежуточный шаг не устанавливает окончательную гарантию."
+    },
+    {
+      "previous": "LAW-030",
+      "target": "LAW-030",
+      "reason": "Sequential waits do not implement atomic wait-any semantics.",
+      "reason_ru": "Последовательные ожидания не реализуют атомарное ожидание любого события."
+    },
+    {
+      "previous": "LAW-031",
+      "target": "LAW-031",
+      "reason": "Hardware and firmware constraints are real but must not become unbounded generic exceptions.",
+      "reason_ru": "Ограничения оборудования и прошивки реальны, но не должны становиться неограниченными общими исключениями."
+    },
+    {
+      "previous": "LAW-032",
+      "target": "LAW-031",
+      "reason": "Hardware and firmware constraints are real but must not become unbounded generic exceptions.",
+      "reason_ru": "Ограничения оборудования и прошивки реальны, но не должны становиться неограниченными общими исключениями."
+    },
+    {
+      "previous": "LAW-033",
+      "target": "LAW-031",
+      "reason": "Hardware and firmware constraints are real but must not become unbounded generic exceptions.",
+      "reason_ru": "Ограничения оборудования и прошивки реальны, но не должны становиться неограниченными общими исключениями."
+    },
+    {
+      "previous": "LAW-034",
+      "target": "LAW-001",
+      "reason": "Compatibility requirements must remain removable without freezing internal design.",
+      "reason_ru": "Требования совместимости должны оставаться удаляемыми, не замораживая внутреннюю архитектуру."
+    },
+    {
+      "previous": "LAW-035",
+      "target": "LAW-035",
+      "reason": "Instrumentation can alter timing but must not implement correctness.",
+      "reason_ru": "Измерительные средства меняют время, но не должны обеспечивать корректность."
+    },
+    {
+      "previous": "LAW-036",
+      "target": "LAW-036",
+      "reason": "A dependency label or favorable average cannot establish cost or correctness.",
+      "reason_ru": "Метка зависимости или выгодное среднее не устанавливают стоимость или корректность."
+    },
+    {
+      "previous": "LAW-037",
+      "target": "LAW-036",
+      "reason": "A dependency label or favorable average cannot establish cost or correctness.",
+      "reason_ru": "Метка зависимости или выгодное среднее не устанавливают стоимость или корректность."
+    },
+    {
+      "previous": "LAW-038",
+      "target": "LAW-036",
+      "reason": "A dependency label or favorable average cannot establish cost or correctness.",
+      "reason_ru": "Метка зависимости или выгодное среднее не устанавливают стоимость или корректность."
+    },
+    {
+      "previous": "LAW-039",
+      "target": "LAW-018",
+      "reason": "Neither a convenient data layout nor an earlier check proves that later access is valid.",
+      "reason_ru": "Ни удобный формат данных, ни более ранняя проверка не доказывают допустимость последующего доступа."
+    },
+    {
+      "previous": "LAW-040",
+      "target": "LAW-040",
+      "reason": "A language choice or desired list length is not engineering evidence.",
+      "reason_ru": "Выбор языка или желаемая длина списка не являются инженерным основанием."
+    }
+  ]
+}

@@ -1,43 +1,47 @@
-# Unsafe policy
+# Rust implementation safety policy
 
-Safe Rust — default. Unsafe разрешён только для конкретного hardware/FFI/memory boundary,
-который невозможно выразить существующими safe abstractions. «Быстрее» без измерения и
-«удобнее» не основания. Safe code не доказывает отсутствие semantic races, deadlocks,
-resource exhaustion или ошибок foreign memory.
+This policy applies to the chosen Rust implementation. It is not a language-independent
+kernel law. Architectural obligations are valid lifetimes, permissions, initialization,
+ordering and reviewable proofs; another language must satisfy the same obligations using
+its own mechanisms.
 
-Каждый unsafe block, unsafe fn/trait impl, inline assembly и raw-pointer operation имеет
-минимальный scope и локальный `SAFETY:` comment со ссылкой на invariant ID. Будущий core
-crate использует `#![forbid(unsafe_code)]`, кроме явно одобренных boundary crates; в них
-`#![deny(unsafe_op_in_unsafe_fn)]`. Generated code и dependencies входят в аудит, а не
-исключаются как «чужие». Unsafe в macro expansion также учитывается.
+Safe Rust is the default. Unsafe is allowed only at a necessary hardware, foreign-interface
+or memory boundary that available safe abstractions cannot express. Convenience is not
+a justification; claimed speed requires measurement. Safe code alone does not prove
+freedom from semantic races, deadlocks, exhaustion or invalid foreign-memory assumptions.
 
-## Обязательная карточка invariant
+Keep each unsafe block minimal and attach a local `SAFETY:` comment with an invariant ID.
+Core crates use `#![forbid(unsafe_code)]` except approved boundary crates, which use
+`#![deny(unsafe_op_in_unsafe_fn)]`. Include dependencies, generated code, macro expansions,
+assembly and unsafe trait implementations in the inventory.
 
-| Поле | Требование |
+| Invariant record | Required information |
 |---|---|
-| ID, owner, source locations | Стабильная identity и ответственный reviewer |
-| Necessity | Почему safe implementation невозможна на этой границе |
-| Preconditions | Alignment, initialization, bounds, provenance, ownership, aliasing |
-| Temporal assumptions | Lifetime, interrupt/preemption context, CPU affinity, ordering |
-| External agents | DMA, device, firmware, userspace mutation, FFI callbacks |
-| Guarantees | Что получает safe caller; полный error/cancel/drop contract |
-| Proof boundary | Какие assumptions не проверяются Rust/compiler и чем подтверждены |
-| Tests | Negative cases, fault injection, model/litmus/hardware checks |
-| Review | Независимый review boundary и повторный review при изменении assumptions |
+| Identity and owner | Stable ID, source locations and responsible reviewer |
+| Necessity | Why a safe implementation is unavailable at this boundary |
+| Preconditions | Bounds, alignment, initialization, provenance, ownership and aliasing |
+| Temporal assumptions | Lifetimes, preemption, interrupt context, affinity and ordering |
+| External agents | Devices, firmware, foreign callbacks and mutable user memory |
+| Guarantees | Safe-caller contract including errors, cancellation and destruction |
+| Proof boundary | Assumptions outside language checks and supporting evidence |
+| Tests and review | Negative cases, failures, interleavings and independent boundary review |
 
-Нельзя формировать ссылку на volatile/MMIO или mutable user memory как на обычную Rust
-memory без доказательства reference validity. Volatile не является atomic и не заменяет
-barrier. `Send`/`Sync` impl требует отдельных SMP и interrupt proofs. `MaybeUninit` нельзя
-публиковать до инициализации всех observable bytes. Reused buffers заново задают flags.
-Drop не освобождает DMA memory, пока device может писать. Panic/unwind policy ещё требует ADR;
-никакая cleanup path не может полагаться на недоказанный unwind через interrupt/FFI.
+Volatile access is not atomic and does not replace a barrier. A `Send` or `Sync`
+implementation needs explicit multiprocessor and interrupt reasoning. Do not publish
+`MaybeUninit` contents before observable bytes are initialized. Reused buffers reset
+metadata. Destruction cannot free memory while a device may still access it. Panic and
+unwinding policy remains open; cleanup cannot assume unwinding across interrupts or
+foreign calls without a supported contract.
 
-Тестирование по границе: Miri применим только к поддерживаемому host-side коду; concurrency
-model checking — к моделируемым interleavings; QEMU — к platform integration; real hardware
-и Arm litmus — к ordering/errata. Ни один из них по отдельности не является proof всего ядра.
-Инструменты Miri/model checking в Phase 0.1 не запускались и не устанавливались.
+Use Miri for supported host-side code, concurrency models for represented interleavings,
+QEMU for integration and real hardware/litmus tests for ordering and silicon defects.
+None proves the whole kernel. These kernel checks have not been run in Phase 0.
+Pin the compiler and relevant reference revision before the first unsafe implementation.
 
-Основания: [Rust undefined behavior reference](https://doc.rust-lang.org/reference/behavior-considered-undefined.html),
-[Dirty Pipe](../../research/pathology/KOL-PATH-0008.json), [DMA](../../research/pathology/KOL-PATH-0010.json),
-[RCU](../../research/pathology/KOL-PATH-0022.json), [epoll lifetime](../../research/pathology/KOL-PATH-0030.json).
-Конкретная версия Rust compiler/reference должна быть закреплена перед первым unsafe implementation.
+Evidence: [Rust validity rules](https://doc.rust-lang.org/reference/behavior-considered-undefined.html),
+[buffer initialization](../../research/pathology/KOL-PATH-0008.json),
+[device ordering](../../research/pathology/KOL-PATH-0010.json),
+[reclamation](../../research/pathology/KOL-PATH-0022.json),
+[reference upgrade](../../research/pathology/KOL-PATH-0030.json).
+
+[Russian translation](../../translations/ru/docs/architecture/unsafe-policy.md)

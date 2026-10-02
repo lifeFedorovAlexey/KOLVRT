@@ -1,18 +1,11 @@
-# Schema v1
+# Case schema v1
 
-[case.schema.json](case.schema.json) — JSON Schema Draft 2020-12, закрытая структура:
-unknown properties запрещены. Все поля обязательны; неизвестные provenance values
-представляются null с объяснением, а не вымышленными датами и hashes.
+[case.schema.json](case.schema.json) uses JSON Schema Draft 2020-12 with a closed structure: unknown properties are rejected. All declared required fields must be present. Unknown provenance is null with an explanation, never an invented date or hash.
 
-Структурные проверки выполняет jsonschema. [validate.py](../../tools/pathology/validate.py)
-дополнительно проверяет ID uniqueness, filename, primary source, evidence references,
-даты, decision/compatibility consistency и наличие вопросов при неизвестной истории.
-`--minimum 30` — default для Phase 0.1, меньший порог допустим для isolated tooling tests.
-Пустая/несуществующая база не проходит проверку.
+The Rust [research checker](../../tools/research-checks/README.md) applies the schema with format validation and additionally checks unique keys and IDs, filenames, primary sources, evidence references, dates, decision/compatibility consistency and questions for unknown history. Phase 0.1 requires at least 30 research cases; this research deliverable count is unrelated to the number of kernel laws. Empty or missing databases fail.
 
-Enum decisions: NATIVE_FIX, COMPAT_ONLY, HARDWARE_TRANSLATION, ACCEPTED_TRADEOFF,
-RESEARCH_REQUIRED, NOT_APPLICABLE. Compatible behavior может требоваться только условно;
-CONDITIONAL не является обещанием его реализации.
+Decisions are NATIVE_FIX, COMPAT_ONLY, HARDWARE_TRANSLATION, ACCEPTED_TRADEOFF, RESEARCH_REQUIRED or NOT_APPLICABLE. CONDITIONAL compatibility is not a promise to implement it.
 
-При несовместимом изменении schema создать v2 migration ADR; не переписывать старые
-значения так, чтобы исчезло различие между unknown, false и not applicable.
+An incompatible schema change requires a v2 migration decision. Preserve the distinctions between unknown, false and not applicable.
+
+[Russian translation](../../translations/ru/schemas/pathology/README.md)

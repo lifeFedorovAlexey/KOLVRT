@@ -1,0 +1,49 @@
+# ADR-0006 — Dependency measurements and fair comparisons
+
+Status: **Accepted**. Date: 2026-10-02.
+
+## Context
+
+Call counts, CPU time and rare mandatory dependencies are not equivalent (cases 15, 21, 25).
+
+## Decision
+
+Publish a multidimensional vector, textual states, coverage and preregistered paired benchmarks; no universal score.
+
+## Alternatives
+
+A weighted 0–100 score; declaring native paths successful without evidence; comparing only means.
+
+## Why rejected
+
+Weights are arbitrary, declarations do not establish execution paths, and means hide tails and failures.
+
+## Consequences
+
+Store raw observations and attribution. MOSTLY_NATIVE requires consumer-specific migration budgets.
+
+## Compatibility impact
+
+Compatibility may be faster. Separate software dependency from hardware translation.
+
+## Performance impact
+
+Measure observer cost with instrumentation on and off. Unsupported counters are unavailable.
+
+## Security impact
+
+Limit tracing permissions, memory and payload collection.
+
+## Testing
+
+Test zero denominators, nested-call double counting, event loss, censored latency and missing counters.
+
+## Reversibility
+
+Add dimensions through versioned schemas without rewriting old observations.
+
+## Evidence
+
+[Cases and sources](../research/CASE_INDEX.md); [other systems](../../research/other-systems/COMPARISON.md).
+
+[Russian translation](../../translations/ru/docs/architecture-decisions/0006-metrics.md)

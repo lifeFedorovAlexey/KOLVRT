@@ -1,32 +1,31 @@
 # Phase 0.2 research backlog
 
-Phase 1 не начинается автоматически. Порядок ниже выбран по dependencies; это
-исследовательские задачи с проверяемым output, а не обещание написать ядро следующей командой.
+Phase 1 does not start automatically. Tasks are ordered by dependency and require verifiable outputs.
 
-| Приоритет | Работа | Deliverable / критерий принятия |
-|---|---|---|
-| P0 | Углубить cases 07, 08, 30 | Полные introducing/fix/revert hashes, release intervals, isolated fail/pass replay и negative control |
-| P0 | Threat model | Trust boundaries: malicious app/adapter/driver/device/firmware; explicit TCB и failure domains |
-| P0 | Routing state model | Resolver specification + executable host model: conflicts, no downgrade, drain, generation, shared handles |
-| P0 | Shared ownership model | File/lock/wait/credential consistency и counterexamples для незаконного API splitting |
-| P0 | Platform contract research | Arm architecture/GIC/timer/MMU/SMP и VirtIO spec clauses; Linux сравнение, реальные invariants |
-| P0 | Pin environment | Rust/LLVM/linker/QEMU versions, machine/CPU/accelerator manifest; пока без kernel implementation |
-| P1 | Placement experiment | Два законченных host prototypes одной request semantics, IPC и in-process; не fake syscall layer |
-| P1 | Native ABI v0 candidate | Wire encoding, handles, errors, cancellation, deadlines; compatibility matrix и decoding fuzz corpus |
-| P1 | Memory model | COW, DMA leases, user-copy, pin quotas, retirement; litmus/model failures и proofs границ |
-| P1 | Bug-compat lifecycle | Real consumer manifest examples, tombstone/migration policy, native-only dependency checker prototype |
-| P1 | Telemetry experiment | Causal attribution, nested CPU, lost events и unavailable states; overhead ON/OFF на host workload |
-| P1 | Full provenance | Pinned official docs revisions, hashes и retrieval records; проверить все null first versions |
-| P1 | Missing historical candidates | arm64 set_fs removal; futex PI CVE-2014-3153; изучить primary commits до включения cases |
-| P2 | Расширение Linux coverage | io_uring lifetime, signal restart semantics, SysV IPC, TCP/netfilter, LSM, filesystem durability, EEVDF/RT |
-| P2 | Hardware debt audit | Найти подтверждённый случай workaround после исчезновения supported hardware; не выводить его из возраста кода |
-| P2 | Other-system postmortems | По одному конкретному failure/fix или migration case для Starnix, Redox, seL4, Theseus, WSL1, Asterinas |
-| P2 | Re-evaluate optional compatibility | Нужны ли sysctl obsolete/time32/mandatory behaviors реальным consumers; не писать unused adapters |
+Apply the [research decision filter](RESEARCH_METHOD.md) before starting each item. First establish the native workload, its correctness oracle and platform constraints. Deep historical replay, compatibility, routing and telemetry work become immediate priorities only when they resolve a concrete uncertainty blocking that deliverable; otherwise defer them. The table is an investigation backlog, not a mandatory feature list.
 
-Для каждого эксперимента preregister correctness oracle, sample policy и artifacts.
-Нет требования доказать, что native быстрее. Если результат отвергает ADR assumption,
-пересмотреть ADR и laws, сохранив историю и причину изменения.
+| Priority | Work and acceptance evidence |
+|---|---|
+| P0 | Deepen cases 07, 08 and 30: complete commit chains, release intervals, isolated failing/passing replay and negative controls. |
+| P0 | Threat model: malicious application, adapter, driver, device and firmware; explicit trusted base and failure domains. |
+| P0 | Executable routing model: conflicts, no downgrade, draining, generations and shared handles. |
+| P0 | Shared ownership: file, lock, wait and credential consistency; counterexamples to invalid family splitting. |
+| P0 | Platform contracts: pinned Arm and VirtIO specifications, invariants and Linux comparisons. |
+| P0 | Kernel environment manifest: Rust, LLVM, linker, QEMU, machine, CPU and accelerator; no kernel implementation yet. |
+| P1 | Placement: complete in-process and IPC host prototypes with identical request semantics. |
+| P1 | Native ABI candidate: encoding, handles, errors, cancellation and deadlines; compatibility matrix and decoding fuzz corpus. |
+| P1 | Memory model: copy-on-write, DMA leases, user-copy, pin quotas and retirement; boundary arguments and failing models. |
+| P1 | Bug compatibility lifecycle: real consumer manifests, retirement records and a native-only dependency-checker prototype. |
+| P1 | Telemetry: causal attribution, nested CPU time, lost events, unavailable states and observer cost with instrumentation on/off. |
+| P1 | Provenance: pinned documentation revisions, hashes, retrieval records and unknown first versions. |
+| P1 | Read primary commits before admitting arm64 set_fs removal or futex PI CVE-2014-3153 as cases. |
+| P2 | Extend Linux coverage: io_uring lifetimes, signal restart, SysV IPC, TCP/netfilter, LSM, durability and EEVDF/RT. |
+| P2 | Find evidence of a workaround outliving all supported affected hardware; age alone is not evidence. |
+| P2 | Study one concrete failure, fix or migration for Starnix, Redox, seL4, Theseus, WSL1 and Asterinas. |
+| P2 | Reassess actual consumers of obsolete sysctl, time32 and mandatory locking before implementing optional adapters. |
 
-Gate к обсуждению Phase 1: принятый threat model, platform/unsafe contracts, объяснённые
-state boundaries, минимальный native ABI candidate и решённый scope первого vertical
-slice. Phase 0.1 validation сам по себе этот gate не открывает.
+Preregister correctness oracles, sampling policy and artifacts for experiments. Native paths need not win. If evidence rejects an assumption, revise the decision and laws with a recorded reason.
+
+Before discussing Phase 1, accept a threat model, platform and safety contracts, explained state boundaries, a minimal native ABI candidate and the scope of the first vertical slice. Phase 0.1 validation does not satisfy this gate.
+
+[Russian translation](../../translations/ru/docs/research/PHASE_0_2.md)

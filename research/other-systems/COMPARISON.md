@@ -1,110 +1,53 @@
-# Другие системы: идеи, ограничения и применимость
+# Other systems: ideas, limits and applicability
 
-Дата: 2026-10-02. Это документальное сравнение; ни одна из систем локально не собиралась
-и не benchmarked. «Результат» ниже означает результат, описанный primary source. Отсутствие
-найденного failure report не означает отсутствие провалов. Metadata: [ledger](../sources/other-sources.json).
+Research date: 2026-10-02. This is a documentary comparison; none of these systems was built or benchmarked locally. Results mean results described by primary sources. Missing failure reports do not establish an absence of failures. See the [source ledger](../sources/other-sources.json).
 
 ## Fuchsia / Zircon / Starnix
 
-Starnix реализует Linux ABI в Fuchsia userspace program и переводит syscalls к Fuchsia
-subsystems; native Fuchsia продолжает использовать собственные interfaces. Это реальный
-архитектурный пример отделения personality от native kernel. [Starnix overview](https://fuchsia.dev/fuchsia-src/concepts/starnix).
+Starnix implements a Linux ABI in a Fuchsia userspace program while native Fuchsia retains its interfaces. Its scope includes process and file semantics, not just syscall numbers. [Overview](https://fuchsia.dev/fuchsia-src/concepts/starnix), [RFC-0082](https://fuchsia.dev/fuchsia-src/contribute/governance/rfcs/0082_starnix).
 
-RFC рассматривает исполнение немодифицированных Linux programs; объём эмуляции включает
-процессную и файловую семантику, а не только номера syscalls. [RFC-0082](https://fuchsia.dev/fuchsia-src/contribute/governance/rfcs/0082_starnix).
-Полезная идея для KOLVRT: отдельный semantic owner personality. Ограничение: boundary не
-устраняет state coupling, а ошибки personality всё ещё воздействуют на её consumers.
-Из источников нельзя вывести покрытие всех Linux programs или преимущество скорости.
-Конкретный failure postmortem и стоимость syscall transport остаются вопросами Phase 0.2.
-Не копировать Zircon object model без анализа нужных KOLVRT primitives.
+Apply separate ownership of compatibility semantics. This boundary does not remove state coupling or failures affecting consumers. The sources do not establish universal Linux coverage or a speed advantage. Study a concrete failure and syscall transport costs in Phase 0.2; do not import Zircon's object model without analyzing KOLVRT primitives.
 
 ## Redox OS
 
-Официальная книга описывает Rust microkernel, userspace drivers/services и scheme IPC.
-Она также прямо описывает пересмотр system-service interface и эволюцию security design;
-это пример того, что Rust не завершает архитектурное проектирование. [Redox goals, official mirror](https://github.com/redox-os/book/blob/master/src/our-goals.md).
+The official book describes a Rust microkernel, userspace drivers and services, and scheme IPC. It explicitly discusses service-interface revision and security-design evolution: Rust does not finish architectural design. [Official book mirror](https://github.com/redox-os/book/blob/master/src/our-goals.md).
 
-Полезная идея: resource protocols между kernel и сервисами. Результат, доступный этому
-исследованию: документированная работающая структура проекта, а не проверенная нами
-совместимость конкретного hardware. Ограничение: текущая схема и планы не равны immutable
-ABI. Изменение планов не следует называть security failure без postmortem. Для KOLVRT
-применим принцип явного IPC contract; namespace/file-like model не принимается автоматически.
-Нужно исследовать реальные scheme migration regressions и расходы recovery.
+Apply explicit resource protocols. The documented project structure is evidence, not locally verified hardware support. Current schemes and plans are not immutable ABI commitments. Changed plans alone do not prove security failure. Investigate scheme migration regressions and recovery costs; do not automatically adopt a file-like namespace model.
 
 ## seL4
 
-seL4 публикует конкретные verified configurations и наборы доказанных свойств для них.
-Объём assurance зависит от configuration/architecture; нельзя распространить его по
-названию проекта на произвольные drivers и applications. [Verified configurations](https://docs.sel4.systems/projects/sel4/verified-configurations.html).
+seL4 publishes verified configurations and properties. Assurance depends on architecture and configuration; it does not automatically cover arbitrary drivers and applications. [Verified configurations](https://docs.sel4.systems/projects/sel4/verified-configurations.html).
 
-Полезная идея: proof boundary и explicit capability delegation. Реальный результат —
-опубликованная configuration-specific verification, не подтверждённый KOLVRT proof.
-Ограничение для нас: KOLVRT Rust/toolchain/driver assumptions потребуют собственных proofs.
-Обобщённый «провал seL4» источником не установлен. Применить discipline invariant ledger,
-не обещать formal verification всего ядра. Список trusted hardware/compiler assumptions
-и стоимость поддержания proofs нужно изучить отдельно до выбора verification plan.
+Apply explicit proof boundaries, capability delegation and an invariant ledger. KOLVRT's compiler, hardware and driver assumptions require separate arguments. The source establishes neither a general seL4 failure nor proof of KOLVRT. Study trusted assumptions and proof-maintenance costs before selecting a verification plan; do not promise whole-kernel verification.
 
 ## Theseus OS
 
-Проект исследует Rust intralingual design и перенос управления ресурсами в type system;
-заменяемость компонентов во время исполнения — заявленная цель. [Theseus book](https://www.theseus-os.com/Theseus/book/),
-[safe-language principles](https://www.theseus-os.com/Theseus/book/design/idea.html).
+Theseus investigates Rust intralingual design, type-system resource management and runtime component replacement. [Book](https://www.theseus-os.com/Theseus/book/), [design principles](https://www.theseus-os.com/Theseus/book/design/idea.html).
 
-Полезная идея: ownership и state structure как часть interface, а не только calling
-convention. Ограничение: typed code replacement не даёт автоматически semantic state
-conversion или isolation от unsafe code. Результат в нашем scope — опубликованный
-исследовательский design и implementation project; чисел performance здесь не приводим.
-Не установлено доказательство произвольного безопасного live swap всех subsystems.
-Для KOLVRT: quiescence и state migration должны быть явны, даже если Rust типы совпадают.
-Нужен разбор конкретного failure/recovery experiment из papers.
+Apply ownership and state structure as interface properties. Typed replacement alone does not prove semantic state conversion or isolation from unsafe code. The result here is a published design and implementation project, without verified performance numbers or a proof of arbitrary safe replacement. KOLVRT requires explicit quiescence and migration even with identical types. Study a concrete failure/recovery experiment.
 
 ## FreeBSD Linuxulator
 
-Историческая architecture article описывает per-executable ABI dispatch через sysentvec.
-Она содержит устаревшие i386/2.6-era детали, поэтому не является описанием всех текущих
-ports. [FreeBSD Linux emulation article](https://docs.freebsd.org/en/articles/linux-emulation/).
+The historical article describes executable ABI dispatch through sysentvec and includes old i386/2.6-era details. It is not a complete description of current ports. [Architecture article](https://docs.freebsd.org/en/articles/linux-emulation/).
 
-Конкретный инженерный случай: Q2 2023 report сообщает, что старый kern_alternate_path
-неправильно обрабатывал абсолютные symlink targets; alternate ABI root перенесли в
-name lookup facility. Это показывает конфликт между изоляцией pathname translation и
-полнотой общей path semantics. [Project report](https://www.freebsd.org/status/report-2023-04-2023-06/linuxulator/).
+The Q2 2023 report documents incorrect handling of absolute symlink targets by kern_alternate_path and moving alternate ABI roots into name lookup. This illustrates tension between isolated pathname translation and full path semantics. [Project report](https://www.freebsd.org/status/report-2023-04-2023-06/linuxulator/).
 
-Идея: executable personality binding. Ограничение: compatibility может требовать
-нового native primitive. KOLVRT должен обосновывать такой primitive универсальным
-контрактом (например, explicit lookup root), а не флагом «если Linux». Не копировать
-kernel-resident placement без TCB и latency анализа. Текущий compat coverage требует
-отдельного pinned conformance run.
+Apply executable compatibility binding. New native primitives, such as explicit lookup roots, need a general contract rather than a Linux-specific flag. Kernel-resident placement needs trusted-base and latency analysis. Current compatibility coverage requires a pinned conformance run.
 
 ## WSL1
 
-Microsoft описывает Pico processes и kernel-mode providers, переводящие Linux syscalls
-в NT operations; при отсутствии прямого mapping provider реализует дополнительную
-семантику. Fork — пример более сложной операции. Источник относится к исходной WSL
-архитектуре 2016 года, не WSL2. [WSL overview](https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview).
+Microsoft's 2016 overview describes Pico processes and kernel providers translating Linux syscalls into NT operations, with additional semantics when no direct mapping exists; fork is an example. It describes WSL1, not WSL2. [Overview](https://learn.microsoft.com/en-us/archive/blogs/wsl/windows-subsystem-for-linux-overview).
 
-Полезная идея: subsystem identity при dispatch, независимость native host API.
-Результат: запуск немодифицированных ELF64 Linux binaries описан разработчиками.
-Ограничение: translation не всегда one-to-one, а kernel-mode provider остаётся privileged.
-Нельзя объявить переход к другой архитектуре доказательством полного провала WSL1 по
-одному overview. Для KOLVRT применима честная декларация невыразимых operations;
-конкретные filesystem/signal fidelity gaps и benchmark evidence — отдельный research item.
+Apply explicit subsystem identity and an independent native host API. The developers describe unmodified ELF64 execution, but translation is not always one-to-one and providers remain privileged. An architecture transition alone does not establish total failure. Record inexpressible operations honestly and research filesystem/signal fidelity gaps and benchmark evidence separately.
 
 ## Asterinas
 
-Проект документирует Rust kernel с Linux ABI и OSTD как основу safe OS development;
-книга отмечает раннюю стадию. [Asterinas book](https://asterinas.github.io/book/).
+The book describes a Rust kernel targeting Linux ABI and OSTD as a foundation for safe OS development, while noting an early stage. [Book](https://asterinas.github.io/book/).
 
-Полезная идея: малый reviewed foundation для safe clients. Отличие от KOLVRT:
-Linux ABI у Asterinas — центральная цель, а у KOLVRT — optional personality.
-Результат в scope исследования — доступный проект и описанные interfaces; заявленную
-efficiency/security нельзя превращать в независимо подтверждённые числа. Провалы
-конкретной boundary abstraction этим источником не установлены. Следует проверить
-OSTD soundness assumptions и реальные bug fixes, не импортируя Linux-oriented core design.
+Apply a small reviewed foundation for safe clients. Linux ABI is a central Asterinas goal and an optional KOLVRT environment. The available project and interfaces are evidence; efficiency and security claims are not independently verified measurements. This source does not establish a concrete boundary failure. Examine OSTD soundness assumptions and actual fixes without importing Linux-oriented core design.
 
-## Выводы KOLVRT
+## KOLVRT conclusions
 
-Принять: отдельные semantic owners, capability-aware boundaries, typed lifetimes,
-configuration-specific claims и evidence для performance. Оставить открытыми: placement,
-native process primitives, state migration format и объём formal verification.
-[ADR-0008](../../docs/adr/0008-placement.md) не выдаёт выбор monolithic/microkernel за
-завершённый только потому, что один проект выглядит ближе по философии.
+Adopt explicit semantic ownership, authority-aware boundaries, typed lifetimes, configuration-specific claims and performance evidence. Keep placement, process primitives, migration formats and verification scope open. [The placement decision](../../docs/architecture-decisions/0008-placement.md) remains proposed; philosophical similarity alone does not select a kernel architecture.
+
+[Russian translation](../../translations/ru/research/other-systems/COMPARISON.md)
