@@ -32,7 +32,7 @@ Weighted security/debt score и выдуманные 10/20/40-family percentages
 
 Allocation-context COST-L-0001 — research candidate, а не implemented adapter proposal. Context-coupled locking/deferred work остаются dossiers для разделения по actual state/progress assumptions. DMA ownership — counterexample blanket legacy criticism: upstream guide уже задаёт map/unmap lifetime и barriers. Сохранить [решения по seeds](taxonomy.md).
 
-Issue #57 отвечает за полный adapter-versus-native-rewrite rubric и worked acceptance decisions; этот метод является input, а не дублирующей реализацией. Issue #55 отвечает за confirmed driver/debt graph edges. #45 остаётся открытым для configured/transitive и historical analysis. #59 рассматривает host grouping/crash containment после явного определения native service/device contracts; его prototype здесь не разрешён.
+[Критерии adapter/native и разобранные случаи VirtIO/USB](adapter-versus-native.md) дают начальное исследование #57, явные причины отклонения и условия пересмотра отложенной реализации. Issue #55 отвечает за confirmed driver/debt graph edges. #45 остаётся открытым для configured/transitive и historical analysis. #59 рассматривает host grouping/crash containment после явного определения native service/device contracts; его prototype здесь не разрешён.
 
 Benchmark contracts переиспользуют #49/#50 и существующий migration advisor. Сравнивать одинаковые useful results, authority, outcomes и lifetime; сохранять raw provenance и честно более быструю compatibility. Наблюдаемые source counts не являются costs. Linux Driver Host, driver port, physical inventory или runtime compatibility не реализованы.
 
