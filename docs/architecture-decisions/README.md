@@ -16,4 +16,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0012 — Multicore ownership and acknowledged retirement](0012-multicore-retirement.md) — Accepted for two-CPU QEMU.
 
+- [ADR-0013 — Effective authority and privileged necessity](0013-security-boundaries.md) — Accepted for boundary rules only.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

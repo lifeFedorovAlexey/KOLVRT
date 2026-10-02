@@ -84,21 +84,21 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Exercise timeout, outstanding callbacks, dormant dependencies and failure before and after irreversible effects.
 
-## LAW-009 — Authority cannot grow through translation
+## LAW-009 — Translation cannot expand effective authority
 
-**Rule:** Translation, identity mapping and delegation cannot increase native rights or bypass memory protection and quotas. Unsafe historical behavior is not a compatibility entitlement.
+**Rule:** For consumer C and operation O, EffectiveAuthority_via_compat(C,O) ⊆ NativeAuthorizedAuthority(C,O) in the applicable native authorization/revocation context. Translation, identity mapping and delegation cannot bypass memory protection, quotas or delegation restrictions. Service-private capabilities may differ from consumer capabilities but enable only caller-authorized objects and effects. Additional consumer grants require a separate native flow before admission, never compat issuance.
 
-**Rationale:** Compatibility mechanisms operate within the same protection contract.
+**Rationale:** Check caller effects rather than literal equality of service and consumer capability inventories, preventing confused deputies.
 
 **Historical evidence:** [KOL-PATH-0007](../../research/cases/KOL-PATH-0007.json), [KOL-PATH-0008](../../research/cases/KOL-PATH-0008.json), [KOL-PATH-0017](../../research/cases/KOL-PATH-0017.json), [KOL-PATH-0018](../../research/cases/KOL-PATH-0018.json)
 
-**Prevents:** Privilege gains disguised as old semantics.
+**Prevents:** Authority laundering disguised as compatibility or mediation.
 
-**Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
+**Allowed exceptions:** No compatibility exception may expand effective authority.
 
-**Enforcement:** Review rights transitions and grants at every adapter boundary.
+**Enforcement:** Review issuer, consumer, operation, scope and revocation context at every boundary; follow [ADR-0013](../architecture-decisions/0013-security-boundaries.md).
 
-**Testing:** Attempt nested delegation, group dropping and malicious legacy requests; authority must not increase.
+**Testing:** Sufficient and denied authority, missing grants, broader substitutes, nested adapters, other/private authority, restart/rebind, PROD, private disk and split/combined operations.
 
 ## LAW-013 — Explicit identity and lifetime ownership
 

@@ -1,5 +1,7 @@
 # Rust implementation safety policy
 
+Phase 0 statements below describe the historical stage. Current checks are bounded by the [SMP contract](../kernel/smp.md). An unsafe inventory is not a risk score; safe Rust and EL0 do not themselves exclude a component from TCB. Trust is property-specific in the [system threat model](../security/threat-model.md).
+
 This policy applies to the chosen Rust implementation. It is not a language-independent
 kernel law. Architectural obligations are valid lifetimes, permissions, initialization,
 ordering and reviewable proofs; another language must satisfy the same obligations using

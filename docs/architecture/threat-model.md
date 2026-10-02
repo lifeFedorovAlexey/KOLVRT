@@ -1,5 +1,7 @@
 # Threat and failure model
 
+This is the first native slice design model, not evidence of implemented isolation. The [system threat model](../security/threat-model.md) extends analysis to services, compat, devices and property-specific trust while preserving this narrower contract.
+
 The first native slice protects task memory, object identity, authority, bounded resource use and truthful outcomes. Its trust base consists of boot input selection, privileged memory/exception/interrupt code, object and quota arbiters, the scheduler and the supervisor's grant policy. Safe language use does not remove this trust base.
 
 ## Boundaries

@@ -1,5 +1,7 @@
 # Review of the initial kernel laws
 
+[ADR-0013](../architecture-decisions/0013-security-boundaries.md) clarifies LAW-009: constrain consumer effects with no compatibility waiver. Privileged necessity makes LAW-040, LAW-041 and LAW-042 concrete; the law count is unchanged.
+
 This records the initial consolidation into 17 obligations. The subsequent [coverage audit](law-audit.md) adds three independently justified laws; the active set now has 20.
 
 The initial list was shaped by a requested range and incorrectly enforced that range in tooling. That constraint is removed. This review groups requirements by independent architectural obligations rather than selecting another target count. IDs are retained, not renumbered to disguise consolidation.

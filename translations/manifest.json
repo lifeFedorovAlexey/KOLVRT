@@ -61,17 +61,21 @@
         "source_sha256": "36ab1a3271ba14d1cf1e21bdd25aaf580d5bae8d1b03f258cd86650ffdf67215",
         "translation_sha256": "5301903454b689e10193739d764cf134d88ead0021f5611c6a1c9707b685e6fb"
       },
+      "docs/architecture-decisions/0013-security-boundaries.md": {
+        "source_sha256": "f041b8ab06ab4146ee3c0ae5e872caa6f4e73204edd3f54d4ca907d7c01ae556",
+        "translation_sha256": "3edc9048430ee99a876789e928a3c2ebf2af326a11e1c92fdd37781605fa5348"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "2b3ff158879cc3040b5c6b460848f63576c9e93bfafba099b7cd2e03e5f0079f",
-        "translation_sha256": "a8bf2d83aca9d5b836a9ff20b63f6fc5cfe092cd48bdd3db4d1ad8d3ea09fc04"
+        "source_sha256": "34c9dba0b01ea37fd2f7135ebab938002eddf60e7f034704eb576e3711bcbb95",
+        "translation_sha256": "2af3cf1c1e4a1a9df7078a0d305ea07a4d37e652ceae28cbb8a679f021ccec01"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
         "translation_sha256": "a3663804370470d156dd9a698aa3ed92d567649ef0d03cf6cedef9ac18cf19e1"
       },
       "docs/architecture/compatibility-model.md": {
-        "source_sha256": "86b91e1897412ea1cc85a2a90c33bd51e7ae3de10bc76d2b17629af6e349ab4f",
-        "translation_sha256": "061196566074f47a52a291f602f682cf54452eaa69644204ceb9d57afa0936e8"
+        "source_sha256": "c76b9c0ec01e6dbc742309fdfa1b7cd2e57b644d54b3e2dc3a6302a6ec800494",
+        "translation_sha256": "d08486d3aaf731ebd708400d85ae99f307cbc4e4424c2a3c6e0eca46623be56f"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -89,25 +93,29 @@
         "source_sha256": "ea7e3d83ddd9817f821326accddfff777a68e8f133e3cbf9728ae84430f2166d",
         "translation_sha256": "e0de2fc8baea306d684a1624d084513e64e0756bb5cac9a40671f7356a9ff718"
       },
+      "docs/architecture/kernel-admission-policy.md": {
+        "source_sha256": "b1f9282451f67dd829d028c73a6a6a8c2b891e57620d3d68ce300ac8a5d350c9",
+        "translation_sha256": "d71dc83f28794c0c25f22b29edaa8f99c5e068f1d8c240af1ab8dffa34cfc1dd"
+      },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "d8ca93512a263d0b36e1c347755c0cef8e18306896708008a12c509b1f1ea731",
-        "translation_sha256": "433a6aa280434f31c9a9bc70b975c9412bfe385514581e74b438c6f3052dcadd"
+        "source_sha256": "484f9e783225d58b82ce0741591fd223c8fa6bcb5f001d7a9b2340ed7ec30a44",
+        "translation_sha256": "93109d790f87700f701bc2e06fbdef585cc5513e800c2f53f284a71c24919f3d"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",
         "translation_sha256": "3a9ff0987cc77424032ae43ccde851057654ca8f6ab1522a280dc53a11f2c0f4"
       },
       "docs/architecture/law-review.md": {
-        "source_sha256": "ed5d48e72d5534bf392b58c01e6d94d07a906620168f968e87f9fcda4d91005a",
-        "translation_sha256": "eb857dad57324dd7489d32444238415a701b2f26bd82c766267455fc8827a673"
+        "source_sha256": "7f9813cc3e28644f721a544d0610256aaabc6539a990ca851e01514414b01414",
+        "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/native-abi.md": {
         "source_sha256": "7982d777a8e38af9800b29a794d65feb9713b0a8c15b116e63dd9f8c64373bc8",
         "translation_sha256": "11f4d68c7baeff6ff8978562aee5770d61b60c90caca102e8999e42266ac713f"
       },
       "docs/architecture/native-model.md": {
-        "source_sha256": "d2cde18ef95ae68958881cc24453a028630142ed37b30374dd408e356d92f4b1",
-        "translation_sha256": "b1729cc0f83dd231a693e09d7ea8a73df0ae039e3477cbfd4c8ffbfe9b189046"
+        "source_sha256": "24ea1e9c1bba7c5614def2efd07c2f2dbb898b1f51cf93739746abc509f46393",
+        "translation_sha256": "90b58ff05ec99f64f49c6c68ce717131232b7e7001daf2f42cb933d29c9135bf"
       },
       "docs/architecture/platform-contract.md": {
         "source_sha256": "c3bd6ff49af9614331074176b41f5556da2b0234dff4084eb57f11354a345feb",
@@ -117,13 +125,17 @@
         "source_sha256": "b93f71f7c9ccadab1c122ac73894257e1026769b14b5cbb2346ff7a2c9b0c812",
         "translation_sha256": "b0b2e7d89287ded3898c0995c2cb2106d845ab95945c32098d2f354b0f676974"
       },
+      "docs/architecture/security-reference-comparison.md": {
+        "source_sha256": "8f7e718793849940c93e63d159ec3d5f5cb750b50fa2225848b055080a65e346",
+        "translation_sha256": "2b3094724c88be40d15584f81e87a9401e3700d9b1d4b5d5482c058fffed6061"
+      },
       "docs/architecture/threat-model.md": {
-        "source_sha256": "9d252aeaafdeaa17872a0d9ffa2b5676fc3abad617cbeddd850deb84bc642064",
-        "translation_sha256": "2ddc9adad01096b7d0588f21a0fe275e971f4f73e59849b885a982bbb4b7eda0"
+        "source_sha256": "516e652a5641302ab8fb02fdaf5bc3a827f93c059422c965559ef210384aba88",
+        "translation_sha256": "347b050fd649a59c5a7bb0fdf587ab9e3aa65d363e9d1fc58cd04ad63759f8a5"
       },
       "docs/architecture/unsafe-policy.md": {
-        "source_sha256": "442308f9d168a2a0f77002252795061994d86cd5e54dd95f6b7d1029557d7577",
-        "translation_sha256": "617d28e0f051226a445d9fb86c96a7de6a42213fd66240ded7908daeba404b25"
+        "source_sha256": "c80c0a16d7ef2b83b9db3157e2f711e6026f9a7f7df32ef97554e6e27e02ab7b",
+        "translation_sha256": "ed688d38ddc0ad3b990e02a17758a90afb55c7659889a2300297e1629433762c"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "e9ba6080161498819182c867d8f14234f93096a7bb7ce7382bf9c4e3e634efd8",
@@ -217,6 +229,14 @@
         "source_sha256": "7246dc6da8586f9fd232bf15a80ce89fbbb4da7cd31a37ecd90f0ef99a55e7e6",
         "translation_sha256": "323eb1128a38f8a4dabe7a83a54f62e9b81a25de91192551501761d1fccae378"
       },
+      "docs/security/inspection-model.md": {
+        "source_sha256": "f677bdbb305f1c961cb0cfeb6cbf6c910a6a555fc20f2c8b80aefaecd449d82c",
+        "translation_sha256": "0ef10358f09d7dc4b243ec7ca9c1a2b5912dfa602de828a8f4bd36bff17c4c10"
+      },
+      "docs/security/threat-model.md": {
+        "source_sha256": "999f88265f8072446b5b624df0a54abd215cd09099e4ff0259e59665b8fd4364",
+        "translation_sha256": "0aaa251ca453469156a117820893c65ee0559e80fbc24318532b07beaf09f693"
+      },
       "docs/vision.md": {
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",
         "translation_sha256": "d1f7c6c17a88a43bb6772f044377fe34a1a0fa6830f3fc7ea31ec5ebf15e7907"
@@ -228,6 +248,54 @@
       "research/measurements/README.md": {
         "source_sha256": "9849826a0ff6ed1c48c88d167783c23c50d9a5c264d3e45088acd2493a0e60d2",
         "translation_sha256": "95f1a2e43c0e5f70ba0ac370c9a3facb1037364079d61e37983b1e1bebfc9c4b"
+      },
+      "research/other-systems/kasperskyos/drivers.md": {
+        "source_sha256": "014755c0a69029d8b543526f62e34fb8895ea73d989dfc4ef431101744ccec58",
+        "translation_sha256": "b75ac2c7affd3c9c5b6488b61677686cb95bd3493a5ce8a2363197dcedebb877"
+      },
+      "research/other-systems/kasperskyos/ipc.md": {
+        "source_sha256": "401ec88fea6fc39e28873a322eb05c654292870056b20a99b14e203c1aa1e10b",
+        "translation_sha256": "c344aeb4b3026f2b5191698e8002cc6cf1bfa7820b3064d5f83729f90ff2ebbb"
+      },
+      "research/other-systems/kasperskyos/kolvrt-lessons.md": {
+        "source_sha256": "96c427327f6e858f956dcfacd7b3dca5361ab6f263914912338b823fb153aa4f",
+        "translation_sha256": "152b7a1f58195fbb77beec64dfb270bca733e1037727f5e2546f7a806d2e01c1"
+      },
+      "research/other-systems/kasperskyos/microkernel.md": {
+        "source_sha256": "f49937dff9f7e5b2f557bcb4f27de0e11da1bae897d74f754104220e2b675617",
+        "translation_sha256": "9bf8a035328cacdd6b3c0c62b90fbfab2ff182fe52546a3c7975c23cb8a539c6"
+      },
+      "research/other-systems/kasperskyos/overview.md": {
+        "source_sha256": "3ea3b0e09bc0bb0248a63df84a322d052261579a9287c2202bbb31d4d17ecaaa",
+        "translation_sha256": "e68ae7750ac102634fafa987b7cee59eddf9d3f553e1a4bfa9aa417485fff093"
+      },
+      "research/other-systems/kasperskyos/performance-tradeoffs.md": {
+        "source_sha256": "39b1a612dc9564b64ac5ecc26515326dcfbd8ee0dc49ccb9f0a151becc378791",
+        "translation_sha256": "92b87a66195cdf6e1bbfbac0fd47e20fa2a534f8ff2cd0a6867de93d23510776"
+      },
+      "research/other-systems/kasperskyos/security-domains.md": {
+        "source_sha256": "5a780cb09a07791a38911ffc6d428b094a3d6f62b9d62f2cb69fe09cddfa6c7f",
+        "translation_sha256": "6cf2112b85be483e96d4fbd44648d17fb6936b386333e2b5e459caf6d6e29013"
+      },
+      "research/other-systems/kasperskyos/security-policy.md": {
+        "source_sha256": "f076122801c8de7978ac4f4f96a8e764d7190dfa53269523436b825ee74c474f",
+        "translation_sha256": "8fc00cfc6fb3a2ee27e01370e58939ca1736eabded0312e530316e5b33a6ac17"
+      },
+      "research/other-systems/kasperskyos/sources.md": {
+        "source_sha256": "308de06f8b9adf297e9262fd443efc81507f7087c49a17b44fa25eab15b789bf",
+        "translation_sha256": "c3b2dc85b3b9dae155b3872ea411865b03ee43bada7176580b0563be84d808c0"
+      },
+      "research/other-systems/kasperskyos/tcb.md": {
+        "source_sha256": "f01f40105516997179a67ebe4bc16071cd7f06872287904ae4a48e0d4ae73e93",
+        "translation_sha256": "caa6983ea97d8365c694e16f293a86c5d02efc527344521f789ddd6a47a7a9b1"
+      },
+      "research/other-systems/kasperskyos/threat-model.md": {
+        "source_sha256": "acb13e4d11297c5679ae0ff748b2b958ab14cad9ce46821304c807e315b2fcea",
+        "translation_sha256": "967cbf1bc4f9ca4f394a49e6a3f31653f09c1897cdd90d94b1bab3bd85daa807"
+      },
+      "research/other-systems/kasperskyos/typed-interfaces.md": {
+        "source_sha256": "ee8a161a7185f054dfb372852769cd112d299c502ba70bf5a4b77dea1da7d81c",
+        "translation_sha256": "d3acf3bbc5aca45f4b8a6db6433a05715bfb328d09cd1ddd3db9f08a0c548c3c"
       }
     }
   },

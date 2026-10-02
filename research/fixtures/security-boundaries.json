@@ -1,0 +1,97 @@
+{
+  "artifact_kind": "future-scenario-specifications",
+  "execution_status": "not-executed",
+  "scope": "Proposed security boundaries; no kernel test results or benchmark claims",
+  "scenarios": [
+    {
+      "id": "AUTH-01",
+      "trigger": "Sufficient native authority",
+      "expected": "Authorized effect within caller scope; no extra grant",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-02",
+      "trigger": "Denied native authority",
+      "expected": "Compat path denies the same effect",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-03",
+      "trigger": "Missing consumer capability",
+      "expected": "Compat cannot mint or obtain the missing consumer grant",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-04",
+      "trigger": "Broader substitute capability",
+      "expected": "Reject authority expansion through a substitute",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-05",
+      "trigger": "Nested adapters",
+      "expected": "Consumer attribution and scope survive every boundary",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-06",
+      "trigger": "Another consumer or service authority",
+      "expected": "Private service authority cannot authorize unrelated caller effects",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-07",
+      "trigger": "Restart or rebind",
+      "expected": "Preserve scope and applicable revocation context; no grant reset",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-08",
+      "trigger": "PROD configuration",
+      "expected": "No profile exception expands effective authority",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-09",
+      "trigger": "Filesystem private disk capability",
+      "expected": "Permit authorized file scope only, not arbitrary raw disk effects",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "AUTH-10",
+      "trigger": "Split or combined operations",
+      "expected": "Composition does not exceed native-authorized aggregate effects",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "DMA-01",
+      "trigger": "Driver crash, timeout and reset",
+      "expected": "Do not reclaim pinned pages until completion or proven containment/reset",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "EL1-01",
+      "trigger": "Global coordinator requests EL1",
+      "expected": "Deny admission without privileged-necessity proof",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "OBS-01",
+      "trigger": "Unauthorized inspection",
+      "expected": "Deny access and do not disclose usable handles, payloads or addresses",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "OBS-02",
+      "trigger": "Revocation during inspection",
+      "expected": "Consistent generation or explicit incomplete result with bounded output",
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "PROF-01",
+      "trigger": "Remove diagnostic consumer",
+      "expected": "Mandatory authorization and lifecycle enforcement remain",
+      "execution_status": "not-executed"
+    }
+  ]
+}

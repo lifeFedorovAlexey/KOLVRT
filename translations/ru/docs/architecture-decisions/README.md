@@ -16,4 +16,6 @@
 
 - [ADR-0012 — Multicore ownership и подтверждённый retirement](0012-multicore-retirement.md) — Принят для двух CPU в QEMU.
 
+- [ADR-0013 — Effective authority и необходимость привилегий](0013-security-boundaries.md) — Принят только для правил границ.
+
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)

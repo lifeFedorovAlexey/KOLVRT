@@ -1,5 +1,7 @@
 # Compatibility model
 
+Compat cannot issue missing consumer grants or expand effective authority. Service-private capabilities permit mediation only within native-authorized effects; [ADR-0013](../architecture-decisions/0013-security-boundaries.md) allows no compatibility waiver.
+
 A compatibility module translates an external semantic contract into the current native
 contract. It is a separately identifiable, replaceable, versioned and removable dependency. Such a module is justified only by a concrete KOLVRT consumer. Studying a foreign interface does not commit the project to supporting it.
 

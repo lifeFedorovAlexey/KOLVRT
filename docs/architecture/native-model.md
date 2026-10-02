@@ -1,5 +1,7 @@
 # Native model
 
+This is a design model; the current kernel foundation does not implement the complete EL0 contract. Global authority alone does not justify EL1: require [privileged-necessity evidence](kernel-admission-policy.md). Service-private capabilities enable only native-authorized caller effects.
+
 ## Boundaries
 
 The core owns task and address-space lifetimes, scheduling mechanisms, memory ownership,

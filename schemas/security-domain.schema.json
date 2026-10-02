@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Offline security domain review record",
+  "description": "Research artifact; no runtime ABI or usable grants.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "generation",
+    "privilege",
+    "evidence_state",
+    "grants",
+    "compat_dependencies",
+    "relationships",
+    "devices",
+    "tcb",
+    "provenance"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "privilege": {
+      "enum": ["EL0", "EL1", "external"]
+    },
+    "evidence_state": {
+      "enum": ["proposed", "implemented"]
+    },
+    "grants": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issuer",
+          "right",
+          "object_scope",
+          "effect_scope",
+          "service_private"
+        ],
+        "properties": {
+          "issuer": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "right": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "object_scope": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "effect_scope": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "service_private": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "compat_dependencies": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "string",
+        "maxLength": 128
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "string",
+        "maxLength": 512
+      }
+    },
+    "devices": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["owner", "dma_boundary", "evidence"],
+        "properties": {
+          "owner": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "dma_boundary": {
+            "enum": [
+              "verified-iommu",
+              "trusted-device-programmer",
+              "none",
+              "unknown"
+            ]
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "tcb": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["property", "trusted_component", "assumption"],
+        "properties": {
+          "property": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "trusted_component": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "assumption": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_revision", "dirty", "scope", "references"],
+      "properties": {
+        "source_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "dirty": {
+          "type": "boolean"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "references": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      }
+    }
+  }
+}
