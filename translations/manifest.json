@@ -14,8 +14,8 @@
         "translation_sha256": "67f699dbead0d780417d86d5788eba97692c020e1220661f44be3e83d01ff03d"
       },
       "docs/architecture-decisions/0001-native-authority.md": {
-        "source_sha256": "40819ca643f0de0307dca917227ea77f4950452fad6cfac1c378337736036a53",
-        "translation_sha256": "e7b6d086030193d673b6004a2178d68314f08717937457e2425ec30e43e05509"
+        "source_sha256": "cc4bef991858502a7653480709f2d1854f79964712573570c737ac7337aaa684",
+        "translation_sha256": "c016d5a1128645cea5096091bf558b94f45f9e76e3021a4fc7df87edd5a65c0b"
       },
       "docs/architecture-decisions/0002-stateful-routing.md": {
         "source_sha256": "28961c2c5f52a9ee8a28089016d473f957a2cbb33340a8260f7b94fa0404abe3",
@@ -102,8 +102,8 @@
         "translation_sha256": "d71dc83f28794c0c25f22b29edaa8f99c5e068f1d8c240af1ab8dffa34cfc1dd"
       },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "c63f67c5dc8daa7dde6017cc23db14337ab3e330ab79e2bbd1ba01432e05857b",
-        "translation_sha256": "4dfe230b5fd0f2988ccde0b31f955eab4ef578bcb8109b0fb0a74c3673510f75"
+        "source_sha256": "9353577b40fe70d027e6361cc11c5dd17f7f792e5385674de9a4fdc44a1ccce1",
+        "translation_sha256": "7128a644fa4d1744ceceb7165abb3179d78f896b24e90bd555868cfba065b8a4"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",
@@ -122,8 +122,8 @@
         "translation_sha256": "03283b2d99d653aba0bcbc287c1312c382f5953ed109018946c647bd88b6cc99"
       },
       "docs/architecture/native-abi.md": {
-        "source_sha256": "7982d777a8e38af9800b29a794d65feb9713b0a8c15b116e63dd9f8c64373bc8",
-        "translation_sha256": "11f4d68c7baeff6ff8978562aee5770d61b60c90caca102e8999e42266ac713f"
+        "source_sha256": "d5ed53963c3e5198098cc4a2aa02d8a036133b04bd9c7bd4de9500fd58c83d64",
+        "translation_sha256": "f5d9cdd32e3a7a8df8f714b861e8cbe2818f953e4273ba55ab348d3a7dc04edc"
       },
       "docs/architecture/native-model.md": {
         "source_sha256": "24ea1e9c1bba7c5614def2efd07c2f2dbb898b1f51cf93739746abc509f46393",

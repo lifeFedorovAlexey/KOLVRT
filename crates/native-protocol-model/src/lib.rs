@@ -272,6 +272,21 @@ mod tests {
         assert_eq!(request.payload(), b"ping");
     }
     #[test]
+    fn unsupported_versions_never_decode_as_current_contract() {
+        let mut request = message();
+        let mut response = [0; RESPONSE_HEADER];
+        encode_response(TEST_REQUEST_ID, Status::Completed, &[], &mut response).unwrap();
+        for version in 1..=u16::MAX {
+            request[request_fields::VERSION].copy_from_slice(&version.to_le_bytes());
+            response[response_fields::VERSION].copy_from_slice(&version.to_le_bytes());
+            assert_eq!(decode(&request, 0), Err(Error::Version));
+            assert_eq!(
+                decode_response(&response, TEST_REQUEST_ID),
+                Err(Error::Version)
+            );
+        }
+    }
+    #[test]
     fn rejects_every_truncation_and_invalid_header() {
         let b = message();
         for end in 0..b.len() {

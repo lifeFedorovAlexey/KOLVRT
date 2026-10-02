@@ -16,7 +16,7 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Enforcement:** Audit dependency closure, generated interfaces and exported layouts.
+**Enforcement:** Audit dependency closure, generated interfaces and exported layouts. [ADR-0001](../architecture-decisions/0001-native-authority.md) requires explicit ABI publication stages and a per-contract/version ABI-FREEZE before stable status.
 
 **Testing:** Remove all software adapters and run the unchanged native contract suite.
 

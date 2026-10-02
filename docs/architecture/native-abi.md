@@ -2,6 +2,53 @@
 
 This is a testable encoding candidate for the [first slice](first-native-slice.md), not a stable public ABI. It is independent of compiler structure layout. All integers are unsigned little-endian unless stated otherwise. No pointers or padding bytes cross the protocol boundary. The caller's protection domain is established by entry context, never a message field.
 
+ABI contract: native.request/0
+Publication stage: CANDIDATE
+ABI-FREEZE: none
+
+## Publication lifecycle
+
+Stages apply per named contract/version: `EXPERIMENTAL -> CANDIDATE -> PUBLIC -> STABLE`.
+Publishing source, documentation or builds does not advance a stage. Record transitions,
+owners, scope and evidence under [ADR-0001](../architecture-decisions/0001-native-authority.md).
+
+| Stage        | Guarantees and obligations                                                                                                                                                                                        |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EXPERIMENTAL | Exploratory behavior and encoding with stated limits. No implicit support promise; unsupported versions are rejected.                                                                                             |
+| CANDIDATE    | Documented, testable proposal with conformance fixtures and identified feedback consumers; breaking replacement/removal remains possible under declared support promises.                                         |
+| PUBLIC       | Published for consumer use with explicit provisional support, owner, finite window, change notices and migration/errors. Publication does not imply freeze.                                                       |
+| STABLE       | A separate accepted ABI-FREEZE ADR covers this exact contract/version and preserves its specified encodings, operations and outcomes for the declared support window. Internal implementation remains changeable. |
+
+Before freeze, breaking replacement/removal requires documented status, notice under the
+declared policy, migration instructions and explicit unsupported-version rejection.
+It cannot erase separately declared support. Authority checks, memory safety and running
+outcome guarantees remain mandatory at every stage. Stable support is finite under the
+[compatibility lifecycle](compatibility-model.md); a successor does not renew it.
+
+## ABI-FREEZE gate
+
+STABLE requires a separate accepted ABI-FREEZE ADR per named contract/version containing:
+
+1. Covered encodings, operations, errors, ownership and outcome guarantees, reserved fields
+   and excluded scope; internal compiler layouts are not frozen.
+2. Named consumers and owner, feedback and unresolved limitations.
+3. Reproducible conformance and negative-test evidence for versions, operations, malformed
+   frames, authority and outcomes, with actual platform/execution scope.
+4. Version discovery/negotiation and coexistence, explicit rejection of unsupported versions
+   and no silent downgrade of pinned contracts.
+5. Finite support guarantees, notices, migration, retirement and rollback limits.
+
+The ADR records `Decision kind: ABI-FREEZE`, `ABI contract: <name/version>` and accepted
+status. The contract's `ABI-FREEZE` field links to that ADR. Document checks validate stage
+metadata and the matching local accepted decision; review must assess the evidence.
+A semantic change to a frozen contract requires a new version. This lifecycle policy
+does not freeze v0: `native.request/0` remains CANDIDATE with no freeze decision.
+
+The host echo fixture is not a production consumer or negotiation implementation.
+Both request and response decoders accept only version 0 and reject others with
+`Error::Version`; requests are rejected before admission. Alternate-version negotiation,
+production consumer conformance and a reviewed freeze remain verification gaps.
+
 ## Request frame
 
 | Offset | Bytes    | Meaning                                                               |

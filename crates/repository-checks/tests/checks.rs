@@ -20,6 +20,40 @@ fn root() -> PathBuf {
         .unwrap()
         .to_path_buf()
 }
+
+#[test]
+fn abi_publication_requires_exact_accepted_freeze() {
+    let candidate =
+        "ABI contract: native.request/0\nPublication stage: CANDIDATE\nABI-FREEZE: none\n";
+    assert!(
+        documents::check_abi_publication(candidate, |_| Err("unexpected ADR load".into())).is_ok()
+    );
+    let stable = candidate.replace("CANDIDATE", "STABLE");
+    assert!(documents::check_abi_publication(&stable, |_| Err("missing".into())).is_err());
+    let linked = stable.replace(
+        "none",
+        "[Freeze](../architecture-decisions/0099-test-freeze.md)",
+    );
+    let accepted = "Status: **Accepted**. Date: 2026-10-02.\nDecision kind: ABI-FREEZE\nABI contract: native.request/0\n";
+    assert!(documents::check_abi_publication(&linked, |_| Ok(accepted.into())).is_ok());
+    for invalid in [
+        accepted.replace("Accepted", "Proposed"),
+        accepted.replace("native.request/0", "native.request/1"),
+        accepted.replace("ABI-FREEZE", "LIFECYCLE"),
+        format!("{accepted}ABI contract: native.request/0\n"),
+    ] {
+        assert!(documents::check_abi_publication(&linked, |_| Ok(invalid.clone())).is_err());
+    }
+    assert!(documents::check_abi_publication(&linked, |_| Err("missing ADR".into())).is_err());
+    for invalid in [
+        candidate.replace("CANDIDATE", "PUBLISHED"),
+        format!("{candidate}Publication stage: STABLE\n"),
+        candidate.replace("ABI contract: native.request/0\n", ""),
+        linked.replace("../architecture-decisions/", "https://example.com/"),
+    ] {
+        assert!(documents::check_abi_publication(&invalid, |_| Ok(accepted.into())).is_err());
+    }
+}
 fn valid() -> Value {
     read_json(&root().join("research/cases/KOL-PATH-0001.json")).unwrap()
 }

@@ -174,7 +174,58 @@ pub fn check_laws(text: &str) -> CheckResult<Vec<String>> {
     Ok(ids)
 }
 
+/// Structural publication gate; acceptance of conformance evidence remains a review.
+pub fn check_abi_publication(
+    text: &str,
+    load_decision: impl Fn(&str) -> CheckResult<String>,
+) -> CheckResult<()> {
+    fn field<'a>(text: &'a str, name: &str) -> CheckResult<&'a str> {
+        let prefix = format!("{name}: ");
+        let values: Vec<_> = text
+            .lines()
+            .filter_map(|s| s.strip_prefix(&prefix))
+            .collect();
+        if values.len() != 1 || values[0].trim().is_empty() {
+            return Err(format!("ABI publication requires exactly one {name}"));
+        }
+        Ok(values[0].trim())
+    }
+    let contract = field(text, "ABI contract")?;
+    let stage = field(text, "Publication stage")?;
+    let freeze = field(text, "ABI-FREEZE")?;
+    if !matches!(stage, "EXPERIMENTAL" | "CANDIDATE" | "PUBLIC" | "STABLE") {
+        return Err("unknown ABI publication stage".into());
+    }
+    if freeze == "none" {
+        return if stage == "STABLE" {
+            Err("STABLE requires an accepted ABI-FREEZE".into())
+        } else {
+            Ok(())
+        };
+    }
+    let reference =
+        Regex::new(r"^\[[^\]]+\]\(\.\./architecture-decisions/([0-9]{4}-[a-z0-9-]+\.md)\)$")
+            .unwrap();
+    let captures = reference
+        .captures(freeze)
+        .ok_or("ABI-FREEZE requires a local ADR link")?;
+    let decision = load_decision(&captures[1])?;
+    if !decision
+        .lines()
+        .any(|s| s.starts_with("Status: **Accepted**."))
+        || field(&decision, "Decision kind")? != "ABI-FREEZE"
+        || field(&decision, "ABI contract")? != contract
+    {
+        return Err("ABI-FREEZE must be accepted and cover the exact contract/version".into());
+    }
+    Ok(())
+}
+
 pub fn check_docs(root: &Path) -> CheckResult<()> {
+    check_abi_publication(
+        &read(&root.join("docs/architecture/native-abi.md"))?,
+        |name| read(&root.join("docs/architecture-decisions").join(name)),
+    )?;
     for path in markdown(root, false)? {
         links(root, &path, &read(&path)?)?;
     }
