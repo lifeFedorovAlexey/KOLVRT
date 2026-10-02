@@ -8,15 +8,19 @@ Descriptors, open-file descriptions, locks, credentials and waits couple API fam
 
 ## Decision
 
-Bind consumer, family and protocol to an exact version and digest. Shared-state closure constrains splitting and switching.
+Select by consumer/state-domain binding, API family and semantic route. The route names its protocol and exact semantic version. The binding separately pins digest, dependency closure, native operations, adapter chain, rights, device scope, quotas, profile and generation. Consumer and domain identities remain distinct. Shared-state closure constrains splitting and switching.
+
+Admission intersects package, process, driver, device and administrator constraints; denial cannot be overridden by defaults or precedence. Dispatch uses the pinned route and current authorization checks. Every new independent selector requires an ADR, a named workload, evidence that existing selectors are insufficient, shared-state analysis and rejection tests. The [routing model](../architecture/routing-model.md) specifies the finite window example and rejection cases.
+
+This clarification addresses issue #2 under LAW-003, LAW-004, LAW-005 and LAW-009. It adds no law or general resolver implementation.
 
 ## Alternatives
 
-Arbitrary per-call routing; one process-wide flag; routing by application name.
+Arbitrary per-call routing; one process-wide flag; routing by application name; a flat key containing admission constraints; a generic routing graph.
 
 ## Why rejected
 
-Per-call routing breaks state; one flag is too coarse; an application name is not a contract.
+Per-call routing breaks state; one flag is too coarse; an application name is not a contract. A flat key obscures semantics versus authority. No demonstrated workload justifies a generic graph's policy and state complexity.
 
 ## Consequences
 
@@ -36,7 +40,7 @@ Intersect policies, reject conflicts and downgrades, and never grant additional 
 
 ## Testing
 
-Test resolver conflicts and model-check rebinding and unloading after quiescence.
+Test resolver conflicts and model-check rebinding and unloading after quiescence. Reject denied rights, out-of-scope devices, quota exhaustion, empty policy intersections and incompatible handle/state import. Current finite window and host domain checks cover only documented subsets; general admission and gateway execution remain verification gaps.
 
 ## Reversibility
 

@@ -48,7 +48,7 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Enforcement:** Resolve dependency closure and permission intersections before binding.
+**Enforcement:** Resolve dependency closure and permission intersections before binding. [ADR-0002](../architecture-decisions/0002-stateful-routing.md) separates finite selection identity from rights, device scope and quota constraints and requires evidence for new selectors.
 
 **Testing:** Missing modules, conflicting policies and unsupported versions never execute a substitute contract.
 

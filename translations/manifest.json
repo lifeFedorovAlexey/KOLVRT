@@ -18,8 +18,8 @@
         "translation_sha256": "e7b6d086030193d673b6004a2178d68314f08717937457e2425ec30e43e05509"
       },
       "docs/architecture-decisions/0002-stateful-routing.md": {
-        "source_sha256": "3476ca685aef698e8e245f663dd8c8f7f1160390f3375eb93333987373898a53",
-        "translation_sha256": "60a93fb59acabec92257e6d71cd110a7b8b932f76ef314f08e2749bad759c8d5"
+        "source_sha256": "28961c2c5f52a9ee8a28089016d473f957a2cbb33340a8260f7b94fa0404abe3",
+        "translation_sha256": "52e2019d26c77399484d8c5df526b193155ee424600e9d8cce5a73e43f90430c"
       },
       "docs/architecture-decisions/0003-profiles.md": {
         "source_sha256": "4d34d69c9638436924fdc6e01e27b264534b161668d0a24f2fa8cd59d7b0790c",
@@ -102,8 +102,8 @@
         "translation_sha256": "d71dc83f28794c0c25f22b29edaa8f99c5e068f1d8c240af1ab8dffa34cfc1dd"
       },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "484f9e783225d58b82ce0741591fd223c8fa6bcb5f001d7a9b2340ed7ec30a44",
-        "translation_sha256": "93109d790f87700f701bc2e06fbdef585cc5513e800c2f53f284a71c24919f3d"
+        "source_sha256": "6840be26c139ed2d5861fb2e47e70ffb90e7ec0b37a127ea0298b6b1a2913cae",
+        "translation_sha256": "232cceea53feffbf2cc93e1c2eb9b0d420c340ebf58a82c4a3124b27554f6bdb"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",
@@ -138,8 +138,8 @@
         "translation_sha256": "626b0db007ef5531de54222106bc3ed760a98a4909c9d63378698eb50417879d"
       },
       "docs/architecture/routing-model.md": {
-        "source_sha256": "b93f71f7c9ccadab1c122ac73894257e1026769b14b5cbb2346ff7a2c9b0c812",
-        "translation_sha256": "b0b2e7d89287ded3898c0995c2cb2106d845ab95945c32098d2f354b0f676974"
+        "source_sha256": "15ca4c968d9eb5e458de45ec0c7ae96d901e5f5eef760d65f0551f0adb068b5a",
+        "translation_sha256": "6c4a938110ea848748a6669d76e449da2b012d025218a29be5e469b8c7ce11d2"
       },
       "docs/architecture/security-reference-comparison.md": {
         "source_sha256": "8f7e718793849940c93e63d159ec3d5f5cb750b50fa2225848b055080a65e346",
