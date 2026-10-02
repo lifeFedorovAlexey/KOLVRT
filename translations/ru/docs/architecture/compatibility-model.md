@@ -152,4 +152,10 @@ LAW-008. Они относятся к поддерживаемым програ�
 
 Более поздняя [реализация Phase 2](../kernel/routing.md) предоставляет optional EL0 adapters для конкретного own-task observation workload. Прежнее описание Phase 0 историческое; оно не означает, что kernel builds всё ещё отсутствуют.
 
+## Доказательства долга совместимости
+
+[Реестр COST-L](compatibility-debt.md) назначает стабильные identities повторяющимся причинам несовместимости отдельно от module versions, source cases KOL-PATH и отклонений EXC. Он предоставляет реализованную offline schema/lifecycle/support validation и research-only candidate records. UNKNOWN cost отличается от измеренного нуля; записи никогда не выдают authority и не разрешают unloading.
+
+Production module-to-COST-L manifest enforcement остаётся issue #47; accounting и runtime inspection — последующая работа. Исследование Linux API не включает поддержку и не превращает текущие synthetic routing examples в Linux-driver evidence. При интеграции записей сохранить конечный support и quiescent retirement obligations этой модели.
+
 [Английский оригинал](../../../../docs/architecture/compatibility-model.md)

@@ -1,0 +1,105 @@
+name: Hardware Bring-up Request
+description: Request a bounded boot or device investigation without publishing a raw inventory.
+title: "[Hardware Bring-up Request] "
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        This issue will be public. Do not paste unrestricted inventories or logs. Review and
+        sanitize the exact text and attachments locally before submitting. UNKNOWN with a reason is
+        useful evidence. Submission does not establish support or authorize a hardware survey. See
+        the [submission
+        guide](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/docs/research/issue-submissions.md),
+        [research program](https://github.com/lifeFedorovAlexey/KOLVRT/issues/44) and [COST-L
+        registry](https://github.com/lifeFedorovAlexey/KOLVRT/blob/main/research/cost-l/registry.json).
+        You may answer in English or Russian.
+  - type: dropdown
+    id: role
+    attributes:
+      label: Platform role
+      options:
+        - research_host
+        - boot_target
+        - UNKNOWN - explain below
+    validations:
+      required: true
+  - type: textarea
+    id: platform
+    attributes:
+      label: Safe platform/device description
+      description: >-
+        Only public model names and PCI vendor/device/subsystem IDs or USB vendor/product IDs,
+        bus/class and revision if relevant. Use UNKNOWN rather than collecting private identifiers.
+        Do not paste raw inventories.
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Requested behavior and scope
+      description: >-
+        Which boot or device operation is needed, by which concrete consumer? Describe existing
+        support evidence or NOT RUN. A research host is not a tested KOLVRT boot target.
+    validations:
+      required: true
+  - type: textarea
+    id: upstream
+    attributes:
+      label: Upstream candidate
+      description: >-
+        Public Linux driver path, exact commit/version/configuration and match evidence, or UNKNOWN
+        with a reason.
+    validations:
+      required: false
+  - type: dropdown
+    id: dma-iommu
+    attributes:
+      label: DMA/IOMMU evidence
+      options:
+        - UNKNOWN - not verified
+        - Not applicable - explain in evidence
+        - Documented only - not tested
+        - Observed in the stated test - attach sanitized evidence
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Security and authority constraints
+      description: >-
+        State native-authorized effects, isolation and rejection requirements. Compatibility cannot
+        grant missing rights. Separate hardware constraints from compatibility debt; list unknowns.
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: Bounded test plan
+      description: >-
+        Proposed build/profile, reproduction, rollback/reset and stop conditions. State what
+        evidence would count as success; do not claim an unexecuted test passed.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary evidence
+      description: >-
+        Public upstream links pinned to a commit/version, exact file/section/line locators,
+        configuration and evidence gaps. UNKNOWN with a reason is acceptable.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-review
+    attributes:
+      label: Public submission review
+      options:
+        - label: >-
+            I reviewed every field and any attachment locally and removed secrets, serials,
+            MAC/IP/SSID, usernames, hostnames and private paths. I approve publication of exactly
+            this reviewed content.
+          required: true
+        - label: >-
+            I distinguish proposals and UNKNOWN values from executed evidence; this submission does
+            not authorize further inventory collection or publication.
+          required: true

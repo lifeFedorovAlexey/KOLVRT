@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "id": "COST-L-0001",
+  "title": "Allocation-context and reclaim side effects",
+  "status": "CANDIDATE",
+  "category": "MEMORY",
+  "subsystem": "allocation/reclaim",
+  "summary": "Source-backed research candidate for a recurring semantic dependency. No active KOLVRT consumer, compatibility implementation or measured cost is claimed.",
+  "research_date": "2026-10-03",
+  "introduced_at": "2026-10-02",
+  "last_observed_at": null,
+  "history": {
+    "linux_behavior": "GFP_KERNEL permits sleeping and direct reclaim. GFP_NOFS/GFP_NOIO historically avoid filesystem or I/O recursion; scoped APIs are preferred since 4.12.",
+    "historical_reason": "Reclaim recovers memory under pressure while context restrictions prevent recursive deadlocks and distinguish reserve access.",
+    "root_cause": "Allocation policy carries execution-context and subsystem side effects that a legacy consumer may depend on.",
+    "classification": "HISTORICAL_CONSTRAINT",
+    "linux_versions": ["v6.12"],
+    "first_known_version": null,
+    "unknown_origin_reason": "The pinned documentation establishes the described behavior, not its first introducing release/commit. Historical origin requires separate investigation."
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Linux v6.12: core-api/memory-allocation.rst",
+      "url": "https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/Documentation/core-api/memory-allocation.rst",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "commit": "adc218676eef25575469234709c2d87185ca223a",
+      "version": "v6.12",
+      "locator": "Get Free Page flags; GFP flags and reclaim behavior",
+      "date": null,
+      "limitations": "Pinned documentation reviewed; original introduction/publication date, representative driver users and historical causality remain unverified."
+    }
+  ],
+  "evidence": {
+    "linux_behavior": ["S1"],
+    "historical_reason": ["S1"],
+    "root_cause": ["S1"]
+  },
+  "native": {
+    "status": "PROPOSED",
+    "behavior": "Current IRQ paths neither allocate nor take heap/table locks. A future EL0 allocation contract must explicitly define reclaim and failure; no general allocation service is implemented.",
+    "why_differs": "A Linux-facing adapter cannot silently introduce reclaim work into native IRQ execution. Which EL0 semantics actually need translation remains unverified.",
+    "references": [
+      "docs/kernel/interrupts.md",
+      "docs/architecture/kernel-laws.md"
+    ]
+  },
+  "compat_modules": [],
+  "affected_consumers": [],
+  "affected_driver_families": [],
+  "runtime_cost": {
+    "cpu": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "ns",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "latency": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "ns",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "memory": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "bytes",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "copies": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "count",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "allocations": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "count",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "context_switches": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "count",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    },
+    "throughput": {
+      "state": "UNKNOWN",
+      "value": null,
+      "unit": "operations/s",
+      "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+      "denominator": null,
+      "coverage": "UNKNOWN",
+      "provenance": null,
+      "reason": "No comparable implemented workload or runtime observation exists."
+    }
+  },
+  "security_impact": "Reclaim/reserve mediation must retain caller quotas and avoid recursive wait dependencies; flags never issue grants.",
+  "authority_implications": "NO_AUTHORITY_EXPANSION",
+  "complexity_impact": "Requires context and reclaim-scope analysis rather than mapping a function name alone.",
+  "support": {
+    "status": "RESEARCH_ONLY",
+    "owner": null,
+    "owner_unknown_reason": "No supported implementation/consumer owner has been assigned.",
+    "start": null,
+    "until": null,
+    "migration_target": "Use an explicit bounded native allocation/reclaim contract once admitted; defer unsupported contexts.",
+    "migration_strategy": "Identify named consumers and the accepted native contract before proposing compatibility; native rewrite or deferral remain options.",
+    "removal_condition": "No implementation currently exists. Any future implementation needs finite support, named consumers including offline/archival paths and proven quiescence; retain this historical record even if the candidate is rejected."
+  },
+  "lifecycle": [
+    {
+      "status": "CANDIDATE",
+      "date": "2026-10-02",
+      "decision": "Assign stable research identity after reviewing pinned semantic evidence; support/incompatibility confirmation remains open."
+    }
+  ],
+  "related_cost_l": [],
+  "source_cases": [],
+  "exceptions": [],
+  "tests": [],
+  "benchmarks": [],
+  "confidence": "LOW",
+  "proverb_ru": "За одной страницей пойдёшь — всё ядро обойдёшь.",
+  "open_questions": [
+    "Which pinned driver workloads depend on reclaim or scope behavior rather than only on successful allocation?",
+    "What native EL0 allocation/reclaim contract should be admitted?",
+    "What is the first introducing release/commit?",
+    "Who owns any future supported implementation and finite migration window?"
+  ]
+}

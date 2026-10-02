@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
 
-use repository_checks::{CheckResult, database, documents, report};
+use repository_checks::{CheckResult, cost_l, database, documents, report};
 use std::{env, path::PathBuf};
 
 fn run() -> CheckResult<()> {
@@ -15,10 +15,16 @@ fn run() -> CheckResult<()> {
     match command {
         "check" | "validate" | "check-docs" | "check-translations" if args.len() <= 1 => {
             if matches!(command,"check" | "validate") { database::validate(&root, &root.join("research/cases"), repository_checks::MINIMUM_RESEARCH_CASES)?; }
+            if matches!(command,"check" | "validate") { cost_l::validate(&root, &root.join("research/cost-l"))?; }
             if matches!(command,"check" | "check-docs") { documents::check_docs(&root)?; }
             if matches!(command,"check" | "check-translations") { documents::check_translations(&root)?; }
             if command == "check" { report::report(&root, true)?; }
             println!("{command}: passed. Structural checks do not establish historical truth or kernel behavior.");
+        }
+        "check-cost-l" if args.len() == 1 || (args.len() == 3 && args[1] == "--directory") => {
+            let directory = if args.len() == 3 { PathBuf::from(&args[2]) } else { root.join("research/cost-l") };
+            let records = cost_l::validate(&root, &directory)?;
+            println!("COST-L: {} records validated; no runtime support or authority established.", records.len());
         }
         "validate" if args.len() == 3 && args[1] == "--directory" => {
             database::validate(&root, &PathBuf::from(&args[2]), repository_checks::MINIMUM_RESEARCH_CASES)?;
@@ -32,7 +38,7 @@ fn run() -> CheckResult<()> {
             documents::record_translation(&root, &args[1], &args[2])?;
             println!("Recorded reviewed pair: {}/{}. Meaning must be reviewed by a person.", args[1], args[2]);
         }
-        _ => return Err("usage: repository-checks [check | validate [--directory PATH] | check-docs | check-translations | report [--check] | record-translation LOCALE PATH]".into())
+        _ => return Err("usage: repository-checks [check | validate [--directory PATH] | check-cost-l [--directory PATH] | check-docs | check-translations | report [--check] | record-translation LOCALE PATH]".into())
     }
     Ok(())
 }
