@@ -1,0 +1,81 @@
+{
+  "id": "KOL-PATH-0028",
+  "title": "USB internal API redesign без вечного driver ABI",
+  "subsystem": "Driver model",
+  "category": [
+    "DRIVER_MODEL",
+    "API_DESIGN"
+  ],
+  "linux_versions": "Linux driver-interface document приводит USB переход к async streams и изменение allocation API ради deadlock fixes; точные commits не названы.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S28",
+      "title": "Linux kernel driver interface",
+      "url": "https://docs.kernel.org/process/stable-api-nonsense.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Stable Kernel Source Interfaces: USB redesign examples",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Driver model"
+    }
+  ],
+  "historical_context": "Linux driver-interface document приводит USB переход к async streams и изменение allocation API ради deadlock fixes; точные commits не названы.",
+  "original_reason": "Internal interfaces менялись вместе со всеми in-tree callers.",
+  "root_cause": "Фиксация internal ABI заставила бы сохранять неверные contracts.",
+  "observable_behavior": "Linux не обещает стабильный in-kernel binary/source interface, отличая его от userspace ABI.",
+  "compatibility_dependency": "Out-of-tree drivers несут стоимость адаптации к версиям kernel.",
+  "security_impact": "Binary layout coupling усложняет безопасное изменение.",
+  "performance_impact": "Versioned boundary может добавить serialization.",
+  "complexity_impact": "Linux здесь пример полезной изменяемости, не pathology-баг.",
+  "hardware_dependency": "Независимость core от vendor device layout.",
+  "linux_current_solution": "In-tree coordinated updates и удаление unused interfaces.",
+  "remaining_problem": "Найти конкретные USB commits из исторического документа; placement драйверов ещё не выбран.",
+  "constraints_then": "Много callers и evolving hardware.",
+  "constraints_now": "Нужда в coordinated API evolution сохраняется.",
+  "change_consequences": "Out-of-tree drivers несут стоимость адаптации к версиям kernel.",
+  "improvement_assessment": "Вывод KOLVRT: Native internal Rust API не объявляется stable binary ABI. Внешний driver protocol версионируется и не раскрывает layout kernel objects. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "ACCEPTED_TRADEOFF",
+  "kolvrt_native_semantics": "Native internal Rust API не объявляется stable binary ABI. Внешний driver protocol версионируется и не раскрывает layout kernel objects.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "driver.protocol/<family>/<version>; отдельный adapter",
+  "migration_strategy": "При изменении core обновить native drivers атомарно; старый внешний протокол обслуживает adapter.",
+  "tests_required": [
+    "Native-only dependency graph не импортирует legacy driver adapter.",
+    "Protocol conformance и async cancel/teardown."
+  ],
+  "benchmarks_required": [
+    "Driver request latency, allocations и context switches для обеих границ placement."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Найти конкретные USB commits из исторического документа; placement драйверов ещё не выбран.",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": [
+      "S28"
+    ],
+    "original_reason": [
+      "S28"
+    ],
+    "root_cause": [
+      "S28"
+    ],
+    "observable_behavior": [
+      "S28"
+    ],
+    "compatibility_dependency": [
+      "S28"
+    ],
+    "linux_current_solution": [
+      "S28"
+    ]
+  }
+}

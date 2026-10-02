@@ -1,0 +1,80 @@
+{
+  "id": "KOL-PATH-0024",
+  "title": "SO_REUSEPORT: shared port требует общей authority",
+  "subsystem": "Networking",
+  "category": [
+    "SECURITY",
+    "RESOURCE_MANAGEMENT"
+  ],
+  "linux_versions": "SO_REUSEPORT доступен с Linux 3.9; sockets с одним адресом должны иметь одинаковый effective UID.",
+  "first_known_version": "3.9 (SO_REUSEPORT)",
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S24",
+      "title": "socket",
+      "url": "https://man7.org/linux/man-pages/man7/socket.7.html",
+      "repository": "https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git",
+      "commit": null,
+      "tag_version": "man-pages-6.19",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "SO_REUSEPORT: effective UID restriction",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Networking"
+    }
+  ],
+  "historical_context": "SO_REUSEPORT доступен с Linux 3.9; sockets с одним адресом должны иметь одинаковый effective UID.",
+  "original_reason": "Распределять connections/datagrams между несколькими sockets.",
+  "root_cause": "Общий адрес без ограничения membership допускает перехват чужого трафика.",
+  "observable_behavior": "Linux ограничивает port sharing по effective UID.",
+  "compatibility_dependency": "Политика Linux UID должна сохраниться для Linux sockets, но не обязана стать native authority model.",
+  "security_impact": "Предотвращение traffic hijacking.",
+  "performance_impact": "Load distribution tradeoff.",
+  "complexity_impact": "Credential и endpoint identity связаны явно.",
+  "hardware_dependency": "Multi-queue NIC позже; VirtIO baseline.",
+  "linux_current_solution": "SO_REUSEPORT плюс UID condition.",
+  "remaining_problem": "Какая native policy join/revoke нужна при смене credentials?",
+  "constraints_then": "UID-based access и multiworker servers.",
+  "constraints_now": "Multiworker нужен, UID-based grant необязателен.",
+  "change_consequences": "Политика Linux UID должна сохраниться для Linux sockets, но не обязана стать native authority model.",
+  "improvement_assessment": "Вывод KOLVRT: PortGroup — capability объект; join требует отдельного grant. Балансировка не меняет ownership endpoint. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "PortGroup — capability объект; join требует отдельного grant. Балансировка не меняет ownership endpoint.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "linux.net.reuseport/v1; общий port group",
+  "migration_strategy": "Adapter проверяет Linux credentials и native join grant; native API не выводит grant из UID.",
+  "tests_required": [
+    "Чужая domain не присоединяется к port group.",
+    "Close одного member не перенаправляет traffic на stale socket."
+  ],
+  "benchmarks_required": [
+    "Accept/datagram throughput, per-member fairness, p99 и drops."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Какая native policy join/revoke нужна при смене credentials?"
+  ],
+  "evidence": {
+    "historical_context": [
+      "S24"
+    ],
+    "original_reason": [
+      "S24"
+    ],
+    "root_cause": [
+      "S24"
+    ],
+    "observable_behavior": [
+      "S24"
+    ],
+    "compatibility_dependency": [
+      "S24"
+    ],
+    "linux_current_solution": [
+      "S24"
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "id": "KOL-PATH-0022",
+  "title": "RCU: удаление ссылки не разрешает free",
+  "subsystem": "Concurrency / memory reclamation",
+  "category": [
+    "CONCURRENCY",
+    "PERFORMANCE"
+  ],
+  "linux_versions": "RCU documentation разделяет removal и reclamation через grace period.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S22",
+      "title": "What is RCU",
+      "url": "https://docs.kernel.org/RCU/whatisRCU.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "Removal versus reclamation; grace periods",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Concurrency / memory reclamation"
+    }
+  ],
+  "historical_context": "RCU documentation разделяет removal и reclamation через grace period.",
+  "original_reason": "Дешёвые чтения в read-mostly структурах.",
+  "root_cause": "Читатели могут ещё удерживать старую версию после удаления из shared structure.",
+  "observable_behavior": "Free до завершения readers приводит к неверному lifetime; RCU postpones reclamation.",
+  "compatibility_dependency": "Это сознательный internal concurrency protocol, не обязательный legacy ABI.",
+  "security_impact": "UAF при неверном grace protocol.",
+  "performance_impact": "Быстрые reads оплачиваются delayed memory reclamation.",
+  "complexity_impact": "Safe wrapper не должен выдавать unconstrained static reference.",
+  "hardware_dependency": "SMP и weak memory ordering.",
+  "linux_current_solution": "Grace periods, RCU read-side sections и соответствующие publication primitives.",
+  "remaining_problem": "RCU, epochs или refcount для первого native handle table? Решение после моделей.",
+  "constraints_then": "Read-mostly масштабирование.",
+  "constraints_now": "Требование остаётся; Linux RCU complexity не нужно копировать целиком.",
+  "change_consequences": "Это сознательный internal concurrency protocol, не обязательный legacy ABI.",
+  "improvement_assessment": "Вывод KOLVRT: Shared reclamation API выдаёт lifetime-bound read guard; retired objects освобождаются только после подтверждённого quiescence. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "ACCEPTED_TRADEOFF",
+  "kolvrt_native_semantics": "Shared reclamation API выдаёт lifetime-bound read guard; retired objects освобождаются только после подтверждённого quiescence.",
+  "compatibility_required": "NO",
+  "compatibility_scope": "NONE",
+  "migration_strategy": "Начать с locks/reference ownership; вводить epoch reclamation только по измеренной нужде и отдельному safety review.",
+  "tests_required": [
+    "Reader stall и concurrent remove не приводят к free.",
+    "CPU offline и task cancellation не теряют quiescence accounting."
+  ],
+  "benchmarks_required": [
+    "Read/write mixes: throughput, grace latency, backlog memory high-water."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "RCU, epochs или refcount для первого native handle table? Решение после моделей.",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": [
+      "S22"
+    ],
+    "original_reason": [
+      "S22"
+    ],
+    "root_cause": [
+      "S22"
+    ],
+    "observable_behavior": [
+      "S22"
+    ],
+    "compatibility_dependency": [
+      "S22"
+    ],
+    "linux_current_solution": [
+      "S22"
+    ]
+  }
+}

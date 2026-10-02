@@ -1,0 +1,80 @@
+{
+  "id": "KOL-PATH-0017",
+  "title": "User namespaces: dropping groups расширяло доступ",
+  "subsystem": "Namespaces / security",
+  "category": [
+    "SECURITY",
+    "API_DESIGN"
+  ],
+  "linux_versions": "/proc/pid/setgroups добавлен в 3.19 и backported из-за доступа после dropping groups.",
+  "first_known_version": "3.19 (fix interface)",
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S17",
+      "title": "user_namespaces",
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "repository": "https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git",
+      "commit": null,
+      "tag_version": "man-pages-6.19",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "The /proc/pid/setgroups file and Linux 3.19 security fix",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Namespaces / security"
+    }
+  ],
+  "historical_context": "/proc/pid/setgroups добавлен в 3.19 и backported из-за доступа после dropping groups.",
+  "original_reason": "User namespace даёт локальные privileges для изолированного администрирования.",
+  "root_cause": "Удаление supplementary groups не монотонно уменьшает POSIX права, если other permissive, group restrictive.",
+  "observable_behavior": "Процесс мог получить ранее недоступный file access через dropping group.",
+  "compatibility_dependency": "Security fix ограничивает setgroups для unprivileged mapping; небезопасное поведение не сохраняется.",
+  "security_impact": "Расширение доступа нарушает isolation.",
+  "performance_impact": "Дополнительная авторизация требует учёта cost.",
+  "complexity_impact": "Credential domain нельзя переключать как независимый stateless API.",
+  "hardware_dependency": "Нет.",
+  "linux_current_solution": "Требуется deny setgroups до unprivileged gid_map; ограничение наследуется.",
+  "remaining_problem": "Определить отношения между POSIX deny semantics и native capability grants.",
+  "constraints_then": "Ambient UID/GID и namespace-local privileges.",
+  "constraints_now": "Совместимость нужна, но ambient model не должен определять native security.",
+  "change_consequences": "Security fix ограничивает setgroups для unprivileged mapping; небезопасное поведение не сохраняется.",
+  "improvement_assessment": "Вывод KOLVRT: Delegate capability rights можно только уменьшать; mapping identity не создаёт ambient privileges. POSIX DAC вычисляется в adapter, но native authorization остаётся обязательной. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "NATIVE_FIX",
+  "kolvrt_native_semantics": "Delegate capability rights можно только уменьшать; mapping identity не создаёт ambient privileges. POSIX DAC вычисляется в adapter, но native authorization остаётся обязательной.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "linux.credentials/v1 внутри всей security domain",
+  "migration_strategy": "Перевести uid/gid policy в explicit grants; сохранить безопасную Linux семантику, не bypass.",
+  "tests_required": [
+    "rwx---rwx fixture: dropping group не расширяет native grants.",
+    "Nested delegation и credential update races."
+  ],
+  "benchmarks_required": [
+    "Authorization latency и mapping lookup при глубокой domain nesting."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Определить отношения между POSIX deny semantics и native capability grants."
+  ],
+  "evidence": {
+    "historical_context": [
+      "S17"
+    ],
+    "original_reason": [
+      "S17"
+    ],
+    "root_cause": [
+      "S17"
+    ],
+    "observable_behavior": [
+      "S17"
+    ],
+    "compatibility_dependency": [
+      "S17"
+    ],
+    "linux_current_solution": [
+      "S17"
+    ]
+  }
+}

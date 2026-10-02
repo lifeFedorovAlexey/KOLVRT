@@ -1,0 +1,81 @@
+{
+  "id": "KOL-PATH-0026",
+  "title": "futex_waitv: ожидание нескольких адресов",
+  "subsystem": "Synchronization / IPC",
+  "category": [
+    "API_DESIGN",
+    "COMPATIBILITY"
+  ],
+  "linux_versions": "futex2 documentation описывает waitv: 1..128 entries, absolute 64-bit timeout, reserved=0.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S26",
+      "title": "futex2",
+      "url": "https://docs.kernel.org/userspace-api/futex2.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "futex_waitv; Timeout; Types of futex",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Synchronization / IPC"
+    }
+  ],
+  "historical_context": "futex2 documentation описывает waitv: 1..128 entries, absolute 64-bit timeout, reserved=0.",
+  "original_reason": "Исходный интерфейс futex имел ограничения для multi-wait.",
+  "root_cause": "Нельзя безопасно эмулировать atomic wait-any простой последовательностью blocking waits.",
+  "observable_behavior": "waitv проверяет значения и отменяет подготовку, если одно отличается.",
+  "compatibility_dependency": "Legacy wait-any libraries требуют семантики без lost wakeup, не только совпадения сигнатуры.",
+  "security_impact": "Unbounded wait list может истощать ресурсы.",
+  "performance_impact": "Multiwait может быть выгоднее многопоточной эмуляции.",
+  "complexity_impact": "Ограничение 128 Linux не является автоматически native законом.",
+  "hardware_dependency": "Shared physical identity при разных virtual addresses.",
+  "linux_current_solution": "Отдельный futex_waitv API с extensible entries.",
+  "remaining_problem": "Определить native bound и fairness при постоянно готовом первом элементе.",
+  "constraints_then": "Performance-aware userspace synchronization.",
+  "constraints_now": "Потребность в multiwait сохраняется; нужен доказанный atomic protocol.",
+  "change_consequences": "Legacy wait-any libraries требуют семантики без lost wakeup, не только совпадения сигнатуры.",
+  "improvement_assessment": "Вывод KOLVRT: Native wait-any гарантирует атомарность register/recheck/wake относительно заданного протокола; partial setup полностью откатывается. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "ACCEPTED_TRADEOFF",
+  "kolvrt_native_semantics": "Native wait-any гарантирует атомарность register/recheck/wake относительно заданного протокола; partial setup полностью откатывается.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "linux.sync.waitv/v1; один shared-memory synchronization domain",
+  "migration_strategy": "Все wait/wake на одном объекте используют согласованный backend; маршрут нельзя менять у sleeping waiter.",
+  "tests_required": [
+    "Wake между check и registration не теряется.",
+    "Invalid entry откатывает все регистрации; deadline и cancel гонки дают один outcome."
+  ],
+  "benchmarks_required": [
+    "Wait set sizes, contention, wake storms, p99, context switches."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Определить native bound и fairness при постоянно готовом первом элементе.",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": [
+      "S26"
+    ],
+    "original_reason": [
+      "S26"
+    ],
+    "root_cause": [
+      "S26"
+    ],
+    "observable_behavior": [
+      "S26"
+    ],
+    "compatibility_dependency": [
+      "S26"
+    ],
+    "linux_current_solution": [
+      "S26"
+    ]
+  }
+}

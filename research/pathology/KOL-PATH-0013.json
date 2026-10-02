@@ -1,0 +1,81 @@
+{
+  "id": "KOL-PATH-0013",
+  "title": "ACPI _OSI: идентичность ОС вместо capability",
+  "subsystem": "Firmware / ACPI",
+  "category": [
+    "HISTORICAL_BEHAVIOR",
+    "HARDWARE_QUIRK"
+  ],
+  "linux_versions": "ACPI OSI document описывает Windows-specific строки и невозможность Linux просто отвечать false.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S13",
+      "title": "ACPI OSI and REV",
+      "url": "https://docs.kernel.org/firmware-guide/acpi/osi.html",
+      "repository": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+      "commit": null,
+      "tag_version": null,
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "OSI misuse and Windows interface strings",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "Firmware / ACPI"
+    }
+  ],
+  "historical_context": "ACPI OSI document описывает Windows-specific строки и невозможность Linux просто отвечать false.",
+  "original_reason": "Firmware тестировалось с определёнными OS responses.",
+  "root_cause": "_OSI фактически использовался как OS-version detector вместо interface capability.",
+  "observable_behavior": "Linux отвечает на Windows interface strings ради работоспособности BIOS.",
+  "compatibility_dependency": "«Честное имя ОС» может выбрать непроверенную firmware ветку.",
+  "security_impact": "Непроверенная ветка может нарушить power/device invariants.",
+  "performance_impact": "Frontend имеет boot/resume overhead.",
+  "complexity_impact": "Brand strings не должны проникать в scheduler или driver API.",
+  "hardware_dependency": "ACPI firmware; не требуется первичному DT target.",
+  "linux_current_solution": "Совместимые OSI responses и platform-specific handling документированы как компромисс.",
+  "remaining_problem": "Выбор AML runtime и его isolation остаётся открытым.",
+  "constraints_then": "Firmware ecosystems и тестирование на Windows.",
+  "constraints_now": "Старые firmware продолжают существовать; native protocol не обязан повторять OSI.",
+  "change_consequences": "«Честное имя ОС» может выбрать непроверенную firmware ветку.",
+  "improvement_assessment": "Вывод KOLVRT: Firmware personality выполняется в изолированном frontend; наружу — native device/power capabilities без OS brand strings. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "HARDWARE_TRANSLATION",
+  "kolvrt_native_semantics": "Firmware personality выполняется в изолированном frontend; наружу — native device/power capabilities без OS brand strings.",
+  "compatibility_required": "CONDITIONAL",
+  "compatibility_scope": "platform.acpi.osi/v1; firmware instance, только при добавлении ACPI",
+  "migration_strategy": "Начать с DT; ACPI включать по tested firmware fixtures и отдельному ADR.",
+  "tests_required": [
+    "AML fixtures с OSI branches возвращают ожидаемые native capabilities.",
+    "Ошибки frontend не создают partially initialized device."
+  ],
+  "benchmarks_required": [
+    "Firmware evaluation startup/suspend latency; footprint интерпретатора."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Выбор AML runtime и его isolation остаётся открытым.",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": [
+      "S13"
+    ],
+    "original_reason": [
+      "S13"
+    ],
+    "root_cause": [
+      "S13"
+    ],
+    "observable_behavior": [
+      "S13"
+    ],
+    "compatibility_dependency": [
+      "S13"
+    ],
+    "linux_current_solution": [
+      "S13"
+    ]
+  }
+}

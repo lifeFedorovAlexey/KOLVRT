@@ -1,0 +1,82 @@
+{
+  "id": "KOL-PATH-0001",
+  "title": "close(): ошибка после освобождения fd",
+  "subsystem": "VFS",
+  "category": [
+    "ABI_LEGACY",
+    "HISTORICAL_BEHAVIOR",
+    "COMPATIBILITY"
+  ],
+  "linux_versions": "Man-pages 6.19 описывает сохранённую Linux-семантику; дата её введения не установлена.",
+  "first_known_version": null,
+  "status": "ANALYZED_WITH_OPEN_QUESTIONS",
+  "research_date": "2026-10-02",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "close",
+      "url": "https://man7.org/linux/man-pages/man2/close.2.html",
+      "repository": "https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git",
+      "commit": null,
+      "tag_version": "man-pages-6.19",
+      "date": null,
+      "research_date": "2026-10-02",
+      "locator": "CAVEATS: Dealing with error returns from close()",
+      "kind": "OFFICIAL_DOCUMENTATION",
+      "provenance_limitations": "Прочитана указанная web-страница. Неуказанные commit, версия документа или дата публикации не подтверждены; null не означает отсутствие истории. Дата исследования не является датой изменения Linux.",
+      "subsystem": "VFS"
+    }
+  ],
+  "historical_context": "Man-pages 6.19 описывает сохранённую Linux-семантику; дата её введения не установлена.",
+  "original_reason": "Ресурс освобождается до поздних ошибок завершения I/O.",
+  "root_cause": "Один код ошибки не выражает отдельно освобождение дескриптора и результат записи.",
+  "observable_behavior": "После ошибки close, кроме EBADF, Linux уже освободил fd; повтор может закрыть переиспользованный номер.",
+  "compatibility_dependency": "Изменение правила EINTR меняет переносимость и код очистки приложений.",
+  "security_impact": "Риск закрыть чужой fd при retry.",
+  "performance_impact": "Ожидание flush нельзя скрыть в дешёвом close.",
+  "complexity_impact": "Два исхода требуют явной модели результата.",
+  "hardware_dependency": "Не зависит от ARM.",
+  "linux_current_solution": "Документировано не повторять close; fsync нужен отдельно; в прочитанной странице Linux не планирует менять EINTR.",
+  "remaining_problem": "Как native completion сообщает ошибку после уничтожения последнего handle?",
+  "constraints_then": "Числовые fd и синхронный errno.",
+  "constraints_now": "Linux ABI всё ещё нужен старым приложениям; native API свободен от этого формата.",
+  "change_consequences": "Изменение правила EINTR меняет переносимость и код очистки приложений.",
+  "improvement_assessment": "Вывод KOLVRT: Close потребляет handle ровно один раз; результат отдельно содержит release outcome и I/O diagnostic. Flush — отдельная операция. Это проектный выбор; превосходство по производительности не измерено.",
+  "kolvrt_decision": "COMPAT_ONLY",
+  "kolvrt_native_semantics": "Close потребляет handle ровно один раз; результат отдельно содержит release outcome и I/O diagnostic. Flush — отдельная операция.",
+  "compatibility_required": "YES",
+  "compatibility_scope": "linux.files.close/v1, таблица fd процесса",
+  "migration_strategy": "Сначала перевести cleanup на consuming handle; shim сохраняет Linux errno.",
+  "tests_required": [
+    "Гонка close/reuse не затрагивает новый handle.",
+    "Fault injection поздней EIO и EINTR: handle потреблён, ошибка видна."
+  ],
+  "benchmarks_required": [
+    "Close/flush отдельно: p99 и allocations при fd churn."
+  ],
+  "confidence": "MEDIUM",
+  "open_questions": [
+    "Как native completion сообщает ошибку после уничтожения последнего handle?",
+    "Установить первый introducing commit/tag по git history; прочитанный источник подтверждает механизм, но не его точную дату появления."
+  ],
+  "evidence": {
+    "historical_context": [
+      "S01"
+    ],
+    "original_reason": [
+      "S01"
+    ],
+    "root_cause": [
+      "S01"
+    ],
+    "observable_behavior": [
+      "S01"
+    ],
+    "compatibility_dependency": [
+      "S01"
+    ],
+    "linux_current_solution": [
+      "S01"
+    ]
+  }
+}
