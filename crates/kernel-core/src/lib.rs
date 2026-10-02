@@ -4,6 +4,7 @@
 pub mod execution;
 pub mod memory;
 pub mod platform;
+pub mod process;
 pub mod scheduling;
 pub mod time;
 pub mod window;
