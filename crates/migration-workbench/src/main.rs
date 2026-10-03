@@ -178,6 +178,9 @@ fn run() -> Result<PathBuf, String> {
         improvement_margin_ns: 1000,
         p95_regression_budget_ns: 100000,
         p99_regression_budget_ns: None,
+        p95_memory_regression_budget_bytes: None,
+        p95_copied_bytes_regression_budget: None,
+        p95_energy_regression_budget_uj: None,
     };
     let observed = Instant::now();
     let mut pairs = Vec::new();
@@ -206,6 +209,12 @@ fn run() -> Result<PathBuf, String> {
         pairs.push(Pair {
             baseline_ns: baseline.elapsed_ns,
             candidate_ns: candidate.elapsed_ns,
+            baseline_memory_bytes: None,
+            candidate_memory_bytes: None,
+            baseline_copied_bytes: None,
+            candidate_copied_bytes: None,
+            baseline_energy_uj: None,
+            candidate_energy_uj: None,
             baseline_compat_admissions: baseline.compat_admissions,
             candidate_compat_admissions: candidate.compat_admissions,
             useful_units: ITERATIONS,

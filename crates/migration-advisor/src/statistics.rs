@@ -23,6 +23,9 @@ pub struct StatisticalPolicy {
     pub improvement_margin_ns: u64,
     pub p95_regression_budget_ns: u64,
     pub p99_regression_budget_ns: Option<u64>,
+    pub p95_memory_regression_budget_bytes: Option<u64>,
+    pub p95_copied_bytes_regression_budget: Option<u64>,
+    pub p95_energy_regression_budget_uj: Option<u64>,
 }
 impl StatisticalPolicy {
     pub fn validate(&self) -> Result<(), String> {
@@ -47,6 +50,17 @@ pub struct Distribution {
     pub p99_ns: Option<u64>,
 }
 #[derive(Clone, Debug, Serialize)]
+pub struct ResourceDistribution {
+    pub median: u64,
+    pub p95: Option<u64>,
+    pub p99: Option<u64>,
+}
+#[derive(Clone, Debug, Serialize)]
+pub struct ResourceComparison {
+    pub baseline: ResourceDistribution,
+    pub candidate: ResourceDistribution,
+}
+#[derive(Clone, Debug, Serialize)]
 pub struct Statistics {
     pub paired_runs: usize,
     pub resampling_block_length: usize,
@@ -56,6 +70,9 @@ pub struct Statistics {
     pub comparison_tail_resamples: usize,
     pub baseline: Distribution,
     pub candidate: Distribution,
+    pub memory_bytes: Option<ResourceComparison>,
+    pub copied_bytes: Option<ResourceComparison>,
+    pub energy_uj: Option<ResourceComparison>,
     pub mean_gain_ns: f64,
     pub mean_gain_fraction: f64,
     pub gain_interval_ns: [f64; 2],
@@ -73,6 +90,51 @@ fn distribution(mut values: Vec<u64>, effective_units: usize) -> Distribution {
         p95_ns: (effective_units >= P95_TAIL_MINIMUM).then(|| rank(95)),
         p99_ns: (effective_units >= P99_TAIL_MINIMUM).then(|| rank(99)),
     }
+}
+
+fn resource_distribution(mut values: Vec<u64>, effective_units: usize) -> ResourceDistribution {
+    values.sort_unstable();
+    let rank = |percent: usize| values[(percent * values.len()).div_ceil(100) - 1];
+    ResourceDistribution {
+        median: rank(50),
+        p95: (effective_units >= P95_TAIL_MINIMUM).then(|| rank(95)),
+        p99: (effective_units >= P99_TAIL_MINIMUM).then(|| rank(99)),
+    }
+}
+
+fn resource_comparison(
+    pairs: &[Pair],
+    baseline: impl Fn(&Pair) -> Option<u64>,
+    candidate: impl Fn(&Pair) -> Option<u64>,
+    effective_units: usize,
+) -> Option<ResourceComparison> {
+    let baseline_values: Option<Vec<_>> = pairs.iter().map(baseline).collect();
+    let candidate_values: Option<Vec<_>> = pairs.iter().map(candidate).collect();
+    Some(ResourceComparison {
+        baseline: resource_distribution(baseline_values?, effective_units),
+        candidate: resource_distribution(candidate_values?, effective_units),
+    })
+}
+
+fn within_budget(
+    comparison: Option<&ResourceComparison>,
+    budget: Option<u64>,
+    effective_units: usize,
+) -> Option<bool> {
+    let Some(budget) = budget else {
+        return Some(true);
+    };
+    let comparison = comparison?;
+    if effective_units < P95_TAIL_MINIMUM {
+        return None;
+    }
+    Some(
+        comparison
+            .candidate
+            .p95?
+            .saturating_sub(comparison.baseline.p95?)
+            <= budget,
+    )
 }
 
 // SplitMix64 provides reproducible resampling, not security entropy. Rejection avoids modulo bias.
@@ -166,12 +228,50 @@ pub fn analyze_family(
             .zip(candidate.p99_ns)
             .map(|(a, b)| b.saturating_sub(a) <= budget),
     };
+    let memory_bytes = resource_comparison(
+        pairs,
+        |p| p.baseline_memory_bytes,
+        |p| p.candidate_memory_bytes,
+        resampling_blocks,
+    );
+    let copied_bytes = resource_comparison(
+        pairs,
+        |p| p.baseline_copied_bytes,
+        |p| p.candidate_copied_bytes,
+        resampling_blocks,
+    );
+    let energy_uj = resource_comparison(
+        pairs,
+        |p| p.baseline_energy_uj,
+        |p| p.candidate_energy_uj,
+        resampling_blocks,
+    );
+    let memory_ok = within_budget(
+        memory_bytes.as_ref(),
+        policy.p95_memory_regression_budget_bytes,
+        resampling_blocks,
+    );
+    let copied_bytes_ok = within_budget(
+        copied_bytes.as_ref(),
+        policy.p95_copied_bytes_regression_budget,
+        resampling_blocks,
+    );
+    let energy_ok = within_budget(
+        energy_uj.as_ref(),
+        policy.p95_energy_regression_budget_uj,
+        resampling_blocks,
+    );
     let decision = if comparison_tail_resamples < MIN_COMPARISON_TAIL_RESAMPLES {
         "inadequate_comparison_resolution"
     } else if p95_ok.is_none() || p99_ok.is_none() {
         "insufficient_tail_evidence"
+    } else if memory_ok.is_none() || copied_bytes_ok.is_none() || energy_ok.is_none() {
+        "insufficient_resource_evidence"
     } else if p95_ok == Some(false) || p99_ok == Some(false) {
         "tail_regression"
+    } else if memory_ok == Some(false) || copied_bytes_ok == Some(false) || energy_ok == Some(false)
+    {
+        "resource_regression"
     } else if interval[0] > policy.improvement_margin_ns as f64 {
         "supported_latency_gain"
     } else {
@@ -186,6 +286,9 @@ pub fn analyze_family(
         comparison_tail_resamples,
         baseline,
         candidate,
+        memory_bytes,
+        copied_bytes,
+        energy_uj,
         mean_gain_ns: mean,
         mean_gain_fraction: mean / baseline_mean,
         gain_interval_ns: interval,

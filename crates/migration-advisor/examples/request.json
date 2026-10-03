@@ -81,7 +81,10 @@
     "seed": 7,
     "improvement_margin_ns": 5,
     "p95_regression_budget_ns": 10,
-    "p99_regression_budget_ns": null
+    "p99_regression_budget_ns": null,
+    "p95_memory_regression_budget_bytes": null,
+    "p95_copied_bytes_regression_budget": null,
+    "p95_energy_regression_budget_uj": null
   },
   "attestations": [],
   "migration_plans": []

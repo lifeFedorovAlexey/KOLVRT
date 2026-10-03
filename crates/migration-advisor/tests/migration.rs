@@ -23,6 +23,9 @@ fn policy() -> migration_advisor::statistics::StatisticalPolicy {
         improvement_margin_ns: 5,
         p95_regression_budget_ns: 10,
         p99_regression_budget_ns: None,
+        p95_memory_regression_budget_bytes: None,
+        p95_copied_bytes_regression_budget: None,
+        p95_energy_regression_budget_uj: None,
     }
 }
 // Only this explicitly injected fixture verifier trusts synthetic assertions. The CLI never does.
@@ -135,6 +138,12 @@ fn request() -> Request {
                 .map(|i| Pair {
                     baseline_ns: 100,
                     candidate_ns: 50,
+                    baseline_memory_bytes: None,
+                    candidate_memory_bytes: None,
+                    baseline_copied_bytes: None,
+                    candidate_copied_bytes: None,
+                    baseline_energy_uj: None,
+                    candidate_energy_uj: None,
                     baseline_compat_admissions: 10,
                     candidate_compat_admissions: 0,
                     useful_units: 10,
@@ -589,6 +598,74 @@ fn one_noisy_pair_is_tolerated_but_uncertain_effect_and_tail_regression_are_not(
         trusted_fixture(&r, &solver()).unwrap().candidates[0].status,
         CandidateStatus::PartialEvidenceCandidate
     );
+}
+
+#[test]
+fn configured_multidimensional_budgets_require_evidence_and_reject_regressions() {
+    use migration_advisor::statistics::analyze_family;
+
+    let mut resource_policy = policy();
+    resource_policy.p95_memory_regression_budget_bytes = Some(0);
+    resource_policy.p95_copied_bytes_regression_budget = Some(8);
+    resource_policy.p95_energy_regression_budget_uj = Some(0);
+    let make_pairs = |memory: Option<u64>, copied: Option<u64>, energy: Option<u64>| {
+        (0..100)
+            .map(|i| Pair {
+                baseline_ns: 100,
+                candidate_ns: 50,
+                baseline_memory_bytes: Some(1024),
+                candidate_memory_bytes: memory,
+                baseline_copied_bytes: Some(16),
+                candidate_copied_bytes: copied,
+                baseline_energy_uj: Some(100),
+                candidate_energy_uj: energy,
+                baseline_compat_admissions: 1,
+                candidate_compat_admissions: 0,
+                useful_units: 1,
+                baseline_first: i % 2 == 0,
+                oracle_passed: true,
+            })
+            .collect::<Vec<_>>()
+    };
+
+    let missing =
+        analyze_family(&make_pairs(Some(1000), Some(16), None), &resource_policy, 1).unwrap();
+    assert_eq!(missing.decision, "insufficient_resource_evidence");
+
+    let within = analyze_family(
+        &make_pairs(Some(1024), Some(16), Some(100)),
+        &resource_policy,
+        1,
+    )
+    .unwrap();
+    assert_eq!(within.decision, "supported_latency_gain");
+    assert_eq!(within.memory_bytes.unwrap().candidate.p95, Some(1024));
+
+    let regression = analyze_family(
+        &make_pairs(Some(1024), Some(25), Some(100)),
+        &resource_policy,
+        1,
+    )
+    .unwrap();
+    assert_eq!(regression.decision, "resource_regression");
+}
+
+#[test]
+fn resource_budget_regression_rejects_the_advisor_candidate() {
+    let mut request = request();
+    request.statistics.p95_copied_bytes_regression_budget = Some(0);
+    request.benchmarks[0].statistics = request.statistics.clone();
+    for pair in &mut request.benchmarks[0].pairs {
+        pair.baseline_copied_bytes = Some(8);
+        pair.candidate_copied_bytes = Some(16);
+    }
+
+    let report = trusted_fixture(&request, &solver()).unwrap();
+    assert_eq!(
+        report.candidates[0].status,
+        CandidateStatus::RejectedCandidate
+    );
+    assert!(!report.candidates[0].assurance.statistical_gain_supported);
 }
 
 #[test]

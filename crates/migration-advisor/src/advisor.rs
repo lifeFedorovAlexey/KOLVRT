@@ -73,6 +73,21 @@ pub struct ContractTest {
 pub struct Pair {
     pub baseline_ns: u64,
     pub candidate_ns: u64,
+    /// Per-run peak resident bytes; unknown is not zero.
+    #[serde(default)]
+    pub baseline_memory_bytes: Option<u64>,
+    #[serde(default)]
+    pub candidate_memory_bytes: Option<u64>,
+    /// Per-run bytes copied by the measured consumer; unknown is not zero.
+    #[serde(default)]
+    pub baseline_copied_bytes: Option<u64>,
+    #[serde(default)]
+    pub candidate_copied_bytes: Option<u64>,
+    /// Per-run energy in microjoules; unknown is not zero.
+    #[serde(default)]
+    pub baseline_energy_uj: Option<u64>,
+    #[serde(default)]
+    pub candidate_energy_uj: Option<u64>,
     pub baseline_compat_admissions: u64,
     pub candidate_compat_admissions: u64,
     pub useful_units: u64,
@@ -654,7 +669,10 @@ pub fn advise_with_verifier(
                                 candidate.candidate_median_ns = Some(result.candidate.median_ns);
                                 candidate.assurance.statistical_gain_supported =
                                     result.decision == "supported_latency_gain";
-                                benchmark_failed |= result.decision == "tail_regression";
+                                benchmark_failed |= matches!(
+                                    result.decision.as_str(),
+                                    "tail_regression" | "resource_regression"
+                                );
                                 stats = Some(result);
                             }
                             Err(error) => candidate.assurance.missing_checks.push(error),
@@ -678,7 +696,7 @@ pub fn advise_with_verifier(
                     ),
                     (
                         candidate.assurance.statistical_gain_supported,
-                        "latency gain or tail budget is not statistically supported",
+                        "latency gain or a configured resource budget is not supported by the evidence",
                     ),
                     (
                         rollback_ready,
@@ -701,7 +719,7 @@ pub fn advise_with_verifier(
                 } else {
                     CandidateStatus::PartialEvidenceCandidate
                 };
-                candidate.reason = if rejected { "a contract/oracle/experimental validity check failed or a tail regression exceeded budget" }
+                candidate.reason = if rejected { "a contract/oracle/experimental validity check failed or a configured regression budget was exceeded" }
                     else if candidate.status == CandidateStatus::VerifiedCandidate { "authenticated scoped evidence supports a migration proposal; deployment needs separate authorization" }
                     else { "dependency solution exists; evidence gaps are explicit and no strong preference is issued" }.into();
                 candidate.proposal = Some(Proposal {
