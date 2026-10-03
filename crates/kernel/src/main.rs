@@ -250,7 +250,10 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     }
     cpu::mask();
     cpu::timer_stop();
-    event!("{{\"event\":\"panic\",\"status\":\"fail\"}}");
+    event!(
+        "{{\"event\":\"panic\",\"status\":\"fail\",\"line\":{}}}",
+        info.location().map_or(0, |location| location.line())
+    );
     diagnostics::status("FAIL", "panic", format_args!("kernel halted"));
     #[cfg(feature = "diagnostics")]
     if let Some(location) = info.location() {
