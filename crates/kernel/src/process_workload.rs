@@ -336,14 +336,15 @@ fn quantum_progress(
     let mut counters = [0_u64; config::ACTIVE_CPUS];
     let mut el0_residency = [0_u64; config::ACTIVE_CPUS];
     let mut first_el0_residency = [0_u64; config::ACTIVE_CPUS];
+    let mut el0_generation_valid = true;
+    let mut el0_monotonic = true;
     for (owner, counter) in counters.iter_mut().enumerate() {
         let id = ids[owner * 2];
         let task = &first.tasks[id.slot()];
         el0_residency[owner] = task.el0_residency_ticks;
         first_el0_residency[owner] = task.el0_residency_ticks;
+        el0_generation_valid &= task.process_generation == id.generation();
         passed &= registry.state(id) == Ok(State::Admitted)
-            && task.process_generation == id.generation()
-            && task.el0_residency_ticks > 0
             && registry.completion(id) == Err(Error::Transition)
             && registry.reclaim(p, id) == Err(Error::Transition);
         assert!(crate::scheduler::detached(id));
@@ -364,7 +365,7 @@ fn quantum_progress(
             let peer = ids[owner * 2 + 1];
             let task = &result.tasks[spinner.slot()];
             if task.process_generation == spinner.generation() {
-                passed &= task.el0_residency_ticks >= el0_residency[owner];
+                el0_monotonic &= task.el0_residency_ticks >= el0_residency[owner];
                 el0_residency[owner] = task.el0_residency_ticks;
             }
             if registry.state(spinner) == Ok(State::Admitted) && registry.completion(peer).is_ok() {
@@ -384,8 +385,6 @@ fn quantum_progress(
         passed &= registry.completion(id).is_ok_and(|c| c.reason == expected);
         passed &= tag(registry, id) == EXIT_CODE + index as u64;
         if index % 2 == 0 {
-            let owner = index / 2;
-            passed &= el0_residency[owner] > first_el0_residency[owner];
             // SAFETY: INV-USER-RETIRE: terminal retained space, all CPU writers
             // quiescent; this read ends before reclamation below.
             let counter = unsafe {
@@ -395,6 +394,18 @@ fn quantum_progress(
         }
         registry.reclaim(p, id).unwrap();
     }
+    report(
+        "process_el0_residency_initial",
+        el0_generation_valid && first_el0_residency.iter().all(|ticks| *ticks > 0),
+    );
+    report("process_el0_residency_monotonic", el0_monotonic);
+    report(
+        "process_el0_residency_accumulates",
+        el0_residency
+            .iter()
+            .zip(first_el0_residency)
+            .all(|(final_ticks, initial_ticks)| *final_ticks > initial_ticks),
+    );
     report(
         "process_quantum_return_and_peer_progress",
         passed

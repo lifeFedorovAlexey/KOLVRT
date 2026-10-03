@@ -132,7 +132,9 @@ pub extern "C" fn kernel_main() -> ! {
                 }
             ),
         );
-        process_workload::exercise(&mut physical, &mut processes, |_, passed| assert!(passed));
+        process_workload::exercise(&mut physical, &mut processes, |name, passed| {
+            assert!(passed, "process workload check failed: {name}");
+        });
         #[cfg(feature = "boot-payload")]
         boot_workload::payload(
             &mut physical,
