@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "status": "OPEN",
   "issue": "https://github.com/lifeFedorovAlexey/KOLVRT/issues/15",
   "evidence": "research/results/routing-performance-trigger.json",
   "profile": "dev-full",
@@ -70,11 +69,13 @@
       "delta_percent": -8.605851979345957
     }
   ],
-  "interpretation": "Investigation trigger only; no established winner; fixed warmup, preemption, TCG/host variability and tail uncertainty retained",
+  "interpretation": "The repeated fixed-source QEMU investigation found no stable compatibility speed advantage: all run-cluster bootstrap intervals include zero, and medians vary in sign across launches. Generated AArch64 assembly shows the native path calls the shared backend directly; adapters perform their declared decoding and normalization. No performance code change is justified. These are TCG observations only; no physical ARM64 speed or throughput claim is made.",
   "next_checks": [
-    "Repeated paired order-counterbalanced trials",
-    "Generated-code review without weakening validation or ownership",
-    "Separate clock and scheduler overhead",
-    "ARM64 hardware validation"
-  ]
+    "Repeat on physical ARM64 before making any hardware speed or throughput claim."
+  ],
+  "repeated_qemu_findings": "Eight fixed-source QEMU launches; route-level paired median differences are small, inconsistent and all exploratory run-cluster bootstrap intervals include zero. Assembly inspection found the native route already bypasses legacy decoding; adapters add the expected byte decoding and bounds checks. No performance code change is justified. Issue remains open only for the unavailable physical ARM64 comparison if a hardware performance claim is pursued.",
+  "status": "CLOSED",
+  "repeated_qemu_evidence": "research/results/routing-performance-issue15-repeats.json",
+  "codegen_review": "Release AArch64 assembly emitted from the guest with dev,v1,v2,bug features. The native route bypasses legacy decoding and invokes the shared backend directly; compatibility routes decode and normalize bytes before that same backend. No avoidable native register-packing/reduction work was identified. Bounds and initialized-output checks remain intact.",
+  "resolution_scope": "QEMU TCG performance investigation complete. Physical ARM64 evidence is a prerequisite for any future physical speed or throughput claim, not a claim made by this record."
 }
