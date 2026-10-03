@@ -8,7 +8,7 @@
     {
       "path": "crates/kernel/src\\boot_workload.S",
       "review": "INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE",
-      "sha256": "9f4d7b33766a5e47f2b2076a9293ddeb2f3ed18413fb17f506b770b7b4e80caa"
+      "sha256": "8585b51f007fd67167566549c257d0a79ab2b01367ff0bb5e2855aafafd3fba1"
     }
   ],
   "compiler": "Rust 1.99.0",

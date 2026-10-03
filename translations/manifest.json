@@ -86,8 +86,8 @@
         "translation_sha256": "9edaf7d7c08a1577d8c63c3acf67c4ec191b97ef1d5b936dc2995d8e45e85592"
       },
       "docs/architecture-decisions/0019-process-local-handles.md": {
-        "source_sha256": "c7f2f786f8654d9008859f4ca90b7a2ccbb6c7058c1c923d7185648389df4c73",
-        "translation_sha256": "a1a0ee5958184b9f95dfc9b14280a0ca545c540ffc5c3327148317105c5f917b"
+        "source_sha256": "9b3b9e17b3ed74de9980a34cb95cb877f15d2d889c96d5eaef91b2e344c67c11",
+        "translation_sha256": "d2df0a3232233a9c6f9ed2d85404db31a7d9b7af3ffcc8bd2a9b94b28fdc1864"
       },
       "docs/architecture-decisions/README.md": {
         "source_sha256": "d360ba6343c8da0b8eec75c7bf9b7d5d69709f363135817c9b159a729e50ba66",
@@ -198,8 +198,8 @@
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
       },
       "docs/kernel/handles.md": {
-        "source_sha256": "4fd61cdd194d6ae2634128530158dbe714dc501ee0a5011ef09c2c82be9dd56a",
-        "translation_sha256": "d0a29be6345a6820340898f7f210446c98e5ee00e2db128fd8820598373bbd89"
+        "source_sha256": "9378f7cd193db6746570e548b6509f217dd3e269c0985184f3a7bd384475d7f4",
+        "translation_sha256": "158c9ce1416f3f846764af5e04bc1ac606c24494fa68a21ff0e9475a4c3fbd92"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",

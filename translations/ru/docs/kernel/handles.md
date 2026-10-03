@@ -41,7 +41,7 @@ flowchart TD
 
 [Process ownership](../../../../crates/kernel/src/process.rs) сохраняет поколения namespace после retirement. [Scheduler integration](../../../../crates/kernel/src/scheduler/mod.rs) перемещает линейный namespace в owner state через existing publication permits и возвращает через quiescent editing после завершения двух CPU. Task metadata — копируемые evidence; namespaces и targets не клонируются. Global handle lock, новый UnsafeCell, unsafe Sync, raw-pointer cache и unchecked indexing не добавлены. Fixed affinity, private mappings и exclusive masked owner sections исключают lookup/close/retirement races. Migration, shared mappings и asynchronous operations требуют нового exclusion/retention proof.
 
-DEV после quiescence показывает process slot/generation, capacity, active count, поколения/kinds live slots и retiring lifecycle; usable handles, raw kernel pointers и payload не выводятся. PROD исключает diagnostics, сохраняя проверки. Eight inline targets — deterministic quota процесса. Lookup/close не выделяют память, не блокируются, не уступают CPU, не логируют и не вызывают external service.
+DEV после quiescence показывает process slot/generation, capacity, active count, поколения/kinds live slots и retiring lifecycle; полные raw handle values, raw kernel pointers и payload не выводятся. PROD исключает diagnostics, сохраняя проверки. Eight inline targets — deterministic quota процесса. Lookup/close не выделяют память, не блокируются, не уступают CPU, не логируют и не вызывают external service.
 
 Подготовка runqueue инициализирует существующее хранилище под исключительным preparing permit, без передачи State по значению через фиксированный DEV-стек. Итоговый аудит воспроизвёл повреждение BSS из-за крупных временных объектов на стеке прежней реализации. Инициализация на месте устраняет эти копии и сохраняет continuity отчётов и ownership namespace.
 
@@ -62,6 +62,8 @@ Generation увеличивается при reservation, включая failed 
 
 ## Verification и performance gate
 
+Retirement-control требует отдельное событие handle-retirement-reject: посторонний panic не засчитывается как ожидаемое отклонение нарушения cleanup invariant.
+
 [EL0 verification](../../../../crates/kernel/src/handles/testing.rs) проводит forged/stale/wrong-kind lookup и double close через production copied request path. Два реальных процесса передают одинаковый raw handle: empty receiver не resolve sender resource. Eight two-CPU creation/exit/fault/reclaim rounds сохраняют handle generations при ProcessId slot reuse; проверяются frame counts и пустота namespace. Fixture покрывает live borrowed events, completion ownership, capacity, small-limit generation exhaustion, failed user publication и repeated close/reuse.
 
 Пять build controls отключают реальные generation validation, owner validation, type checking, generation advancement или retirement cleanup. Runner должен обнаружить каждый в DEV и PROD. Изменяется enforcement, а не test expectation. Проверенная матрица включает existing Phase 3.2/lifecycle controls, native-only removal, routing regression, host tests, Clippy и repository checks.
@@ -72,11 +74,11 @@ Five per-CPU scopes сохраняют четыре warmups и 32 raw timer obse
 
 | Scope                 | DEV CPU0 median / p95 | DEV CPU1 median / p95 | PROD CPU0 median / p95 | PROD CPU1 median / p95 |
 | --------------------- | --------------------- | --------------------- | ---------------------- | ---------------------- |
-| handle_lookup_success | 44 / 50               | 44 / 69               | 7 / 50                 | 6 / 7                  |
-| handle_lookup_failure | 38 / 50               | 37 / 50               | 6 / 37                 | 6 / 7                  |
-| handle_create         | 75 / 93               | 75 / 75               | 6 / 25                 | 6 / 7                  |
-| handle_close          | 38 / 44               | 37 / 38               | 6 / 31                 | 6 / 12                 |
-| handle_slot_reuse     | 206 / 225             | 194 / 206             | 6 / 44                 | 13 / 57                |
+| handle_lookup_success | 44 / 50               | 50 / 75               | 6 / 7                  | 6 / 13                 |
+| handle_lookup_failure | 38 / 50               | 37 / 44               | 6 / 125                | 6 / 7                  |
+| handle_create         | 68 / 81               | 69 / 88               | 6 / 31                 | 6 / 13                 |
+| handle_close          | 44 / 56               | 44 / 50               | 6 / 31                 | 6 / 63                 |
+| handle_slot_reuse     | 206 / 218             | 212 / 225             | 6 / 13                 | 6 / 19                 |
 
 [Kernel receipt](../../../../research/results/kernel-phase33.json), [native-only receipt](../../../../research/results/native-compat-removal-phase33.json), [routing regression](../../../../research/results/routing-phase33-regression.json) и [unsafe inventory](../../../../research/results/kernel-phase33-unsafe-audit.json) сохраняют точную область измерений. Native-only сверяет 59 неизменных native/harness files; production unsafe delta — zero, три linked-fixture sites — test-only. Ранний CI встретил secondary CPU failure до ownership negative control; runner не принял это за успех и не скрывает отказ. Итоговый CI обязан пройти для опубликованного кандидата.
 

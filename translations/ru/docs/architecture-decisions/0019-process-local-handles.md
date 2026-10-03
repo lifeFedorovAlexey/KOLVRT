@@ -3,7 +3,7 @@
 Status: **Accepted for bounded Phase 3.3**. Date: 2026-10-03.
 
 Document status: CURRENT
-Evidence scope: process-local identity/type/lifetime; проверка продолжается, без authority и transfer.
+Evidence scope: process-local identity/type/lifetime; локальная exact-source проверка, без authority и transfer.
 Current reference: [Контракт handles](../kernel/handles.md)
 
 ## Context
@@ -42,7 +42,7 @@ Protected resource — kernel-owned wait/completion storage. EL0 не может
 
 ## Testing
 
-Требуются real two-CPU copied-request execution, foreign/stale/wrong-kind rejection, close/rollback/exhaustion/reuse, exit/fault cleanup, compile-time retained-borrow exclusion, пять actual enforcement controls, existing lifecycle/user-copy/routing regressions, physical native-only removal, host/Clippy/repository checks, exact-source receipts и green CI. Прогресс не означает complete acceptance.
+Требуются real two-CPU copied-request execution, foreign/stale/wrong-kind rejection, close/rollback/exhaustion/reuse, exit/fault cleanup, compile-time retained-borrow exclusion, пять actual enforcement controls, existing lifecycle/user-copy/routing regressions, physical native-only removal, host/Clippy/repository checks, exact-source receipts и green CI. Результаты локальной проверки связаны с контрактом handles; окончательная приёмка требует green CI опубликованного кандидата.
 
 ## Reversibility
 

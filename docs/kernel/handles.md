@@ -64,7 +64,7 @@ Creation owns the prepared target on the kernel stack until publication succeeds
 
 [EL0 verification](../../crates/kernel/src/handles/testing.rs) drives forged/stale/wrong-kind lookup and double close through the production copied request path. Two real processes submit the same raw handle: the empty receiver cannot resolve the sender resource. Eight two-CPU creation/exit/fault/reclaim rounds preserve handle generations across reused process slots. Frame counts and namespace emptiness are checked. The fixture also covers live borrowed events, completion ownership, capacity, small-limit generation exhaustion, failed user publication and repeated close/reuse.
 
-Five build controls remove actual generation validation, owner validation, type checking, generation advancement or retirement cleanup. The runner must detect each in DEV and PROD. These mutate enforcement, not test expectations. The verified matrix includes existing Phase 3.2 and lifecycle controls, native-only removal, routing regression, host tests, Clippy and repository checks.
+Five build controls remove actual generation validation, owner validation, type checking, generation advancement or retirement cleanup. The runner must detect each in DEV and PROD. These mutate enforcement, not test expectations. Retirement requires its dedicated handle-retirement-reject event so unrelated panics cannot count as the expected invariant rejection. The verified matrix includes existing Phase 3.2 and lifecycle controls, native-only removal, routing regression, host tests, Clippy and repository checks.
 
 Five per-CPU scopes retain four warmups and 32 raw timer observations: successful lookup, failed lookup, create, close and slot reuse. Create measures target construction and namespace commit with a no-op publication callback; user-copy/EL0 setup is excluded. Close preparation is outside its interval. Reuse measures create/close/create/close. Measurements are regression baselines under QEMU TCG, not hardware throughput claims. Compiler-observation barriers materialize intermediate namespace states so create/close/reuse cannot be folded away. The measured candidate has 73 source hashes, 72 checks and 67 negative controls.
 
@@ -72,11 +72,11 @@ Recorded timer ticks at 62.5 MHz, 32 samples per cell. Single-operation PROD obs
 
 | Scope                 | DEV CPU0 median / p95 | DEV CPU1 median / p95 | PROD CPU0 median / p95 | PROD CPU1 median / p95 |
 | --------------------- | --------------------- | --------------------- | ---------------------- | ---------------------- |
-| handle_lookup_success | 44 / 50               | 44 / 69               | 7 / 50                 | 6 / 7                  |
-| handle_lookup_failure | 38 / 50               | 37 / 50               | 6 / 37                 | 6 / 7                  |
-| handle_create         | 75 / 93               | 75 / 75               | 6 / 25                 | 6 / 7                  |
-| handle_close          | 38 / 44               | 37 / 38               | 6 / 31                 | 6 / 12                 |
-| handle_slot_reuse     | 206 / 225             | 194 / 206             | 6 / 44                 | 13 / 57                |
+| handle_lookup_success | 44 / 50               | 50 / 75               | 6 / 7                  | 6 / 13                 |
+| handle_lookup_failure | 38 / 50               | 37 / 44               | 6 / 125                | 6 / 7                  |
+| handle_create         | 68 / 81               | 69 / 88               | 6 / 31                 | 6 / 13                 |
+| handle_close          | 44 / 56               | 44 / 50               | 6 / 31                 | 6 / 63                 |
+| handle_slot_reuse     | 206 / 218             | 212 / 225             | 6 / 13                 | 6 / 19                 |
 
 [Kernel receipt](../../research/results/kernel-phase33.json), [native-only receipt](../../research/results/native-compat-removal-phase33.json), [routing regression](../../research/results/routing-phase33-regression.json) and [unsafe inventory](../../research/results/kernel-phase33-unsafe-audit.json) retain the exact measured scope. Native-only compares 59 unchanged native/harness files; production unsafe delta is zero and three linked-fixture sites are test-only. An earlier CI invocation encountered a secondary CPU failure before its ownership negative control; it is not accepted as success or hidden by the runner. Final CI must pass on the published candidate.
 

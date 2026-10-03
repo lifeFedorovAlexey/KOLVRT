@@ -410,11 +410,10 @@ impl Registry {
         trace(id, State::Reclaiming, None);
         let object = self.objects[id.slot()].take().ok_or(Error::Stale)?;
         assert_eq!(object.id, id);
-        assert_eq!(self.handles[id.slot()].live(), 0, "handle retirement leak");
-        assert!(
-            self.handles[id.slot()].owner().is_none(),
-            "handle namespace still accessible"
-        );
+        if self.handles[id.slot()].live() != 0 || self.handles[id.slot()].owner().is_some() {
+            crate::event!("{{\"event\":\"handle-retirement-reject\",\"status\":\"fail\"}}");
+            panic!("handle namespace must retire before reclamation");
+        }
         object.space.reclaim(physical);
         self.table.released(id)?;
         trace(id, State::Free, None);

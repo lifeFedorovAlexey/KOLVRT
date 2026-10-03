@@ -171,7 +171,7 @@ const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--handle-retirement-control",
         "handle-retirement-negative",
-        "\"event\":\"panic\"",
+        "\"event\":\"handle-retirement-reject\"",
     ),
 ];
 const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
