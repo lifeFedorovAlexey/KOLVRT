@@ -1324,6 +1324,9 @@ fn rollback_and_irreversible_changes_are_part_of_every_solved_proposal() {
 #[test]
 fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     use ed25519_dalek::{Signer, SigningKey};
+    use migration_advisor::authorization::{
+        DeploymentAuthorization, RouteGeneration, SignedDeploymentAuthorization,
+    };
     use migration_advisor::provenance::*;
     use std::collections::BTreeMap;
     let root = std::env::temp_dir().join(format!("kolvrt-advisor-chain-{}", std::process::id()));
@@ -1377,6 +1380,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     }
     r.benchmarks[0].statistics = r.statistics.clone();
     let key = SigningKey::from_bytes(&[44; 32]);
+    let deployment_key = SigningKey::from_bytes(&[45; 32]);
     let hex = |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
     let sign = |role, payload: Vec<u8>| {
         let digest = subject_digest(&payload);
@@ -1385,6 +1389,19 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
             subject_digest: digest.clone(),
             key_id: "fixture-producer".into(),
             signature: hex(&key.sign(&signing_message(role, &digest)).to_bytes()),
+            issued_at_unix_seconds: None,
+            session_id: None,
+        }
+    };
+    let sign_deployment = |payload: Vec<u8>| {
+        let digest = subject_digest(&payload);
+        Attestation {
+            role: Role::Deployment,
+            subject_digest: digest.clone(),
+            key_id: "fixture-deployer".into(),
+            signature: hex(&deployment_key
+                .sign(&signing_message(Role::Deployment, &digest))
+                .to_bytes()),
             issued_at_unix_seconds: None,
             session_id: None,
         }
@@ -1415,18 +1432,26 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     ));
     let policy = TrustPolicy {
         schema: 1,
-        keys: vec![TrustedKey {
-            key_id: "fixture-producer".into(),
-            public_key: hex(&key.verifying_key().to_bytes()),
-            roles: vec![
-                Role::Catalog,
-                Role::Runtime,
-                Role::ContractTest,
-                Role::Benchmark,
-                Role::Proposal,
-            ],
-            revoked: false,
-        }],
+        keys: vec![
+            TrustedKey {
+                key_id: "fixture-producer".into(),
+                public_key: hex(&key.verifying_key().to_bytes()),
+                roles: vec![
+                    Role::Catalog,
+                    Role::Runtime,
+                    Role::ContractTest,
+                    Role::Benchmark,
+                    Role::Proposal,
+                ],
+                revoked: false,
+            },
+            TrustedKey {
+                key_id: "fixture-deployer".into(),
+                public_key: hex(&deployment_key.verifying_key().to_bytes()),
+                roles: vec![Role::Deployment],
+                revoked: false,
+            },
+        ],
         required_session_id: None,
         max_attestation_age_seconds: None,
         max_clock_skew_seconds: None,
@@ -1473,6 +1498,76 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     assert!(output.status.success());
     let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(json["candidates"][0]["status"], "VERIFIED_CANDIDATE");
+    let authorization = DeploymentAuthorization {
+        schema: 1,
+        candidate: r.catalog[1].identity.clone(),
+        plan_digest: r.migration_plans[0].plan_digest.clone(),
+        context: r.context.clone(),
+        route_generations: vec![RouteGeneration {
+            route: r.runtime.as_ref().unwrap().routes[0].route.clone(),
+            generation: r.runtime.as_ref().unwrap().routes[0].generation,
+        }],
+        state_retirement: None,
+        satisfied_rollback_preconditions: r.migration_plans[0].rollback_preconditions.clone(),
+        authorized_irreversible_changes: r.migration_plans[0].irreversible_changes.clone(),
+    };
+    let authorization_payload = serde_json::to_vec(&authorization).unwrap();
+    let signed_authorization = SignedDeploymentAuthorization {
+        attestations: vec![sign_deployment(authorization_payload)],
+        authorization,
+    };
+    let plan = Plan {
+        packages: vec![r.catalog[1].identity.clone()],
+    };
+    std::fs::write(
+        root.join(&signed_authorization.authorization.plan_digest),
+        serde_json::to_vec(&plan).unwrap(),
+    )
+    .unwrap();
+    let receipt =
+        migration_advisor::authorization::authorize(&r, &signed_authorization, &solver(), &store)
+            .unwrap();
+    assert!(receipt.authorization_verified);
+    assert!(!receipt.deployment_executed);
+    let authorization_path = root.join("authorization.json");
+    std::fs::write(
+        &authorization_path,
+        serde_json::to_vec(&signed_authorization).unwrap(),
+    )
+    .unwrap();
+    let authorized_cli = std::process::Command::new(env!("CARGO_BIN_EXE_migration-advisor"))
+        .arg("authorize")
+        .arg(&request_path)
+        .arg(&authorization_path)
+        .arg("--trust-policy")
+        .arg(&trust_path)
+        .arg("--artifact-root")
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(authorized_cli.status.success());
+    let authorization_receipt: serde_json::Value =
+        serde_json::from_slice(&authorized_cli.stdout).unwrap();
+    assert_eq!(authorization_receipt["authorization_verified"], true);
+    assert_eq!(authorization_receipt["deployment_executed"], false);
+    let mut altered_authorization = signed_authorization;
+    altered_authorization.authorization.route_generations[0].generation += 1;
+    std::fs::write(
+        &authorization_path,
+        serde_json::to_vec(&altered_authorization).unwrap(),
+    )
+    .unwrap();
+    let altered_cli = std::process::Command::new(env!("CARGO_BIN_EXE_migration-advisor"))
+        .arg("authorize")
+        .arg(&request_path)
+        .arg(&authorization_path)
+        .arg("--trust-policy")
+        .arg(&trust_path)
+        .arg("--artifact-root")
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(!altered_cli.status.success());
     let pilot_attestation = r.attestations.remove(0);
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
     assert_eq!(

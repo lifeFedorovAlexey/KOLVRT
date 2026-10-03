@@ -13,6 +13,7 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
     let digest = subject_digest(raw);
     std::fs::write(root.join(&digest), raw).unwrap();
     let key = SigningKey::from_bytes(&[42; 32]); // Public test fixture only.
+    let deployment_key = SigningKey::from_bytes(&[46; 32]); // Separate role fixture.
     let public = hex(&key.verifying_key().to_bytes());
     let payload = br#"{"passed":true,"package":"fixture"}"#;
     let subject = subject_digest(payload);
@@ -29,12 +30,20 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
     };
     let policy = TrustPolicy {
         schema: 1,
-        keys: vec![TrustedKey {
-            key_id: "test".into(),
-            public_key: public,
-            roles: vec![Role::ContractTest, Role::Deployment],
-            revoked: false,
-        }],
+        keys: vec![
+            TrustedKey {
+                key_id: "test".into(),
+                public_key: public,
+                roles: vec![Role::ContractTest],
+                revoked: false,
+            },
+            TrustedKey {
+                key_id: "deployment-test".into(),
+                public_key: hex(&deployment_key.verifying_key().to_bytes()),
+                roles: vec![Role::Deployment],
+                revoked: false,
+            },
+        ],
         required_session_id: None,
         max_attestation_age_seconds: None,
         max_clock_skew_seconds: None,
@@ -47,31 +56,35 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
             .authenticate(Role::ContractTest, payload, &refs, &attestations)
             .is_ok()
     );
-    let deployment_signature = key.sign(&signing_message(Role::Deployment, &subject));
+    let deployment_signature = deployment_key.sign(&signing_message(Role::Deployment, &subject));
     let deployment_attestation = Attestation {
         role: Role::Deployment,
         subject_digest: subject.clone(),
-        key_id: "test".into(),
+        key_id: "deployment-test".into(),
         signature: hex(&deployment_signature.to_bytes()),
         issued_at_unix_seconds: None,
         session_id: None,
     };
-    assert!(store
-        .authenticate(
-            Role::Deployment,
-            payload,
-            &refs,
-            &[deployment_attestation.clone()]
-        )
-        .is_ok());
-    assert!(store
-        .authenticate(
-            Role::ContractTest,
-            payload,
-            &refs,
-            &[deployment_attestation]
-        )
-        .is_err());
+    assert!(
+        store
+            .authenticate(
+                Role::Deployment,
+                payload,
+                &refs,
+                &[deployment_attestation.clone()]
+            )
+            .is_ok()
+    );
+    assert!(
+        store
+            .authenticate(
+                Role::ContractTest,
+                payload,
+                &refs,
+                &[deployment_attestation]
+            )
+            .is_err()
+    );
     assert!(
         store
             .authenticate(
@@ -82,6 +95,9 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
             )
             .is_err()
     );
+    let mut mixed_deployment_role = policy.clone();
+    mixed_deployment_role.keys[0].roles.push(Role::Deployment);
+    assert!(SignedArtifactStore::new(mixed_deployment_role, root.clone()).is_err());
     assert!(
         store
             .authenticate(Role::Catalog, payload, &refs, &attestations)

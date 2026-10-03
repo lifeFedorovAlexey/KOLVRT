@@ -106,7 +106,9 @@ fn verify_authorization_bindings(
         || !runtime.complete
         || runtime.lost_events != 0
     {
-        return Err("authorization does not bind a complete matching candidate/runtime plan".into());
+        return Err(
+            "authorization does not bind a complete matching candidate/runtime plan".into(),
+        );
     }
     let expected_routes = active_route_generations(runtime)?;
     let mut authorized_routes = authorization.route_generations.clone();
@@ -121,9 +123,15 @@ fn verify_authorization_bindings(
         &authorization.authorized_irreversible_changes,
         &migration.irreversible_changes,
     ) {
-        return Err("authorization must acknowledge the exact rollback and irreversible-change lists".into());
+        return Err(
+            "authorization must acknowledge the exact rollback and irreversible-change lists"
+                .into(),
+        );
     }
-    match (&migration.rollback_strategy, migration.persistent_data_change) {
+    match (
+        &migration.rollback_strategy,
+        migration.persistent_data_change,
+    ) {
         (RollbackStrategy::RestoreSnapshot { snapshot_digest }, true) => {
             let consent = authorization
                 .state_retirement
@@ -132,7 +140,10 @@ fn verify_authorization_bindings(
             if consent.previous_state_digest != snapshot_digest.as_str()
                 || !consent.only_after_health_check
             {
-                return Err("state retirement must bind the rollback snapshot and wait for health checks".into());
+                return Err(
+                    "state retirement must bind the rollback snapshot and wait for health checks"
+                        .into(),
+                );
             }
         }
         (_, false) if authorization.state_retirement.is_none() => {}
@@ -214,12 +225,8 @@ pub fn authorize(
         plan_digest: authorization.plan_digest.clone(),
         route_generations,
         state_retirement: authorization.state_retirement.clone(),
-        satisfied_rollback_preconditions: authorization
-            .satisfied_rollback_preconditions
-            .clone(),
-        authorized_irreversible_changes: authorization
-            .authorized_irreversible_changes
-            .clone(),
+        satisfied_rollback_preconditions: authorization.satisfied_rollback_preconditions.clone(),
+        authorized_irreversible_changes: authorization.authorized_irreversible_changes.clone(),
         authorization_verified: true,
         deployment_executed: false,
     })
@@ -312,7 +319,11 @@ mod tests {
         assert!(verify_authorization_bindings(&changed, &runtime, &migration).is_err());
 
         let mut changed = auth.clone();
-        changed.state_retirement.as_mut().unwrap().only_after_health_check = false;
+        changed
+            .state_retirement
+            .as_mut()
+            .unwrap()
+            .only_after_health_check = false;
         assert!(verify_authorization_bindings(&changed, &runtime, &migration).is_err());
 
         let mut changed = auth.clone();
