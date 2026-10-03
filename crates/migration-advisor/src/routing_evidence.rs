@@ -370,13 +370,16 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 };
                 let adapter_ticks = median_ticks(&adapter_cpu_ticks);
                 let native_ticks = median_ticks(&native_service_cpu_ticks);
-                let exclusive_cpu_ticks = median_ticks(
-                    &adapter_cpu_ticks
-                        .iter()
-                        .zip(&native_service_cpu_ticks)
-                        .map(|(&adapter, &native)| adapter.saturating_add(native))
-                        .collect::<Vec<_>>(),
-                );
+                let exclusive_cpu_samples = adapter_cpu_ticks
+                    .iter()
+                    .zip(&native_service_cpu_ticks)
+                    .map(|(&adapter, &native)| {
+                        adapter
+                            .checked_add(native)
+                            .ok_or_else(|| "exclusive CPU sample overflow".to_string())
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+                let exclusive_cpu_ticks = median_ticks(&exclusive_cpu_samples);
                 let to_ns = |ticks: u64| -> Result<u64, String> {
                     (u128::from(ticks) * 1_000_000_000 / u128::from(header[7]))
                         .try_into()

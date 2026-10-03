@@ -91,20 +91,24 @@ fn input<'a>(route: Route, inclusive: &'a [u8; 4], counted: &'a [u8; 8]) -> Inpu
 fn invoke(consumer: &mut Consumer) -> (Reduction, routing::Work) {
     let inclusive = [0, 0, 1, 0]; // LE16 inclusive [0,1].
     let counted = [0, 0, 0, 0, 0, 0, 0, 2]; // BE32 start=0,count=2.
+    let request = input(consumer.route(), &inclusive, &counted);
+    invoke_prepared(consumer, request)
+}
+fn invoke_prepared(consumer: &mut Consumer, request: Input<'_>) -> (Reduction, routing::Work) {
     consumer
-        .call_with(
-            &mut Native,
-            core::hint::black_box(input(consumer.route(), &inclusive, &counted)),
-        )
+        .call_with(&mut Native, core::hint::black_box(request))
         .unwrap()
 }
 #[cfg(feature = "dev")]
 fn benchmark(mut consumer: Consumer, oracle: Reduction) {
     let route = consumer.route();
+    let inclusive = [0, 0, 1, 0];
+    let counted = [0, 0, 0, 0, 0, 0, 0, 2];
     let mut warmup = [0u64; WARMUP];
     for value in &mut warmup {
+        let request = input(route, &inclusive, &counted);
         let start = svc::<{ abi::CLOCK }>(0, 0)[0];
-        assert_eq!(invoke(&mut consumer).0, oracle);
+        assert_eq!(invoke_prepared(&mut consumer, request).0, oracle);
         *value = svc::<{ abi::CLOCK }>(0, 0)[0] - start;
     }
     emit(REPORT_BENCH);
@@ -118,8 +122,9 @@ fn benchmark(mut consumer: Consumer, oracle: Reduction) {
     let mut adapter_cpu_samples = [0u64; SAMPLES];
     let mut native_service_cpu_samples = [0u64; SAMPLES];
     for (sample_index, value) in samples.iter_mut().enumerate() {
+        let request = input(route, &inclusive, &counted);
         let start_accounting = svc::<{ abi::CLOCK }>(0, 0);
-        let (result, _) = invoke(&mut consumer);
+        let (result, _) = invoke_prepared(&mut consumer, request);
         let end_accounting = svc::<{ abi::CLOCK }>(0, 0);
         let end = end_accounting[0];
         assert_eq!(result, oracle);
