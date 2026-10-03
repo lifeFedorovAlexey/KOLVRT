@@ -97,3 +97,7 @@ Phase 3.1 завершает ограниченный внутренний жи�
 ## Границы copy в Phase 3.2
 
 [Safe user-copy](user-copy.md) заимствует текущую выполняемую Task внутри того же masked exclusive local scope. Bounded synchronous call не делает yield, allocation, lock и не удерживает user reference. Immutable admission roots/frames остаются borrowed у Registry до конца dispatch. Точные process/space и queue generation, running ownership и текущий TTBR проверяются до page access. Nested synchronous abort восстанавливается только на audited unprivileged copy PC; внешний lower-EL Context остаётся saved до обычного return. IRQ nesting не поддерживается. Copy guard/borrow заканчивается до task exit, root switching или ERET; two-CPU retirement barrier не меняется.
+
+## Владение namespace в Phase 3.3
+
+[Владение handles](handles.md) использует existing publication/mutation/quiescent permits. Admission исключительно заимствует Registry namespace; move помещает его в indexed CPU state, а acquired completion двух CPU возвращает ровно один раз. Namespace остаётся линейным в nonterminal steps. Global lock и unsafe storage не добавлены; retained resource borrows заканчиваются внутри masked current-task callback.

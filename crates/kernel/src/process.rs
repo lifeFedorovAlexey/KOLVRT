@@ -41,6 +41,7 @@ struct Object {
 pub(crate) struct Registry {
     table: Table<CAPACITY>,
     objects: [Option<Object>; CAPACITY],
+    handles: [crate::handles::Namespace; CAPACITY],
 }
 pub(crate) fn context_contract() -> Result<(), Error> {
     if percpu::id() != percpu::BOOT_CPU {
@@ -79,6 +80,7 @@ impl Registry {
         Ok(Self {
             table: Table::new(),
             objects: core::array::from_fn(|_| None),
+            handles: core::array::from_fn(|_| crate::handles::Namespace::new()),
         })
     }
 
@@ -173,6 +175,9 @@ impl Registry {
                 observations: crate::execution::Observations::ZERO,
                 blocked: false,
             });
+            self.handles[id.slot()]
+                .bind(id)
+                .expect("fresh process namespace");
             scheduler::reset_event(id);
             self.table.prepared(id).expect("transaction state");
             Ok(())
@@ -206,6 +211,101 @@ impl Registry {
     pub fn state(&self, id: ProcessId) -> Result<State, Error> {
         context_contract()?;
         self.table.state(id)
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn seed_handle(&mut self, id: ProcessId) -> kernel_core::handles::Handle {
+        context_contract().expect("handle bootstrap owner");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        for _ in 0..CAPACITY - 1 {
+            self.handles[id.slot()]
+                .create_event(
+                    id,
+                    kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                    |_| Ok::<_, ()>(()),
+                )
+                .unwrap();
+        }
+        self.handles[id.slot()]
+            .create_event(
+                id,
+                kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                |_| Ok::<_, ()>(()),
+            )
+            .unwrap()
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn transfer_handle(
+        &mut self,
+        sender: ProcessId,
+        handle: kernel_core::handles::Handle,
+        receiver: ProcessId,
+        rights: kernel_core::handles::Rights,
+    ) -> Result<kernel_core::handles::Handle, kernel_core::handles::Error> {
+        use kernel_core::handles::Error as HandleError;
+        context_contract().map_err(|_| HandleError::ForeignProcess)?;
+        if sender == receiver {
+            return Err(HandleError::Invalid);
+        }
+        if self.table.state(sender).ok() != Some(State::Prepared)
+            || self.table.state(receiver).ok() != Some(State::Prepared)
+        {
+            return Err(HandleError::Inactive);
+        }
+        if sender.slot() < receiver.slot() {
+            let (before, after) = self.handles.split_at_mut(receiver.slot());
+            before[sender.slot()].transfer(sender, handle, &mut after[0], receiver, rights)
+        } else {
+            let (before, after) = self.handles.split_at_mut(sender.slot());
+            after[0].transfer(
+                sender,
+                handle,
+                &mut before[receiver.slot()],
+                receiver,
+                rights,
+            )
+        }
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn handle_input(&mut self, id: ProcessId, raw: u64, expected: u64) {
+        context_contract().expect("handle fixture setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        let object = self.objects[id.slot()].as_mut().unwrap();
+        object.context.gpr[20] = raw;
+        object.context.gpr[21] = expected;
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn delegated_handle_input(
+        &mut self,
+        id: ProcessId,
+        raw: u64,
+        expected: u64,
+        delegated: u64,
+    ) {
+        self.handle_input(id, raw, expected);
+        self.objects[id.slot()].as_mut().unwrap().context.gpr[22] = delegated;
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn transfer_target_input(&mut self, sender: ProcessId, receiver: ProcessId) {
+        context_contract().expect("handle transfer fixture setup");
+        assert_eq!(self.table.state(sender), Ok(State::Prepared));
+        assert_eq!(self.table.state(receiver), Ok(State::Prepared));
+        let context = &mut self.objects[sender.slot()].as_mut().unwrap().context;
+        context.gpr[23] = receiver.slot() as u64;
+        context.gpr[24] = receiver.generation();
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn wait_before_handle_input(&mut self, id: ProcessId) {
+        context_contract().expect("handle wait fixture setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.objects[id.slot()].as_mut().unwrap().context.gpr[25] = 1;
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn handle_state(&self, id: ProcessId) -> (usize, bool) {
+        context_contract().expect("handle inspection owner");
+        (
+            self.handles[id.slot()].live(),
+            self.handles[id.slot()].owner().is_some(),
+        )
     }
     pub fn live(&self) -> usize {
         context_contract().expect("process inspection owner");
@@ -260,25 +360,31 @@ impl Registry {
         step: bool,
     ) -> scheduler::Completed {
         context_contract().expect("process dispatch owner");
-        let tasks = core::array::from_fn(|slot| {
-            let object = self.objects[slot].as_ref()?;
-            if self.table.state(object.id).ok()? != State::Admitted {
-                return None;
+        let mut tasks: [Option<Admission<'_>>; CAPACITY] = core::array::from_fn(|_| None);
+        for ((slot, object), handles) in
+            self.objects.iter().enumerate().zip(self.handles.iter_mut())
+        {
+            let Some(object) = object.as_ref() else {
+                continue;
+            };
+            if self.table.state(object.id).ok() != Some(State::Admitted) {
+                continue;
             }
-            Some(Admission {
+            tasks[slot] = Some(Admission {
                 identity: object.id,
+                handles,
                 space: &object.space,
                 context: object.context,
                 slice_budget: object.slice_limit,
                 slices: object.slices,
                 observations: object.observations,
                 blocked: object.blocked,
-            })
-        });
+            });
+        }
         let completed = if step {
-            scheduler::step(&tasks)
+            scheduler::step(&mut tasks)
         } else {
-            scheduler::dispatch(&tasks, timeout)
+            scheduler::dispatch(&mut tasks, timeout)
         };
         for result in completed.tasks.iter().filter(|r| r.process_generation != 0) {
             let object = self.objects[result.id]
@@ -303,6 +409,36 @@ impl Registry {
             if step && result.state == scheduler::task::CONTEXT_READY {
                 assert!(scheduler::detached(object.id));
                 continue;
+            }
+            #[cfg(feature = "diagnostics")]
+            if self.handles[result.id].live() != 0 {
+                crate::diagnostics::status(
+                    "DEBUG",
+                    "handles",
+                    format_args!(
+                        "process_slot={} process_generation={} capacity={} active={} lifecycle=retiring",
+                        object.id.slot(),
+                        object.id.generation(),
+                        self.handles[result.id].capacity(),
+                        self.handles[result.id].live()
+                    ),
+                );
+                for slot in 0..self.handles[result.id].capacity() {
+                    if let Some((generation, Some(kind))) = self.handles[result.id].slot_state(slot)
+                    {
+                        crate::diagnostics::status(
+                            "DEBUG",
+                            "handles",
+                            format_args!("slot={} generation={} kind={kind:?}", slot, generation),
+                        );
+                    }
+                }
+            }
+            if !cfg!(feature = "handle-retirement-negative") || self.handles[result.id].live() == 0
+            {
+                self.handles[result.id]
+                    .retire(object.id)
+                    .expect("terminal namespace owner");
             }
             let reason = match result.state {
                 CONTEXT_EXITED => Reason::Exited(result.context.gpr[0]),
@@ -345,6 +481,10 @@ impl Registry {
         trace(id, State::Reclaiming, None);
         let object = self.objects[id.slot()].take().ok_or(Error::Stale)?;
         assert_eq!(object.id, id);
+        if self.handles[id.slot()].live() != 0 || self.handles[id.slot()].owner().is_some() {
+            crate::event!("{{\"event\":\"handle-retirement-reject\",\"status\":\"fail\"}}");
+            panic!("handle namespace must retire before reclamation");
+        }
         object.space.reclaim(physical);
         self.table.released(id)?;
         trace(id, State::Free, None);

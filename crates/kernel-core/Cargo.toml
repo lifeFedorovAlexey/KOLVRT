@@ -3,3 +3,10 @@ name = "kernel-core"
 version = "0.1.0"
 edition = "2024"
 
+
+[features]
+handle-generation-negative = []
+handle-owner-negative = []
+handle-type-negative = []
+handle-reuse-negative = []
+handle-transfer-rights-negative = []

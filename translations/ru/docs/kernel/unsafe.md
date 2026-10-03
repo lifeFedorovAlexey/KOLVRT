@@ -165,3 +165,7 @@ Phase 3.0 ограничивает scheduler UnsafeCell access операция�
 ### INV-USER-COPY-TEST
 
 **Необходимость и владелец:** Kernel-test-only injection пропускает page preflight для восьми bounded bytes: четыре допустимых байта перед unmapped guard. Fixture владеет initialized scratch и удерживает current process/root. Production assembly и recovery возвращают четыре завершённых байта в обоих направлениях; input suffix остаётся poisoned, peers продолжают работу и reclaim. Проверяется hardware fault containment, не поддерживаемый unmap race. Trusted immutable fixture slicing использует INV-USER-IMAGE. Новые unsafe Sync и shared mutable process storage отсутствуют.
+
+## Изменения ссылок Phase 3.3
+
+[Handles](handles.md) не добавляют production unsafe. INV-RUNQUEUE уже исключает concurrent namespace access при linear moves и требует acquired completion перед quiescent extraction. Synchronous Retained borrows исключают close/retire во время использования. Три test-only lexical sites используют INV-USER-IMAGE для immutable linked symbols и двух bounded fixture slices; обязательны ownership, checked image lengths и negative execution на двух CPU. [Инвентаризация](../../../../research/results/kernel-phase33-unsafe-audit.json) содержит 109 lexical locations против 106 в Phase 3.2. Raw resource pointer, UnsafeCell, unsafe Sync и unchecked index не добавлены.

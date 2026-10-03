@@ -83,3 +83,7 @@ DEV поддерживает bounded traces, grant inspection и явную faul
 ## Граница памяти в Phase 3.2
 
 [Safe user-copy](../kernel/user-copy.md) не предоставляет operation authority. Проверяются точные executing process/root, bounds и аппаратные права EL0; immutable mappings/lifetime удерживаются, input публикует только завершённые initialized snapshots. Precise copy faults возвращают ошибки, а остальные EL1 invariant failures остаются fatal. Частичные output writes сообщают свой prefix; internal Rust layout/padding не экспортируются. Parsing, authority и effects должны использовать тот же snapshot в указанном порядке. Mutable/shared mappings, asynchronous exit и DMA не поддерживаются; [ADR-0018](../architecture-decisions/0018-safe-user-copy.md) определяет privileged necessity и review gate для обоих профилей.
+
+## Ограниченная reference identity Phase 3.3
+
+[Handle namespaces](../kernel/handles.md) отклоняют stale/forged/foreign/wrong-kind references без выбора чужой таблицы или dereference user object pointer. Concrete wait/completion storage защищено и принадлежит kernel; lookup возвращает synchronous retained borrow, cleanup exit/fault предшествует frame reclaim. Eight slots и generation quarantine ограничивают resource use и исключают stale aliasing. Эти гарантии не дают authority; rights, delegation, asynchronous retained work и revocation — отдельные gates. General object dispatch не добавлен.

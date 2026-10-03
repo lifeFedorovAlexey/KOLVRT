@@ -28,4 +28,8 @@
 
 - [ADR-0018 — Ограниченное синхронное безопасное копирование](0018-safe-user-copy.md) — Принято для ограниченного Phase 3.2.
 
+- [ADR-0019 — Линейные namespace дескрипторов процессов](0019-process-local-handles.md) — Accepted for bounded Phase 3.3.
+
+- [ADR-0020 — Передача дескрипторов с ограничением прав и удержание targets](0020-handle-transfer-and-retention.md) — Принято для ограниченной реализации issue #23.
+
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)
