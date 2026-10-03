@@ -438,8 +438,8 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
         let process_identity = process_identities[id]
             .as_ref()
             .ok_or("consumer is missing its kernel-owned process identity")?;
-        let (el0_residency_ticks, counter_frequency_hz) = process_residency[id]
-            .ok_or("consumer is missing kernel-counted EL0 residency")?;
+        let (el0_residency_ticks, counter_frequency_hz) =
+            process_residency[id].ok_or("consumer is missing kernel-counted EL0 residency")?;
         consumers.push(json!({"id":id,"cpu":id / platform_config::USER_PROCESSES_PER_CPU,"process_identity":process_identity,"el0_residency_ticks":el0_residency_ticks,"counter_frequency_hz":counter_frequency_hz,"route":words[header::ROUTE],"generation":words[header::GENERATION],"conformance_checks":words[header::CONFORMANCE],"oracle_sum":words[header::SUM],"frequency":words[header::FREQUENCY],"native_attempts":native_attempts[id],"profile_digest_words":&words[header::DIGEST..FIXED_HEADER_WORDS],"benchmarks":benchmarks}));
     }
     Ok(json!(consumers))

@@ -53,8 +53,14 @@ fn authentic_structure_preserves_raw_observations_without_inventing_ab_pairs() {
     assert_eq!(report.runs[0].observations[0].process_generation, 1);
     assert_eq!(report.runs[0].observations[0].owner_cpu, 0);
     assert_eq!(report.runs[0].observations[0].resident_pages, 7);
-    assert_eq!(report.runs[0].observations[0].el0_residency_counter_ticks, 5000);
-    assert_eq!(report.runs[0].observations[0].estimated_el0_residency_ns, 5_000_000);
+    assert_eq!(
+        report.runs[0].observations[0].el0_residency_counter_ticks,
+        5000
+    );
+    assert_eq!(
+        report.runs[0].observations[0].estimated_el0_residency_ns,
+        5_000_000
+    );
     assert_eq!(report.runs[0].expected_consumers, 1);
     assert_eq!(report.runs[0].completed_consumers, 1);
     assert_eq!(report.runs[0].missing_consumers, 0);

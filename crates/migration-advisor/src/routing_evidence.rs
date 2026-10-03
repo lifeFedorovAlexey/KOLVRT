@@ -368,8 +368,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 resident_pages,
                 el0_residency_counter_ticks: el0_residency_ticks,
                 counter_frequency_hz,
-                estimated_el0_residency_ns: (u128::from(el0_residency_ticks)
-                    * 1_000_000_000
+                estimated_el0_residency_ns: (u128::from(el0_residency_ticks) * 1_000_000_000
                     / u128::from(counter_frequency_hz))
                     .try_into()
                     .map_err(|_| "EL0 residency conversion overflow")?,

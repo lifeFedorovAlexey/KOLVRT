@@ -129,11 +129,7 @@ pub(crate) unsafe fn enter(context: &Context, resume: *mut usize) {
     }
 }
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn user_trap(
-    frame: *mut Context,
-    kind: u64,
-    entry_ticks: u64,
-) -> usize {
+pub unsafe extern "C" fn user_trap(frame: *mut Context, kind: u64, entry_ticks: u64) -> usize {
     assert!(cpu::irq_masked(), "user exception IRQ contract");
     let trap = if kind == TRAP_IRQ {
         Trap::Irq
