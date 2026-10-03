@@ -43,6 +43,7 @@ struct Definition {
     id: usize,
     generation: u64,
     root: u64,
+    lease: crate::asid::Lease,
     slice_budget: Option<usize>,
     process_generation: u64,
     linked: bool,
@@ -54,6 +55,7 @@ impl Task {
             id: 0,
             generation: 0,
             root: 0,
+            lease: crate::asid::Lease::NATIVE,
             slice_budget: None,
             process_generation: 0,
             linked: false,
@@ -73,6 +75,7 @@ impl Task {
         id: usize,
         generation: u64,
         root: u64,
+        lease: crate::asid::Lease,
         context: Context,
         slice_budget: Option<usize>,
     ) -> Self {
@@ -82,6 +85,7 @@ impl Task {
                 id,
                 generation,
                 root,
+                lease,
                 slice_budget,
                 process_generation: generation,
                 linked: true,
@@ -111,6 +115,9 @@ impl Task {
     }
     pub fn root(&self) -> u64 {
         self.definition.root
+    }
+    pub fn lease(&self) -> crate::asid::Lease {
+        self.definition.lease
     }
     pub fn slice_budget(&self) -> Option<usize> {
         self.definition.slice_budget
