@@ -144,6 +144,7 @@ fn request() -> Request {
         }],
         statistics: policy(),
         attestations: vec![],
+        session: None,
         migration_plans: vec![MigrationPlan {
             candidate: hash(2),
             plan_digest: plan_digest(&candidate_plan),
@@ -692,57 +693,181 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     r.migration_plans[0].rollback_strategy = RollbackStrategy::ReinstallPrevious {
         previous_plan: r.benchmarks[0].baseline_plan.clone(),
     };
+    let issuer = SigningKey::from_bytes(&[46; 32]);
     let key = SigningKey::from_bytes(&[44; 32]);
+    let independent_key = SigningKey::from_bytes(&[45; 32]);
     let hex = |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
-    let sign = |role, payload: Vec<u8>| {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let session = SessionBinding {
+        id: "a5".repeat(16),
+        challenge_digest: subject_digest(b"fresh external challenge"),
+        context_digest: subject_digest(&serde_json::to_vec(&r.context).unwrap()),
+        issued_at_unix: now,
+        expires_at_unix: now + 60,
+    };
+    r.session = Some(session.clone());
+    let sign = |role, payload: Vec<u8>, key_id: &str, key: &SigningKey, bound: bool| {
         let digest = subject_digest(&payload);
+        let message = if bound {
+            signing_message_bound(role, &digest, &session)
+        } else {
+            signing_message(role, &digest)
+        };
         Attestation {
             role,
             subject_digest: digest.clone(),
-            key_id: "fixture-producer".into(),
-            signature: hex(&key.sign(&signing_message(role, &digest)).to_bytes()),
+            key_id: key_id.into(),
+            signature: hex(&key.sign(&message).to_bytes()),
+            session: bound.then(|| session.clone()),
         }
     };
     for p in &r.catalog {
-        r.attestations
-            .push(sign(Role::Catalog, serde_json::to_vec(p).unwrap()));
+        r.attestations.push(sign(
+            Role::Catalog,
+            serde_json::to_vec(p).unwrap(),
+            "producer-a",
+            &key,
+            true,
+        ));
     }
     for t in &r.tests {
-        r.attestations
-            .push(sign(Role::ContractTest, serde_json::to_vec(t).unwrap()));
+        let payload = serde_json::to_vec(t).unwrap();
+        r.attestations.push(sign(
+            Role::ContractTest,
+            payload.clone(),
+            "producer-a",
+            &key,
+            true,
+        ));
+        r.attestations.push(sign(
+            Role::ContractTest,
+            payload,
+            "producer-b",
+            &independent_key,
+            true,
+        ));
     }
     r.attestations.push(sign(
         Role::Runtime,
         serde_json::to_vec(r.runtime.as_ref().unwrap()).unwrap(),
+        "producer-a",
+        &key,
+        true,
     ));
     r.attestations.push(sign(
         Role::Benchmark,
         serde_json::to_vec(&r.benchmarks[0]).unwrap(),
+        "producer-a",
+        &key,
+        true,
     ));
     r.attestations.push(sign(
         Role::Proposal,
         serde_json::to_vec(&r.migration_plans[0]).unwrap(),
+        "producer-a",
+        &key,
+        true,
+    ));
+    r.attestations.push(sign(
+        Role::Session,
+        serde_json::to_vec(&session).unwrap(),
+        "session-issuer",
+        &issuer,
+        false,
     ));
     let policy = TrustPolicy {
-        schema: 1,
-        keys: vec![TrustedKey {
-            key_id: "fixture-producer".into(),
-            public_key: hex(&key.verifying_key().to_bytes()),
-            roles: vec![
-                Role::Catalog,
-                Role::Runtime,
-                Role::ContractTest,
-                Role::Benchmark,
-                Role::Proposal,
-            ],
-            revoked: false,
+        schema: 2,
+        keys: vec![
+            TrustedKey {
+                key_id: "session-issuer".into(),
+                public_key: hex(&issuer.verifying_key().to_bytes()),
+                roles: vec![Role::Session],
+                revoked: false,
+                compromised: false,
+                producer: Some(ProducerIdentity {
+                    producer_id: "challenge-authority".into(),
+                    custody_domain: "issuer-vault".into(),
+                    enforcement_domain: "issuer-service".into(),
+                }),
+                valid_from_unix: Some(0),
+                valid_until_unix: None,
+            },
+            TrustedKey {
+                key_id: "producer-a".into(),
+                public_key: hex(&key.verifying_key().to_bytes()),
+                roles: vec![
+                    Role::Catalog,
+                    Role::Runtime,
+                    Role::ContractTest,
+                    Role::Benchmark,
+                    Role::Proposal,
+                ],
+                revoked: false,
+                compromised: false,
+                producer: Some(ProducerIdentity {
+                    producer_id: "producer-a".into(),
+                    custody_domain: "custody-a".into(),
+                    enforcement_domain: "runner-a".into(),
+                }),
+                valid_from_unix: Some(0),
+                valid_until_unix: None,
+            },
+            TrustedKey {
+                key_id: "producer-b".into(),
+                public_key: hex(&independent_key.verifying_key().to_bytes()),
+                roles: vec![Role::ContractTest],
+                revoked: false,
+                compromised: false,
+                producer: Some(ProducerIdentity {
+                    producer_id: "producer-b".into(),
+                    custody_domain: "custody-b".into(),
+                    enforcement_domain: "runner-b".into(),
+                }),
+                valid_from_unix: Some(0),
+                valid_until_unix: None,
+            },
+        ],
+        session: Some(SessionPolicy {
+            max_lifetime_secs: 120,
+            max_future_skew_secs: 2,
+            allow_offline: false,
+        }),
+        independence: vec![IndependencePolicy {
+            role: Role::ContractTest,
+            min_producers: 2,
+            min_custody_domains: 2,
+            min_enforcement_domains: 2,
         }],
     };
-    let store = SignedArtifactStore::new(policy.clone(), root.clone()).unwrap();
+    let store = SignedArtifactStore::provisioned(
+        policy.clone(),
+        root.clone(),
+        root.join("session-ledger-direct"),
+        now,
+    )
+    .unwrap();
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
     assert_eq!(
         report.candidates[0].status,
         CandidateStatus::VerifiedCandidate
+    );
+    assert!(report.candidates[0].assurance.trust.provisioned_policy);
+    assert!(report.candidates[0].assurance.trust.session_verified);
+    assert!(report.candidates[0].assurance.trust.evidence_chain_complete);
+    assert!(
+        report.candidates[0]
+            .assurance
+            .trust
+            .producer_independence_satisfied
+    );
+    assert!(
+        !report.candidates[0]
+            .assurance
+            .trust
+            .experimental_fixture_mode
     );
     assert!(
         !report.candidates[0]
@@ -762,6 +887,8 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         .arg(&trust_path)
         .arg("--artifact-root")
         .arg(&root)
+        .arg("--session-ledger")
+        .arg(root.join("session-ledger-cli"))
         .output()
         .unwrap();
     assert!(output.status.success());
@@ -774,9 +901,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         CandidateStatus::PartialEvidenceCandidate
     );
     assert!(!report.candidates[0].assurance.provenance_verified);
+    assert!(!report.candidates[0].assurance.trust.evidence_chain_complete);
     assert!(report.preferred_observed.is_none());
-    for file in std::fs::read_dir(&root).unwrap() {
-        std::fs::remove_file(file.unwrap().path()).unwrap();
-    }
-    std::fs::remove_dir(root).unwrap();
+    std::fs::remove_dir_all(root).unwrap();
 }

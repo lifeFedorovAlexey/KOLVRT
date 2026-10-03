@@ -24,6 +24,7 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         subject_digest: subject,
         key_id: "test".into(),
         signature,
+        session: None,
     };
     let policy = TrustPolicy {
         schema: 1,
@@ -32,7 +33,13 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
             public_key: public,
             roles: vec![Role::ContractTest],
             revoked: false,
+            compromised: false,
+            producer: None,
+            valid_from_unix: None,
+            valid_until_unix: None,
         }],
+        session: None,
+        independence: vec![],
     };
     let store = SignedArtifactStore::new(policy.clone(), root.clone()).unwrap();
     let attestations = vec![attestation];

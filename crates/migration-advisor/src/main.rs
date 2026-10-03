@@ -14,7 +14,7 @@ const MAX_SOLVER_STATES: u64 = 1 << 19;
 
 fn run() -> Result<(), String> {
     let args: Vec<_> = env::args().skip(1).collect();
-    if !matches!(args.len(), 2 | 6) || !matches!(args[0].as_str(), "advise" | "inspect-routing") {
+    if !matches!(args.len(), 2 | 8) || !matches!(args[0].as_str(), "advise" | "inspect-routing") {
         return Err("usage: migration-advisor advise REQUEST.json (JSON report on stdout)".into());
     }
     let file = fs::File::open(&args[1]).map_err(|e| e.to_string())?;
@@ -40,7 +40,7 @@ fn run() -> Result<(), String> {
     let solver = ExhaustiveSolver {
         max_states: MAX_SOLVER_STATES,
     };
-    let report = if args.len() == 6 {
+    let report = if args.len() >= 6 {
         if args[2] != "--trust-policy" || args[4] != "--artifact-root" {
             return Err(
                 "usage: advise REQUEST.json --trust-policy TRUST.json --artifact-root DIR".into(),
@@ -56,7 +56,19 @@ fn run() -> Result<(), String> {
         }
         let policy: TrustPolicy =
             serde_json::from_slice(&policy_bytes).map_err(|e| e.to_string())?;
-        let verifier = SignedArtifactStore::new(policy, args[5].clone().into())?;
+        if args.len() != 8 || args[6] != "--session-ledger" {
+            return Err("usage: advise REQUEST.json --trust-policy TRUST.json --artifact-root DIR --session-ledger DIR".into());
+        }
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_err(|_| "system UTC clock is before UNIX epoch")?
+            .as_secs();
+        let verifier = SignedArtifactStore::provisioned(
+            policy,
+            args[5].clone().into(),
+            args[7].clone().into(),
+            now,
+        )?;
         advise_with_verifier(&request, &solver, &verifier)?
     } else {
         advise(&request, &solver)?

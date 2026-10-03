@@ -130,8 +130,8 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "a7da1abe33a81574c4eda0a211de83513b36db568044a8e8c681979985540949",
-        "translation_sha256": "3c821f45ceef54e06444bccb29c726c0d6c8f3baacea3489ae2e23fe06481678"
+        "source_sha256": "9a37fd65a26925f3079d2520520183efe05e699a02fe9a193c53bddb8ecab63f",
+        "translation_sha256": "612a90dd97525ef9d1dc554f20b19375cb94dd189ed6a1447816a3f6c6763b49"
       },
       "docs/architecture/migration-workbench.md": {
         "source_sha256": "bd1a18820009cf12f852a2773de96139ac7cd1333d0f10829d69f8e7b762202d",
