@@ -339,10 +339,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 {
                     return Err("summary/raw measurement mismatch".into());
                 }
-                if adapter_cpu_ticks.contains(&0)
-                    || (frame[1] == 0 && native_service_cpu_ticks.contains(&0))
-                    || (frame[1] != 0 && native_service_cpu_ticks.iter().any(|&ticks| ticks != 0))
-                {
+                if adapter_cpu_ticks.contains(&0) || native_service_cpu_ticks.contains(&0) {
                     return Err("invalid adapter/native exclusive CPU accounting".into());
                 }
                 let calls = (SAMPLES + WARMUP) as u64;
@@ -468,7 +465,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             "saved producer assertions are not authenticated".into(),
             "sequential request samples are not independent alternating paired runs".into(),
             "physical ARM64 workload measurements are absent".into(),
-            "exclusive adapter CPU attribution is unavailable".into(),
+            "exclusive CPU covers the EL0 call region and READ_WINDOW body; shared SVC and other kernel overhead remain unattributed".into(),
             "snapshot rollback execution is not part of this routing exercise".into(),
         ],
         runs: output,

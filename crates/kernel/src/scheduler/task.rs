@@ -7,8 +7,6 @@ pub(crate) const CONTEXT_FAULTED: usize = 3;
 pub(crate) const CONTEXT_TIMED_OUT: usize = 4;
 pub(crate) const CONTEXT_BLOCKED: usize = 6;
 pub(super) const CONTEXT_VACANT: usize = 5;
-#[cfg(feature = "machine-events")]
-use kernel_core::execution as abi;
 /// Small fully initialized admission descriptor; no diagnostic report storage is
 /// copied through caller stacks. The retained root belongs to the process owner.
 #[derive(Clone, Copy)]
@@ -41,8 +39,6 @@ pub(crate) struct Task {
     pub fault_far: usize,
     pub peer_faults_at_exit: usize,
     pub observations: crate::execution::Observations,
-    #[cfg(feature = "machine-events")]
-    pub report: [u64; abi::REPORT_WORDS],
     #[cfg(feature = "machine-events")]
     pub report_len: usize,
 }
@@ -79,8 +75,6 @@ impl Task {
         fault_far: 0,
         peer_faults_at_exit: 0,
         observations: crate::execution::Observations::ZERO,
-        #[cfg(feature = "machine-events")]
-        report: [0; abi::REPORT_WORDS],
         #[cfg(feature = "machine-events")]
         report_len: 0,
     };

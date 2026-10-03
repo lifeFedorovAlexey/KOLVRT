@@ -407,10 +407,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
             let calls = BENCH_WARMUP + BENCH_SAMPLES as u64;
             if route > routing::Route::EmptyFirst as u64
                 || adapter_cpu_samples.contains(&0)
-                || (route == routing::Route::Native as u64
-                    && native_service_cpu_samples.contains(&0))
-                || (route != routing::Route::Native as u64
-                    && native_service_cpu_samples.iter().any(|&ticks| ticks != 0))
+                || native_service_cpu_samples.contains(&0)
                 || c[counter::NATIVE] != if route == 0 { calls } else { 0 }
                 || c[counter::COMPAT] != if route == 0 { 0 } else { calls }
                 || c[counter::BACKEND_CALLS] != calls
@@ -451,7 +448,8 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 .map(|(&adapter, &native)| {
                     adapter
                         .checked_add(native)
-                        .ok_or_else(|| "exclusive CPU sample overflow".to_string())
+                        .ok_or_else(|| std::io::Error::other("exclusive CPU sample overflow"))
+                        .map_err(|error| -> Box<dyn std::error::Error> { Box::new(error) })
                 })
                 .collect::<Result<Vec<_>>>()?;
             let exclusive_cpu_ticks = median(&exclusive_cpu_samples)?;
