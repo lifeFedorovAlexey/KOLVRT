@@ -217,6 +217,15 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 ]
                 .contains(&scope)
                     && expected.contains(&"user_copy_el0_boundary_and_snapshot")
+                    || [
+                        "handle_lookup_success",
+                        "handle_lookup_failure",
+                        "handle_create",
+                        "handle_close",
+                        "handle_slot_reuse",
+                    ]
+                    .contains(&scope)
+                        && expected.contains(&"handle_el0_identity_type_generation_and_lifetime")
                 {
                     let cpu = event["cpu"]
                         .as_u64()
@@ -258,9 +267,12 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 el0 = true;
             }
             Some("suite") if tests => {
-                if expected.contains(&"user_copy_el0_boundary_and_snapshot")
-                    && measurements.len() != 1 + cpus * 4
-                {
+                let groups = usize::from(expected.contains(&"user_copy_el0_boundary_and_snapshot"))
+                    * 4
+                    + usize::from(
+                        expected.contains(&"handle_el0_identity_type_generation_and_lifetime"),
+                    ) * 5;
+                if groups != 0 && measurements.len() != 1 + cpus * groups {
                     return Err("missing user-copy measurements".into());
                 }
                 if event["status"] != "pass"

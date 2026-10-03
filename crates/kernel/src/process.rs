@@ -339,6 +339,30 @@ impl Registry {
                 assert!(scheduler::detached(object.id));
                 continue;
             }
+            #[cfg(feature = "diagnostics")]
+            if self.handles[result.id].live() != 0 {
+                crate::diagnostics::status(
+                    "DEBUG",
+                    "handles",
+                    format_args!(
+                        "process_slot={} process_generation={} capacity={} active={} lifecycle=retiring",
+                        object.id.slot(),
+                        object.id.generation(),
+                        self.handles[result.id].capacity(),
+                        self.handles[result.id].live()
+                    ),
+                );
+                for slot in 0..self.handles[result.id].capacity() {
+                    if let Some((generation, Some(kind))) = self.handles[result.id].slot_state(slot)
+                    {
+                        crate::diagnostics::status(
+                            "DEBUG",
+                            "handles",
+                            format_args!("slot={} generation={} kind={kind:?}", slot, generation),
+                        );
+                    }
+                }
+            }
             if !cfg!(feature = "handle-retirement-negative") || self.handles[result.id].live() == 0
             {
                 self.handles[result.id]

@@ -104,46 +104,65 @@ fn dispatch_inner(
     ARRIVED.store(0, Ordering::Release);
     NATIVE_ROOT.store(memory::table_root(), Ordering::Release);
     for (owner, local) in LOCALS.iter().enumerate() {
-        let mut state = State::ZERO;
-        if step {
-            state.current = CURSOR[owner].load(Ordering::Acquire);
-        }
-        state.deadline = timeout.map(time::deadline_after);
-        for (index, task) in state.tasks.iter_mut().enumerate() {
-            let id = owner * TASKS + index;
-            if let Some(admitted) = tasks[id].as_mut() {
-                assert_eq!(admitted.identity.slot(), id);
-                assert_eq!(admitted.space.slot(), id);
-                *task = Task::new(
-                    id,
-                    admitted.identity.generation(),
-                    admitted.space.root(),
-                    admitted.context,
-                    admitted.slice_budget,
+        // Initialize existing storage under the exclusive preparing permit. A
+        // by-value State would put multiple report/namespace arrays on DEV stacks.
+        local.prepare(generation, |state| {
+            state.current = if step {
+                CURSOR[owner].load(Ordering::Acquire)
+            } else {
+                NO_TASK
+            };
+            state.switches = 0;
+            state.deadline = timeout.map(time::deadline_after);
+            for (index, task) in state.tasks.iter_mut().enumerate() {
+                let id = owner * TASKS + index;
+                assert_eq!(
+                    state.handles[index].live(),
+                    0,
+                    "namespace moved back before preparation"
                 );
-                state.handles[index] = core::mem::take(admitted.handles);
-                task.bind_queue(generation);
-                task.slices = admitted.slices;
-                task.observations = admitted.observations;
-                if admitted.blocked {
-                    assert!(step, "blocked processes require step driver");
-                    task.state = task::CONTEXT_BLOCKED;
-                }
-                #[cfg(feature = "machine-events")]
-                if local.completed() {
-                    local.inspect(local.generation(), |previous| {
-                        let old = &previous.tasks[index];
-                        if old.process_generation() == admitted.identity.generation()
-                            && old.id() == id
-                        {
-                            task.report.copy_from_slice(&old.report);
-                            task.report_len = old.report_len;
-                        }
-                    });
+                assert_eq!(
+                    state.handles[index].owner(),
+                    None,
+                    "namespace owner moved back"
+                );
+                if let Some(admitted) = tasks[id].as_mut() {
+                    assert_eq!(admitted.identity.slot(), id);
+                    assert_eq!(admitted.space.slot(), id);
+                    #[cfg(feature = "machine-events")]
+                    let previous_report = if task.process_generation()
+                        == admitted.identity.generation()
+                        && task.id() == id
+                    {
+                        Some((task.report, task.report_len))
+                    } else {
+                        None
+                    };
+                    *task = Task::new(
+                        id,
+                        admitted.identity.generation(),
+                        admitted.space.root(),
+                        admitted.context,
+                        admitted.slice_budget,
+                    );
+                    state.handles[index] = core::mem::take(admitted.handles);
+                    task.bind_queue(generation);
+                    task.slices = admitted.slices;
+                    task.observations = admitted.observations;
+                    if admitted.blocked {
+                        assert!(step, "blocked processes require step driver");
+                        task.state = task::CONTEXT_BLOCKED;
+                    }
+                    #[cfg(feature = "machine-events")]
+                    if let Some((report, length)) = previous_report {
+                        task.report = report;
+                        task.report_len = length;
+                    }
+                } else {
+                    *task = Task::ZERO;
                 }
             }
-        }
-        local.prepare(generation, state);
+        });
         local.preempt.store(false, Ordering::Release);
     }
     memory::USER_EXECUTION_ACTIVE.store(platform_config::ACTIVE_CPUS, Ordering::Release);

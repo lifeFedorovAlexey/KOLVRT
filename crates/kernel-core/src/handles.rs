@@ -34,16 +34,27 @@ pub enum CreationError<E> {
     Handle(Error),
     Publication(E),
 }
+/// Internal immutable target identity; not serialized to EL0 and not authority.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TargetId {
+    creator: ProcessId,
+    slot: usize,
+    generation: u64,
+}
 // Narrow concrete primitive storage, not a generic invocation/object hierarchy.
-enum Resource {
+enum Primitive {
     Event(Event),
     Completion(Completion),
 }
+struct Resource {
+    identity: TargetId,
+    value: Primitive,
+}
 impl Resource {
     fn kind(&self) -> Kind {
-        match self {
-            Self::Event(_) => Kind::Event,
-            Self::Completion(_) => Kind::Completion,
+        match self.value {
+            Primitive::Event(_) => Kind::Event,
+            Primitive::Completion(_) => Kind::Completion,
         }
     }
 }
@@ -76,15 +87,18 @@ pub struct Retained<'a> {
     resource: &'a Resource,
 }
 impl Retained<'_> {
+    pub fn target(&self) -> TargetId {
+        self.resource.identity
+    }
     pub fn event(&self) -> Option<&Event> {
-        match self.resource {
-            Resource::Event(e) => Some(e),
+        match &self.resource.value {
+            Primitive::Event(e) => Some(e),
             _ => None,
         }
     }
     pub fn completion(&self) -> Option<Completion> {
-        match self.resource {
-            Resource::Completion(c) => Some(*c),
+        match &self.resource.value {
+            Primitive::Completion(c) => Some(*c),
             _ => None,
         }
     }
@@ -179,7 +193,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
     fn create<E>(
         &mut self,
         caller: ProcessId,
-        resource: Resource,
+        value: Primitive,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
         self.context(caller).map_err(CreationError::Handle)?;
@@ -204,6 +218,14 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
                 .ok_or(CreationError::Handle(Error::GenerationExhausted))?;
         }
         let handle = Handle((slot.generation << 8) | index as u64);
+        let resource = Resource {
+            identity: TargetId {
+                creator: caller,
+                slot: index,
+                generation: slot.generation,
+            },
+            value,
+        };
         // Resource remains owned by this stack value until infallible commit.
         // Error or unwinding drops it; the slot stays vacant with a burned generation.
         publish(handle).map_err(CreationError::Publication)?;
@@ -216,7 +238,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         event: Event,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create(caller, Resource::Event(event), publish)
+        self.create(caller, Primitive::Event(event), publish)
     }
     pub fn create_completion<E>(
         &mut self,
@@ -224,7 +246,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         completion: Completion,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create(caller, Resource::Completion(completion), publish)
+        self.create(caller, Primitive::Completion(completion), publish)
     }
 }
 
@@ -295,6 +317,22 @@ mod tests {
         assert_eq!(n.lookup(b, new, Kind::Event).err(), Some(Error::Stale));
     }
     #[test]
+    fn target_identity_survives_moves_and_reuse_changes_target() {
+        let (a, _) = ids();
+        let mut n = Namespace::<1>::new();
+        n.bind(a).unwrap();
+        let h = event(&mut n, a);
+        let target = n.lookup(a, h, Kind::Event).unwrap().target();
+        let mut moved = n;
+        assert_eq!(moved.lookup(a, h, Kind::Event).unwrap().target(), target);
+        moved.close(a, h).unwrap();
+        let fresh = event(&mut moved, a);
+        assert_ne!(
+            moved.lookup(a, fresh, Kind::Event).unwrap().target(),
+            target
+        );
+    }
+    #[test]
     fn transactional_failure_burns_generation_and_exhaustion_never_wraps() {
         let (a, _) = ids();
         let mut n = Namespace::<1, 2>::new();
@@ -331,6 +369,10 @@ mod tests {
         let ha = event(&mut x, a);
         let hb = event(&mut y, b);
         assert_eq!(ha, hb);
+        assert_ne!(
+            x.lookup(a, ha, Kind::Event).unwrap().target(),
+            y.lookup(b, hb, Kind::Event).unwrap().target()
+        );
         x.lookup(a, ha, Kind::Event)
             .unwrap()
             .event()

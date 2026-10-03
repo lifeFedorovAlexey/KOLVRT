@@ -82,3 +82,7 @@ The [process lifecycle](../kernel/processes.md) separates retained address-space
 ## Phase 3.2 memory boundary
 
 [Safe user-copy](../kernel/user-copy.md) admits no operation authority. It checks the exact executing process/root, bounds and hardware EL0 permissions, retains immutable mappings/lifetime, and publishes only completed initialized input snapshots. Precise copy faults return errors while unrelated EL1 invariant failures remain fatal. Output partial writes report their prefix; no internal Rust layout/padding is exported. Parsing, authority and effects must use the same snapshot in that order. Mutable/shared mappings, asynchronous exit and DMA remain unsupported; [ADR-0018](../architecture-decisions/0018-safe-user-copy.md) defines the privileged necessity and review gate in both profiles.
+
+## Phase 3.3 bounded reference identity
+
+[Handle namespaces](../kernel/handles.md) reject stale/forged/foreign/wrong-kind references without selecting another process table or dereferencing user object pointers. Protected concrete wait/completion storage remains kernel-owned; lookup returns a synchronous retained borrow, and exit/fault cleanup precedes frame reclaim. Eight slots and generation quarantine bound resource use and prevent stale aliasing. These guarantees confer no authority; rights, delegation, asynchronous retained work and revocation remain separate gates. No general object dispatch is added.

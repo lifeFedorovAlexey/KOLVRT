@@ -72,10 +72,13 @@ pub(crate) fn call(
             .lookup(caller, handle, kind)
             .map(|_| 0)
             .unwrap_or_else(status),
-        2 => handles
-            .close(caller, handle)
-            .map(|_| 0)
-            .unwrap_or_else(status),
+        2 => match handles.lookup(caller, handle, kind) {
+            Err(error) => status(error),
+            Ok(_) => handles
+                .close(caller, handle)
+                .map(|_| 0)
+                .unwrap_or_else(status),
+        },
         _ => 1,
     };
     true

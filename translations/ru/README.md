@@ -107,7 +107,7 @@ KOLVRT уже загружается как native AArch64 kernel в QEMU.
 | ARM physical timer IRQ             | ✅                                                        |
 | DEV / PROD профили                 | ✅                                                        |
 | Автоматический kernel test harness | ✅                                                        |
-| Настоящие in-kernel tests          | ✅ 69 в последнем записанном прогоне DEV и PROD           |
+| Настоящие in-kernel tests          | ✅ 72 в последнем записанном прогоне DEV и PROD           |
 | Negative failure controls          | ✅                                                        |
 | Отладка GDB                        | ✅                                                        |
 | SMP                                | ✅ Основа двух CPU в QEMU                                 |
@@ -148,7 +148,10 @@ Process lifecycle + own-event wait  ✅ bounded Phase 3.1
 Safe user-copy                      ✅ bounded Phase 3.2
         │
         ▼
-Handles, IPC and services            next
+Process-local handles               ✅ bounded Phase 3.3
+        │
+        ▼
+Capabilities, IPC and services       next
         │
         ▼
 Compatibility personalities
@@ -159,7 +162,7 @@ Linux ABI compatibility where useful
 
 Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
 
-Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Phase 3.2 теперь добавляет bounded safe user-copy. IPC, handles/capabilities, cancellation, постоянные services и security domains остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md) и [scheduler](docs/kernel/scheduler.md).
+Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Phase 3.2 теперь добавляет bounded safe user-copy. IPC, capabilities, cancellation, постоянные services и security domains остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md) и [scheduler](docs/kernel/scheduler.md).
 
 ---
 
@@ -426,7 +429,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Тесты должны обнаруживать ошибки ядра
 
-Последняя успешно записанная матрица выполнила **69 проверок ядра в каждом профиле DEV и PROD**. Она включает ограниченное вытеснение и путь ожидания/блокировки/пробуждения по собственному событию процесса, а также 57 отрицательных контролей. Отчёт относится только к указанным в нём хешам исходников и не покрывает более поздние изменения рабочего дерева. Более ранние результаты остаются историческими и не подменяются текущим свидетельством.
+Последняя успешно записанная матрица выполнила **72 проверок ядра в каждом профиле DEV и PROD**. Она включает ограниченное вытеснение и путь ожидания/блокировки/пробуждения по собственному событию процесса, а также 67 отрицательных контролей. Отчёт относится только к указанным в нём хешам исходников и не покрывает более поздние изменения рабочего дерева. Более ранние результаты остаются историческими и не подменяются текущим свидетельством.
 
 Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
 
@@ -552,4 +555,8 @@ Stable userspace ABI пока отсутствует.
 
 ## Safe user-copy в Phase 3.2
 
-[Граница user-copy](docs/kernel/user-copy.md) теперь поддерживает bounded current-process byte copies, immutable input snapshots и precise fault recovery на обоих CPU. DEV/PROD suite содержит 69 checks и 57 failure controls. [ADR-0018](docs/architecture-decisions/0018-safe-user-copy.md) сохраняет синхронное исключение mapping/lifetime races и отделяет memory validity от authority. Handles, capabilities, domains и IPC остаются будущей работой.
+[Граница user-copy](docs/kernel/user-copy.md) теперь поддерживает bounded current-process byte copies, immutable input snapshots и precise fault recovery на обоих CPU. DEV/PROD suite содержит 69 checks и 57 failure controls. [ADR-0018](docs/architecture-decisions/0018-safe-user-copy.md) сохраняет синхронное исключение mapping/lifetime races и отделяет memory validity от authority. Phase 3.3 добавляет process-local references ниже; capabilities, domains и IPC остаются будущей работой.
+
+## Локальные handles процессов в Phase 3.3
+
+[Handles](docs/kernel/handles.md) дают bounded caller-local opaque references, generation/type/live checks, transactional publication и deterministic exit/fault cleanup. [ADR-0019](docs/architecture-decisions/0019-process-local-handles.md) отделяет identity/lifetime от authority. Exact-source [матрица](../../research/results/kernel-phase33.json) фиксирует 72 DEV/PROD checks и 67 negative controls; native-only и routing regressions имеют собственные receipts. Capabilities, transfer, domains и IPC не реализованы.

@@ -1,0 +1,710 @@
+{
+  "assembly": [
+    {
+      "path": "crates/kernel/src\\arch\\aarch64\\entry.S",
+      "review": "INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE",
+      "sha256": "e49880f06a87cd5906cfa28f170d0b0689336aa02cd303bca243fa8f15c1d402"
+    },
+    {
+      "path": "crates/kernel/src\\boot_workload.S",
+      "review": "INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE",
+      "sha256": "9f4d7b33766a5e47f2b2076a9293ddeb2f3ed18413fb17f506b770b7b4e80caa"
+    }
+  ],
+  "compiler": "Rust 1.99.0",
+  "compiler_runtime": [
+    {
+      "artifact": "liballoc-eec096819305f2a0.rlib",
+      "sha256": "6717bac5ad231fc995ec4c7df03374239f7fc96581f523c0f136a27d9b49905f",
+      "source_unsafe_coverage": "compiler-trusted; not individually proven"
+    },
+    {
+      "artifact": "libcompiler_builtins-0c6ad450adef580d.rlib",
+      "sha256": "7f3294299c48d99ede27f5971a64a3df325b4831f90f14cbc1e9ecd5561e2b59",
+      "source_unsafe_coverage": "compiler-trusted; not individually proven"
+    },
+    {
+      "artifact": "libcore-843558a43969c768.rlib",
+      "sha256": "ce073769e799d635ccfe153c493436ea4056c85b19235644e9280cef56063645",
+      "source_unsafe_coverage": "compiler-trusted; not individually proven"
+    }
+  ],
+  "dependency_boundary": "compiler runtime and generated instructions require compiler trust; no compatibility dependency",
+  "generated_wrappers": [
+    "read_reg!(el)",
+    "read_reg!(ticks)",
+    "read_reg!(frequency)",
+    "read_reg!(sctlr)",
+    "read_reg!(acknowledge)",
+    "read_reg!(daif)",
+    "read_reg!(active_root)",
+    "read_reg!(mpidr)",
+    "read_reg!(user_esr)",
+    "read_reg!(user_far)"
+  ],
+  "locations": [
+    {
+      "context": "        tpidr: 0,\n    };\n}\n\nunsafe extern \"C\" {",
+      "line": 109,
+      "path": "crates/kernel/src\\arch\\aarch64\\context.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "}\n/// # Safety\n/// Retained root/context and live permanent kernel stack; no scheduler borrow or\n/// exclusion permit survives this call. Assembly restores the native ABI before return.\npub(crate) unsafe fn enter(context: &Context, resume: *mut usize) {",
+      "line": 115,
+      "path": "crates/kernel/src\\arch\\aarch64\\context.rs",
+      "text": "pub(crate) unsafe fn enter(context: &Context, resume: *mut usize) {"
+    },
+    {
+      "context": "    );\n    crate::sync::assert_scheduler_unlocked();\n    // SAFETY: INV-USER-CONTEXT: checked exact frame ABI and caller's retained root;\n    // assembly publishes resume SP using STLR before any lower-EL return.\n    unsafe {",
+      "line": 127,
+      "path": "crates/kernel/src\\arch\\aarch64\\context.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    unsafe {\n        run_user(context, resume);\n    }\n}\n#[unsafe(no_mangle)]",
+      "line": 131,
+      "path": "crates/kernel/src\\arch\\aarch64\\context.rs",
+      "text": "#[unsafe(no_mangle)]"
+    },
+    {
+      "context": "        run_user(context, resume);\n    }\n}\n#[unsafe(no_mangle)]\npub unsafe extern \"C\" fn user_trap(frame: *mut Context, kind: u64) -> usize {",
+      "line": 132,
+      "path": "crates/kernel/src\\arch\\aarch64\\context.rs",
+      "text": "pub unsafe extern \"C\" fn user_trap(frame: *mut Context, kind: u64) -> usize {"
+    },
+    {
+      "context": "        }\n    };\n    // SAFETY: INV-USER-CONTEXT: lower-EL vector supplies the complete aligned frame\n    // on the CPU's permanent EL1 stack; the mutable borrow ends before ERET.\n    let resume = scheduler::trap(unsafe { &mut *frame }, trap);",
+      "line": 153,
+      "path": "crates/kernel/src\\arch\\aarch64\\context.rs",
+      "text": "let resume = scheduler::trap(unsafe { &mut *frame }, trap);"
+    },
+    {
+      "context": "    let resume = scheduler::trap(unsafe { &mut *frame }, trap);\n    if resume == 0 {\n        // SAFETY: INV-USER-CONTEXT: same live vector frame, scheduler borrow ended;\n        // validate the selected return state before the assembly ERET boundary.\n        require_user_context(unsafe { &*frame });",
+      "line": 157,
+      "path": "crates/kernel/src\\arch\\aarch64\\context.rs",
+      "text": "require_user_context(unsafe { &*frame });"
+    },
+    {
+      "context": "macro_rules! read_reg {\n    ($name:ident, $reg:literal) => {\n        pub fn $name() -> u64 { let value;\n            // SAFETY: INV-REG: privileged EL1 architectural read, no memory access.\n            unsafe { asm!(concat!(\"mrs {}, \", $reg), out(reg) value, options(nomem, nostack)); } value",
+      "line": 64,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe { asm!(concat!(\"mrs {}, \", $reg), out(reg) value, options(nomem, nostack)); } value"
+    },
+    {
+      "context": "    let par: u64;\n    // SAFETY: INV-USER-COPY: masked synchronous current-task section; AT uses\n    // EL0 permissions and current retained TTBR. PAR is read after ISB, no\n    // mapping writer/root switch/IRQ can intervene on this CPU.\n    unsafe {",
+      "line": 94,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "}\npub fn stack_pointer() -> usize {\n    let sp;\n    // SAFETY: INV-PERCPU: observes this CPU's current aligned stack, never dereferences it.\n    unsafe {",
+      "line": 118,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    sp\n}\npub fn barrier() {\n    // SAFETY: INV-TLB: complete published memory effects before signalling/completion.\n    unsafe {",
+      "line": 125,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn local_invalidate() {\n    // SAFETY: INV-SHOOTDOWN: calling CPU is at a reader-quiescent boundary; all prior loads finish before acknowledgement.\n    unsafe {",
+      "line": 131,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn clean_boot(start: usize, end: usize) {\n    // SAFETY: INV-BOOT-PUBLISH: CPU0-owned linked RAM, Cortex-A57 64-byte lines; clean tables/publication to PoC for MMU-off secondary.\n    unsafe {",
+      "line": 143,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "}\nfn psci(function: u64, arg1: u64, arg2: u64, arg3: u64) -> i64 {\n    let result;\n    // SAFETY: INV-CPUON: validated SMC conduit; PSCI/SMCCC preserve x4-x18 for these calls, x0-x3 declared clobbered.\n    unsafe {",
+      "line": 153,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        | (u64::from(id) << SGI_INTID_SHIFT)\n        | ((affinity >> MPIDR_AFF1_SHIFT & AFFINITY_LEVEL_MASK) << SGI_AFF1_SHIFT)\n        | (1 << (affinity & AFFINITY_LEVEL_MASK));\n    // SAFETY: INV-SGI: affinity is a validated participating CPU; Group1 SGI, published mailbox before device signal.\n    unsafe {",
+      "line": 181,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        asm!(\"dsb ishst\", \"msr S3_0_C12_C11_5, {}\", \"isb\", in(reg) value, options(nostack));\n    }\n}\npub fn vectors() {\n    unsafe extern \"C\" {",
+      "line": 186,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "    unsafe extern \"C\" {\n        static vectors: u8;\n    }\n    // SAFETY: INV-VECTOR: linked 2 KiB-aligned vector table with kernel lifetime.\n    unsafe {",
+      "line": 190,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn mask() {\n    // SAFETY: INV-IRQ: affects only the calling CPU; masking cannot release an IRQ-owned resource.\n    unsafe {",
+      "line": 196,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn unmask() {\n    // SAFETY: INV-IRQ: called only after GIC, source and vectors are initialized.\n    unsafe {",
+      "line": 202,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn timer(deadline: u64) {\n    // SAFETY: INV-TIMER: deadline in the current physical-counter epoch; PPI initialized.\n    unsafe {",
+      "line": 208,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn timer_stop() {\n    // SAFETY: INV-TIMER: masks/deasserts level source before GIC EOI.\n    unsafe {",
+      "line": 214,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn end_irq(id: u64) {\n    // SAFETY: INV-IRQ: exact acknowledged INTID, EOImode=0 drops priority and deactivates.\n    unsafe {",
+      "line": 220,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn cpu_interface() {\n    // SAFETY: INV-IRQ: nonsecure Group 1, redistributor initialized, IRQs still masked.\n    unsafe {",
+      "line": 226,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        | SCTLR_DATA_CACHE_ENABLE\n        | SCTLR_INSTRUCTION_CACHE_ENABLE\n        | SCTLR_WRITE_EXECUTE_NEVER;\n    // SAFETY: INV-MMU: root is aligned initialized owned tables; current PC/SP identity mapped.\n    unsafe {",
+      "line": 237,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n}\npub fn poweroff() -> ! {\n    // SAFETY: INV-PSCI: pinned virt exposes PSCI SMC, SYSTEM_OFF has no returned lifetime.\n    unsafe {",
+      "line": 243,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "/// # Safety\n/// Root owns live aligned tables and preserves this CPU's kernel code/stack mappings.\n/// IRQ is masked; caller retains the address space until all CPUs leave it. No ASID reuse\n/// without completed local invalidation. The foundation pins each space to one CPU.\npub unsafe fn activate_root(root: u64) {",
+      "line": 255,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "pub unsafe fn activate_root(root: u64) {"
+    },
+    {
+      "context": "/// IRQ is masked; caller retains the address space until all CPUs leave it. No ASID reuse\n/// without completed local invalidation. The foundation pins each space to one CPU.\npub unsafe fn activate_root(root: u64) {\n    // SAFETY: INV-USER-TTBR: caller retains root; ASID zero, full local invalidation on every switch.\n    unsafe {",
+      "line": 257,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "}\npub fn publish_instructions(start: usize, end: usize) {\n    clean_boot(start, end);\n    // SAFETY: INV-USER-IMAGE: completed code writes to PoC before global inner-shareable I-cache invalidation.\n    unsafe {",
+      "line": 264,
+      "path": "crates/kernel/src\\arch\\aarch64\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "#![forbid(unsafe_code)]\nuse kernel_core::memory::Error;\npub const PAGE_OFFSET_MASK: u64 = 4095;\npub const PHYSICAL_ADDRESS_LIMIT: u64 = 1 << 40;\npub const OUTPUT_ADDRESS_MASK: u64 = 0x0000fffffffff000;",
+      "line": 1,
+      "path": "crates/kernel/src\\arch\\aarch64\\page.rs",
+      "text": "#![forbid(unsafe_code)]"
+    },
+    {
+      "context": "#[cfg(feature = \"boot-payload\")]\nconst PAYLOAD_MAX_SLICES: usize = 512;\n// SAFETY: INV-USER-IMAGE: trusted position-independent EL0 fixture, copied into owned RX pages.\ncore::arch::global_asm!(include_str!(\"boot_workload.S\"));\nunsafe extern \"C\" {",
+      "line": 24,
+      "path": "crates/kernel/src\\boot_workload.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "    let image_end = &raw const user_image_end as usize;\n    assert!(image_end > image_start);\n    // SAFETY: INV-USER-IMAGE: linked immutable position-independent trusted image extent.\n    let image =\n        unsafe { core::slice::from_raw_parts(image_start as *const u8, image_end - image_start) };",
+      "line": 81,
+      "path": "crates/kernel/src\\boot_workload.rs",
+      "text": "unsafe { core::slice::from_raw_parts(image_start as *const u8, image_end - image_start) };"
+    },
+    {
+      "context": "            \"user register context lost\"\n        );\n        // SAFETY: INV-USER-RETIRE: all CPUs acquired done, no user/kernel page writer;\n        // retained frame's initialized tag is read before any space/charge is retired.\n        let tag = unsafe {",
+      "line": 167,
+      "path": "crates/kernel/src\\boot_workload.rs",
+      "text": "let tag = unsafe {"
+    },
+    {
+      "context": "        if base == 0 {\n            return Err(fmt::Error);\n        }\n        // SAFETY: INV-UART: published only after DT validation; sole CPU polled writer, no IRQ logging.\n        let uart = unsafe { Registers::new(base, UART_REGISTER_SIZE) };",
+      "line": 42,
+      "path": "crates/kernel/src\\diagnostics\\mod.rs",
+      "text": "let uart = unsafe { Registers::new(base, UART_REGISTER_SIZE) };"
+    },
+    {
+      "context": "}\nimpl Registers {\n    /// # Safety\n    /// INV-MMIO: region is validated device memory, mapped for this kernel's lifetime.\n    pub unsafe fn new(base: usize, size: usize) -> Self {",
+      "line": 9,
+      "path": "crates/kernel/src\\hal\\mod.rs",
+      "text": "pub unsafe fn new(base: usize, size: usize) -> Self {"
+    },
+    {
+      "context": "            .expect(\"MMIO address overflow\") as *mut u32\n    }\n    pub fn read(&self, offset: usize) -> u32 {\n        // SAFETY: INV-MMIO: construction guarantees validity; address checks width/alignment.\n        unsafe { read_volatile(self.address(offset)) }",
+      "line": 24,
+      "path": "crates/kernel/src\\hal\\mod.rs",
+      "text": "unsafe { read_volatile(self.address(offset)) }"
+    },
+    {
+      "context": "        unsafe { read_volatile(self.address(offset)) }\n    }\n    pub fn write(&self, offset: usize, value: u32) {\n        // SAFETY: INV-MMIO: bounded register access, no ordinary reference to device memory.\n        unsafe {",
+      "line": 28,
+      "path": "crates/kernel/src\\hal\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            }\n        }\n    }\n}\nunsafe extern \"C\" {",
+      "line": 208,
+      "path": "crates/kernel/src\\handles\\testing.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "    let start = &raw const handle_image_start as usize;\n    let end = &raw const handle_image_end as usize;\n    assert!(end > start && end - start <= crate::platform::config::PAGE_BYTES);\n    // SAFETY: INV-USER-IMAGE: immutable trusted linker fixture, checked page bound.\n    let image = unsafe { core::slice::from_raw_parts(start as *const u8, end - start) };",
+      "line": 224,
+      "path": "crates/kernel/src\\handles\\testing.rs",
+      "text": "let image = unsafe { core::slice::from_raw_parts(start as *const u8, end - start) };"
+    },
+    {
+      "context": "        foreign_end > foreign_start\n            && foreign_end - foreign_start <= crate::platform::config::PAGE_BYTES\n    );\n    // SAFETY: INV-USER-IMAGE: bounded immutable linked foreign-handle fixture.\n    let foreign_image = unsafe {",
+      "line": 232,
+      "path": "crates/kernel/src\\handles\\testing.rs",
+      "text": "let foreign_image = unsafe {"
+    },
+    {
+      "context": "pub fn initialize(d: &Description) {\n    crate::percpu::primary_only();\n    // SAFETY: INV-GIC: validated GICv3 register regions, IRQ masked; sole CPU configuration owner.\n    let distributor =\n        unsafe { Registers::new(d.distributor.base as usize, d.distributor.size as usize) };",
+      "line": 50,
+      "path": "crates/kernel/src\\interrupt\\mod.rs",
+      "text": "unsafe { Registers::new(d.distributor.base as usize, d.distributor.size as usize) };"
+    },
+    {
+      "context": "        if offset + GICR_FRAME_SIZE > size {\n            break;\n        }\n        // SAFETY: INV-GIC-AFFINITY: validated bounded redistributor region; each CPU owns only matching GICR_TYPER affinity.\n        let frame = unsafe { Registers::new(base + offset, GICR_FRAME_SIZE) };",
+      "line": 72,
+      "path": "crates/kernel/src\\interrupt\\mod.rs",
+      "text": "let frame = unsafe { Registers::new(base + offset, GICR_FRAME_SIZE) };"
+    },
+    {
+      "context": "        }\n    }\n    panic!(\"GIC progress timeout\");\n}\n#[unsafe(no_mangle)]",
+      "line": 114,
+      "path": "crates/kernel/src\\interrupt\\mod.rs",
+      "text": "#[unsafe(no_mangle)]"
+    },
+    {
+      "context": "    }\n    cpu::timer_stop();\n    #[cfg(feature = \"kernel-tests\")]\n    // SAFETY: INV-PROBE: test-only context negative control; vector entry must preserve compiler-usable SIMD state.\n    unsafe {",
+      "line": 131,
+      "path": "crates/kernel/src\\interrupt\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "#![no_std]\n#![no_main]\n#![deny(unsafe_op_in_unsafe_fn)]\nextern crate alloc;\nmod arch {",
+      "line": 3,
+      "path": "crates/kernel/src\\main.rs",
+      "text": "#![deny(unsafe_op_in_unsafe_fn)]"
+    },
+    {
+      "context": "const BOOT_TIMER_DELAY: time::Duration = time::Duration::from_millis(10);\n#[cfg(not(feature = \"kernel-tests\"))]\nconst BOOT_IRQ_TIMEOUT: time::Duration = time::Duration::from_secs(1);\nuse core::sync::atomic::Ordering;\n#[unsafe(no_mangle)]",
+      "line": 35,
+      "path": "crates/kernel/src\\main.rs",
+      "text": "#[unsafe(no_mangle)]"
+    },
+    {
+      "context": "    cpu::timer_stop();\n    cpu::mask();\n    cpu::poweroff();\n}\n#[unsafe(no_mangle)]",
+      "line": 196,
+      "path": "crates/kernel/src\\main.rs",
+      "text": "#[unsafe(no_mangle)]"
+    },
+    {
+      "context": "        }\n    }\n    fatal_exception(esr, far, pc)\n}\n#[unsafe(no_mangle)]",
+      "line": 221,
+      "path": "crates/kernel/src\\main.rs",
+      "text": "#[unsafe(no_mangle)]"
+    },
+    {
+      "context": "pub const DYNAMIC_BASE: usize = config::DYNAMIC_BASE;\nstatic PHYSICAL_OWNER: core::sync::atomic::AtomicBool = core::sync::atomic::AtomicBool::new(false);\nstatic RAM_START: AtomicUsize = AtomicUsize::new(0);\nstatic RAM_END: AtomicUsize = AtomicUsize::new(0);\nunsafe extern \"C\" {",
+      "line": 49,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "        crate::percpu::primary_only();\n        self.pool.allocate(count, align).ok().map(|i| {\n            let address = self.base + i * PAGE_SIZE;\n            // SAFETY: INV-FRAME: CPU0-only allocation, exclusively claimed RAM; prior retirement acknowledged before pool reuse, no IRQ reader.\n            unsafe {",
+      "line": 102,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n    pub fn read_word(&self) -> u64 {\n        crate::percpu::primary_only();\n        // SAFETY: INV-FRAME: CPU0 access through retained guard; remote immutable reader is explicitly coordinated, IRQ never accesses mappings.\n        unsafe { core::ptr::read_volatile(self.address() as *const u64) }",
+      "line": 263,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe { core::ptr::read_volatile(self.address() as *const u64) }"
+    },
+    {
+      "context": "        if !self.writable {\n            return Err(kernel_core::memory::Error::Invalid);\n        }\n        // SAFETY: INV-FRAME: CPU0-owned write; caller must complete before publishing a remote read; no shared mutable Rust alias or IRQ access.\n        unsafe {",
+      "line": 271,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        );\n        let native = TABLES.lock();\n        // SAFETY: INV-USER-SPACE: exclusive zeroed contiguous allocation, checked extents;\n        // private page-table storage, no published root or user execution during construction.\n        unsafe {",
+      "line": 436,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    HEAP_BASE.store(frame.address, Ordering::Release);\n}\nstruct Heap;\n// SAFETY: INV-HEAP: reserved 64 KiB RAM, disjoint live ranges from locked plan; caller obeys GlobalAlloc.\nunsafe impl GlobalAlloc for Heap {",
+      "line": 514,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe impl GlobalAlloc for Heap {"
+    },
+    {
+      "context": "}\nstruct Heap;\n// SAFETY: INV-HEAP: reserved 64 KiB RAM, disjoint live ranges from locked plan; caller obeys GlobalAlloc.\nunsafe impl GlobalAlloc for Heap {\n    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {",
+      "line": 515,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe fn alloc(&self, layout: Layout) -> *mut u8 {"
+    },
+    {
+      "context": "            .lock()\n            .allocate(count, align)\n            .map_or(null_mut(), |i| (base + i * HEAP_UNIT_BYTES) as *mut u8)\n    }\n    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {",
+      "line": 527,
+      "path": "crates/kernel/src\\memory\\mod.rs",
+      "text": "unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {"
+    },
+    {
+      "context": "pub fn discover_boot() -> Description {\n    assert_eq!(config::ACTIVE_CPUS, kernel_core::platform::MAX_BOOT_CPUS);\n    assert_eq!(config::CONFIGURED_CPUS, config::ACTIVE_CPUS);\n    // SAFETY: INV-FDT: pinned ELF boot places immutable DTB at RAM start, first 40 bytes RAM.\n    let header = unsafe { core::slice::from_raw_parts(RAM_BASE as *const u8, FDT_HEADER_BYTES) };",
+      "line": 13,
+      "path": "crates/kernel/src\\platform\\mod.rs",
+      "text": "let header = unsafe { core::slice::from_raw_parts(RAM_BASE as *const u8, FDT_HEADER_BYTES) };"
+    },
+    {
+      "context": "            .unwrap(),\n    ) as usize;\n    assert!((FDT_HEADER_BYTES..=MAX_BOOT_DESCRIPTION_BYTES).contains(&size));\n    // SAFETY: INV-FDT: checked extent ends before loaded kernel; firmware/CPU1 never mutates it.\n    let bytes = unsafe { core::slice::from_raw_parts(RAM_BASE as *const u8, size) };",
+      "line": 21,
+      "path": "crates/kernel/src\\platform\\mod.rs",
+      "text": "let bytes = unsafe { core::slice::from_raw_parts(RAM_BASE as *const u8, size) };"
+    },
+    {
+      "context": "}\n#[cfg(feature = \"kernel-tests\")]\npub fn uart(d: &Description) -> Registers {\n    // SAFETY: INV-MMIO: discovered and platform-validated PL011; identity device mapping.\n    unsafe { Registers::new(d.uart.base as usize, d.uart.size as usize) }",
+      "line": 44,
+      "path": "crates/kernel/src\\platform\\mod.rs",
+      "text": "unsafe { Registers::new(d.uart.base as usize, d.uart.size as usize) }"
+    },
+    {
+      "context": "const TIMER_SLICES: u64 = 1;\nconst ENTRY_ARGUMENTS: usize = 5;\nconst STRESS_CYCLES: usize = 32;\nconst VERIFY_TIMEOUT: time::Duration = time::Duration::from_secs(2);\nunsafe extern \"C\" {",
+      "line": 17,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "    let start = &raw const lifecycle_image_start as usize;\n    let end = &raw const lifecycle_image_end as usize;\n    assert!(end > start && end - start <= config::PAGE_BYTES);\n    // SAFETY: INV-USER-IMAGE: immutable trusted linker extents, checked bounded size.\n    unsafe { core::slice::from_raw_parts(start as *const u8, end - start) }",
+      "line": 26,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "unsafe { core::slice::from_raw_parts(start as *const u8, end - start) }"
+    },
+    {
+      "context": "    assert_eq!(registry.state(id), Ok(State::Completed));\n    assert!(crate::scheduler::detached(id));\n    // SAFETY: INV-USER-RETIRE: retained private space, acquired scheduler unlink,\n    // all CPU writers quiescent; inspection ends before explicit reclamation.\n    unsafe { core::ptr::read_volatile(registry.data_address(id).unwrap() as *const u64) }",
+      "line": 57,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "unsafe { core::ptr::read_volatile(registry.data_address(id).unwrap() as *const u64) }"
+    },
+    {
+      "context": "    {\n        let duplicate = Registry::try_new().err() == Some(Error::AlreadyOwned);\n        // SAFETY: INV-REMOTE-READER: control carries no pointer; CPU1 returns only\n        // its observed coordinator rejection, and CPU0 waits before reading it.\n        unsafe {",
+      "line": 71,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            && registry.reclaim(p, id) == Err(Error::Transition);\n        assert!(crate::scheduler::detached(id));\n        // SAFETY: INV-USER-RETIRE: step restored native roots and all writers are\n        // quiescent; the registry still retains the private space across steps.\n        *counter = unsafe {",
+      "line": 345,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "*counter = unsafe {"
+    },
+    {
+      "context": "        passed &= tag(registry, id) == EXIT_CODE + index as u64;\n        if index % 2 == 0 {\n            // SAFETY: INV-USER-RETIRE: terminal retained space, all CPU writers\n            // quiescent; this read ends before reclamation below.\n            let counter = unsafe {",
+      "line": 377,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "let counter = unsafe {"
+    },
+    {
+      "context": "}\n// SAFETY: INV-RUNQUEUE: every storage access owns the nonblocking acquire/release\n// permit and checks observed CPU, IRQ mask, phase and generation. HRTB closures\n// cannot return storage references; no permit spans ERET, waits or completion.\nunsafe impl Sync for Local {}",
+      "line": 27,
+      "path": "crates/kernel/src\\scheduler\\local.rs",
+      "text": "unsafe impl Sync for Local {}"
+    },
+    {
+      "context": "            .unwrap_or_else(|error| reject(error));\n        let _scope = Scope::enter();\n        // SAFETY: INV-RUNQUEUE: exclusive preparing permit, observed coordinator,\n        // IRQ masked; acquired prior completion excludes any admitted owner.\n        unsafe {",
+      "line": 81,
+      "path": "crates/kernel/src\\scheduler\\local.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            .unwrap_or_else(|error| reject(error));\n        let _scope = Scope::enter();\n        // SAFETY: INV-RUNQUEUE: local observed CPU/IRQ/Running/generation checked,\n        // exclusive permit rejects nested/concurrent entry; closure cannot leak a borrow.\n        unsafe { operation(&mut *self.state.get()) }",
+      "line": 109,
+      "path": "crates/kernel/src\\scheduler\\local.rs",
+      "text": "unsafe { operation(&mut *self.state.get()) }"
+    },
+    {
+      "context": "            .unwrap_or_else(|error| reject(error));\n        let _scope = Scope::enter();\n        // SAFETY: INV-RUNQUEUE: acquired Done and exclusive coordinator permit;\n        // no owner can execute or change phase while borrowed; HRTB forbids escaped refs.\n        unsafe { operation(&mut *self.state.get()) }",
+      "line": 129,
+      "path": "crates/kernel/src\\scheduler\\local.rs",
+      "text": "unsafe { operation(&mut *self.state.get()) }"
+    },
+    {
+      "context": "    );\n}\n/// # Safety\n/// Same retained live-root contract as activate_root; used only for pinned user roots.\nunsafe fn activate(root: u64) {",
+      "line": 267,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe fn activate(root: u64) {"
+    },
+    {
+      "context": "        let _ = root;\n        NATIVE_ROOT.load(Ordering::Acquire)\n    };\n    // SAFETY: INV-USER-TTBR: caller retains the root and mask/stack preconditions.\n    unsafe {",
+      "line": 274,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n    if let Some(first) = first {\n        // SAFETY: INV-USER-TTBR: caller retains live immutable roots through acquired\n        // completion; no State reference spans ERET, native stack/code remain mapped.\n        unsafe {",
+      "line": 363,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            activate(first.1);\n        }\n        cpu::timer(time::deadline_after(QUANTUM));\n        // SAFETY: INV-USER-CONTEXT: checked frame ABI and permanent native stack.\n        unsafe {",
+      "line": 368,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            CURSOR[percpu::id()].store(current, Ordering::Release);\n            cpu::timer_stop();\n            // SAFETY: INV-USER-RETIRE: saved READY contexts remain owned by the\n            // Registry; native root/TLBI precede returning a nonterminal step.\n            unsafe {",
+      "line": 471,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        if let Some(next) = choose(state, generation) {\n            acquire_process(state.tasks[next].id());\n            *frame = state.tasks[next].context;\n            // SAFETY: INV-USER-TTBR: next pinned live root; completed flush precedes ERET.\n            unsafe {",
+      "line": 480,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        } else {\n            cpu::timer_stop();\n            // SAFETY: INV-USER-RETIRE: no ready/running process remains on this CPU;\n            // native root and local TLBI precede release completion and frame reclamation.\n            unsafe {",
+      "line": 489,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    /// # Safety\n    /// READ/HOLD require a retained immutable mapped word until completion or acknowledged\n    /// retirement; no new reader may be admitted during retirement. FAULT is an exact\n    /// test-only probe. Other commands must use a zero address. CPU0 is the sole producer.\n    pub unsafe fn submit(command: u64, address: usize) {",
+      "line": 37,
+      "path": "crates/kernel/src\\smp.rs",
+      "text": "pub unsafe fn submit(command: u64, address: usize) {"
+    },
+    {
+      "context": "            READ | HOLD => {\n                let address = ADDRESS.load(Ordering::Acquire) as usize;\n                // SAFETY: INV-REMOTE-READER: test driver retains Mapping/Frame until DONE or shootdown acknowledgement; aligned initialized borrowed word.\n                RESULT.store(\n                    unsafe { core::ptr::read_volatile(address as *const u64) },",
+      "line": 76,
+      "path": "crates/kernel/src\\smp.rs",
+      "text": "unsafe { core::ptr::read_volatile(address as *const u64) },"
+    },
+    {
+      "context": "    }\n}\npub fn start(root: u64) {\n    percpu::primary_only();\n    unsafe extern \"C\" {",
+      "line": 157,
+      "path": "crates/kernel/src\\smp.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "        cpu::affinity_state(percpu::CPUS[SECONDARY_CPU].affinity.load(Ordering::Acquire)),\n        cpu::PSCI_AFFINITY_ON\n    );\n}\n#[unsafe(no_mangle)]",
+      "line": 181,
+      "path": "crates/kernel/src\\smp.rs",
+      "text": "#[unsafe(no_mangle)]"
+    },
+    {
+      "context": "    held: AtomicBool,\n    value: UnsafeCell<T>,\n}\n// SAFETY: INV-LOCK: Acquire/Release excludes access; T:Send; IRQ handler never takes this lock.\nunsafe impl<T: Send> Sync for Lock<T> {}",
+      "line": 39,
+      "path": "crates/kernel/src\\sync\\mod.rs",
+      "text": "unsafe impl<T: Send> Sync for Lock<T> {}"
+    },
+    {
+      "context": "impl<T> Deref for Guard<'_, T> {\n    type Target = T;\n    fn deref(&self) -> &T {\n        // SAFETY: INV-LOCK: guard holds exclusive ownership until Drop; reference tied to guard.\n        unsafe { &*self.lock.value.get() }",
+      "line": 109,
+      "path": "crates/kernel/src\\sync\\mod.rs",
+      "text": "unsafe { &*self.lock.value.get() }"
+    },
+    {
+      "context": "}\nimpl<T> DerefMut for Guard<'_, T> {\n    fn deref_mut(&mut self) -> &mut T {\n        // SAFETY: INV-LOCK: exclusive guard cannot be duplicated, mutable borrow bounds lifetime.\n        unsafe { &mut *self.lock.value.get() }",
+      "line": 115,
+      "path": "crates/kernel/src\\sync\\mod.rs",
+      "text": "unsafe { &mut *self.lock.value.get() }"
+    },
+    {
+      "context": "const LOCK_MEASUREMENT_SAMPLES: usize = 64;\nconst IPI_REPETITIONS: usize = 32;\nconst SMP_WORD_PATTERN: u64 = 0x534d505f4b4f4c; // ASCII SMP_KOL.\nuse kernel_core::platform::Description;\nunsafe extern \"C\" {",
+      "line": 25,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "}\npub fn remote_fault(address: usize) {\n    expected(&raw const probe_read_pc as usize);\n    // SAFETY: INV-PROBE: secondary's private probe registration; deliberately retired mapping, resumes at exact registered PC.\n    unsafe {",
+      "line": 70,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        \"smp_cpu_identity\",\n        first.affinity.load(Ordering::Acquire) != second.affinity.load(Ordering::Acquire)\n            && percpu::id() == BOOT_CPU,\n    );\n    unsafe extern \"C\" {",
+      "line": 94,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "        first.ipis.load(Ordering::Acquire) == primary_ipis,\n    );\n    cpu::unmask();\n    // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.\n    unsafe {",
+      "line": 118,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        second.ipis.load(Ordering::Acquire) == before + IPI_REPETITIONS as u64,\n    );\n    *remote::LOCK_DATA.lock() = (0, remote::PUBLICATION_XOR);\n    // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.\n    unsafe {",
+      "line": 145,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    let mut mapping = memory::map(&a, memory::DYNAMIC_BASE, true, false).unwrap();\n    mapping.write_word(SMP_WORD_PATTERN).unwrap();\n    cpu::barrier();\n    // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.\n    unsafe {",
+      "line": 164,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        remote::RESULT.load(Ordering::Acquire) == SMP_WORD_PATTERN,\n    );\n    remote::GATE.store(false, Ordering::Release);\n    // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.\n    unsafe {",
+      "line": 174,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            \"smp_remote_ack\",\n            p.reclaimable(&a) && second.tlb_ack.load(Ordering::Acquire) > 0,\n        );\n        // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.\n        unsafe {",
+      "line": 205,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    }\n    let first_timers = first.timers.load(Ordering::Acquire);\n    let second_timers = second.timers.load(Ordering::Acquire);\n    // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.\n    unsafe {",
+      "line": 225,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    );\n    #[cfg(feature = \"secondary-panic-test\")]\n    {\n        // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.\n        unsafe {",
+      "line": 249,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    crate::process_workload::exercise(p, processes, report);\n    crate::user_copy::testing::exercise(p, processes, report);\n    crate::handles::testing::exercise(p, processes, report);\n    // SAFETY: INV-REMOTE-READER: bounded control work has no borrowed pointer; shutdown drains it before CPU_OFF.\n    unsafe {",
+      "line": 319,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            && uart.read(UART_PID1) & UART_PID_MASK == UART_PID1_PL011,\n    );\n    expected(&raw const probe_break_pc as usize);\n    // SAFETY: INV-PROBE: deliberate BRK at exact registered instruction, test build only.\n    unsafe {",
+      "line": 344,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            && p.available() == before - 1,\n    );\n    let mapping = memory::map(&a, memory::DYNAMIC_BASE, true, false).unwrap();\n    // SAFETY: INV-PROBE: newly allocated owned frame, mapped alias, aligned u64 access.\n    unsafe {",
+      "line": 376,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    unsafe {\n        probe_write(mapping.address(), PAGE_TEST_PATTERN);\n    }\n    // SAFETY: INV-PROBE: same live frame, read initialized bytes through physical identity alias.\n    let value = unsafe { probe_read(a.address()) };",
+      "line": 380,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "let value = unsafe { probe_read(a.address()) };"
+    },
+    {
+      "context": "    );\n    mapping.unmap();\n    expected(&raw const probe_read_pc as usize);\n    // SAFETY: INV-PROBE: deliberate unmapped access, exact test PC permits bounded recovery.\n    unsafe {",
+      "line": 391,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    );\n    let mapping = memory::map(&a, memory::DYNAMIC_BASE, false, false).unwrap();\n    expected(&raw const probe_write_pc as usize);\n    // SAFETY: INV-PROBE: deliberate write-permission fault in test-only probe.\n    unsafe {",
+      "line": 403,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "    percpu::current()\n        .expected_resume\n        .store(&raw const probe_execute_resume as u64, Ordering::Release);\n    // SAFETY: INV-PROBE: execute-never page; test handler resumes at exact assembly recovery label.\n    unsafe {",
+      "line": 416,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "        core::alloc::Layout::from_size_align(memory::HEAP_BYTES + 1, memory::HEAP_UNIT_BYTES)\n            .unwrap();\n    // SAFETY: INV-HEAP: explicit oversized layout exercises allocation failure; no non-null result is discarded.\n    let exhausted =\n        core::hint::black_box(unsafe { alloc::alloc::alloc(core::hint::black_box(layout)) });",
+      "line": 448,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "core::hint::black_box(unsafe { alloc::alloc::alloc(core::hint::black_box(layout)) });"
+    },
+    {
+      "context": "    interrupt::delivered().store(0, Ordering::Release);\n    cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));\n    cpu::unmask();\n    // SAFETY: INV-PROBE: aligned AtomicU64 loaded with LDAR, bounded physical-counter wait; vector must undo IRQ-side SIMD/FP clobber.\n    let context = unsafe {",
+      "line": 492,
+      "path": "crates/kernel/src\\tests.rs",
+      "text": "let context = unsafe {"
+    },
+    {
+      "context": "    let fault_address = memory::USER_GUARD - 4;\n    let guard = CopyGuard::new(fault_address, poisoned.len()).unwrap();\n    // SAFETY: INV-USER-COPY-TEST: current task/root retained, initialized 8-byte\n    // destination; guard page deliberately faults at production LDTRB PC.\n    let copied_in = unsafe { user_copy_in(poisoned.as_mut_ptr(), fault_address, poisoned.len()) };",
+      "line": 85,
+      "path": "crates/kernel/src\\user_copy\\testing.rs",
+      "text": "let copied_in = unsafe { user_copy_in(poisoned.as_mut_ptr(), fault_address, poisoned.len()) };"
+    },
+    {
+      "context": "    drop(guard);\n    let guard = CopyGuard::new(fault_address, poisoned.len()).unwrap();\n    // SAFETY: INV-USER-COPY-TEST: initialized byte source; only four writable user\n    // bytes precede the deliberate STTRB fault, never a kernel pointer access.\n    let copied_out = unsafe { user_copy_out(fault_address, poisoned.as_ptr(), poisoned.len()) };",
+      "line": 90,
+      "path": "crates/kernel/src\\user_copy\\testing.rs",
+      "text": "let copied_out = unsafe { user_copy_out(fault_address, poisoned.as_ptr(), poisoned.len()) };"
+    },
+    {
+      "context": "    let snapshot = access.copy_from_user::<MAX_BYTES>(address, length).unwrap();\n    core::hint::black_box(snapshot.bytes());\n}\n\nunsafe extern \"C\" {",
+      "line": 174,
+      "path": "crates/kernel/src\\user_copy\\testing.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "    let start = &raw const copy_image_start as usize;\n    let end = &raw const copy_image_end as usize;\n    assert!(end > start && end - start <= PAGE_BYTES);\n    // SAFETY: INV-USER-IMAGE: immutable trusted linker image, checked page bound.\n    let image = unsafe { core::slice::from_raw_parts(start as *const u8, end - start) };",
+      "line": 189,
+      "path": "crates/kernel/src\\user_copy\\testing.rs",
+      "text": "let image = unsafe { core::slice::from_raw_parts(start as *const u8, end - start) };"
+    },
+    {
+      "context": "        end: AtomicUsize::new(0),\n    }\n};\n    crate::platform::config::ACTIVE_CPUS];\nunsafe extern \"C\" {",
+      "line": 67,
+      "path": "crates/kernel/src\\user_copy.rs",
+      "text": "unsafe extern \"C\" {"
+    },
+    {
+      "context": "        let _guard = CopyGuard::new(address, length)?;\n        // SAFETY: INV-USER-COPY: initialized disjoint bounded kernel storage, checked\n        // current root/generation/EL0 permissions, immutable retained mappings;\n        // only the exact LDTRB instruction recovers an architectural user fault.\n        let copied = unsafe { user_copy_in(snapshot.bytes.as_mut_ptr(), address, length) };",
+      "line": 138,
+      "path": "crates/kernel/src\\user_copy.rs",
+      "text": "let copied = unsafe { user_copy_in(snapshot.bytes.as_mut_ptr(), address, length) };"
+    },
+    {
+      "context": "        let _guard = CopyGuard::new(address, bytes.len())?;\n        // SAFETY: INV-USER-COPY: initialized Rust byte slice, checked bounded writable\n        // current user range; no struct/padding conversion. Exact STTRB recovery\n        // returns the completed prefix and never reports a partial write as success.\n        let copied = unsafe { user_copy_out(address, bytes.as_ptr(), bytes.len()) };",
+      "line": 157,
+      "path": "crates/kernel/src\\user_copy.rs",
+      "text": "let copied = unsafe { user_copy_out(address, bytes.as_ptr(), bytes.len()) };"
+    },
+    {
+      "context": "#![no_std]\n#![forbid(unsafe_code)]\n\npub mod execution;\npub mod memory;",
+      "line": 2,
+      "path": "crates/kernel-core/src\\lib.rs",
+      "text": "#![forbid(unsafe_code)]"
+    }
+  ],
+  "native_dependency_tree": "kolvrt-kernel v0.1.0 (C:\\Users\\life\\.codex\\worktrees\\phase3-2-user-copy\\KOLVRT\\crates\\kernel)\nkernel-core v0.1.0 (C:\\Users\\life\\.codex\\worktrees\\phase3-2-user-copy\\KOLVRT\\crates\\kernel-core)\n",
+  "scope": "first-party source inventory with local invariant context; assembly and compiled runtime artifacts included; not a safety proof",
+  "phase33_review": {
+    "production_unsafe_additions": 0,
+    "test_only_additions": 3,
+    "baseline_lexical_locations": 106,
+    "candidate_lexical_locations": 109,
+    "review": "INV-USER-IMAGE for linked bounded immutable handle fixture symbols and two checked image slices; INV-RUNQUEUE already governs linear namespace moves and acquired quiescent storage. No new unsafe storage/Sync/indexing. Preparing storage is now initialized in place under the same existing INV-RUNQUEUE permit, eliminating oversized DEV stack copies."
+  }
+}

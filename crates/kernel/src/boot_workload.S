@@ -228,6 +228,12 @@ handle_image_start:
  mov x1,x21
  svc #0x82
  and x19,x19,x0
+ // Old user-supplied handle must stay stale after the slot contains a new target.
+ mov x0,x21
+ svc #0x80
+ cmp x0,#2
+ cset x3,eq
+ and x19,x19,x3
  cbz x22,1f
  // A failed suite must exit 0 rather than hide behind the expected fault.
  cbz x19,1f

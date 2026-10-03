@@ -6,6 +6,10 @@ use crate::{
     user_copy,
 };
 use core::sync::atomic::{AtomicU64, Ordering};
+const SAMPLES: usize = 32;
+const WARMUP: usize = 4;
+static BENCHMARKS: [[AtomicU64; SAMPLES * 5]; crate::platform::config::ACTIVE_CPUS] =
+    [const { [const { AtomicU64::new(0) }; SAMPLES * 5] }; crate::platform::config::ACTIVE_CPUS];
 use kernel_core::{
     handles::{CreationError, Namespace as Table},
     process::{Completion, Table as Processes},
@@ -110,9 +114,12 @@ pub(super) fn call(
             access.copy_to_user(address + 64, &h.encode().to_le_bytes())
         })
         .unwrap();
+    benchmark(table, caller, h);
+    let stale_after_reuse = table.lookup(caller, old, Kind::Event).is_err();
     LAST[crate::percpu::id()].store(h.encode(), Ordering::Release);
     frame.gpr[0] = u64::from(
         stale_process
+            && stale_after_reuse
             && rollback
             && owner
             && kind
@@ -124,6 +131,79 @@ pub(super) fn call(
             && stress,
     );
     true
+}
+#[inline(never)]
+fn benchmark(table: &mut Namespace, caller: crate::process::ProcessId, h: Handle) {
+    for case in 0..5 {
+        for sample in 0..SAMPLES + WARMUP {
+            let prepared = if case == 3 {
+                Some(
+                    table
+                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .unwrap(),
+                )
+            } else {
+                None
+            };
+            core::hint::black_box(&mut *table);
+            let start = crate::cpu::ticks();
+            let created = match case {
+                0 => {
+                    core::hint::black_box(
+                        table
+                            .lookup(caller, core::hint::black_box(h), Kind::Event)
+                            .unwrap(),
+                    );
+                    None
+                }
+                1 => {
+                    core::hint::black_box(
+                        table
+                            .lookup(
+                                caller,
+                                Handle::decode(core::hint::black_box(u64::MAX)),
+                                Kind::Event,
+                            )
+                            .err(),
+                    );
+                    None
+                }
+                2 => Some(
+                    table
+                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .unwrap(),
+                ),
+                3 => {
+                    table.close(caller, prepared.unwrap()).unwrap();
+                    None
+                }
+                _ => {
+                    let first = table
+                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .unwrap();
+                    core::hint::black_box(&*table);
+                    table.close(caller, first).unwrap();
+                    core::hint::black_box(&*table);
+                    let next = table
+                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .unwrap();
+                    core::hint::black_box((first, next));
+                    core::hint::black_box(&*table);
+                    table.close(caller, next).unwrap();
+                    None
+                }
+            };
+            core::hint::black_box(&*table);
+            let ticks = crate::cpu::ticks() - start;
+            if let Some(created) = created {
+                table.close(caller, created).unwrap();
+            }
+            if sample >= WARMUP {
+                BENCHMARKS[crate::percpu::id()][case * SAMPLES + sample - WARMUP]
+                    .store(ticks, Ordering::Release);
+            }
+        }
+    }
 }
 unsafe extern "C" {
     static handle_foreign_start: u8;
@@ -227,4 +307,33 @@ pub(crate) fn exercise(
         "handle_exit_fault_cleanup_and_process_reuse",
         registry.live() == 0 && physical.available() == before,
     );
+    for (owner, benchmarks) in BENCHMARKS.iter().enumerate() {
+        for (case, scope) in [
+            "handle_lookup_success",
+            "handle_lookup_failure",
+            "handle_create",
+            "handle_close",
+            "handle_slot_reuse",
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let raw: [u64; SAMPLES] =
+                core::array::from_fn(|i| benchmarks[case * SAMPLES + i].load(Ordering::Acquire));
+            let mut sorted = raw;
+            let [median, p95, p99] = kernel_core::quantiles(&mut sorted).unwrap();
+            crate::event!(
+                "{{\"event\":\"measurement\",\"scope\":\"{}\",\"cpu\":{},\"units\":\"timer_ticks\",\"frequency\":{},\"warmup\":{},\"iterations\":{},\"median\":{},\"p95\":{},\"p99\":{},\"samples\":{:?}}}",
+                scope,
+                owner,
+                crate::cpu::frequency(),
+                WARMUP,
+                SAMPLES,
+                median,
+                p95,
+                p99,
+                raw
+            );
+        }
+    }
 }

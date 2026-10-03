@@ -28,4 +28,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0018 — Bounded synchronous safe user copy](0018-safe-user-copy.md) — Accepted for bounded Phase 3.2.
 
+- [ADR-0019 — Linear process-local handle namespaces](0019-process-local-handles.md) — Accepted for bounded Phase 3.3.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)
