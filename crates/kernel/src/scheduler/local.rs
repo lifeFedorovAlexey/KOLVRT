@@ -135,7 +135,7 @@ impl Local {
     pub fn inspect<R>(&self, generation: u64, operation: impl for<'a> FnOnce(&'a State) -> R) -> R {
         self.quiescent(generation, |state| operation(state))
     }
-    #[cfg(feature = "machine-events")]
+    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
     pub fn inspect_reports<R>(
         &self,
         generation: u64,
