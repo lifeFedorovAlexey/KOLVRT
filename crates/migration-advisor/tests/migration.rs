@@ -215,6 +215,7 @@ fn request() -> Request {
             rollback_preconditions: vec!["old artifact and compatible state retained".into()],
             irreversible_changes: vec![],
         }],
+        scoped_resolutions: None,
     }
 }
 
@@ -384,17 +385,76 @@ fn scoped_solver_selects_side_by_side_abi_and_build_variants() {
     selection.identity = hash(13);
     invalid.selections.sort();
     assert!(verify_scoped(&problem, &invalid).is_err());
+
+    let mut request = request();
+    request.catalog.extend(catalog.clone());
+    request.scoped_resolutions = Some(ScopedResolutionRequest {
+        max_states: 1024,
+        scenarios: vec![ScopedResolutionScenario {
+            id: "legacy-and-next-abi".into(),
+            namespaces: vec![
+                ScopedNamespaceRequest {
+                    id: "legacy-client".into(),
+                    root: old_root_identity,
+                    architecture: "aarch64".into(),
+                    abi: "abi-v1".into(),
+                    requirements: app_requirement.clone(),
+                    retained: retained.clone(),
+                },
+                ScopedNamespaceRequest {
+                    id: "next-client".into(),
+                    root: new_root_identity,
+                    architecture: "aarch64".into(),
+                    abi: "abi-v2".into(),
+                    requirements: app_requirement,
+                    retained,
+                },
+            ],
+        }],
+    });
+    let report = advise(&request, &solver()).unwrap();
+    let measured = &report.scoped_resolutions[0];
+    assert_eq!(measured.status, "solved");
+    assert_eq!(measured.plan.as_ref().unwrap().selections.len(), 4);
+    assert!(
+        measured
+            .plan_digest
+            .as_ref()
+            .is_some_and(|digest| { migration_advisor::digest_valid(digest) })
+    );
+    let metrics = measured.metrics.unwrap();
+    assert!(metrics.visited_states > 0);
+    assert!(metrics.feasible_closures > 0);
+    assert!(metrics.branches_considered > 0);
 }
 
 #[test]
 fn schema_three_requests_remain_readable_without_changing_legacy_package_payloads() {
     let mut request = request();
     request.schema = migration_advisor::COMPATIBLE_SCHEMA;
+    let legacy_json = serde_json::to_vec(&request).unwrap();
+    let decoded: Request = serde_json::from_slice(&legacy_json).unwrap();
+    assert!(decoded.scoped_resolutions.is_none());
     let report = trusted_fixture(&request, &solver()).unwrap();
     assert_eq!(report.schema, migration_advisor::SCHEMA);
     let package: serde_json::Value =
         serde_json::from_str(&serde_json::to_string(&request.catalog[0]).unwrap()).unwrap();
     assert!(package.get("variant").is_none());
+}
+
+#[test]
+fn scoped_resolution_data_requires_schema_four() {
+    let mut request = request();
+    request.scoped_resolutions = Some(ScopedResolutionRequest {
+        max_states: 8,
+        scenarios: vec![ScopedResolutionScenario {
+            id: "v4-only".into(),
+            namespaces: vec![],
+        }],
+    });
+    request.schema = migration_advisor::COMPATIBLE_SCHEMA;
+    let error = advise(&request, &solver()).unwrap_err();
+    assert!(error.contains("require request schema v4"));
 }
 
 #[test]
@@ -598,6 +658,25 @@ fn cli_emits_read_only_report_and_rejects_unknown_fields() {
     r.tests.clear();
     r.benchmarks.clear();
     refresh_power_pilot_binding(&mut r);
+    r.catalog[0].variant = Some(migration_advisor::PackageVariant {
+        architecture: "x86_64".into(),
+        abi: "fixture-v1".into(),
+        build: "fixture-build".into(),
+    });
+    r.scoped_resolutions = Some(ScopedResolutionRequest {
+        max_states: 64,
+        scenarios: vec![ScopedResolutionScenario {
+            id: "installed-fixture-closure".into(),
+            namespaces: vec![ScopedNamespaceRequest {
+                id: "fixture-process".into(),
+                root: hash(1),
+                architecture: "x86_64".into(),
+                abi: "fixture-v1".into(),
+                requirements: vec![vec![requirement("window")]],
+                retained: vec![],
+            }],
+        }],
+    });
     let path = std::env::temp_dir().join(format!("kolvrt-advisor-{}.json", std::process::id()));
     std::fs::write(&path, serde_json::to_vec(&r).unwrap()).unwrap();
     let output = std::process::Command::new(env!("CARGO_BIN_EXE_migration-advisor"))
@@ -609,6 +688,12 @@ fn cli_emits_read_only_report_and_rejects_unknown_fields() {
     let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(report["automatic_replacement"], false);
     assert!(report["preferred_observed"].is_null());
+    assert_eq!(report["scoped_resolutions"][0]["status"], "solved");
+    assert!(
+        report["scoped_resolutions"][0]["metrics"]["visited_states"]
+            .as_u64()
+            .is_some_and(|states| states > 0)
+    );
     let mut json = serde_json::to_value(r).unwrap();
     json["auto_install"] = true.into();
     std::fs::write(&path, serde_json::to_vec(&json).unwrap()).unwrap();

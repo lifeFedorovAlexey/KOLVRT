@@ -142,8 +142,8 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "b707e7a8154e9bc7aa47c389c7d7383baef6efb54406b969ce5d5f2d9d685b3a",
-        "translation_sha256": "7c7c7c4c91dd6c30033e13b80916ab0790f61fb180774b93c57e3ba5234efc73"
+        "source_sha256": "467be4f46dae669c2e74d0563e66044f0c02438578895a390d779640c02139a5",
+        "translation_sha256": "919b68e7eafe8019cdc5606dea8a8475d8c65d93f426fddb624212cc155750a2"
       },
       "docs/architecture/migration-workbench.md": {
         "source_sha256": "d140b7c83a0daab390911f33844126944935f856a0636c5c22a36d6aaac319c9",
