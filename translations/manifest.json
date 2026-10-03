@@ -182,8 +182,8 @@
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/el0.md": {
-        "source_sha256": "b9314a2736b399317e29680594c39183005704f4605d31f5dfb1c4b184d85cf3",
-        "translation_sha256": "5937000180802d4710c9f14e049bbe902b0d85d8c7378cb16e7dd7a4ddf89d83"
+        "source_sha256": "598dbe5fb13a2ebd1ea7e417c156293a16c37bfdc43cbf685fdcf0b1d1f2269d",
+        "translation_sha256": "74b6f8d77b98d57c7583af0d74bcf52763da971408c44b7db1f414e21f5dcc2c"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "7ab0345bf609b17bbe42b1f8d5f332473c8245e2cfdb01582626fc3382c62ae0",

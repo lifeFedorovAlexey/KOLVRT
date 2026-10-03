@@ -16,11 +16,17 @@ pub(crate) enum Origin {
 #[derive(Clone, Copy)]
 pub(crate) struct Spec<'a> {
     pub image: &'a [u8],
+    pub image_format: ImageFormat,
     pub context: Context,
     pub owner: usize,
     pub entry: usize,
     /// Explicit workload limit; None means normal exit/fault determines lifetime.
     pub slice_limit: Option<usize>,
+}
+#[derive(Clone, Copy, Eq, PartialEq)]
+pub(crate) enum ImageFormat {
+    RawFixture,
+    Elf64Aarch64,
 }
 #[derive(Debug)]
 pub(crate) struct CreationFailure {
@@ -107,10 +113,48 @@ impl Registry {
             return Err((Error::NotQuiescent, None));
         }
         let payload = spec.entry == config::USER_PAYLOAD_BASE;
+        let (image, image_memory_size, image_pages) = match spec.image_format {
+            ImageFormat::RawFixture => (
+                spec.image,
+                spec.image.len(),
+                spec.image.len().div_ceil(config::PAGE_BYTES),
+            ),
+            ImageFormat::Elf64Aarch64 => {
+                let plan = kernel_core::elf::parse(
+                    spec.image,
+                    config::USER_PAYLOAD_BASE,
+                    config::USER_PAYLOAD_BYTES,
+                    config::PAGE_BYTES,
+                )
+                .map_err(|_| (Error::InvalidImage, None))?;
+                if plan.segment_count != 1
+                    || plan.entry != spec.entry
+                    || plan.segments[0].virtual_address != config::USER_PAYLOAD_BASE
+                    || plan.segments[0].flags & kernel_core::elf::PF_X == 0
+                    || plan.segments[0].flags & kernel_core::elf::PF_W != 0
+                {
+                    return Err((Error::InvalidImage, None));
+                }
+                let segment = plan.segments[0];
+                let end = segment
+                    .file_offset
+                    .checked_add(segment.file_size)
+                    .ok_or((Error::InvalidImage, None))?;
+                (
+                    &spec.image[segment.file_offset..end],
+                    segment.memory_size,
+                    plan.page_count,
+                )
+            }
+        };
         if spec.owner >= config::ACTIVE_CPUS
             || spec.image.is_empty()
             || !(spec.entry == memory::USER_CODE || payload)
-            || spec.image.len()
+            || image.is_empty()
+            || image_memory_size == 0
+            || image_memory_size > config::USER_PAYLOAD_BYTES
+            || spec.image_format == ImageFormat::Elf64Aarch64 && !payload
+            || image.len()
                 > if payload {
                     config::USER_PAYLOAD_BYTES
                 } else {
@@ -135,12 +179,7 @@ impl Registry {
             frame = Some(
                 physical
                     .allocate(
-                        memory::USER_SPACE_PAGES
-                            + if payload {
-                                spec.image.len().div_ceil(config::PAGE_BYTES)
-                            } else {
-                                0
-                            },
+                        memory::USER_SPACE_PAGES + if payload { image_pages } else { 0 },
                         1,
                     )
                     .ok_or((Error::Allocation, CreationStep::Frames))?,
@@ -151,8 +190,9 @@ impl Registry {
             space = Some(memory::OwnedUserSpace::new(
                 frame.take().unwrap(),
                 id.slot(),
-                spec.image,
+                image,
                 spec.entry,
+                image_memory_size,
             ));
             if fail_at == Some(CreationStep::Space) {
                 return Err((Error::Allocation, CreationStep::Space));
@@ -219,6 +259,16 @@ impl Registry {
             .ok_or(Error::Stale)?
             .space
             .data_address())
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn image_address(&self, id: ProcessId) -> Result<usize, Error> {
+        context_contract()?;
+        self.table.state(id)?;
+        Ok(self.objects[id.slot()]
+            .as_ref()
+            .ok_or(Error::Stale)?
+            .space
+            .image_address())
     }
     /// Internal synchronous completion driver, not a public wait ABI. No default
     /// workload deadline. The future service loop may schedule another dispatch.

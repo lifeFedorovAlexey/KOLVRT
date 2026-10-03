@@ -13,6 +13,9 @@ const SPIN_BUDGET: usize = 8;
 const TIMER_SLICES: u64 = 1;
 const ENTRY_ARGUMENTS: usize = 5;
 const STRESS_CYCLES: usize = 32;
+const ELF_EXIT_CODE: u64 = 0x4b4f_4c31;
+const ELF_MAX_SLICES: usize = 16;
+const MINIMAL_ELF: &[u8] = include_bytes!("../assets/minimal-exit.elf");
 const VERIFY_TIMEOUT: time::Duration = time::Duration::from_secs(2);
 unsafe extern "C" {
     static lifecycle_image_start: u8;
@@ -38,6 +41,7 @@ fn spec(owner: usize, mode: u64, code: u64) -> Spec<'static> {
     ]);
     Spec {
         image: image(),
+        image_format: process::ImageFormat::RawFixture,
         context,
         owner,
         entry: memory::USER_CODE,
@@ -297,9 +301,146 @@ pub fn exercise(
     report("process_bounded_stress", stress);
     quantum_progress(p, registry, &mut report);
     blocking_progress(p, registry, &mut report);
+    #[cfg(feature = "kernel-tests")]
+    exercise_elf(p, registry, &mut report, before);
     report(
         "process_resource_reclamation",
         registry.live() == 0 && p.available() == before,
+    );
+}
+
+#[cfg(feature = "kernel-tests")]
+fn exercise_elf(
+    p: &mut memory::Physical,
+    registry: &mut Registry,
+    report: &mut impl FnMut(&str, bool),
+    baseline_pages: usize,
+) {
+    let image = kernel_core::elf::parse(
+        MINIMAL_ELF,
+        config::USER_PAYLOAD_BASE,
+        config::USER_PAYLOAD_BYTES,
+        config::PAGE_BYTES,
+    )
+    .expect("checked-in minimal ELF fixture");
+    let mut context = Context::ZERO;
+    context.pc = image.entry as u64;
+    context.sp = memory::USER_STACK_TOP as u64;
+
+    let pages_before = p.available();
+    let live_before = registry.live();
+    let mut rejected = true;
+    for (offset, value) in [
+        (68usize, 7u64),
+        (80, (config::USER_PAYLOAD_BASE - config::PAGE_BYTES) as u64),
+        (24, (config::USER_PAYLOAD_BASE + config::PAGE_BYTES) as u64),
+        (96, u64::MAX),
+    ] {
+        let mut damaged = alloc::vec::Vec::from(MINIMAL_ELF);
+        damaged[offset..offset + 8].copy_from_slice(&value.to_le_bytes());
+        let result = registry.create(
+            p,
+            Origin::Bootstrap,
+            Spec {
+                image: &damaged,
+                image_format: process::ImageFormat::Elf64Aarch64,
+                context,
+                owner: 0,
+                entry: config::USER_PAYLOAD_BASE,
+                slice_limit: Some(ELF_MAX_SLICES),
+            },
+            None,
+        );
+        rejected &= result.is_err_and(|failure| {
+            failure.error == Error::InvalidImage && failure.completion.is_none()
+        });
+        rejected &= p.available() == pages_before && registry.live() == live_before;
+    }
+    report("elf_invalid_images_are_transactional", rejected);
+
+    let mut injection_rollback = true;
+    for step in kernel_core::process::CREATION_STEPS {
+        let available = p.available();
+        let live = registry.live();
+        let result = registry.create(
+            p,
+            Origin::Bootstrap,
+            Spec {
+                image: MINIMAL_ELF,
+                image_format: process::ImageFormat::Elf64Aarch64,
+                context,
+                owner: 0,
+                entry: image.entry,
+                slice_limit: Some(ELF_MAX_SLICES),
+            },
+            Some(step),
+        );
+        injection_rollback &= result.is_err_and(|failure| {
+            failure.error == Error::Allocation
+                && failure.completion.is_some_and(|completion| {
+                    completion.reason == Reason::CreationFailed(step)
+                        && registry.state(completion.id) == Err(Error::Stale)
+                })
+        });
+        injection_rollback &= p.available() == available && registry.live() == live;
+    }
+    report("elf_creation_failure_is_transactional", injection_rollback);
+
+    let first = registry
+        .create(
+            p,
+            Origin::Bootstrap,
+            Spec {
+                image: MINIMAL_ELF,
+                image_format: process::ImageFormat::Elf64Aarch64,
+                context,
+                owner: percpu::BOOT_CPU,
+                entry: image.entry,
+                slice_limit: Some(ELF_MAX_SLICES),
+            },
+            None,
+        )
+        .unwrap_or_else(|failure| process::reject(failure.error));
+    let second = registry
+        .create(
+            p,
+            Origin::Bootstrap,
+            Spec {
+                image: MINIMAL_ELF,
+                image_format: process::ImageFormat::Elf64Aarch64,
+                context,
+                owner: percpu::SECONDARY_CPU,
+                entry: image.entry,
+                slice_limit: Some(ELF_MAX_SLICES),
+            },
+            None,
+        )
+        .unwrap_or_else(|failure| process::reject(failure.error));
+    registry.start(first).unwrap();
+    registry.start(second).unwrap();
+    registry.dispatch(Some(VERIFY_TIMEOUT));
+    let exited = registry
+        .completion(first)
+        .is_ok_and(|done| done.reason == Reason::Exited(ELF_EXIT_CODE))
+        && registry
+            .completion(second)
+            .is_ok_and(|done| done.reason == Reason::Exited(ELF_EXIT_CODE));
+    let image_address = registry.image_address(first).unwrap();
+    // SAFETY: image is retained after terminal completion, both CPUs detached, and the
+    // verifier reads only the zero-filled tail of the private executable page.
+    let zero_tail = unsafe {
+        core::slice::from_raw_parts((image_address + 12) as *const u8, config::PAGE_BYTES - 12)
+            .iter()
+            .all(|byte| *byte == 0)
+    };
+    let isolated = registry.data_address(first).unwrap() != registry.data_address(second).unwrap();
+    registry.reclaim(p, first).unwrap();
+    registry.reclaim(p, second).unwrap();
+    report("elf_executes_in_isolated_el0_spaces", exited && isolated);
+    report("elf_bss_and_page_padding_are_zero", zero_tail);
+    report(
+        "elf_reclaims_all_frames",
+        p.available() == baseline_pages && registry.live() == 0,
     );
 }
 

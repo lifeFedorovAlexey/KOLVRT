@@ -12,7 +12,7 @@ use crate::{
     },
     memory, percpu,
     platform::config,
-    process::{Origin, Registry, Spec},
+    process::{ImageFormat, Origin, Registry, Spec},
     time,
 };
 use core::sync::atomic::Ordering;
@@ -133,6 +133,7 @@ pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence 
                 Origin::Bootstrap,
                 Spec {
                     image,
+                    image_format: ImageFormat::RawFixture,
                     context: contexts[id],
                     owner: id / TASKS,
                     entry: memory::USER_CODE,
@@ -247,6 +248,7 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
                 Origin::Bootstrap,
                 Spec {
                     image,
+                    image_format: ImageFormat::RawFixture,
                     context: contexts[id],
                     owner: id / TASKS,
                     entry: config::USER_PAYLOAD_BASE,

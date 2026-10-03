@@ -342,8 +342,8 @@ impl OwnedUserSpace {
     pub fn slot(&self) -> usize {
         self.id
     }
-    pub fn new(frame: Frame, id: usize, image: &[u8], entry: usize) -> Self {
-        let space = UserSpace::image(&frame, id, image, entry);
+    pub fn new(frame: Frame, id: usize, image: &[u8], entry: usize, memory_size: usize) -> Self {
+        let space = UserSpace::image(&frame, id, image, entry, memory_size);
         // Transfer the same charge, not another mapping or allocation. All
         // construction borrows end here; the owned Frame stays live until reclaim.
         core::mem::forget(space);
@@ -354,6 +354,10 @@ impl OwnedUserSpace {
     }
     pub fn data_address(&self) -> usize {
         self.frame.address + USER_DATA_PAGE * PAGE_SIZE
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn image_address(&self) -> usize {
+        self.frame.address + USER_SPACE_PAGES * PAGE_SIZE
     }
     pub fn reclaim(self, physical: &mut Physical) {
         // Only kernel-internal lifecycle code owns this value. The caller checked
@@ -374,18 +378,19 @@ pub struct UserSpace<'a> {
 impl<'a> UserSpace<'a> {
     #[cfg(feature = "user-retirement-negative")]
     pub fn new(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
-        Self::image(frame, id, image, USER_CODE)
+        Self::image(frame, id, image, USER_CODE, image.len())
     }
-    fn image(frame: &'a Frame, id: usize, image: &[u8], entry: usize) -> Self {
+    fn image(frame: &'a Frame, id: usize, image: &[u8], entry: usize, memory_size: usize) -> Self {
         crate::percpu::primary_only();
         assert_eq!(USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
         let payload = entry == config::USER_PAYLOAD_BASE;
-        let image_pages = image.len().div_ceil(PAGE_SIZE);
+        let image_pages = memory_size.div_ceil(PAGE_SIZE);
         assert_eq!(
             frame.count,
             USER_SPACE_PAGES + if payload { image_pages } else { 0 }
         );
         assert!(id < USER_CHARGES.len() && !image.is_empty());
+        assert!(image.len() <= memory_size && memory_size <= config::USER_PAYLOAD_BYTES);
         assert!(if payload {
             image.len() <= config::USER_PAYLOAD_BYTES
         } else {

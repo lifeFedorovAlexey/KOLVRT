@@ -1,6 +1,9 @@
 #![no_std]
 #![forbid(unsafe_code)]
+#[cfg(test)]
+extern crate std;
 
+pub mod elf;
 pub mod execution;
 pub mod memory;
 pub mod platform;
