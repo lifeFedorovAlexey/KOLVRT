@@ -1,5 +1,5 @@
 //! Trusted static bootstrap fixtures and post-quiescence verifier. Not scheduler lifetime.
-#[cfg(feature = "boot-payload")]
+#[cfg(all(feature = "boot-payload", feature = "machine-events"))]
 use crate::event;
 #[cfg(all(feature = "boot-payload", feature = "machine-events"))]
 use crate::scheduler;
@@ -271,15 +271,27 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
                 &words[..length]
             );
         }
+        let process = identities
+            .get(task.id)
+            .expect("completed task has an admitted process identity");
+        assert_eq!(process.slot(), task.id);
+        assert_eq!(process.generation(), task.process_generation);
+        let resident_pages = processes
+            .resident_pages(*process)
+            .expect("completed process retains its address-space charge");
         event!(
-            "{{\"event\":\"user-result\",\"id\":{},\"state\":{},\"exit\":{},\"fault\":{},\"slices\":{},\"length\":{},\"native_attempts\":{}}}",
+            "{{\"event\":\"user-result\",\"id\":{},\"state\":{},\"exit\":{},\"fault\":{},\"slices\":{},\"length\":{},\"native_attempts\":{},\"process_slot\":{},\"process_generation\":{},\"owner_cpu\":{},\"resident_pages\":{}}}",
             task.id,
             task.state,
             task.context.gpr[0],
             task.fault_class,
             task.slices,
             task.report_len,
-            task.native_attempts
+            task.native_attempts,
+            process.slot(),
+            process.generation(),
+            task.id / scheduler::TASKS,
+            resident_pages
         );
     }
     for identity in identities {

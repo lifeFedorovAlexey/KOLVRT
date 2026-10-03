@@ -220,6 +220,18 @@ impl Registry {
             .space
             .data_address())
     }
+    /// Kernel-owned resident frame charge for an exact live process identity.
+    /// This remains valid after terminal completion and before explicit reclaim.
+    #[cfg(feature = "machine-events")]
+    pub fn resident_pages(&self, id: ProcessId) -> Result<usize, Error> {
+        context_contract()?;
+        self.table.state(id)?;
+        let object = self.objects[id.slot()].as_ref().ok_or(Error::Stale)?;
+        if object.id != id {
+            return Err(Error::Stale);
+        }
+        Ok(object.space.resident_pages())
+    }
     /// Internal synchronous completion driver, not a public wait ABI. No default
     /// workload deadline. The future service loop may schedule another dispatch.
     pub fn dispatch(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {

@@ -219,6 +219,8 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
     let mut words = vec![Vec::<u64>::new(); platform_config::USER_PROCESSES];
     let mut finished = BTreeSet::new();
     let mut native_attempts = [0u64; platform_config::USER_PROCESSES];
+    let mut process_identities = vec![None::<Value>; platform_config::USER_PROCESSES];
+    let mut seen_process_generations = BTreeSet::new();
     let mut terminal = false;
     for event in events {
         terminal |= event["event"] == "boot";
@@ -248,6 +250,32 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
             native_attempts[id] = event["native_attempts"]
                 .as_u64()
                 .ok_or("missing independent native accounting")?;
+            let process_slot = event["process_slot"]
+                .as_u64()
+                .ok_or("missing kernel process slot")?;
+            let process_generation = event["process_generation"]
+                .as_u64()
+                .filter(|generation| *generation != 0)
+                .ok_or("missing kernel process generation")?;
+            let owner_cpu = event["owner_cpu"]
+                .as_u64()
+                .ok_or("missing kernel process owner")?;
+            let resident_pages = event["resident_pages"]
+                .as_u64()
+                .filter(|pages| *pages != 0)
+                .ok_or("missing kernel resident frame charge")?;
+            if process_slot != id as u64
+                || owner_cpu != (id / platform_config::USER_PROCESSES_PER_CPU) as u64
+                || !seen_process_generations.insert((process_slot, process_generation))
+            {
+                return Err("kernel process identity does not match the consumer slot".into());
+            }
+            process_identities[id] = Some(json!({
+                "process_slot":process_slot,
+                "process_generation":process_generation,
+                "owner_cpu":owner_cpu,
+                "resident_pages":resident_pages
+            }));
         } else {
             if event["offset"].as_u64() != Some(data.len() as u64) {
                 return Err("missing or duplicate report chunk".into());
@@ -397,7 +425,10 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 "EL0 accounting disagrees with independently counted native admissions".into(),
             );
         }
-        consumers.push(json!({"id":id,"cpu":id / platform_config::USER_PROCESSES_PER_CPU,"route":words[header::ROUTE],"generation":words[header::GENERATION],"conformance_checks":words[header::CONFORMANCE],"oracle_sum":words[header::SUM],"frequency":words[header::FREQUENCY],"native_attempts":native_attempts[id],"profile_digest_words":&words[header::DIGEST..FIXED_HEADER_WORDS],"benchmarks":benchmarks}));
+        let process_identity = process_identities[id]
+            .as_ref()
+            .ok_or("consumer is missing its kernel-owned process identity")?;
+        consumers.push(json!({"id":id,"cpu":id / platform_config::USER_PROCESSES_PER_CPU,"process_identity":process_identity,"route":words[header::ROUTE],"generation":words[header::GENERATION],"conformance_checks":words[header::CONFORMANCE],"oracle_sum":words[header::SUM],"frequency":words[header::FREQUENCY],"native_attempts":native_attempts[id],"profile_digest_words":&words[header::DIGEST..FIXED_HEADER_WORDS],"benchmarks":benchmarks}));
     }
     Ok(json!(consumers))
 }
@@ -564,7 +595,17 @@ pub fn run(args: &[String]) -> Result<()> {
         let events: Vec<Value> =
             serde_json::from_slice(&fs::read(retained.with_extension("results.json"))?)?;
         let consumers = reports(&events, routes, !prod)?;
-        runs.push(json!({"profile":label,"user_artifact":artifact,"kernel_build":read_json(elf.with_file_name(if prod {"prod-boot-payload-build.json"} else {"dev-boot-payload-build.json"}))?,"run":read_json(retained.with_extension("run.json"))?,"consumers":consumers,"events":events}));
+        let report_chunks = events
+            .iter()
+            .filter(|event| event["event"] == "user-report")
+            .count();
+        let expected_consumers = platform_config::USER_PROCESSES as u64;
+        let completed_consumers = consumers
+            .as_array()
+            .ok_or("missing parsed consumers")?
+            .len() as u64;
+        let missing_consumers = expected_consumers.saturating_sub(completed_consumers);
+        runs.push(json!({"profile":label,"user_artifact":artifact,"kernel_build":read_json(elf.with_file_name(if prod {"prod-boot-payload-build.json"} else {"dev-boot-payload-build.json"}))?,"run":read_json(retained.with_extension("run.json"))?,"scope_accounting":{"expected_consumers":expected_consumers,"completed_consumers":completed_consumers,"missing_consumers":missing_consumers,"validated_report_chunks":report_chunks,"lost_report_chunks":0},"consumers":consumers,"events":events}));
         println!(
             "routing: {label} verified on {} EL0 processes",
             platform_config::USER_PROCESSES
@@ -600,7 +641,7 @@ pub fn run(args: &[String]) -> Result<()> {
     if starting_sources != super::source_inventory()? {
         return Err("sources changed during routing run".into());
     }
-    let result = json!({"schema_version":1,"scope":"real fixed-affinity EL0 consumers; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency observations, tail uncertainty and physical hardware unverified"});
+    let result = json!({"schema_version":2,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner and resident frame charge are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency observations, tail uncertainty and physical hardware unverified"});
     fs::write(
         "target/kernel/routing-results.json",
         serde_json::to_string_pretty(&result)?,

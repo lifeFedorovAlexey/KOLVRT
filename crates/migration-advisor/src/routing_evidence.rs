@@ -23,6 +23,10 @@ const ROUTE_NAMES: [&str; 4] = [
 pub struct Observation {
     pub consumer: u64,
     pub cpu: u64,
+    pub process_slot: u64,
+    pub process_generation: u64,
+    pub owner_cpu: u64,
+    pub resident_pages: u64,
     pub declared_route: String,
     pub generation: u64,
     pub conformance_checks: u64,
@@ -49,6 +53,11 @@ pub struct Run {
     pub profile: String,
     pub kernel_digest: String,
     pub package_digest: String,
+    pub expected_consumers: u64,
+    pub completed_consumers: u64,
+    pub missing_consumers: u64,
+    pub validated_report_chunks: u64,
+    pub lost_report_chunks: u64,
     pub observations: Vec<Observation>,
 }
 #[derive(Debug, Serialize)]
@@ -99,7 +108,7 @@ fn take<'a>(words: &'a [u64], cursor: &mut usize, count: usize) -> Result<&'a [u
 /// against them. This validates structure, not producer identity or physical performance.
 pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
     let input: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
-    if number(&input, "schema_version")? != 1 {
+    if number(&input, "schema_version")? != 2 {
         return Err("unsupported routing evidence schema".into());
     }
     let runs = input["runs"]
@@ -124,6 +133,8 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         }
         let mut raw = BTreeMap::<u64, Vec<u64>>::new();
         let mut finished = BTreeSet::new();
+        let mut process_results = BTreeMap::<u64, (u64, u64, u64, u64)>::new();
+        let mut report_chunks = 0u64;
         let mut boot = false;
         let mut processes = None;
         for event in run["events"].as_array().ok_or("missing raw events")? {
@@ -137,6 +148,9 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             }
             match text(event, "event")? {
                 "user-report" => {
+                    report_chunks = report_chunks
+                        .checked_add(1)
+                        .ok_or("report chunk count overflow")?;
                     let id = number(event, "id")?;
                     if finished.contains(&id) {
                         return Err("report after completion".into());
@@ -149,11 +163,24 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 }
                 "user-result" => {
                     let id = number(event, "id")?;
+                    let process_slot = number(event, "process_slot")?;
+                    let process_generation = number(event, "process_generation")?;
+                    let owner_cpu = number(event, "owner_cpu")?;
+                    let resident_pages = number(event, "resident_pages")?;
                     if !finished.insert(id)
                         || number(event, "state")? != 2
                         || number(event, "exit")? != 1
                         || number(event, "fault")? != 0
                         || number(event, "length")? != raw.get(&id).map_or(0, Vec::len) as u64
+                        || process_slot != id
+                        || process_generation == 0
+                        || resident_pages == 0
+                        || process_results
+                            .insert(
+                                id,
+                                (process_slot, process_generation, owner_cpu, resident_pages),
+                            )
+                            .is_some()
                     {
                         return Err("missing/failed/duplicate consumer completion".into());
                     }
@@ -182,8 +209,19 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         let consumers = run["consumers"]
             .as_array()
             .ok_or("missing consumer summaries")?;
+        let accounting = &run["scope_accounting"];
+        let expected_consumers = number(accounting, "expected_consumers")?;
+        let completed_consumers = number(accounting, "completed_consumers")?;
+        let missing_consumers = number(accounting, "missing_consumers")?;
+        let validated_report_chunks = number(accounting, "validated_report_chunks")?;
+        let lost_report_chunks = number(accounting, "lost_report_chunks")?;
         if !boot
             || consumers.is_empty()
+            || expected_consumers != consumers.len() as u64
+            || completed_consumers != finished.len() as u64
+            || missing_consumers != expected_consumers.saturating_sub(completed_consumers)
+            || validated_report_chunks != report_chunks
+            || lost_report_chunks != 0
             || processes != Some(consumers.len() as u64)
             || finished.len() != consumers.len()
             || raw.len() != consumers.len()
@@ -192,10 +230,25 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         }
         let mut observations = Vec::new();
         let mut seen = BTreeSet::new();
+        let mut seen_process_ids = BTreeSet::new();
         for consumer in consumers {
             let id = number(consumer, "id")?;
             if !seen.insert(id) {
                 return Err("duplicate consumer summary".into());
+            }
+            let process_slot = number(&consumer["process_identity"], "process_slot")?;
+            let process_generation = number(&consumer["process_identity"], "process_generation")?;
+            let owner_cpu = number(&consumer["process_identity"], "owner_cpu")?;
+            let resident_pages = number(&consumer["process_identity"], "resident_pages")?;
+            if process_slot != id
+                || process_generation == 0
+                || owner_cpu != number(consumer, "cpu")?
+                || resident_pages == 0
+                || !seen_process_ids.insert((process_slot, process_generation))
+                || process_results.get(&id)
+                    != Some(&(process_slot, process_generation, owner_cpu, resident_pages))
+            {
+                return Err("kernel process identity/accounting mismatch".into());
             }
             let data = raw.get(&id).ok_or("summary without raw report")?;
             let mut cursor = 0;
@@ -283,6 +336,10 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             observations.push(Observation {
                 consumer: id,
                 cpu: number(consumer, "cpu")?,
+                process_slot,
+                process_generation,
+                owner_cpu,
+                resident_pages,
                 declared_route: declared.into(),
                 generation: header[3],
                 conformance_checks: header[4],
@@ -294,6 +351,11 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             profile: profile.into(),
             kernel_digest: kernel.into(),
             package_digest: package.into(),
+            expected_consumers,
+            completed_consumers,
+            missing_consumers,
+            validated_report_chunks,
+            lost_report_chunks,
             observations,
         });
     }
