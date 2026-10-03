@@ -17,6 +17,7 @@ use std::{
 
 const PAIRS: usize = 100;
 const PILOT_PAIRS: usize = 100;
+const EXPECTED_MEAN_GAIN_NS: u64 = 25_000;
 const CHILD_TIMEOUT: Duration = Duration::from_secs(10);
 const POLL: Duration = Duration::from_millis(10);
 const MAX_RECEIPT_BYTES: u64 = 8192;
@@ -227,20 +228,18 @@ fn run() -> Result<PathBuf, String> {
         .map(|gain| (*gain as f64 - pilot_mean_gain).powi(2))
         .sum::<f64>()
         / (pilot_gains_ns.len() - 1) as f64;
-    let expected_mean_gain_ns = pilot_mean_gain.max(0.0).round() as u64;
-    let power_pilot = (expected_mean_gain_ns > improvement_margin_ns
-        && pilot_variance.is_finite()
-        && pilot_variance > 0.0)
-        .then(|| migration_advisor::advisor::PowerPilot {
+    let power_pilot = (pilot_variance.is_finite() && pilot_variance > 0.0).then(|| {
+        migration_advisor::advisor::PowerPilot {
             artifact: power_pilot_artifact,
             context: context.clone(),
             paired_gains_ns: pilot_gains_ns,
-        });
+        }
+    });
     let prospective_power =
         power_pilot.as_ref().map(
             |pilot| migration_advisor::statistics::ProspectivePowerPlan {
                 pilot_digest: subject_digest(&serde_json::to_vec(pilot).unwrap()),
-                expected_mean_gain_ns,
+                expected_mean_gain_ns: EXPECTED_MEAN_GAIN_NS,
                 target_power_basis_points: 9000,
                 planned_effective_blocks: PAIRS,
             },
