@@ -166,6 +166,8 @@ fn request() -> Request {
                 package: hash(id),
                 contract: hash(99),
                 suite: hash(80),
+                execution_receipt: None,
+                execution_artifacts: vec![],
                 context: context(),
                 passed: true,
             })
@@ -212,6 +214,7 @@ fn request() -> Request {
             rollback_strategy: RollbackStrategy::ReinstallPrevious {
                 previous_plan: plan_digest(&installed),
             },
+            rollback_execution_receipt: None,
             rollback_preconditions: vec!["old artifact and compatible state retained".into()],
             irreversible_changes: vec![],
         }],
@@ -788,6 +791,8 @@ fn newer_versions_are_candidates_and_dependency_contracts_are_required() {
         package: hash(3),
         contract: hash(99),
         suite: hash(80),
+        execution_receipt: None,
+        execution_artifacts: vec![],
         context: context(),
         passed: true,
     });
@@ -1294,6 +1299,8 @@ fn rollback_and_irreversible_changes_are_part_of_every_solved_proposal() {
     r.migration_plans[0].rollback_strategy = RollbackStrategy::RestoreSnapshot {
         snapshot_digest: hash(55),
     };
+    assert!(trusted_fixture(&r, &solver()).is_err()); // A snapshot plan needs an execution receipt for persistent data.
+    r.migration_plans[0].rollback_execution_receipt = Some(hash(56));
     r.migration_plans[0]
         .irreversible_changes
         .push("external durable state cannot be restored".into());
@@ -1302,8 +1309,15 @@ fn rollback_and_irreversible_changes_are_part_of_every_solved_proposal() {
         report.candidates[0].status,
         CandidateStatus::PartialEvidenceCandidate
     );
+    assert!(!report.candidates[0].assurance.contracts_passed);
+    assert!(!report.candidates[0].assurance.rollback_documented);
     let proposal = report.candidates[0].proposal.as_ref().unwrap();
     assert_eq!(proposal.irreversible_changes.as_ref().unwrap().len(), 1);
+    let rollback_receipt = hash(56);
+    assert_eq!(
+        proposal.rollback_execution_receipt.as_deref(),
+        Some(rollback_receipt.as_str())
+    );
     assert!(!proposal.deployment_authorized);
 }
 

@@ -69,6 +69,12 @@ pub struct ContractTest {
     pub package: String,
     pub contract: String,
     pub suite: String,
+    /// Optional digest of the retained execution receipt for this contract run.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_receipt: Option<String>,
+    /// Additional raw execution artifacts referenced by the receipt.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub execution_artifacts: Vec<String>,
     pub context: Context,
     pub passed: bool,
 }
@@ -219,6 +225,9 @@ pub struct MigrationPlan {
     pub required_changes: Vec<String>,
     pub persistent_data_change: bool,
     pub rollback_strategy: RollbackStrategy,
+    /// Digest of retained execution evidence that exercised the rollback drill.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rollback_execution_receipt: Option<String>,
     pub rollback_preconditions: Vec<String>,
     pub irreversible_changes: Vec<String>,
 }
@@ -248,6 +257,7 @@ pub struct Proposal {
     pub expected_gain: Option<Statistics>,
     pub required_changes: Option<Vec<String>>,
     pub rollback_strategy: Option<RollbackStrategy>,
+    pub rollback_execution_receipt: Option<String>,
     pub rollback_preconditions: Option<Vec<String>>,
     pub irreversible_changes: Option<Vec<String>>,
     pub deployment_authorized: bool,
@@ -357,6 +367,12 @@ fn validate(request: &Request) -> Result<(), String> {
         if !digest_valid(&t.package)
             || !digest_valid(&t.contract)
             || !digest_valid(&t.suite)
+            || t.execution_receipt
+                .as_deref()
+                .is_some_and(|receipt| !digest_valid(receipt))
+            || t.execution_artifacts
+                .iter()
+                .any(|artifact| !digest_valid(artifact))
             || !context_valid(&t.context)
             || !tests.insert((
                 &t.package,
@@ -401,6 +417,17 @@ fn validate(request: &Request) -> Result<(), String> {
             || !context_valid(&m.context)
             || !migrations.insert(&m.candidate)
             || !rollback_valid
+            || (m.persistent_data_change
+                && (!matches!(
+                    &m.rollback_strategy,
+                    RollbackStrategy::RestoreSnapshot { .. }
+                ) || m
+                    .rollback_execution_receipt
+                    .as_deref()
+                    .is_none_or(|receipt| !digest_valid(receipt))))
+            || m.rollback_execution_receipt
+                .as_deref()
+                .is_some_and(|receipt| !digest_valid(receipt))
             || m.required_changes.is_empty()
             || m.rollback_preconditions.is_empty()
             || m.required_changes
@@ -526,6 +553,10 @@ fn analyze_scoped_resolutions(request: &Request) -> Vec<ScopedResolutionResult> 
 
 // Collect exact provider-specification and consumer-specification test results.
 fn contract_gate(request: &Request, plan: &Plan, root: &str) -> (bool, bool, BTreeSet<usize>) {
+    let requires_execution_receipt = request
+        .migration_plans
+        .iter()
+        .any(|migration| migration.candidate == root && migration.persistent_data_change);
     let selected: Vec<_> = plan
         .packages
         .iter()
@@ -543,6 +574,9 @@ fn contract_gate(request: &Request, plan: &Plan, root: &str) -> (bool, bool, BTr
                 t.contract == contract
                     && t.context == request.context
                     && providers.iter().any(|p| p.identity == t.package)
+                    && (!requires_execution_receipt
+                        || t.package != root
+                        || t.execution_receipt.is_some())
             })
             .collect::<Vec<_>>();
         if let Some((i, _)) = found.iter().find(|(_, t)| t.passed) {
@@ -784,6 +818,8 @@ pub fn advise_with_verifier(
                     let t = &request.tests[*i];
                     let mut refs = context_references(&t.context);
                     refs.extend([t.package.clone(), t.contract.clone(), t.suite.clone()]);
+                    refs.extend(t.execution_receipt.clone());
+                    refs.extend(t.execution_artifacts.clone());
                     authenticate(
                         request,
                         verifier,
@@ -815,6 +851,13 @@ pub fn advise_with_verifier(
                 });
                 let rollback_ready = metadata.is_some_and(|m| {
                     m.irreversible_changes.is_empty()
+                        && (!m.persistent_data_change
+                            || results.iter().any(|index| {
+                                let test = &request.tests[*index];
+                                test.package == p.identity
+                                    && test.execution_receipt.as_deref()
+                                        == m.rollback_execution_receipt.as_deref()
+                            }))
                         && match &m.rollback_strategy {
                             RollbackStrategy::RestoreSnapshot { .. } => true,
                             RollbackStrategy::ReinstallPrevious { previous_plan } => {
@@ -830,6 +873,7 @@ pub fn advise_with_verifier(
                     {
                         refs.push(snapshot_digest.clone());
                     }
+                    refs.extend(m.rollback_execution_receipt.clone());
                     authenticate(
                         request,
                         verifier,
@@ -970,6 +1014,8 @@ pub fn advise_with_verifier(
                     expected_gain: stats,
                     required_changes: metadata.map(|m| m.required_changes.clone()),
                     rollback_strategy: metadata.map(|m| m.rollback_strategy.clone()),
+                    rollback_execution_receipt: metadata
+                        .and_then(|m| m.rollback_execution_receipt.clone()),
                     rollback_preconditions: metadata.map(|m| m.rollback_preconditions.clone()),
                     irreversible_changes: metadata.map(|m| m.irreversible_changes.clone()),
                     deployment_authorized: false,
