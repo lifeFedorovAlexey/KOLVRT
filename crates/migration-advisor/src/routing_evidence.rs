@@ -48,11 +48,11 @@ pub struct MeasuredRoute {
     pub conversions: u64,
     pub warmup_ticks: Vec<u64>,
     pub sample_ticks: Vec<u64>,
-    pub adapter_cpu_ticks: Vec<u64>,
+    pub route_el0_cpu_ticks: Vec<u64>,
     pub native_service_cpu_ticks: Vec<u64>,
     pub observed_preemptions: u64,
     pub median_wall_ns: u64,
-    pub adapter_cpu_ns: Option<u64>,
+    pub route_el0_cpu_ns: Option<u64>,
     pub native_service_cpu_ns: u64,
     pub exclusive_cpu_ns: u64,
 }
@@ -116,7 +116,7 @@ fn take<'a>(words: &'a [u64], cursor: &mut usize, count: usize) -> Result<&'a [u
 /// against them. This validates structure, not producer identity or physical performance.
 pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
     let input: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
-    if number(&input, "schema_version")? != 4 {
+    if number(&input, "schema_version")? != 5 {
         return Err("unsupported routing evidence schema".into());
     }
     let runs = input["runs"]
@@ -326,21 +326,21 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 let name = route(frame[1])?;
                 let warmup = take(data, &mut cursor, WARMUP)?.to_vec();
                 let samples = take(data, &mut cursor, SAMPLES)?.to_vec();
-                let adapter_cpu_ticks = take(data, &mut cursor, SAMPLES)?.to_vec();
+                let route_el0_cpu_ticks = take(data, &mut cursor, SAMPLES)?.to_vec();
                 let native_service_cpu_ticks = take(data, &mut cursor, SAMPLES)?.to_vec();
                 let preemptions = take(data, &mut cursor, 1)?[0];
                 let counters = take(data, &mut cursor, COUNTERS)?;
                 if samples != words(&benchmark["samples"])?
                     || warmup != words(&benchmark["warmup_samples"])?
-                    || adapter_cpu_ticks != words(&benchmark["adapter_cpu_samples"])?
+                    || route_el0_cpu_ticks != words(&benchmark["route_el0_cpu_samples"])?
                     || native_service_cpu_ticks != words(&benchmark["native_service_cpu_samples"])?
                     || counters != words(&benchmark["counters"])?
                     || preemptions != number(benchmark, "observed_preemptions")?
                 {
                     return Err("summary/raw measurement mismatch".into());
                 }
-                if adapter_cpu_ticks.contains(&0) || native_service_cpu_ticks.contains(&0) {
-                    return Err("invalid adapter/native exclusive CPU accounting".into());
+                if route_el0_cpu_ticks.contains(&0) || native_service_cpu_ticks.contains(&0) {
+                    return Err("invalid route-EL0/native CPU accounting".into());
                 }
                 let calls = (SAMPLES + WARMUP) as u64;
                 let compat = frame[1] != 0;
@@ -365,9 +365,9 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     sorted.sort_unstable();
                     sorted[(values.len() - 1) / 2]
                 };
-                let adapter_ticks = median_ticks(&adapter_cpu_ticks);
+                let route_el0_ticks = median_ticks(&route_el0_cpu_ticks);
                 let native_ticks = median_ticks(&native_service_cpu_ticks);
-                let exclusive_cpu_samples = adapter_cpu_ticks
+                let exclusive_cpu_samples = route_el0_cpu_ticks
                     .iter()
                     .zip(&native_service_cpu_ticks)
                     .map(|(&adapter, &native)| {
@@ -382,7 +382,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                         .try_into()
                         .map_err(|_| "CPU time conversion overflow".into())
                 };
-                if number(benchmark, "adapter_cpu_ns")? != to_ns(adapter_ticks)?
+                if number(benchmark, "route_el0_cpu_ns")? != to_ns(route_el0_ticks)?
                     || number(benchmark, "native_service_cpu_ns")? != to_ns(native_ticks)?
                     || number(benchmark, "exclusive_cpu_ns")? != to_ns(exclusive_cpu_ticks)?
                 {
@@ -405,11 +405,11 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     conversions: counters[6],
                     warmup_ticks: warmup,
                     sample_ticks: samples,
-                    adapter_cpu_ticks,
+                    route_el0_cpu_ticks,
                     native_service_cpu_ticks,
                     observed_preemptions: preemptions,
                     median_wall_ns: ns.try_into().map_err(|_| "latency conversion overflow")?,
-                    adapter_cpu_ns: Some(to_ns(adapter_ticks)?),
+                    route_el0_cpu_ns: Some(to_ns(route_el0_ticks)?),
                     native_service_cpu_ns: to_ns(native_ticks)?,
                     exclusive_cpu_ns: to_ns(exclusive_cpu_ticks)?,
                 });

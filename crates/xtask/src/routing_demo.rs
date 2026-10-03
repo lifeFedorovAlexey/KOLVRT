@@ -388,7 +388,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 .ok_or("missing samples")?
                 .to_vec();
             cursor += BENCH_SAMPLES;
-            let adapter_cpu_samples = words
+            let route_el0_cpu_samples = words
                 .get(cursor..cursor + BENCH_SAMPLES)
                 .ok_or("missing exclusive EL0 CPU samples")?
                 .to_vec();
@@ -406,7 +406,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
             cursor += COUNTER_WORDS;
             let calls = BENCH_WARMUP + BENCH_SAMPLES as u64;
             if route > routing::Route::EmptyFirst as u64
-                || adapter_cpu_samples.contains(&0)
+                || route_el0_cpu_samples.contains(&0)
                 || native_service_cpu_samples.contains(&0)
                 || c[counter::NATIVE] != if route == 0 { calls } else { 0 }
                 || c[counter::COMPAT] != if route == 0 { 0 } else { calls }
@@ -440,9 +440,9 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 .map(|&v| (v as f64 - mean).powi(2))
                 .sum::<f64>()
                 / (samples.len() - 1) as f64;
-            let adapter_cpu_ticks = median(&adapter_cpu_samples)?;
+            let route_el0_cpu_ticks = median(&route_el0_cpu_samples)?;
             let native_service_cpu_ticks = median(&native_service_cpu_samples)?;
-            let exclusive_cpu_samples = adapter_cpu_samples
+            let exclusive_cpu_samples = route_el0_cpu_samples
                 .iter()
                 .zip(&native_service_cpu_samples)
                 .map(|(&adapter, &native)| {
@@ -457,7 +457,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 "route":route,
                 "warmup_samples":warmup,
                 "samples":samples,
-                "adapter_cpu_samples":adapter_cpu_samples,
+                "route_el0_cpu_samples":route_el0_cpu_samples,
                 "native_service_cpu_samples":native_service_cpu_samples,
                 "median_ticks":wall_median,
                 "p95_ticks":p95,
@@ -466,7 +466,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 "sample_variance_ticks_squared":variance,
                 "standard_deviation_ticks":variance.sqrt(),
                 "observed_preemptions":preemptions,
-                "adapter_cpu_ns":ticks_to_ns(adapter_cpu_ticks, words[header::FREQUENCY])?,
+                "route_el0_cpu_ns":ticks_to_ns(route_el0_cpu_ticks, words[header::FREQUENCY])?,
                 "native_service_cpu_ns":ticks_to_ns(native_service_cpu_ticks, words[header::FREQUENCY])?,
                 "exclusive_cpu_ns":ticks_to_ns(exclusive_cpu_ticks, words[header::FREQUENCY])?,
                 "throughput":null,
@@ -726,7 +726,7 @@ pub fn run(args: &[String]) -> Result<()> {
     if starting_sources != super::source_inventory()? {
         return Err("sources changed during routing run".into());
     }
-    let result = json!({"schema_version":4,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner, resident frame charge and EL0 counter residency are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency and EL0 residency-counter observations; exception-entry overhead remains in EL0 residency; tail uncertainty and physical hardware unverified"});
+    let result = json!({"schema_version":5,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner, resident frame charge and EL0 counter residency are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency and EL0 residency-counter observations; exception-entry overhead remains in EL0 residency; tail uncertainty and physical hardware unverified"});
     fs::write(
         "target/kernel/routing-results.json",
         serde_json::to_string_pretty(&result)?,

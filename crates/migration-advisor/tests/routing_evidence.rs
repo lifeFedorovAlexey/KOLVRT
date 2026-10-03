@@ -29,7 +29,7 @@ fn evidence() -> Value {
     words.extend(counters);
     words.push(0x444f_4e45);
     let count = words.len();
-    json!({"schema_version":4,"runs":[{"profile":"fixture-dev","kernel_build":{"sha256":"a".repeat(64)},"user_artifact":{"elf_sha256":"b".repeat(64)},
+    json!({"schema_version":5,"runs":[{"profile":"fixture-dev","kernel_build":{"sha256":"a".repeat(64)},"user_artifact":{"elf_sha256":"b".repeat(64)},
         "scope_accounting":{"expected_consumers":1,"completed_consumers":1,"missing_consumers":0,"validated_report_chunks":1,"lost_report_chunks":0},
         "run":{"elf_sha256":"a".repeat(64),"accelerator":"TCG"},
         "events":[{"event":"el0","status":"pass","reclaimed":true,"processes":1},
@@ -37,7 +37,7 @@ fn evidence() -> Value {
             {"event":"user-result","id":0,"state":2,"exit":1,"fault":0,"length":count,"process_slot":0,"process_generation":1,"owner_cpu":0,"resident_pages":7,"el0_residency_ticks":5000,"native_window_service_ticks":5000,"counter_frequency_hz":1000000},
             {"event":"boot","status":"pass","el":1,"secondary_shutdown_verified":true}],
         "consumers":[{"id":0,"cpu":0,"process_identity":{"process_slot":0,"process_generation":1,"owner_cpu":0,"resident_pages":7},"el0_residency_ticks":5000,"native_window_service_ticks":5000,"counter_frequency_hz":1000000,"route":0,"generation":1,"conformance_checks":24,"oracle_sum":123,"frequency":1_000_000,"profile_digest_words":[1,2,3,4],
-            "benchmarks":[{"route":0,"warmup_samples":vec![10;16],"samples":vec![10;128],"adapter_cpu_samples":vec![20;128],"native_service_cpu_samples":vec![30;128],"adapter_cpu_ns":20000,"native_service_cpu_ns":30000,"exclusive_cpu_ns":50000,"counters":counters,"observed_preemptions":0}]}]}]})
+            "benchmarks":[{"route":0,"warmup_samples":vec![10;16],"samples":vec![10;128],"route_el0_cpu_samples":vec![20;128],"native_service_cpu_samples":vec![30;128],"route_el0_cpu_ns":20000,"native_service_cpu_ns":30000,"exclusive_cpu_ns":50000,"counters":counters,"observed_preemptions":0}]}]}]})
 }
 
 #[test]
@@ -60,7 +60,7 @@ fn authentic_structure_preserves_raw_observations_without_inventing_ab_pairs() {
         5000
     );
     assert_eq!(
-        report.runs[0].observations[0].measured_routes[0].adapter_cpu_ns,
+        report.runs[0].observations[0].measured_routes[0].route_el0_cpu_ns,
         Some(20_000)
     );
     assert_eq!(

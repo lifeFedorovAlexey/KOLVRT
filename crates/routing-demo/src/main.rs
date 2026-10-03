@@ -119,7 +119,7 @@ fn benchmark(mut consumer: Consumer, oracle: Reduction) {
     }
     let slices_before = svc::<{ abi::SLICES }>(0, 0)[0];
     let mut samples = [0u64; SAMPLES];
-    let mut adapter_cpu_samples = [0u64; SAMPLES];
+    let mut route_el0_cpu_samples = [0u64; SAMPLES];
     let mut native_service_cpu_samples = [0u64; SAMPLES];
     for (sample_index, value) in samples.iter_mut().enumerate() {
         let request = input(route, &inclusive, &counted);
@@ -129,7 +129,7 @@ fn benchmark(mut consumer: Consumer, oracle: Reduction) {
         let end = end_accounting[0];
         assert_eq!(result, oracle);
         *value = end.checked_sub(start_accounting[0]).unwrap();
-        adapter_cpu_samples[sample_index] =
+        route_el0_cpu_samples[sample_index] =
             end_accounting[2].checked_sub(start_accounting[2]).unwrap();
         native_service_cpu_samples[sample_index] =
             end_accounting[3].checked_sub(start_accounting[3]).unwrap();
@@ -138,7 +138,7 @@ fn benchmark(mut consumer: Consumer, oracle: Reduction) {
     for value in samples {
         emit(value);
     }
-    for value in adapter_cpu_samples {
+    for value in route_el0_cpu_samples {
         emit(value);
     }
     for value in native_service_cpu_samples {
