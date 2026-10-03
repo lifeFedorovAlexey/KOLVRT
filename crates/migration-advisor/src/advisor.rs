@@ -76,6 +76,9 @@ pub struct Pair {
     pub consumer_id: Option<String>,
     pub baseline_ns: u64,
     pub candidate_ns: u64,
+    /// Systematically sampled request latencies, kept separate from whole-run pairs.
+    #[serde(default)]
+    pub request_latency: Option<RequestLatencySamples>,
     /// Per-run peak resident bytes; unknown is not zero.
     #[serde(default)]
     pub baseline_memory_bytes: Option<u64>,
@@ -96,6 +99,17 @@ pub struct Pair {
     pub useful_units: u64,
     pub baseline_first: bool,
     pub oracle_passed: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct RequestLatencySamples {
+    /// Distance between sampled groups in useful requests, predeclared by the signed protocol.
+    pub sample_stride: u64,
+    /// Number of consecutive calls timed per group; values store mean nanoseconds per call.
+    pub sample_width: u64,
+    pub baseline_ns: Vec<u64>,
+    pub candidate_ns: Vec<u64>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]

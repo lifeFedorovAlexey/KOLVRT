@@ -158,6 +158,7 @@ fn request() -> Request {
                     consumer_id: None,
                     baseline_ns: 100,
                     candidate_ns: 50,
+                    request_latency: None,
                     baseline_memory_bytes: None,
                     candidate_memory_bytes: None,
                     baseline_copied_bytes: None,
@@ -650,6 +651,33 @@ fn semantic_extension_needs_both_provider_and_consumer_spec_tests() {
 }
 
 #[test]
+fn request_latency_quantiles_are_descriptive_and_not_run_independence_units() {
+    use migration_advisor::statistics::analyze_family;
+
+    let mut r = request();
+    for (run, pair) in r.benchmarks[0].pairs.iter_mut().enumerate() {
+        pair.request_latency = Some(RequestLatencySamples {
+            sample_stride: 241,
+            sample_width: 16,
+            baseline_ns: vec![1000 + run as u64; 128],
+            candidate_ns: vec![900 + run as u64; 128],
+        });
+    }
+    let statistics = analyze_family(&r.benchmarks[0].pairs, &policy(), 1).unwrap();
+    let requests = statistics.request_latency.as_ref().unwrap();
+    assert_eq!(statistics.paired_runs, 100);
+    assert_eq!(statistics.resampling_blocks, 100);
+    assert_eq!(requests.sample_stride, 241);
+    assert_eq!(requests.sample_width, 16);
+    assert_eq!(requests.sampled_groups_per_path, 12_800);
+    assert_eq!(requests.baseline.p95_ns, Some(1094));
+    assert_eq!(requests.candidate.p95_ns, Some(994));
+
+    r.benchmarks[0].pairs[0].request_latency = None;
+    assert!(analyze_family(&r.benchmarks[0].pairs, &policy(), 1).is_err());
+}
+
+#[test]
 fn one_noisy_pair_is_tolerated_but_uncertain_effect_and_tail_regression_are_not() {
     let mut r = request();
     r.benchmarks[0].pairs[0].candidate_ns = 110;
@@ -710,6 +738,7 @@ fn configured_multidimensional_budgets_require_evidence_and_reject_regressions()
                 consumer_id: None,
                 baseline_ns: 100,
                 candidate_ns: 50,
+                request_latency: None,
                 baseline_memory_bytes: Some(1024),
                 candidate_memory_bytes: memory,
                 baseline_copied_bytes: Some(16),
@@ -786,6 +815,7 @@ fn consumer_specific_resource_budgets_fail_closed_and_report_each_consumer() {
                 consumer_id: Some(consumer_id.into()),
                 baseline_ns: 100,
                 candidate_ns: 50,
+                request_latency: None,
                 baseline_memory_bytes: Some(1024),
                 candidate_memory_bytes: Some(if consumer_id == "client-a" {
                     1024

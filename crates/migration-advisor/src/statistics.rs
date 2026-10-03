@@ -11,6 +11,8 @@ const P95_TAIL_MINIMUM: usize = 100;
 const P99_TAIL_MINIMUM: usize = 1000;
 const MIN_COMPARISON_TAIL_RESAMPLES: usize = 20;
 const MAX_CONSUMER_RESOURCE_BUDGETS: usize = 4096;
+const MAX_REQUEST_LATENCY_SAMPLES_PER_PAIR: usize = 4096;
+const MAX_REQUEST_LATENCY_SAMPLES: usize = 1_000_000;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -122,6 +124,9 @@ pub struct Statistics {
     pub prospective_power: Option<ProspectivePowerAssessment>,
     pub baseline: Distribution,
     pub candidate: Distribution,
+    /// Descriptive quantiles over retained request samples; no request-level independence
+    /// or confidence interval is inferred from these observations.
+    pub request_latency: Option<RequestLatencyComparison>,
     pub memory_bytes: Option<ResourceComparison>,
     pub copied_bytes: Option<ResourceComparison>,
     pub energy_uj: Option<ResourceComparison>,
@@ -133,6 +138,15 @@ pub struct Statistics {
     pub bootstrap_resamples: usize,
     pub seed: u64,
     pub decision: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct RequestLatencyComparison {
+    pub sample_stride: u64,
+    pub sample_width: u64,
+    pub sampled_groups_per_path: usize,
+    pub baseline: Distribution,
+    pub candidate: Distribution,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -229,6 +243,63 @@ fn distribution(mut values: Vec<u64>, effective_units: usize) -> Distribution {
     }
 }
 
+fn request_latency_distribution(mut values: Vec<u64>) -> Distribution {
+    values.sort_unstable();
+    let rank = |percent: usize| values[(percent * values.len()).div_ceil(100) - 1];
+    Distribution {
+        median_ns: rank(50),
+        p95_ns: (values.len() >= P95_TAIL_MINIMUM).then(|| rank(95)),
+        p99_ns: (values.len() >= P99_TAIL_MINIMUM).then(|| rank(99)),
+    }
+}
+
+fn request_latency_comparison(pairs: &[Pair]) -> Result<Option<RequestLatencyComparison>, String> {
+    let present = pairs
+        .iter()
+        .filter(|pair| pair.request_latency.is_some())
+        .count();
+    if present == 0 {
+        return Ok(None);
+    }
+    if present != pairs.len() {
+        return Err("request latency samples are incomplete across paired runs".into());
+    }
+    let first = pairs[0].request_latency.as_ref().unwrap();
+    let stride = first.sample_stride;
+    let width = first.sample_width;
+    let sample_count = first.baseline_ns.len();
+    if stride == 0
+        || width == 0
+        || sample_count == 0
+        || sample_count > MAX_REQUEST_LATENCY_SAMPLES_PER_PAIR
+        || first.candidate_ns.len() != sample_count
+        || pairs.iter().any(|pair| {
+            let sample = pair.request_latency.as_ref().unwrap();
+            sample.sample_stride != stride
+                || sample.sample_width != width
+                || sample.baseline_ns.len() != sample_count
+                || sample.candidate_ns.len() != sample_count
+        })
+        || sample_count.saturating_mul(pairs.len()) > MAX_REQUEST_LATENCY_SAMPLES
+    {
+        return Err("request latency samples have inconsistent stride, count, or bounds".into());
+    }
+    let mut baseline = Vec::with_capacity(sample_count * pairs.len());
+    let mut candidate = Vec::with_capacity(sample_count * pairs.len());
+    for pair in pairs {
+        let sample = pair.request_latency.as_ref().unwrap();
+        baseline.extend_from_slice(&sample.baseline_ns);
+        candidate.extend_from_slice(&sample.candidate_ns);
+    }
+    Ok(Some(RequestLatencyComparison {
+        sample_stride: stride,
+        sample_width: width,
+        sampled_groups_per_path: baseline.len(),
+        baseline: request_latency_distribution(baseline),
+        candidate: request_latency_distribution(candidate),
+    }))
+}
+
 fn resource_distribution(mut values: Vec<u64>, effective_units: usize) -> ResourceDistribution {
     values.sort_unstable();
     let rank = |percent: usize| values[(percent * values.len()).div_ceil(100) - 1];
@@ -315,6 +386,7 @@ pub fn analyze_family(
     {
         return Err("insufficient resampling blocks or excessive/invalid paired runs".into());
     }
+    let request_latency = request_latency_comparison(pairs)?;
     let gains: Vec<_> = pairs
         .iter()
         .map(|p| (i128::from(p.baseline_ns) - i128::from(p.candidate_ns)) as f64)
@@ -533,6 +605,7 @@ pub fn analyze_family(
         prospective_power: None,
         baseline,
         candidate,
+        request_latency,
         memory_bytes,
         copied_bytes,
         energy_uj,

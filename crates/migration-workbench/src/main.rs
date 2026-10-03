@@ -21,7 +21,7 @@ const EXPECTED_MEAN_GAIN_NS: u64 = 25_000;
 const CONSUMER_ID: &str = "fixture-window-consumer";
 const CHILD_TIMEOUT: Duration = Duration::from_secs(10);
 const POLL: Duration = Duration::from_millis(10);
-const MAX_RECEIPT_BYTES: u64 = 8192;
+const MAX_RECEIPT_BYTES: u64 = 32768;
 
 fn store(root: &Path, bytes: &[u8]) -> Result<String, String> {
     let digest = subject_digest(bytes);
@@ -81,6 +81,10 @@ fn execute(path: &Path, mode: &str, log: &Path) -> Result<Receipt, String> {
         && (receipt.iterations != ITERATIONS
             || receipt.checksum != migration_workbench::expected_checksum()
             || receipt.elapsed_ns == 0
+            || receipt.request_latency_samples_ns.len()
+                != ((ITERATIONS - 1) / migration_workbench::REQUEST_LATENCY_SAMPLE_STRIDE + 1)
+                    as usize
+            || receipt.request_latency_samples_ns.contains(&0)
             || u128::from(receipt.native_admissions) + u128::from(receipt.compat_admissions)
                 != u128::from(ITERATIONS))
     {
@@ -275,6 +279,12 @@ fn run() -> Result<PathBuf, String> {
             consumer_id: Some(CONSUMER_ID.into()),
             baseline_ns: baseline.elapsed_ns,
             candidate_ns: candidate.elapsed_ns,
+            request_latency: Some(migration_advisor::advisor::RequestLatencySamples {
+                sample_stride: migration_workbench::REQUEST_LATENCY_SAMPLE_STRIDE,
+                sample_width: migration_workbench::REQUEST_LATENCY_SAMPLE_WIDTH,
+                baseline_ns: baseline.request_latency_samples_ns.clone(),
+                candidate_ns: candidate.request_latency_samples_ns.clone(),
+            }),
             baseline_memory_bytes: baseline.peak_memory_bytes,
             candidate_memory_bytes: candidate.peak_memory_bytes,
             baseline_copied_bytes: Some(baseline.copied_bytes),
