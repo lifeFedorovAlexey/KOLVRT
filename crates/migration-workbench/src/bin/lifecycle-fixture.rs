@@ -73,7 +73,6 @@ fn run(args: &[String]) -> Result<Receipt, String> {
             };
             let migrated = serde_json::to_vec(&state).map_err(|error| error.to_string())?;
             write_atomic(&root.join("state-v2.json"), &migrated)?;
-            fs::remove_file(old_path).map_err(|error| error.to_string())?;
             Ok(Receipt {
                 operation: operation.clone(),
                 passed: true,

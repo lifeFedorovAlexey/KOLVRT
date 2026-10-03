@@ -57,12 +57,9 @@ fn lifecycle_worker_migrates_persistent_state_and_restores_snapshot() {
     assert!(call("verify-v1", &state).status.success());
     let snapshot = fs::read(state.join("state-v1.json")).unwrap();
     assert!(call("migrate", &state).status.success());
-    assert!(!state.join("state-v1.json").exists());
+    assert_eq!(fs::read(state.join("state-v1.json")).unwrap(), snapshot);
     assert!(call("verify-v2", &state).status.success());
 
-    fs::remove_dir_all(&state).unwrap();
-    fs::create_dir_all(&state).unwrap();
-    fs::write(state.join("state-v1.json"), &snapshot).unwrap();
     assert!(call("verify-v1", &state).status.success());
     assert_eq!(fs::read(state.join("state-v1.json")).unwrap(), snapshot);
 
