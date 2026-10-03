@@ -420,6 +420,7 @@ fn run() -> Result<PathBuf, String> {
         power_pilot,
         attestations,
         migration_plans: vec![migration],
+        scoped_resolutions: None,
     };
     let policy = TrustPolicy {
         schema: 1,

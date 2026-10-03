@@ -148,6 +148,8 @@ fn dispatch_inner(
                     state.handles[index] = core::mem::take(admitted.handles);
                     task.bind_queue(generation);
                     task.slices = admitted.slices;
+                    task.el0_residency_ticks = admitted.el0_residency_ticks;
+                    task.native_window_service_ticks = admitted.native_window_service_ticks;
                     task.observations = admitted.observations;
                     if admitted.blocked {
                         assert!(step, "blocked processes require step driver");

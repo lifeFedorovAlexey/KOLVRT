@@ -334,9 +334,16 @@ fn quantum_progress(
     let mut passed = first.owners_released;
     passed &= quantum_context(&first, &ids, registry);
     let mut counters = [0_u64; config::ACTIVE_CPUS];
+    let mut el0_residency = [0_u64; config::ACTIVE_CPUS];
+    let mut first_el0_residency = [0_u64; config::ACTIVE_CPUS];
     for (owner, counter) in counters.iter_mut().enumerate() {
         let id = ids[owner * 2];
+        let task = &first.tasks[id.slot()];
+        el0_residency[owner] = task.el0_residency_ticks;
+        first_el0_residency[owner] = task.el0_residency_ticks;
         passed &= registry.state(id) == Ok(State::Admitted)
+            && task.process_generation == id.generation()
+            && task.el0_residency_ticks > 0
             && registry.completion(id) == Err(Error::Transition)
             && registry.reclaim(p, id) == Err(Error::Transition);
         assert!(crate::scheduler::detached(id));
@@ -355,6 +362,11 @@ fn quantum_progress(
         for owner in 0..config::ACTIVE_CPUS {
             let spinner = ids[owner * 2];
             let peer = ids[owner * 2 + 1];
+            let task = &result.tasks[spinner.slot()];
+            if task.process_generation == spinner.generation() {
+                passed &= task.el0_residency_ticks >= el0_residency[owner];
+                el0_residency[owner] = task.el0_residency_ticks;
+            }
             if registry.state(spinner) == Ok(State::Admitted) && registry.completion(peer).is_ok() {
                 peer_progress[owner] = true;
             }
@@ -372,6 +384,8 @@ fn quantum_progress(
         passed &= registry.completion(id).is_ok_and(|c| c.reason == expected);
         passed &= tag(registry, id) == EXIT_CODE + index as u64;
         if index % 2 == 0 {
+            let owner = index / 2;
+            passed &= el0_residency[owner] > first_el0_residency[owner];
             // SAFETY: INV-USER-RETIRE: terminal retained space, all CPU writers
             // quiescent; this read ends before reclamation below.
             let counter = unsafe {
