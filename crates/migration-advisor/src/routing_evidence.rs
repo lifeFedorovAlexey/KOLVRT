@@ -54,7 +54,7 @@ pub struct MeasuredRoute {
     pub median_wall_ns: u64,
     pub route_el0_cpu_ns: Option<u64>,
     pub native_service_cpu_ns: u64,
-    pub exclusive_cpu_ns: u64,
+    pub measured_segments_cpu_ns: u64,
 }
 #[derive(Debug, Serialize)]
 pub struct Run {
@@ -117,7 +117,7 @@ fn take<'a>(words: &'a [u64], cursor: &mut usize, count: usize) -> Result<&'a [u
 pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
     let input: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
     let evidence_schema = number(&input, "schema_version")?;
-    if !matches!(evidence_schema, 4 | 5) {
+    if !matches!(evidence_schema, 4..=6) {
         return Err("unsupported routing evidence schema".into());
     }
     // v4 used adapter_* names for this same EL0 route-call interval. Normalize the
@@ -126,6 +126,11 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         ("adapter_cpu_samples", "adapter_cpu_ns")
     } else {
         ("route_el0_cpu_samples", "route_el0_cpu_ns")
+    };
+    let measured_segments_cpu_ns_key = if evidence_schema >= 6 {
+        "measured_segments_cpu_ns"
+    } else {
+        "exclusive_cpu_ns"
     };
     let runs = input["runs"]
         .as_array()
@@ -375,16 +380,16 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 };
                 let route_el0_ticks = median_ticks(&route_el0_cpu_ticks);
                 let native_ticks = median_ticks(&native_service_cpu_ticks);
-                let exclusive_cpu_samples = route_el0_cpu_ticks
+                let measured_segments_cpu_samples = route_el0_cpu_ticks
                     .iter()
                     .zip(&native_service_cpu_ticks)
-                    .map(|(&adapter, &native)| {
-                        adapter
+                    .map(|(&route_el0, &native)| {
+                        route_el0
                             .checked_add(native)
-                            .ok_or_else(|| "exclusive CPU sample overflow".to_string())
+                            .ok_or_else(|| "measured CPU segment sum overflow".to_string())
                     })
                     .collect::<Result<Vec<_>, _>>()?;
-                let exclusive_cpu_ticks = median_ticks(&exclusive_cpu_samples);
+                let measured_segments_cpu_ticks = median_ticks(&measured_segments_cpu_samples);
                 let to_ns = |ticks: u64| -> Result<u64, String> {
                     (u128::from(ticks) * 1_000_000_000 / u128::from(header[7]))
                         .try_into()
@@ -392,7 +397,8 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 };
                 if number(benchmark, route_el0_cpu_ns_key)? != to_ns(route_el0_ticks)?
                     || number(benchmark, "native_service_cpu_ns")? != to_ns(native_ticks)?
-                    || number(benchmark, "exclusive_cpu_ns")? != to_ns(exclusive_cpu_ticks)?
+                    || number(benchmark, measured_segments_cpu_ns_key)?
+                        != to_ns(measured_segments_cpu_ticks)?
                 {
                     return Err("exclusive CPU summary disagrees with raw counters".into());
                 }
@@ -419,7 +425,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     median_wall_ns: ns.try_into().map_err(|_| "latency conversion overflow")?,
                     route_el0_cpu_ns: Some(to_ns(route_el0_ticks)?),
                     native_service_cpu_ns: to_ns(native_ticks)?,
-                    exclusive_cpu_ns: to_ns(exclusive_cpu_ticks)?,
+                    measured_segments_cpu_ns: to_ns(measured_segments_cpu_ticks)?,
                 });
             }
             if native_window_service_ticks < measured_native_service_ticks {

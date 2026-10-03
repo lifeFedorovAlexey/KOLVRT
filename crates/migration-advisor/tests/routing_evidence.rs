@@ -68,7 +68,7 @@ fn authentic_structure_preserves_raw_observations_without_inventing_ab_pairs() {
         30_000
     );
     assert_eq!(
-        report.runs[0].observations[0].measured_routes[0].exclusive_cpu_ns,
+        report.runs[0].observations[0].measured_routes[0].measured_segments_cpu_ns,
         50_000
     );
     assert_eq!(
@@ -88,6 +88,24 @@ fn authentic_structure_preserves_raw_observations_without_inventing_ab_pairs() {
     assert!(!report.provenance_verified);
     assert!(!report.automatic_replacement);
     assert!(report.preferred_migration.is_none());
+}
+
+#[test]
+fn schema_six_names_combined_segments_without_claiming_adapter_cpu() {
+    let mut value = evidence();
+    value["schema_version"] = 6.into();
+    let benchmark = &mut value["runs"][0]["consumers"][0]["benchmarks"][0];
+    let legacy_sum = benchmark
+        .as_object_mut()
+        .unwrap()
+        .remove("exclusive_cpu_ns")
+        .unwrap();
+    benchmark["measured_segments_cpu_ns"] = legacy_sum;
+    let report = inspect(&serde_json::to_vec(&value).unwrap()).unwrap();
+    let route = &report.runs[0].observations[0].measured_routes[0];
+    assert_eq!(route.measured_segments_cpu_ns, 50_000);
+    assert_eq!(route.route_el0_cpu_ns, Some(20_000));
+    assert_eq!(route.native_service_cpu_ns, 30_000);
 }
 
 #[test]

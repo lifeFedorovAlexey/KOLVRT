@@ -442,17 +442,17 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 / (samples.len() - 1) as f64;
             let route_el0_cpu_ticks = median(&route_el0_cpu_samples)?;
             let native_service_cpu_ticks = median(&native_service_cpu_samples)?;
-            let exclusive_cpu_samples = route_el0_cpu_samples
+            let measured_segments_cpu_samples = route_el0_cpu_samples
                 .iter()
                 .zip(&native_service_cpu_samples)
-                .map(|(&adapter, &native)| {
-                    adapter
+                .map(|(&route_el0, &native)| {
+                    route_el0
                         .checked_add(native)
-                        .ok_or_else(|| std::io::Error::other("exclusive CPU sample overflow"))
+                        .ok_or_else(|| std::io::Error::other("measured CPU segment sum overflow"))
                         .map_err(|error| -> Box<dyn std::error::Error> { Box::new(error) })
                 })
                 .collect::<Result<Vec<_>>>()?;
-            let exclusive_cpu_ticks = median(&exclusive_cpu_samples)?;
+            let measured_segments_cpu_ticks = median(&measured_segments_cpu_samples)?;
             benchmarks.push(json!({
                 "route":route,
                 "warmup_samples":warmup,
@@ -468,7 +468,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 "observed_preemptions":preemptions,
                 "route_el0_cpu_ns":ticks_to_ns(route_el0_cpu_ticks, words[header::FREQUENCY])?,
                 "native_service_cpu_ns":ticks_to_ns(native_service_cpu_ticks, words[header::FREQUENCY])?,
-                "exclusive_cpu_ns":ticks_to_ns(exclusive_cpu_ticks, words[header::FREQUENCY])?,
+                "measured_segments_cpu_ns":ticks_to_ns(measured_segments_cpu_ticks, words[header::FREQUENCY])?,
                 "throughput":null,
                 "counters":c,
                 "allocations":0,
@@ -726,7 +726,7 @@ pub fn run(args: &[String]) -> Result<()> {
     if starting_sources != super::source_inventory()? {
         return Err("sources changed during routing run".into());
     }
-    let result = json!({"schema_version":5,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner, resident frame charge and EL0 counter residency are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency and EL0 residency-counter observations; exception-entry overhead remains in EL0 residency; tail uncertainty and physical hardware unverified"});
+    let result = json!({"schema_version":6,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner, resident frame charge and EL0 counter residency are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency and EL0 residency-counter observations; exception-entry overhead remains in EL0 residency; adapter-only CPU cost is not measured; tail uncertainty and physical hardware unverified"});
     fs::write(
         "target/kernel/routing-results.json",
         serde_json::to_string_pretty(&result)?,
