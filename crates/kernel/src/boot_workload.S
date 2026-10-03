@@ -135,3 +135,33 @@ lifecycle_image_start:
  svc #USER_FINISHED_TRAP
  b 13b
 lifecycle_image_end:
+
+// Actual EL0 initializes request + several-page byte buffer, then mutates its
+// original request after snapshot admission. The second SVC must use saved bytes.
+.global copy_image_start,copy_image_end
+copy_image_start:
+ mov x20,#0x2000
+ lsl x20,x20,#16
+ add x20,x20,#4096
+ mov x0,#42
+ str x0,[x20]
+ mov x21,#0x2000
+ lsl x21,x21,#16
+ add x21,x21,#3,lsl #12
+ mov x2,#0x4000
+ mov w3,#0xa5
+20:
+ strb w3,[x21],#1
+ subs x2,x2,#1
+ b.ne 20b
+ mov x1,x20
+ svc #0x70
+ mov x22,x0
+ mov x0,#43
+ str x0,[x20]
+ mov x1,x20
+ svc #0x71
+ and x0,x0,x22
+ svc #USER_FINISHED_TRAP
+ b .
+copy_image_end:

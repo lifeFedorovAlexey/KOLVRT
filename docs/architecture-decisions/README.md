@@ -26,4 +26,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0017 — Generation-safe native process lifecycle](0017-process-lifecycle.md) — Accepted for bounded Phase 3.1.
 
+- [ADR-0018 — Bounded synchronous safe user copy](0018-safe-user-copy.md) — Accepted for bounded Phase 3.2.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

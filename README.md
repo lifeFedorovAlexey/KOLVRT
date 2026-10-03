@@ -107,7 +107,7 @@ KOLVRT already boots as a native AArch64 kernel in QEMU.
 | ARM physical timer IRQ        | ✅                                                     |
 | DEV / PROD profiles           | ✅                                                     |
 | Automated kernel test harness | ✅                                                     |
-| Real in-kernel tests          | ✅ 67 in the latest recorded DEV and PROD run          |
+| Real in-kernel tests          | ✅ 69 in the latest recorded DEV and PROD run          |
 | Negative failure controls     | ✅                                                     |
 | GDB debugging                 | ✅                                                     |
 | SMP                           | ✅ Two-CPU QEMU foundation                             |
@@ -145,7 +145,10 @@ Versioned Routing & Translation      ✅ bounded EL0 slice
 Process lifecycle + own-event wait  ✅ bounded Phase 3.1
         │
         ▼
-Safe user-copy, IPC, handles and services    next
+Safe user-copy                      ✅ bounded Phase 3.2
+        │
+        ▼
+Handles, IPC and services            next
         │
         ▼
 Compatibility personalities
@@ -156,7 +159,7 @@ Linux ABI compatibility where useful
 
 Compatibility is not being wired into a single-CPU kernel and patched for SMP later.
 
-The native execution model comes first. The bounded EL0/address-space and timer-scheduler foundation runs fixed-affinity processes on two CPUs. Phase 2 routing executes in an optional isolated EL0 image; native core remains independent. Phase 3.1 adds kernel-owned process creation, start, completion and reclaim, plus a limited own-process event latch used by the preemptible step path. These are trusted-bootstrap mechanisms, not public EL0 process or wait APIs. Safe user-copy, IPC, handles/capabilities, cancellation, persistent services and security domains remain future work; the full native slice is incomplete. See the [process lifecycle](docs/kernel/processes.md), [wait contract](docs/kernel/wait.md) and [scheduler](docs/kernel/scheduler.md).
+The native execution model comes first. The bounded EL0/address-space and timer-scheduler foundation runs fixed-affinity processes on two CPUs. Phase 2 routing executes in an optional isolated EL0 image; native core remains independent. Phase 3.1 adds kernel-owned process creation, start, completion and reclaim, plus a limited own-process event latch used by the preemptible step path. These are trusted-bootstrap mechanisms, not public EL0 process or wait APIs. Phase 3.2 now adds bounded safe user-copy. IPC, handles/capabilities, cancellation, persistent services and security domains remain future work; the full native slice is incomplete. See the [process lifecycle](docs/kernel/processes.md), [wait contract](docs/kernel/wait.md) and [scheduler](docs/kernel/scheduler.md).
 
 ---
 
@@ -423,7 +426,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Tests are supposed to fail when the kernel is wrong
 
-The latest passing recorded matrix ran **67 real kernel tests in both DEV and PROD test profiles**.
+The latest passing recorded matrix ran **69 real kernel tests in both DEV and PROD test profiles**.
 It includes the bounded preemption step and own-process event wait/block path. The exact-source
 receipt preserves the tested files, artifacts and QEMU scope; later working-tree edits are not
 covered by that receipt. Historical milestone counts remain in their original decision records.
@@ -549,3 +552,7 @@ Or, in the less formal project dialect:
 The [Phase 2 contract](docs/kernel/routing.md) records the actual EL0 routes, profile validation, measurements, authority boundary and limits. The full IPC/service native slice remains incomplete.
 
 [Russian translation](translations/ru/README.md)
+
+## Phase 3.2 safe user-copy
+
+The [user-copy boundary](docs/kernel/user-copy.md) now supports bounded current-process byte copies, immutable input snapshots and precise fault recovery on both CPUs. The DEV/PROD suite has 69 checks and 57 failure controls. [ADR-0018](docs/architecture-decisions/0018-safe-user-copy.md) preserves synchronous mapping/lifetime exclusion and separates memory validity from authority. Handles, capabilities, domains and IPC remain future work.

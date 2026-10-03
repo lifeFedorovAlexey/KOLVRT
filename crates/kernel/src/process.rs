@@ -150,7 +150,7 @@ impl Registry {
             }
             space = Some(memory::OwnedUserSpace::new(
                 frame.take().unwrap(),
-                id.slot(),
+                id,
                 spec.image,
                 spec.entry,
             ));

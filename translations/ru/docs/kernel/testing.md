@@ -46,3 +46,7 @@ Host tests проверяют безопасные алгоритмы, откл�
 [Фундамент EL0](el0.md) добавляет 14 проверок и настоящее non-test execution. Machine boot требует его EL0 result до terminal boot success. Новые negative controls: `--user-context-control`, `--user-root-control`, `--user-retirement-control`; они повреждают saved context, пропускают root switch и пытаются выполнить release после забывания space guard. Workers обязаны завершиться после faults своих local peers, доказывая продолжение исполнения.
 
 Отдельная [матрица Phase 2](routing.md) запускается `cargo xtask routing test`: настоящее EL0 native/v1/v2/bug coexistence, feature-minimal PROD profiles, native-only consumers, stripped boot и три routing failure controls. 53 native checks и одиннадцать foundation controls не меняются. Host decoding tests не заменяют EL0 execution.
+
+## Проверки user-copy Phase 3.2
+
+[Контракт copy](user-copy.md) добавляет реальные EL0 copies и snapshot mutation на обоих CPU, precise mid-copy fault injection, initialized output и generation/lifetime rejection. Текущая DEV/PROD matrix требует 69 именованных checks и 57 failure controls, включая live-reread и disabled-recovery controls в обоих профилях. Четыре size/failure scope сохраняют raw bounded benchmarks для каждого CPU. Та же matrix выполняется без compatibility source packages; повторяется Phase 2 routing matrix. Host tests/Clippy/repository checks дополняют real kernel evidence, но не заменяют его.

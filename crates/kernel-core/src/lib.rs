@@ -7,6 +7,7 @@ pub mod platform;
 pub mod process;
 pub mod scheduling;
 pub mod time;
+pub mod user_copy;
 pub mod wait;
 pub mod window;
 

@@ -338,12 +338,35 @@ pub struct OwnedUserSpace {
     frame: Frame,
     id: usize,
 }
+static USER_GENERATIONS: [core::sync::atomic::AtomicU64; crate::process::CAPACITY] =
+    [const { core::sync::atomic::AtomicU64::new(0) }; crate::process::CAPACITY];
+pub(crate) fn current_space(slot: usize, generation: u64, root: u64) -> bool {
+    slot < USER_CHARGES.len()
+        && generation != 0
+        && root != 0
+        && USER_CHARGES[slot].load(Ordering::Acquire) as u64 == root
+        && USER_GENERATIONS[slot].load(Ordering::Acquire) == generation
+}
+#[cfg(feature = "kernel-tests")]
+pub(crate) fn live_space_generation(slot: usize, generation: u64) -> bool {
+    slot < USER_CHARGES.len()
+        && generation != 0
+        && USER_GENERATIONS[slot].load(Ordering::Acquire) == generation
+        && USER_CHARGES[slot].load(Ordering::Acquire) != 0
+}
 impl OwnedUserSpace {
     pub fn slot(&self) -> usize {
         self.id
     }
-    pub fn new(frame: Frame, id: usize, image: &[u8], entry: usize) -> Self {
+    pub fn new(
+        frame: Frame,
+        identity: kernel_core::process::ProcessId,
+        image: &[u8],
+        entry: usize,
+    ) -> Self {
+        let id = identity.slot();
         let space = UserSpace::image(&frame, id, image, entry);
+        USER_GENERATIONS[id].store(identity.generation(), Ordering::Release);
         // Transfer the same charge, not another mapping or allocation. All
         // construction borrows end here; the owned Frame stays live until reclaim.
         core::mem::forget(space);
@@ -362,6 +385,7 @@ impl OwnedUserSpace {
             frame: &self.frame,
             id: self.id,
         });
+        USER_GENERATIONS[self.id].store(0, Ordering::Release);
         physical.release(self.frame);
     }
 }

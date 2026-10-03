@@ -23,6 +23,8 @@ pub(crate) struct Admission<'a> {
 }
 #[derive(Clone, Copy)]
 pub(crate) struct Task {
+    #[cfg(feature = "kernel-tests")]
+    pub copy_snapshot: [u8; 8],
     pub context: Context,
     definition: Definition,
     pub state: usize,
@@ -49,6 +51,8 @@ struct Definition {
 }
 impl Task {
     pub const ZERO: Self = Self {
+        #[cfg(feature = "kernel-tests")]
+        copy_snapshot: [0; 8],
         context: Context::ZERO,
         definition: Definition {
             id: 0,

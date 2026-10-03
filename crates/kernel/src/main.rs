@@ -21,6 +21,7 @@ mod sync;
 #[cfg(feature = "kernel-tests")]
 mod tests;
 mod time;
+mod user_copy;
 use arch::aarch64 as cpu;
 const BOOT_MEMORY_PATTERN: u64 = 0x4b4f4c565254; // ASCII "KOLVRT".
 const KIBIBYTE_BYTES: usize = 1024;
@@ -193,6 +194,9 @@ pub extern "C" fn kernel_main() -> ! {
 }
 #[unsafe(no_mangle)]
 pub extern "C" fn synchronous(esr: u64, far: u64, pc: u64) -> u64 {
+    if let Some(resume) = user_copy::recover(esr, far, pc) {
+        return resume;
+    }
     #[cfg(feature = "kernel-tests")]
     {
         let ec = esr >> cpu::ESR_EC_SHIFT;
