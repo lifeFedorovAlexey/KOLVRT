@@ -68,6 +68,7 @@ pub struct Statistics {
     pub comparison_family_size: usize,
     pub comparison_confidence_basis_points: f64,
     pub comparison_tail_resamples: usize,
+    pub dependence: DependenceDiagnostic,
     pub baseline: Distribution,
     pub candidate: Distribution,
     pub memory_bytes: Option<ResourceComparison>,
@@ -80,6 +81,61 @@ pub struct Statistics {
     pub bootstrap_resamples: usize,
     pub seed: u64,
     pub decision: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct DependenceDiagnostic {
+    /// Lag-one autocorrelation of ordered whole-run latency gains.
+    pub lag_one_autocorrelation: Option<f64>,
+    /// Last lag retained by the positive-pair truncation, capped at 100.
+    pub positive_sequence_cutoff_lag: Option<usize>,
+    /// Initial-positive-sequence estimate from ordered paired gains; diagnostic only.
+    pub estimated_effective_pairs: Option<f64>,
+    pub maximum_lag_examined: usize,
+}
+
+fn dependence_diagnostic(gains: &[f64]) -> DependenceDiagnostic {
+    let maximum_lag_examined = (gains.len() / 2).min(100);
+    let mean = gains.iter().sum::<f64>() / gains.len() as f64;
+    let centered: Vec<_> = gains.iter().map(|value| value - mean).collect();
+    let denominator = centered.iter().map(|value| value * value).sum::<f64>();
+    if denominator == 0.0 || maximum_lag_examined < 2 {
+        return DependenceDiagnostic {
+            lag_one_autocorrelation: None,
+            positive_sequence_cutoff_lag: None,
+            estimated_effective_pairs: None,
+            maximum_lag_examined,
+        };
+    }
+
+    let autocorrelation = |lag: usize| {
+        centered[lag..]
+            .iter()
+            .zip(&centered[..centered.len() - lag])
+            .map(|(later, earlier)| later * earlier)
+            .sum::<f64>()
+            / denominator
+    };
+    let lag_one_autocorrelation = autocorrelation(1);
+    let mut integrated_correlation = 0.0;
+    let mut positive_sequence_cutoff_lag = None;
+    let mut lag = 1;
+    while lag < maximum_lag_examined {
+        let pair_sum = autocorrelation(lag) + autocorrelation(lag + 1);
+        if pair_sum <= 0.0 {
+            break;
+        }
+        integrated_correlation += pair_sum;
+        positive_sequence_cutoff_lag = Some(lag + 1);
+        lag += 2;
+    }
+    let integrated_time = (1.0 + 2.0 * integrated_correlation).max(1.0);
+    DependenceDiagnostic {
+        lag_one_autocorrelation: Some(lag_one_autocorrelation),
+        positive_sequence_cutoff_lag,
+        estimated_effective_pairs: Some((gains.len() as f64 / integrated_time).max(1.0)),
+        maximum_lag_examined,
+    }
 }
 
 fn distribution(mut values: Vec<u64>, effective_units: usize) -> Distribution {
@@ -284,6 +340,7 @@ pub fn analyze_family(
         comparison_family_size: family_size,
         comparison_confidence_basis_points,
         comparison_tail_resamples,
+        dependence: dependence_diagnostic(&gains),
         baseline,
         candidate,
         memory_bytes,
@@ -297,4 +354,29 @@ pub fn analyze_family(
         seed: policy.seed,
         decision: decision.into(),
     })
+}
+
+#[cfg(test)]
+mod dependence_tests {
+    use super::dependence_diagnostic;
+
+    #[test]
+    fn ordered_gain_diagnostic_exposes_serial_dependence_without_claiming_power() {
+        let trending: Vec<_> = (0..100).map(f64::from).collect();
+        let correlated = dependence_diagnostic(&trending);
+        assert!(correlated.lag_one_autocorrelation.unwrap() > 0.9);
+        assert!(correlated.estimated_effective_pairs.unwrap() < 10.0);
+        assert_eq!(correlated.maximum_lag_examined, 50);
+
+        let alternating: Vec<_> = (0..100)
+            .map(|i| if i % 2 == 0 { -1.0 } else { 1.0 })
+            .collect();
+        let anti_correlated = dependence_diagnostic(&alternating);
+        assert!(anti_correlated.lag_one_autocorrelation.unwrap() < -0.9);
+        assert!(anti_correlated.estimated_effective_pairs.unwrap() <= 100.0);
+
+        let constant = dependence_diagnostic(&vec![7.0; 100]);
+        assert!(constant.lag_one_autocorrelation.is_none());
+        assert!(constant.estimated_effective_pairs.is_none());
+    }
 }

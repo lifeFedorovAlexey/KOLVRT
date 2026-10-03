@@ -822,6 +822,8 @@ fn moving_block_bootstrap_uses_ordered_pairs_and_effective_tail_count() {
     assert_eq!(result.paired_runs, 60);
     assert_eq!(result.resampling_block_length, 2);
     assert_eq!(result.resampling_blocks, 30);
+    assert!(result.dependence.lag_one_autocorrelation.unwrap() > 0.5);
+    assert!(result.dependence.estimated_effective_pairs.unwrap() < 60.0);
     assert!(result.baseline.p95_ns.is_none());
     assert_eq!(
         result.gain_interval_ns,
