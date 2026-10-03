@@ -21,7 +21,7 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         .to_bytes());
     let attestation = Attestation {
         role: Role::ContractTest,
-        subject_digest: subject,
+        subject_digest: subject.clone(),
         key_id: "test".into(),
         signature,
         issued_at_unix_seconds: None,
@@ -32,7 +32,7 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         keys: vec![TrustedKey {
             key_id: "test".into(),
             public_key: public,
-            roles: vec![Role::ContractTest],
+            roles: vec![Role::ContractTest, Role::Deployment],
             revoked: false,
         }],
         required_session_id: None,
@@ -47,6 +47,31 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
             .authenticate(Role::ContractTest, payload, &refs, &attestations)
             .is_ok()
     );
+    let deployment_signature = key.sign(&signing_message(Role::Deployment, &subject));
+    let deployment_attestation = Attestation {
+        role: Role::Deployment,
+        subject_digest: subject.clone(),
+        key_id: "test".into(),
+        signature: hex(&deployment_signature.to_bytes()),
+        issued_at_unix_seconds: None,
+        session_id: None,
+    };
+    assert!(store
+        .authenticate(
+            Role::Deployment,
+            payload,
+            &refs,
+            &[deployment_attestation.clone()]
+        )
+        .is_ok());
+    assert!(store
+        .authenticate(
+            Role::ContractTest,
+            payload,
+            &refs,
+            &[deployment_attestation]
+        )
+        .is_err());
     assert!(
         store
             .authenticate(

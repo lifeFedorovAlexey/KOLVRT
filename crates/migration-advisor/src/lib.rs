@@ -6,6 +6,7 @@ use sha2::{Digest, Sha256};
 use std::collections::BTreeSet;
 
 pub mod advisor;
+pub mod authorization;
 pub mod provenance;
 pub mod routing_evidence;
 pub mod solver;

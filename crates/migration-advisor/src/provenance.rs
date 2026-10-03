@@ -22,6 +22,7 @@ pub enum Role {
     ContractTest,
     Benchmark,
     Proposal,
+    Deployment,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
