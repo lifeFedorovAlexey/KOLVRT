@@ -130,11 +130,11 @@ fn dispatch_inner(
                     assert_eq!(admitted.identity.slot(), id);
                     assert_eq!(admitted.space.slot(), id);
                     #[cfg(feature = "machine-events")]
-                    let previous_report = if task.process_generation()
+                    let previous_report_len = if task.process_generation()
                         == admitted.identity.generation()
                         && task.id() == id
                     {
-                        Some((task.report, task.report_len))
+                        Some(task.report_len)
                     } else {
                         None
                     };
@@ -154,8 +154,7 @@ fn dispatch_inner(
                         task.state = task::CONTEXT_BLOCKED;
                     }
                     #[cfg(feature = "machine-events")]
-                    if let Some((report, length)) = previous_report {
-                        task.report = report;
+                    if let Some(length) = previous_report_len {
                         task.report_len = length;
                     }
                 } else {
@@ -482,7 +481,9 @@ fn trap_owned(
             if event(task.id()).consume() {
                 task.state = CONTEXT_READY;
             }
-        } else if class == ESR_SVC64 && native_call_measured(task, frame, operation, reports) {
+        } else if class == ESR_SVC64
+            && native_call_measured(task, &mut state.handles, current, frame, operation, reports)
+        {
             task.context = *frame;
             // Bounded synchronous native request: no locks, allocation or retained user
             // pointers; current task identity came from the owned runqueue, not registers.
@@ -492,41 +493,9 @@ fn trap_owned(
             task.state = CONTEXT_EXITED;
             task.peer_faults_at_exit = peer_faults;
         } else {
-            let Trap::Sync {
-                class,
-                operation,
-                far,
-            } = kind
-            else {
-                unreachable!()
-            };
-            if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire) {
-                frame.gpr[0] = abi::OK;
-                task.context = *frame;
-                if !event(task.id()).register() {
-                    return 0;
-                }
-                task.state = task::CONTEXT_BLOCKED;
-                // Registration precedes the state publication; a signal racing
-                // this recheck remains latched for the coordinator after return.
-                if event(task.id()).consume() {
-                    task.state = CONTEXT_READY;
-                }
-            } else if class == ESR_SVC64
-                && native_call(task, &mut state.handles, state.current, frame, operation)
-            {
-                task.context = *frame;
-                // Bounded synchronous native request: no locks, allocation or retained user
-                // pointers; current task identity came from the owned runqueue, not registers.
-                return 0;
-            } else if class == ESR_SVC64 && operation == abi::FINISH {
-                task.state = CONTEXT_EXITED;
-                task.peer_faults_at_exit = peer_faults;
-            } else {
-                task.state = CONTEXT_FAULTED;
-                task.fault_class = class;
-                task.fault_far = far;
-            }
+            task.state = CONTEXT_FAULTED;
+            task.fault_class = class;
+            task.fault_far = far;
         }
     }
     if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
@@ -573,6 +542,7 @@ fn native_call(
     current: usize,
     frame: &mut Context,
     operation: u16,
+    #[allow(unused_variables)] reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
 ) -> bool {
     if crate::handles::call(task, handles, current, frame, operation) {
         return true;
@@ -609,15 +579,17 @@ fn native_call(
 }
 fn native_call_measured(
     task: &mut Task,
+    handles: &mut [crate::handles::Namespace; TASKS],
+    current: usize,
     frame: &mut Context,
     operation: u16,
     reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
 ) -> bool {
     if operation != abi::READ_WINDOW {
-        return native_call(task, frame, operation, reports);
+        return native_call(task, handles, current, frame, operation, reports);
     }
     let start = cpu::ticks();
-    let handled = native_call(task, frame, operation, reports);
+    let handled = native_call(task, handles, current, frame, operation, reports);
     if handled {
         task.native_window_service_ticks = task
             .native_window_service_ticks

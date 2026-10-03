@@ -18,8 +18,10 @@ pub(crate) struct Admission<'a> {
     pub slices: usize,
     /// Total generic-counter ticks observed while executing at EL0, accumulated
     /// at each synchronous exception/IRQ boundary.
+    #[allow(dead_code)]
     pub el0_residency_ticks: u64,
     /// EL1 execution time spent servicing the native routing backend.
+    #[allow(dead_code)]
     pub native_window_service_ticks: u64,
     pub observations: crate::execution::Observations,
     pub blocked: bool,
