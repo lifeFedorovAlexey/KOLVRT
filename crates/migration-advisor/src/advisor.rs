@@ -4,8 +4,8 @@ use crate::{
     validate_requirements,
 };
 use crate::{
-    provenance::{Attestation, EvidenceVerifier, NoTrust, Role},
-    statistics::{StatisticalPolicy, Statistics, analyze_family},
+    provenance::{Attestation, EvidenceVerifier, NoTrust, Role, subject_digest},
+    statistics::{StatisticalPolicy, Statistics, analyze_family_with_power},
 };
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
@@ -111,6 +111,15 @@ pub struct Benchmark {
     pub pairs: Vec<Pair>,
 }
 
+/// Authenticated, ordered paired gains from an independent pilot run.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct PowerPilot {
+    pub artifact: String,
+    pub context: Context,
+    pub paired_gains_ns: Vec<i64>,
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Request {
@@ -126,6 +135,9 @@ pub struct Request {
     pub tests: Vec<ContractTest>,
     pub benchmarks: Vec<Benchmark>,
     pub statistics: StatisticalPolicy,
+    /// Pilot data is separate from the measured candidate pairs and must be authenticated.
+    #[serde(default)]
+    pub power_pilot: Option<PowerPilot>,
     pub attestations: Vec<Attestation>,
     pub migration_plans: Vec<MigrationPlan>,
 }
@@ -235,6 +247,24 @@ fn validate(request: &Request) -> Result<(), String> {
         return Err("unsupported schema or invalid context".into());
     }
     request.statistics.validate()?;
+    match (
+        request.statistics.prospective_power.as_ref(),
+        request.power_pilot.as_ref(),
+    ) {
+        (Some(plan), Some(pilot))
+            if digest_valid(&pilot.artifact)
+                && pilot.context == request.context
+                && pilot.paired_gains_ns.len() <= crate::statistics::MAX_PAIRS
+                && plan.pilot_digest
+                    == subject_digest(&serde_json::to_vec(pilot).expect("typed power pilot")) => {}
+        (Some(_), _) => {
+            return Err("prospective power plan needs matching pilot evidence".into());
+        }
+        (None, Some(_)) => {
+            return Err("unreferenced power pilot evidence".into());
+        }
+        (None, None) => {}
+    }
     validate_catalog(&request.catalog)?;
     validate_requirements(&request.requirements)?;
     validate_requirements(&request.retained)?;
@@ -280,6 +310,10 @@ fn validate(request: &Request) -> Result<(), String> {
     for b in &request.benchmarks {
         if !digest_valid(&b.artifact)
             || !artifacts.insert(&b.artifact)
+            || request
+                .power_pilot
+                .as_ref()
+                .is_some_and(|pilot| pilot.artifact == b.artifact)
             || !digest_valid(&b.baseline_plan)
             || !digest_valid(&b.candidate_plan)
             || !context_valid(&b.context)
@@ -396,10 +430,14 @@ fn authenticate<T: Serialize>(
     payload: &T,
     references: Vec<String>,
     gaps: &mut Vec<String>,
-) {
+) -> bool {
     let bytes = serde_json::to_vec(payload).expect("typed evidence serialization");
-    if let Err(error) = verifier.authenticate(role, &bytes, &references, &request.attestations) {
-        gaps.push(format!("{role:?}: {error}"));
+    match verifier.authenticate(role, &bytes, &references, &request.attestations) {
+        Ok(()) => true,
+        Err(error) => {
+            gaps.push(format!("{role:?}: {error}"));
+            false
+        }
     }
 }
 fn context_references(context: &Context) -> Vec<String> {
@@ -527,6 +565,20 @@ pub fn advise_with_verifier(
                     contract_gate(request, &plan, &p.identity);
                 candidate.assurance.contracts_passed = baseline_tested && candidate_tested;
                 let mut provenance_gaps = Vec::new();
+                let power_pilot_verified = if let Some(pilot) = &request.power_pilot {
+                    let mut refs = context_references(&pilot.context);
+                    refs.push(pilot.artifact.clone());
+                    authenticate(
+                        request,
+                        verifier,
+                        Role::Benchmark,
+                        pilot,
+                        refs,
+                        &mut provenance_gaps,
+                    )
+                } else {
+                    false
+                };
                 let ids: BTreeSet<_> = baseline.packages.iter().chain(&plan.packages).collect();
                 for id in ids {
                     let package = request.catalog.iter().find(|p| &p.identity == id).unwrap();
@@ -662,8 +714,20 @@ pub fn advise_with_verifier(
                             .map(|p| u128::from(p.candidate_compat_admissions))
                             .sum();
                         debt_reduced = candidate_compat < baseline_compat;
-                        match analyze_family(&b.pairs, &request.statistics, comparison_family_size)
-                        {
+                        let pilot_gains = power_pilot_verified.then(|| {
+                            request
+                                .power_pilot
+                                .as_ref()
+                                .unwrap()
+                                .paired_gains_ns
+                                .as_slice()
+                        });
+                        match analyze_family_with_power(
+                            &b.pairs,
+                            &request.statistics,
+                            comparison_family_size,
+                            pilot_gains,
+                        ) {
                             Ok(result) => {
                                 candidate.baseline_median_ns = Some(result.baseline.median_ns);
                                 candidate.candidate_median_ns = Some(result.candidate.median_ns);

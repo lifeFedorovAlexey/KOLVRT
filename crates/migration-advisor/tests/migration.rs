@@ -14,6 +14,7 @@ fn version(major: u32) -> SemanticVersion {
     }
 }
 fn policy() -> migration_advisor::statistics::StatisticalPolicy {
+    let pilot = power_pilot();
     migration_advisor::statistics::StatisticalPolicy {
         min_resampling_blocks: 100,
         resampling_block_length: 1,
@@ -26,6 +27,14 @@ fn policy() -> migration_advisor::statistics::StatisticalPolicy {
         p95_memory_regression_budget_bytes: None,
         p95_copied_bytes_regression_budget: None,
         p95_energy_regression_budget_uj: None,
+        prospective_power: Some(migration_advisor::statistics::ProspectivePowerPlan {
+            pilot_digest: migration_advisor::provenance::subject_digest(
+                &serde_json::to_vec(&pilot).unwrap(),
+            ),
+            expected_mean_gain_ns: 50,
+            target_power_basis_points: 9000,
+            planned_effective_blocks: 100,
+        }),
     }
 }
 // Only this explicitly injected fixture verifier trusts synthetic assertions. The CLI never does.
@@ -76,6 +85,15 @@ fn context() -> Context {
         kernel: hash(91),
         protocol: hash(92),
         source: EvidenceSource::OsRuntime,
+    }
+}
+fn power_pilot() -> PowerPilot {
+    PowerPilot {
+        artifact: hash(82),
+        context: context(),
+        paired_gains_ns: (0..100)
+            .map(|i| if i % 2 == 0 { -50 } else { 50 })
+            .collect(),
     }
 }
 fn request() -> Request {
@@ -153,6 +171,7 @@ fn request() -> Request {
                 .collect(),
         }],
         statistics: policy(),
+        power_pilot: Some(power_pilot()),
         attestations: vec![],
         migration_plans: vec![MigrationPlan {
             candidate: hash(2),
@@ -166,6 +185,20 @@ fn request() -> Request {
             rollback_preconditions: vec!["old artifact and compatible state retained".into()],
             irreversible_changes: vec![],
         }],
+    }
+}
+
+fn refresh_power_pilot_binding(request: &mut Request) {
+    if let (Some(pilot), Some(plan)) = (
+        request.power_pilot.as_mut(),
+        request.statistics.prospective_power.as_mut(),
+    ) {
+        pilot.context = request.context.clone();
+        plan.pilot_digest =
+            migration_advisor::provenance::subject_digest(&serde_json::to_vec(pilot).unwrap());
+        for benchmark in &mut request.benchmarks {
+            benchmark.statistics = request.statistics.clone();
+        }
     }
 }
 
@@ -359,6 +392,7 @@ fn missing_failed_stale_or_synthetic_evidence_never_recommends() {
                 t.context = r.context.clone();
             }
             r.benchmarks[0].context = r.context.clone();
+            refresh_power_pilot_binding(r);
         },
     ];
     for (i, mutate) in mutations.into_iter().enumerate() {
@@ -435,6 +469,7 @@ fn cli_emits_read_only_report_and_rejects_unknown_fields() {
     r.runtime = None;
     r.tests.clear();
     r.benchmarks.clear();
+    refresh_power_pilot_binding(&mut r);
     let path = std::env::temp_dir().join(format!("kolvrt-advisor-{}.json", std::process::id()));
     std::fs::write(&path, serde_json::to_vec(&r).unwrap()).unwrap();
     let output = std::process::Command::new(env!("CARGO_BIN_EXE_migration-advisor"))
@@ -466,7 +501,7 @@ fn tied_or_unequal_work_candidates_have_no_preference() {
     test.package = hash(3);
     r.tests.push(test);
     let mut benchmark = r.benchmarks[0].clone();
-    benchmark.artifact = hash(82);
+    benchmark.artifact = hash(83);
     benchmark.candidate_plan = plan_digest(&Plan {
         packages: vec![hash(3)],
     });
@@ -834,6 +869,52 @@ fn moving_block_bootstrap_uses_ordered_pairs_and_effective_tail_count() {
 }
 
 #[test]
+fn prospective_power_uses_separate_pilot_and_blocks_unplanned_gain_claims() {
+    use migration_advisor::statistics::analyze_family_with_power;
+    let request = request();
+    let benchmark = &request.benchmarks[0];
+    let pilot = &request.power_pilot.as_ref().unwrap().paired_gains_ns;
+    let result =
+        analyze_family_with_power(&benchmark.pairs, &benchmark.statistics, 1, Some(pilot)).unwrap();
+    assert_eq!(result.decision, "supported_latency_gain");
+    let assessment = result.prospective_power.unwrap();
+    assert!(assessment.adequate);
+    assert_eq!(assessment.pilot_pairs, 100);
+    assert_eq!(assessment.planned_effective_blocks, 100);
+    assert!(assessment.required_effective_blocks.unwrap() <= 100);
+
+    let result =
+        analyze_family_with_power(&benchmark.pairs, &benchmark.statistics, 1, None).unwrap();
+    assert_eq!(result.decision, "missing_power_pilot");
+
+    let mut underplanned = benchmark.statistics.clone();
+    underplanned
+        .prospective_power
+        .as_mut()
+        .unwrap()
+        .planned_effective_blocks = 101;
+    let result =
+        analyze_family_with_power(&benchmark.pairs, &underplanned, 1, Some(pilot)).unwrap();
+    assert_eq!(result.decision, "insufficient_prospective_power");
+    assert!(!result.prospective_power.unwrap().adequate);
+
+    let mut overrun = benchmark.statistics.clone();
+    overrun
+        .prospective_power
+        .as_mut()
+        .unwrap()
+        .planned_effective_blocks = 99;
+    let result = analyze_family_with_power(&benchmark.pairs, &overrun, 1, Some(pilot)).unwrap();
+    assert_eq!(result.decision, "insufficient_prospective_power");
+    assert!(!result.prospective_power.unwrap().adequate);
+
+    let mut undeclared = benchmark.statistics.clone();
+    undeclared.prospective_power = None;
+    let result = analyze_family_with_power(&benchmark.pairs, &undeclared, 1, None).unwrap();
+    assert_eq!(result.decision, "missing_prospective_power");
+}
+
+#[test]
 fn rollback_and_irreversible_changes_are_part_of_every_solved_proposal() {
     let mut r = request();
     r.migration_plans.clear();
@@ -917,6 +998,13 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     r.migration_plans[0].rollback_strategy = RollbackStrategy::ReinstallPrevious {
         previous_plan: r.benchmarks[0].baseline_plan.clone(),
     };
+    if let (Some(power), Some(pilot)) = (
+        r.statistics.prospective_power.as_mut(),
+        r.power_pilot.as_ref(),
+    ) {
+        power.pilot_digest = subject_digest(&serde_json::to_vec(pilot).unwrap());
+    }
+    r.benchmarks[0].statistics = r.statistics.clone();
     let key = SigningKey::from_bytes(&[44; 32]);
     let hex = |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
     let sign = |role, payload: Vec<u8>| {
@@ -930,6 +1018,10 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
             session_id: None,
         }
     };
+    r.attestations.push(sign(
+        Role::Benchmark,
+        serde_json::to_vec(r.power_pilot.as_ref().unwrap()).unwrap(),
+    ));
     for p in &r.catalog {
         r.attestations
             .push(sign(Role::Catalog, serde_json::to_vec(p).unwrap()));
@@ -975,6 +1067,19 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         CandidateStatus::VerifiedCandidate
     );
     assert!(
+        report.candidates[0]
+            .proposal
+            .as_ref()
+            .unwrap()
+            .expected_gain
+            .as_ref()
+            .unwrap()
+            .prospective_power
+            .as_ref()
+            .unwrap()
+            .adequate
+    );
+    assert!(
         !report.candidates[0]
             .proposal
             .as_ref()
@@ -997,6 +1102,25 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     assert!(output.status.success());
     let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(json["candidates"][0]["status"], "VERIFIED_CANDIDATE");
+    let pilot_attestation = r.attestations.remove(0);
+    let report = advise_with_verifier(&r, &solver(), &store).unwrap();
+    assert_eq!(
+        report.candidates[0].status,
+        CandidateStatus::PartialEvidenceCandidate
+    );
+    assert!(!report.candidates[0].assurance.provenance_verified);
+    assert_eq!(
+        report.candidates[0]
+            .proposal
+            .as_ref()
+            .unwrap()
+            .expected_gain
+            .as_ref()
+            .unwrap()
+            .decision,
+        "missing_power_pilot"
+    );
+    r.attestations.insert(0, pilot_attestation);
     r.benchmarks[0].pairs[0].candidate_ns = 1;
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
     assert_eq!(

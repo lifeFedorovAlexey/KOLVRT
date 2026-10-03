@@ -16,6 +16,7 @@ use std::{
 };
 
 const PAIRS: usize = 100;
+const PILOT_PAIRS: usize = 100;
 const CHILD_TIMEOUT: Duration = Duration::from_secs(10);
 const POLL: Duration = Duration::from_millis(10);
 const MAX_RECEIPT_BYTES: u64 = 8192;
@@ -97,6 +98,38 @@ fn attest<T: Serialize>(key: &SigningKey, role: Role, payload: &T) -> Attestatio
         session_id: None,
     }
 }
+fn measure_pair(
+    binaries: &[PathBuf],
+    root: &Path,
+    series: &str,
+    index: usize,
+) -> Result<(Receipt, Receipt, bool), String> {
+    let first = if index.is_multiple_of(2) { 0 } else { 1 };
+    let second = 1 - first;
+    let a = execute(
+        &binaries[first],
+        "measure",
+        &root.join(format!("{series}-{index:03}-{first}.json")),
+    )?;
+    let b = execute(
+        &binaries[second],
+        "measure",
+        &root.join(format!("{series}-{index:03}-{second}.json")),
+    )?;
+    let (baseline, candidate) = if first == 0 { (a, b) } else { (b, a) };
+    if baseline.mode != "compat"
+        || candidate.mode != "native"
+        || baseline.compat_admissions != ITERATIONS
+        || candidate.native_admissions != ITERATIONS
+        || baseline.copied_bytes != ITERATIONS * 4
+        || candidate.copied_bytes != 0
+        || baseline.peak_memory_bytes.is_none()
+        || candidate.peak_memory_bytes.is_none()
+    {
+        return Err("fixture route or resource accounting mismatch".into());
+    }
+    Ok((baseline, candidate, first == 0))
+}
 fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|b| format!("{b:02x}")).collect()
 }
@@ -171,47 +204,67 @@ fn run() -> Result<PathBuf, String> {
             passed: true,
         });
     }
+    let improvement_margin_ns = 1000;
+    let mut pilot_raw = Vec::new();
+    let mut pilot_gains_ns = Vec::new();
+    for i in 0..PILOT_PAIRS {
+        let (baseline, candidate, _) = measure_pair(&binaries, &root, "power-pilot", i)?;
+        let gain = i128::from(baseline.elapsed_ns) - i128::from(candidate.elapsed_ns);
+        pilot_gains_ns.push(i64::try_from(gain).map_err(|_| "pilot gain overflow")?);
+        pilot_raw.push((baseline, candidate));
+        if (i + 1) % 10 == 0 {
+            eprintln!(
+                "[INFO] migration-workbench: retained {} independent power-pilot pairs",
+                i + 1
+            );
+        }
+    }
+    let power_pilot_artifact = store_json(&artifacts, &pilot_raw)?;
+    let pilot_mean_gain =
+        pilot_gains_ns.iter().map(|gain| *gain as f64).sum::<f64>() / pilot_gains_ns.len() as f64;
+    let pilot_variance = pilot_gains_ns
+        .iter()
+        .map(|gain| (*gain as f64 - pilot_mean_gain).powi(2))
+        .sum::<f64>()
+        / (pilot_gains_ns.len() - 1) as f64;
+    let expected_mean_gain_ns = pilot_mean_gain.max(0.0).round() as u64;
+    let power_pilot = (expected_mean_gain_ns > improvement_margin_ns
+        && pilot_variance.is_finite()
+        && pilot_variance > 0.0)
+        .then(|| migration_advisor::advisor::PowerPilot {
+            artifact: power_pilot_artifact,
+            context: context.clone(),
+            paired_gains_ns: pilot_gains_ns,
+        });
+    let prospective_power =
+        power_pilot.as_ref().map(
+            |pilot| migration_advisor::statistics::ProspectivePowerPlan {
+                pilot_digest: subject_digest(&serde_json::to_vec(pilot).unwrap()),
+                expected_mean_gain_ns,
+                target_power_basis_points: 9000,
+                planned_effective_blocks: PAIRS,
+            },
+        );
     let statistics = StatisticalPolicy {
         min_resampling_blocks: PAIRS,
         resampling_block_length: 1,
         bootstrap_resamples: 2000,
         confidence_basis_points: 9500,
         seed: 7,
-        improvement_margin_ns: 1000,
+        improvement_margin_ns,
         p95_regression_budget_ns: 100000,
         p99_regression_budget_ns: None,
         p95_memory_regression_budget_bytes: Some(0),
         p95_copied_bytes_regression_budget: Some(0),
         p95_energy_regression_budget_uj: None,
+        prospective_power,
     };
     let observed = Instant::now();
     let mut pairs = Vec::new();
     let mut raw = Vec::new();
     for i in 0..PAIRS {
-        let first = if i % 2 == 0 { 0 } else { 1 };
-        let second = 1 - first;
-        let a = execute(
-            &binaries[first],
-            "measure",
-            &root.join(format!("pair-{i:03}-{first}.json")),
-        )?;
-        let b = execute(
-            &binaries[second],
-            "measure",
-            &root.join(format!("pair-{i:03}-{second}.json")),
-        )?;
-        let (baseline, candidate) = if first == 0 { (a, b) } else { (b, a) };
-        if baseline.mode != "compat"
-            || candidate.mode != "native"
-            || baseline.compat_admissions != ITERATIONS
-            || candidate.native_admissions != ITERATIONS
-            || baseline.copied_bytes != ITERATIONS * 4
-            || candidate.copied_bytes != 0
-            || baseline.peak_memory_bytes.is_none()
-            || candidate.peak_memory_bytes.is_none()
-        {
-            return Err("fixture route or resource accounting mismatch".into());
-        }
+        let (baseline, candidate, baseline_first) =
+            measure_pair(&binaries, &root, "measurement", i)?;
         pairs.push(Pair {
             baseline_ns: baseline.elapsed_ns,
             candidate_ns: candidate.elapsed_ns,
@@ -224,7 +277,7 @@ fn run() -> Result<PathBuf, String> {
             baseline_compat_admissions: baseline.compat_admissions,
             candidate_compat_admissions: candidate.compat_admissions,
             useful_units: ITERATIONS,
-            baseline_first: first == 0,
+            baseline_first,
             oracle_passed: true,
         });
         raw.push((baseline, candidate));
@@ -323,6 +376,9 @@ fn run() -> Result<PathBuf, String> {
     for t in &contracts {
         attestations.push(attest(&key, Role::ContractTest, t));
     }
+    if let Some(pilot) = &power_pilot {
+        attestations.push(attest(&key, Role::Benchmark, pilot));
+    }
     attestations.push(attest(&key, Role::Runtime, &runtime));
     attestations.push(attest(&key, Role::Benchmark, &benchmark));
     attestations.push(attest(&key, Role::Proposal, &migration));
@@ -343,6 +399,7 @@ fn run() -> Result<PathBuf, String> {
         tests: contracts,
         benchmarks: vec![benchmark],
         statistics,
+        power_pilot,
         attestations,
         migration_plans: vec![migration],
     };
