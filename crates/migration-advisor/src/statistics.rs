@@ -10,6 +10,7 @@ pub const MAX_PAIRS: usize = 4096;
 const P95_TAIL_MINIMUM: usize = 100;
 const P99_TAIL_MINIMUM: usize = 1000;
 const MIN_COMPARISON_TAIL_RESAMPLES: usize = 20;
+const MAX_CONSUMER_RESOURCE_BUDGETS: usize = 4096;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -26,6 +27,9 @@ pub struct StatisticalPolicy {
     pub p95_memory_regression_budget_bytes: Option<u64>,
     pub p95_copied_bytes_regression_budget: Option<u64>,
     pub p95_energy_regression_budget_uj: Option<u64>,
+    /// Per-consumer p95 budgets; these require per-pair consumer identity and observations.
+    #[serde(default)]
+    pub consumer_resource_budgets: Vec<ConsumerResourceBudget>,
     /// A prospectively declared, pilot-based power plan. Missing plans cannot support a gain.
     #[serde(default)]
     pub prospective_power: Option<ProspectivePowerPlan>,
@@ -42,6 +46,16 @@ pub struct ProspectivePowerPlan {
     /// Planned effective resampling blocks, not raw requests or within-run observations.
     pub planned_effective_blocks: usize,
 }
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ConsumerResourceBudget {
+    pub consumer_id: String,
+    pub p95_memory_regression_budget_bytes: Option<u64>,
+    pub p95_copied_bytes_regression_budget: Option<u64>,
+    pub p95_energy_regression_budget_uj: Option<u64>,
+}
+
 impl StatisticalPolicy {
     pub fn validate(&self) -> Result<(), String> {
         if !(MIN_RESAMPLING_BLOCKS..=MAX_PAIRS).contains(&self.min_resampling_blocks)
@@ -55,6 +69,21 @@ impl StatisticalPolicy {
                     || !(8000..=9900).contains(&plan.target_power_basis_points)
                     || !(MIN_RESAMPLING_BLOCKS..=MAX_PAIRS).contains(&plan.planned_effective_blocks)
             })
+            || self.consumer_resource_budgets.iter().any(|budget| {
+                budget.consumer_id.trim().is_empty()
+                    || budget.consumer_id.len() > 128
+                    || (budget.p95_memory_regression_budget_bytes.is_none()
+                        && budget.p95_copied_bytes_regression_budget.is_none()
+                        && budget.p95_energy_regression_budget_uj.is_none())
+            })
+            || self.consumer_resource_budgets.len() > MAX_CONSUMER_RESOURCE_BUDGETS
+            || self
+                .consumer_resource_budgets
+                .iter()
+                .map(|budget| budget.consumer_id.as_str())
+                .collect::<std::collections::BTreeSet<_>>()
+                .len()
+                != self.consumer_resource_budgets.len()
         {
             return Err(
                 "invalid predeclared effective-sample/block/bootstrap/confidence policy".into(),
@@ -96,6 +125,7 @@ pub struct Statistics {
     pub memory_bytes: Option<ResourceComparison>,
     pub copied_bytes: Option<ResourceComparison>,
     pub energy_uj: Option<ResourceComparison>,
+    pub consumer_resources: Vec<ConsumerResourceAssessment>,
     pub mean_gain_ns: f64,
     pub mean_gain_fraction: f64,
     pub gain_interval_ns: [f64; 2],
@@ -103,6 +133,17 @@ pub struct Statistics {
     pub bootstrap_resamples: usize,
     pub seed: u64,
     pub decision: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct ConsumerResourceAssessment {
+    pub consumer_id: String,
+    pub memory_bytes: Option<ResourceComparison>,
+    pub copied_bytes: Option<ResourceComparison>,
+    pub energy_uj: Option<ResourceComparison>,
+    pub memory_within_budget: Option<bool>,
+    pub copied_bytes_within_budget: Option<bool>,
+    pub energy_within_budget: Option<bool>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -264,9 +305,13 @@ pub fn analyze_family(
     if family_size == 0
         || resampling_blocks < policy.min_resampling_blocks
         || pairs.len() > MAX_PAIRS
-        || pairs
-            .iter()
-            .any(|p| p.baseline_ns == 0 || p.candidate_ns == 0)
+        || pairs.iter().any(|p| {
+            p.baseline_ns == 0
+                || p.candidate_ns == 0
+                || p.consumer_id
+                    .as_ref()
+                    .is_some_and(|id| id.trim().is_empty() || id.len() > 128)
+        })
     {
         return Err("insufficient resampling blocks or excessive/invalid paired runs".into());
     }
@@ -357,15 +402,119 @@ pub fn analyze_family(
         policy.p95_energy_regression_budget_uj,
         resampling_blocks,
     );
+    let consumer_budget_ids: std::collections::BTreeSet<_> = policy
+        .consumer_resource_budgets
+        .iter()
+        .map(|budget| budget.consumer_id.as_str())
+        .collect();
+    let consumer_identity_complete = if policy.consumer_resource_budgets.is_empty() {
+        true
+    } else {
+        let block_length = policy.resampling_block_length;
+        let mut seen_consumers = std::collections::BTreeSet::new();
+        let mut previous_consumer = None;
+        pairs.len().is_multiple_of(block_length)
+            && pairs.chunks_exact(block_length).all(|block| {
+                let Some(consumer_id) = block.first().and_then(|pair| pair.consumer_id.as_deref())
+                else {
+                    return false;
+                };
+                let whole_block_has_one_listed_consumer = block.iter().all(|pair| {
+                    pair.consumer_id.as_deref() == Some(consumer_id)
+                        && consumer_budget_ids.contains(consumer_id)
+                });
+                let consumer_is_contiguous = if previous_consumer == Some(consumer_id) {
+                    true
+                } else {
+                    let first_visit = seen_consumers.insert(consumer_id);
+                    previous_consumer = Some(consumer_id);
+                    first_visit
+                };
+                whole_block_has_one_listed_consumer && consumer_is_contiguous
+            })
+    };
+    let consumer_resources: Vec<_> = policy
+        .consumer_resource_budgets
+        .iter()
+        .map(|budget| {
+            let consumer_pairs: Vec<_> = pairs
+                .iter()
+                .filter(|pair| pair.consumer_id.as_deref() == Some(&budget.consumer_id))
+                .cloned()
+                .collect();
+            let complete_blocks = consumer_pairs
+                .len()
+                .is_multiple_of(policy.resampling_block_length);
+            let consumer_blocks = consumer_pairs.len() / policy.resampling_block_length;
+            let effective_units = if complete_blocks { consumer_blocks } else { 0 };
+            let resource = |baseline: fn(&Pair) -> Option<u64>,
+                            candidate: fn(&Pair) -> Option<u64>| {
+                (complete_blocks && !consumer_pairs.is_empty()).then(|| {
+                    resource_comparison(&consumer_pairs, baseline, candidate, effective_units)
+                })?
+            };
+            let memory_bytes = resource(
+                |pair| pair.baseline_memory_bytes,
+                |pair| pair.candidate_memory_bytes,
+            );
+            let copied_bytes = resource(
+                |pair| pair.baseline_copied_bytes,
+                |pair| pair.candidate_copied_bytes,
+            );
+            let energy_uj = resource(
+                |pair| pair.baseline_energy_uj,
+                |pair| pair.candidate_energy_uj,
+            );
+            ConsumerResourceAssessment {
+                consumer_id: budget.consumer_id.clone(),
+                memory_within_budget: within_budget(
+                    memory_bytes.as_ref(),
+                    budget.p95_memory_regression_budget_bytes,
+                    effective_units,
+                ),
+                copied_bytes_within_budget: within_budget(
+                    copied_bytes.as_ref(),
+                    budget.p95_copied_bytes_regression_budget,
+                    effective_units,
+                ),
+                energy_within_budget: within_budget(
+                    energy_uj.as_ref(),
+                    budget.p95_energy_regression_budget_uj,
+                    effective_units,
+                ),
+                memory_bytes,
+                copied_bytes,
+                energy_uj,
+            }
+        })
+        .collect();
+    let consumer_budget_missing = !consumer_identity_complete
+        || consumer_resources.iter().any(|assessment| {
+            assessment.memory_within_budget.is_none()
+                || assessment.copied_bytes_within_budget.is_none()
+                || assessment.energy_within_budget.is_none()
+        });
+    let consumer_budget_regression = consumer_resources.iter().any(|assessment| {
+        assessment.memory_within_budget == Some(false)
+            || assessment.copied_bytes_within_budget == Some(false)
+            || assessment.energy_within_budget == Some(false)
+    });
     let decision = if comparison_tail_resamples < MIN_COMPARISON_TAIL_RESAMPLES {
         "inadequate_comparison_resolution"
     } else if p95_ok.is_none() || p99_ok.is_none() {
         "insufficient_tail_evidence"
-    } else if memory_ok.is_none() || copied_bytes_ok.is_none() || energy_ok.is_none() {
+    } else if memory_ok.is_none()
+        || copied_bytes_ok.is_none()
+        || energy_ok.is_none()
+        || consumer_budget_missing
+    {
         "insufficient_resource_evidence"
     } else if p95_ok == Some(false) || p99_ok == Some(false) {
         "tail_regression"
-    } else if memory_ok == Some(false) || copied_bytes_ok == Some(false) || energy_ok == Some(false)
+    } else if memory_ok == Some(false)
+        || copied_bytes_ok == Some(false)
+        || energy_ok == Some(false)
+        || consumer_budget_regression
     {
         "resource_regression"
     } else if interval[0] > policy.improvement_margin_ns as f64 {
@@ -387,6 +536,7 @@ pub fn analyze_family(
         memory_bytes,
         copied_bytes,
         energy_uj,
+        consumer_resources,
         mean_gain_ns: mean,
         mean_gain_fraction: mean / baseline_mean,
         gain_interval_ns: interval,

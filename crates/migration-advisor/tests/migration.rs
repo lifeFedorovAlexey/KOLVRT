@@ -27,6 +27,7 @@ fn policy() -> migration_advisor::statistics::StatisticalPolicy {
         p95_memory_regression_budget_bytes: None,
         p95_copied_bytes_regression_budget: None,
         p95_energy_regression_budget_uj: None,
+        consumer_resource_budgets: Vec::new(),
         prospective_power: Some(migration_advisor::statistics::ProspectivePowerPlan {
             pilot_digest: migration_advisor::provenance::subject_digest(
                 &serde_json::to_vec(&pilot).unwrap(),
@@ -154,6 +155,7 @@ fn request() -> Request {
             unfinished: 0,
             pairs: (0..100)
                 .map(|i| Pair {
+                    consumer_id: None,
                     baseline_ns: 100,
                     candidate_ns: 50,
                     baseline_memory_bytes: None,
@@ -705,6 +707,7 @@ fn configured_multidimensional_budgets_require_evidence_and_reject_regressions()
     let make_pairs = |memory: Option<u64>, copied: Option<u64>, energy: Option<u64>| {
         (0..100)
             .map(|i| Pair {
+                consumer_id: None,
                 baseline_ns: 100,
                 candidate_ns: 50,
                 baseline_memory_bytes: Some(1024),
@@ -760,6 +763,120 @@ fn resource_budget_regression_rejects_the_advisor_candidate() {
         CandidateStatus::RejectedCandidate
     );
     assert!(!report.candidates[0].assurance.statistical_gain_supported);
+}
+
+#[test]
+fn consumer_specific_resource_budgets_fail_closed_and_report_each_consumer() {
+    use migration_advisor::statistics::{ConsumerResourceBudget, analyze_family};
+
+    let mut policy = policy();
+    policy.consumer_resource_budgets = ["client-a", "client-b"]
+        .into_iter()
+        .map(|consumer_id| ConsumerResourceBudget {
+            consumer_id: consumer_id.into(),
+            p95_memory_regression_budget_bytes: Some(0),
+            p95_copied_bytes_regression_budget: Some(0),
+            p95_energy_regression_budget_uj: None,
+        })
+        .collect();
+    let pairs = (0..200)
+        .map(|i| {
+            let consumer_id = if i < 100 { "client-a" } else { "client-b" };
+            Pair {
+                consumer_id: Some(consumer_id.into()),
+                baseline_ns: 100,
+                candidate_ns: 50,
+                baseline_memory_bytes: Some(1024),
+                candidate_memory_bytes: Some(if consumer_id == "client-a" {
+                    1024
+                } else {
+                    1032
+                }),
+                baseline_copied_bytes: Some(16),
+                candidate_copied_bytes: Some(0),
+                baseline_energy_uj: None,
+                candidate_energy_uj: None,
+                baseline_compat_admissions: 1,
+                candidate_compat_admissions: 0,
+                useful_units: 1,
+                baseline_first: i % 2 == 0,
+                oracle_passed: true,
+            }
+        })
+        .collect::<Vec<_>>();
+    let assessment = analyze_family(&pairs, &policy, 1).unwrap();
+    assert_eq!(assessment.decision, "resource_regression");
+    assert_eq!(assessment.consumer_resources.len(), 2);
+    assert_eq!(assessment.consumer_resources[0].consumer_id, "client-a");
+    assert_eq!(
+        assessment.consumer_resources[0].memory_within_budget,
+        Some(true)
+    );
+    assert_eq!(assessment.consumer_resources[1].consumer_id, "client-b");
+    assert_eq!(
+        assessment.consumer_resources[1].memory_within_budget,
+        Some(false)
+    );
+
+    let mut split_block_policy = policy.clone();
+    split_block_policy.resampling_block_length = 2;
+    let mut split_block = pairs.clone();
+    split_block[1].consumer_id = Some("client-b".into());
+    assert_eq!(
+        analyze_family(&split_block, &split_block_policy, 1)
+            .unwrap()
+            .decision,
+        "insufficient_resource_evidence"
+    );
+
+    let mut duplicate_budget = policy.clone();
+    duplicate_budget
+        .consumer_resource_budgets
+        .push(duplicate_budget.consumer_resource_budgets[0].clone());
+    assert!(analyze_family(&pairs, &duplicate_budget, 1).is_err());
+
+    let mut missing_identity = pairs;
+    missing_identity[0].consumer_id = None;
+    assert_eq!(
+        analyze_family(&missing_identity, &policy, 1)
+            .unwrap()
+            .decision,
+        "insufficient_resource_evidence"
+    );
+}
+
+#[test]
+fn authenticated_consumer_resource_regression_rejects_the_candidate() {
+    use migration_advisor::statistics::ConsumerResourceBudget;
+
+    let mut request = request();
+    request.statistics.consumer_resource_budgets = vec![ConsumerResourceBudget {
+        consumer_id: "window-client/1".into(),
+        p95_memory_regression_budget_bytes: Some(0),
+        p95_copied_bytes_regression_budget: None,
+        p95_energy_regression_budget_uj: None,
+    }];
+    request.benchmarks[0].statistics = request.statistics.clone();
+    for pair in &mut request.benchmarks[0].pairs {
+        pair.consumer_id = Some("window-client/1".into());
+        pair.baseline_memory_bytes = Some(1024);
+        pair.candidate_memory_bytes = Some(1032);
+    }
+    let report = trusted_fixture(&request, &solver()).unwrap();
+    let candidate = &report.candidates[0];
+    assert_eq!(candidate.status, CandidateStatus::RejectedCandidate);
+    assert_eq!(
+        candidate
+            .proposal
+            .as_ref()
+            .unwrap()
+            .expected_gain
+            .as_ref()
+            .unwrap()
+            .consumer_resources[0]
+            .memory_within_budget,
+        Some(false)
+    );
 }
 
 #[test]

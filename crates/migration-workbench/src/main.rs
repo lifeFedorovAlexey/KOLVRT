@@ -256,6 +256,7 @@ fn run() -> Result<PathBuf, String> {
         p95_memory_regression_budget_bytes: Some(0),
         p95_copied_bytes_regression_budget: Some(0),
         p95_energy_regression_budget_uj: None,
+        consumer_resource_budgets: Vec::new(),
         prospective_power,
     };
     let observed = Instant::now();
@@ -265,6 +266,7 @@ fn run() -> Result<PathBuf, String> {
         let (baseline, candidate, baseline_first) =
             measure_pair(&binaries, &root, "measurement", i)?;
         pairs.push(Pair {
+            consumer_id: Some("fixture-window-consumer".into()),
             baseline_ns: baseline.elapsed_ns,
             candidate_ns: candidate.elapsed_ns,
             baseline_memory_bytes: baseline.peak_memory_bytes,

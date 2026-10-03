@@ -71,6 +71,9 @@ pub struct ContractTest {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Pair {
+    /// Stable measured-consumer identity; required when consumer-specific budgets are configured.
+    #[serde(default)]
+    pub consumer_id: Option<String>,
     pub baseline_ns: u64,
     pub candidate_ns: u64,
     /// Per-run peak resident bytes; unknown is not zero.
