@@ -125,9 +125,9 @@ fn benchmark(mut consumer: Consumer, oracle: Reduction) {
         assert_eq!(result, oracle);
         *value = end.checked_sub(start_accounting[0]).unwrap();
         adapter_cpu_samples[sample_index] =
-                        end_accounting[2].checked_sub(start_accounting[2]).unwrap();
+            end_accounting[2].checked_sub(start_accounting[2]).unwrap();
         native_service_cpu_samples[sample_index] =
-                        end_accounting[3].checked_sub(start_accounting[3]).unwrap();
+            end_accounting[3].checked_sub(start_accounting[3]).unwrap();
     }
     let slices_after = svc::<{ abi::SLICES }>(0, 0)[0];
     for value in samples {
