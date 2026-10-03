@@ -310,6 +310,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "host-process-metrics"
+version = "0.1.0"
+
+[[package]]
 name = "icu_collections"
 version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -515,6 +519,7 @@ name = "migration-workbench"
 version = "0.1.0"
 dependencies = [
  "ed25519-dalek",
+ "host-process-metrics",
  "kernel-core",
  "migration-advisor",
  "rand_core",

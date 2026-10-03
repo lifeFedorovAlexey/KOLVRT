@@ -6,6 +6,7 @@ publish = false
 default-run = "migration-workbench"
 
 [dependencies]
+host-process-metrics = { path = "../host-process-metrics" }
 migration-advisor = { path = "../migration-advisor" }
 kernel-core = { path = "../kernel-core" }
 routing = { path = "../routing", features = ["dev", "conformance", "compat-v1", "compat-v2", "bug-compat"] }

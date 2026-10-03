@@ -178,7 +178,7 @@ fn run() -> Result<PathBuf, String> {
         improvement_margin_ns: 1000,
         p95_regression_budget_ns: 100000,
         p99_regression_budget_ns: None,
-        p95_memory_regression_budget_bytes: None,
+        p95_memory_regression_budget_bytes: Some(0),
         p95_copied_bytes_regression_budget: Some(0),
         p95_energy_regression_budget_uj: None,
     };
@@ -203,14 +203,18 @@ fn run() -> Result<PathBuf, String> {
             || candidate.mode != "native"
             || baseline.compat_admissions != ITERATIONS
             || candidate.native_admissions != ITERATIONS
+            || baseline.copied_bytes != ITERATIONS * 4
+            || candidate.copied_bytes != 0
+            || baseline.peak_memory_bytes.is_none()
+            || candidate.peak_memory_bytes.is_none()
         {
-            return Err("fixture route mismatch".into());
+            return Err("fixture route or resource accounting mismatch".into());
         }
         pairs.push(Pair {
             baseline_ns: baseline.elapsed_ns,
             candidate_ns: candidate.elapsed_ns,
-            baseline_memory_bytes: None,
-            candidate_memory_bytes: None,
+            baseline_memory_bytes: baseline.peak_memory_bytes,
+            candidate_memory_bytes: candidate.peak_memory_bytes,
             baseline_copied_bytes: Some(baseline.copied_bytes),
             candidate_copied_bytes: Some(candidate.copied_bytes),
             baseline_energy_uj: None,

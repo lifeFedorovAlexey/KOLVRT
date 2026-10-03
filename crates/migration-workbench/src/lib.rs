@@ -13,7 +13,7 @@ const STABILIZATION_PERCENT: u128 = 20;
 const WINDOW_WORDS: u32 = 16;
 const START_COUNT: u64 = 240;
 pub const CONTRACT: &str = "window workload/1.0.0: immutable u32[256]; half-open windows [i%240,i%240+16); exact sum and word count; empty returns zero; invalid bounds fail; no persistent data or external effects; compat input is equivalent LE16 inclusive endpoints; native input is a half-open Span; every result is checked";
-pub const PROTOCOL: &str = "physical-host-process-library-v3; 100 fresh-process pairs, independence assumed not proven; AB/BA alternating; 3..20 warmup batches of 5000 calls; stop when last3 batch durations max-min<=20percent of min; retain every warmup batch; measured50000 useful reductions; equal input, oracle, instrumentation and inherited process limits; background load and thermal state uncontrolled; no exclusions; abort and retain evidence on first process/oracle failure; failed warmup invalidates recommendation; primary metric whole-batch wall ns excluding spawn, contracts and warmup; per-process receipts retained; paired route-library copied-byte counters measured for each useful batch with p95 regression budget 0 bytes; peak memory and energy unavailable and unbudgeted; not KOLVRT kernel or ARM64 behavior; predeclared bootstrap2000/seed7/confidence9500/margin1000ns/p95budget100000ns/p99unavailable";
+pub const PROTOCOL: &str = "physical-host-process-library-v4; 100 fresh-process pairs, independence assumed not proven; AB/BA alternating; 3..20 warmup batches of 5000 calls; stop when last3 batch durations max-min<=20percent of min; retain every warmup batch; measured50000 useful reductions; equal input, oracle, instrumentation and inherited process limits; background load and thermal state uncontrolled; no exclusions; abort and retain evidence on first process/oracle failure; failed warmup invalidates recommendation; primary metric whole-batch wall ns excluding spawn, contracts and warmup; per-process receipts retain copied bytes and Windows PeakWorkingSetSize across process lifetime; p95 copied-byte and peak-working-set regression budgets 0 bytes; peak memory includes startup, contracts, warmup and measurement, not just the measured batch; energy unavailable and unbudgeted; not KOLVRT kernel or ARM64 behavior; predeclared bootstrap2000/seed7/confidence9500/margin1000ns/p95budget100000ns/p99unavailable";
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -30,6 +30,7 @@ pub struct Receipt {
     pub native_admissions: u64,
     pub compat_admissions: u64,
     pub copied_bytes: u64,
+    pub peak_memory_bytes: Option<u64>,
     pub conversions: u64,
 }
 
@@ -103,6 +104,7 @@ pub fn execute(native: bool, measure: bool) -> Result<Receipt, String> {
         native_admissions: 0,
         compat_admissions: 0,
         copied_bytes: 0,
+        peak_memory_bytes: None,
         conversions: 0,
     };
     if !measure {
@@ -171,6 +173,8 @@ pub fn execute(native: bool, measure: bool) -> Result<Receipt, String> {
     if counters.errors != 0 || receipt.checksum != expected_checksum() {
         return Err("accounting or checksum failure".into());
     }
+    receipt.peak_memory_bytes = host_process_metrics::peak_working_set_bytes()
+        .map_err(|error| format!("peak working-set measurement failed: {error}"))?;
     Ok(receipt)
 }
 pub fn fixture_main(native: bool) {
