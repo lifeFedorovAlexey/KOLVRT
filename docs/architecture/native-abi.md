@@ -99,3 +99,7 @@ The cancellation linearization point competes with effect commitment. If cancell
 The no_std [decoder](../../crates/native-protocol-model/src/lib.rs) checks encoding, snapshot ownership, rights attenuation and generation exhaustion. The [host models](../../crates/native-state-models/src/lib.rs) check lifetime, charge retention, wait registration, rebinding, startup and domain transfer. The candidate compiles for AArch64 without a host standard library. This does not verify exception entry, assembly calling conventions, page tables, real user-copy or an unbounded concurrent implementation.
 
 [Russian translation](../../translations/ru/docs/architecture/native-abi.md)
+
+## Current bounded Phase 3.3 handle boundary
+
+[Process-local handles](../kernel/handles.md) implement reference identity, type and synchronous lifetime only. The provisional LE64 encoding and copied 32-byte lookup/close request are explicit byte formats; no Rust layout or pointer is exported. Broader handle/capability/transfer requirements in this document remain future contracts and are not satisfied merely by a successful lookup.

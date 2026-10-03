@@ -72,18 +72,18 @@ static RUNNING_OWNER: [AtomicUsize; config::TOTAL_TASKS] =
 /// Persistent native dispatch mechanism. Per-process identity is independent of
 /// queue generation; lifetime and optional bounded limits belong to the caller.
 pub(crate) fn dispatch(
-    tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS],
+    tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
 ) -> Completed {
     dispatch_inner(tasks, timeout, false)
 }
 /// Return after at most one timer quantum/terminal event per CPU, without
 /// requiring processes to terminate. This still retains the two-CPU barrier.
-pub(crate) fn step(tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
+pub(crate) fn step(tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
     dispatch_inner(tasks, None, true)
 }
 fn dispatch_inner(
-    tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS],
+    tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
     step: bool,
 ) -> Completed {
@@ -104,46 +104,65 @@ fn dispatch_inner(
     ARRIVED.store(0, Ordering::Release);
     NATIVE_ROOT.store(memory::table_root(), Ordering::Release);
     for (owner, local) in LOCALS.iter().enumerate() {
-        let mut state = State::ZERO;
-        if step {
-            state.current = CURSOR[owner].load(Ordering::Acquire);
-        }
-        state.deadline = timeout.map(time::deadline_after);
-        for (index, task) in state.tasks.iter_mut().enumerate() {
-            let id = owner * TASKS + index;
-            if let Some(admitted) = tasks[id] {
-                assert_eq!(admitted.identity.slot(), id);
-                assert_eq!(admitted.space.slot(), id);
-                *task = Task::new(
-                    id,
-                    admitted.identity.generation(),
-                    admitted.space.root(),
-                    admitted.context,
-                    admitted.slice_budget,
+        // Initialize existing storage under the exclusive preparing permit. A
+        // by-value State would put multiple report/namespace arrays on DEV stacks.
+        local.prepare(generation, |state| {
+            state.current = if step {
+                CURSOR[owner].load(Ordering::Acquire)
+            } else {
+                NO_TASK
+            };
+            state.switches = 0;
+            state.deadline = timeout.map(time::deadline_after);
+            for (index, task) in state.tasks.iter_mut().enumerate() {
+                let id = owner * TASKS + index;
+                assert_eq!(
+                    state.handles[index].live(),
+                    0,
+                    "namespace moved back before preparation"
                 );
-                task.bind_queue(generation);
-                task.slices = admitted.slices;
-                task.el0_residency_ticks = admitted.el0_residency_ticks;
-                task.native_window_service_ticks = admitted.native_window_service_ticks;
-                task.observations = admitted.observations;
-                if admitted.blocked {
-                    assert!(step, "blocked processes require step driver");
-                    task.state = task::CONTEXT_BLOCKED;
-                }
-                #[cfg(feature = "machine-events")]
-                if local.completed() {
-                    local.inspect(local.generation(), |previous| {
-                        let old = &previous.tasks[index];
-                        if old.process_generation() == admitted.identity.generation()
-                            && old.id() == id
-                        {
-                            task.report_len = old.report_len;
-                        }
-                    });
+                assert_eq!(
+                    state.handles[index].owner(),
+                    None,
+                    "namespace owner moved back"
+                );
+                if let Some(admitted) = tasks[id].as_mut() {
+                    assert_eq!(admitted.identity.slot(), id);
+                    assert_eq!(admitted.space.slot(), id);
+                    #[cfg(feature = "machine-events")]
+                    let previous_report = if task.process_generation()
+                        == admitted.identity.generation()
+                        && task.id() == id
+                    {
+                        Some((task.report, task.report_len))
+                    } else {
+                        None
+                    };
+                    *task = Task::new(
+                        id,
+                        admitted.identity.generation(),
+                        admitted.space.root(),
+                        admitted.context,
+                        admitted.slice_budget,
+                    );
+                    state.handles[index] = core::mem::take(admitted.handles);
+                    task.bind_queue(generation);
+                    task.slices = admitted.slices;
+                    task.observations = admitted.observations;
+                    if admitted.blocked {
+                        assert!(step, "blocked processes require step driver");
+                        task.state = task::CONTEXT_BLOCKED;
+                    }
+                    #[cfg(feature = "machine-events")]
+                    if let Some((report, length)) = previous_report {
+                        task.report = report;
+                        task.report_len = length;
+                    }
+                } else {
+                    *task = Task::ZERO;
                 }
             }
-        }
-        local.prepare(generation, state);
+        });
         local.preempt.store(false, Ordering::Release);
     }
     memory::USER_EXECUTION_ACTIVE.store(platform_config::ACTIVE_CPUS, Ordering::Release);
@@ -184,6 +203,11 @@ fn dispatch_inner(
                 state.tasks[index].result()
             });
             completed.tasks[owner * TASKS + index] = task;
+            if let Some(admitted) = tasks[owner * TASKS + index].as_mut() {
+                *admitted.handles = local.quiescent(generation, |state| {
+                    core::mem::take(&mut state.handles[index])
+                });
+            }
         }
     }
     #[cfg(not(feature = "process-unlink-negative"))]
@@ -468,9 +492,41 @@ fn trap_owned(
             task.state = CONTEXT_EXITED;
             task.peer_faults_at_exit = peer_faults;
         } else {
-            task.state = CONTEXT_FAULTED;
-            task.fault_class = class;
-            task.fault_far = far;
+            let Trap::Sync {
+                class,
+                operation,
+                far,
+            } = kind
+            else {
+                unreachable!()
+            };
+            if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire) {
+                frame.gpr[0] = abi::OK;
+                task.context = *frame;
+                if !event(task.id()).register() {
+                    return 0;
+                }
+                task.state = task::CONTEXT_BLOCKED;
+                // Registration precedes the state publication; a signal racing
+                // this recheck remains latched for the coordinator after return.
+                if event(task.id()).consume() {
+                    task.state = CONTEXT_READY;
+                }
+            } else if class == ESR_SVC64
+                && native_call(task, &mut state.handles, state.current, frame, operation)
+            {
+                task.context = *frame;
+                // Bounded synchronous native request: no locks, allocation or retained user
+                // pointers; current task identity came from the owned runqueue, not registers.
+                return 0;
+            } else if class == ESR_SVC64 && operation == abi::FINISH {
+                task.state = CONTEXT_EXITED;
+                task.peer_faults_at_exit = peer_faults;
+            } else {
+                task.state = CONTEXT_FAULTED;
+                task.fault_class = class;
+                task.fault_far = far;
+            }
         }
     }
     if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
@@ -511,15 +567,16 @@ fn trap_owned(
         local.resume_sp.load(Ordering::Acquire)
     }
 }
-
 fn native_call(
     task: &mut Task,
+    handles: &mut [crate::handles::Namespace; TASKS],
+    current: usize,
     frame: &mut Context,
     operation: u16,
-    reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
 ) -> bool {
-    #[cfg(not(feature = "machine-events"))]
-    let _ = reports;
+    if crate::handles::call(task, handles, current, frame, operation) {
+        return true;
+    }
     #[cfg(feature = "kernel-tests")]
     if crate::user_copy::testing::call(task, frame, operation) {
         return true;

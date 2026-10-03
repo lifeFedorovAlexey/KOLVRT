@@ -147,6 +147,38 @@ const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
         "LockHeld",
     ),
 ];
+const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
+    (
+        "--handle-generation-control",
+        "handle-generation-negative",
+        "handle_el0_identity_type_generation_and_lifetime",
+    ),
+    (
+        "--handle-owner-control",
+        "handle-owner-negative",
+        "handle_el0_identity_type_generation_and_lifetime",
+    ),
+    (
+        "--handle-type-control",
+        "handle-type-negative",
+        "handle_el0_identity_type_generation_and_lifetime",
+    ),
+    (
+        "--handle-reuse-control",
+        "handle-reuse-negative",
+        "handle_el0_identity_type_generation_and_lifetime",
+    ),
+    (
+        "--handle-retirement-control",
+        "handle-retirement-negative",
+        "\"event\":\"handle-retirement-reject\"",
+    ),
+    (
+        "--handle-transfer-rights-control",
+        "handle-transfer-rights-negative",
+        "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
+    ),
+];
 const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--user-copy-snapshot-control",
@@ -233,6 +265,10 @@ const TESTS: &[&str] = &[
     "process_resource_reclamation",
     "user_copy_el0_boundary_and_snapshot",
     "user_copy_lifetime_and_reclamation",
+    "handle_cross_process_reference_isolation",
+    "handle_el0_transfer_transaction_attenuation",
+    "handle_el0_identity_type_generation_and_lifetime",
+    "handle_exit_fault_cleanup_and_process_reuse",
 ];
 fn main() {
     if let Err(e) = run() {
@@ -278,7 +314,7 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
-            for &(flag, feature, _) in USER_COPY_CONTROLS {
+            for &(flag, feature, _) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()) {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
                     return execute(&elf, true, true);
@@ -357,7 +393,7 @@ fn run() -> Result<()> {
             }
             println!("Native kernel matrix passed (two active CPUs; scheduler ownership enforced).");
             for prod in [false, true] {
-                for &(flag, _, marker) in USER_COPY_CONTROLS {
+                for &(flag, _, marker) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()) {
                     let mut command = Command::new(env::current_exe()?);
                     command.args(["test", flag]);
                     if prod { command.arg("--prod"); }
@@ -715,7 +751,7 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len()) * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len()) * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {

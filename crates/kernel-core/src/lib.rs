@@ -20,3 +20,4 @@ pub fn quantiles(samples: &mut [u64]) -> Option<[u64; 3]> {
     let rank = |p: usize| samples[(samples.len() * p).div_ceil(100) - 1];
     Some([rank(50), rank(95), rank(99)])
 }
+pub mod handles;

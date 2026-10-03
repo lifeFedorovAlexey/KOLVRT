@@ -9,9 +9,9 @@ pub(crate) const CONTEXT_BLOCKED: usize = 6;
 pub(super) const CONTEXT_VACANT: usize = 5;
 /// Small fully initialized admission descriptor; no diagnostic report storage is
 /// copied through caller stacks. The retained root belongs to the process owner.
-#[derive(Clone, Copy)]
 pub(crate) struct Admission<'a> {
     pub identity: kernel_core::process::ProcessId,
+    pub handles: &'a mut crate::handles::Namespace,
     pub space: &'a crate::memory::OwnedUserSpace,
     pub context: Context,
     pub slice_budget: Option<usize>,
@@ -187,6 +187,7 @@ impl TaskResult {
 }
 pub(super) struct State {
     pub tasks: [Task; TASKS],
+    pub handles: [crate::handles::Namespace; TASKS],
     pub current: usize,
     pub switches: usize,
     pub deadline: Option<u64>,
@@ -194,6 +195,7 @@ pub(super) struct State {
 impl State {
     pub const ZERO: Self = Self {
         tasks: [Task::ZERO; TASKS],
+        handles: [const { crate::handles::Namespace::new() }; TASKS],
         current: NO_TASK,
         switches: 0,
         deadline: None,

@@ -77,7 +77,7 @@ impl Local {
     pub fn completed(&self) -> bool {
         self.ownership.completed()
     }
-    pub fn prepare(&self, generation: u64, state: State) {
+    pub fn prepare(&self, generation: u64, initialize: impl FnOnce(&mut State)) {
         crate::sync::assert_scheduler_unlocked();
         let _access = self
             .ownership
@@ -87,7 +87,7 @@ impl Local {
         // SAFETY: INV-RUNQUEUE: exclusive preparing permit, observed coordinator,
         // IRQ masked; acquired prior completion excludes any admitted owner.
         unsafe {
-            *self.state.get() = state;
+            initialize(&mut *self.state.get());
         }
     }
     pub fn publish(&self, generation: u64) {
@@ -191,7 +191,7 @@ impl Local {
         #[cfg(feature = "scheduler-stale-negative")]
         self.with(generation - 1, |_| ());
         #[cfg(feature = "scheduler-reset-negative")]
-        self.prepare(generation + 1, State::ZERO);
+        self.prepare(generation + 1, |_| ());
         #[cfg(feature = "scheduler-inspect-negative")]
         self.inspect(generation, |_| ());
         #[cfg(feature = "scheduler-complete-negative")]

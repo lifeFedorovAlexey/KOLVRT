@@ -81,3 +81,7 @@ Issue #22 сможет опереться на точную идентичнос
 ## Текущая copy boundary Phase 3.2
 
 [Safe user-copy](user-copy.md) реализует issue #22 поверх этого retained generation/root ownership. Borrowed current-task Access проверяет range и права EL0, копирует immutable bounded snapshot и содержит precise copy faults. Он заканчивается до exit/root switching и не может пережить address-space reclamation. Синхронный whole-dispatch retirement barrier остаётся обязательным; mutable/shared mappings и asynchronous copy не поддерживаются. Ранний Phase 3.1 receipt остаётся историческим evidence, а Phase 3.2 matrix повторяет все lifecycle checks. Public process/handle authority не добавлены.
+
+## Локальные ссылки процессов в Phase 3.3
+
+[Handle namespaces](handles.md) линейно перемещаются через admission и scheduling steps, сохраняя поколения при ProcessId reuse. После quiescence exit/fault namespace возвращается; все записи retired, owner unbound. Reclamation отклоняет оставшиеся entries или доступный namespace. Handle borrows не переживают completion или освобождение frames.

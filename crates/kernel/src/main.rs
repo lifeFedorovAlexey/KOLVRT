@@ -9,6 +9,7 @@ mod boot_workload;
 mod diagnostics;
 mod execution;
 mod hal;
+mod handles;
 mod interrupt;
 mod memory;
 mod percpu;

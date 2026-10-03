@@ -81,3 +81,7 @@ Issue #22 can build on exact process identity, privately retained address spaces
 ## Phase 3.2 current copy boundary
 
 [Safe user-copy](user-copy.md) implements issue #22 over this retained generation/root ownership. A borrowed current-task Access checks range and EL0 permissions, copies an immutable bounded snapshot and contains precise copy faults. It ends before exit/root switching and cannot survive address-space reclamation. The synchronous whole-dispatch retirement barrier remains mandatory; mutable/shared mappings and asynchronous copy are unsupported. The earlier Phase 3.1 receipt remains historical evidence, while the Phase 3.2 matrix repeats every lifecycle check. No public process/handle authority is introduced.
+
+## Phase 3.3 process-local references
+
+[Handle namespaces](handles.md) move linearly through admission and scheduling steps, preserving generations across ProcessId reuse. Exit/fault quiescence returns each namespace before all entries are retired and its owner unbound; reclamation rejects remaining entries or an accessible namespace. No handle borrows survive completion or frame release.

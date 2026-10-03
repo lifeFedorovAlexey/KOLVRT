@@ -50,3 +50,7 @@ Host tests проверяют безопасные алгоритмы, откл�
 ## Проверки user-copy Phase 3.2
 
 [Контракт copy](user-copy.md) добавляет реальные EL0 copies и snapshot mutation на обоих CPU, precise mid-copy fault injection, initialized output и generation/lifetime rejection. Текущая DEV/PROD matrix требует 69 именованных checks и 57 failure controls, включая live-reread и disabled-recovery controls в обоих профилях. Четыре size/failure scope сохраняют raw bounded benchmarks для каждого CPU. Та же matrix выполняется без compatibility source packages; повторяется Phase 2 routing matrix. Host tests/Clippy/repository checks дополняют real kernel evidence, но не заменяют его.
+
+## Проверки handles в Phase 3.3
+
+[Контракт handles](handles.md) требует 72 kernel checks и 67 negative controls в DEV/PROD. Пять actual enforcement mutations проверяют generation validation, owner validation, kind validation, unsafe reuse и missing retirement cleanup. Пять handle measurement scopes на CPU добавляются к четырём copy scopes: nineteen unique measurement records вместе с lock baseline. Physical compatibility-package removal и Phase 2 routing должны успешно повториться на том же source candidate.
