@@ -24,6 +24,8 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         subject_digest: subject,
         key_id: "test".into(),
         signature,
+        issued_at_unix_seconds: None,
+        session_id: None,
     };
     let policy = TrustPolicy {
         schema: 1,
@@ -33,6 +35,9 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
             roles: vec![Role::ContractTest],
             revoked: false,
         }],
+        required_session_id: None,
+        max_attestation_age_seconds: None,
+        max_clock_skew_seconds: None,
     };
     let store = SignedArtifactStore::new(policy.clone(), root.clone()).unwrap();
     let attestations = vec![attestation];
@@ -106,6 +111,74 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
     assert!(
         store
             .authenticate(Role::ContractTest, payload, &refs, &attestations)
+            .is_err()
+    );
+    std::fs::remove_dir(root).unwrap();
+}
+
+#[test]
+fn session_attestations_require_fresh_timestamp_and_external_challenge() {
+    let root = std::env::temp_dir().join(format!("kolvrt-freshness-{}", std::process::id()));
+    std::fs::create_dir_all(&root).unwrap();
+    let key = SigningKey::from_bytes(&[47; 32]);
+    let payload = br#"{"passed":true}"#;
+    let digest = subject_digest(payload);
+    let session = "a".repeat(64);
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let make = |issued_at, session_id: &str| {
+        let signature = key.sign(&session_signing_message(
+            Role::ContractTest,
+            &digest,
+            issued_at,
+            session_id,
+        ));
+        Attestation {
+            role: Role::ContractTest,
+            subject_digest: digest.clone(),
+            key_id: "fresh-test".into(),
+            signature: hex(&signature.to_bytes()),
+            issued_at_unix_seconds: Some(issued_at),
+            session_id: Some(session_id.into()),
+        }
+    };
+    let policy = TrustPolicy {
+        schema: 1,
+        keys: vec![TrustedKey {
+            key_id: "fresh-test".into(),
+            public_key: hex(&key.verifying_key().to_bytes()),
+            roles: vec![Role::ContractTest],
+            revoked: false,
+        }],
+        required_session_id: Some(session.clone()),
+        max_attestation_age_seconds: Some(60),
+        max_clock_skew_seconds: Some(5),
+    };
+    let store = SignedArtifactStore::new(policy, root.clone()).unwrap();
+    let valid = make(now, &session);
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[valid])
+            .is_ok()
+    );
+    let stale = make(now.saturating_sub(120), &session);
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[stale])
+            .is_err()
+    );
+    let wrong_session = make(now, &"b".repeat(64));
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[wrong_session])
+            .is_err()
+    );
+    let future = make(now.saturating_add(10), &session);
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[future])
             .is_err()
     );
     std::fs::remove_dir(root).unwrap();

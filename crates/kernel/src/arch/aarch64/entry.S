@@ -262,12 +262,15 @@ user_sync_vector:
  save_user
  mov x0,sp
  mov x1,xzr
+ mrs x2,cntpct_el0
  bl user_trap
  cbnz x0,user_kernel_return
  return_user
 user_irq_vector:
  save_user
+ mrs x19,cntpct_el0
  bl interrupt_entry
+ mov x2,x19
  mov x0,sp
  mov x1,#USER_TRAP_IRQ
  bl user_trap

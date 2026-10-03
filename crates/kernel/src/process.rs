@@ -33,6 +33,8 @@ struct Object {
     context: Context,
     slice_limit: Option<usize>,
     slices: usize,
+    el0_residency_ticks: u64,
+    native_window_service_ticks: u64,
     observations: crate::execution::Observations,
     blocked: bool,
 }
@@ -172,6 +174,8 @@ impl Registry {
                 context,
                 slice_limit: spec.slice_limit,
                 slices: 0,
+                el0_residency_ticks: 0,
+                native_window_service_ticks: 0,
                 observations: crate::execution::Observations::ZERO,
                 blocked: false,
             });
@@ -320,6 +324,18 @@ impl Registry {
             .space
             .data_address())
     }
+    /// Kernel-owned resident frame charge for an exact live process identity.
+    /// This remains valid after terminal completion and before explicit reclaim.
+    #[cfg(feature = "machine-events")]
+    pub fn resident_pages(&self, id: ProcessId) -> Result<usize, Error> {
+        context_contract()?;
+        self.table.state(id)?;
+        let object = self.objects[id.slot()].as_ref().ok_or(Error::Stale)?;
+        if object.id != id {
+            return Err(Error::Stale);
+        }
+        Ok(object.space.resident_pages())
+    }
     /// Internal synchronous completion driver, not a public wait ABI. No default
     /// workload deadline. The future service loop may schedule another dispatch.
     pub fn dispatch(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {
@@ -377,6 +393,8 @@ impl Registry {
                 context: object.context,
                 slice_budget: object.slice_limit,
                 slices: object.slices,
+                el0_residency_ticks: object.el0_residency_ticks,
+                native_window_service_ticks: object.native_window_service_ticks,
                 observations: object.observations,
                 blocked: object.blocked,
             });
@@ -397,6 +415,8 @@ impl Registry {
             );
             object.context = result.context;
             object.slices = result.slices;
+            object.el0_residency_ticks = result.el0_residency_ticks;
+            object.native_window_service_ticks = result.native_window_service_ticks;
             object.observations = result.observations;
             object.blocked = result.state == scheduler::task::CONTEXT_BLOCKED;
             if object.blocked && scheduler::event(object.id.slot()).consume() {

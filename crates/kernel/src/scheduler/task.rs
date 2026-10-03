@@ -7,8 +7,6 @@ pub(crate) const CONTEXT_FAULTED: usize = 3;
 pub(crate) const CONTEXT_TIMED_OUT: usize = 4;
 pub(crate) const CONTEXT_BLOCKED: usize = 6;
 pub(super) const CONTEXT_VACANT: usize = 5;
-#[cfg(feature = "machine-events")]
-use kernel_core::execution as abi;
 /// Small fully initialized admission descriptor; no diagnostic report storage is
 /// copied through caller stacks. The retained root belongs to the process owner.
 pub(crate) struct Admission<'a> {
@@ -18,6 +16,13 @@ pub(crate) struct Admission<'a> {
     pub context: Context,
     pub slice_budget: Option<usize>,
     pub slices: usize,
+    /// Total generic-counter ticks observed while executing at EL0, accumulated
+    /// at each synchronous exception/IRQ boundary.
+    #[allow(dead_code)]
+    pub el0_residency_ticks: u64,
+    /// EL1 execution time spent servicing the native routing backend.
+    #[allow(dead_code)]
+    pub native_window_service_ticks: u64,
     pub observations: crate::execution::Observations,
     pub blocked: bool,
 }
@@ -29,12 +34,13 @@ pub(crate) struct Task {
     definition: Definition,
     pub state: usize,
     pub slices: usize,
+    pub el0_residency_ticks: u64,
+    pub native_window_service_ticks: u64,
+    pub entered_at: u64,
     pub fault_class: u64,
     pub fault_far: usize,
     pub peer_faults_at_exit: usize,
     pub observations: crate::execution::Observations,
-    #[cfg(feature = "machine-events")]
-    pub report: [u64; abi::REPORT_WORDS],
     #[cfg(feature = "machine-events")]
     pub report_len: usize,
 }
@@ -64,12 +70,13 @@ impl Task {
         },
         state: CONTEXT_VACANT,
         slices: 0,
+        el0_residency_ticks: 0,
+        native_window_service_ticks: 0,
+        entered_at: 0,
         fault_class: 0,
         fault_far: 0,
         peer_faults_at_exit: 0,
         observations: crate::execution::Observations::ZERO,
-        #[cfg(feature = "machine-events")]
-        report: [0; abi::REPORT_WORDS],
         #[cfg(feature = "machine-events")]
         report_len: 0,
     };
@@ -128,6 +135,8 @@ impl Task {
             context: self.context,
             state: self.state,
             slices: self.slices,
+            el0_residency_ticks: self.el0_residency_ticks,
+            native_window_service_ticks: self.native_window_service_ticks,
             observations: self.observations,
             fault_class: self.fault_class,
             id: self.id(),
@@ -146,6 +155,8 @@ pub(crate) struct TaskResult {
     pub context: Context,
     pub state: usize,
     pub slices: usize,
+    pub el0_residency_ticks: u64,
+    pub native_window_service_ticks: u64,
     pub observations: crate::execution::Observations,
     pub fault_class: u64,
     pub id: usize,
@@ -162,6 +173,8 @@ impl TaskResult {
         context: Context::ZERO,
         state: CONTEXT_VACANT,
         slices: 0,
+        el0_residency_ticks: 0,
+        native_window_service_ticks: 0,
         observations: crate::execution::Observations::ZERO,
         fault_class: 0,
         id: 0,

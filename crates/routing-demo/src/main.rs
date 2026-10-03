@@ -13,7 +13,7 @@ include!(concat!(env!("OUT_DIR"), "/profile.rs"));
 // aligned guarded stack and CPU-owned task ID in x0. No shared writable globals/BSS.
 global_asm!(".section .text.entry,\"ax\"\n.global _start\n_start:\n bl user_main\n b .");
 #[cfg(feature = "evidence")]
-const REPORT_HEADER: u64 = 0x4b56_5232; // KVR2 reporting schema, outside the native kernel.
+const REPORT_HEADER: u64 = 0x4b56_5233; // KVR3 includes exclusive EL0/native service counters.
 #[cfg(feature = "dev")]
 const REPORT_BENCH: u64 = 0x4245_4e43;
 #[cfg(feature = "evidence")]
@@ -91,20 +91,24 @@ fn input<'a>(route: Route, inclusive: &'a [u8; 4], counted: &'a [u8; 8]) -> Inpu
 fn invoke(consumer: &mut Consumer) -> (Reduction, routing::Work) {
     let inclusive = [0, 0, 1, 0]; // LE16 inclusive [0,1].
     let counted = [0, 0, 0, 0, 0, 0, 0, 2]; // BE32 start=0,count=2.
+    let request = input(consumer.route(), &inclusive, &counted);
+    invoke_prepared(consumer, request)
+}
+fn invoke_prepared(consumer: &mut Consumer, request: Input<'_>) -> (Reduction, routing::Work) {
     consumer
-        .call_with(
-            &mut Native,
-            core::hint::black_box(input(consumer.route(), &inclusive, &counted)),
-        )
+        .call_with(&mut Native, core::hint::black_box(request))
         .unwrap()
 }
 #[cfg(feature = "dev")]
 fn benchmark(mut consumer: Consumer, oracle: Reduction) {
     let route = consumer.route();
+    let inclusive = [0, 0, 1, 0];
+    let counted = [0, 0, 0, 0, 0, 0, 0, 2];
     let mut warmup = [0u64; WARMUP];
     for value in &mut warmup {
+        let request = input(route, &inclusive, &counted);
         let start = svc::<{ abi::CLOCK }>(0, 0)[0];
-        assert_eq!(invoke(&mut consumer).0, oracle);
+        assert_eq!(invoke_prepared(&mut consumer, request).0, oracle);
         *value = svc::<{ abi::CLOCK }>(0, 0)[0] - start;
     }
     emit(REPORT_BENCH);
@@ -115,15 +119,29 @@ fn benchmark(mut consumer: Consumer, oracle: Reduction) {
     }
     let slices_before = svc::<{ abi::SLICES }>(0, 0)[0];
     let mut samples = [0u64; SAMPLES];
-    for value in &mut samples {
-        let start = svc::<{ abi::CLOCK }>(0, 0)[0];
-        let (result, _) = invoke(&mut consumer);
-        let end = svc::<{ abi::CLOCK }>(0, 0)[0];
+    let mut route_el0_cpu_samples = [0u64; SAMPLES];
+    let mut native_service_cpu_samples = [0u64; SAMPLES];
+    for (sample_index, value) in samples.iter_mut().enumerate() {
+        let request = input(route, &inclusive, &counted);
+        let start_accounting = svc::<{ abi::CLOCK }>(0, 0);
+        let (result, _) = invoke_prepared(&mut consumer, request);
+        let end_accounting = svc::<{ abi::CLOCK }>(0, 0);
+        let end = end_accounting[0];
         assert_eq!(result, oracle);
-        *value = end.checked_sub(start).unwrap();
+        *value = end.checked_sub(start_accounting[0]).unwrap();
+        route_el0_cpu_samples[sample_index] =
+            end_accounting[2].checked_sub(start_accounting[2]).unwrap();
+        native_service_cpu_samples[sample_index] =
+            end_accounting[3].checked_sub(start_accounting[3]).unwrap();
     }
     let slices_after = svc::<{ abi::SLICES }>(0, 0)[0];
     for value in samples {
+        emit(value);
+    }
+    for value in route_el0_cpu_samples {
+        emit(value);
+    }
+    for value in native_service_cpu_samples {
         emit(value);
     }
     emit(slices_after - slices_before);

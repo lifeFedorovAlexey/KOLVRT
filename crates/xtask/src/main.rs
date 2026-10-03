@@ -366,7 +366,8 @@ fn run() -> Result<()> {
                 fs::write(format!("target/kernel/{flag}.log"), &text)?;
                 if output.status.success() || !text.contains(marker) {
                     return Err(format!(
-                        "host failure propagation control did not fail correctly: {flag}"
+                        "host failure propagation control did not fail correctly: {flag}; status={}; expected={marker:?}; output:\n{text}",
+                        output.status
                     )
                     .into());
                 }

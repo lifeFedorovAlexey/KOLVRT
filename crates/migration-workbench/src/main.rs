@@ -16,9 +16,12 @@ use std::{
 };
 
 const PAIRS: usize = 100;
+const PILOT_PAIRS: usize = 100;
+const EXPECTED_MEAN_GAIN_NS: u64 = 25_000;
+const CONSUMER_ID: &str = "fixture-window-consumer";
 const CHILD_TIMEOUT: Duration = Duration::from_secs(10);
 const POLL: Duration = Duration::from_millis(10);
-const MAX_RECEIPT_BYTES: u64 = 8192;
+const MAX_RECEIPT_BYTES: u64 = 32768;
 
 fn store(root: &Path, bytes: &[u8]) -> Result<String, String> {
     let digest = subject_digest(bytes);
@@ -78,6 +81,10 @@ fn execute(path: &Path, mode: &str, log: &Path) -> Result<Receipt, String> {
         && (receipt.iterations != ITERATIONS
             || receipt.checksum != migration_workbench::expected_checksum()
             || receipt.elapsed_ns == 0
+            || receipt.request_latency_samples_ns.len()
+                != ((ITERATIONS - 1) / migration_workbench::REQUEST_LATENCY_SAMPLE_STRIDE + 1)
+                    as usize
+            || receipt.request_latency_samples_ns.contains(&0)
             || u128::from(receipt.native_admissions) + u128::from(receipt.compat_admissions)
                 != u128::from(ITERATIONS))
     {
@@ -93,7 +100,41 @@ fn attest<T: Serialize>(key: &SigningKey, role: Role, payload: &T) -> Attestatio
         subject_digest: digest,
         key_id: "ephemeral-local-experiment".into(),
         signature: hex(&signature.to_bytes()),
+        issued_at_unix_seconds: None,
+        session_id: None,
     }
+}
+fn measure_pair(
+    binaries: &[PathBuf],
+    root: &Path,
+    series: &str,
+    index: usize,
+) -> Result<(Receipt, Receipt, bool), String> {
+    let first = if index.is_multiple_of(2) { 0 } else { 1 };
+    let second = 1 - first;
+    let a = execute(
+        &binaries[first],
+        "measure",
+        &root.join(format!("{series}-{index:03}-{first}.json")),
+    )?;
+    let b = execute(
+        &binaries[second],
+        "measure",
+        &root.join(format!("{series}-{index:03}-{second}.json")),
+    )?;
+    let (baseline, candidate) = if first == 0 { (a, b) } else { (b, a) };
+    if baseline.mode != "compat"
+        || candidate.mode != "native"
+        || baseline.compat_admissions != ITERATIONS
+        || candidate.native_admissions != ITERATIONS
+        || baseline.copied_bytes != ITERATIONS * 4
+        || candidate.copied_bytes != 0
+        || baseline.peak_memory_bytes.is_none()
+        || candidate.peak_memory_bytes.is_none()
+    {
+        return Err("fixture route or resource accounting mismatch".into());
+    }
+    Ok((baseline, candidate, first == 0))
 }
 fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|b| format!("{b:02x}")).collect()
@@ -169,46 +210,91 @@ fn run() -> Result<PathBuf, String> {
             passed: true,
         });
     }
+    let improvement_margin_ns = 1000;
+    let mut pilot_raw = Vec::new();
+    let mut pilot_gains_ns = Vec::new();
+    for i in 0..PILOT_PAIRS {
+        let (baseline, candidate, _) = measure_pair(&binaries, &root, "power-pilot", i)?;
+        let gain = i128::from(baseline.elapsed_ns) - i128::from(candidate.elapsed_ns);
+        pilot_gains_ns.push(i64::try_from(gain).map_err(|_| "pilot gain overflow")?);
+        pilot_raw.push((baseline, candidate));
+        if (i + 1) % 10 == 0 {
+            eprintln!(
+                "[INFO] migration-workbench: retained {} independent power-pilot pairs",
+                i + 1
+            );
+        }
+    }
+    let power_pilot_artifact = store_json(&artifacts, &pilot_raw)?;
+    let pilot_mean_gain =
+        pilot_gains_ns.iter().map(|gain| *gain as f64).sum::<f64>() / pilot_gains_ns.len() as f64;
+    let pilot_variance = pilot_gains_ns
+        .iter()
+        .map(|gain| (*gain as f64 - pilot_mean_gain).powi(2))
+        .sum::<f64>()
+        / (pilot_gains_ns.len() - 1) as f64;
+    let power_pilot = (pilot_variance.is_finite() && pilot_variance > 0.0).then(|| {
+        migration_advisor::advisor::PowerPilot {
+            artifact: power_pilot_artifact,
+            context: context.clone(),
+            paired_gains_ns: pilot_gains_ns,
+        }
+    });
+    let prospective_power =
+        power_pilot.as_ref().map(
+            |pilot| migration_advisor::statistics::ProspectivePowerPlan {
+                pilot_digest: subject_digest(&serde_json::to_vec(pilot).unwrap()),
+                expected_mean_gain_ns: EXPECTED_MEAN_GAIN_NS,
+                target_power_basis_points: 9000,
+                planned_effective_blocks: PAIRS,
+            },
+        );
     let statistics = StatisticalPolicy {
-        min_pairs: PAIRS,
+        min_resampling_blocks: PAIRS,
+        resampling_block_length: 1,
         bootstrap_resamples: 2000,
         confidence_basis_points: 9500,
         seed: 7,
-        improvement_margin_ns: 1000,
+        improvement_margin_ns,
         p95_regression_budget_ns: 100000,
         p99_regression_budget_ns: None,
+        p95_memory_regression_budget_bytes: Some(0),
+        p95_copied_bytes_regression_budget: Some(0),
+        p95_energy_regression_budget_uj: None,
+        consumer_resource_budgets: vec![migration_advisor::statistics::ConsumerResourceBudget {
+            consumer_id: CONSUMER_ID.into(),
+            p95_memory_regression_budget_bytes: Some(0),
+            p95_copied_bytes_regression_budget: Some(0),
+            p95_energy_regression_budget_uj: None,
+        }],
+        prospective_power,
     };
     let observed = Instant::now();
     let mut pairs = Vec::new();
     let mut raw = Vec::new();
     for i in 0..PAIRS {
-        let first = if i % 2 == 0 { 0 } else { 1 };
-        let second = 1 - first;
-        let a = execute(
-            &binaries[first],
-            "measure",
-            &root.join(format!("pair-{i:03}-{first}.json")),
-        )?;
-        let b = execute(
-            &binaries[second],
-            "measure",
-            &root.join(format!("pair-{i:03}-{second}.json")),
-        )?;
-        let (baseline, candidate) = if first == 0 { (a, b) } else { (b, a) };
-        if baseline.mode != "compat"
-            || candidate.mode != "native"
-            || baseline.compat_admissions != ITERATIONS
-            || candidate.native_admissions != ITERATIONS
-        {
-            return Err("fixture route mismatch".into());
-        }
+        let (baseline, candidate, baseline_first) =
+            measure_pair(&binaries, &root, "measurement", i)?;
         pairs.push(Pair {
+            consumer_id: Some(CONSUMER_ID.into()),
             baseline_ns: baseline.elapsed_ns,
             candidate_ns: candidate.elapsed_ns,
+            request_latency: Some(migration_advisor::advisor::RequestLatencySamples {
+                sample_stride: migration_workbench::REQUEST_LATENCY_SAMPLE_STRIDE,
+                sample_width: migration_workbench::REQUEST_LATENCY_SAMPLE_WIDTH,
+                baseline_ns: baseline.request_latency_samples_ns.clone(),
+                candidate_ns: candidate.request_latency_samples_ns.clone(),
+            }),
+            baseline_memory_bytes: baseline.peak_memory_bytes,
+            candidate_memory_bytes: candidate.peak_memory_bytes,
+            baseline_copied_bytes: Some(baseline.copied_bytes),
+            candidate_copied_bytes: Some(candidate.copied_bytes),
+            baseline_energy_uj: None,
+            candidate_energy_uj: None,
             baseline_compat_admissions: baseline.compat_admissions,
             candidate_compat_admissions: candidate.compat_admissions,
             useful_units: ITERATIONS,
-            baseline_first: first == 0,
+            baseline_first,
             oracle_passed: true,
         });
         raw.push((baseline, candidate));
@@ -249,6 +335,7 @@ fn run() -> Result<PathBuf, String> {
             .into(),
             version: 1,
             identity: id.clone(),
+            variant: None,
             provides: vec![Capability {
                 capability_id: "workload.window.reduce".into(),
                 semantic_version: version,
@@ -307,6 +394,9 @@ fn run() -> Result<PathBuf, String> {
     for t in &contracts {
         attestations.push(attest(&key, Role::ContractTest, t));
     }
+    if let Some(pilot) = &power_pilot {
+        attestations.push(attest(&key, Role::Benchmark, pilot));
+    }
     attestations.push(attest(&key, Role::Runtime, &runtime));
     attestations.push(attest(&key, Role::Benchmark, &benchmark));
     attestations.push(attest(&key, Role::Proposal, &migration));
@@ -327,6 +417,7 @@ fn run() -> Result<PathBuf, String> {
         tests: contracts,
         benchmarks: vec![benchmark],
         statistics,
+        power_pilot,
         attestations,
         migration_plans: vec![migration],
     };
@@ -344,6 +435,9 @@ fn run() -> Result<PathBuf, String> {
             ],
             revoked: false,
         }],
+        required_session_id: None,
+        max_attestation_age_seconds: None,
+        max_clock_skew_seconds: None,
     };
     fs::write(
         root.join("request.json"),
@@ -365,7 +459,7 @@ fn run() -> Result<PathBuf, String> {
     .map_err(|e| e.to_string())?;
     let report = advise_with_verifier(
         &request,
-        &migration_advisor::solver::ExhaustiveSolver { max_states: 1024 },
+        &migration_advisor::solver::ClosureSolver { max_states: 1024 },
         &verifier,
     )?;
     fs::write(

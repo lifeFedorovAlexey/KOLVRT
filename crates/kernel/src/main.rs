@@ -90,8 +90,6 @@ pub extern "C" fn kernel_main() -> ! {
         "SMP",
         format_args!("{} CPUs participating", platform::config::ACTIVE_CPUS),
     );
-    #[cfg(feature = "kernel-tests")]
-    tests::run(&d, &mut physical, &mut processes);
     #[cfg(feature = "ownership-test")]
     {
         let _foreign_owner = memory::Physical::new(&d);
@@ -107,6 +105,8 @@ pub extern "C" fn kernel_main() -> ! {
         physical.release(frame);
         panic!("retained mapping release was accepted");
     }
+    #[cfg(feature = "kernel-tests")]
+    tests::run(&d, &mut physical, &mut processes);
     #[cfg(not(feature = "kernel-tests"))]
     {
         let users = boot_workload::exercise(&mut physical, &mut processes);
@@ -251,7 +251,10 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     }
     cpu::mask();
     cpu::timer_stop();
-    event!("{{\"event\":\"panic\",\"status\":\"fail\"}}");
+    event!(
+        "{{\"event\":\"panic\",\"status\":\"fail\",\"line\":{}}}",
+        info.location().map_or(0, |location| location.line())
+    );
     diagnostics::status("FAIL", "panic", format_args!("kernel halted"));
     #[cfg(feature = "diagnostics")]
     if let Some(location) = info.location() {

@@ -70,8 +70,8 @@
         "translation_sha256": "0099da1c50d415d83da5a08d91692baa18d33d1cf8bd2f2e4f6ef85cabca8893"
       },
       "docs/architecture-decisions/0015-el0-versioned-routing.md": {
-        "source_sha256": "efd4f9dfa680399b6a6f48ea6077d3bbc5a5a047503a9bfd5e6da29b56c4adaf",
-        "translation_sha256": "73e189d9d8a6f543106bd1367790f80e4bfce7d2f927a814848ff42865ee7839"
+        "source_sha256": "6e33adea3416aa4f4baa76fd13e70c475f7c2204494e29bfdb0e98dd6a91c954",
+        "translation_sha256": "3f8c92a5ab40cb4bd06361d2136a20062d7e61aaf04e61f2b8c8baaad7abd52d"
       },
       "docs/architecture-decisions/0016-scheduler-ownership.md": {
         "source_sha256": "3c4d27dc0b833e5db1d7df98fce60cd65b4b1155c64bd389cb24b3e655decf87",
@@ -142,12 +142,12 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "a7da1abe33a81574c4eda0a211de83513b36db568044a8e8c681979985540949",
-        "translation_sha256": "3c821f45ceef54e06444bccb29c726c0d6c8f3baacea3489ae2e23fe06481678"
+        "source_sha256": "b707e7a8154e9bc7aa47c389c7d7383baef6efb54406b969ce5d5f2d9d685b3a",
+        "translation_sha256": "7c7c7c4c91dd6c30033e13b80916ab0790f61fb180774b93c57e3ba5234efc73"
       },
       "docs/architecture/migration-workbench.md": {
-        "source_sha256": "bd1a18820009cf12f852a2773de96139ac7cd1333d0f10829d69f8e7b762202d",
-        "translation_sha256": "03283b2d99d653aba0bcbc287c1312c382f5953ed109018946c647bd88b6cc99"
+        "source_sha256": "d140b7c83a0daab390911f33844126944935f856a0636c5c22a36d6aaac319c9",
+        "translation_sha256": "cb21b403bc26d9309b76de91f43d216b79c49e0f409e720c3d661d011c2a655f"
       },
       "docs/architecture/native-abi.md": {
         "source_sha256": "50b8550363fdca075f748745be28063c1ebf61edf7cc9a6bb2141b10bdb87e75",
@@ -218,8 +218,8 @@
         "translation_sha256": "e3cc8b60c70ff58ae4d257bc510622ddc2d9d5598daaa7eec8e86d71fbd404d4"
       },
       "docs/kernel/routing.md": {
-        "source_sha256": "2847615cd7e4dcf9200481102d2b28f1033bea8fe1934ac73886673cf189b017",
-        "translation_sha256": "612f5707cd0e3576b3991ebfea6fa4397c360abdfedae6e92bfca6a9d9c41fc0"
+        "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
+        "translation_sha256": "855db72b1be05ee90a1946ad145f506c61016591c7e32a6abbe85123a7400acd"
       },
       "docs/kernel/scheduler.md": {
         "source_sha256": "cc34e0bb716d953263fd7dc59d0c9cfab99281b572334aa8ab2fa38cfee21d5a",

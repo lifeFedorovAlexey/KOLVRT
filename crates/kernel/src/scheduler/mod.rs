@@ -31,14 +31,14 @@ pub(crate) const REPORT_CHUNK_WORDS: usize = 64;
 impl Completed {
     pub fn report_chunk(&self, id: usize, offset: usize) -> ([u64; REPORT_CHUNK_WORDS], usize) {
         assert!(id < config::TOTAL_TASKS);
-        LOCALS[id / TASKS].inspect(self.generation, |state| {
+        LOCALS[id / TASKS].inspect_reports(self.generation, |state, reports| {
             let task = &state.tasks[id % TASKS];
             assert_eq!(task.id(), id);
             assert_eq!(task.generation(), self.generation, "stale report task");
             let mut words = [0; REPORT_CHUNK_WORDS];
             assert!(offset <= task.report_len);
             let length = (task.report_len - offset).min(REPORT_CHUNK_WORDS);
-            words[..length].copy_from_slice(&task.report[offset..offset + length]);
+            words[..length].copy_from_slice(&reports[id % TASKS][offset..offset + length]);
             (words, length)
         })
     }
@@ -130,11 +130,11 @@ fn dispatch_inner(
                     assert_eq!(admitted.identity.slot(), id);
                     assert_eq!(admitted.space.slot(), id);
                     #[cfg(feature = "machine-events")]
-                    let previous_report = if task.process_generation()
+                    let previous_report_len = if task.process_generation()
                         == admitted.identity.generation()
                         && task.id() == id
                     {
-                        Some((task.report, task.report_len))
+                        Some(task.report_len)
                     } else {
                         None
                     };
@@ -154,8 +154,7 @@ fn dispatch_inner(
                         task.state = task::CONTEXT_BLOCKED;
                     }
                     #[cfg(feature = "machine-events")]
-                    if let Some((report, length)) = previous_report {
-                        task.report = report;
+                    if let Some(length) = previous_report_len {
                         task.report_len = length;
                     }
                 } else {
@@ -364,6 +363,9 @@ fn run_local() {
             activate(first.1);
         }
         cpu::timer(time::deadline_after(QUANTUM));
+        local.with(generation, |state| {
+            state.tasks[first.2 % TASKS].entered_at = cpu::ticks();
+        });
         // SAFETY: INV-USER-CONTEXT: checked frame ABI and permanent native stack.
         unsafe {
             cpu::context::enter(&first.0, local.resume_sp.as_ptr());
@@ -384,114 +386,155 @@ fn run_local() {
     local.complete(generation, quiescent);
 }
 
-pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
+pub(crate) fn trap(frame: &mut Context, kind: Trap, entry_ticks: u64) -> usize {
     let local = &LOCALS[percpu::id()];
     let generation = local.generation();
-    local.with(generation, |state| {
-        assert!(state.current < TASKS);
-        let current = state.current;
-        let peer_faults = state
-            .tasks
-            .iter()
-            .filter(|t| t.state == CONTEXT_FAULTED)
-            .count();
-        let task = &mut state.tasks[current];
-        validate_task(task, current, generation);
-        assert_eq!(task.state, CONTEXT_RUNNING);
-        assert_eq!(frame.pstate & PSTATE_MODE_MASK, USER_EL0T);
-        task.context = *frame;
-        if matches!(kind, Trap::Irq) {
-            if !local.preempt.swap(false, Ordering::AcqRel) {
+    #[cfg(feature = "machine-events")]
+    {
+        local.with_reports(generation, |state, reports| {
+            trap_owned(
+                state,
+                frame,
+                kind,
+                entry_ticks,
+                local,
+                generation,
+                Some(reports),
+            )
+        })
+    }
+    #[cfg(not(feature = "machine-events"))]
+    {
+        local.with(generation, |state| {
+            trap_owned(state, frame, kind, entry_ticks, local, generation, None)
+        })
+    }
+}
+
+fn trap_owned(
+    state: &mut State,
+    frame: &mut Context,
+    kind: Trap,
+    entry_ticks: u64,
+    local: &Local,
+    generation: u64,
+    reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
+) -> usize {
+    assert!(state.current < TASKS);
+    let current = state.current;
+    let peer_faults = state
+        .tasks
+        .iter()
+        .filter(|t| t.state == CONTEXT_FAULTED)
+        .count();
+    let task = &mut state.tasks[current];
+    validate_task(task, current, generation);
+    assert_eq!(task.state, CONTEXT_RUNNING);
+    assert_eq!(frame.pstate & PSTATE_MODE_MASK, USER_EL0T);
+    task.el0_residency_ticks = task
+        .el0_residency_ticks
+        .checked_add(
+            entry_ticks
+                .checked_sub(task.entered_at)
+                .expect("architectural counter moved backwards"),
+        )
+        .expect("per-process EL0 residency counter exhausted");
+    task.context = *frame;
+    if matches!(kind, Trap::Irq) {
+        if !local.preempt.swap(false, Ordering::AcqRel) {
+            task.entered_at = cpu::ticks();
+            return 0;
+        }
+        task.slices += 1;
+        task.observations.service_timer(task.slices);
+        task.state = if task
+            .slice_budget()
+            .is_some_and(|limit| task.slices >= limit)
+        {
+            CONTEXT_TIMED_OUT
+        } else {
+            CONTEXT_READY
+        };
+        #[cfg(feature = "user-context-negative")]
+        {
+            cpu::context::corrupt_saved(&mut task.context);
+        }
+    } else {
+        let Trap::Sync {
+            class,
+            operation,
+            far,
+        } = kind
+        else {
+            unreachable!()
+        };
+        if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire) {
+            frame.gpr[0] = abi::OK;
+            task.context = *frame;
+            if !event(task.id()).register() {
+                task.entered_at = cpu::ticks();
                 return 0;
             }
-            task.slices += 1;
-            task.observations.service_timer(task.slices);
-            task.state = if task
-                .slice_budget()
-                .is_some_and(|limit| task.slices >= limit)
-            {
-                CONTEXT_TIMED_OUT
-            } else {
-                CONTEXT_READY
-            };
-            #[cfg(feature = "user-context-negative")]
-            {
-                cpu::context::corrupt_saved(&mut task.context);
+            task.state = task::CONTEXT_BLOCKED;
+            // Registration precedes the state publication; a signal racing
+            // this recheck remains latched for the coordinator after return.
+            if event(task.id()).consume() {
+                task.state = CONTEXT_READY;
             }
+        } else if class == ESR_SVC64
+            && native_call_measured(task, &mut state.handles, current, frame, operation, reports)
+        {
+            task.context = *frame;
+            // Bounded synchronous native request: no locks, allocation or retained user
+            // pointers; current task identity came from the owned runqueue, not registers.
+            task.entered_at = cpu::ticks();
+            return 0;
+        } else if class == ESR_SVC64 && operation == abi::FINISH {
+            task.state = CONTEXT_EXITED;
+            task.peer_faults_at_exit = peer_faults;
         } else {
-            let Trap::Sync {
-                class,
-                operation,
-                far,
-            } = kind
-            else {
-                unreachable!()
-            };
-            if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire) {
-                frame.gpr[0] = abi::OK;
-                task.context = *frame;
-                if !event(task.id()).register() {
-                    return 0;
-                }
-                task.state = task::CONTEXT_BLOCKED;
-                // Registration precedes the state publication; a signal racing
-                // this recheck remains latched for the coordinator after return.
-                if event(task.id()).consume() {
-                    task.state = CONTEXT_READY;
-                }
-            } else if class == ESR_SVC64
-                && native_call(task, &mut state.handles, state.current, frame, operation)
-            {
-                task.context = *frame;
-                // Bounded synchronous native request: no locks, allocation or retained user
-                // pointers; current task identity came from the owned runqueue, not registers.
-                return 0;
-            } else if class == ESR_SVC64 && operation == abi::FINISH {
-                task.state = CONTEXT_EXITED;
-                task.peer_faults_at_exit = peer_faults;
-            } else {
-                task.state = CONTEXT_FAULTED;
-                task.fault_class = class;
-                task.fault_far = far;
+            task.state = CONTEXT_FAULTED;
+            task.fault_class = class;
+            task.fault_far = far;
+        }
+    }
+    if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
+        for task in &mut state.tasks {
+            if task.state == CONTEXT_READY || task.state == CONTEXT_RUNNING {
+                task.state = CONTEXT_TIMED_OUT;
             }
         }
-        if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
-            for task in &mut state.tasks {
-                if task.state == CONTEXT_READY || task.state == CONTEXT_RUNNING {
-                    task.state = CONTEXT_TIMED_OUT;
-                }
-            }
+    }
+    release_process(state.tasks[current].id());
+    if STEP.load(Ordering::Acquire) {
+        CURSOR[percpu::id()].store(current, Ordering::Release);
+        cpu::timer_stop();
+        // SAFETY: INV-USER-RETIRE: saved READY contexts remain owned by the
+        // Registry; native root/TLBI precede returning a nonterminal step.
+        unsafe {
+            cpu::activate_root(NATIVE_ROOT.load(Ordering::Acquire));
         }
-        release_process(state.tasks[current].id());
-        if STEP.load(Ordering::Acquire) {
-            CURSOR[percpu::id()].store(current, Ordering::Release);
-            cpu::timer_stop();
-            // SAFETY: INV-USER-RETIRE: saved READY contexts remain owned by the
-            // Registry; native root/TLBI precede returning a nonterminal step.
-            unsafe {
-                cpu::activate_root(NATIVE_ROOT.load(Ordering::Acquire));
-            }
-            return local.resume_sp.load(Ordering::Acquire);
+        return local.resume_sp.load(Ordering::Acquire);
+    }
+    if let Some(next) = choose(state, generation) {
+        acquire_process(state.tasks[next].id());
+        *frame = state.tasks[next].context;
+        // SAFETY: INV-USER-TTBR: next pinned live root; completed flush precedes ERET.
+        unsafe {
+            activate(state.tasks[next].root());
         }
-        if let Some(next) = choose(state, generation) {
-            acquire_process(state.tasks[next].id());
-            *frame = state.tasks[next].context;
-            // SAFETY: INV-USER-TTBR: next pinned live root; completed flush precedes ERET.
-            unsafe {
-                activate(state.tasks[next].root());
-            }
-            cpu::timer(time::deadline_after(QUANTUM));
-            0
-        } else {
-            cpu::timer_stop();
-            // SAFETY: INV-USER-RETIRE: no ready/running process remains on this CPU;
-            // native root and local TLBI precede release completion and frame reclamation.
-            unsafe {
-                cpu::activate_root(NATIVE_ROOT.load(Ordering::Acquire));
-            }
-            local.resume_sp.load(Ordering::Acquire)
+        cpu::timer(time::deadline_after(QUANTUM));
+        state.tasks[next].entered_at = cpu::ticks();
+        0
+    } else {
+        cpu::timer_stop();
+        // SAFETY: INV-USER-RETIRE: no ready/running process remains on this CPU;
+        // native root and local TLBI precede release completion and frame reclamation.
+        unsafe {
+            cpu::activate_root(NATIVE_ROOT.load(Ordering::Acquire));
         }
-    })
+        local.resume_sp.load(Ordering::Acquire)
+    }
 }
 fn native_call(
     task: &mut Task,
@@ -499,6 +542,7 @@ fn native_call(
     current: usize,
     frame: &mut Context,
     operation: u16,
+    #[allow(unused_variables)] reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
 ) -> bool {
     if crate::handles::call(task, handles, current, frame, operation) {
         return true;
@@ -515,13 +559,16 @@ fn native_call(
         abi::CLOCK => {
             frame.gpr[0] = cpu::ticks();
             frame.gpr[1] = cpu::frequency();
+            frame.gpr[2] = task.el0_residency_ticks;
+            frame.gpr[3] = task.native_window_service_ticks;
         }
         #[cfg(feature = "machine-events")]
         abi::REPORT => {
-            if task.report_len == task.report.len() {
+            if task.report_len == abi::REPORT_WORDS {
                 frame.gpr[0] = abi::FULL;
             } else {
-                task.report[task.report_len] = frame.gpr[0];
+                reports.expect("machine-events report storage")[task.id() % TASKS]
+                    [task.report_len] = frame.gpr[0];
                 task.report_len += 1;
                 frame.gpr[0] = abi::OK;
             }
@@ -529,6 +576,31 @@ fn native_call(
         _ => return false,
     }
     true
+}
+fn native_call_measured(
+    task: &mut Task,
+    handles: &mut [crate::handles::Namespace; TASKS],
+    current: usize,
+    frame: &mut Context,
+    operation: u16,
+    reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
+) -> bool {
+    if operation != abi::READ_WINDOW {
+        return native_call(task, handles, current, frame, operation, reports);
+    }
+    let start = cpu::ticks();
+    let handled = native_call(task, handles, current, frame, operation, reports);
+    if handled {
+        task.native_window_service_ticks = task
+            .native_window_service_ticks
+            .checked_add(
+                cpu::ticks()
+                    .checked_sub(start)
+                    .expect("architectural counter moved backwards"),
+            )
+            .expect("native window service counter exhausted");
+    }
+    handled
 }
 /// Only an executing fixed-affinity task in an exclusive masked storage section
 /// can access its retained immutable root. Old copies, terminal/unlinked tasks,

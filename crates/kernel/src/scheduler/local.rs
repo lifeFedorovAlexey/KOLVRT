@@ -1,10 +1,14 @@
 //! Only module allowed to dereference scheduler UnsafeCell storage.
 use super::State;
+#[cfg(feature = "machine-events")]
+use super::TASKS;
 use crate::{cpu, percpu};
 use core::{
     cell::UnsafeCell,
     sync::atomic::{AtomicBool, AtomicUsize, Ordering},
 };
+#[cfg(feature = "machine-events")]
+use kernel_core::execution as abi;
 use kernel_core::scheduling::ownership::{Error, Ownership, Phase};
 fn reject(error: Error) -> ! {
     #[cfg(feature = "scheduler-contract-negative")]
@@ -17,6 +21,8 @@ fn reject(error: Error) -> ! {
 
 pub(super) struct Local {
     state: UnsafeCell<State>,
+    #[cfg(feature = "machine-events")]
+    reports: UnsafeCell<[[u64; abi::REPORT_WORDS]; TASKS]>,
     ownership: Ownership,
     pub preempt: AtomicBool,
     pub resume_sp: AtomicUsize,
@@ -55,6 +61,8 @@ impl Local {
     pub const fn new(owner: usize) -> Self {
         Self {
             state: UnsafeCell::new(State::ZERO),
+            #[cfg(feature = "machine-events")]
+            reports: UnsafeCell::new([[0; abi::REPORT_WORDS]; TASKS]),
             ownership: Ownership::new(owner, percpu::BOOT_CPU),
             preempt: AtomicBool::new(false),
             resume_sp: AtomicUsize::new(0),
@@ -108,8 +116,40 @@ impl Local {
         // exclusive permit rejects nested/concurrent entry; closure cannot leak a borrow.
         unsafe { operation(&mut *self.state.get()) }
     }
+    #[cfg(feature = "machine-events")]
+    pub fn with_reports<R>(
+        &self,
+        generation: u64,
+        operation: impl for<'a> FnOnce(&'a mut State, &'a mut [[u64; abi::REPORT_WORDS]; TASKS]) -> R,
+    ) -> R {
+        crate::sync::assert_scheduler_unlocked();
+        let _access = self
+            .ownership
+            .mutate(percpu::id(), cpu::irq_masked(), generation)
+            .unwrap_or_else(|error| reject(error));
+        let _scope = Scope::enter();
+        // SAFETY: same exclusive per-CPU scheduler permit as state access protects both
+        // the task queue and its index-aligned, owner-private report storage.
+        unsafe { operation(&mut *self.state.get(), &mut *self.reports.get()) }
+    }
     pub fn inspect<R>(&self, generation: u64, operation: impl for<'a> FnOnce(&'a State) -> R) -> R {
         self.quiescent(generation, |state| operation(state))
+    }
+    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+    pub fn inspect_reports<R>(
+        &self,
+        generation: u64,
+        operation: impl for<'a> FnOnce(&'a State, &'a [[u64; abi::REPORT_WORDS]; TASKS]) -> R,
+    ) -> R {
+        crate::sync::assert_scheduler_unlocked();
+        let _access = self
+            .ownership
+            .inspect(percpu::id(), cpu::irq_masked(), generation)
+            .unwrap_or_else(|error| reject(error));
+        let _scope = Scope::enter();
+        // SAFETY: acquired quiescent permit excludes execution and mutation for both
+        // the task queue and report storage until this callback returns.
+        unsafe { operation(&*self.state.get(), &*self.reports.get()) }
     }
     /// Coordinator-only editing after acquired completion, with the same exclusive
     /// permit as inspection. Used to unlink roots before process completion publication.

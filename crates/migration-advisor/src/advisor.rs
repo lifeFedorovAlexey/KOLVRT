@@ -1,11 +1,11 @@
 use crate::solver::{Plan, Problem, Solver, verify};
 use crate::{
-    Package, Requirements, SCHEMA, digest_valid, plan_digest, validate_catalog,
+    COMPATIBLE_SCHEMA, Package, Requirements, SCHEMA, digest_valid, plan_digest, validate_catalog,
     validate_requirements,
 };
 use crate::{
-    provenance::{Attestation, EvidenceVerifier, NoTrust, Role},
-    statistics::{StatisticalPolicy, Statistics, analyze},
+    provenance::{Attestation, EvidenceVerifier, NoTrust, Role, subject_digest},
+    statistics::{StatisticalPolicy, Statistics, analyze_family_with_power},
 };
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
@@ -71,13 +71,45 @@ pub struct ContractTest {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Pair {
+    /// Stable measured-consumer identity; required when consumer-specific budgets are configured.
+    #[serde(default)]
+    pub consumer_id: Option<String>,
     pub baseline_ns: u64,
     pub candidate_ns: u64,
+    /// Systematically sampled request latencies, kept separate from whole-run pairs.
+    #[serde(default)]
+    pub request_latency: Option<RequestLatencySamples>,
+    /// Per-run peak resident bytes; unknown is not zero.
+    #[serde(default)]
+    pub baseline_memory_bytes: Option<u64>,
+    #[serde(default)]
+    pub candidate_memory_bytes: Option<u64>,
+    /// Per-run bytes copied by the measured consumer; unknown is not zero.
+    #[serde(default)]
+    pub baseline_copied_bytes: Option<u64>,
+    #[serde(default)]
+    pub candidate_copied_bytes: Option<u64>,
+    /// Per-run energy in microjoules; unknown is not zero.
+    #[serde(default)]
+    pub baseline_energy_uj: Option<u64>,
+    #[serde(default)]
+    pub candidate_energy_uj: Option<u64>,
     pub baseline_compat_admissions: u64,
     pub candidate_compat_admissions: u64,
     pub useful_units: u64,
     pub baseline_first: bool,
     pub oracle_passed: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct RequestLatencySamples {
+    /// Distance between sampled groups in useful requests, predeclared by the signed protocol.
+    pub sample_stride: u64,
+    /// Number of consecutive calls timed per group; values store mean nanoseconds per call.
+    pub sample_width: u64,
+    pub baseline_ns: Vec<u64>,
+    pub candidate_ns: Vec<u64>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -96,6 +128,15 @@ pub struct Benchmark {
     pub pairs: Vec<Pair>,
 }
 
+/// Authenticated, ordered paired gains from an independent pilot run.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct PowerPilot {
+    pub artifact: String,
+    pub context: Context,
+    pub paired_gains_ns: Vec<i64>,
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Request {
@@ -111,6 +152,9 @@ pub struct Request {
     pub tests: Vec<ContractTest>,
     pub benchmarks: Vec<Benchmark>,
     pub statistics: StatisticalPolicy,
+    /// Pilot data is separate from the measured candidate pairs and must be authenticated.
+    #[serde(default)]
+    pub power_pilot: Option<PowerPilot>,
     pub attestations: Vec<Attestation>,
     pub migration_plans: Vec<MigrationPlan>,
 }
@@ -216,10 +260,28 @@ fn context_valid(c: &Context) -> bool {
 }
 
 fn validate(request: &Request) -> Result<(), String> {
-    if request.schema != SCHEMA || !context_valid(&request.context) {
+    if !matches!(request.schema, COMPATIBLE_SCHEMA | SCHEMA) || !context_valid(&request.context) {
         return Err("unsupported schema or invalid context".into());
     }
     request.statistics.validate()?;
+    match (
+        request.statistics.prospective_power.as_ref(),
+        request.power_pilot.as_ref(),
+    ) {
+        (Some(plan), Some(pilot))
+            if digest_valid(&pilot.artifact)
+                && pilot.context == request.context
+                && pilot.paired_gains_ns.len() <= crate::statistics::MAX_PAIRS
+                && plan.pilot_digest
+                    == subject_digest(&serde_json::to_vec(pilot).expect("typed power pilot")) => {}
+        (Some(_), _) => {
+            return Err("prospective power plan needs matching pilot evidence".into());
+        }
+        (None, Some(_)) => {
+            return Err("unreferenced power pilot evidence".into());
+        }
+        (None, None) => {}
+    }
     validate_catalog(&request.catalog)?;
     validate_requirements(&request.requirements)?;
     validate_requirements(&request.retained)?;
@@ -265,6 +327,10 @@ fn validate(request: &Request) -> Result<(), String> {
     for b in &request.benchmarks {
         if !digest_valid(&b.artifact)
             || !artifacts.insert(&b.artifact)
+            || request
+                .power_pilot
+                .as_ref()
+                .is_some_and(|pilot| pilot.artifact == b.artifact)
             || !digest_valid(&b.baseline_plan)
             || !digest_valid(&b.candidate_plan)
             || !context_valid(&b.context)
@@ -381,10 +447,14 @@ fn authenticate<T: Serialize>(
     payload: &T,
     references: Vec<String>,
     gaps: &mut Vec<String>,
-) {
+) -> bool {
     let bytes = serde_json::to_vec(payload).expect("typed evidence serialization");
-    if let Err(error) = verifier.authenticate(role, &bytes, &references, &request.attestations) {
-        gaps.push(format!("{role:?}: {error}"));
+    match verifier.authenticate(role, &bytes, &references, &request.attestations) {
+        Ok(()) => true,
+        Err(error) => {
+            gaps.push(format!("{role:?}: {error}"));
+            false
+        }
     }
 }
 fn context_references(context: &Context) -> Vec<String> {
@@ -419,6 +489,19 @@ pub fn advise_with_verifier(
     let baseline = request.installed.clone();
     verify(&problem(&request.current), &baseline)?;
     let baseline_digest = plan_digest(&baseline);
+    let comparison_family_size = request
+        .catalog
+        .iter()
+        .filter(|package| {
+            package.identity != current.identity
+                && !(package.name == current.name
+                    && (package.version < current.version
+                        || (package.version == current.version
+                            && package.variant == current.variant)))
+                && crate::covers(&[package], &request.requirements)
+        })
+        .count()
+        .max(1);
     let debt = request.runtime.as_ref().map(|e| {
         let native: u128 = e
             .routes
@@ -466,7 +549,9 @@ pub fn advise_with_verifier(
     let mut candidates = Vec::new();
     for p in &request.catalog {
         if p.identity == current.identity
-            || (p.name == current.name && p.version <= current.version)
+            || (p.name == current.name
+                && (p.version < current.version
+                    || (p.version == current.version && p.variant == current.variant)))
             || !crate::covers(&[p], &request.requirements)
         {
             continue;
@@ -502,6 +587,20 @@ pub fn advise_with_verifier(
                     contract_gate(request, &plan, &p.identity);
                 candidate.assurance.contracts_passed = baseline_tested && candidate_tested;
                 let mut provenance_gaps = Vec::new();
+                let power_pilot_verified = if let Some(pilot) = &request.power_pilot {
+                    let mut refs = context_references(&pilot.context);
+                    refs.push(pilot.artifact.clone());
+                    authenticate(
+                        request,
+                        verifier,
+                        Role::Benchmark,
+                        pilot,
+                        refs,
+                        &mut provenance_gaps,
+                    )
+                } else {
+                    false
+                };
                 let ids: BTreeSet<_> = baseline.packages.iter().chain(&plan.packages).collect();
                 for id in ids {
                     let package = request.catalog.iter().find(|p| &p.identity == id).unwrap();
@@ -637,13 +736,29 @@ pub fn advise_with_verifier(
                             .map(|p| u128::from(p.candidate_compat_admissions))
                             .sum();
                         debt_reduced = candidate_compat < baseline_compat;
-                        match analyze(&b.pairs, &request.statistics) {
+                        let pilot_gains = power_pilot_verified.then(|| {
+                            request
+                                .power_pilot
+                                .as_ref()
+                                .unwrap()
+                                .paired_gains_ns
+                                .as_slice()
+                        });
+                        match analyze_family_with_power(
+                            &b.pairs,
+                            &request.statistics,
+                            comparison_family_size,
+                            pilot_gains,
+                        ) {
                             Ok(result) => {
                                 candidate.baseline_median_ns = Some(result.baseline.median_ns);
                                 candidate.candidate_median_ns = Some(result.candidate.median_ns);
                                 candidate.assurance.statistical_gain_supported =
                                     result.decision == "supported_latency_gain";
-                                benchmark_failed |= result.decision == "tail_regression";
+                                benchmark_failed |= matches!(
+                                    result.decision.as_str(),
+                                    "tail_regression" | "resource_regression"
+                                );
                                 stats = Some(result);
                             }
                             Err(error) => candidate.assurance.missing_checks.push(error),
@@ -667,7 +782,7 @@ pub fn advise_with_verifier(
                     ),
                     (
                         candidate.assurance.statistical_gain_supported,
-                        "latency gain or tail budget is not statistically supported",
+                        "latency gain or a configured resource budget is not supported by the evidence",
                     ),
                     (
                         rollback_ready,
@@ -690,7 +805,7 @@ pub fn advise_with_verifier(
                 } else {
                     CandidateStatus::PartialEvidenceCandidate
                 };
-                candidate.reason = if rejected { "a contract/oracle/experimental validity check failed or a tail regression exceeded budget" }
+                candidate.reason = if rejected { "a contract/oracle/experimental validity check failed or a configured regression budget was exceeded" }
                     else if candidate.status == CandidateStatus::VerifiedCandidate { "authenticated scoped evidence supports a migration proposal; deployment needs separate authorization" }
                     else { "dependency solution exists; evidence gaps are explicit and no strong preference is issued" }.into();
                 candidate.proposal = Some(Proposal {

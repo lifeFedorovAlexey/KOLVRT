@@ -11,9 +11,11 @@ pub mod routing_evidence;
 pub mod solver;
 pub mod statistics;
 
-pub const SCHEMA: u32 = 2;
+pub const SCHEMA: u32 = 4;
+pub const COMPATIBLE_SCHEMA: u32 = 3;
 /// Exact enumeration is deliberately limited; large universes need another Solver.
-pub const MAX_PACKAGES: usize = 20;
+pub const MAX_PACKAGES: usize = 256;
+pub const MAX_REFERENCE_PACKAGES: usize = 20;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(deny_unknown_fields)]
@@ -52,6 +54,16 @@ impl Requirement {
 /// Outer list is AND, inner list is OR. Empty alternatives are invalid.
 pub type Requirements = Vec<Vec<Requirement>>;
 
+/// Build identity beyond the user-facing package version. The reference profile may ignore this
+/// metadata, while scoped environments must match architecture and ABI before considering a build.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(deny_unknown_fields)]
+pub struct PackageVariant {
+    pub architecture: String,
+    pub abi: String,
+    pub build: String,
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Package {
@@ -59,6 +71,9 @@ pub struct Package {
     pub version: u32,
     /// SHA-256 of the exact executable/package artifact.
     pub identity: String,
+    /// Optional for schema-v3 reference catalogs; required by the scoped solver.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub variant: Option<PackageVariant>,
     pub provides: Vec<Capability>,
     pub requires: Requirements,
     pub conflicts: Vec<Requirement>,
@@ -110,7 +125,12 @@ pub fn validate_catalog(catalog: &[Package]) -> Result<(), String> {
             || p.version == 0
             || !digest_valid(&p.identity)
             || !identities.insert(&p.identity)
-            || !versions.insert((&p.name, p.version))
+            || !versions.insert((&p.name, p.version, &p.variant))
+            || p.variant.as_ref().is_some_and(|variant| {
+                variant.architecture.trim().is_empty()
+                    || variant.abi.trim().is_empty()
+                    || variant.build.trim().is_empty()
+            })
             || p.provides.iter().any(|c| {
                 c.capability_id.trim().is_empty()
                     || c.semantic_version.major == 0

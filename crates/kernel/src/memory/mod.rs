@@ -375,6 +375,12 @@ impl OwnedUserSpace {
     pub fn root(&self) -> u64 {
         self.frame.address as u64
     }
+    /// Number of physical frames owned by this process space, including its
+    /// root, fixed mappings and immutable image pages.
+    #[cfg(feature = "machine-events")]
+    pub fn resident_pages(&self) -> usize {
+        self.frame.count
+    }
     pub fn data_address(&self) -> usize {
         self.frame.address + USER_DATA_PAGE * PAGE_SIZE
     }
