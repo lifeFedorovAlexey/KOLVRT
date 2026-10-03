@@ -176,8 +176,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     let owner_cpu = number(event, "owner_cpu")?;
                     let resident_pages = number(event, "resident_pages")?;
                     let el0_residency_ticks = number(event, "el0_residency_ticks")?;
-                    let native_window_service_ticks =
-                        number(event, "native_window_service_ticks")?;
+                    let native_window_service_ticks = number(event, "native_window_service_ticks")?;
                     let counter_frequency_hz = number(event, "counter_frequency_hz")?;
                     if !finished.insert(id)
                         || number(event, "state")? != 2
@@ -334,8 +333,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 if samples != words(&benchmark["samples"])?
                     || warmup != words(&benchmark["warmup_samples"])?
                     || adapter_cpu_ticks != words(&benchmark["adapter_cpu_samples"])?
-                    || native_service_cpu_ticks
-                        != words(&benchmark["native_service_cpu_samples"])?
+                    || native_service_cpu_ticks != words(&benchmark["native_service_cpu_samples"])?
                     || counters != words(&benchmark["counters"])?
                     || preemptions != number(benchmark, "observed_preemptions")?
                 {

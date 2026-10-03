@@ -238,8 +238,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
     let mut finished = BTreeSet::new();
     let mut native_attempts = [0u64; platform_config::USER_PROCESSES];
     let mut process_identities = vec![None::<Value>; platform_config::USER_PROCESSES];
-    let mut process_residency =
-        vec![None::<(u64, u64, u64)>; platform_config::USER_PROCESSES];
+    let mut process_residency = vec![None::<(u64, u64, u64)>; platform_config::USER_PROCESSES];
     let mut seen_process_generations = BTreeSet::new();
     let mut terminal = false;
     for event in events {
