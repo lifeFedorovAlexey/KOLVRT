@@ -217,6 +217,7 @@ fn run() -> Result<PathBuf, String> {
             execution_receipt: (i == 1).then(|| lifecycle_digest.clone()),
             execution_artifacts: if i == 1 {
                 vec![
+                    lifecycle_evidence.worker_digest.clone(),
                     lifecycle_evidence.snapshot_digest.clone(),
                     lifecycle_evidence.invalid_migration_stderr_digest.clone(),
                     lifecycle_evidence.invalid_path_stderr_digest.clone(),
@@ -497,6 +498,7 @@ impl RouteName {
 struct LifecycleEvidence {
     schema: u32,
     scenario: String,
+    worker_digest: String,
     worker_receipts: Vec<serde_json::Value>,
     snapshot_digest: String,
     restored_state_digest: String,
@@ -575,6 +577,9 @@ fn execute_lifecycle(worker: &Path, root: &Path) -> Result<LifecycleEvidence, St
     let run_dir = root.join("lifecycle");
     let state_dir = run_dir.join("state");
     let snapshot = run_dir.join("snapshot-v1.json");
+    let worker_bytes =
+        fs::read(worker).map_err(|error| format!("lifecycle worker unavailable: {error}"))?;
+    let worker_digest = store(&root.join("artifacts"), &worker_bytes)?;
     fs::create_dir_all(&state_dir).map_err(|error| error.to_string())?;
     let mut receipts = Vec::new();
     for (operation, name) in [
@@ -666,9 +671,14 @@ fn execute_lifecycle(worker: &Path, root: &Path) -> Result<LifecycleEvidence, St
         return Err("invalid state path rejection did not retain an error message".into());
     }
     let invalid_path_stderr_digest = store(&root.join("artifacts"), &invalid_path_stderr)?;
+    let worker_after = fs::read(worker).map_err(|error| error.to_string())?;
+    if subject_digest(&worker_after) != worker_digest {
+        return Err("lifecycle worker changed while executing the scenario".into());
+    }
     Ok(LifecycleEvidence {
         schema: 1,
         scenario: "separate-process persistent-state v1-to-v2 migration, restart, invalid-input rejection, and snapshot rollback".into(),
+        worker_digest,
         worker_receipts: receipts,
         snapshot_digest,
         restored_state_digest,
