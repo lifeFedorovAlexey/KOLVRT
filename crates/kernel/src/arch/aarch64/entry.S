@@ -268,8 +268,9 @@ user_sync_vector:
  return_user
 user_irq_vector:
  save_user
+ mrs x19,cntpct_el0
  bl interrupt_entry
- mov x2,x0
+ mov x2,x19
  mov x0,sp
  mov x1,#USER_TRAP_IRQ
  bl user_trap

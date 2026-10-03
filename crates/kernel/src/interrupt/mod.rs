@@ -112,16 +112,15 @@ fn wait(mut ready: impl FnMut() -> bool) {
     panic!("GIC progress timeout");
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn interrupt_entry() -> u64 {
-    let entry_ticks = cpu::ticks();
+pub extern "C" fn interrupt_entry() {
     let id = cpu::acknowledge();
     if id == GIC_SPURIOUS_INTID {
-        return entry_ticks;
+        return;
     }
     if id == u64::from(crate::smp::IPI) {
         crate::smp::on_ipi();
         cpu::end_irq(id);
-        return entry_ticks;
+        return;
     }
     if id != u64::from(crate::platform::PHYSICAL_TIMER_IRQ) {
         crate::fatal_exception(0, id, 0);
@@ -135,5 +134,4 @@ pub extern "C" fn interrupt_entry() -> u64 {
     delivered().fetch_add(1, Ordering::Release);
     crate::scheduler::on_timer();
     cpu::end_irq(id);
-    entry_ticks
 }
