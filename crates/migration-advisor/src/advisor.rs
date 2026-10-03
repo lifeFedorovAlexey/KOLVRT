@@ -5,7 +5,7 @@ use crate::{
 };
 use crate::{
     provenance::{Attestation, EvidenceVerifier, NoTrust, Role},
-    statistics::{StatisticalPolicy, Statistics, analyze},
+    statistics::{StatisticalPolicy, Statistics, analyze_family},
 };
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
@@ -419,6 +419,16 @@ pub fn advise_with_verifier(
     let baseline = request.installed.clone();
     verify(&problem(&request.current), &baseline)?;
     let baseline_digest = plan_digest(&baseline);
+    let comparison_family_size = request
+        .catalog
+        .iter()
+        .filter(|package| {
+            package.identity != current.identity
+                && !(package.name == current.name && package.version <= current.version)
+                && crate::covers(&[package], &request.requirements)
+        })
+        .count()
+        .max(1);
     let debt = request.runtime.as_ref().map(|e| {
         let native: u128 = e
             .routes
@@ -637,7 +647,8 @@ pub fn advise_with_verifier(
                             .map(|p| u128::from(p.candidate_compat_admissions))
                             .sum();
                         debt_reduced = candidate_compat < baseline_compat;
-                        match analyze(&b.pairs, &request.statistics) {
+                        match analyze_family(&b.pairs, &request.statistics, comparison_family_size)
+                        {
                             Ok(result) => {
                                 candidate.baseline_median_ns = Some(result.baseline.median_ns);
                                 candidate.candidate_median_ns = Some(result.candidate.median_ns);

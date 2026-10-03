@@ -9,6 +9,7 @@ const MAX_RESAMPLES: usize = 10000;
 pub const MAX_PAIRS: usize = 4096;
 const P95_TAIL_MINIMUM: usize = 100;
 const P99_TAIL_MINIMUM: usize = 1000;
+const MIN_COMPARISON_TAIL_RESAMPLES: usize = 20;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -42,6 +43,9 @@ pub struct Distribution {
 #[derive(Clone, Debug, Serialize)]
 pub struct Statistics {
     pub independent_pairs: usize,
+    pub comparison_family_size: usize,
+    pub comparison_confidence_basis_points: f64,
+    pub comparison_tail_resamples: usize,
     pub baseline: Distribution,
     pub candidate: Distribution,
     pub mean_gain_ns: f64,
@@ -79,8 +83,19 @@ fn index(state: &mut u64, length: usize) -> usize {
 }
 
 pub fn analyze(pairs: &[Pair], policy: &StatisticalPolicy) -> Result<Statistics, String> {
+    analyze_family(pairs, policy, 1)
+}
+
+/// Bonferroni-adjusted paired bootstrap interval for a predeclared family of candidate plans.
+/// The family size is the number of matched benchmark hypotheses in the request.
+pub fn analyze_family(
+    pairs: &[Pair],
+    policy: &StatisticalPolicy,
+    family_size: usize,
+) -> Result<Statistics, String> {
     policy.validate()?;
-    if pairs.len() < policy.min_pairs
+    if family_size == 0
+        || pairs.len() < policy.min_pairs
         || pairs.len() > MAX_PAIRS
         || pairs
             .iter()
@@ -104,9 +119,17 @@ pub fn analyze(pairs: &[Pair], policy: &StatisticalPolicy) -> Result<Statistics,
         resamples.push(sum / pairs.len() as f64);
     }
     resamples.sort_by(f64::total_cmp);
-    let tail = (10000 - policy.confidence_basis_points) as usize;
-    let lower = (tail * resamples.len()).div_ceil(20000).saturating_sub(1);
-    let upper = ((20000 - tail) * resamples.len()).div_ceil(20000) - 1;
+    let tail_probability =
+        f64::from(10000 - policy.confidence_basis_points) / 20000.0 / family_size as f64;
+    let comparison_confidence_basis_points =
+        10000.0 - f64::from(10000 - policy.confidence_basis_points) / family_size as f64;
+    let lower_count = (tail_probability * resamples.len() as f64).ceil().max(1.0) as usize;
+    let upper_count = ((1.0 - tail_probability) * resamples.len() as f64)
+        .ceil()
+        .max(1.0) as usize;
+    let lower = lower_count - 1;
+    let upper = upper_count.saturating_sub(1).min(resamples.len() - 1);
+    let comparison_tail_resamples = lower_count.min(resamples.len() - upper);
     let interval = [resamples[lower], resamples[upper]];
     let baseline = distribution(pairs.iter().map(|p| p.baseline_ns).collect());
     let candidate = distribution(pairs.iter().map(|p| p.candidate_ns).collect());
@@ -121,7 +144,9 @@ pub fn analyze(pairs: &[Pair], policy: &StatisticalPolicy) -> Result<Statistics,
             .zip(candidate.p99_ns)
             .map(|(a, b)| b.saturating_sub(a) <= budget),
     };
-    let decision = if p95_ok.is_none() || p99_ok.is_none() {
+    let decision = if comparison_tail_resamples < MIN_COMPARISON_TAIL_RESAMPLES {
+        "inadequate_comparison_resolution"
+    } else if p95_ok.is_none() || p99_ok.is_none() {
         "insufficient_tail_evidence"
     } else if p95_ok == Some(false) || p99_ok == Some(false) {
         "tail_regression"
@@ -132,6 +157,9 @@ pub fn analyze(pairs: &[Pair], policy: &StatisticalPolicy) -> Result<Statistics,
     };
     Ok(Statistics {
         independent_pairs: pairs.len(),
+        comparison_family_size: family_size,
+        comparison_confidence_basis_points,
+        comparison_tail_resamples,
         baseline,
         candidate,
         mean_gain_ns: mean,

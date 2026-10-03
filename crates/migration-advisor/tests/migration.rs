@@ -412,6 +412,18 @@ fn tied_or_unequal_work_candidates_have_no_preference() {
             .preferred_observed
             .is_none()
     );
+    let report = trusted_fixture(&r, &solver()).unwrap();
+    assert_eq!(
+        report.candidates[0]
+            .proposal
+            .as_ref()
+            .unwrap()
+            .expected_gain
+            .as_ref()
+            .unwrap()
+            .comparison_family_size,
+        2
+    );
     for p in &mut r.benchmarks[1].pairs {
         p.candidate_ns = 40;
     }
@@ -606,6 +618,50 @@ fn small_samples_cannot_supply_tails_and_bootstrap_is_reproducible() {
     let result = analyze(&pairs, &policy).unwrap();
     assert_eq!(result.candidate.p99_ns, Some(50));
     assert_eq!(result.decision, "supported_latency_gain");
+}
+
+#[test]
+fn multiple_candidate_intervals_are_adjusted_and_need_enough_tail_resamples() {
+    use migration_advisor::statistics::{analyze, analyze_family};
+    let mut r = request();
+    for (i, pair) in r.benchmarks[0].pairs.iter_mut().enumerate() {
+        pair.baseline_ns = 200 + i as u64;
+        pair.candidate_ns = 100 + (i % 7) as u64 * 10;
+    }
+    let pairs = &r.benchmarks[0].pairs;
+    let single = analyze(pairs, &policy()).unwrap();
+    let family = analyze_family(pairs, &policy(), 2).unwrap();
+    assert!(family.gain_interval_ns[0] <= single.gain_interval_ns[0]);
+    assert!(family.gain_interval_ns[1] >= single.gain_interval_ns[1]);
+    assert_eq!(family.comparison_family_size, 2);
+    assert_eq!(family.comparison_confidence_basis_points, 9750.0);
+    assert!(family.comparison_tail_resamples >= 20);
+    let broad_family = analyze_family(pairs, &policy(), 100).unwrap();
+    assert_eq!(broad_family.decision, "inadequate_comparison_resolution");
+    assert!(!broad_family.decision.eq("supported_latency_gain"));
+}
+
+#[test]
+fn an_unmeasured_catalog_candidate_still_counts_in_the_comparison_family() {
+    let mut r = request();
+    r.catalog.push(package("another-replacement", 3, "window"));
+    let report = trusted_fixture(&r, &solver()).unwrap();
+    let gain = report.candidates[0]
+        .proposal
+        .as_ref()
+        .unwrap()
+        .expected_gain
+        .as_ref()
+        .unwrap();
+    assert_eq!(gain.comparison_family_size, 2);
+    assert_eq!(gain.decision, "supported_latency_gain");
+    assert!(report.candidates.iter().any(|candidate| {
+        candidate.package == hash(3)
+            && candidate
+                .proposal
+                .as_ref()
+                .is_some_and(|proposal| proposal.expected_gain.is_none())
+    }));
 }
 
 #[test]
