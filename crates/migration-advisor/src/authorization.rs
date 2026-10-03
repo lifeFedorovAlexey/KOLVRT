@@ -186,7 +186,7 @@ pub fn authorize(
     let runtime = request
         .runtime
         .as_ref()
-        .filter(|runtime| request.context.source == crate::advisor::EvidenceSource::OsRuntime)
+        .filter(|_| request.context.source == crate::advisor::EvidenceSource::OsRuntime)
         .ok_or("deployment authorization requires OS runtime evidence")?;
     let migration = request
         .migration_plans
