@@ -32,7 +32,7 @@ The [solver and checker](../../crates/migration-advisor/src/solver.rs) are indep
 
 ## Evidence levels and proposals
 
-The [advisor](../../crates/migration-advisor/src/advisor.rs) records context: machine identity, workload/kernel/protocol digests and source (`os_runtime`, `host_model` or `host_process`). Runtime records bind package identity, window, route generations, adapter digests, native/compat admissions, failures, exclusive adapter CPU nanoseconds and copied bytes. Missing cost remains unknown. Known expensive routes and unknown-cost routes are separate. Compatibility share is unknown with lost events, incomplete classification or no admissions; observations never prove module removability. Follow the [diagnostic contract](diagnostics.md).
+The [advisor](../../crates/migration-advisor/src/advisor.rs) records context: machine identity, workload/kernel/protocol digests and source (`os_runtime`, `host_model` or `host_process`). Runtime records bind package identity, window, route generations, adapter digests, native/compat admissions and failures; a producer may supply exclusive adapter CPU nanoseconds and copied bytes. Missing cost remains unknown. The current QEMU fixture exporter cannot isolate adapter CPU: it reports EL0 route-call residency (including client/wrapper and exception-boundary overhead) separately from native service time. Known expensive routes and unknown-cost routes are separate. Compatibility share is unknown with lost events, incomplete classification or no admissions; observations never prove module removability. Follow the [diagnostic contract](diagnostics.md).
 
 Results have explicit assurance dimensions and missing checks, not a fabricated numerical confidence score:
 
