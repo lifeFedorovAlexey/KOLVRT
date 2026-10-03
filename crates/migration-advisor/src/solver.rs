@@ -14,6 +14,38 @@ pub struct Plan {
 #[serde(rename_all = "snake_case")]
 pub enum ResolutionModel {
     ReferenceSingleVersion,
+    SideBySideNamespaces,
+}
+
+pub const MAX_SCOPED_NAMESPACES: usize = 64;
+
+/// One independently resolved process/runtime namespace with explicit target ABI and retained
+/// consumer requirements. Namespace IDs must be sorted and unique for deterministic plans.
+pub struct ScopedNamespace<'a> {
+    pub id: &'a str,
+    pub root: &'a str,
+    pub architecture: &'a str,
+    pub abi: &'a str,
+    pub requirements: &'a Requirements,
+    pub retained: &'a Requirements,
+}
+
+pub struct ScopedProblem<'a> {
+    pub catalog: &'a [Package],
+    pub namespaces: &'a [ScopedNamespace<'a>],
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord)]
+#[serde(deny_unknown_fields)]
+pub struct ScopedSelection {
+    pub namespace: String,
+    pub identity: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ScopedPlan {
+    pub selections: Vec<ScopedSelection>,
 }
 
 pub struct Problem<'a> {
@@ -273,6 +305,277 @@ impl Solver for ClosureSolver {
             }
 
             // Reverse push order makes the deterministic identity order the DFS visit order.
+            for provider in providers.into_iter().rev() {
+                let mut child = selected.clone();
+                let at = child.binary_search(&provider).unwrap_err();
+                child.insert(at, provider);
+                pending.push(child);
+            }
+        }
+        best.ok_or(SolveError::Unsatisfiable)
+    }
+}
+
+fn matches_namespace(package: &Package, namespace: &ScopedNamespace<'_>) -> bool {
+    package.variant.as_ref().is_some_and(|variant| {
+        variant.architecture == namespace.architecture && variant.abi == namespace.abi
+    })
+}
+
+fn validate_scoped_problem(problem: &ScopedProblem<'_>) -> Result<(), String> {
+    validate_catalog(problem.catalog)?;
+    if problem.namespaces.is_empty()
+        || problem.namespaces.len() > MAX_SCOPED_NAMESPACES
+        || problem
+            .namespaces
+            .windows(2)
+            .any(|pair| pair[0].id >= pair[1].id)
+    {
+        return Err("scoped namespaces must be nonempty, bounded, sorted, and unique".into());
+    }
+    for namespace in problem.namespaces {
+        if namespace.id.trim().is_empty()
+            || namespace.architecture.trim().is_empty()
+            || namespace.abi.trim().is_empty()
+        {
+            return Err("scoped namespace identity and target ABI are required".into());
+        }
+        validate_requirements(namespace.requirements)?;
+        validate_requirements(namespace.retained)?;
+        let root = problem
+            .catalog
+            .iter()
+            .find(|package| package.identity == namespace.root)
+            .ok_or("unknown scoped root identity")?;
+        if !matches_namespace(root, namespace)
+            || namespace.requirements.is_empty()
+            || !covers(&[root], namespace.requirements)
+        {
+            return Err(format!(
+                "root does not provide the requested surface for namespace {}",
+                namespace.id
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// Independently verifies a plan with one package version per name *inside each namespace*.
+/// The same package name, including different ABI/build variants, can coexist across namespaces.
+pub fn verify_scoped(problem: &ScopedProblem<'_>, plan: &ScopedPlan) -> Result<(), String> {
+    validate_scoped_problem(problem)?;
+    if plan.selections.is_empty() || plan.selections.windows(2).any(|pair| pair[0] >= pair[1]) {
+        return Err("scoped selections must be unique and sorted by namespace and identity".into());
+    }
+    let mut selected = vec![Vec::<&Package>::new(); problem.namespaces.len()];
+    for item in &plan.selections {
+        let scope_index = problem
+            .namespaces
+            .binary_search_by(|namespace| namespace.id.cmp(item.namespace.as_str()))
+            .map_err(|_| "unknown namespace in scoped plan")?;
+        let namespace = &problem.namespaces[scope_index];
+        let package = problem
+            .catalog
+            .iter()
+            .find(|package| package.identity == item.identity)
+            .ok_or("unknown identity in scoped plan")?;
+        if !matches_namespace(package, namespace) {
+            return Err("package architecture/ABI does not match its namespace".into());
+        }
+        if selected[scope_index]
+            .iter()
+            .any(|other| other.name == package.name)
+        {
+            return Err(format!(
+                "namespace {} selects multiple variants of package {}",
+                namespace.id, package.name
+            ));
+        }
+        selected[scope_index].push(package);
+    }
+    for (index, namespace) in problem.namespaces.iter().enumerate() {
+        let packages = &selected[index];
+        if !packages
+            .iter()
+            .any(|package| package.identity == namespace.root)
+        {
+            return Err(format!("missing root in namespace {}", namespace.id));
+        }
+        if !covers(packages, namespace.requirements) || !covers(packages, namespace.retained) {
+            return Err(format!(
+                "unsatisfied consumer in namespace {}",
+                namespace.id
+            ));
+        }
+        for package in packages {
+            if !covers(packages, &package.requires) {
+                return Err(format!(
+                    "unsatisfied dependency {} in namespace {}",
+                    package.name, namespace.id
+                ));
+            }
+            if package.conflicts.iter().any(|requirement| {
+                packages.iter().any(|other| {
+                    other.identity != package.identity
+                        && other
+                            .provides
+                            .iter()
+                            .any(|provided| requirement.matches(provided))
+                })
+            }) {
+                return Err(format!(
+                    "conflict for {} in namespace {}",
+                    package.name, namespace.id
+                ));
+            }
+        }
+    }
+    Ok(())
+}
+
+fn can_add_scoped(
+    catalog: &[Package],
+    selected: &[(usize, usize)],
+    scope: usize,
+    candidate: usize,
+) -> bool {
+    let package = &catalog[candidate];
+    selected
+        .iter()
+        .filter(|(at_scope, _)| *at_scope == scope)
+        .all(|(_, index)| {
+            let other = &catalog[*index];
+            package.name != other.name
+                && !package.conflicts.iter().any(|requirement| {
+                    other
+                        .provides
+                        .iter()
+                        .any(|provided| requirement.matches(provided))
+                })
+                && !other.conflicts.iter().any(|requirement| {
+                    package
+                        .provides
+                        .iter()
+                        .any(|provided| requirement.matches(provided))
+                })
+        })
+}
+
+/// Bounded dependency-closure search over multiple ABI-isolated namespaces. Dependencies and
+/// conflicts are evaluated only within their namespace; variants must match its architecture/ABI.
+pub struct ScopedClosureSolver {
+    pub max_states: u64,
+}
+
+impl ScopedClosureSolver {
+    pub fn solve(&self, problem: &ScopedProblem<'_>) -> Result<ScopedPlan, SolveError> {
+        validate_scoped_problem(problem).map_err(SolveError::Invalid)?;
+        let mut roots = Vec::with_capacity(problem.namespaces.len());
+        for (scope, namespace) in problem.namespaces.iter().enumerate() {
+            let package = problem
+                .catalog
+                .iter()
+                .position(|package| package.identity == namespace.root)
+                .unwrap();
+            roots.push((scope, package));
+        }
+        let mut pending = vec![roots];
+        let mut visited = BTreeSet::new();
+        let mut states = 0;
+        let mut best: Option<ScopedPlan> = None;
+        while let Some(selected) = pending.pop() {
+            if !visited.insert(selected.clone()) {
+                continue;
+            }
+            if states >= self.max_states {
+                return Err(SolveError::BudgetExceeded);
+            }
+            states += 1;
+            if best
+                .as_ref()
+                .is_some_and(|plan| selected.len() > plan.selections.len())
+            {
+                continue;
+            }
+
+            let mut clauses = Vec::<(usize, &Requirements)>::new();
+            for (scope, namespace) in problem.namespaces.iter().enumerate() {
+                clauses.push((scope, namespace.requirements));
+                clauses.push((scope, namespace.retained));
+            }
+            for &(scope, package) in &selected {
+                clauses.push((scope, &problem.catalog[package].requires));
+            }
+
+            let mut next: Option<Vec<(usize, usize)>> = None;
+            let mut impossible = false;
+            for (scope, requirements) in clauses {
+                for clause in requirements {
+                    if selected.iter().any(|(at_scope, index)| {
+                        *at_scope == scope && package_satisfies(&problem.catalog[*index], clause)
+                    }) {
+                        continue;
+                    }
+                    let mut providers: Vec<_> = problem
+                        .catalog
+                        .iter()
+                        .enumerate()
+                        .filter(|(index, package)| {
+                            matches_namespace(package, &problem.namespaces[scope])
+                                && package_satisfies(package, clause)
+                                && can_add_scoped(problem.catalog, &selected, scope, *index)
+                        })
+                        .map(|(index, _)| (scope, index))
+                        .collect();
+                    providers.sort_by(|(_, a), (_, b)| {
+                        problem.catalog[*a]
+                            .identity
+                            .cmp(&problem.catalog[*b].identity)
+                    });
+                    if providers.is_empty() {
+                        impossible = true;
+                        break;
+                    }
+                    if next
+                        .as_ref()
+                        .is_none_or(|current| providers.len() < current.len())
+                    {
+                        next = Some(providers);
+                    }
+                }
+                if impossible {
+                    break;
+                }
+            }
+            if impossible {
+                continue;
+            }
+            let Some(providers) = next else {
+                let mut selections: Vec<_> = selected
+                    .iter()
+                    .map(|(scope, package)| ScopedSelection {
+                        namespace: problem.namespaces[*scope].id.into(),
+                        identity: problem.catalog[*package].identity.clone(),
+                    })
+                    .collect();
+                selections.sort();
+                let plan = ScopedPlan { selections };
+                if verify_scoped(problem, &plan).is_ok()
+                    && best.as_ref().is_none_or(|current| {
+                        (plan.selections.len(), &plan.selections)
+                            < (current.selections.len(), &current.selections)
+                    })
+                {
+                    best = Some(plan);
+                }
+                continue;
+            };
+            if best
+                .as_ref()
+                .is_some_and(|plan| selected.len() >= plan.selections.len())
+            {
+                continue;
+            }
             for provider in providers.into_iter().rev() {
                 let mut child = selected.clone();
                 let at = child.binary_search(&provider).unwrap_err();

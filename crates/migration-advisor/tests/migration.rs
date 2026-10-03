@@ -62,11 +62,20 @@ fn requirement(name: &str) -> Requirement {
         contract_digest: hash(99),
     }
 }
+fn requirement_major(name: &str, major: u32) -> Requirement {
+    Requirement {
+        capability_id: name.into(),
+        min_version: version(major),
+        max_version: version(major),
+        contract_digest: hash(99),
+    }
+}
 fn package(name: &str, id: u8, capability: &str) -> Package {
     Package {
         name: name.into(),
         version: 1,
         identity: hash(id),
+        variant: None,
         provides: vec![Capability {
             capability_id: capability.into(),
             semantic_version: version(1),
@@ -75,6 +84,24 @@ fn package(name: &str, id: u8, capability: &str) -> Package {
         requires: vec![],
         conflicts: vec![],
     }
+}
+fn variant_package(
+    name: &str,
+    id: u8,
+    capability: &str,
+    capability_major: u32,
+    architecture: &str,
+    abi: &str,
+    build: &str,
+) -> Package {
+    let mut result = package(name, id, capability);
+    result.provides[0].semantic_version = version(capability_major);
+    result.variant = Some(migration_advisor::PackageVariant {
+        architecture: architecture.into(),
+        abi: abi.into(),
+        build: build.into(),
+    });
+    result
 }
 fn solver() -> ClosureSolver {
     ClosureSolver { max_states: 1024 }
@@ -270,6 +297,104 @@ fn closure_alternatives_conflicts_and_independent_verifier() {
         ExhaustiveSolver { max_states: 1 }.solve(&problem),
         Err(SolveError::BudgetExceeded)
     );
+}
+
+#[test]
+fn scoped_solver_selects_side_by_side_abi_and_build_variants() {
+    let mut old_root = variant_package("app-old", 10, "window", 1, "aarch64", "abi-v1", "old");
+    old_root.requires = vec![vec![requirement("runtime-v1")]];
+    let mut new_root = variant_package("app-new", 11, "window", 1, "aarch64", "abi-v2", "new");
+    new_root.requires = vec![vec![requirement_major("runtime-v2", 2)]];
+    let mut runtime_v1 = variant_package(
+        "runtime",
+        12,
+        "runtime-v1",
+        1,
+        "aarch64",
+        "abi-v1",
+        "build-101",
+    );
+    runtime_v1.conflicts = vec![requirement_major("runtime-v2", 2)];
+    let mut runtime_v2 = variant_package(
+        "runtime",
+        13,
+        "runtime-v2",
+        2,
+        "aarch64",
+        "abi-v2",
+        "build-202",
+    );
+    runtime_v2.conflicts = vec![requirement_major("runtime-v1", 1)];
+    let wrong_arch = variant_package(
+        "runtime",
+        14,
+        "runtime-v1",
+        1,
+        "x86_64",
+        "abi-v1",
+        "build-303",
+    );
+    let catalog = vec![old_root, new_root, runtime_v1, runtime_v2, wrong_arch];
+    let app_requirement = vec![vec![requirement("window")]];
+    let retained = vec![];
+    let old_root_identity = hash(10);
+    let new_root_identity = hash(11);
+    let namespaces = vec![
+        ScopedNamespace {
+            id: "legacy-client",
+            root: &old_root_identity,
+            architecture: "aarch64",
+            abi: "abi-v1",
+            requirements: &app_requirement,
+            retained: &retained,
+        },
+        ScopedNamespace {
+            id: "next-client",
+            root: &new_root_identity,
+            architecture: "aarch64",
+            abi: "abi-v2",
+            requirements: &app_requirement,
+            retained: &retained,
+        },
+    ];
+    let problem = ScopedProblem {
+        catalog: &catalog,
+        namespaces: &namespaces,
+    };
+    let plan = ScopedClosureSolver { max_states: 1024 }
+        .solve(&problem)
+        .unwrap();
+    verify_scoped(&problem, &plan).unwrap();
+    assert_eq!(plan.selections.len(), 4);
+    assert!(plan.selections.contains(&ScopedSelection {
+        namespace: "legacy-client".into(),
+        identity: hash(12),
+    }));
+    assert!(plan.selections.contains(&ScopedSelection {
+        namespace: "next-client".into(),
+        identity: hash(13),
+    }));
+
+    let mut invalid = plan;
+    let selection = invalid
+        .selections
+        .iter_mut()
+        .find(|item| item.namespace == "legacy-client" && item.identity == hash(12))
+        .unwrap();
+    selection.identity = hash(13);
+    invalid.selections.sort();
+    assert!(verify_scoped(&problem, &invalid).is_err());
+}
+
+#[test]
+fn schema_three_requests_remain_readable_without_changing_legacy_package_payloads() {
+    let mut request = request();
+    request.schema = migration_advisor::COMPATIBLE_SCHEMA;
+    let report = trusted_fixture(&request, &solver()).unwrap();
+    assert_eq!(report.schema, migration_advisor::SCHEMA);
+    let package: serde_json::Value =
+        serde_json::from_str(&serde_json::to_string(&request.catalog[0]).unwrap()).unwrap();
+    assert!(package.get("variant").is_none());
 }
 
 #[test]

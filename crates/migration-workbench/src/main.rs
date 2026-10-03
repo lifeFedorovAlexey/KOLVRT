@@ -335,6 +335,7 @@ fn run() -> Result<PathBuf, String> {
             .into(),
             version: 1,
             identity: id.clone(),
+            variant: None,
             provides: vec![Capability {
                 capability_id: "workload.window.reduce".into(),
                 semantic_version: version,

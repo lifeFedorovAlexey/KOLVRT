@@ -1,6 +1,6 @@
 use crate::solver::{Plan, Problem, Solver, verify};
 use crate::{
-    Package, Requirements, SCHEMA, digest_valid, plan_digest, validate_catalog,
+    COMPATIBLE_SCHEMA, Package, Requirements, SCHEMA, digest_valid, plan_digest, validate_catalog,
     validate_requirements,
 };
 use crate::{
@@ -260,7 +260,7 @@ fn context_valid(c: &Context) -> bool {
 }
 
 fn validate(request: &Request) -> Result<(), String> {
-    if request.schema != SCHEMA || !context_valid(&request.context) {
+    if !matches!(request.schema, COMPATIBLE_SCHEMA | SCHEMA) || !context_valid(&request.context) {
         return Err("unsupported schema or invalid context".into());
     }
     request.statistics.validate()?;
@@ -494,7 +494,10 @@ pub fn advise_with_verifier(
         .iter()
         .filter(|package| {
             package.identity != current.identity
-                && !(package.name == current.name && package.version <= current.version)
+                && !(package.name == current.name
+                    && (package.version < current.version
+                        || (package.version == current.version
+                            && package.variant == current.variant)))
                 && crate::covers(&[package], &request.requirements)
         })
         .count()
@@ -546,7 +549,9 @@ pub fn advise_with_verifier(
     let mut candidates = Vec::new();
     for p in &request.catalog {
         if p.identity == current.identity
-            || (p.name == current.name && p.version <= current.version)
+            || (p.name == current.name
+                && (p.version < current.version
+                    || (p.version == current.version && p.variant == current.variant)))
             || !crate::covers(&[p], &request.requirements)
         {
             continue;
