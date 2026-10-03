@@ -109,6 +109,25 @@ impl Physical {
             }
         })
     }
+    /// Retain and zero a known free physical extent so a same-VA TLB test can
+    /// keep the previous process backing unavailable across ASID reuse.
+    pub fn pin_extent_at(&mut self, address: usize, count: usize) -> Option<Frame> {
+        crate::percpu::primary_only();
+        if count == 0 || address < self.base || !(address - self.base).is_multiple_of(PAGE_SIZE) {
+            return None;
+        }
+        let index = (address - self.base) / PAGE_SIZE;
+        self.pool.allocate_at(index, count).ok()?;
+        // SAFETY: INV-FRAME: exact free pool extent claimed above; zero before use.
+        unsafe {
+            core::ptr::write_bytes(address as *mut u8, 0, count * PAGE_SIZE);
+        }
+        Some(Frame {
+            address,
+            count,
+            owner: core::marker::PhantomData,
+        })
+    }
     /// Consumes ownership only after the caller has unmapped and invalidated all aliases.
     pub fn release(&mut self, frame: Frame) {
         crate::percpu::primary_only();
@@ -326,6 +345,7 @@ const USER_DEVICES_PAGE: usize = 1;
 const USER_LEAVES_PAGE: usize = 2;
 const USER_CODE_PAGE: usize = 3;
 const USER_DATA_PAGE: usize = 4;
+pub const USER_DATA_FRAME_OFFSET: usize = USER_DATA_PAGE * PAGE_SIZE;
 const USER_STACK_PAGE: usize = 5;
 pub const USER_SPACE_PAGES: usize = USER_STACK_PAGE + USER_STACK_PAGES;
 static USER_CHARGES: [AtomicUsize; crate::process::CAPACITY] =
@@ -337,6 +357,7 @@ pub static USER_EXECUTION_ACTIVE: AtomicUsize = AtomicUsize::new(0);
 pub struct OwnedUserSpace {
     frame: Frame,
     id: usize,
+    lease: crate::asid::Lease,
 }
 impl OwnedUserSpace {
     pub fn slot(&self) -> usize {
@@ -344,16 +365,20 @@ impl OwnedUserSpace {
     }
     pub fn new(frame: Frame, id: usize, image: &[u8], entry: usize) -> Self {
         let space = UserSpace::image(&frame, id, image, entry);
+        let lease = crate::asid::allocate(id, id / config::USER_PROCESSES_PER_CPU);
         // Transfer the same charge, not another mapping or allocation. All
         // construction borrows end here; the owned Frame stays live until reclaim.
         core::mem::forget(space);
-        Self { frame, id }
+        Self { frame, id, lease }
     }
     pub fn root(&self) -> u64 {
         self.frame.address as u64
     }
     pub fn data_address(&self) -> usize {
         self.frame.address + USER_DATA_PAGE * PAGE_SIZE
+    }
+    pub fn lease(&self) -> crate::asid::Lease {
+        self.lease
     }
     pub fn reclaim(self, physical: &mut Physical) {
         // Only kernel-internal lifecycle code owns this value. The caller checked
@@ -362,6 +387,16 @@ impl OwnedUserSpace {
             frame: &self.frame,
             id: self.id,
         });
+        crate::asid::release(self.lease, false);
+        physical.release(self.frame);
+    }
+    /// Roll back a fully constructed but never published root.
+    pub fn rollback(self, physical: &mut Physical) {
+        drop(UserSpace {
+            frame: &self.frame,
+            id: self.id,
+        });
+        crate::asid::release(self.lease, true);
         physical.release(self.frame);
     }
 }

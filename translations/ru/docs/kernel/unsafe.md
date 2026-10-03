@@ -136,7 +136,7 @@ CPU0 инициализирует проверенные эксклюзивно 
 
 ### INV-USER-TTBR and INV-USER-IMAGE
 
-Privileged root/barrier instructions требуют live aligned tables, сохраняющие kernel PC/SP. ASID zero требует full local invalidation при каждом switch и перед reclamation. Trusted immutable linker extents копируются в checked owned pages, очищаются до PoC и публикуются с instruction-cache maintenance до launch. Пропуск root-switch должен вызвать ошибку. Loader, migration, ASID reuse и доказательство physical cache-coherency не заявляются.
+Privileged root/barrier instructions требуют live aligned tables, сохраняющие kernel PC/SP. Native ASID zero требует full local invalidation при каждом switch; fixed-affinity process roots используют ASID lease с проверкой аппаратной ширины и local `TLBI ASIDE1` до retirement/reuse. Lease epoch отклоняет stale software retirement; release требует завершённой invalidation CPU-владельца и scheduler quiescence. Для неподдерживаемого ASID encoding остаётся full-flush fallback. Trusted immutable linker extents копируются в checked owned pages, очищаются до PoC и публикуются с instruction-cache maintenance до launch. Пропуск root-switch или reuse invalidation должен вызвать ошибку в QEMU. Loader, migration, multi-CPU root residency и доказательство physical cache-coherency не заявляются.
 
 ### INV-USER-CONTEXT and INV-RUNQUEUE
 

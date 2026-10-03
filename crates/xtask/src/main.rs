@@ -43,6 +43,7 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
         "--user-retirement-control",
         "user address space retains frame",
     ),
+    ("--asid-reuse-control", "asid_reuse_requires_invalidation"),
 ];
 const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
     (
@@ -211,11 +212,14 @@ const TESTS: &[&str] = &[
     "process_normal_exit_and_fault",
     "process_creation_rollback",
     "process_capacity_exhaustion",
+    "asid_pool_exhaustion_both_cpus",
     "process_slot_generation_reuse",
     "process_terminal_rejections",
     "process_authority_boundary",
     "process_sparse_affinity",
     "process_bounded_stress",
+    "asid_reuse_same_va_both_cpus",
+    "asid_reuse_requires_invalidation",
     "process_quantum_return_and_peer_progress",
     "process_wait_block_and_wakeup",
     "process_resource_reclamation",
@@ -244,6 +248,7 @@ fn run() -> Result<()> {
             }
         }
         Some("compare") if args.len() == 3 => compare_measurements(Path::new(&args[1]), Path::new(&args[2])),
+        Some("asid-bench") if args.len() == 1 => asid_bench(),
         Some("build") => {
             build(args.iter().any(|a| a == "--prod"), false, None, false)?;
             Ok(())
@@ -272,6 +277,10 @@ fn run() -> Result<()> {
             }
             for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative"), ("--user-context-control", "user-context-negative"), ("--user-root-control", "user-root-negative"), ("--user-retirement-control", "user-retirement-negative")] {
                 if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
+            }
+            if args.iter().any(|arg| arg == "--asid-reuse-control") {
+                let elf = build(false, true, Some("asid-reuse-negative"), true)?;
+                return execute(&elf, true, true);
             }
             if args.iter().any(|a| a == "--negative-control") {
                 let elf = build(false, true, Some("negative-test"), true)?;
@@ -343,7 +352,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask test [--record LABEL] | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask test [--record LABEL] | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<PathBuf> {
@@ -516,9 +525,18 @@ fn qemu_args(elf: &Path) -> Vec<String> {
     ]
 }
 fn execute(elf: &Path, tests: bool, machine: bool) -> Result<()> {
-    execute_mode(elf, tests, machine, false)
+    execute_mode(elf, tests, machine, false, true)
 }
-fn execute_mode(elf: &Path, tests: bool, machine: bool, payload: bool) -> Result<()> {
+fn execute_quiet(elf: &Path, tests: bool, machine: bool) -> Result<()> {
+    execute_mode(elf, tests, machine, false, false)
+}
+fn execute_mode(
+    elf: &Path,
+    tests: bool,
+    machine: bool,
+    payload: bool,
+    show_console: bool,
+) -> Result<()> {
     let log = elf.with_extension("log");
     let err = elf.with_extension("stderr");
     // Never leave an earlier run's successful evidence beside a failed/human run.
@@ -556,7 +574,9 @@ fn execute_mode(elf: &Path, tests: bool, machine: bool, payload: bool) -> Result
         thread::sleep(QEMU_POLL_INTERVAL);
     }
     let text = fs::read_to_string(&log)?;
-    print!("{}", output::console_text(&text, output::stdout_color()));
+    if show_console {
+        print!("{}", output::console_text(&text, output::stdout_color()));
+    }
     if !machine {
         if text.contains("@KOLVRT") || text.contains("[FAIL]") {
             return Err("human console failure or unexpected machine record".into());
@@ -624,6 +644,96 @@ fn source_inventory() -> Result<Value> {
 }
 fn read_json(path: impl AsRef<Path>) -> Result<Value> {
     Ok(serde_json::from_slice(&fs::read(path)?)?)
+}
+fn asid_bench() -> Result<()> {
+    const PAIRS: usize = 8;
+    let sources = source_inventory()?;
+    let tagged = build(false, true, None, true)?;
+    let baseline = build(false, true, Some("asid-baseline"), true)?;
+    let mut pairs = Vec::with_capacity(PAIRS);
+    for pair in 0..PAIRS {
+        let order = if pair % 2 == 0 {
+            [("baseline", &baseline), ("tagged", &tagged)]
+        } else {
+            [("tagged", &tagged), ("baseline", &baseline)]
+        };
+        let mut results = serde_json::Map::new();
+        for (mode, elf) in order {
+            execute_quiet(elf, true, true)?;
+            let path = elf.with_extension("results.json");
+            let events = read_json(path)?;
+            let measurement = events
+                .as_array()
+                .ok_or("invalid ASID QEMU event list")?
+                .iter()
+                .find(|event| event["event"] == "asid-measurement")
+                .cloned()
+                .ok_or("missing ASID measurement event")?;
+            results.insert(mode.into(), measurement);
+        }
+        let tagged_switches = results["tagged"]["cpus"]
+            .as_array()
+            .ok_or("missing tagged CPU counters")?
+            .iter()
+            .map(|cpu| {
+                cpu["switches"]
+                    .as_u64()
+                    .ok_or("invalid tagged switch count")
+            })
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+        let baseline_switches = results["baseline"]["cpus"]
+            .as_array()
+            .ok_or("missing baseline CPU counters")?
+            .iter()
+            .map(|cpu| {
+                cpu["switches"]
+                    .as_u64()
+                    .ok_or("invalid baseline switch count")
+            })
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+        if tagged_switches != baseline_switches {
+            return Err(format!("paired scheduler work differed in pair {}", pair + 1).into());
+        }
+        pairs.push(json!({"pair":pair + 1,"order":order.map(|(mode, _)| mode),"results":results}));
+        println!("ASID paired QEMU run {}/{} passed", pair + 1, PAIRS);
+    }
+    if source_inventory()? != sources {
+        return Err("source changed during ASID paired measurement; results rejected".into());
+    }
+    let deltas: Vec<i64> = pairs
+        .iter()
+        .map(|pair| {
+            let baseline = pair["results"]["baseline"]["elapsed_ticks"]
+                .as_i64()
+                .unwrap();
+            let tagged = pair["results"]["tagged"]["elapsed_ticks"].as_i64().unwrap();
+            baseline - tagged
+        })
+        .collect();
+    let mut sorted = deltas.clone();
+    sorted.sort_unstable();
+    let median_delta = if sorted.len() % 2 == 1 {
+        sorted[sorted.len() / 2] as f64
+    } else {
+        (sorted[sorted.len() / 2 - 1] as f64 + sorted[sorted.len() / 2] as f64) / 2.0
+    };
+    let digest = format!("{:x}", Sha256::digest(serde_json::to_vec(&sources)?));
+    let record = json!({
+        "schema_version": 1,
+        "issue": 18,
+        "source_inventory_sha256": digest,
+        "source_files": sources,
+        "platform": {"qemu_version": String::from_utf8(Command::new(qemu()?).arg("--version").output()?.stdout)?, "accelerator": "TCG", "cpus": platform_config::ACTIVE_CPUS, "warmup_cycles": 0, "measured_cycles": 32, "pair_order": "counterbalanced", "repeats": PAIRS},
+        "measurement": {"scope": "process lifecycle stress on both pinned CPUs", "units": "cntpct_el0 timer_ticks", "paired_delta_direction": "baseline minus tagged; positive favors tagged", "median_paired_delta_ticks": median_delta, "paired_deltas_ticks": deltas, "claim": "QEMU TCG comparison only; not hardware throughput or a universal performance claim"},
+        "builds": {"tagged": read_json("target/kernel/dev-tests-build.json")?, "baseline": read_json("target/kernel/dev-asid-baseline-build.json")?, "tagged_run": read_json(tagged.with_extension("run.json"))?, "baseline_run": read_json(baseline.with_extension("run.json"))?},
+        "pairs": pairs
+    });
+    fs::write(
+        "research/results/issue18-asid-measurements.json",
+        serde_json::to_string_pretty(&record)?,
+    )?;
+    println!("Retained paired ASID results: research/results/issue18-asid-measurements.json");
+    Ok(())
 }
 fn validate_samples(measurement: &Value) -> Result<()> {
     if measurement["units"] != "timer_ticks"

@@ -26,4 +26,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0017 — Generation-safe native process lifecycle](0017-process-lifecycle.md) — Accepted for bounded Phase 3.1.
 
+- [ADR-0018 — Fixed-affinity AArch64 ASID lifecycle](0018-asid-lifecycle.md) — Accepted for bounded process roots; migration remains unsupported.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

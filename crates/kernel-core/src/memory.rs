@@ -92,6 +92,18 @@ impl<const N: usize> Pool<N> {
         }
         Err(Error::Exhausted)
     }
+    /// Claim an exact free extent when a physical address is part of a retained
+    /// translation witness. The caller receives the same ownership as allocate.
+    pub fn allocate_at(&mut self, start: usize, count: usize) -> Result<(), Error> {
+        let end = start.checked_add(count).ok_or(Error::Invalid)?;
+        if count == 0 || end > self.units {
+            return Err(Error::Invalid);
+        }
+        if (start..end).any(|i| self.busy(i)) {
+            return Err(Error::Occupied);
+        }
+        self.reserve(start, count)
+    }
     /// Caller owns the exact live range; bounds and occupancy are always checked.
     pub fn release(&mut self, start: usize, count: usize) -> Result<(), Error> {
         let end = start.checked_add(count).ok_or(Error::Invalid)?;
@@ -142,6 +154,18 @@ mod tests {
         }
         assert_eq!(candidate.available(), UNITS);
         assert_eq!(rescan_reference.available(), UNITS);
+    }
+    #[test]
+    fn exact_extent_claim_preserves_pool_ownership() {
+        let mut pool = Pool::<1>::empty();
+        pool.initialize(64).unwrap();
+        pool.reserve(8, 4).unwrap();
+        assert_eq!(pool.allocate_at(8, 4), Err(Error::Occupied));
+        pool.allocate_at(16, 8).unwrap();
+        assert_eq!(pool.available(), 52);
+        pool.release(16, 8).unwrap();
+        assert_eq!(pool.available(), 60);
+        assert_eq!(pool.allocate_at(64, 1), Err(Error::Invalid));
     }
     #[test]
     fn exhaustion_reuse_and_transactional_rejection() {
