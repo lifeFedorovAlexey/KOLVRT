@@ -13,7 +13,8 @@ pub mod statistics;
 
 pub const SCHEMA: u32 = 3;
 /// Exact enumeration is deliberately limited; large universes need another Solver.
-pub const MAX_PACKAGES: usize = 20;
+pub const MAX_PACKAGES: usize = 256;
+pub const MAX_REFERENCE_PACKAGES: usize = 20;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(deny_unknown_fields)]

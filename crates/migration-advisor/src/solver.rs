@@ -93,7 +93,7 @@ pub fn verify(problem: &Problem<'_>, plan: &Plan) -> Result<(), String> {
     Ok(())
 }
 
-/// Reference solver: complete bounded enumeration; minimizes package count, then identities.
+/// Small independent oracle: complete subset enumeration; minimizes package count, then identities.
 /// This is not a SAT backend or a CUDF implementation. Exhausted search is never UNSAT.
 pub struct ExhaustiveSolver {
     pub max_states: u64,
@@ -101,6 +101,12 @@ pub struct ExhaustiveSolver {
 impl Solver for ExhaustiveSolver {
     fn solve(&self, problem: &Problem<'_>) -> Result<Plan, SolveError> {
         validate_problem(problem).map_err(SolveError::Invalid)?;
+        if problem.catalog.len() > crate::MAX_REFERENCE_PACKAGES {
+            return Err(SolveError::Invalid(format!(
+                "exhaustive reference solver is limited to {} packages",
+                crate::MAX_REFERENCE_PACKAGES
+            )));
+        }
         let root_index = problem
             .catalog
             .iter()
@@ -133,6 +139,145 @@ impl Solver for ExhaustiveSolver {
             }
             if verify(problem, &plan).is_ok() {
                 best = Some(plan);
+            }
+        }
+        best.ok_or(SolveError::Unsatisfiable)
+    }
+}
+
+/// Bounded dependency-closure search for larger catalogs. It branches only on providers of
+/// currently unsatisfied requirement clauses, memoizes selected closures, and independently
+/// verifies each complete plan. This remains the reference single-version profile.
+pub struct ClosureSolver {
+    pub max_states: u64,
+}
+
+fn package_satisfies(package: &Package, clause: &[crate::Requirement]) -> bool {
+    clause
+        .iter()
+        .any(|requirement| package.provides.iter().any(|p| requirement.matches(p)))
+}
+
+fn can_add(catalog: &[Package], selected: &[usize], candidate: usize) -> bool {
+    let package = &catalog[candidate];
+    selected.iter().all(|&index| {
+        let other = &catalog[index];
+        package.name != other.name
+            && !package
+                .conflicts
+                .iter()
+                .any(|r| other.provides.iter().any(|p| r.matches(p)))
+            && !other
+                .conflicts
+                .iter()
+                .any(|r| package.provides.iter().any(|p| r.matches(p)))
+    })
+}
+
+impl Solver for ClosureSolver {
+    fn solve(&self, problem: &Problem<'_>) -> Result<Plan, SolveError> {
+        validate_problem(problem).map_err(SolveError::Invalid)?;
+        let root_index = problem
+            .catalog
+            .iter()
+            .position(|p| p.identity == problem.root)
+            .unwrap();
+        let mut pending = vec![vec![root_index]];
+        let mut visited = BTreeSet::new();
+        let mut states = 0;
+        let mut best: Option<Plan> = None;
+
+        while let Some(selected) = pending.pop() {
+            if !visited.insert(selected.clone()) {
+                continue;
+            }
+            if states >= self.max_states {
+                return Err(SolveError::BudgetExceeded);
+            }
+            states += 1;
+            if best
+                .as_ref()
+                .is_some_and(|plan| selected.len() > plan.packages.len())
+            {
+                continue;
+            }
+
+            let mut clauses: Vec<&Vec<crate::Requirement>> = Vec::new();
+            clauses.extend(problem.requirements.iter());
+            clauses.extend(problem.retained.iter());
+            for &index in &selected {
+                clauses.extend(problem.catalog[index].requires.iter());
+            }
+
+            let mut next: Option<Vec<usize>> = None;
+            let mut impossible = false;
+            for clause in clauses {
+                if selected
+                    .iter()
+                    .any(|&i| package_satisfies(&problem.catalog[i], clause))
+                {
+                    continue;
+                }
+                let mut providers: Vec<_> = problem
+                    .catalog
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, package)| {
+                        package_satisfies(package, clause)
+                            && can_add(problem.catalog, &selected, *i)
+                    })
+                    .map(|(i, _)| i)
+                    .collect();
+                providers.sort_by(|&a, &b| {
+                    problem.catalog[a]
+                        .identity
+                        .cmp(&problem.catalog[b].identity)
+                });
+                if providers.is_empty() {
+                    impossible = true;
+                    break;
+                }
+                if next
+                    .as_ref()
+                    .is_none_or(|current| providers.len() < current.len())
+                {
+                    next = Some(providers);
+                }
+            }
+            if impossible {
+                continue;
+            }
+
+            let Some(providers) = next else {
+                let mut packages: Vec<_> = selected
+                    .iter()
+                    .map(|&i| problem.catalog[i].identity.clone())
+                    .collect();
+                packages.sort();
+                let plan = Plan { packages };
+                if verify(problem, &plan).is_ok()
+                    && best.as_ref().is_none_or(|current| {
+                        (plan.packages.len(), &plan.packages)
+                            < (current.packages.len(), &current.packages)
+                    })
+                {
+                    best = Some(plan);
+                }
+                continue;
+            };
+            if best
+                .as_ref()
+                .is_some_and(|plan| selected.len() >= plan.packages.len())
+            {
+                continue;
+            }
+
+            // Reverse push order makes the deterministic identity order the DFS visit order.
+            for provider in providers.into_iter().rev() {
+                let mut child = selected.clone();
+                let at = child.binary_search(&provider).unwrap_err();
+                child.insert(at, provider);
+                pending.push(child);
             }
         }
         best.ok_or(SolveError::Unsatisfiable)

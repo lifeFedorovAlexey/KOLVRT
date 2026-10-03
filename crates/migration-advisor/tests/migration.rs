@@ -66,8 +66,8 @@ fn package(name: &str, id: u8, capability: &str) -> Package {
         conflicts: vec![],
     }
 }
-fn solver() -> ExhaustiveSolver {
-    ExhaustiveSolver { max_states: 1024 }
+fn solver() -> ClosureSolver {
+    ClosureSolver { max_states: 1024 }
 }
 fn context() -> Context {
     Context {
@@ -188,6 +188,12 @@ fn closure_alternatives_conflicts_and_independent_verifier() {
     };
     let result = solver().solve(&problem).unwrap();
     assert_eq!(result.packages, vec![hash(1), hash(3)]);
+    assert_eq!(
+        result,
+        ExhaustiveSolver { max_states: 1000 }
+            .solve(&problem)
+            .unwrap()
+    );
     assert!(
         verify(
             &problem,
@@ -248,12 +254,65 @@ fn unsatisfiable_cycles_versions_and_retained_consumers() {
             retained: &retained,
         })
     };
+    let solve_reference = |catalog: &[Package]| {
+        ExhaustiveSolver { max_states: 1000 }.solve(&Problem {
+            catalog,
+            requirements: &req,
+            root: &root,
+            retained: &retained,
+        })
+    };
     assert_eq!(solve(&catalog).unwrap().packages.len(), 2);
+    assert_eq!(solve(&catalog), solve_reference(&catalog));
     catalog[1].provides[0].semantic_version = version(2);
     assert_eq!(solve(&catalog), Err(SolveError::Unsatisfiable));
+    assert_eq!(solve(&catalog), solve_reference(&catalog));
     catalog[1].provides[0].semantic_version = version(1);
     catalog[1].provides[0].contract_digest = hash(98);
     assert!(solve(&catalog).is_ok());
+    assert_eq!(solve(&catalog), solve_reference(&catalog));
+}
+
+#[test]
+fn closure_solver_scales_with_dependency_alternatives_not_all_subsets() {
+    let chain_length = 120u8;
+    let mut root = package("root", 1, "window");
+    root.requires = vec![vec![requirement("dep-0")]];
+    let mut catalog = vec![root];
+    for index in 0..chain_length {
+        let mut dependency = package(
+            &format!("dependency-{index:03}"),
+            index + 2,
+            &format!("dep-{index}"),
+        );
+        if index + 1 < chain_length {
+            dependency.requires = vec![vec![requirement(&format!("dep-{}", index + 1))]];
+        }
+        catalog.push(dependency);
+    }
+    // The direct provider forms a second, much smaller closure. The solver must explore both
+    // branches and return the minimum plan after comparing their complete dependency closures.
+    catalog.push(package("direct-provider", 200, "dep-0"));
+    let requirements = vec![vec![requirement("window")]];
+    let retained = vec![];
+    let problem = Problem {
+        catalog: &catalog,
+        requirements: &requirements,
+        root: &hash(1),
+        retained: &retained,
+    };
+
+    let plan = ClosureSolver { max_states: 122 }.solve(&problem).unwrap();
+    assert_eq!(plan.packages, vec![hash(1), hash(200)]);
+    verify(&problem, &plan).unwrap();
+    assert_eq!(
+        ClosureSolver { max_states: 121 }.solve(&problem),
+        Err(SolveError::BudgetExceeded)
+    );
+    assert!(matches!(
+        ExhaustiveSolver { max_states: 1000 }.solve(&problem),
+        Err(SolveError::Invalid(_))
+    ));
 }
 
 #[test]

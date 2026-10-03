@@ -379,7 +379,7 @@ fn run() -> Result<PathBuf, String> {
     .map_err(|e| e.to_string())?;
     let report = advise_with_verifier(
         &request,
-        &migration_advisor::solver::ExhaustiveSolver { max_states: 1024 },
+        &migration_advisor::solver::ClosureSolver { max_states: 1024 },
         &verifier,
     )?;
     fs::write(

@@ -1,7 +1,7 @@
 use migration_advisor::{
     advisor::{Request, advise, advise_with_verifier},
     provenance::{SignedArtifactStore, TrustPolicy},
-    solver::ExhaustiveSolver,
+    solver::ClosureSolver,
 };
 use std::{
     env, fs,
@@ -37,7 +37,7 @@ fn run() -> Result<(), String> {
         return writeln!(output).map_err(|e| e.to_string());
     }
     let request: Request = serde_json::from_slice(&bytes).map_err(|e| e.to_string())?;
-    let solver = ExhaustiveSolver {
+    let solver = ClosureSolver {
         max_states: MAX_SOLVER_STATES,
     };
     let report = if args.len() == 6 {
