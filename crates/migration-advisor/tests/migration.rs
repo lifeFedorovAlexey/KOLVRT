@@ -15,7 +15,8 @@ fn version(major: u32) -> SemanticVersion {
 }
 fn policy() -> migration_advisor::statistics::StatisticalPolicy {
     migration_advisor::statistics::StatisticalPolicy {
-        min_pairs: 100,
+        min_resampling_blocks: 100,
+        resampling_block_length: 1,
         bootstrap_resamples: 2000,
         confidence_basis_points: 9500,
         seed: 7,
@@ -84,7 +85,7 @@ fn request() -> Request {
         packages: vec![hash(2)],
     };
     Request {
-        schema: 2,
+        schema: migration_advisor::SCHEMA,
         catalog: vec![current, candidate],
         current: hash(1),
         installed: installed.clone(),
@@ -596,7 +597,7 @@ fn small_samples_cannot_supply_tails_and_bootstrap_is_reproducible() {
     let mut r = request();
     r.benchmarks[0].pairs.truncate(30);
     let mut policy = policy();
-    policy.min_pairs = 30;
+    policy.min_resampling_blocks = 30;
     let result = analyze(&r.benchmarks[0].pairs, &policy).unwrap();
     assert!(result.baseline.p95_ns.is_none());
     assert!(result.baseline.p99_ns.is_none());
@@ -613,7 +614,7 @@ fn small_samples_cannot_supply_tails_and_bootstrap_is_reproducible() {
         .cycle()
         .take(1000)
         .collect();
-    policy.min_pairs = 1000;
+    policy.min_resampling_blocks = 1000;
     policy.p99_regression_budget_ns = Some(10);
     let result = analyze(&pairs, &policy).unwrap();
     assert_eq!(result.candidate.p99_ns, Some(50));
@@ -662,6 +663,36 @@ fn an_unmeasured_catalog_candidate_still_counts_in_the_comparison_family() {
                 .as_ref()
                 .is_some_and(|proposal| proposal.expected_gain.is_none())
     }));
+}
+
+#[test]
+fn moving_block_bootstrap_uses_ordered_pairs_and_effective_tail_count() {
+    use migration_advisor::statistics::analyze_family;
+    let r = request();
+    let mut pairs = r.benchmarks[0].pairs[..60].to_vec();
+    for (i, pair) in pairs.iter_mut().enumerate() {
+        let gain = if (i / 10) % 2 == 0 {
+            80 + (i % 10) as u64
+        } else {
+            20 + (i % 10) as u64
+        };
+        pair.baseline_ns = 200 + gain;
+        pair.candidate_ns = 200;
+    }
+    let mut policy = policy();
+    policy.min_resampling_blocks = 30;
+    policy.resampling_block_length = 2;
+    let result = analyze_family(&pairs, &policy, 1).unwrap();
+    assert_eq!(result.paired_runs, 60);
+    assert_eq!(result.resampling_block_length, 2);
+    assert_eq!(result.resampling_blocks, 30);
+    assert!(result.baseline.p95_ns.is_none());
+    assert_eq!(
+        result.gain_interval_ns,
+        analyze_family(&pairs, &policy, 1).unwrap().gain_interval_ns
+    );
+    policy.resampling_block_length = 3;
+    assert!(analyze_family(&pairs, &policy, 1).is_err());
 }
 
 #[test]

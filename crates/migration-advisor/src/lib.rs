@@ -11,7 +11,7 @@ pub mod routing_evidence;
 pub mod solver;
 pub mod statistics;
 
-pub const SCHEMA: u32 = 2;
+pub const SCHEMA: u32 = 3;
 /// Exact enumeration is deliberately limited; large universes need another Solver.
 pub const MAX_PACKAGES: usize = 20;
 

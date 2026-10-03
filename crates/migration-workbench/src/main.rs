@@ -170,7 +170,8 @@ fn run() -> Result<PathBuf, String> {
         });
     }
     let statistics = StatisticalPolicy {
-        min_pairs: PAIRS,
+        min_resampling_blocks: PAIRS,
+        resampling_block_length: 1,
         bootstrap_resamples: 2000,
         confidence_basis_points: 9500,
         seed: 7,

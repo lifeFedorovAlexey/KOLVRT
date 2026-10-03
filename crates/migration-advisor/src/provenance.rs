@@ -51,7 +51,7 @@ pub fn subject_digest(payload: &[u8]) -> String {
 /// Stable domain separation. Sign the serialized typed payload's digest and its role.
 pub fn signing_message(role: Role, digest: &str) -> Vec<u8> {
     format!(
-        "KOLVRT-MIGRATION-ATTESTATION/2\n{}\n{digest}\n",
+        "KOLVRT-MIGRATION-ATTESTATION/3\n{}\n{digest}\n",
         serde_json::to_string(&role).unwrap()
     )
     .into_bytes()

@@ -1,5 +1,5 @@
 {
-  "schema": 2,
+  "schema": 3,
   "catalog": [
     {
       "name": "compat-window",
@@ -74,7 +74,8 @@
   "tests": [],
   "benchmarks": [],
   "statistics": {
-    "min_pairs": 100,
+    "min_resampling_blocks": 100,
+    "resampling_block_length": 1,
     "bootstrap_resamples": 2000,
     "confidence_basis_points": 9500,
     "seed": 7,

@@ -1,9 +1,9 @@
-//! Paired percentile bootstrap of mean latency gain. Samples must be independent
-//! paired workload runs; this module cannot infer independence from timestamps.
+//! Paired bootstrap of mean latency gain, with a declared circular block length for
+//! serial dependence. Choosing that length still requires evidence outside this module.
 use crate::advisor::Pair;
 use serde::{Deserialize, Serialize};
 
-const MIN_INDEPENDENT_PAIRS: usize = 30;
+const MIN_RESAMPLING_BLOCKS: usize = 30;
 const MIN_RESAMPLES: usize = 2000;
 const MAX_RESAMPLES: usize = 10000;
 pub const MAX_PAIRS: usize = 4096;
@@ -14,7 +14,9 @@ const MIN_COMPARISON_TAIL_RESAMPLES: usize = 20;
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct StatisticalPolicy {
-    pub min_pairs: usize,
+    pub min_resampling_blocks: usize,
+    /// Circular moving-block length over ordered whole-run pairs; 1 is the i.i.d. bootstrap.
+    pub resampling_block_length: usize,
     pub bootstrap_resamples: usize,
     pub confidence_basis_points: u32,
     pub seed: u64,
@@ -24,11 +26,15 @@ pub struct StatisticalPolicy {
 }
 impl StatisticalPolicy {
     pub fn validate(&self) -> Result<(), String> {
-        if !(MIN_INDEPENDENT_PAIRS..=MAX_PAIRS).contains(&self.min_pairs)
+        if !(MIN_RESAMPLING_BLOCKS..=MAX_PAIRS).contains(&self.min_resampling_blocks)
+            || self.resampling_block_length == 0
+            || self.resampling_block_length > self.min_resampling_blocks / 2
             || !(MIN_RESAMPLES..=MAX_RESAMPLES).contains(&self.bootstrap_resamples)
             || !(9000..=9900).contains(&self.confidence_basis_points)
         {
-            return Err("invalid predeclared sample/bootstrap/confidence policy".into());
+            return Err(
+                "invalid predeclared effective-sample/block/bootstrap/confidence policy".into(),
+            );
         }
         Ok(())
     }
@@ -42,7 +48,9 @@ pub struct Distribution {
 }
 #[derive(Clone, Debug, Serialize)]
 pub struct Statistics {
-    pub independent_pairs: usize,
+    pub paired_runs: usize,
+    pub resampling_block_length: usize,
+    pub resampling_blocks: usize,
     pub comparison_family_size: usize,
     pub comparison_confidence_basis_points: f64,
     pub comparison_tail_resamples: usize,
@@ -57,13 +65,13 @@ pub struct Statistics {
     pub decision: String,
 }
 
-fn distribution(mut values: Vec<u64>) -> Distribution {
+fn distribution(mut values: Vec<u64>, effective_units: usize) -> Distribution {
     values.sort_unstable();
     let rank = |percent: usize| values[(percent * values.len()).div_ceil(100) - 1];
     Distribution {
         median_ns: rank(50),
-        p95_ns: (values.len() >= P95_TAIL_MINIMUM).then(|| rank(95)),
-        p99_ns: (values.len() >= P99_TAIL_MINIMUM).then(|| rank(99)),
+        p95_ns: (effective_units >= P95_TAIL_MINIMUM).then(|| rank(95)),
+        p99_ns: (effective_units >= P99_TAIL_MINIMUM).then(|| rank(99)),
     }
 }
 
@@ -94,14 +102,15 @@ pub fn analyze_family(
     family_size: usize,
 ) -> Result<Statistics, String> {
     policy.validate()?;
+    let resampling_blocks = pairs.len() / policy.resampling_block_length;
     if family_size == 0
-        || pairs.len() < policy.min_pairs
+        || resampling_blocks < policy.min_resampling_blocks
         || pairs.len() > MAX_PAIRS
         || pairs
             .iter()
             .any(|p| p.baseline_ns == 0 || p.candidate_ns == 0)
     {
-        return Err("insufficient or excessive independent paired runs".into());
+        return Err("insufficient resampling blocks or excessive/invalid paired runs".into());
     }
     let gains: Vec<_> = pairs
         .iter()
@@ -113,9 +122,16 @@ pub fn analyze_family(
     let mut state = policy.seed;
     let mut resamples = Vec::with_capacity(policy.bootstrap_resamples);
     for _ in 0..policy.bootstrap_resamples {
-        let sum: f64 = (0..pairs.len())
-            .map(|_| gains[index(&mut state, gains.len())])
-            .sum();
+        let mut sum = 0.0;
+        let mut sampled = 0;
+        while sampled < pairs.len() {
+            let start = index(&mut state, gains.len());
+            let block = policy.resampling_block_length.min(pairs.len() - sampled);
+            for offset in 0..block {
+                sum += gains[(start + offset) % gains.len()];
+            }
+            sampled += block;
+        }
         resamples.push(sum / pairs.len() as f64);
     }
     resamples.sort_by(f64::total_cmp);
@@ -131,8 +147,14 @@ pub fn analyze_family(
     let upper = upper_count.saturating_sub(1).min(resamples.len() - 1);
     let comparison_tail_resamples = lower_count.min(resamples.len() - upper);
     let interval = [resamples[lower], resamples[upper]];
-    let baseline = distribution(pairs.iter().map(|p| p.baseline_ns).collect());
-    let candidate = distribution(pairs.iter().map(|p| p.candidate_ns).collect());
+    let baseline = distribution(
+        pairs.iter().map(|p| p.baseline_ns).collect(),
+        resampling_blocks,
+    );
+    let candidate = distribution(
+        pairs.iter().map(|p| p.candidate_ns).collect(),
+        resampling_blocks,
+    );
     let p95_ok = baseline
         .p95_ns
         .zip(candidate.p95_ns)
@@ -156,7 +178,9 @@ pub fn analyze_family(
         "inconclusive_effect"
     };
     Ok(Statistics {
-        independent_pairs: pairs.len(),
+        paired_runs: pairs.len(),
+        resampling_block_length: policy.resampling_block_length,
+        resampling_blocks,
         comparison_family_size: family_size,
         comparison_confidence_basis_points,
         comparison_tail_resamples,
