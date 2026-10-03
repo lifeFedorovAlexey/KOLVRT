@@ -70,8 +70,8 @@
         "translation_sha256": "0099da1c50d415d83da5a08d91692baa18d33d1cf8bd2f2e4f6ef85cabca8893"
       },
       "docs/architecture-decisions/0015-el0-versioned-routing.md": {
-        "source_sha256": "efd4f9dfa680399b6a6f48ea6077d3bbc5a5a047503a9bfd5e6da29b56c4adaf",
-        "translation_sha256": "73e189d9d8a6f543106bd1367790f80e4bfce7d2f927a814848ff42865ee7839"
+        "source_sha256": "a100c2dbf33fa27ad415c76b8dbf95505ebdc5e9cfe41309a45ef26841a4f440",
+        "translation_sha256": "9a642eacc9e6075fd3c9adff69ba82dc20d141211e6ed8a356d2256858ceed3d"
       },
       "docs/architecture-decisions/0016-scheduler-ownership.md": {
         "source_sha256": "3c4d27dc0b833e5db1d7df98fce60cd65b4b1155c64bd389cb24b3e655decf87",
@@ -206,8 +206,8 @@
         "translation_sha256": "76f25b222e19be0a077def0a1f2fda035ebd95fbf588113fe7841a8755aa86fe"
       },
       "docs/kernel/routing.md": {
-        "source_sha256": "2847615cd7e4dcf9200481102d2b28f1033bea8fe1934ac73886673cf189b017",
-        "translation_sha256": "612f5707cd0e3576b3991ebfea6fa4397c360abdfedae6e92bfca6a9d9c41fc0"
+        "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
+        "translation_sha256": "855db72b1be05ee90a1946ad145f506c61016591c7e32a6abbe85123a7400acd"
       },
       "docs/kernel/scheduler.md": {
         "source_sha256": "29cd4748cc67e135d90780029c9e83d83a1b4804a4d953d8faf9c03d9efcaf45",
