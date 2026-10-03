@@ -164,14 +164,14 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
     pub fn close(&mut self, caller: ProcessId, handle: Handle) -> Result<(), Error> {
         let index = self.index(caller, handle)?;
         // Retained borrows have ended before this exclusive operation.
-        drop(self.slots[index].resource.take());
+        self.slots[index].resource = None;
         Ok(())
     }
     pub fn retire(&mut self, caller: ProcessId) -> Result<usize, Error> {
         self.context(caller)?;
         let count = self.live();
         for slot in &mut self.slots {
-            drop(slot.resource.take());
+            slot.resource = None;
         }
         self.owner = None;
         Ok(count)

@@ -339,10 +339,12 @@ impl Registry {
                 assert!(scheduler::detached(object.id));
                 continue;
             }
-            #[cfg(not(feature = "handle-retirement-negative"))]
-            self.handles[result.id]
-                .retire(object.id)
-                .expect("terminal namespace owner");
+            if !cfg!(feature = "handle-retirement-negative") || self.handles[result.id].live() == 0
+            {
+                self.handles[result.id]
+                    .retire(object.id)
+                    .expect("terminal namespace owner");
+            }
             let reason = match result.state {
                 CONTEXT_EXITED => Reason::Exited(result.context.gpr[0]),
                 CONTEXT_FAULTED => Reason::Faulted {
