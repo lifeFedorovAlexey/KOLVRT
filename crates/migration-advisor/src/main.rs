@@ -1,6 +1,6 @@
 use migration_advisor::{
-    authorization::{SignedDeploymentAuthorization, authorize},
     advisor::{Request, advise, advise_with_verifier},
+    authorization::{SignedDeploymentAuthorization, authorize},
     provenance::{SignedArtifactStore, TrustPolicy},
     solver::ClosureSolver,
 };
