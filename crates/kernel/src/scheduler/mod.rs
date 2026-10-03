@@ -440,7 +440,7 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
                     task.state = CONTEXT_READY;
                 }
             } else if class == ESR_SVC64
-                && native_call(task, &mut state.handles[state.current], frame, operation)
+                && native_call(task, &mut state.handles, state.current, frame, operation)
             {
                 task.context = *frame;
                 // Bounded synchronous native request: no locks, allocation or retained user
@@ -495,11 +495,12 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
 }
 fn native_call(
     task: &mut Task,
-    handles: &mut crate::handles::Namespace,
+    handles: &mut [crate::handles::Namespace; TASKS],
+    current: usize,
     frame: &mut Context,
     operation: u16,
 ) -> bool {
-    if crate::handles::call(task, handles, frame, operation) {
+    if crate::handles::call(task, handles, current, frame, operation) {
         return true;
     }
     #[cfg(feature = "kernel-tests")]

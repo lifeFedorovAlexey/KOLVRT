@@ -2,8 +2,8 @@
 
 Status: **Accepted for bounded Phase 3.3**. Date: 2026-10-03.
 
-Document status: CURRENT
-Evidence scope: process-local identity/type/lifetime; локальная exact-source проверка, без authority и transfer.
+Document status: HISTORICAL
+Evidence scope: process-local identity/type/lifetime; transfer и retained-target guarantees описаны в [ADR-0020](0020-handle-transfer-and-retention.md).
 Current reference: [Контракт handles](../kernel/handles.md)
 
 ## Context

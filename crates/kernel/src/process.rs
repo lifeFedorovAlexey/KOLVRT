@@ -216,9 +216,54 @@ impl Registry {
     pub fn seed_handle(&mut self, id: ProcessId) -> kernel_core::handles::Handle {
         context_contract().expect("handle bootstrap owner");
         assert_eq!(self.table.state(id), Ok(State::Prepared));
+        for _ in 0..CAPACITY - 1 {
+            self.handles[id.slot()]
+                .create_event(
+                    id,
+                    kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                    |_| Ok::<_, ()>(()),
+                )
+                .unwrap();
+        }
         self.handles[id.slot()]
-            .create_event(id, kernel_core::wait::Event::new(), |_| Ok::<_, ()>(()))
+            .create_event(
+                id,
+                kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                |_| Ok::<_, ()>(()),
+            )
             .unwrap()
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn transfer_handle(
+        &mut self,
+        sender: ProcessId,
+        handle: kernel_core::handles::Handle,
+        receiver: ProcessId,
+        rights: kernel_core::handles::Rights,
+    ) -> Result<kernel_core::handles::Handle, kernel_core::handles::Error> {
+        use kernel_core::handles::Error as HandleError;
+        context_contract().map_err(|_| HandleError::ForeignProcess)?;
+        if sender == receiver {
+            return Err(HandleError::Invalid);
+        }
+        if self.table.state(sender).ok() != Some(State::Prepared)
+            || self.table.state(receiver).ok() != Some(State::Prepared)
+        {
+            return Err(HandleError::Inactive);
+        }
+        if sender.slot() < receiver.slot() {
+            let (before, after) = self.handles.split_at_mut(receiver.slot());
+            before[sender.slot()].transfer(sender, handle, &mut after[0], receiver, rights)
+        } else {
+            let (before, after) = self.handles.split_at_mut(sender.slot());
+            after[0].transfer(
+                sender,
+                handle,
+                &mut before[receiver.slot()],
+                receiver,
+                rights,
+            )
+        }
     }
     #[cfg(feature = "kernel-tests")]
     pub fn handle_input(&mut self, id: ProcessId, raw: u64, expected: u64) {
@@ -227,6 +272,32 @@ impl Registry {
         let object = self.objects[id.slot()].as_mut().unwrap();
         object.context.gpr[20] = raw;
         object.context.gpr[21] = expected;
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn delegated_handle_input(
+        &mut self,
+        id: ProcessId,
+        raw: u64,
+        expected: u64,
+        delegated: u64,
+    ) {
+        self.handle_input(id, raw, expected);
+        self.objects[id.slot()].as_mut().unwrap().context.gpr[22] = delegated;
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn transfer_target_input(&mut self, sender: ProcessId, receiver: ProcessId) {
+        context_contract().expect("handle transfer fixture setup");
+        assert_eq!(self.table.state(sender), Ok(State::Prepared));
+        assert_eq!(self.table.state(receiver), Ok(State::Prepared));
+        let context = &mut self.objects[sender.slot()].as_mut().unwrap().context;
+        context.gpr[23] = receiver.slot() as u64;
+        context.gpr[24] = receiver.generation();
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn wait_before_handle_input(&mut self, id: ProcessId) {
+        context_contract().expect("handle wait fixture setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.objects[id.slot()].as_mut().unwrap().context.gpr[25] = 1;
     }
     #[cfg(feature = "kernel-tests")]
     pub fn handle_state(&self, id: ProcessId) -> (usize, bool) {

@@ -1,47 +1,50 @@
 # Process-local handles
 
 Document status: CURRENT
-Evidence scope: bounded Phase 3.3 exact-source QEMU verification; two fixed-affinity CPUs, no authority or transfer.
-Current reference: [ADR-0019](../architecture-decisions/0019-process-local-handles.md)
+Evidence scope: bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.
+Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md)
 
 ## Representation and caller context
 
 [Handle primitives](../../crates/kernel-core/src/handles.rs) encode an opaque LE64 value: eight low slot bits and 56 generation bits. The namespace capacity is eight entries. This is an explicit provisional wire encoding, never a cast of an internal structure. Generation zero is an invalid encoding, not a special resource. Predictable integer identities are not secrets or authority.
 
-Each process slot retains one linear namespace across ProcessId reuse. Binding records the exact ProcessId; lookup checks caller, bounds, generation, live entry and requested kind. Equal numbers in different namespaces can refer to different resources. A foreign number never selects another process table. [Native request handling](../../crates/kernel/src/handles.rs) derives caller context from the scheduler-owned task and bound namespace, verifies the Phase 3.2 executing context, and copies a 32-byte request into an immutable snapshot.
+Each process slot retains one linear namespace across ProcessId reuse. Binding records the exact ProcessId; lookup checks caller, bounds, generation, live entry, requested kind and required rights. Equal numbers in different namespaces can refer to different resources. A wire handle never selects another process table. [Native request handling](../../crates/kernel/src/handles.rs) derives caller context from the scheduler-owned task and bound namespace, verifies the executing context, and copies a 48-byte request into an immutable snapshot before touching namespace entries.
 
 ```text
-LE64 version=1, operation=(1 lookup | 2 close), handle, kind=(1 event | 2 completion)
-safe copy -> decode snapshot -> current namespace -> generation/live/type check
-           -> synchronous retained reference -> later independent authority gate
+LE64[6] version=1, operation=(1 lookup | 2 close | 3 transfer)
+lookup/close: handle, kind, required_rights, reserved=0
+transfer:     handle, receiver_process_slot, receiver_generation, requested_rights
+safe copy -> decode snapshot -> current caller table -> generation/type/rights check
+           -> receiver-local handle with the same target binding
 ```
 
-Only lookup and close are exposed. Status words are native bounded outcomes: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure. Unknown version/opcode/kind fails. Close also validates the requested kind. No pointer, physical address, global object ID, internal enum layout or compatibility errno crosses EL0. Creation is trusted bootstrap/fixture work, not an unprivileged object-creation authority API.
+Lookup, close and transfer are exposed. Rights are `SEND=1` and `TRANSFER=2`; unknown bits fail. Transfer requires TRANSFER and a subset of the held rights. The receiver is identified by a live ProcessId already bound to a namespace on the caller's CPU; other-CPU requests fail with ForeignProcess. Status words are native bounded outcomes: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure, 9 rights denied, 10 retained-reference quota exhausted. Unknown version/opcode/kind fails. Close validates kind and generation. No pointer, physical address, global object ID, internal enum layout or compatibility errno crosses EL0. Creation remains trusted bootstrap work, not an unprivileged object-creation authority API.
 
 ## Ownership and target lifetime
 
 Each owned target carries an immutable kernel-only TargetId (creating ProcessId, slot and reservation generation), distinct from the process-local wire Handle. Moving a namespace preserves TargetId; reusing its slot creates a different target. TargetId is never serialized to EL0 and grants no authority.
 
-The two concrete targets are the existing coalescing wait Event and an owned immutable process Completion record. The completion retains its value, not a live process or address space. Closing it cannot terminate a process. The event owns its latch storage. This narrow sum is not a universal KernelObject hierarchy or generic invocation interface.
+The two concrete targets are the existing coalescing wait Event and an owned immutable process Completion record. The completion retains its value, not a live process or address space. Closing it cannot terminate a process. Delegated Event handles share one atomic latch in a fixed 512-slot kernel pool. Each slot carries a nonwrapping generation and allows at most 1,024 live references. The per-process namespace remains eight entries; exhausted pool or reference quotas fail explicitly. This narrow sum is not a universal KernelObject hierarchy or generic invocation interface.
 
-A namespace owns each target directly in bounded initialized storage. Lookup returns a Retained borrow; no allocation or reference count is required. A used retained borrow excludes mutable close/retire at compile time, as checked by a compile-fail test. Accepted work here is synchronous and finishes before close; asynchronous retained requests, shared publishers and delegated references remain unimplemented. Closing removes exactly one resource owner and invalidates future lookup. Double close is Stale. Resource-specific methods are available only to trusted kernel code; a successful EL0 lookup grants no read/write/terminate/delegate authority.
+A namespace owns one reference per entry. Lookup returns a Retained borrow; its `.retain()` operation creates an owned reference for accepted work. A used borrow excludes mutable close/retire at compile time. Transfer validates both tables before publishing a fresh receiver-local generation, attenuates rights, and preserves TargetId. Closing removes one entry and blocks future lookup through that token, while delegated entries and owned retained work keep the object alive. Double close is Stale. Resource-specific methods remain kernel-only; handle rights gate admission but do not add an EL0 object pointer or general invoke interface.
 
 ```mermaid
 flowchart TD
     R[Registry owns namespace and retained frames] --> M[Move namespace to indexed CPU state]
     M --> L[Masked owner lookup and retained borrow]
-    L --> B[Borrow ends before return or close]
-    B --> Q[Both CPUs restore native roots and complete TLBI]
-    Q --> T[Move namespace back under acquired completion]
+    L --> B[Borrow or owned accepted reference]
+    B --> Q[Close drops one reference; final drop reclaims pool slot]
+    Q --> T[Both CPUs restore native roots and complete TLBI]
+    T --> R
     T --> S{Process survives scheduling step?}
     S -->|yes| R
     S -->|exit or fault| E[Retire entries and unbind namespace]
     E --> F[Reclaim frames while preserving slot generations]
 ```
 
-[Process ownership](../../crates/kernel/src/process.rs) retains namespace generations after retirement. [Scheduler integration](../../crates/kernel/src/scheduler/mod.rs) moves each namespace into the owner state through existing publication permits, then moves it back through quiescent editing after both CPU completions. Task metadata remains copied evidence; namespaces and targets are not cloned. No global handle lock, new UnsafeCell, unsafe Sync, raw-pointer cache or unchecked indexing is introduced. Fixed affinity, private mappings and exclusive masked owner sections exclude lookup/close/retirement races. Future migration, shared mappings or asynchronous operations require a new exclusion/retention proof.
+[Process ownership](../../crates/kernel/src/process.rs) retains namespace generations after retirement. [Scheduler integration](../../crates/kernel/src/scheduler/mod.rs) moves each namespace into the owner state through existing publication permits, then moves it back through quiescent editing after both CPU completions. Same-CPU lookups and EL0 transfer use the already exclusive scheduler ownership permit; no table/object lock is acquired. Cross-CPU tests transfer while both namespaces are coordinator-owned, then race source close against recipient lookup on real EL0 CPUs. Atomic reference counts protect the shared Event target. No new UnsafeCell, unsafe Sync, raw-pointer cache or unchecked indexing is introduced. Safe user copy happens before namespace access, and no lock crosses copy, allocation, wait or external calls.
 
-DEV reports process slot/generation, capacity, active count, live slot generations/kinds and retiring lifecycle after quiescence. It does not print complete raw handle values, kernel pointers or payloads. PROD removes diagnostics and retains the same checks. Eight inline targets are the deterministic per-process quota; lookup/close do not allocate, block, yield, log or call an external service.
+DEV reports process slot/generation, capacity, active count, live slot generations/kinds and retiring lifecycle after quiescence. It does not print complete raw handle values, kernel pointers or payloads. PROD removes diagnostics and retains the same checks. Eight table entries per process, 512 shared Event slots and 1,024 references per target are explicit quotas. Lookup/close/transfer do not allocate, block, yield, log or call an external service.
 
 Runqueue preparation initializes existing storage under its exclusive preparing permit. It avoids by-value State copies on the fixed DEV stack. The acceptance audit reproduced BSS corruption from oversized stack temporaries in the previous implementation; in-place preparation removes those copies while preserving report continuity and namespace ownership.
 
@@ -62,11 +65,11 @@ Creation owns the prepared target on the kernel stack until publication succeeds
 
 ## Verification and performance gate
 
-[EL0 verification](../../crates/kernel/src/handles/testing.rs) drives forged/stale/wrong-kind lookup and double close through the production copied request path. Two real processes submit the same raw handle: the empty receiver cannot resolve the sender resource. Eight two-CPU creation/exit/fault/reclaim rounds preserve handle generations across reused process slots. Frame counts and namespace emptiness are checked. The fixture also covers live borrowed events, completion ownership, capacity, small-limit generation exhaustion, failed user publication and repeated close/reuse.
+[EL0 verification](../../crates/kernel/src/handles/testing.rs) drives forged/stale/wrong-kind lookup, double close, required-right checks and transfer through the production copied request path. The receiver obtains a different local token for the same TargetId with SEND only; an attempted rights escalation and a full receiver table are rejected transactionally. The source closes before accepted work completes. Two CPUs also receive delegated aliases, then run source close and recipient lookup concurrently on the same atomic Event. Eight two-CPU creation/exit/fault/reclaim rounds preserve handle generations across reused process slots. Frame counts, target identity and namespace cleanup are checked. The fixture also covers completion ownership, capacity, small-limit generation exhaustion, failed user publication and repeated close/reuse.
 
-Five build controls remove actual generation validation, owner validation, type checking, generation advancement or retirement cleanup. The runner must detect each in DEV and PROD. These mutate enforcement, not test expectations. Retirement requires its dedicated handle-retirement-reject event so unrelated panics cannot count as the expected invariant rejection. The verified matrix includes existing Phase 3.2 and lifecycle controls, native-only removal, routing regression, host tests, Clippy and repository checks.
+Six build controls remove actual generation validation, owner validation, type checking, generation advancement, retirement cleanup or transfer rights enforcement. The runner must detect each in DEV and PROD. These mutate enforcement, not test expectations. Retirement requires its dedicated handle-retirement-reject event so unrelated panics cannot count as the expected invariant rejection. The verified matrix includes existing Phase 3.2 and lifecycle controls, native-only removal, routing regression, host tests, Clippy and repository checks.
 
-Five per-CPU scopes retain four warmups and 32 raw timer observations: successful lookup, failed lookup, create, close and slot reuse. Create measures target construction and namespace commit with a no-op publication callback; user-copy/EL0 setup is excluded. Close preparation is outside its interval. Reuse measures create/close/create/close. Measurements are regression baselines under QEMU TCG, not hardware throughput claims. Compiler-observation barriers materialize intermediate namespace states so create/close/reuse cannot be folded away. The measured candidate has 73 source hashes, 72 checks and 67 negative controls.
+Five per-CPU scopes retain four warmups and 32 raw timer observations: successful lookup, failed lookup, create, close and slot reuse. Create measures target construction and namespace commit with a no-op publication callback; user-copy/EL0 setup is excluded. Close preparation is outside its interval. Reuse measures create/close/create/close. Measurements are regression baselines under QEMU TCG, not hardware throughput claims. Compiler-observation barriers materialize intermediate namespace states so create/close/reuse cannot be folded away. These numbers are the original Phase 3.3 baseline; the current issue #23 exact-source receipt is recorded separately.
 
 Recorded timer ticks at 62.5 MHz, 32 samples per cell. Single-operation PROD observations approach timer granularity; a zero median is a quantized observation, not a claim of zero execution cost. Do not infer a hardware speedup from these samples:
 
@@ -78,10 +81,10 @@ Recorded timer ticks at 62.5 MHz, 32 samples per cell. Single-operation PROD obs
 | handle_close          | 44 / 56               | 44 / 50               | 6 / 31                 | 6 / 63                 |
 | handle_slot_reuse     | 206 / 218             | 212 / 225             | 6 / 13                 | 6 / 19                 |
 
-[Kernel receipt](../../research/results/kernel-phase33.json), [native-only receipt](../../research/results/native-compat-removal-phase33.json), [routing regression](../../research/results/routing-phase33-regression.json) and [unsafe inventory](../../research/results/kernel-phase33-unsafe-audit.json) retain the exact measured scope. Native-only compares 59 unchanged native/harness files; production unsafe delta is zero and three linked-fixture sites are test-only. An earlier CI invocation encountered a secondary CPU failure before its ownership negative control; it is not accepted as success or hidden by the runner. Final CI must pass on the published candidate.
+[Issue #23 exact-source receipt](../../research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) records 73 DEV/PROD checks and 69 negative controls. The [original Phase 3.3 baseline](../../research/results/kernel-phase33.json), [native-only receipt](../../research/results/native-compat-removal-phase33.json), [routing regression](../../research/results/routing-phase33-regression.json) and [unsafe inventory](../../research/results/kernel-phase33-unsafe-audit.json) retain their separate scopes. Native-only compares 59 unchanged native/harness files; production unsafe delta is zero and three linked-fixture sites are test-only.
 
 ## Scope before capabilities
 
-Identity/type/lifetime checks produce a resource reference; they do not authorize effects. Phase 3.4 can add explicit admission checks around the same caller namespace and retained resource without changing handle identity. Rights representation, authority issuer, delegation, revocation and asynchronous accepted-work retention still require their own contracts. Issue #23 includes later rights/transfer acceptance and is not closed by this bounded milestone. Linux fd/Windows HANDLE semantics, IPC, sharing/duplication, security domains, capability bits, magic current/root handles and a universal object model are excluded.
+Identity/type/lifetime checks produce a resource reference; they do not authorize effects. Issue #23 adds SEND/TRANSFER admission, attenuation and bounded owned Event retention. A future phase can add an authority issuer, revocation and broader asynchronous work contracts without changing handle identity. Linux fd/Windows HANDLE semantics, general IPC, unrestricted duplication, security domains, capability bits, magic current/root handles and a universal object model are excluded.
 
 [Russian translation](../../translations/ru/docs/kernel/handles.md)

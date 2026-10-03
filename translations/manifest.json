@@ -6,8 +6,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "67029e2527f388ba66dc25afaafcd5d878306ba0957424a53eeb5ff0d8569195",
-        "translation_sha256": "e0fb337130ef4e39b4993955f1012e91937f398c27f4477096cc1a630121fb92"
+        "source_sha256": "9e60de955f36a8024388bb6b8c879b7f1de060b1cc70b20affc1147f4846524d",
+        "translation_sha256": "3a7223c3c86237f41270aa1744b712ff66d5f18c8b095475c08b3936822dfe7d"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "6518a598b4f2d4d7abd7618b81d28c6e26dd1596123247cc5cd887db3ffabea3",
@@ -86,12 +86,16 @@
         "translation_sha256": "9edaf7d7c08a1577d8c63c3acf67c4ec191b97ef1d5b936dc2995d8e45e85592"
       },
       "docs/architecture-decisions/0019-process-local-handles.md": {
-        "source_sha256": "9b3b9e17b3ed74de9980a34cb95cb877f15d2d889c96d5eaef91b2e344c67c11",
-        "translation_sha256": "d2df0a3232233a9c6f9ed2d85404db31a7d9b7af3ffcc8bd2a9b94b28fdc1864"
+        "source_sha256": "d5d08300809adbbb88cf1900afb1791879ebd4f1de00146a27d45aa197de390d",
+        "translation_sha256": "071495abaaa7a44fee3f13f4e0f881ebd7511c23ad3762d20ee526668b692d8b"
+      },
+      "docs/architecture-decisions/0020-handle-transfer-and-retention.md": {
+        "source_sha256": "6f8ac58ddfacdd8e968e038cde5ce6e67c40a82be71631dbad168c9a8e6d466a",
+        "translation_sha256": "f13c64b17878bacf572b394861222424031780ee8ccd2fe4d4cbde60abe2510b"
       },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "d360ba6343c8da0b8eec75c7bf9b7d5d69709f363135817c9b159a729e50ba66",
-        "translation_sha256": "c1717bbd106de836c8834d97f575a6b8ee0221dafd88eb34febc5d50444ef211"
+        "source_sha256": "9659031e19d4c5c62f210ffeff927a709039cfc100a39f2748402452745c28d5",
+        "translation_sha256": "239da88b4bb14c3faf0c3ca349ed9d924ead3586fdcf69fbc71e49d6577d9c86"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
@@ -198,8 +202,8 @@
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
       },
       "docs/kernel/handles.md": {
-        "source_sha256": "9378f7cd193db6746570e548b6509f217dd3e269c0985184f3a7bd384475d7f4",
-        "translation_sha256": "158c9ce1416f3f846764af5e04bc1ac606c24494fa68a21ff0e9475a4c3fbd92"
+        "source_sha256": "9675c1e83377468b96d4ee22c5b6bd69cc6bdcef2acd55dcbba747acddbaea39",
+        "translation_sha256": "89cf3cd295c659e9a3ee0a7660bd2f3f6b6f010e66b66caff762658b25e0ff72"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",

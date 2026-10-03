@@ -59,4 +59,5 @@ handle-generation-negative = ["kernel-tests", "kernel-core/handle-generation-neg
 handle-owner-negative = ["kernel-tests", "kernel-core/handle-owner-negative"]
 handle-type-negative = ["kernel-tests", "kernel-core/handle-type-negative"]
 handle-reuse-negative = ["kernel-tests", "kernel-core/handle-reuse-negative"]
+handle-transfer-rights-negative = ["kernel-tests", "kernel-core/handle-transfer-rights-negative"]
 handle-retirement-negative = ["kernel-tests"]

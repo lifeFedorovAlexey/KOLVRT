@@ -1,7 +1,7 @@
 //! Process-local references to two existing native primitives. No authority.
 use crate::{
     process::{Completion, ProcessId},
-    wait::Event,
+    wait::SharedEvent,
 };
 pub const MAX_GENERATION: u64 = u64::MAX >> 8;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -20,6 +20,28 @@ pub enum Kind {
     Completion,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Rights(u8);
+impl Rights {
+    pub const NONE: Self = Self(0);
+    pub const SEND: Self = Self(1);
+    pub const TRANSFER: Self = Self(2);
+    pub const KNOWN: Self = Self(Self::SEND.0 | Self::TRANSFER.0);
+    pub const ALL: Self = Self::KNOWN;
+    pub const fn from_bits(bits: u8) -> Option<Self> {
+        if bits & !Self::KNOWN.0 == 0 {
+            Some(Self(bits))
+        } else {
+            None
+        }
+    }
+    pub const fn bits(self) -> u8 {
+        self.0
+    }
+    const fn contains(self, required: Self) -> bool {
+        self.0 & required.0 == required.0
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
     Invalid,
     Stale,
@@ -28,6 +50,8 @@ pub enum Error {
     Inactive,
     Capacity,
     GenerationExhausted,
+    Rights,
+    ReferenceExhausted,
 }
 #[derive(Debug, PartialEq, Eq)]
 pub enum CreationError<E> {
@@ -43,11 +67,12 @@ pub struct TargetId {
 }
 // Narrow concrete primitive storage, not a generic invocation/object hierarchy.
 enum Primitive {
-    Event(Event),
+    Event(SharedEvent),
     Completion(Completion),
 }
 struct Resource {
     identity: TargetId,
+    rights: Rights,
     value: Primitive,
 }
 impl Resource {
@@ -56,6 +81,19 @@ impl Resource {
             Primitive::Event(_) => Kind::Event,
             Primitive::Completion(_) => Kind::Completion,
         }
+    }
+    fn delegated(&self, rights: Rights) -> Result<Self, Error> {
+        let value = match &self.value {
+            Primitive::Event(event) => {
+                Primitive::Event(event.try_clone().ok_or(Error::ReferenceExhausted)?)
+            }
+            Primitive::Completion(completion) => Primitive::Completion(*completion),
+        };
+        Ok(Self {
+            identity: self.identity,
+            rights,
+            value,
+        })
     }
 }
 struct Slot {
@@ -86,11 +124,16 @@ pub struct Namespace<const N: usize, const LIMIT: u64 = MAX_GENERATION> {
 pub struct Retained<'a> {
     resource: &'a Resource,
 }
+/// Owned reference for accepted work that outlives the lookup call or source
+/// handle. Dropping the final such reference releases its bounded resource slot.
+pub struct OwnedRetained {
+    resource: Resource,
+}
 impl Retained<'_> {
     pub fn target(&self) -> TargetId {
         self.resource.identity
     }
-    pub fn event(&self) -> Option<&Event> {
+    pub fn event(&self) -> Option<&SharedEvent> {
         match &self.resource.value {
             Primitive::Event(e) => Some(e),
             _ => None,
@@ -99,6 +142,34 @@ impl Retained<'_> {
     pub fn completion(&self) -> Option<Completion> {
         match &self.resource.value {
             Primitive::Completion(c) => Some(*c),
+            _ => None,
+        }
+    }
+    pub fn rights(&self) -> Rights {
+        self.resource.rights
+    }
+    pub fn retain(&self) -> Result<OwnedRetained, Error> {
+        Ok(OwnedRetained {
+            resource: self.resource.delegated(self.resource.rights)?,
+        })
+    }
+}
+impl OwnedRetained {
+    pub fn target(&self) -> TargetId {
+        self.resource.identity
+    }
+    pub fn rights(&self) -> Rights {
+        self.resource.rights
+    }
+    pub fn event(&self) -> Option<&SharedEvent> {
+        match &self.resource.value {
+            Primitive::Event(event) => Some(event),
+            _ => None,
+        }
+    }
+    pub fn completion(&self) -> Option<Completion> {
+        match &self.resource.value {
+            Primitive::Completion(completion) => Some(*completion),
             _ => None,
         }
     }
@@ -168,12 +239,68 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         handle: Handle,
         expected: Kind,
     ) -> Result<Retained<'_>, Error> {
+        self.lookup_with_rights(caller, handle, expected, Rights::NONE)
+    }
+    pub fn lookup_with_rights(
+        &self,
+        caller: ProcessId,
+        handle: Handle,
+        expected: Kind,
+        required: Rights,
+    ) -> Result<Retained<'_>, Error> {
         let index = self.index(caller, handle)?;
         let resource = self.slots[index].resource.as_ref().ok_or(Error::Stale)?;
         if !cfg!(feature = "handle-type-negative") && resource.kind() != expected {
             return Err(Error::WrongType);
         }
+        if !resource.rights.contains(required) {
+            return Err(Error::Rights);
+        }
         Ok(Retained { resource })
+    }
+    /// Atomically validates sender authority, receiver ownership and capacity,
+    /// then commits one new receiver-local generation. The source remains live;
+    /// both slots retain the same immutable target identity and shared event.
+    pub fn transfer<const M: usize, const OTHER_LIMIT: u64>(
+        &self,
+        caller: ProcessId,
+        handle: Handle,
+        receiver: &mut Namespace<M, OTHER_LIMIT>,
+        receiver_owner: ProcessId,
+        requested: Rights,
+    ) -> Result<Handle, Error> {
+        let source_index = self.index(caller, handle)?;
+        let source = self.slots[source_index]
+            .resource
+            .as_ref()
+            .ok_or(Error::Stale)?;
+        let unauthorized = Rights::from_bits(requested.bits()).is_none()
+            || !source.rights.contains(Rights::TRANSFER)
+            || !source.rights.contains(requested);
+        if unauthorized && !cfg!(feature = "handle-transfer-rights-negative") {
+            return Err(Error::Rights);
+        }
+        receiver.context(receiver_owner)?;
+        let target = receiver
+            .slots
+            .iter()
+            .position(|slot| slot.resource.is_none() && slot.generation < OTHER_LIMIT)
+            .ok_or_else(|| {
+                if receiver.slots.iter().any(|slot| slot.resource.is_none()) {
+                    Error::GenerationExhausted
+                } else {
+                    Error::Capacity
+                }
+            })?;
+        let generation = receiver.slots[target]
+            .generation
+            .checked_add(1)
+            .filter(|next| *next <= OTHER_LIMIT)
+            .ok_or(Error::GenerationExhausted)?;
+        let delegated = source.delegated(requested)?;
+        receiver.slots[target].generation = generation;
+        receiver.slots[target].resource = Some(delegated);
+        Ok(Handle((generation << 8) | target as u64))
     }
     pub fn close(&mut self, caller: ProcessId, handle: Handle) -> Result<(), Error> {
         let index = self.index(caller, handle)?;
@@ -194,6 +321,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         &mut self,
         caller: ProcessId,
         value: Primitive,
+        rights: Rights,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
         self.context(caller).map_err(CreationError::Handle)?;
@@ -224,6 +352,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
                 slot: index,
                 generation: slot.generation,
             },
+            rights,
             value,
         };
         // Resource remains owned by this stack value until infallible commit.
@@ -235,10 +364,19 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
     pub fn create_event<E>(
         &mut self,
         caller: ProcessId,
-        event: Event,
+        event: SharedEvent,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create(caller, Primitive::Event(event), publish)
+        self.create_event_with_rights(caller, event, Rights::ALL, publish)
+    }
+    pub fn create_event_with_rights<E>(
+        &mut self,
+        caller: ProcessId,
+        event: SharedEvent,
+        rights: Rights,
+        publish: impl FnOnce(Handle) -> Result<(), E>,
+    ) -> Result<Handle, CreationError<E>> {
+        self.create(caller, Primitive::Event(event), rights, publish)
     }
     pub fn create_completion<E>(
         &mut self,
@@ -246,19 +384,29 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         completion: Completion,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create(caller, Primitive::Completion(completion), publish)
+        self.create_completion_with_rights(caller, completion, Rights::ALL, publish)
+    }
+    pub fn create_completion_with_rights<E>(
+        &mut self,
+        caller: ProcessId,
+        completion: Completion,
+        rights: Rights,
+        publish: impl FnOnce(Handle) -> Result<(), E>,
+    ) -> Result<Handle, CreationError<E>> {
+        self.create(caller, Primitive::Completion(completion), rights, publish)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::wait::SharedEvent;
     fn ids() -> (ProcessId, ProcessId) {
         let mut p = crate::process::Table::<2>::new();
         (p.reserve(0..1).unwrap(), p.reserve(1..2).unwrap())
     }
     fn event<const N: usize, const L: u64>(n: &mut Namespace<N, L>, id: ProcessId) -> Handle {
-        n.create_event(id, Event::new(), |_| Ok::<_, ()>(()))
+        n.create_event(id, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
             .unwrap()
     }
     #[test]
@@ -305,7 +453,8 @@ mod tests {
             Some(completion)
         );
         assert_eq!(
-            n.create_event(a, Event::new(), |_| Ok::<_, ()>(())).err(),
+            n.create_event(a, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
+                .err(),
             Some(CreationError::Handle(Error::Capacity))
         );
         assert_eq!(n.retire(a), Ok(2));
@@ -339,7 +488,7 @@ mod tests {
         n.bind(a).unwrap();
         let mut leaked = None;
         assert_eq!(
-            n.create_event(a, Event::new(), |h| {
+            n.create_event(a, SharedEvent::try_new().unwrap(), |h| {
                 leaked = Some(h);
                 Err(9)
             }),
@@ -353,11 +502,80 @@ mod tests {
         );
         n.close(a, h).unwrap();
         assert_eq!(
-            n.create_event(a, Event::new(), |_| Ok::<_, ()>(())).err(),
+            n.create_event(a, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
+                .err(),
             Some(CreationError::Handle(Error::GenerationExhausted))
         );
         assert_eq!(n.slot_state(0), Some((2, None)));
         assert_eq!(n.retire(a), Ok(0));
+    }
+    #[test]
+    fn transfer_is_receiver_local_transactional_and_attenuates_rights() {
+        let (a, b) = ids();
+        let mut sender = Namespace::<2>::new();
+        let mut receiver = Namespace::<1>::new();
+        sender.bind(a).unwrap();
+        receiver.bind(b).unwrap();
+        let source = sender
+            .create_event_with_rights(a, SharedEvent::try_new().unwrap(), Rights::ALL, |_| {
+                Ok::<_, ()>(())
+            })
+            .unwrap();
+        let full = event(&mut receiver, b);
+        let sender_before = sender.live();
+        let receiver_before = receiver.live();
+        assert_eq!(
+            sender.transfer(a, source, &mut receiver, b, Rights::SEND),
+            Err(Error::Capacity)
+        );
+        assert_eq!(sender.live(), sender_before);
+        assert_eq!(receiver.live(), receiver_before);
+        assert_eq!(
+            sender
+                .lookup_with_rights(a, source, Kind::Event, Rights::TRANSFER)
+                .unwrap()
+                .rights(),
+            Rights::ALL
+        );
+        receiver.close(b, full).unwrap();
+        let delegated = sender
+            .transfer(a, source, &mut receiver, b, Rights::SEND)
+            .unwrap();
+        assert_ne!(source, delegated);
+        let sender_target = sender.lookup(a, source, Kind::Event).unwrap().target();
+        let receiver_ref = receiver
+            .lookup_with_rights(b, delegated, Kind::Event, Rights::SEND)
+            .unwrap();
+        assert_eq!(receiver_ref.target(), sender_target);
+        assert_eq!(receiver_ref.rights(), Rights::SEND);
+        assert_eq!(
+            receiver
+                .lookup_with_rights(b, delegated, Kind::Event, Rights::TRANSFER)
+                .err(),
+            Some(Error::Rights)
+        );
+        sender
+            .lookup(a, source, Kind::Event)
+            .unwrap()
+            .event()
+            .unwrap()
+            .signal();
+        assert!(!receiver_ref.event().unwrap().register());
+        sender.close(a, source).unwrap();
+        let accepted = receiver
+            .lookup(b, delegated, Kind::Event)
+            .unwrap()
+            .retain()
+            .unwrap();
+        receiver.close(b, delegated).unwrap();
+        assert!(accepted.event().unwrap().signal());
+        assert_eq!(sender.live(), 0);
+        assert_eq!(receiver.live(), 0);
+        drop(accepted);
+        assert_eq!(
+            receiver.transfer(b, delegated, &mut sender, a, Rights::ALL),
+            Err(Error::Stale)
+        );
     }
     #[test]
     fn process_local_equal_values_and_stress() {

@@ -11,9 +11,9 @@ const WARMUP: usize = 4;
 static BENCHMARKS: [[AtomicU64; SAMPLES * 5]; crate::platform::config::ACTIVE_CPUS] =
     [const { [const { AtomicU64::new(0) }; SAMPLES * 5] }; crate::platform::config::ACTIVE_CPUS];
 use kernel_core::{
-    handles::{CreationError, Namespace as Table},
+    handles::{CreationError, Namespace as Table, Rights},
     process::{Completion, Table as Processes},
-    wait::Event,
+    wait::SharedEvent,
 };
 static LAST: [AtomicU64; crate::platform::config::ACTIVE_CPUS] =
     [const { AtomicU64::new(0) }; crate::platform::config::ACTIVE_CPUS];
@@ -23,6 +23,36 @@ pub(super) fn call(
     frame: &mut Context,
     operation: u16,
 ) -> bool {
+    if operation == 0x85 {
+        let Some(caller) = table.owner() else {
+            frame.gpr[0] = status(Error::Inactive);
+            return true;
+        };
+        frame.gpr[0] = table
+            .close(caller, Handle::decode(frame.gpr[0]))
+            .map(|_| 0)
+            .unwrap_or_else(status);
+        return true;
+    }
+    if operation == 0x86 {
+        let Some(caller) = table.owner() else {
+            frame.gpr[0] = status(Error::Inactive);
+            return true;
+        };
+        frame.gpr[0] = match table.lookup_with_rights(
+            caller,
+            Handle::decode(frame.gpr[0]),
+            Kind::Event,
+            Rights::SEND,
+        ) {
+            Ok(reference) => {
+                reference.event().unwrap().signal();
+                0
+            }
+            Err(error) => status(error),
+        };
+        return true;
+    }
     if operation != 0x81 && operation != 0x82 {
         return false;
     }
@@ -30,7 +60,7 @@ pub(super) fn call(
     let access = Access::current(task).expect("current caller");
     let address = frame.gpr[1] as usize;
     if operation == 0x82 {
-        let a = table.create_event(caller, Event::new(), |h| {
+        let a = table.create_event(caller, SharedEvent::try_new().unwrap(), |h| {
             access.copy_to_user(address + 64, &h.encode().to_le_bytes())
         });
         let b = table.create_completion(
@@ -46,7 +76,7 @@ pub(super) fn call(
     }
     let old = Handle::decode(LAST[crate::percpu::id()].load(Ordering::Acquire));
     let stale_process = table.lookup(caller, old, Kind::Event).is_err();
-    let failed = table.create_event(caller, Event::new(), |h| {
+    let failed = table.create_event(caller, SharedEvent::try_new().unwrap(), |h| {
         access.copy_to_user(memory::USER_GUARD - 4, &h.encode().to_le_bytes())
     });
     let rollback = matches!(
@@ -56,7 +86,7 @@ pub(super) fn call(
         }))
     ) && table.live() == 0;
     let h = table
-        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
         .unwrap();
     let mut identities = Processes::<2>::new();
     let a = identities.reserve(0..1).unwrap();
@@ -69,10 +99,77 @@ pub(super) fn call(
         let e = r.event().unwrap();
         e.signal() && !e.register()
     };
+    let transfer = {
+        let source = table
+            .create_event_with_rights(caller, SharedEvent::try_new().unwrap(), Rights::ALL, |_| {
+                Ok::<_, ()>(())
+            })
+            .unwrap();
+        let target = table.lookup(caller, source, Kind::Event).unwrap().target();
+        let mut delegated = Table::<1>::new();
+        delegated.bind(foreign).unwrap();
+        let delegated_handle = table
+            .transfer(caller, source, &mut delegated, foreign, Rights::SEND)
+            .unwrap();
+        let attenuated = delegated
+            .lookup_with_rights(foreign, delegated_handle, Kind::Event, Rights::SEND)
+            .is_ok()
+            && delegated
+                .lookup_with_rights(foreign, delegated_handle, Kind::Event, Rights::TRANSFER)
+                .err()
+                == Some(Error::Rights);
+        let mut escalation_target = Table::<1>::new();
+        escalation_target.bind(caller).unwrap();
+        let escalation = delegated.transfer(
+            foreign,
+            delegated_handle,
+            &mut escalation_target,
+            caller,
+            Rights::ALL,
+        ) == Err(Error::Rights);
+        let mut full = Table::<1>::new();
+        full.bind(foreign).unwrap();
+        let occupied = full
+            .create_event(
+                foreign,
+                SharedEvent::try_new().unwrap(),
+                |_| Ok::<_, ()>(()),
+            )
+            .unwrap();
+        let source_live = table.live();
+        let receiver_live = full.live();
+        let transactional = table.transfer(caller, source, &mut full, foreign, Rights::SEND)
+            == Err(Error::Capacity)
+            && table.live() == source_live
+            && full.live() == receiver_live;
+        full.close(foreign, occupied).unwrap();
+        let source_event = table.lookup(caller, source, Kind::Event).unwrap();
+        let shared = source_event.event().unwrap().signal()
+            && !delegated
+                .lookup(foreign, delegated_handle, Kind::Event)
+                .unwrap()
+                .event()
+                .unwrap()
+                .register()
+            && delegated
+                .lookup(foreign, delegated_handle, Kind::Event)
+                .unwrap()
+                .target()
+                == target;
+        table.close(caller, source).unwrap();
+        delegated
+            .lookup(foreign, delegated_handle, Kind::Event)
+            .is_ok()
+            && attenuated
+            && escalation
+            && transactional
+            && shared
+            && Rights::from_bits(0x80).is_none()
+    };
     table.close(caller, h).unwrap();
     let double = table.close(caller, h) == Err(Error::Stale);
     let fresh = table
-        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
         .unwrap();
     let generation = fresh != h && table.lookup(caller, h, Kind::Event).err() == Some(Error::Stale);
     table.close(caller, fresh).unwrap();
@@ -80,22 +177,22 @@ pub(super) fn call(
     exhaustion.bind(caller).unwrap();
     for _ in 0..2 {
         let h = exhaustion
-            .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+            .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
             .unwrap();
         exhaustion.close(caller, h).unwrap();
     }
     let wrap = exhaustion
-        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
         .err()
         == Some(CreationError::Handle(Error::GenerationExhausted));
     let mut filled = [Handle::decode(0); CAPACITY];
     for h in &mut filled {
         *h = table
-            .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+            .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
             .unwrap();
     }
     let capacity = table
-        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
         .err()
         == Some(CreationError::Handle(Error::Capacity));
     for h in filled {
@@ -104,13 +201,13 @@ pub(super) fn call(
     let mut stress = true;
     for _ in 0..64 {
         let h = table
-            .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+            .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
             .unwrap();
         table.close(caller, h).unwrap();
         stress &= table.lookup(caller, h, Kind::Event).is_err();
     }
     let h = table
-        .create_event(caller, Event::new(), |h| {
+        .create_event(caller, SharedEvent::try_new().unwrap(), |h| {
             access.copy_to_user(address + 64, &h.encode().to_le_bytes())
         })
         .unwrap();
@@ -124,6 +221,7 @@ pub(super) fn call(
             && owner
             && kind
             && retained
+            && transfer
             && double
             && generation
             && wrap
@@ -139,7 +237,7 @@ fn benchmark(table: &mut Namespace, caller: crate::process::ProcessId, h: Handle
             let prepared = if case == 3 {
                 Some(
                     table
-                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
                         .unwrap(),
                 )
             } else {
@@ -170,7 +268,7 @@ fn benchmark(table: &mut Namespace, caller: crate::process::ProcessId, h: Handle
                 }
                 2 => Some(
                     table
-                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
                         .unwrap(),
                 ),
                 3 => {
@@ -179,13 +277,13 @@ fn benchmark(table: &mut Namespace, caller: crate::process::ProcessId, h: Handle
                 }
                 _ => {
                     let first = table
-                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
                         .unwrap();
                     core::hint::black_box(&*table);
                     table.close(caller, first).unwrap();
                     core::hint::black_box(&*table);
                     let next = table
-                        .create_event(caller, Event::new(), |_| Ok::<_, ()>(()))
+                        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
                         .unwrap();
                     core::hint::black_box((first, next));
                     core::hint::black_box(&*table);
@@ -252,8 +350,22 @@ pub(crate) fn exercise(
             .unwrap()
     });
     let foreign_handle = registry.seed_handle(foreign_ids[0]);
+    let delegated_handle = registry
+        .transfer_handle(foreign_ids[0], foreign_handle, foreign_ids[1], Rights::SEND)
+        .unwrap();
     for (owner, &id) in foreign_ids.iter().enumerate() {
-        registry.handle_input(id, foreign_handle.encode(), if owner == 0 { 0 } else { 2 });
+        if owner == 0 {
+            registry.handle_input(id, foreign_handle.encode(), 0);
+        } else if owner == 1 {
+            registry.delegated_handle_input(
+                id,
+                foreign_handle.encode(),
+                2,
+                delegated_handle.encode(),
+            );
+        } else {
+            registry.handle_input(id, foreign_handle.encode(), 2);
+        }
         registry.start(id).unwrap();
     }
     registry.dispatch(Some(crate::time::Duration::from_secs(5)));
@@ -266,6 +378,79 @@ pub(crate) fn exercise(
     for id in foreign_ids {
         registry.reclaim(physical, id).unwrap();
     }
+    let transfer_sender = registry
+        .create(
+            physical,
+            Origin::Bootstrap,
+            Spec {
+                image,
+                context: Context {
+                    pc: memory::USER_CODE as u64,
+                    sp: memory::USER_STACK_TOP as u64,
+                    ..Context::ZERO
+                },
+                owner: 0,
+                entry: memory::USER_CODE,
+                slice_limit: None,
+            },
+            None,
+        )
+        .unwrap();
+    let transfer_receiver = registry
+        .create(
+            physical,
+            Origin::Bootstrap,
+            Spec {
+                image: foreign_image,
+                context: Context {
+                    pc: memory::USER_CODE as u64,
+                    sp: memory::USER_STACK_TOP as u64,
+                    ..Context::ZERO
+                },
+                owner: 0,
+                entry: memory::USER_CODE,
+                slice_limit: None,
+            },
+            None,
+        )
+        .unwrap();
+    registry.transfer_target_input(transfer_sender, transfer_receiver);
+    registry.delegated_handle_input(transfer_receiver, 0x107, 2, 0x100);
+    registry.wait_before_handle_input(transfer_receiver);
+    registry.start(transfer_sender).unwrap();
+    registry.start(transfer_receiver).unwrap();
+    for _ in 0..128 {
+        if registry.state(transfer_sender).unwrap() == crate::process::State::Completed
+            && registry.blocked(transfer_receiver).unwrap()
+        {
+            break;
+        }
+        registry.step();
+    }
+    let sender_finished =
+        registry.state(transfer_sender).unwrap() == crate::process::State::Completed;
+    let receiver_blocked = registry.blocked(transfer_receiver).unwrap();
+    if receiver_blocked {
+        registry.signal(transfer_receiver).unwrap();
+        for _ in 0..128 {
+            if registry.state(transfer_receiver).unwrap() == crate::process::State::Completed {
+                break;
+            }
+            registry.step();
+        }
+    }
+    let transfer_passed = sender_finished
+        && receiver_blocked
+        && registry
+            .completion(transfer_sender)
+            .ok()
+            .is_some_and(|completion| completion.reason == Reason::Exited(1))
+        && registry
+            .completion(transfer_receiver)
+            .ok()
+            .is_some_and(|completion| completion.reason == Reason::Exited(1));
+    registry.reclaim(physical, transfer_sender).unwrap();
+    registry.reclaim(physical, transfer_receiver).unwrap();
     let mut passed = true;
     for round in 0..8 {
         let ids: [_; crate::platform::config::ACTIVE_CPUS] = core::array::from_fn(|owner| {
@@ -303,6 +488,10 @@ pub(crate) fn exercise(
         }
     }
     report("handle_el0_identity_type_generation_and_lifetime", passed);
+    report(
+        "handle_el0_transfer_transaction_attenuation",
+        transfer_passed,
+    );
     report(
         "handle_exit_fault_cleanup_and_process_reuse",
         registry.live() == 0 && physical.available() == before,

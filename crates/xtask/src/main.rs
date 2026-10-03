@@ -173,6 +173,11 @@ const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
         "handle-retirement-negative",
         "\"event\":\"handle-retirement-reject\"",
     ),
+    (
+        "--handle-transfer-rights-control",
+        "handle-transfer-rights-negative",
+        "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
+    ),
 ];
 const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
     (
@@ -261,6 +266,7 @@ const TESTS: &[&str] = &[
     "user_copy_el0_boundary_and_snapshot",
     "user_copy_lifetime_and_reclamation",
     "handle_cross_process_reference_isolation",
+    "handle_el0_transfer_transaction_attenuation",
     "handle_el0_identity_type_generation_and_lifetime",
     "handle_exit_fault_cleanup_and_process_reuse",
 ];

@@ -30,4 +30,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0019 — Linear process-local handle namespaces](0019-process-local-handles.md) — Accepted for bounded Phase 3.3.
 
+- [ADR-0020 — Attenuated handle transfer and retained targets](0020-handle-transfer-and-retention.md) — Accepted for bounded issue #23 implementation.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)
