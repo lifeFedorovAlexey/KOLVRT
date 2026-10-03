@@ -116,9 +116,17 @@ fn take<'a>(words: &'a [u64], cursor: &mut usize, count: usize) -> Result<&'a [u
 /// against them. This validates structure, not producer identity or physical performance.
 pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
     let input: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
-    if number(&input, "schema_version")? != 5 {
+    let evidence_schema = number(&input, "schema_version")?;
+    if !matches!(evidence_schema, 4 | 5) {
         return Err("unsupported routing evidence schema".into());
     }
+    // v4 used adapter_* names for this same EL0 route-call interval. Normalize the
+    // legacy labels without attributing the interval to adapter-only execution.
+    let (route_el0_cpu_samples_key, route_el0_cpu_ns_key) = if evidence_schema == 4 {
+        ("adapter_cpu_samples", "adapter_cpu_ns")
+    } else {
+        ("route_el0_cpu_samples", "route_el0_cpu_ns")
+    };
     let runs = input["runs"]
         .as_array()
         .filter(|r| !r.is_empty())
@@ -332,7 +340,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 let counters = take(data, &mut cursor, COUNTERS)?;
                 if samples != words(&benchmark["samples"])?
                     || warmup != words(&benchmark["warmup_samples"])?
-                    || route_el0_cpu_ticks != words(&benchmark["route_el0_cpu_samples"])?
+                    || route_el0_cpu_ticks != words(&benchmark[route_el0_cpu_samples_key])?
                     || native_service_cpu_ticks != words(&benchmark["native_service_cpu_samples"])?
                     || counters != words(&benchmark["counters"])?
                     || preemptions != number(benchmark, "observed_preemptions")?
@@ -382,7 +390,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                         .try_into()
                         .map_err(|_| "CPU time conversion overflow".into())
                 };
-                if number(benchmark, "route_el0_cpu_ns")? != to_ns(route_el0_ticks)?
+                if number(benchmark, route_el0_cpu_ns_key)? != to_ns(route_el0_ticks)?
                     || number(benchmark, "native_service_cpu_ns")? != to_ns(native_ticks)?
                     || number(benchmark, "exclusive_cpu_ns")? != to_ns(exclusive_cpu_ticks)?
                 {

@@ -91,6 +91,24 @@ fn authentic_structure_preserves_raw_observations_without_inventing_ab_pairs() {
 }
 
 #[test]
+fn legacy_v4_adapter_labels_normalize_to_route_el0_residency() {
+    let mut data = evidence();
+    data["schema_version"] = 4.into();
+    let benchmark = data["runs"][0]["consumers"][0]["benchmarks"][0]
+        .as_object_mut()
+        .unwrap();
+    let samples = benchmark.remove("route_el0_cpu_samples").unwrap();
+    benchmark.insert("adapter_cpu_samples".into(), samples);
+    let cpu_ns = benchmark.remove("route_el0_cpu_ns").unwrap();
+    benchmark.insert("adapter_cpu_ns".into(), cpu_ns);
+
+    let report = inspect(&serde_json::to_vec(&data).unwrap()).unwrap();
+    let route = &report.runs[0].observations[0].measured_routes[0];
+    assert_eq!(route.route_el0_cpu_ns, Some(20_000));
+    assert_eq!(route.native_service_cpu_ns, 30_000);
+}
+
+#[test]
 fn damaged_missing_or_inconsistent_os_evidence_is_rejected() {
     let mutations: Vec<fn(&mut Value)> = vec![
         |v| v["schema_version"] = 2.into(),
