@@ -220,6 +220,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
     let mut finished = BTreeSet::new();
     let mut native_attempts = [0u64; platform_config::USER_PROCESSES];
     let mut process_identities = vec![None::<Value>; platform_config::USER_PROCESSES];
+    let mut process_residency = vec![None::<(u64, u64)>; platform_config::USER_PROCESSES];
     let mut seen_process_generations = BTreeSet::new();
     let mut terminal = false;
     for event in events {
@@ -264,6 +265,14 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 .as_u64()
                 .filter(|pages| *pages != 0)
                 .ok_or("missing kernel resident frame charge")?;
+            let el0_residency_ticks = event["el0_residency_ticks"]
+                .as_u64()
+                .filter(|ticks| *ticks != 0)
+                .ok_or("missing kernel-counted EL0 residency")?;
+            let counter_frequency_hz = event["counter_frequency_hz"]
+                .as_u64()
+                .filter(|frequency| *frequency != 0)
+                .ok_or("missing EL0 counter frequency")?;
             if process_slot != id as u64
                 || owner_cpu != (id / platform_config::USER_PROCESSES_PER_CPU) as u64
                 || !seen_process_generations.insert((process_slot, process_generation))
@@ -276,6 +285,7 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 "owner_cpu":owner_cpu,
                 "resident_pages":resident_pages
             }));
+            process_residency[id] = Some((el0_residency_ticks, counter_frequency_hz));
         } else {
             if event["offset"].as_u64() != Some(data.len() as u64) {
                 return Err("missing or duplicate report chunk".into());
@@ -428,7 +438,9 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
         let process_identity = process_identities[id]
             .as_ref()
             .ok_or("consumer is missing its kernel-owned process identity")?;
-        consumers.push(json!({"id":id,"cpu":id / platform_config::USER_PROCESSES_PER_CPU,"process_identity":process_identity,"route":words[header::ROUTE],"generation":words[header::GENERATION],"conformance_checks":words[header::CONFORMANCE],"oracle_sum":words[header::SUM],"frequency":words[header::FREQUENCY],"native_attempts":native_attempts[id],"profile_digest_words":&words[header::DIGEST..FIXED_HEADER_WORDS],"benchmarks":benchmarks}));
+        let (el0_residency_ticks, counter_frequency_hz) = process_residency[id]
+            .ok_or("consumer is missing kernel-counted EL0 residency")?;
+        consumers.push(json!({"id":id,"cpu":id / platform_config::USER_PROCESSES_PER_CPU,"process_identity":process_identity,"el0_residency_ticks":el0_residency_ticks,"counter_frequency_hz":counter_frequency_hz,"route":words[header::ROUTE],"generation":words[header::GENERATION],"conformance_checks":words[header::CONFORMANCE],"oracle_sum":words[header::SUM],"frequency":words[header::FREQUENCY],"native_attempts":native_attempts[id],"profile_digest_words":&words[header::DIGEST..FIXED_HEADER_WORDS],"benchmarks":benchmarks}));
     }
     Ok(json!(consumers))
 }
@@ -641,7 +653,7 @@ pub fn run(args: &[String]) -> Result<()> {
     if starting_sources != super::source_inventory()? {
         return Err("sources changed during routing run".into());
     }
-    let result = json!({"schema_version":2,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner and resident frame charge are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency observations, tail uncertainty and physical hardware unverified"});
+    let result = json!({"schema_version":3,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner, resident frame charge and EL0 counter residency are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency and EL0 residency-counter observations; exception-entry overhead remains in EL0 residency; tail uncertainty and physical hardware unverified"});
     fs::write(
         "target/kernel/routing-results.json",
         serde_json::to_string_pretty(&result)?,

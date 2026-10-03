@@ -123,6 +123,7 @@ fn dispatch_inner(
                 );
                 task.bind_queue(generation);
                 task.slices = admitted.slices;
+                task.el0_residency_ticks = admitted.el0_residency_ticks;
                 task.observations = admitted.observations;
                 if admitted.blocked {
                     assert!(step, "blocked processes require step driver");
@@ -339,6 +340,9 @@ fn run_local() {
             activate(first.1);
         }
         cpu::timer(time::deadline_after(QUANTUM));
+        local.with(generation, |state| {
+            state.tasks[first.2 % TASKS].entered_at = cpu::ticks();
+        });
         // SAFETY: INV-USER-CONTEXT: checked frame ABI and permanent native stack.
         unsafe {
             cpu::context::enter(&first.0, local.resume_sp.as_ptr());
@@ -359,7 +363,7 @@ fn run_local() {
     local.complete(generation, quiescent);
 }
 
-pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
+pub(crate) fn trap(frame: &mut Context, kind: Trap, entry_ticks: u64) -> usize {
     let local = &LOCALS[percpu::id()];
     let generation = local.generation();
     local.with(generation, |state| {
@@ -374,9 +378,18 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
         validate_task(task, current, generation);
         assert_eq!(task.state, CONTEXT_RUNNING);
         assert_eq!(frame.pstate & PSTATE_MODE_MASK, USER_EL0T);
+        task.el0_residency_ticks = task
+            .el0_residency_ticks
+            .checked_add(
+                entry_ticks
+                    .checked_sub(task.entered_at)
+                    .expect("architectural counter moved backwards"),
+            )
+            .expect("per-process EL0 residency counter exhausted");
         task.context = *frame;
         if matches!(kind, Trap::Irq) {
             if !local.preempt.swap(false, Ordering::AcqRel) {
+                task.entered_at = cpu::ticks();
                 return 0;
             }
             task.slices += 1;
@@ -406,6 +419,7 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
                 frame.gpr[0] = abi::OK;
                 task.context = *frame;
                 if !event(task.id()).register() {
+                    task.entered_at = cpu::ticks();
                     return 0;
                 }
                 task.state = task::CONTEXT_BLOCKED;
@@ -418,6 +432,7 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
                 task.context = *frame;
                 // Bounded synchronous native request: no locks, allocation or retained user
                 // pointers; current task identity came from the owned runqueue, not registers.
+                task.entered_at = cpu::ticks();
                 return 0;
             } else if class == ESR_SVC64 && operation == abi::FINISH {
                 task.state = CONTEXT_EXITED;
@@ -454,6 +469,7 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
                 activate(state.tasks[next].root());
             }
             cpu::timer(time::deadline_after(QUANTUM));
+            state.tasks[next].entered_at = cpu::ticks();
             0
         } else {
             cpu::timer_stop();

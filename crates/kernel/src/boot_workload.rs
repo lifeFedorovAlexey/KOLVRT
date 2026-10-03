@@ -280,7 +280,7 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
             .resident_pages(*process)
             .expect("completed process retains its address-space charge");
         event!(
-            "{{\"event\":\"user-result\",\"id\":{},\"state\":{},\"exit\":{},\"fault\":{},\"slices\":{},\"length\":{},\"native_attempts\":{},\"process_slot\":{},\"process_generation\":{},\"owner_cpu\":{},\"resident_pages\":{}}}",
+            "{{\"event\":\"user-result\",\"id\":{},\"state\":{},\"exit\":{},\"fault\":{},\"slices\":{},\"length\":{},\"native_attempts\":{},\"process_slot\":{},\"process_generation\":{},\"owner_cpu\":{},\"resident_pages\":{},\"el0_residency_ticks\":{},\"counter_frequency_hz\":{}}}",
             task.id,
             task.state,
             task.context.gpr[0],
@@ -291,7 +291,9 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
             process.slot(),
             process.generation(),
             task.id / scheduler::TASKS,
-            resident_pages
+            resident_pages,
+            task.el0_residency_ticks,
+            cpu::frequency()
         );
     }
     for identity in identities {

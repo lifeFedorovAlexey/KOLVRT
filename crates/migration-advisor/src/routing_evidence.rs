@@ -27,6 +27,9 @@ pub struct Observation {
     pub process_generation: u64,
     pub owner_cpu: u64,
     pub resident_pages: u64,
+    pub el0_residency_counter_ticks: u64,
+    pub counter_frequency_hz: u64,
+    pub estimated_el0_residency_ns: u64,
     pub declared_route: String,
     pub generation: u64,
     pub conformance_checks: u64,
@@ -108,7 +111,7 @@ fn take<'a>(words: &'a [u64], cursor: &mut usize, count: usize) -> Result<&'a [u
 /// against them. This validates structure, not producer identity or physical performance.
 pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
     let input: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
-    if number(&input, "schema_version")? != 2 {
+    if number(&input, "schema_version")? != 3 {
         return Err("unsupported routing evidence schema".into());
     }
     let runs = input["runs"]
@@ -133,7 +136,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         }
         let mut raw = BTreeMap::<u64, Vec<u64>>::new();
         let mut finished = BTreeSet::new();
-        let mut process_results = BTreeMap::<u64, (u64, u64, u64, u64)>::new();
+        let mut process_results = BTreeMap::<u64, (u64, u64, u64, u64, u64, u64)>::new();
         let mut report_chunks = 0u64;
         let mut boot = false;
         let mut processes = None;
@@ -167,6 +170,8 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     let process_generation = number(event, "process_generation")?;
                     let owner_cpu = number(event, "owner_cpu")?;
                     let resident_pages = number(event, "resident_pages")?;
+                    let el0_residency_ticks = number(event, "el0_residency_ticks")?;
+                    let counter_frequency_hz = number(event, "counter_frequency_hz")?;
                     if !finished.insert(id)
                         || number(event, "state")? != 2
                         || number(event, "exit")? != 1
@@ -175,10 +180,19 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                         || process_slot != id
                         || process_generation == 0
                         || resident_pages == 0
+                        || el0_residency_ticks == 0
+                        || counter_frequency_hz == 0
                         || process_results
                             .insert(
                                 id,
-                                (process_slot, process_generation, owner_cpu, resident_pages),
+                                (
+                                    process_slot,
+                                    process_generation,
+                                    owner_cpu,
+                                    resident_pages,
+                                    el0_residency_ticks,
+                                    counter_frequency_hz,
+                                ),
                             )
                             .is_some()
                     {
@@ -240,13 +254,24 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             let process_generation = number(&consumer["process_identity"], "process_generation")?;
             let owner_cpu = number(&consumer["process_identity"], "owner_cpu")?;
             let resident_pages = number(&consumer["process_identity"], "resident_pages")?;
+            let el0_residency_ticks = number(consumer, "el0_residency_ticks")?;
+            let counter_frequency_hz = number(consumer, "counter_frequency_hz")?;
             if process_slot != id
                 || process_generation == 0
                 || owner_cpu != number(consumer, "cpu")?
                 || resident_pages == 0
+                || el0_residency_ticks == 0
+                || counter_frequency_hz == 0
                 || !seen_process_ids.insert((process_slot, process_generation))
                 || process_results.get(&id)
-                    != Some(&(process_slot, process_generation, owner_cpu, resident_pages))
+                    != Some(&(
+                        process_slot,
+                        process_generation,
+                        owner_cpu,
+                        resident_pages,
+                        el0_residency_ticks,
+                        counter_frequency_hz,
+                    ))
             {
                 return Err("kernel process identity/accounting mismatch".into());
             }
@@ -254,6 +279,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             let mut cursor = 0;
             let header = take(data, &mut cursor, HEADER_WORDS)?;
             if header[0] != HEADER
+                || header[7] != counter_frequency_hz
                 || header[1] != id
                 || header[2] != number(consumer, "route")?
                 || header[3] != number(consumer, "generation")?
@@ -340,6 +366,13 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 process_generation,
                 owner_cpu,
                 resident_pages,
+                el0_residency_counter_ticks: el0_residency_ticks,
+                counter_frequency_hz,
+                estimated_el0_residency_ns: (u128::from(el0_residency_ticks)
+                    * 1_000_000_000
+                    / u128::from(counter_frequency_hz))
+                    .try_into()
+                    .map_err(|_| "EL0 residency conversion overflow")?,
                 declared_route: declared.into(),
                 generation: header[3],
                 conformance_checks: header[4],

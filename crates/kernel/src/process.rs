@@ -33,6 +33,7 @@ struct Object {
     context: Context,
     slice_limit: Option<usize>,
     slices: usize,
+    el0_residency_ticks: u64,
     observations: crate::execution::Observations,
     blocked: bool,
 }
@@ -170,6 +171,7 @@ impl Registry {
                 context,
                 slice_limit: spec.slice_limit,
                 slices: 0,
+                el0_residency_ticks: 0,
                 observations: crate::execution::Observations::ZERO,
                 blocked: false,
             });
@@ -283,6 +285,7 @@ impl Registry {
                 context: object.context,
                 slice_budget: object.slice_limit,
                 slices: object.slices,
+                el0_residency_ticks: object.el0_residency_ticks,
                 observations: object.observations,
                 blocked: object.blocked,
             })
@@ -303,6 +306,7 @@ impl Registry {
             );
             object.context = result.context;
             object.slices = result.slices;
+            object.el0_residency_ticks = result.el0_residency_ticks;
             object.observations = result.observations;
             object.blocked = result.state == scheduler::task::CONTEXT_BLOCKED;
             if object.blocked && scheduler::event(object.id.slot()).consume() {
