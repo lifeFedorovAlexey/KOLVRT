@@ -22,6 +22,7 @@ pub enum Role {
     ContractTest,
     Benchmark,
     Proposal,
+    Deployment,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -151,6 +152,9 @@ impl SignedArtifactStore {
         for key in &policy.keys {
             if key.key_id.trim().is_empty() || key.roles.is_empty() || !ids.insert(&key.key_id) {
                 return Err("empty or duplicate trusted key/roles".into());
+            }
+            if key.roles.contains(&Role::Deployment) && key.roles.len() != 1 {
+                return Err("deployment authorization keys must have a dedicated role".into());
             }
             let key = VerifyingKey::from_bytes(&hex_bytes(&key.public_key)?)
                 .map_err(|e| e.to_string())?;
