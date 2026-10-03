@@ -48,6 +48,17 @@ pub struct ScopedPlan {
     pub selections: Vec<ScopedSelection>,
 }
 
+#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct ScopedSearchMetrics {
+    /// Unique selected-package states visited by the bounded search.
+    pub visited_states: u64,
+    /// Feasible complete closures reached before optimality pruning.
+    pub feasible_closures: u64,
+    /// Candidate package additions considered across the visited states.
+    pub branches_considered: u64,
+}
+
 pub struct Problem<'a> {
     pub catalog: &'a [Package],
     pub requirements: &'a Requirements,
@@ -322,7 +333,7 @@ fn matches_namespace(package: &Package, namespace: &ScopedNamespace<'_>) -> bool
     })
 }
 
-fn validate_scoped_problem(problem: &ScopedProblem<'_>) -> Result<(), String> {
+pub fn validate_scoped_problem(problem: &ScopedProblem<'_>) -> Result<(), String> {
     validate_catalog(problem.catalog)?;
     if problem.namespaces.is_empty()
         || problem.namespaces.len() > MAX_SCOPED_NAMESPACES
@@ -469,6 +480,13 @@ pub struct ScopedClosureSolver {
 
 impl ScopedClosureSolver {
     pub fn solve(&self, problem: &ScopedProblem<'_>) -> Result<ScopedPlan, SolveError> {
+        self.solve_with_metrics(problem).map(|(plan, _)| plan)
+    }
+
+    pub fn solve_with_metrics(
+        &self,
+        problem: &ScopedProblem<'_>,
+    ) -> Result<(ScopedPlan, ScopedSearchMetrics), SolveError> {
         validate_scoped_problem(problem).map_err(SolveError::Invalid)?;
         let mut roots = Vec::with_capacity(problem.namespaces.len());
         for (scope, namespace) in problem.namespaces.iter().enumerate() {
@@ -481,16 +499,16 @@ impl ScopedClosureSolver {
         }
         let mut pending = vec![roots];
         let mut visited = BTreeSet::new();
-        let mut states = 0;
+        let mut metrics = ScopedSearchMetrics::default();
         let mut best: Option<ScopedPlan> = None;
         while let Some(selected) = pending.pop() {
             if !visited.insert(selected.clone()) {
                 continue;
             }
-            if states >= self.max_states {
+            if metrics.visited_states >= self.max_states {
                 return Err(SolveError::BudgetExceeded);
             }
-            states += 1;
+            metrics.visited_states += 1;
             if best
                 .as_ref()
                 .is_some_and(|plan| selected.len() > plan.selections.len())
@@ -527,6 +545,10 @@ impl ScopedClosureSolver {
                         })
                         .map(|(index, _)| (scope, index))
                         .collect();
+                    metrics.branches_considered = metrics
+                        .branches_considered
+                        .checked_add(providers.len() as u64)
+                        .ok_or(SolveError::BudgetExceeded)?;
                     providers.sort_by(|(_, a), (_, b)| {
                         problem.catalog[*a]
                             .identity
@@ -560,6 +582,12 @@ impl ScopedClosureSolver {
                     .collect();
                 selections.sort();
                 let plan = ScopedPlan { selections };
+                if verify_scoped(problem, &plan).is_ok() {
+                    metrics.feasible_closures = metrics
+                        .feasible_closures
+                        .checked_add(1)
+                        .ok_or(SolveError::BudgetExceeded)?;
+                }
                 if verify_scoped(problem, &plan).is_ok()
                     && best.as_ref().is_none_or(|current| {
                         (plan.selections.len(), &plan.selections)
@@ -583,6 +611,7 @@ impl ScopedClosureSolver {
                 pending.push(child);
             }
         }
-        best.ok_or(SolveError::Unsatisfiable)
+        best.map(|plan| (plan, metrics))
+            .ok_or(SolveError::Unsatisfiable)
     }
 }
