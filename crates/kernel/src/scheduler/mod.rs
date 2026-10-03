@@ -72,18 +72,18 @@ static RUNNING_OWNER: [AtomicUsize; config::TOTAL_TASKS] =
 /// Persistent native dispatch mechanism. Per-process identity is independent of
 /// queue generation; lifetime and optional bounded limits belong to the caller.
 pub(crate) fn dispatch(
-    tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS],
+    tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
 ) -> Completed {
     dispatch_inner(tasks, timeout, false)
 }
 /// Return after at most one timer quantum/terminal event per CPU, without
 /// requiring processes to terminate. This still retains the two-CPU barrier.
-pub(crate) fn step(tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
+pub(crate) fn step(tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
     dispatch_inner(tasks, None, true)
 }
 fn dispatch_inner(
-    tasks: &[Option<Admission<'_>>; config::TOTAL_TASKS],
+    tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
     step: bool,
 ) -> Completed {
@@ -111,7 +111,7 @@ fn dispatch_inner(
         state.deadline = timeout.map(time::deadline_after);
         for (index, task) in state.tasks.iter_mut().enumerate() {
             let id = owner * TASKS + index;
-            if let Some(admitted) = tasks[id] {
+            if let Some(admitted) = tasks[id].as_mut() {
                 assert_eq!(admitted.identity.slot(), id);
                 assert_eq!(admitted.space.slot(), id);
                 *task = Task::new(
@@ -121,6 +121,7 @@ fn dispatch_inner(
                     admitted.context,
                     admitted.slice_budget,
                 );
+                state.handles[index] = core::mem::take(admitted.handles);
                 task.bind_queue(generation);
                 task.slices = admitted.slices;
                 task.observations = admitted.observations;
@@ -183,6 +184,11 @@ fn dispatch_inner(
                 state.tasks[index].result()
             });
             completed.tasks[owner * TASKS + index] = task;
+            if let Some(admitted) = tasks[owner * TASKS + index].as_mut() {
+                *admitted.handles = local.quiescent(generation, |state| {
+                    core::mem::take(&mut state.handles[index])
+                });
+            }
         }
     }
     #[cfg(not(feature = "process-unlink-negative"))]
@@ -414,7 +420,9 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
                 if event(task.id()).consume() {
                     task.state = CONTEXT_READY;
                 }
-            } else if class == ESR_SVC64 && native_call(task, frame, operation) {
+            } else if class == ESR_SVC64
+                && native_call(task, &mut state.handles[state.current], frame, operation)
+            {
                 task.context = *frame;
                 // Bounded synchronous native request: no locks, allocation or retained user
                 // pointers; current task identity came from the owned runqueue, not registers.
@@ -466,7 +474,15 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
         }
     })
 }
-fn native_call(task: &mut Task, frame: &mut Context, operation: u16) -> bool {
+fn native_call(
+    task: &mut Task,
+    handles: &mut crate::handles::Namespace,
+    frame: &mut Context,
+    operation: u16,
+) -> bool {
+    if crate::handles::call(task, handles, frame, operation) {
+        return true;
+    }
     #[cfg(feature = "kernel-tests")]
     if crate::user_copy::testing::call(task, frame, operation) {
         return true;

@@ -165,3 +165,94 @@ copy_image_start:
  svc #USER_FINISHED_TRAP
  b .
 copy_image_end:
+
+// INV-USER-IMAGE: trusted handle fixture, copied into private RX code page.
+.section .rodata.handle_image,"a"
+.balign 16
+.global handle_image_start,handle_image_end
+handle_image_start:
+ mov x22,x2
+ mov x19,#1
+ mov x21,#0x20000000
+ add x21,x21,#4096
+ mov x1,x21
+ svc #0x81
+ and x19,x19,x0
+ ldr x20,[x21,#64]
+ mov x3,#1
+ str x3,[x21]
+ str x3,[x21,#8]
+ str x20,[x21,#16]
+ str x3,[x21,#24]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#2
+ str x3,[x21,#24]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#3
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#1
+ str x3,[x21,#24]
+ mov x3,#-1
+ str x3,[x21,#16]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#1
+ cset x3,eq
+ and x19,x19,x3
+ str x20,[x21,#16]
+ mov x3,#2
+ str x3,[x21,#8]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x21
+ svc #0x80
+ cmp x0,#2
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#1
+ str x3,[x21,#8]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#2
+ cset x3,eq
+ and x19,x19,x3
+ mov x1,x21
+ svc #0x82
+ and x19,x19,x0
+ cbz x22,1f
+ // A failed suite must exit 0 rather than hide behind the expected fault.
+ cbz x19,1f
+ mrs x0,currentel
+1:
+ mov x0,x19
+ svc #0x4e
+ b .
+handle_image_end:
+
+.section .rodata.handle_foreign,"a"
+.balign 16
+.global handle_foreign_start,handle_foreign_end
+handle_foreign_start:
+ mov x19,#0x20000000
+ add x19,x19,#4096
+ mov x3,#1
+ str x3,[x19]
+ str x3,[x19,#8]
+ str x20,[x19,#16]
+ str x3,[x19,#24]
+ mov x0,x19
+ svc #0x80
+ cmp x0,x21
+ cset x0,eq
+ svc #0x4e
+ b .
+handle_foreign_end:

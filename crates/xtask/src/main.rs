@@ -233,6 +233,9 @@ const TESTS: &[&str] = &[
     "process_resource_reclamation",
     "user_copy_el0_boundary_and_snapshot",
     "user_copy_lifetime_and_reclamation",
+    "handle_cross_process_reference_isolation",
+    "handle_el0_identity_type_generation_and_lifetime",
+    "handle_exit_fault_cleanup_and_process_reuse",
 ];
 fn main() {
     if let Err(e) = run() {

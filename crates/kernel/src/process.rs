@@ -41,6 +41,7 @@ struct Object {
 pub(crate) struct Registry {
     table: Table<CAPACITY>,
     objects: [Option<Object>; CAPACITY],
+    handles: [crate::handles::Namespace; CAPACITY],
 }
 pub(crate) fn context_contract() -> Result<(), Error> {
     if percpu::id() != percpu::BOOT_CPU {
@@ -79,6 +80,7 @@ impl Registry {
         Ok(Self {
             table: Table::new(),
             objects: core::array::from_fn(|_| None),
+            handles: core::array::from_fn(|_| crate::handles::Namespace::new()),
         })
     }
 
@@ -173,6 +175,9 @@ impl Registry {
                 observations: crate::execution::Observations::ZERO,
                 blocked: false,
             });
+            self.handles[id.slot()]
+                .bind(id)
+                .expect("fresh process namespace");
             scheduler::reset_event(id);
             self.table.prepared(id).expect("transaction state");
             Ok(())
@@ -206,6 +211,30 @@ impl Registry {
     pub fn state(&self, id: ProcessId) -> Result<State, Error> {
         context_contract()?;
         self.table.state(id)
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn seed_handle(&mut self, id: ProcessId) -> kernel_core::handles::Handle {
+        context_contract().expect("handle bootstrap owner");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.handles[id.slot()]
+            .create_event(id, kernel_core::wait::Event::new(), |_| Ok::<_, ()>(()))
+            .unwrap()
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn handle_input(&mut self, id: ProcessId, raw: u64, expected: u64) {
+        context_contract().expect("handle fixture setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        let object = self.objects[id.slot()].as_mut().unwrap();
+        object.context.gpr[20] = raw;
+        object.context.gpr[21] = expected;
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn handle_state(&self, id: ProcessId) -> (usize, bool) {
+        context_contract().expect("handle inspection owner");
+        (
+            self.handles[id.slot()].live(),
+            self.handles[id.slot()].owner().is_some(),
+        )
     }
     pub fn live(&self) -> usize {
         context_contract().expect("process inspection owner");
@@ -260,25 +289,31 @@ impl Registry {
         step: bool,
     ) -> scheduler::Completed {
         context_contract().expect("process dispatch owner");
-        let tasks = core::array::from_fn(|slot| {
-            let object = self.objects[slot].as_ref()?;
-            if self.table.state(object.id).ok()? != State::Admitted {
-                return None;
+        let mut tasks: [Option<Admission<'_>>; CAPACITY] = core::array::from_fn(|_| None);
+        for ((slot, object), handles) in
+            self.objects.iter().enumerate().zip(self.handles.iter_mut())
+        {
+            let Some(object) = object.as_ref() else {
+                continue;
+            };
+            if self.table.state(object.id).ok() != Some(State::Admitted) {
+                continue;
             }
-            Some(Admission {
+            tasks[slot] = Some(Admission {
                 identity: object.id,
+                handles,
                 space: &object.space,
                 context: object.context,
                 slice_budget: object.slice_limit,
                 slices: object.slices,
                 observations: object.observations,
                 blocked: object.blocked,
-            })
-        });
+            });
+        }
         let completed = if step {
-            scheduler::step(&tasks)
+            scheduler::step(&mut tasks)
         } else {
-            scheduler::dispatch(&tasks, timeout)
+            scheduler::dispatch(&mut tasks, timeout)
         };
         for result in completed.tasks.iter().filter(|r| r.process_generation != 0) {
             let object = self.objects[result.id]
@@ -304,6 +339,10 @@ impl Registry {
                 assert!(scheduler::detached(object.id));
                 continue;
             }
+            #[cfg(not(feature = "handle-retirement-negative"))]
+            self.handles[result.id]
+                .retire(object.id)
+                .expect("terminal namespace owner");
             let reason = match result.state {
                 CONTEXT_EXITED => Reason::Exited(result.context.gpr[0]),
                 CONTEXT_FAULTED => Reason::Faulted {
@@ -345,6 +384,11 @@ impl Registry {
         trace(id, State::Reclaiming, None);
         let object = self.objects[id.slot()].take().ok_or(Error::Stale)?;
         assert_eq!(object.id, id);
+        assert_eq!(self.handles[id.slot()].live(), 0, "handle retirement leak");
+        assert!(
+            self.handles[id.slot()].owner().is_none(),
+            "handle namespace still accessible"
+        );
         object.space.reclaim(physical);
         self.table.released(id)?;
         trace(id, State::Free, None);
