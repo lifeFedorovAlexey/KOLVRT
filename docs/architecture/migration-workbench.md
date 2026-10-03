@@ -10,7 +10,7 @@ Both executables run the routing conformance suite and the workload's empty/resu
 
 The runner starts 100 fresh-process pairs in alternating A/B and B/A order. Fresh processes reset fixture state; there are no external or persistent writes in the workload. Independence is assumed for the exploratory bootstrap, not demonstrated merely by process creation. Background load, thermals, affinity and resource limits inherited from the host remain uncontrolled. All paired receipts, warmup, checksums, counters and durations are retained; outliers are not removed. A process/oracle failure or timeout aborts the experiment with retained failure evidence. Children have a ten-second deadline and bounded JSON receipts. This executor supports its trusted pure fixtures, not arbitrary untrusted applications or a general security sandbox.
 
-The predeclared statistical policy uses 100 pairs, 2000 bootstrap resamples, seed 7, nominal 95% confidence, a 1000-nanosecond gain margin and a 100000-nanosecond p95 regression budget. p99 remains unavailable at this sample count. Windows host kernel bytes are captured for identity; source is `host_process`, which the advisor cannot promote to a verified KOLVRT OS migration.
+The predeclared statistical policy uses 100 pairs, 2000 bootstrap resamples, seed 7, nominal 95% confidence, a 1000-nanosecond gain margin and a 100000-nanosecond p95 latency regression budget. Each measured pair also retains the routing library's actual copied-byte counters for all 50000 useful operations, with a p95 copied-byte regression budget of zero. Peak process memory and energy are unavailable and left unbudgeted; the report must not treat either as zero. p99 remains unavailable at this sample count. Windows host kernel bytes are captured for identity; source is `host_process`, which the advisor cannot promote to a verified KOLVRT OS migration.
 
 ## Provenance and rollback
 
@@ -31,7 +31,7 @@ cargo test --locked -p migration-workbench -p migration-advisor
 cargo run --locked -p migration-advisor -- inspect-routing target/kernel/routing-results.json
 ```
 
-The [retained host result](../../research/results/migration-workbench.json) contains all 100 paired receipts, contracts, the signed request, descriptive statistics and rollback receipt. Its observed effect applies to this host fixture only.
+The [earlier retained host result](../../research/results/migration-workbench.json) preserves the first 100-pair experiment. The [copied-byte-budget result](../../research/results/migration-workbench-copied-bytes-1791037023253.json) retains a new 100-pair run, its signed request, per-process receipts, descriptive statistics and rollback receipt. Its paired copied-byte p95 is 200000 bytes for compat and 0 for native under a zero-byte regression budget. Both observed effects apply only to this host fixture.
 
 Every workbench experiment creates `target/migration-workbench/<epoch-millis>-<pid>/` with frozen fixture executables, contract/paired/rollback receipts, the artifact store, request, external trust policy, report and descriptive statistics. Existing runs are preserved. Raw output includes failed attempts; a later run does not overwrite them. This initial runner requires the Windows host kernel file and fixtures built alongside the runner. No paid server, hardware rental or external credentials are needed.
 
