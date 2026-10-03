@@ -71,7 +71,7 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
                 Role::Deployment,
                 payload,
                 &refs,
-                &[deployment_attestation.clone()]
+                std::slice::from_ref(&deployment_attestation)
             )
             .is_ok()
     );
