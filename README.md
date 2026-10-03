@@ -107,12 +107,14 @@ KOLVRT already boots as a native AArch64 kernel in QEMU.
 | ARM physical timer IRQ        | ✅                                                     |
 | DEV / PROD profiles           | ✅                                                     |
 | Automated kernel test harness | ✅                                                     |
-| Real in-kernel tests          | ✅ 53 per profile                                      |
+| Real in-kernel tests          | ✅ 67 in the latest recorded DEV and PROD run          |
 | Negative failure controls     | ✅                                                     |
 | GDB debugging                 | ✅                                                     |
 | SMP                           | ✅ Two-CPU QEMU foundation                             |
 | EL0 / userspace               | ✅ Bounded isolated-process foundation                 |
 | Scheduler                     | ✅ Timer-driven, fixed per-CPU affinity                |
+| Process lifecycle             | ✅ Bounded create/start/exit/reclaim on two CPUs       |
+| Own-process event wait        | ✅ Bounded block/wakeup path in `Registry::step()`     |
 | Runtime versioned routing     | ✅ Bounded EL0 vertical slice; native core independent |
 | Linux compatibility           | ⏳ Not started                                         |
 
@@ -140,7 +142,10 @@ Scheduler + context switching        ✅
 Versioned Routing & Translation      ✅ bounded EL0 slice
         │
         ▼
-Native IPC + authority + services    next
+Process lifecycle + own-event wait  ✅ bounded Phase 3.1
+        │
+        ▼
+Safe user-copy, IPC, handles and services    next
         │
         ▼
 Compatibility personalities
@@ -151,7 +156,7 @@ Linux ABI compatibility where useful
 
 Compatibility is not being wired into a single-CPU kernel and patched for SMP later.
 
-The native execution model comes first. The authorized EL0/address-space and timer-scheduler foundation is implemented for eight fixed-affinity processes on two CPUs. Phase 2 routing now executes in an optional isolated EL0 image; native core remains independent. IPC, handles/capabilities, cancellation, services and security domains are the next native stage. This does not complete the full native slice.
+The native execution model comes first. The bounded EL0/address-space and timer-scheduler foundation runs fixed-affinity processes on two CPUs. Phase 2 routing executes in an optional isolated EL0 image; native core remains independent. Phase 3.1 adds kernel-owned process creation, start, completion and reclaim, plus a limited own-process event latch used by the preemptible step path. These are trusted-bootstrap mechanisms, not public EL0 process or wait APIs. Safe user-copy, IPC, handles/capabilities, cancellation, persistent services and security domains remain future work; the full native slice is incomplete. See the [process lifecycle](docs/kernel/processes.md), [wait contract](docs/kernel/wait.md) and [scheduler](docs/kernel/scheduler.md).
 
 ---
 
@@ -418,7 +423,10 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Tests are supposed to fail when the kernel is wrong
 
-The current matrix runs **53 real kernel tests in both DEV and PROD test profiles**.
+The latest passing recorded matrix ran **67 real kernel tests in both DEV and PROD test profiles**.
+It includes the bounded preemption step and own-process event wait/block path. The exact-source
+receipt preserves the tested files, artifacts and QEMU scope; later working-tree edits are not
+covered by that receipt. Historical milestone counts remain in their original decision records.
 
 It also runs negative controls that are required to fail correctly.
 

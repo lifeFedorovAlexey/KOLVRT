@@ -107,12 +107,14 @@ KOLVRT уже загружается как native AArch64 kernel в QEMU.
 | ARM physical timer IRQ             | ✅                                                        |
 | DEV / PROD профили                 | ✅                                                        |
 | Автоматический kernel test harness | ✅                                                        |
-| Настоящие in-kernel tests          | ✅ 53 в каждом профиле                                    |
+| Настоящие in-kernel tests          | ✅ 67 в последнем записанном прогоне DEV и PROD           |
 | Negative failure controls          | ✅                                                        |
 | Отладка GDB                        | ✅                                                        |
 | SMP                                | ✅ Основа двух CPU в QEMU                                 |
 | EL0 / userspace                    | ✅ Ограниченный фундамент изолированных процессов         |
 | Scheduler                          | ✅ Timer-driven с фиксированной per-CPU affinity          |
+| Жизненный цикл процессов           | ✅ Ограниченные create/start/exit/reclaim на двух CPU     |
+| Ожидание собственного события      | ✅ Ограниченный block/wakeup в `Registry::step()`         |
 | Runtime versioned routing          | ✅ Ограниченный EL0 vertical slice; native core независим |
 | Linux compatibility                | ⏳ Не начата                                              |
 
@@ -140,7 +142,10 @@ Scheduler + context switching        ✅
 Versioned Routing & Translation      ✅ bounded EL0 slice
         │
         ▼
-Native IPC + authority + services    next
+Process lifecycle + own-event wait  ✅ bounded Phase 3.1
+        │
+        ▼
+Safe user-copy, IPC, handles and services    next
         │
         ▼
 Compatibility personalities
@@ -151,7 +156,7 @@ Linux ABI compatibility where useful
 
 Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
 
-Сначала native execution model. Разрешённый фундамент EL0/address spaces и timer scheduler реализован для восьми процессов с фиксированной affinity на двух CPU. Phase 2 routing теперь исполняется в optional isolated EL0 image; native core остаётся независим. IPC, handles/capabilities, cancellation, services и security domains — следующий native этап. Полный native slice этим не завершён.
+Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Безопасное копирование пользовательской памяти, IPC, handles/capabilities, cancellation, постоянные services и security domains остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md) и [scheduler](docs/kernel/scheduler.md).
 
 ---
 
@@ -418,7 +423,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Тесты должны обнаруживать ошибки ядра
 
-Текущая матрица выполняет **53 настоящих kernel tests в DEV и PROD test profiles**.
+Последняя успешно записанная матрица выполнила **67 проверок ядра в каждом профиле DEV и PROD**. Она включает ограниченное вытеснение и путь ожидания/блокировки/пробуждения по собственному событию процесса, а также 53 отрицательных контроля. Отчёт относится только к указанным в нём хешам исходников и не покрывает более поздние изменения рабочего дерева. Более ранние результаты остаются историческими и не подменяются текущим свидетельством.
 
 Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
 
