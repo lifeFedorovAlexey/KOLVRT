@@ -13,7 +13,7 @@ include!(concat!(env!("OUT_DIR"), "/profile.rs"));
 // aligned guarded stack and CPU-owned task ID in x0. No shared writable globals/BSS.
 global_asm!(".section .text.entry,\"ax\"\n.global _start\n_start:\n bl user_main\n b .");
 #[cfg(feature = "evidence")]
-const REPORT_HEADER: u64 = 0x4b56_5232; // KVR2 reporting schema, outside the native kernel.
+const REPORT_HEADER: u64 = 0x4b56_5233; // KVR3 includes exclusive EL0/native service counters.
 #[cfg(feature = "dev")]
 const REPORT_BENCH: u64 = 0x4245_4e43;
 #[cfg(feature = "evidence")]
@@ -115,15 +115,30 @@ fn benchmark(mut consumer: Consumer, oracle: Reduction) {
     }
     let slices_before = svc::<{ abi::SLICES }>(0, 0)[0];
     let mut samples = [0u64; SAMPLES];
-    for value in &mut samples {
-        let start = svc::<{ abi::CLOCK }>(0, 0)[0];
+    let mut adapter_cpu_samples = [0u64; SAMPLES];
+    let mut native_service_cpu_samples = [0u64; SAMPLES];
+    for (sample_index, value) in samples.iter_mut().enumerate() {
+        let start_accounting = svc::<{ abi::CLOCK }>(0, 0);
         let (result, _) = invoke(&mut consumer);
-        let end = svc::<{ abi::CLOCK }>(0, 0)[0];
+        let end_accounting = svc::<{ abi::CLOCK }>(0, 0);
+        let end = end_accounting[0];
         assert_eq!(result, oracle);
-        *value = end.checked_sub(start).unwrap();
+        *value = end.checked_sub(start_accounting[0]).unwrap();
+        adapter_cpu_samples[sample_index] = end_accounting[2]
+            .checked_sub(start_accounting[2])
+            .unwrap();
+        native_service_cpu_samples[sample_index] = end_accounting[3]
+            .checked_sub(start_accounting[3])
+            .unwrap();
     }
     let slices_after = svc::<{ abi::SLICES }>(0, 0)[0];
     for value in samples {
+        emit(value);
+    }
+    for value in adapter_cpu_samples {
+        emit(value);
+    }
+    for value in native_service_cpu_samples {
         emit(value);
     }
     emit(slices_after - slices_before);

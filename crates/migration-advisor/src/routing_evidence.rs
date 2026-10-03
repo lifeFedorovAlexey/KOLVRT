@@ -5,7 +5,7 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
-const HEADER: u64 = 0x4b56_5232;
+const HEADER: u64 = 0x4b56_5233;
 const BENCH: u64 = 0x4245_4e43;
 const FINAL: u64 = 0x444f_4e45;
 const HEADER_WORDS: usize = 15;
@@ -28,6 +28,7 @@ pub struct Observation {
     pub owner_cpu: u64,
     pub resident_pages: u64,
     pub el0_residency_counter_ticks: u64,
+    pub native_window_service_counter_ticks: u64,
     pub counter_frequency_hz: u64,
     pub estimated_el0_residency_ns: u64,
     pub declared_route: String,
@@ -47,9 +48,13 @@ pub struct MeasuredRoute {
     pub conversions: u64,
     pub warmup_ticks: Vec<u64>,
     pub sample_ticks: Vec<u64>,
+    pub adapter_cpu_ticks: Vec<u64>,
+    pub native_service_cpu_ticks: Vec<u64>,
     pub observed_preemptions: u64,
     pub median_wall_ns: u64,
     pub adapter_cpu_ns: Option<u64>,
+    pub native_service_cpu_ns: u64,
+    pub exclusive_cpu_ns: u64,
 }
 #[derive(Debug, Serialize)]
 pub struct Run {
@@ -111,7 +116,7 @@ fn take<'a>(words: &'a [u64], cursor: &mut usize, count: usize) -> Result<&'a [u
 /// against them. This validates structure, not producer identity or physical performance.
 pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
     let input: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
-    if number(&input, "schema_version")? != 3 {
+    if number(&input, "schema_version")? != 4 {
         return Err("unsupported routing evidence schema".into());
     }
     let runs = input["runs"]
@@ -171,6 +176,8 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     let owner_cpu = number(event, "owner_cpu")?;
                     let resident_pages = number(event, "resident_pages")?;
                     let el0_residency_ticks = number(event, "el0_residency_ticks")?;
+                    let native_window_service_ticks =
+                        number(event, "native_window_service_ticks")?;
                     let counter_frequency_hz = number(event, "counter_frequency_hz")?;
                     if !finished.insert(id)
                         || number(event, "state")? != 2
@@ -181,6 +188,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                         || process_generation == 0
                         || resident_pages == 0
                         || el0_residency_ticks == 0
+                        || native_window_service_ticks == 0
                         || counter_frequency_hz == 0
                         || process_results
                             .insert(
@@ -191,6 +199,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                                     owner_cpu,
                                     resident_pages,
                                     el0_residency_ticks,
+                                    native_window_service_ticks,
                                     counter_frequency_hz,
                                 ),
                             )
@@ -255,12 +264,14 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             let owner_cpu = number(&consumer["process_identity"], "owner_cpu")?;
             let resident_pages = number(&consumer["process_identity"], "resident_pages")?;
             let el0_residency_ticks = number(consumer, "el0_residency_ticks")?;
+            let native_window_service_ticks = number(consumer, "native_window_service_ticks")?;
             let counter_frequency_hz = number(consumer, "counter_frequency_hz")?;
             if process_slot != id
                 || process_generation == 0
                 || owner_cpu != number(consumer, "cpu")?
                 || resident_pages == 0
                 || el0_residency_ticks == 0
+                || native_window_service_ticks == 0
                 || counter_frequency_hz == 0
                 || !seen_process_ids.insert((process_slot, process_generation))
                 || process_results.get(&id)
@@ -270,6 +281,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                         owner_cpu,
                         resident_pages,
                         el0_residency_ticks,
+                        native_window_service_ticks,
                         counter_frequency_hz,
                     ))
             {
@@ -299,6 +311,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             let declared = route(header[2])?;
             let mut measured = Vec::new();
             let mut measured_ids = BTreeSet::new();
+            let mut measured_native_service_ticks = 0u64;
             for benchmark in consumer["benchmarks"]
                 .as_array()
                 .ok_or("missing benchmark summaries")?
@@ -314,14 +327,25 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 let name = route(frame[1])?;
                 let warmup = take(data, &mut cursor, WARMUP)?.to_vec();
                 let samples = take(data, &mut cursor, SAMPLES)?.to_vec();
+                let adapter_cpu_ticks = take(data, &mut cursor, SAMPLES)?.to_vec();
+                let native_service_cpu_ticks = take(data, &mut cursor, SAMPLES)?.to_vec();
                 let preemptions = take(data, &mut cursor, 1)?[0];
                 let counters = take(data, &mut cursor, COUNTERS)?;
                 if samples != words(&benchmark["samples"])?
                     || warmup != words(&benchmark["warmup_samples"])?
+                    || adapter_cpu_ticks != words(&benchmark["adapter_cpu_samples"])?
+                    || native_service_cpu_ticks
+                        != words(&benchmark["native_service_cpu_samples"])?
                     || counters != words(&benchmark["counters"])?
                     || preemptions != number(benchmark, "observed_preemptions")?
                 {
                     return Err("summary/raw measurement mismatch".into());
+                }
+                if adapter_cpu_ticks.contains(&0)
+                    || (frame[1] == 0 && native_service_cpu_ticks.contains(&0))
+                    || (frame[1] != 0 && native_service_cpu_ticks.iter().any(|&ticks| ticks != 0))
+                {
+                    return Err("invalid adapter/native exclusive CPU accounting".into());
                 }
                 let calls = (SAMPLES + WARMUP) as u64;
                 let compat = frame[1] != 0;
@@ -341,6 +365,38 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 sorted.sort_unstable();
                 let ticks = sorted[(SAMPLES - 1) / 2];
                 let ns = u128::from(ticks) * 1_000_000_000 / u128::from(header[7]);
+                let median_ticks = |values: &[u64]| {
+                    let mut sorted = values.to_vec();
+                    sorted.sort_unstable();
+                    sorted[(values.len() - 1) / 2]
+                };
+                let adapter_ticks = median_ticks(&adapter_cpu_ticks);
+                let native_ticks = median_ticks(&native_service_cpu_ticks);
+                let exclusive_cpu_ticks = median_ticks(
+                    &adapter_cpu_ticks
+                        .iter()
+                        .zip(&native_service_cpu_ticks)
+                        .map(|(&adapter, &native)| adapter.saturating_add(native))
+                        .collect::<Vec<_>>(),
+                );
+                let to_ns = |ticks: u64| -> Result<u64, String> {
+                    (u128::from(ticks) * 1_000_000_000 / u128::from(header[7]))
+                        .try_into()
+                        .map_err(|_| "CPU time conversion overflow".into())
+                };
+                if number(benchmark, "adapter_cpu_ns")? != to_ns(adapter_ticks)?
+                    || number(benchmark, "native_service_cpu_ns")? != to_ns(native_ticks)?
+                    || number(benchmark, "exclusive_cpu_ns")? != to_ns(exclusive_cpu_ticks)?
+                {
+                    return Err("exclusive CPU summary disagrees with raw counters".into());
+                }
+                let route_native_service_ticks = native_service_cpu_ticks
+                    .iter()
+                    .try_fold(0u64, |sum, ticks| sum.checked_add(*ticks))
+                    .ok_or("native service counter sum overflow")?;
+                measured_native_service_ticks = measured_native_service_ticks
+                    .checked_add(route_native_service_ticks)
+                    .ok_or("native service counter sum overflow")?;
                 measured.push(MeasuredRoute {
                     route: name.into(),
                     native_admissions: counters[0],
@@ -351,10 +407,17 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     conversions: counters[6],
                     warmup_ticks: warmup,
                     sample_ticks: samples,
+                    adapter_cpu_ticks,
+                    native_service_cpu_ticks,
                     observed_preemptions: preemptions,
                     median_wall_ns: ns.try_into().map_err(|_| "latency conversion overflow")?,
-                    adapter_cpu_ns: None,
+                    adapter_cpu_ns: Some(to_ns(adapter_ticks)?),
+                    native_service_cpu_ns: to_ns(native_ticks)?,
+                    exclusive_cpu_ns: to_ns(exclusive_cpu_ticks)?,
                 });
+            }
+            if native_window_service_ticks < measured_native_service_ticks {
+                return Err("process native-service total is below measured samples".into());
             }
             if take(data, &mut cursor, 1)? != [FINAL] || cursor != data.len() {
                 return Err("missing/trailing report data".into());
@@ -367,6 +430,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 owner_cpu,
                 resident_pages,
                 el0_residency_counter_ticks: el0_residency_ticks,
+                native_window_service_counter_ticks: native_window_service_ticks,
                 counter_frequency_hz,
                 estimated_el0_residency_ns: (u128::from(el0_residency_ticks) * 1_000_000_000
                     / u128::from(counter_frequency_hz))

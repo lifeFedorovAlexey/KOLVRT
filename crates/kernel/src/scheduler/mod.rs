@@ -124,6 +124,7 @@ fn dispatch_inner(
                 task.bind_queue(generation);
                 task.slices = admitted.slices;
                 task.el0_residency_ticks = admitted.el0_residency_ticks;
+                task.native_window_service_ticks = admitted.native_window_service_ticks;
                 task.observations = admitted.observations;
                 if admitted.blocked {
                     assert!(step, "blocked processes require step driver");
@@ -428,7 +429,7 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap, entry_ticks: u64) -> usize {
                 if event(task.id()).consume() {
                     task.state = CONTEXT_READY;
                 }
-            } else if class == ESR_SVC64 && native_call(task, frame, operation) {
+            } else if class == ESR_SVC64 && native_call_measured(task, frame, operation) {
                 task.context = *frame;
                 // Bounded synchronous native request: no locks, allocation or retained user
                 // pointers; current task identity came from the owned runqueue, not registers.
@@ -495,6 +496,8 @@ fn native_call(task: &mut Task, frame: &mut Context, operation: u16) -> bool {
         abi::CLOCK => {
             frame.gpr[0] = cpu::ticks();
             frame.gpr[1] = cpu::frequency();
+            frame.gpr[2] = task.el0_residency_ticks;
+            frame.gpr[3] = task.native_window_service_ticks;
         }
         #[cfg(feature = "machine-events")]
         abi::REPORT => {
@@ -509,6 +512,24 @@ fn native_call(task: &mut Task, frame: &mut Context, operation: u16) -> bool {
         _ => return false,
     }
     true
+}
+fn native_call_measured(task: &mut Task, frame: &mut Context, operation: u16) -> bool {
+    if operation != abi::READ_WINDOW {
+        return native_call(task, frame, operation);
+    }
+    let start = cpu::ticks();
+    let handled = native_call(task, frame, operation);
+    if handled {
+        task.native_window_service_ticks = task
+            .native_window_service_ticks
+            .checked_add(
+                cpu::ticks()
+                    .checked_sub(start)
+                    .expect("architectural counter moved backwards"),
+            )
+            .expect("native window service counter exhausted");
+    }
+    handled
 }
 /// Only an executing fixed-affinity task in an exclusive masked storage section
 /// can access its retained immutable root. Old copies, terminal/unlinked tasks,

@@ -4,7 +4,7 @@ const USER_BASE: u64 = platform_config::USER_PAYLOAD_BASE as u64;
 const ELF_SEGMENT_FILE_OFFSET: usize = 8;
 const ELF_SEGMENT_ADDRESS: usize = 16;
 const ELF_HEADER_BYTES: usize = 64;
-const REPORT_HEADER: u64 = 0x4b56_5232;
+const REPORT_HEADER: u64 = 0x4b56_5233;
 const REPORT_BENCH: u64 = 0x4245_4e43;
 const REPORT_FINAL: u64 = 0x444f_4e45;
 const FIXED_HEADER_WORDS: usize = 15;
@@ -57,6 +57,24 @@ fn field(bytes: &[u8], at: usize, len: usize) -> Result<u64> {
             .ok_or("truncated ELF")?,
     );
     Ok(u64::from_le_bytes(value))
+}
+
+fn median(values: &[u64]) -> Result<u64> {
+    if values.is_empty() {
+        return Err("cannot summarize empty counter samples".into());
+    }
+    let mut sorted = values.to_vec();
+    sorted.sort_unstable();
+    Ok(sorted[(sorted.len() - 1) / 2])
+}
+
+fn ticks_to_ns(ticks: u64, frequency: u64) -> Result<u64> {
+    if frequency == 0 {
+        return Err("counter frequency is zero".into());
+    }
+    (u128::from(ticks) * 1_000_000_000 / u128::from(frequency))
+        .try_into()
+        .map_err(|_| "counter conversion overflow".into())
 }
 
 fn extract(bytes: &[u8]) -> Result<Vec<u8>> {
@@ -220,7 +238,8 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
     let mut finished = BTreeSet::new();
     let mut native_attempts = [0u64; platform_config::USER_PROCESSES];
     let mut process_identities = vec![None::<Value>; platform_config::USER_PROCESSES];
-    let mut process_residency = vec![None::<(u64, u64)>; platform_config::USER_PROCESSES];
+    let mut process_residency =
+        vec![None::<(u64, u64, u64)>; platform_config::USER_PROCESSES];
     let mut seen_process_generations = BTreeSet::new();
     let mut terminal = false;
     for event in events {
@@ -269,6 +288,10 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 .as_u64()
                 .filter(|ticks| *ticks != 0)
                 .ok_or("missing kernel-counted EL0 residency")?;
+            let native_window_service_ticks = event["native_window_service_ticks"]
+                .as_u64()
+                .filter(|ticks| *ticks != 0)
+                .ok_or("missing kernel-counted native service time")?;
             let counter_frequency_hz = event["counter_frequency_hz"]
                 .as_u64()
                 .filter(|frequency| *frequency != 0)
@@ -285,7 +308,11 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 "owner_cpu":owner_cpu,
                 "resident_pages":resident_pages
             }));
-            process_residency[id] = Some((el0_residency_ticks, counter_frequency_hz));
+            process_residency[id] = Some((
+                el0_residency_ticks,
+                native_window_service_ticks,
+                counter_frequency_hz,
+            ));
         } else {
             if event["offset"].as_u64() != Some(data.len() as u64) {
                 return Err("missing or duplicate report chunk".into());
@@ -362,6 +389,16 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 .ok_or("missing samples")?
                 .to_vec();
             cursor += BENCH_SAMPLES;
+            let adapter_cpu_samples = words
+                .get(cursor..cursor + BENCH_SAMPLES)
+                .ok_or("missing exclusive EL0 CPU samples")?
+                .to_vec();
+            cursor += BENCH_SAMPLES;
+            let native_service_cpu_samples = words
+                .get(cursor..cursor + BENCH_SAMPLES)
+                .ok_or("missing native service CPU samples")?
+                .to_vec();
+            cursor += BENCH_SAMPLES;
             let preemptions = *words.get(cursor).ok_or("missing preemption accounting")?;
             cursor += 1;
             let c = words
@@ -370,6 +407,11 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
             cursor += COUNTER_WORDS;
             let calls = BENCH_WARMUP + BENCH_SAMPLES as u64;
             if route > routing::Route::EmptyFirst as u64
+                || adapter_cpu_samples.contains(&0)
+                || (route == routing::Route::Native as u64
+                    && native_service_cpu_samples.contains(&0))
+                || (route != routing::Route::Native as u64
+                    && native_service_cpu_samples.iter().any(|&ticks| ticks != 0))
                 || c[counter::NATIVE] != if route == 0 { calls } else { 0 }
                 || c[counter::COMPAT] != if route == 0 { 0 } else { calls }
                 || c[counter::BACKEND_CALLS] != calls
@@ -395,14 +437,48 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
                 return Err("route accounting mismatch".into());
             }
             let mut sorted = samples.clone();
-            let [median, p95, p99] = kernel_core::quantiles(&mut sorted).unwrap();
+            let [wall_median, p95, p99] = kernel_core::quantiles(&mut sorted).unwrap();
             let mean = samples.iter().map(|&v| v as f64).sum::<f64>() / samples.len() as f64;
             let variance = samples
                 .iter()
                 .map(|&v| (v as f64 - mean).powi(2))
                 .sum::<f64>()
                 / (samples.len() - 1) as f64;
-            benchmarks.push(json!({"route":route,"warmup_samples":warmup,"samples":samples,"median_ticks":median,"p95_ticks":p95,"p99_ticks":p99,"mean_ticks":mean,"sample_variance_ticks_squared":variance,"standard_deviation_ticks":variance.sqrt(),"observed_preemptions":preemptions,"exclusive_cpu_time":null,"throughput":null,"counters":c,"allocations":0,"locks":0,"fallbacks":0,"memory":"stack-owned bounded synchronous request"}));
+            let adapter_cpu_ticks = median(&adapter_cpu_samples)?;
+            let native_service_cpu_ticks = median(&native_service_cpu_samples)?;
+            let exclusive_cpu_samples = adapter_cpu_samples
+                .iter()
+                .zip(&native_service_cpu_samples)
+                .map(|(&adapter, &native)| {
+                    adapter
+                        .checked_add(native)
+                        .ok_or_else(|| "exclusive CPU sample overflow".to_string())
+                })
+                .collect::<Result<Vec<_>>>()?;
+            let exclusive_cpu_ticks = median(&exclusive_cpu_samples)?;
+            benchmarks.push(json!({
+                "route":route,
+                "warmup_samples":warmup,
+                "samples":samples,
+                "adapter_cpu_samples":adapter_cpu_samples,
+                "native_service_cpu_samples":native_service_cpu_samples,
+                "median_ticks":wall_median,
+                "p95_ticks":p95,
+                "p99_ticks":p99,
+                "mean_ticks":mean,
+                "sample_variance_ticks_squared":variance,
+                "standard_deviation_ticks":variance.sqrt(),
+                "observed_preemptions":preemptions,
+                "adapter_cpu_ns":ticks_to_ns(adapter_cpu_ticks, words[header::FREQUENCY])?,
+                "native_service_cpu_ns":ticks_to_ns(native_service_cpu_ticks, words[header::FREQUENCY])?,
+                "exclusive_cpu_ns":ticks_to_ns(exclusive_cpu_ticks, words[header::FREQUENCY])?,
+                "throughput":null,
+                "counters":c,
+                "allocations":0,
+                "locks":0,
+                "fallbacks":0,
+                "memory":"stack-owned bounded synchronous request"
+            }));
         }
         if dev && benchmarks.len() != expected.iter().copied().collect::<BTreeSet<_>>().len() {
             return Err("missing benchmark route".into());
@@ -438,9 +514,9 @@ fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
         let process_identity = process_identities[id]
             .as_ref()
             .ok_or("consumer is missing its kernel-owned process identity")?;
-        let (el0_residency_ticks, counter_frequency_hz) =
-            process_residency[id].ok_or("consumer is missing kernel-counted EL0 residency")?;
-        consumers.push(json!({"id":id,"cpu":id / platform_config::USER_PROCESSES_PER_CPU,"process_identity":process_identity,"el0_residency_ticks":el0_residency_ticks,"counter_frequency_hz":counter_frequency_hz,"route":words[header::ROUTE],"generation":words[header::GENERATION],"conformance_checks":words[header::CONFORMANCE],"oracle_sum":words[header::SUM],"frequency":words[header::FREQUENCY],"native_attempts":native_attempts[id],"profile_digest_words":&words[header::DIGEST..FIXED_HEADER_WORDS],"benchmarks":benchmarks}));
+        let (el0_residency_ticks, native_window_service_ticks, counter_frequency_hz) =
+            process_residency[id].ok_or("consumer is missing kernel process CPU accounting")?;
+        consumers.push(json!({"id":id,"cpu":id / platform_config::USER_PROCESSES_PER_CPU,"process_identity":process_identity,"el0_residency_ticks":el0_residency_ticks,"native_window_service_ticks":native_window_service_ticks,"counter_frequency_hz":counter_frequency_hz,"route":words[header::ROUTE],"generation":words[header::GENERATION],"conformance_checks":words[header::CONFORMANCE],"oracle_sum":words[header::SUM],"frequency":words[header::FREQUENCY],"native_attempts":native_attempts[id],"profile_digest_words":&words[header::DIGEST..FIXED_HEADER_WORDS],"benchmarks":benchmarks}));
     }
     Ok(json!(consumers))
 }
@@ -653,7 +729,7 @@ pub fn run(args: &[String]) -> Result<()> {
     if starting_sources != super::source_inventory()? {
         return Err("sources changed during routing run".into());
     }
-    let result = json!({"schema_version":3,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner, resident frame charge and EL0 counter residency are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency and EL0 residency-counter observations; exception-entry overhead remains in EL0 residency; tail uncertainty and physical hardware unverified"});
+    let result = json!({"schema_version":4,"scope":"real fixed-affinity EL0 consumers; kernel-owned ProcessId slot/generation, CPU owner, resident frame charge and EL0 counter residency are joined to the exact loaded image digest and raw route report; native kernel contains no route or legacy decoder","runs":runs,"negative_controls":["profile integrity", "adapter fault containment", "accounting report corruption"],"stripped_production":{"user_artifact":stripped,"diagnostic_features":[],"kernel_build":stripped_kernel,"verification":"human-console boot smoke; semantic checks use matched PROD evidence image"},"source_files":starting_sources,"claim":"TCG timer latency and EL0 residency-counter observations; exception-entry overhead remains in EL0 residency; tail uncertainty and physical hardware unverified"});
     fs::write(
         "target/kernel/routing-results.json",
         serde_json::to_string_pretty(&result)?,
