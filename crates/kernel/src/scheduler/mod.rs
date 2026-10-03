@@ -467,6 +467,10 @@ pub(crate) fn trap(frame: &mut Context, kind: Trap) -> usize {
     })
 }
 fn native_call(task: &mut Task, frame: &mut Context, operation: u16) -> bool {
+    #[cfg(feature = "kernel-tests")]
+    if crate::user_copy::testing::call(task, frame, operation) {
+        return true;
+    }
     if task.observations.call(operation, &mut frame.gpr) {
         return true;
     }
@@ -489,4 +493,21 @@ fn native_call(task: &mut Task, frame: &mut Context, operation: u16) -> bool {
         _ => return false,
     }
     true
+}
+/// Only an executing fixed-affinity task in an exclusive masked storage section
+/// can access its retained immutable root. Old copies, terminal/unlinked tasks,
+/// and reused process/queue generations fail before any user access.
+pub(crate) fn copy_context(task: &Task) -> bool {
+    let owner = percpu::id();
+    task.id() < config::TOTAL_TASKS
+        && task.id() / TASKS == owner
+        && cpu::irq_masked()
+        && percpu::current().scheduler_borrow.load(Ordering::Acquire)
+        && LOCALS[owner].phase() == Phase::Running
+        && task.generation() == LOCALS[owner].generation()
+        && task.state == CONTEXT_RUNNING
+        && task.linked()
+        && RUNNING_OWNER[task.id()].load(Ordering::Acquire) == owner
+        && cpu::active_root() == task.root()
+        && memory::current_space(task.id(), task.process_generation(), task.root())
 }

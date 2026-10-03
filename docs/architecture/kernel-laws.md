@@ -128,9 +128,9 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Allowed exceptions:** No implicit exceptions. Any change must preserve security obligations and be approved through an architecture decision.
 
-**Enforcement:** Audit boundary contracts and maintain a reviewable inventory of unverified assumptions.
+**Enforcement:** Audit boundary contracts and maintain a reviewable inventory of unverified assumptions. [Safe user-copy](../kernel/user-copy.md) centralizes bounded initialized snapshots, current-space lifetime and EL0 permission checks, with implementation and test links in its contract.
 
-**Testing:** Fuzz malformed messages, reuse poisoned buffers, mutate foreign memory and test clock/size overflow.
+**Testing:** Fuzz malformed messages, reuse poisoned buffers, mutate foreign memory and test clock/size overflow. The [EL0 copy contract](../kernel/user-copy.md) links checks for range/permission errors, poisoned partial-fault scratch, initialized output and user mutation after snapshot in both profiles. General message fuzzing and shared-mapping races remain future gates.
 
 ## LAW-020 — Device memory ownership and ordering
 

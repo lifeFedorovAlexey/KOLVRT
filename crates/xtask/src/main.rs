@@ -147,6 +147,18 @@ const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
         "LockHeld",
     ),
 ];
+const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
+    (
+        "--user-copy-snapshot-control",
+        "user-copy-snapshot-negative",
+        "user_copy_el0_boundary_and_snapshot",
+    ),
+    (
+        "--user-copy-recovery-control",
+        "user-copy-recovery-negative",
+        "\"event\":\"fatal\"",
+    ),
+];
 #[path = "../../kernel/src/platform/config.rs"]
 #[allow(dead_code)] // Layout constants are consumed by the target kernel.
 mod platform_config;
@@ -219,6 +231,8 @@ const TESTS: &[&str] = &[
     "process_quantum_return_and_peer_progress",
     "process_wait_block_and_wakeup",
     "process_resource_reclamation",
+    "user_copy_el0_boundary_and_snapshot",
+    "user_copy_lifetime_and_reclamation",
 ];
 fn main() {
     if let Err(e) = run() {
@@ -264,6 +278,12 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
+            for &(flag, feature, _) in USER_COPY_CONTROLS {
+                if args.iter().any(|arg| arg == flag) {
+                    let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
+                    return execute(&elf, true, true);
+                }
+            }
             for &(flag, feature, _) in SCHEDULER_CONTROLS {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
@@ -335,6 +355,20 @@ fn run() -> Result<()> {
                 }
             }
             println!("Native kernel matrix passed (two active CPUs; scheduler ownership enforced).");
+            for prod in [false, true] {
+                for &(flag, _, marker) in USER_COPY_CONTROLS {
+                    let mut command = Command::new(env::current_exe()?);
+                    command.args(["test", flag]);
+                    if prod { command.arg("--prod"); }
+                    let output = command.output()?;
+                    let text = format!("{}{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
+                    fs::write(format!("target/kernel/{}-{flag}.log", if prod { "prod" } else { "dev" }), &text)?;
+                    if output.status.success() || !text.contains(marker) {
+                        return Err(format!("user-copy control did not fail correctly: {flag} prod={prod}").into());
+                    }
+                    println!("user-copy rejection verified: {flag} prod={prod}");
+                }
+            }
             let label = match args.as_slice() {
                 [_] => None,
                 [_, flag, label] if flag == "--record" => Some(label.as_str()),
@@ -665,6 +699,14 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
             .ok_or("missing real kernel measurement")?
             .clone();
         validate_samples(&measurement)?;
+        for event in events.as_array().unwrap().iter().filter(|e| {
+            e["event"] == "measurement"
+                && e["scope"]
+                    .as_str()
+                    .is_some_and(|s| s.starts_with("user_copy_"))
+        }) {
+            validate_samples(event)?;
+        }
         profiles.insert(profile.into(), json!({"measurement":measurement,"test_build":read_json(format!("target/kernel/{profile}-tests-build.json"))?,"boot_build":read_json(format!("target/kernel/{profile}-boot-build.json"))?,"run":read_json(format!("target/kernel/{profile}-tests.run.json"))?,"test_events":events}));
     }
     let revision = Command::new("git").args(["rev-parse", "HEAD"]).output()?;
@@ -672,7 +714,7 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + SCHEDULER_CONTROLS.len() * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len()) * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {

@@ -186,7 +186,7 @@ impl<'de> Deserialize<'de> for UniqueJson {
 pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -> Result<()> {
     let mut names = BTreeSet::new();
     let mut terminal = false;
-    let mut measurement = false;
+    let mut measurements = BTreeSet::new();
     let mut el0 = false;
     for event in events {
         if matches!(event["event"].as_str(), Some("fatal" | "panic")) || event["status"] == "fail" {
@@ -203,8 +203,32 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 }
             }
             Some("measurement") if tests => {
-                if measurement
-                    || event["scope"] != "lock_uncontended"
+                let scope = event["scope"].as_str().ok_or("measurement missing scope")?;
+                let owner = if scope == "lock_uncontended" {
+                    if !event["cpu"].is_null() {
+                        return Err("lock measurement has CPU selector".into());
+                    }
+                    None
+                } else if [
+                    "user_copy_small",
+                    "user_copy_page",
+                    "user_copy_three_pages",
+                    "user_copy_failure",
+                ]
+                .contains(&scope)
+                    && expected.contains(&"user_copy_el0_boundary_and_snapshot")
+                {
+                    let cpu = event["cpu"]
+                        .as_u64()
+                        .ok_or("copy measurement missing CPU")?;
+                    if cpu >= cpus as u64 {
+                        return Err("foreign copy measurement CPU".into());
+                    }
+                    Some(cpu)
+                } else {
+                    return Err("unknown measurement scope".into());
+                };
+                if !measurements.insert((scope, owner))
                     || event["units"] != "timer_ticks"
                     || event["frequency"].as_u64().is_none_or(|v| v == 0)
                     || ["warmup", "iterations", "median", "p95", "p99"]
@@ -216,7 +240,7 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 {
                     return Err("invalid or duplicate measurement event".into());
                 }
-                measurement = true;
+                crate::validate_samples(event)?;
             }
             Some("el0") if !tests && event["status"] == "pass" => {
                 let processes = cpus * crate::platform_config::USER_PROCESSES_PER_CPU;
@@ -234,6 +258,11 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 el0 = true;
             }
             Some("suite") if tests => {
+                if expected.contains(&"user_copy_el0_boundary_and_snapshot")
+                    && measurements.len() != 1 + cpus * 4
+                {
+                    return Err("missing user-copy measurements".into());
+                }
                 if event["status"] != "pass"
                     || event["tests"].as_u64() != Some(expected.len() as u64)
                     || names != expected.iter().copied().collect()
@@ -407,6 +436,52 @@ mod tests {
             vec![test.clone(), suite.clone(), test.clone()],
         ] {
             assert!(validate(&events, true, &["real"], 2).is_err());
+        }
+    }
+    #[test]
+    fn copy_measurements_require_complete_unique_attribution_and_valid_samples() {
+        let expected = ["user_copy_el0_boundary_and_snapshot"];
+        let sample = |scope: &str, cpu: Option<usize>| {
+            let mut event = json!({"event":"measurement","scope":scope,"units":"timer_ticks","frequency":62500000,"warmup":4,"iterations":2,"median":1,"p95":2,"p99":2,"samples":[1,2]});
+            if let Some(cpu) = cpu {
+                event["cpu"] = json!(cpu);
+            }
+            event
+        };
+        let mut events = vec![
+            json!({"event":"test","name":expected[0],"status":"pass"}),
+            sample("lock_uncontended", None),
+        ];
+        for cpu in 0..2 {
+            for scope in [
+                "user_copy_small",
+                "user_copy_page",
+                "user_copy_three_pages",
+                "user_copy_failure",
+            ] {
+                events.push(sample(scope, Some(cpu)));
+            }
+        }
+        events.push(json!({"event":"suite","status":"pass","tests":1}));
+        validate(&events, true, &expected, 2).unwrap();
+        let mut missing = events.clone();
+        missing.remove(2);
+        assert!(validate(&missing, true, &expected, 2).is_err());
+        let mut duplicate = events.clone();
+        duplicate.insert(2, events[2].clone());
+        assert!(validate(&duplicate, true, &expected, 2).is_err());
+        for (field, value) in [
+            ("cpu", json!(2)),
+            ("scope", json!("user_copy_unknown")),
+            ("median", json!(9)),
+            ("iterations", json!(3)),
+        ] {
+            let mut corrupt = events.clone();
+            corrupt[2][field] = value;
+            assert!(
+                validate(&corrupt, true, &expected, 2).is_err(),
+                "accepted corrupt {field}"
+            );
         }
     }
 }

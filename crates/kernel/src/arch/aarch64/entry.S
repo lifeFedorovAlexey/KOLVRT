@@ -301,6 +301,38 @@ user_kernel_return:
 user_kernel_resumed:
  ret
 
+// INV-USER-COPY: kernel accesses remain fatal; exact user instructions recover.
+// x4 counts completed stores only. No Rust user references, masked IRQ, bounded
+// disjoint buffers and immutable retained root enforced by the Rust wrapper.
+.global user_copy_in,user_copy_out,user_copy_load,user_copy_store,user_copy_resume
+user_copy_in:
+ mov x4,xzr
+1:
+ cmp x4,x2
+ b.eq user_copy_resume
+user_copy_load:
+ ldtrb w3,[x1]
+ strb w3,[x0]
+ add x0,x0,#1
+ add x1,x1,#1
+ add x4,x4,#1
+ b 1b
+user_copy_out:
+ mov x4,xzr
+2:
+ cmp x4,x2
+ b.eq user_copy_resume
+ ldrb w3,[x1]
+user_copy_store:
+ sttrb w3,[x0]
+ add x0,x0,#1
+ add x1,x1,#1
+ add x4,x4,#1
+ b 2b
+user_copy_resume:
+ mov x0,x4
+ ret
+
 // INV-PROBE: test-only exact fault PCs; handler resumes only these instructions.
 .section .text.probes,"ax"
 .global probe_read, probe_read_pc, probe_write, probe_write_pc, probe_break, probe_break_pc
