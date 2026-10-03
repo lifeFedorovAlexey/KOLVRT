@@ -4,7 +4,12 @@ use crate::digest_valid;
 use ed25519_dalek::{Signature, VerifyingKey};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{collections::BTreeSet, io::Read, path::PathBuf};
+use std::{
+    collections::BTreeSet,
+    io::Read,
+    path::PathBuf,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 const MAX_ARTIFACT_BYTES: u64 = 512 * 1024 * 1024;
 const HASH_BUFFER_BYTES: usize = 64 * 1024;
@@ -26,6 +31,10 @@ pub struct Attestation {
     pub subject_digest: String,
     pub key_id: String,
     pub signature: String,
+    #[serde(default)]
+    pub issued_at_unix_seconds: Option<u64>,
+    #[serde(default)]
+    pub session_id: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -42,6 +51,14 @@ pub struct TrustedKey {
 pub struct TrustPolicy {
     pub schema: u32,
     pub keys: Vec<TrustedKey>,
+    /// Fresh attestations must match this externally supplied session challenge.
+    #[serde(default)]
+    pub required_session_id: Option<String>,
+    /// Maximum age of a signed timestamp. None keeps legacy timeless policy behavior.
+    #[serde(default)]
+    pub max_attestation_age_seconds: Option<u64>,
+    #[serde(default)]
+    pub max_clock_skew_seconds: Option<u64>,
 }
 
 pub fn subject_digest(payload: &[u8]) -> String {
@@ -52,6 +69,20 @@ pub fn subject_digest(payload: &[u8]) -> String {
 pub fn signing_message(role: Role, digest: &str) -> Vec<u8> {
     format!(
         "KOLVRT-MIGRATION-ATTESTATION/3\n{}\n{digest}\n",
+        serde_json::to_string(&role).unwrap()
+    )
+    .into_bytes()
+}
+
+/// Session-aware signature domain. Timestamp and externally issued session challenge are signed.
+pub fn session_signing_message(
+    role: Role,
+    digest: &str,
+    issued_at_unix_seconds: u64,
+    session_id: &str,
+) -> Vec<u8> {
+    format!(
+        "KOLVRT-MIGRATION-ATTESTATION/4\n{}\n{digest}\n{issued_at_unix_seconds}\n{session_id}\n",
         serde_json::to_string(&role).unwrap()
     )
     .into_bytes()
@@ -106,6 +137,16 @@ impl SignedArtifactStore {
         let mut ids = BTreeSet::new();
         if policy.schema != 1 {
             return Err("unsupported trust-policy schema".into());
+        }
+        if policy.max_attestation_age_seconds == Some(0)
+            || (policy.max_attestation_age_seconds.is_some()
+                && policy.required_session_id.is_none())
+            || policy
+                .required_session_id
+                .as_ref()
+                .is_some_and(|session| !digest_valid(session))
+        {
+            return Err("invalid freshness age or externally supplied session challenge".into());
         }
         for key in &policy.keys {
             if key.key_id.trim().is_empty() || key.roles.is_empty() || !ids.insert(&key.key_id) {
@@ -169,11 +210,26 @@ impl EvidenceVerifier for SignedArtifactStore {
         attestations: &[Attestation],
     ) -> Result<(), String> {
         let digest = subject_digest(payload);
-        let message = signing_message(role, &digest);
+        let now = if self.policy.required_session_id.is_some()
+            || self.policy.max_attestation_age_seconds.is_some()
+            || self.policy.max_clock_skew_seconds.is_some()
+        {
+            Some(
+                SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .map_err(|_| "system clock predates Unix epoch")?
+                    .as_secs(),
+            )
+        } else {
+            None
+        };
         let authenticated = attestations
             .iter()
             .filter(|a| a.role == role && a.subject_digest == digest)
             .any(|a| {
+                let Some(message) = attestation_message(a, &self.policy, now) else {
+                    return false;
+                };
                 self.policy
                     .keys
                     .iter()
@@ -200,5 +256,54 @@ impl EvidenceVerifier for SignedArtifactStore {
             self.verify_bytes(reference)?;
         }
         Ok(())
+    }
+}
+
+fn attestation_message(
+    attestation: &Attestation,
+    policy: &TrustPolicy,
+    now: Option<u64>,
+) -> Option<Vec<u8>> {
+    match (
+        attestation.issued_at_unix_seconds,
+        attestation.session_id.as_deref(),
+    ) {
+        (Some(issued_at), Some(session_id)) => {
+            if !digest_valid(session_id)
+                || policy
+                    .required_session_id
+                    .as_deref()
+                    .is_some_and(|required| required != session_id)
+            {
+                return None;
+            }
+            if let Some(now) = now {
+                let skew = policy.max_clock_skew_seconds.unwrap_or(0);
+                if issued_at > now.saturating_add(skew)
+                    || policy
+                        .max_attestation_age_seconds
+                        .is_some_and(|age| now.saturating_sub(issued_at) > age.saturating_add(skew))
+                {
+                    return None;
+                }
+            }
+            Some(session_signing_message(
+                attestation.role,
+                &attestation.subject_digest,
+                issued_at,
+                session_id,
+            ))
+        }
+        (None, None)
+            if policy.required_session_id.is_none()
+                && policy.max_attestation_age_seconds.is_none()
+                && policy.max_clock_skew_seconds.is_none() =>
+        {
+            Some(signing_message(
+                attestation.role,
+                &attestation.subject_digest,
+            ))
+        }
+        _ => None,
     }
 }

@@ -93,6 +93,8 @@ fn attest<T: Serialize>(key: &SigningKey, role: Role, payload: &T) -> Attestatio
         subject_digest: digest,
         key_id: "ephemeral-local-experiment".into(),
         signature: hex(&signature.to_bytes()),
+        issued_at_unix_seconds: None,
+        session_id: None,
     }
 }
 fn hex(bytes: &[u8]) -> String {
@@ -358,6 +360,9 @@ fn run() -> Result<PathBuf, String> {
             ],
             revoked: false,
         }],
+        required_session_id: None,
+        max_attestation_age_seconds: None,
+        max_clock_skew_seconds: None,
     };
     fs::write(
         root.join("request.json"),

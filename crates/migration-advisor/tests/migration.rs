@@ -924,6 +924,8 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
             subject_digest: digest.clone(),
             key_id: "fixture-producer".into(),
             signature: hex(&key.sign(&signing_message(role, &digest)).to_bytes()),
+            issued_at_unix_seconds: None,
+            session_id: None,
         }
     };
     for p in &r.catalog {
@@ -960,6 +962,9 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
             ],
             revoked: false,
         }],
+        required_session_id: None,
+        max_attestation_age_seconds: None,
+        max_clock_skew_seconds: None,
     };
     let store = SignedArtifactStore::new(policy.clone(), root.clone()).unwrap();
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
