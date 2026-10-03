@@ -18,6 +18,7 @@ use std::{
 const PAIRS: usize = 100;
 const PILOT_PAIRS: usize = 100;
 const EXPECTED_MEAN_GAIN_NS: u64 = 25_000;
+const CONSUMER_ID: &str = "fixture-window-consumer";
 const CHILD_TIMEOUT: Duration = Duration::from_secs(10);
 const POLL: Duration = Duration::from_millis(10);
 const MAX_RECEIPT_BYTES: u64 = 8192;
@@ -256,7 +257,12 @@ fn run() -> Result<PathBuf, String> {
         p95_memory_regression_budget_bytes: Some(0),
         p95_copied_bytes_regression_budget: Some(0),
         p95_energy_regression_budget_uj: None,
-        consumer_resource_budgets: Vec::new(),
+        consumer_resource_budgets: vec![migration_advisor::statistics::ConsumerResourceBudget {
+            consumer_id: CONSUMER_ID.into(),
+            p95_memory_regression_budget_bytes: Some(0),
+            p95_copied_bytes_regression_budget: Some(0),
+            p95_energy_regression_budget_uj: None,
+        }],
         prospective_power,
     };
     let observed = Instant::now();
@@ -266,7 +272,7 @@ fn run() -> Result<PathBuf, String> {
         let (baseline, candidate, baseline_first) =
             measure_pair(&binaries, &root, "measurement", i)?;
         pairs.push(Pair {
-            consumer_id: Some("fixture-window-consumer".into()),
+            consumer_id: Some(CONSUMER_ID.into()),
             baseline_ns: baseline.elapsed_ns,
             candidate_ns: candidate.elapsed_ns,
             baseline_memory_bytes: baseline.peak_memory_bytes,
