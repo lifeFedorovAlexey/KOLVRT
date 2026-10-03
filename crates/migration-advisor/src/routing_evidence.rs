@@ -370,8 +370,8 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 counter_frequency_hz,
                 estimated_el0_residency_ns: (u128::from(el0_residency_ticks) * 1_000_000_000
                     / u128::from(counter_frequency_hz))
-                    .try_into()
-                    .map_err(|_| "EL0 residency conversion overflow")?,
+                .try_into()
+                .map_err(|_| "EL0 residency conversion overflow")?,
                 declared_route: declared.into(),
                 generation: header[3],
                 conformance_checks: header[4],
