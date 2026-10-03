@@ -4,7 +4,13 @@ use crate::digest_valid;
 use ed25519_dalek::{Signature, VerifyingKey};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{collections::BTreeSet, io::Read, path::PathBuf};
+use std::{
+    collections::BTreeSet,
+    fs::{self, OpenOptions},
+    io::Read,
+    path::PathBuf,
+    sync::Mutex,
+};
 
 const MAX_ARTIFACT_BYTES: u64 = 512 * 1024 * 1024;
 const HASH_BUFFER_BYTES: usize = 64 * 1024;
@@ -12,6 +18,7 @@ const HASH_BUFFER_BYTES: usize = 64 * 1024;
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(rename_all = "snake_case")]
 pub enum Role {
+    Session,
     Catalog,
     Runtime,
     ContractTest,
@@ -26,6 +33,27 @@ pub struct Attestation {
     pub subject_digest: String,
     pub key_id: String,
     pub signature: String,
+    #[serde(default)]
+    pub session: Option<SessionBinding>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct SessionBinding {
+    /// Random lowercase-hex challenge id allocated by an external session issuer.
+    pub id: String,
+    pub challenge_digest: String,
+    pub context_digest: String,
+    pub issued_at_unix: u64,
+    pub expires_at_unix: u64,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ProducerIdentity {
+    pub producer_id: String,
+    pub custody_domain: String,
+    pub enforcement_domain: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -35,6 +63,32 @@ pub struct TrustedKey {
     pub public_key: String,
     pub roles: Vec<Role>,
     pub revoked: bool,
+    #[serde(default)]
+    pub compromised: bool,
+    #[serde(default)]
+    pub producer: Option<ProducerIdentity>,
+    #[serde(default)]
+    pub valid_from_unix: Option<u64>,
+    #[serde(default)]
+    pub valid_until_unix: Option<u64>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct SessionPolicy {
+    pub max_lifetime_secs: u64,
+    pub max_future_skew_secs: u64,
+    /// Offline sessions are rejected until a trusted offline-time source is configured.
+    pub allow_offline: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct IndependencePolicy {
+    pub role: Role,
+    pub min_producers: usize,
+    pub min_custody_domains: usize,
+    pub min_enforcement_domains: usize,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -42,6 +96,10 @@ pub struct TrustedKey {
 pub struct TrustPolicy {
     pub schema: u32,
     pub keys: Vec<TrustedKey>,
+    #[serde(default)]
+    pub session: Option<SessionPolicy>,
+    #[serde(default)]
+    pub independence: Vec<IndependencePolicy>,
 }
 
 pub fn subject_digest(payload: &[u8]) -> String {
@@ -57,6 +115,30 @@ pub fn signing_message(role: Role, digest: &str) -> Vec<u8> {
     .into_bytes()
 }
 
+pub fn signing_message_bound(role: Role, digest: &str, session: &SessionBinding) -> Vec<u8> {
+    let session_digest = subject_digest(&serde_json::to_vec(session).expect("session encoding"));
+    format!(
+        "{}SESSION\n{session_digest}\n",
+        String::from_utf8(signing_message(role, digest)).unwrap()
+    )
+    .into_bytes()
+}
+
+#[derive(Clone, Debug, Default, Serialize)]
+pub struct TrustAssurance {
+    pub experimental_fixture_mode: bool,
+    pub provisioned_policy: bool,
+    pub role_scoped_signatures: bool,
+    pub revocation_checked: bool,
+    pub session_bound: bool,
+    pub session_verified: bool,
+    pub freshness_checked: bool,
+    pub replay_checked: bool,
+    pub producer_independence_checked: bool,
+    pub producer_independence_satisfied: bool,
+    pub evidence_chain_complete: bool,
+}
+
 pub trait EvidenceVerifier {
     /// Must authenticate the exact payload, signer role and all referenced artifact bytes.
     /// Implementations are trusted application configuration, never request-supplied code.
@@ -67,6 +149,21 @@ pub trait EvidenceVerifier {
         references: &[String],
         attestations: &[Attestation],
     ) -> Result<(), String>;
+    fn begin_session(
+        &self,
+        session: Option<&SessionBinding>,
+        _context: &[u8],
+        _attestations: &[Attestation],
+    ) -> Result<(), String> {
+        if session.is_none() {
+            Ok(())
+        } else {
+            Err("no provisioned session verifier configured".into())
+        }
+    }
+    fn assurance(&self) -> TrustAssurance {
+        TrustAssurance::default()
+    }
 }
 
 pub struct NoTrust;
@@ -100,11 +197,14 @@ fn hex_bytes<const N: usize>(text: &str) -> Result<[u8; N], String> {
 pub struct SignedArtifactStore {
     policy: TrustPolicy,
     root: PathBuf,
+    ledger: Option<PathBuf>,
+    now_unix: Option<u64>,
+    active_session: Mutex<Option<SessionBinding>>,
 }
 impl SignedArtifactStore {
     pub fn new(policy: TrustPolicy, root: PathBuf) -> Result<Self, String> {
         let mut ids = BTreeSet::new();
-        if policy.schema != 1 {
+        if policy.schema != 1 || policy.session.is_some() || !policy.independence.is_empty() {
             return Err("unsupported trust-policy schema".into());
         }
         for key in &policy.keys {
@@ -121,7 +221,99 @@ impl SignedArtifactStore {
         if !root.is_dir() {
             return Err("artifact root is not a directory".into());
         }
-        Ok(Self { policy, root })
+        Ok(Self {
+            policy,
+            root,
+            ledger: None,
+            now_unix: None,
+            active_session: Mutex::new(None),
+        })
+    }
+
+    /// Provisioned verifier. Policy, ledger location and clock come from trusted
+    /// application configuration; none are selected by the migration request.
+    pub fn provisioned(
+        policy: TrustPolicy,
+        root: PathBuf,
+        ledger: PathBuf,
+        now_unix: u64,
+    ) -> Result<Self, String> {
+        if policy.schema != 2 {
+            return Err("provisioned verification requires trust-policy schema 2".into());
+        }
+        let session = policy
+            .session
+            .as_ref()
+            .ok_or("provisioned policy requires explicit session clock contract")?;
+        if session.max_lifetime_secs == 0
+            || session.max_future_skew_secs > 300
+            || session.allow_offline
+        {
+            return Err("unsupported session lifetime, skew or offline clock contract".into());
+        }
+        if policy.independence.is_empty() {
+            return Err("provisioned policy requires explicit producer-independence rules".into());
+        }
+        let mut ids = BTreeSet::new();
+        for key in &policy.keys {
+            if key.key_id.trim().is_empty()
+                || key.roles.is_empty()
+                || !ids.insert(&key.key_id)
+                || key
+                    .valid_from_unix
+                    .zip(key.valid_until_unix)
+                    .is_some_and(|(a, b)| a >= b)
+            {
+                return Err("empty, duplicate or invalid-lifetime trusted key".into());
+            }
+            let producer = key
+                .producer
+                .as_ref()
+                .ok_or("provisioned key missing producer identity")?;
+            if producer.producer_id.trim().is_empty()
+                || producer.custody_domain.trim().is_empty()
+                || producer.enforcement_domain.trim().is_empty()
+            {
+                return Err("empty producer/custody/enforcement identity".into());
+            }
+            let public = VerifyingKey::from_bytes(&hex_bytes(&key.public_key)?)
+                .map_err(|e| e.to_string())?;
+            if public.is_weak() {
+                return Err("weak trusted key".into());
+            }
+        }
+        if !policy
+            .keys
+            .iter()
+            .any(|key| key.roles.contains(&Role::Session) && !key.revoked && !key.compromised)
+        {
+            return Err("provisioned policy has no active session issuer".into());
+        }
+        for independence in &policy.independence {
+            if independence.role == Role::Session
+                || independence.min_producers < 2
+                || independence.min_custody_domains < 2
+                || independence.min_enforcement_domains < 2
+            {
+                return Err("independence requirements must require at least two independent producers/domains".into());
+            }
+        }
+        let root = root.canonicalize().map_err(|e| e.to_string())?;
+        if !root.is_dir() {
+            return Err("artifact root is not a directory".into());
+        }
+        fs::create_dir_all(&ledger).map_err(|e| e.to_string())?;
+        let ledger = ledger.canonicalize().map_err(|e| e.to_string())?;
+        if !ledger.is_dir() {
+            return Err("session ledger is not a directory".into());
+        }
+        Ok(Self {
+            policy,
+            root,
+            ledger: Some(ledger),
+            now_unix: Some(now_unix),
+            active_session: Mutex::new(None),
+        })
     }
 
     fn verify_bytes(&self, digest: &str) -> Result<(), String> {
@@ -159,6 +351,64 @@ impl SignedArtifactStore {
         }
         Ok(())
     }
+
+    fn key_usable(&self, key: &TrustedKey, role: Role, at: Option<u64>) -> bool {
+        key.roles.contains(&role)
+            && !key.revoked
+            && !key.compromised
+            && at.is_none_or(|at| {
+                key.valid_from_unix.is_none_or(|start| at >= start)
+                    && key.valid_until_unix.is_none_or(|end| at < end)
+            })
+    }
+
+    fn verify_signature(&self, attestation: &Attestation, role: Role, digest: &str) -> bool {
+        let at = if self.policy.schema == 2 {
+            self.now_unix
+        } else {
+            None
+        };
+        if self.policy.schema == 2 && at.is_none() {
+            return false;
+        }
+        let Some(key) = self
+            .policy
+            .keys
+            .iter()
+            .find(|key| key.key_id == attestation.key_id && self.key_usable(key, role, at))
+        else {
+            return false;
+        };
+        let Ok(public) = hex_bytes(&key.public_key) else {
+            return false;
+        };
+        let Ok(public) = VerifyingKey::from_bytes(&public) else {
+            return false;
+        };
+        let Ok(signature) = hex_bytes(&attestation.signature) else {
+            return false;
+        };
+        let message = if self.policy.schema == 2 {
+            let Some(session) = attestation.session.as_ref() else {
+                return false;
+            };
+            let Ok(active) = self.active_session.lock() else {
+                return false;
+            };
+            if active.as_ref() != Some(session) {
+                return false;
+            }
+            signing_message_bound(role, digest, session)
+        } else {
+            if attestation.session.is_some() {
+                return false;
+            }
+            signing_message(role, digest)
+        };
+        public
+            .verify_strict(&message, &Signature::from_bytes(&signature))
+            .is_ok()
+    }
 }
 impl EvidenceVerifier for SignedArtifactStore {
     fn authenticate(
@@ -169,36 +419,169 @@ impl EvidenceVerifier for SignedArtifactStore {
         attestations: &[Attestation],
     ) -> Result<(), String> {
         let digest = subject_digest(payload);
-        let message = signing_message(role, &digest);
-        let authenticated = attestations
+        let matching: Vec<_> = attestations
             .iter()
             .filter(|a| a.role == role && a.subject_digest == digest)
-            .any(|a| {
-                self.policy
-                    .keys
-                    .iter()
-                    .filter(|key| {
-                        key.key_id == a.key_id && !key.revoked && key.roles.contains(&role)
-                    })
-                    .any(|key| {
-                        let Ok(public) = hex_bytes(&key.public_key) else {
-                            return false;
-                        };
-                        let Ok(signature) = hex_bytes(&a.signature) else {
-                            return false;
-                        };
-                        VerifyingKey::from_bytes(&public).is_ok_and(|key| {
-                            key.verify_strict(&message, &Signature::from_bytes(&signature))
-                                .is_ok()
-                        })
-                    })
-            });
+            .filter(|a| self.verify_signature(a, role, &digest))
+            .collect();
+        let authenticated = !matching.is_empty();
         if !authenticated {
             return Err("missing, revoked, wrong-role or invalid Ed25519 signature".into());
+        }
+        for rule in self
+            .policy
+            .independence
+            .iter()
+            .filter(|rule| rule.role == role)
+        {
+            let eligible: Vec<_> = matching
+                .iter()
+                .filter_map(|attestation| {
+                    self.policy
+                        .keys
+                        .iter()
+                        .find(|key| key.key_id == attestation.key_id)
+                        .and_then(|key| key.producer.as_ref())
+                })
+                .collect();
+            let producer_ids: BTreeSet<_> = eligible.iter().map(|p| &p.producer_id).collect();
+            let custody: BTreeSet<_> = eligible.iter().map(|p| &p.custody_domain).collect();
+            let enforcement: BTreeSet<_> = eligible.iter().map(|p| &p.enforcement_domain).collect();
+            if producer_ids.len() < rule.min_producers
+                || custody.len() < rule.min_custody_domains
+                || enforcement.len() < rule.min_enforcement_domains
+            {
+                return Err(format!(
+                    "{role:?}: producer independence policy not satisfied"
+                ));
+            }
         }
         for reference in references.iter().collect::<BTreeSet<_>>() {
             self.verify_bytes(reference)?;
         }
         Ok(())
+    }
+
+    fn begin_session(
+        &self,
+        session: Option<&SessionBinding>,
+        context: &[u8],
+        attestations: &[Attestation],
+    ) -> Result<(), String> {
+        if self.policy.schema == 1 {
+            return if session.is_none() {
+                Ok(())
+            } else {
+                Err("experimental fixture policy rejects provisioned sessions".into())
+            };
+        }
+        let session = session.ok_or("missing provisioned evidence session")?;
+        let policy = self
+            .policy
+            .session
+            .as_ref()
+            .ok_or("missing session policy")?;
+        if session.id.len() != 32
+            || !session
+                .id
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+            || !digest_valid(&session.challenge_digest)
+            || !digest_valid(&session.context_digest)
+            || session.context_digest != subject_digest(context)
+            || session.expires_at_unix <= session.issued_at_unix
+            || session.expires_at_unix - session.issued_at_unix > policy.max_lifetime_secs
+        {
+            return Err("invalid session id, challenge, context or lifetime".into());
+        }
+        if policy.allow_offline {
+            return Err(
+                "offline evidence is disabled without a trusted offline clock source".into(),
+            );
+        }
+        let now = self.now_unix.ok_or("trusted UTC clock unavailable")?;
+        if session.issued_at_unix > now.saturating_add(policy.max_future_skew_secs)
+            || now >= session.expires_at_unix
+        {
+            return Err("stale or not-yet-valid evidence session".into());
+        }
+        let session_bytes = serde_json::to_vec(session).map_err(|error| error.to_string())?;
+        let digest = subject_digest(&session_bytes);
+        let issuer_attestation = attestations
+            .iter()
+            .find(|attestation| {
+                attestation.role == Role::Session
+                    && attestation.subject_digest == digest
+                    && attestation.session.is_none()
+            })
+            .ok_or("missing trusted session challenge signature")?;
+        let issuer_key = self
+            .policy
+            .keys
+            .iter()
+            .find(|key| {
+                key.key_id == issuer_attestation.key_id
+                    && self.key_usable(key, Role::Session, Some(now))
+            })
+            .ok_or("untrusted, wrong-role, revoked or out-of-rotation session issuer")?;
+        let public = VerifyingKey::from_bytes(&hex_bytes(&issuer_key.public_key)?)
+            .map_err(|error| error.to_string())?;
+        let signature = Signature::from_bytes(&hex_bytes(&issuer_attestation.signature)?);
+        public
+            .verify_strict(&signing_message(Role::Session, &digest), &signature)
+            .map_err(|_| "invalid session challenge signature")?;
+        let ledger = self
+            .ledger
+            .as_ref()
+            .ok_or("provisioned session ledger unavailable")?;
+        // Consume the issuer's challenge digest, so a retry cannot obtain a
+        // second session id around the same signed challenge.
+        let marker = ledger.join(format!("{}.used", session.challenge_digest));
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(marker)
+            .map_err(|error| {
+                if error.kind() == std::io::ErrorKind::AlreadyExists {
+                    "replayed evidence session".into()
+                } else {
+                    error.to_string()
+                }
+            })?;
+        use std::io::Write;
+        writeln!(
+            file,
+            "{} {}",
+            session.issued_at_unix, session.context_digest
+        )
+        .map_err(|error| error.to_string())?;
+        *self
+            .active_session
+            .lock()
+            .map_err(|_| "session verifier poisoned")? = Some(session.clone());
+        Ok(())
+    }
+
+    fn assurance(&self) -> TrustAssurance {
+        if self.policy.schema == 2 {
+            TrustAssurance {
+                provisioned_policy: true,
+                role_scoped_signatures: true,
+                revocation_checked: true,
+                session_bound: true,
+                session_verified: false,
+                freshness_checked: true,
+                replay_checked: true,
+                producer_independence_checked: !self.policy.independence.is_empty(),
+                ..TrustAssurance::default()
+            }
+        } else {
+            TrustAssurance {
+                experimental_fixture_mode: true,
+                role_scoped_signatures: true,
+                revocation_checked: true,
+                ..TrustAssurance::default()
+            }
+        }
     }
 }
