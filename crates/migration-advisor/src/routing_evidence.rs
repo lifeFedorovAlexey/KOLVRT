@@ -141,7 +141,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         }
         let mut raw = BTreeMap::<u64, Vec<u64>>::new();
         let mut finished = BTreeSet::new();
-        let mut process_results = BTreeMap::<u64, (u64, u64, u64, u64, u64, u64)>::new();
+        let mut process_results = BTreeMap::<u64, (u64, u64, u64, u64, u64, u64, u64)>::new();
         let mut report_chunks = 0u64;
         let mut boot = false;
         let mut processes = None;
