@@ -89,8 +89,6 @@ pub extern "C" fn kernel_main() -> ! {
         "SMP",
         format_args!("{} CPUs participating", platform::config::ACTIVE_CPUS),
     );
-    #[cfg(feature = "kernel-tests")]
-    tests::run(&d, &mut physical, &mut processes);
     #[cfg(feature = "ownership-test")]
     {
         let _foreign_owner = memory::Physical::new(&d);
@@ -106,6 +104,8 @@ pub extern "C" fn kernel_main() -> ! {
         physical.release(frame);
         panic!("retained mapping release was accepted");
     }
+    #[cfg(feature = "kernel-tests")]
+    tests::run(&d, &mut physical, &mut processes);
     #[cfg(not(feature = "kernel-tests"))]
     {
         let users = boot_workload::exercise(&mut physical, &mut processes);
