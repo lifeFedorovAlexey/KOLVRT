@@ -1,4 +1,4 @@
-//! Process-local references to two existing native primitives. No authority.
+//! Process-local typed references and bounded native Event authority.
 use crate::{
     process::{Completion, ProcessId},
     wait::{SharedEvent, SignalError},

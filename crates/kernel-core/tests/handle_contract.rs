@@ -44,10 +44,17 @@ fn state<const N: usize, const L: u64>(namespace: &Namespace<N, L>) -> Namespace
 
 #[test]
 fn all_rights_combinations_gate_lookup_and_transfer_without_escalation() {
+    // ADR-0022 extends the provisional rights set; pin its wire bits while
+    // enumerating all 64 held/requested combinations, including REVOKE.
+    const KNOWN_BITS: u8 = 7;
+    assert_eq!(Rights::SEND.bits(), 1);
+    assert_eq!(Rights::TRANSFER.bits(), 2);
+    assert_eq!(Rights::REVOKE.bits(), 4);
+    assert_eq!(Rights::KNOWN.bits(), KNOWN_BITS);
     let (sender_owner, receiver_owner) = owners();
-    for held_bits in 0u8..4 {
+    for held_bits in 0u8..=KNOWN_BITS {
         let held = Rights::from_bits(held_bits).unwrap();
-        for requested_bits in 0u8..4 {
+        for requested_bits in 0u8..=KNOWN_BITS {
             let requested = Rights::from_bits(requested_bits).unwrap();
             let mut sender = Namespace::<1>::new();
             let mut receiver = Namespace::<1>::new();
@@ -106,7 +113,7 @@ fn all_rights_combinations_gate_lookup_and_transfer_without_escalation() {
             }
         }
     }
-    for unknown in 4u8..=255 {
+    for unknown in (KNOWN_BITS + 1)..=255 {
         assert_eq!(Rights::from_bits(unknown), None);
     }
 }

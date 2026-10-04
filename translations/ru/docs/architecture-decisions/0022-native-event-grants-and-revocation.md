@@ -84,9 +84,11 @@ domains и общие IPC grants остаются отдельными зада�
 
 ## Влияние на производительность
 
-Admission и revoke добавляют один bounded compare/exchange общего atomic byte Event. Новых
-allocation, global lock или дополнительных scans таблицы нет. До получения QEMU/profile
-измерений пропускная способность не заявляется.
+Signal admission использует цикл повторных compare/exchange; revoke выполняет атомарный
+fetch-or над тем же общим байтом Event. Эти lock-free операции не гарантируют конечного
+числа повторов на один вызов при произвольной конкуренции. Новых allocation, global lock
+или дополнительных scans таблицы нет. До получения QEMU/profile измерений пропускная
+способность не заявляется.
 
 ## Влияние на безопасность
 

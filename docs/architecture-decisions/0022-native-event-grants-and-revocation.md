@@ -85,9 +85,11 @@ unknown operations. The format remains provisional and unfrozen.
 
 ## Performance impact
 
-Admission and revoke add one bounded compare/exchange on the shared Event's atomic byte.
-No allocation, global lock or additional table scan is introduced. No throughput claim is
-made before the QEMU/profile measurements land.
+Signal admission uses a compare/exchange retry loop; revocation uses an atomic fetch-or
+on the same shared Event byte. These lock-free operations do not establish a finite
+per-call retry bound under arbitrary contention. No allocation, global lock or additional
+table scan is introduced. No throughput claim is made before the QEMU/profile measurements
+land.
 
 ## Security impact
 

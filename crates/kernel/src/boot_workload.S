@@ -345,7 +345,15 @@ handle_foreign_start:
  and x19,x19,x0
  mov x0,x22
  svc #0x86
+ // The waited receiver runs after source revocation; its alias remains live
+ // for lookup/close, but a new SEND must fail with Revoked. The independent
+ // cross-CPU close/lifetime scenario still requires a successful SEND.
+ cbz x25,.Lhandle_alias_signal_unrevoked
+ cmp x0,#11
+ b .Lhandle_alias_signal_checked
+.Lhandle_alias_signal_unrevoked:
  cmp x0,#0
+.Lhandle_alias_signal_checked:
  cset x0,eq
  and x19,x19,x0
 2:

@@ -1,4 +1,4 @@
-//! Narrow process-local reference boundary. No authority or delegation.
+//! Copied caller-local lookup, close, attenuated transfer and Event revocation.
 use crate::{cpu::context::Context, scheduler::task::Task, user_copy::Access};
 use kernel_core::handles::{Error, Handle, Kind, Rights};
 pub(crate) const CAPACITY: usize = 8;
