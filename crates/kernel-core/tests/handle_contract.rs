@@ -117,7 +117,7 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
     let mut sender = Namespace::<1>::new();
     let mut receiver = Namespace::<1, 1>::new();
     sender.bind(a).unwrap();
-    let source = create(&mut sender, a, Rights::ALL);
+    let source = create(&mut sender, a, Rights::TRANSFER);
     let before = (state(&sender), state(&receiver));
     assert_eq!(
         sender.transfer(a, source, &mut receiver, b, Rights::SEND),
@@ -138,7 +138,7 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
         );
         assert_eq!((state(&sender), state(&receiver)), before);
     }
-    let full = create(&mut receiver, b, Rights::ALL);
+    let full = create(&mut receiver, b, Rights::TRANSFER);
     let before = (state(&sender), state(&receiver));
     assert_eq!(
         sender.transfer(a, source, &mut receiver, b, Rights::SEND),
@@ -154,7 +154,7 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
     assert_eq!((state(&sender), state(&receiver)), before);
     assert_eq!(
         sender.lookup(a, source, Kind::Completion).unwrap().rights(),
-        Rights::ALL
+        Rights::TRANSFER
     );
 }
 
@@ -180,7 +180,7 @@ fn exhausted_slot_does_not_hide_other_vacancies_or_reset_after_rebinding() {
     );
     assert_eq!(namespace.slot_state(0), Some((1, None)));
     assert_eq!(namespace.live(), 0);
-    let next = create(&mut namespace, a, Rights::ALL);
+    let next = create(&mut namespace, a, Rights::TRANSFER);
     assert_eq!(next.encode(), 257); // second slot, generation one
     assert_eq!(
         namespace
