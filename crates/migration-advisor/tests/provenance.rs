@@ -37,20 +37,16 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
                 public_key: public,
                 roles: vec![Role::ContractTest],
                 revoked: false,
-<<<<<<< HEAD
                 compromised: false,
                 producer: None,
                 valid_from_unix: None,
                 valid_until_unix: None,
-=======
->>>>>>> origin/main
             },
             TrustedKey {
                 key_id: "deployment-test".into(),
                 public_key: hex(&deployment_key.verifying_key().to_bytes()),
                 roles: vec![Role::Deployment],
                 revoked: false,
-<<<<<<< HEAD
                 compromised: false,
                 producer: None,
                 valid_from_unix: None,
@@ -59,10 +55,6 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         ],
         session: None,
         independence: vec![],
-=======
-            },
-        ],
->>>>>>> origin/main
         required_session_id: None,
         max_attestation_age_seconds: None,
         max_clock_skew_seconds: None,
@@ -84,10 +76,7 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         role: Role::Deployment,
         subject_digest: subject.clone(),
         key_id: "deployment-test".into(),
-<<<<<<< HEAD
         session: None,
-=======
->>>>>>> origin/main
         signature: hex(&deployment_signature.to_bytes()),
         issued_at_unix_seconds: None,
         session_id: None,

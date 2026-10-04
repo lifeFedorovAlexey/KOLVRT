@@ -417,11 +417,7 @@ fn run() -> Result<PathBuf, String> {
     };
     let migration=MigrationPlan {candidate:identities[1].clone(),plan_digest:candidate_digest,context:context.clone(),required_changes:vec!["change client from LE16 inclusive encoding to native half-open Span in a separately authorized next process launch".into(), "migrate persistent fixture state from schema v1 to schema v2 and verify the candidate restart".into()],
         persistent_data_change:true,rollback_strategy:RollbackStrategy::RestoreSnapshot {snapshot_digest:lifecycle_evidence.snapshot_digest.clone()},rollback_execution_receipt:Some(lifecycle_digest.clone()),rollback_preconditions:vec![format!("the candidate lifecycle receipt {lifecycle_digest} records a successful v1-to-v2 restart and byte-identical snapshot restoration before authorization")],irreversible_changes:vec![]};
-<<<<<<< HEAD
     let signer = EphemeralFixtureSigner::generate();
-=======
-    let key = SigningKey::generate(&mut OsRng);
->>>>>>> origin/main
     let mut attestations = Vec::new();
     for p in &catalog {
         attestations.push(signer.attest(Role::Catalog, p));
