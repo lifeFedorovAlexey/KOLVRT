@@ -1,7 +1,7 @@
 //! Process-local references to two existing native primitives. No authority.
 use crate::{
     process::{Completion, ProcessId},
-    wait::SharedEvent,
+    wait::{SharedEvent, SignalError},
 };
 pub const MAX_GENERATION: u64 = u64::MAX >> 8;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -163,7 +163,9 @@ impl Retained<'_> {
             return Err(Error::Rights);
         }
         match &self.resource.value {
-            Primitive::Event(event) => event.admit_signal().map_err(|()| Error::Revoked),
+            Primitive::Event(event) => event
+                .admit_signal()
+                .map_err(|SignalError::Revoked| Error::Revoked),
             Primitive::Completion(_) => Err(Error::WrongType),
         }
     }
@@ -629,7 +631,7 @@ mod tests {
                 .event()
                 .unwrap()
                 .admit_signal(),
-            Err(())
+            Err(crate::wait::SignalError::Revoked)
         );
         assert_eq!(source.close(a, handle), Ok(()));
         assert_eq!(
@@ -639,7 +641,7 @@ mod tests {
                 .event()
                 .unwrap()
                 .admit_signal(),
-            Err(())
+            Err(crate::wait::SignalError::Revoked)
         );
     }
 

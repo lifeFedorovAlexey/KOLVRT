@@ -4,6 +4,10 @@ use core::sync::atomic::{AtomicU8, Ordering};
 const WAITING: u8 = 1;
 const PENDING: u8 = 2;
 const REVOKED: u8 = 4;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SignalError {
+    Revoked,
+}
 pub struct Event {
     state: AtomicU8,
 }
@@ -24,11 +28,11 @@ impl Event {
     }
     /// Admit a new publisher unless revocation has already linearized. The CAS
     /// makes signal admission and revoke a single ordered decision.
-    pub fn admit_signal(&self) -> Result<bool, ()> {
+    pub fn admit_signal(&self) -> Result<bool, SignalError> {
         let mut state = self.state.load(Ordering::Acquire);
         loop {
             if state & REVOKED != 0 {
-                return Err(());
+                return Err(SignalError::Revoked);
             }
             match self.state.compare_exchange_weak(
                 state,
@@ -160,12 +164,12 @@ impl SharedEvent {
     pub fn signal(&self) -> bool {
         self.admit_signal().unwrap_or(false)
     }
-    pub fn admit_signal(&self) -> Result<bool, ()> {
+    pub fn admit_signal(&self) -> Result<bool, SignalError> {
         let state = &self.storage().state;
         let mut observed = state.load(Ordering::Acquire);
         loop {
             if observed & REVOKED != 0 {
-                return Err(());
+                return Err(SignalError::Revoked);
             }
             match state.compare_exchange_weak(
                 observed,
@@ -222,7 +226,7 @@ mod tests {
         assert!(event.revoke());
         assert!(!event.revoke());
         assert!(event.consume());
-        assert_eq!(event.admit_signal(), Err(()));
+        assert_eq!(event.admit_signal(), Err(SignalError::Revoked));
         assert!(!event.signal());
     }
 
@@ -233,7 +237,7 @@ mod tests {
         assert_eq!(alias.admit_signal(), Ok(true));
         owner.revoke();
         drop(owner);
-        assert_eq!(alias.admit_signal(), Err(()));
+        assert_eq!(alias.admit_signal(), Err(SignalError::Revoked));
         assert!(alias.consume());
     }
 }
