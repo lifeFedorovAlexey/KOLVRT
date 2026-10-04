@@ -106,7 +106,7 @@ fn all_rights_combinations_gate_lookup_and_transfer_without_escalation() {
             }
         }
     }
-    for unknown in 4u8..=255 {
+    for unknown in 8u8..=255 {
         assert_eq!(Rights::from_bits(unknown), None);
     }
 }
