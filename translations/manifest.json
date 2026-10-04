@@ -210,8 +210,8 @@
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
       },
       "docs/kernel/handles.md": {
-        "source_sha256": "b9309debb92e8222a28f0f51e344e07cd7b715f79930f4806253e1792b09b1ab",
-        "translation_sha256": "b58534c3f9cb25ef148891fb25c82079476f1fa6493c739fb121a184af42be1c"
+        "source_sha256": "b43e577a2a6c967a815b9c315d6de7270678b8bc8ceb1891671e6e03e8025835",
+        "translation_sha256": "f844b0614af6dfb65250edb8ef6feb2d95894b977c78c40a58ced6139bc5848a"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",

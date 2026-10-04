@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 Evidence scope: ограниченные caller-local handles с явными правами SEND/TRANSFER/REVOKE, attenuation общих targets и отзывом admission общего Event; два CPU с fixed affinity.
-Current references: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) для identity/transfer/lifetime handles и [ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) для минимального Event grant/revoke среза.
+Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) для identity/transfer/lifetime handles с дополнением [ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) для минимального Event grant/revoke среза.
 
 ## Представление и caller context
 
