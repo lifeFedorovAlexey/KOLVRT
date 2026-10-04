@@ -55,15 +55,12 @@ impl Event {
     pub fn consume(&self) -> bool {
         let mut state = self.state.load(Ordering::Acquire);
         while state & (WAITING | PENDING) == WAITING | PENDING {
-            match self
-                .state
-                .compare_exchange_weak(
-                    state,
-                    state & REVOKED,
-                    Ordering::AcqRel,
-                    Ordering::Acquire,
-                )
-            {
+            match self.state.compare_exchange_weak(
+                state,
+                state & REVOKED,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
                 Ok(_) => return true,
                 Err(next) => state = next,
             }
