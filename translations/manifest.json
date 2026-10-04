@@ -101,6 +101,10 @@
         "source_sha256": "d98bea0207a7e12e5e43b5e90edb044ca696ec2ea687680d3c78c050a49f2e73",
         "translation_sha256": "49fa2370938a16bd56f9861bbd9460c6f9b4436029412201729bae30943368e0"
       },
+      "docs/architecture/architecture-audit-2026-10-04.md": {
+        "source_sha256": "03f6ae21db29ba4d6755f984555794cac26380f9e3a2fd65b385d3738cbdd04c",
+        "translation_sha256": "34d2477ab3fe583792b7cd408d406adde7b236d8bbeec3d4236166b35ff6e94f"
+      },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
         "translation_sha256": "a3663804370470d156dd9a698aa3ed92d567649ef0d03cf6cedef9ac18cf19e1"
@@ -130,8 +134,8 @@
         "translation_sha256": "929b9c03a3e2ed5325543cca9658b35cf5a3b58926cab149f4b86b76c810f690"
       },
       "docs/architecture/kernel-admission-policy.md": {
-        "source_sha256": "07fa724a7b1cf5b4aaee2b4c94a07dbd280c701765cfc7854be044cd912b00e9",
-        "translation_sha256": "08179f352cb61f1c18481ab8959451c187fc6cd9b3daec4d38c318e192fbd7fb"
+        "source_sha256": "51c5aa686a7335d18a1033b94e2d6531c284cd126bad235db81536884b748d28",
+        "translation_sha256": "e95188f0108c8bb1fb5d62cb02439a93653b4078b842810947f2fe79cf1d9ec3"
       },
       "docs/architecture/kernel-laws.md": {
         "source_sha256": "ff4f1d3f2de6abd708e4b9e78e3c2fb8c9f7aeb8ce3a5cd415bf6cc091a0d392",
@@ -318,8 +322,8 @@
         "translation_sha256": "2f49d2945fe1d1551623f251740334cf997abb06b2cb9c27c6019c7689971896"
       },
       "docs/security/threat-model.md": {
-        "source_sha256": "72d7b85e0b1f7882f40223ba5b6af7344bc806506722b59830c2e4b885a7ae3f",
-        "translation_sha256": "9b3e7520eb0e7b20a454e861419b1d5f862b23351d396badc04ae4f02cc1aded"
+        "source_sha256": "be8e52d9682cb942725cdfb01279c2a83f4245f32c881a70af11fa5ebfc9fab9",
+        "translation_sha256": "b025f47000d58fd3d286e1ed83e6c3de0e25a59aa0f017112a8c87f583694fb5"
       },
       "docs/vision.md": {
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",

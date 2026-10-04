@@ -6,6 +6,10 @@ Research outcome and admission criteria, not an implemented admission service. [
 
 Global ownership, authority or coordination alone does not justify EL1. Prove that an EL0 service using existing narrow privileged primitives cannot safely enforce the required invariant. Admit only the irreducible privileged mechanism. IPC cost, serialization, convenience and safe Rust do not establish privileged necessity. Benchmark IPC, batching and shared-memory alternatives before a performance-driven placement proposal.
 
+## Architecture before implementation order
+
+Later-stage functionality may be implemented early. Before building a later milestone on an existing implementation, re-derive the required architecture from current invariants and accepted decisions. Implementation order, effort spent, compatibility with current tests and avoiding rework do not establish architectural authority. If an early implementation constrains, contradicts or prematurely freezes that architecture, refactor or remove it. Preserve the required guarantees and meaningful negative checks; a test's current representation is not itself a design requirement.
+
 ## Admission record
 
 Require a record for every proposed new privileged responsibility, not merely for a
