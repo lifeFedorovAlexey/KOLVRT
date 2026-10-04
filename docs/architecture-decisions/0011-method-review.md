@@ -45,3 +45,16 @@ Real subsystem tests, negative controls and implementation inspection complement
 ## Reversibility
 
 Reopen a choice when workload or platform changes; preserve evidence and compare the replacement. No automatic scheduler, userspace or compatibility expansion.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0011",
+  "kind": "adr",
+  "aliases": ["ADR-0011"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

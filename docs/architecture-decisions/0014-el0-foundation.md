@@ -1,5 +1,9 @@
 # ADR-0014 — Fixed-affinity EL0 execution foundation
 
+Document status: CURRENT
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Status: **Accepted for the bounded foundation**. Date: 2026-10-02.
 
 ## Context
@@ -45,3 +49,16 @@ Both DEV/PROD require 53 real tests, actual non-test boot execution and eleven n
 Future scheduling domains or EL0 policy services may replace the static selector only with explicit ownership, admission, lifetime, timeout and remote quiescence contracts. Migration/ASID reuse require a new reviewed decision. This milestone creates no stable userspace ABI.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0014-el0-foundation.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0014",
+  "kind": "adr",
+  "aliases": ["ADR-0014"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

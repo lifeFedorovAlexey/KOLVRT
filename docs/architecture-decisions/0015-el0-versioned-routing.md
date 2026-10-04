@@ -1,5 +1,9 @@
 # ADR-0015 — Versioned routing in isolated EL0 consumers
 
+Document status: CURRENT
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Status: **Accepted for the bounded Phase 2 demonstration**. Date: 2026-10-02.
 
 ## Context
@@ -74,3 +78,16 @@ The optional image can be omitted without changing native tests. A future servic
 [Kernel Laws](../architecture/kernel-laws.md) remain unchanged: LAW-001, LAW-003, LAW-004, LAW-005, LAW-008, LAW-009, LAW-013, LAW-018, LAW-025, LAW-035, LAW-036 and LAW-041 apply. Relevant failure mechanisms include [shared identity](../../research/cases/KOL-PATH-0002.json), [unsafe old behavior](../../research/cases/KOL-PATH-0007.json), [check/use mutation](../../research/cases/KOL-PATH-0018.json) and [retiring references](../../research/cases/KOL-PATH-0030.json). [Results](../../research/results/routing-phase2.json) retain execution observations and exact source inventories.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0015-el0-versioned-routing.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0015",
+  "kind": "adr",
+  "aliases": ["ADR-0015"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

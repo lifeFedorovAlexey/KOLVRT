@@ -1,5 +1,9 @@
 # ADR-0015 — Версионированная маршрутизация в изолированных потребителях EL0
 
+Document status: CURRENT
+Evidence scope: Принятые требования; реализация и проверка имеют отдельные границы доказательств.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Статус: **принято для ограниченной демонстрации Phase 2**. Дата: 2026-10-02.
 
 ## Контекст
@@ -74,3 +78,16 @@ Phase 2 — реальный ограниченный сквозной сцен�
 [Законы ядра](../architecture/kernel-laws.md) не меняются: применяются LAW-001, LAW-003, LAW-004, LAW-005, LAW-008, LAW-009, LAW-013, LAW-018, LAW-025, LAW-035, LAW-036 и LAW-041. Существенные механизмы отказа описаны в материалах об [общей идентичности](../../../../research/cases/KOL-PATH-0002.json), [небезопасном прежнем поведении](../../../../research/cases/KOL-PATH-0007.json), [изменении между проверкой и использованием](../../../../research/cases/KOL-PATH-0018.json) и [удалении удерживаемых ссылок](../../../../research/cases/KOL-PATH-0030.json). [Результаты](../../../../research/results/routing-phase2.json) сохраняют наблюдения исполнения и точные перечни исходников.
 
 [Английский оригинал](../../../../docs/architecture-decisions/0015-el0-versioned-routing.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0015",
+  "kind": "adr",
+  "aliases": ["ADR-0015"],
+  "summary": "Навигация по документу: ADR-0015 — Версионированная маршрутизация в изолированных потребителях EL0. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

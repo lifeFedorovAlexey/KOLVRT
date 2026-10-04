@@ -38,3 +38,5 @@
 - [ADR-0023 — One-process domains and scoped Event grants](0023-domains-and-scoped-grants.md) — Accepted for bounded Phase 3.4; full IPC remains separate.
 
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)
+
+- [ADR-0024 — Навигация знаний документации и актуальность функций](0024-documentation-knowledge.md) — Принят для автономной навигации.

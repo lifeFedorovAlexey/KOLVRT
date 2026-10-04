@@ -5,6 +5,7 @@ pub mod cost_l;
 pub mod database;
 pub mod documents;
 pub mod exceptions;
+pub mod knowledge;
 pub mod report;
 pub mod security_artifacts;
 

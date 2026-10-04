@@ -55,3 +55,16 @@ The DEV/PROD matrix checks same-VA isolation, exhaustion on both CPUs, generatio
 The allocator and switch contract are private to the bounded kernel process runtime. Before increasing CPU count, allowing root sharing, mutating process mappings, or admitting migration, revisit ASID residency and remote shootdown obligations. The ASID-zero baseline remains available for comparison and fallback.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0021-asid-lifecycle.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0021",
+  "kind": "adr",
+  "aliases": ["ADR-0021"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

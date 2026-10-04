@@ -51,3 +51,16 @@ QEMU virt удобен для начала. Описания устройств,
 [Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0005-platform.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0005",
+  "kind": "adr",
+  "aliases": ["ADR-0005"],
+  "summary": "Навигация по документу: ADR-0005 — Контракты платформы с приоритетом ARM64. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

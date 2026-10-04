@@ -55,3 +55,22 @@ Actual EL0 tests exercise both CPUs, separate zero budgets, receiver handle exha
 No public/stable ABI is frozen. A later IPC/supervisor reader must revisit this implementation against accepted laws and decisions, including its fixed-affinity and single-process assumptions. Prior implementation, effort and compatibility with current tests are insufficient reasons to preserve a constraining design.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0023",
+  "kind": "adr",
+  "summary": "Bounded one-process domains and scoped Event grants.",
+  "aliases": ["ADR-0023"],
+  "relationships": [
+    {
+      "type": "related_to",
+      "to": "adr.0022",
+      "scope": "Extends the Event admission/lifetime contract with scoped deferred work; not general IPC architecture."
+    }
+  ]
+}
+```

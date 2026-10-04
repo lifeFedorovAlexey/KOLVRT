@@ -49,3 +49,16 @@ Require real two-CPU copied-request execution, foreign/stale/wrong-kind rejectio
 Change encoding/capacity only with explicit provisional ABI review. Relaxing affinity, synchronous borrows or private mappings requires a new proof. Capability admission can use unchanged identity/type lookup but must independently specify rights, revocation and accepted-work retention. Handles are not authority.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0019-process-local-handles.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0019",
+  "kind": "adr",
+  "aliases": ["ADR-0019"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

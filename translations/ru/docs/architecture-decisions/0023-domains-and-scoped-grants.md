@@ -55,3 +55,22 @@ Actual EL0 tests проверяют оба CPU, отдельные zero budgets,
 Public/stable ABI не заморожен. Более поздний IPC/supervisor reader обязан заново проверить implementation против accepted laws и decisions, включая fixed-affinity и single-process assumptions. Ранняя реализация, затраченные усилия и совместимость с текущими tests недостаточны для сохранения ограничивающего дизайна.
 
 [Английский оригинал](../../../../docs/architecture-decisions/0023-domains-and-scoped-grants.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0023",
+  "kind": "adr",
+  "summary": "Ограниченные домены и scoped Event grants Phase 3.4.",
+  "aliases": ["ADR-0023"],
+  "relationships": [
+    {
+      "type": "related_to",
+      "to": "adr.0022",
+      "scope": "Extends the Event admission/lifetime contract with scoped deferred work; not general IPC architecture."
+    }
+  ]
+}
+```

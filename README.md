@@ -571,3 +571,23 @@ The [user-copy boundary](docs/kernel/user-copy.md) supports bounded current-proc
 ## Phase 3.3 process-local handles
 
 [Handles](docs/kernel/handles.md) provide bounded caller-local opaque references, generation/type/live/rights checks, receiver-local transfer with rights attenuation, retained Event targets and deterministic exit/fault cleanup. EL0 transfer currently targets a namespace on the same CPU; cross-CPU delegation is prepared by the coordinator and exercised under concurrent EL0 close/lookup. [ADR-0019](docs/architecture-decisions/0019-process-local-handles.md) records the original identity/lifetime decision; [ADR-0020](docs/architecture-decisions/0020-handle-transfer-and-retention.md) records the transfer and retention contract. The original Phase 3.3 [matrix](research/results/kernel-phase33.json) records 72 checks; the issue #23 [exact-source matrix](research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) records 73 DEV/PROD checks and 69 negative controls. [Phase 3.4](docs/kernel/domains.md) adds scoped grants and domains; general IPC remains future work.
+
+## Canonical feature status
+
+This derived pilot summary reports implementation scope independently of roadmap ordering. Read the canonical contract and historical receipt scope before claiming verification.
+
+[Documentation map](docs/index.md)
+
+<!-- feature-summary:start -->
+
+| Canonical feature                                                                                          | Implementation      | Evidence limit                                         |
+| ---------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------ |
+| [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                  | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE |
+| [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                              | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.security.capability-revocation](docs/kernel/capabilities.md#kolvrt-security-capability-revocation) | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                     | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)           | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+
+<!-- feature-summary:end -->

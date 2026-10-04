@@ -51,3 +51,16 @@ A second port implements the contracts. If it requires a core rewrite, review th
 [Cases and sources](../research/case-index.md); [other systems](../research/reference-systems.md).
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0005-platform.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0005",
+  "kind": "adr",
+  "aliases": ["ADR-0005"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

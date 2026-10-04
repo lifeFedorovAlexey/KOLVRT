@@ -1,6 +1,12 @@
 # Native model
 
+Document status: CURRENT
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 This is a design model; the current kernel foundation does not implement the complete EL0 contract. Global authority alone does not justify EL1: require [privileged-necessity evidence](kernel-admission-policy.md). Service-private capabilities enable only native-authorized caller effects.
+
+<a name="kolvrt-native-boundaries"></a>
 
 ## Boundaries
 
@@ -19,6 +25,8 @@ implement platform contracts. The core must not import compatibility types, layo
 implementation dependencies. Adapters do not receive private memory-manager, scheduler
 or filesystem objects. Dependency checks must include generated code and build features.
 
+<a name="kolvrt-native-authority"></a>
+
 ## Objects and authority
 
 An object identity is distinct from its displayed integer name. A handle carries checked
@@ -35,6 +43,8 @@ not promise rollback: the outcome must state whether an external effect occurred
 Evidence: [process identity](../../research/cases/KOL-PATH-0019.json),
 [close outcomes](../../research/cases/KOL-PATH-0001.json),
 [reference resurrection](../../research/cases/KOL-PATH-0030.json).
+
+<a name="kolvrt-native-capability-admission"></a>
 
 ## Capability-type admission
 
@@ -85,6 +95,8 @@ the executing endpoint. These are candidate/host checks, not a kernel capability
 typed device authority, real IPC enforcement or proof of general revocation. Those need
 separate workload decisions and integration tests before implementation claims.
 
+<a name="kolvrt-native-object-admission"></a>
+
 ## Common-object admission and deferral
 
 Task, endpoint, address-space/memory lease and device primitives remain narrow.
@@ -128,6 +140,8 @@ framework or speculative file/socket/driver hierarchy is admitted. Future consum
 may reopen the comparison with evidence. Document checks establish record consistency;
 they do not prove abstraction safety or create runtime coverage for hypothetical resources.
 
+<a name="kolvrt-native-memory-io"></a>
+
 ## Memory and I/O
 
 Read-only shared pages, writable owned buffers and device-access leases have distinct
@@ -142,6 +156,8 @@ arbiter. Zero-copy transfer retains backing-page ownership and permissions. Writ
 acceptance, completion, durable storage and close are separate outcomes. Completion
 order is not implicitly submission order.
 
+<a name="kolvrt-native-errors"></a>
+
 ## Time and errors
 
 External timestamps use signed 64-bit seconds, nanoseconds in 0..999999999 and a clock
@@ -151,6 +167,8 @@ from a relative duration happens once. Clock changes are never implicit.
 Unsupported operations, denied authority, invalid requests, exhausted resources,
 cancellation and I/O failures have distinct results. Legacy error-number conversion
 belongs to adapters. No error path reports fabricated success.
+
+<a name="kolvrt-native-platform"></a>
 
 ## Platform contract
 
@@ -167,3 +185,65 @@ hardware-counter costs. Core contract tests need a mock backend and eventually a
 architecture implementation; portability is not proven merely by having an interface.
 
 [Russian translation](../../translations/ru/docs/architecture/native-model.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.native-model",
+  "kind": "subsystem-contract",
+  "summary": "Native intended authority, capability-type admission and explicit deferral.",
+  "units": [
+    {
+      "id": "kolvrt.native.boundaries",
+      "anchor": "kolvrt-native-boundaries",
+      "kind": "contract-section",
+      "summary": "Native authority obligation: boundaries",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.native.authority",
+      "anchor": "kolvrt-native-authority",
+      "kind": "contract-section",
+      "summary": "Native authority obligation: authority",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.native.capability-admission",
+      "anchor": "kolvrt-native-capability-admission",
+      "kind": "contract-section",
+      "summary": "Native authority obligation: capability-admission",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.native.object-admission",
+      "anchor": "kolvrt-native-object-admission",
+      "kind": "contract-section",
+      "summary": "Native authority obligation: object-admission",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.native.memory-io",
+      "anchor": "kolvrt-native-memory-io",
+      "kind": "contract-section",
+      "summary": "Native authority obligation: memory-io",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.native.errors",
+      "anchor": "kolvrt-native-errors",
+      "kind": "contract-section",
+      "summary": "Native authority obligation: errors",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.native.platform",
+      "anchor": "kolvrt-native-platform",
+      "kind": "contract-section",
+      "summary": "Native authority obligation: platform",
+      "depends_on": []
+    }
+  ]
+}
+```

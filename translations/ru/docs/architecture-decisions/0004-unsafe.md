@@ -53,3 +53,16 @@ QEMU имеют свою область и не подтверждают все 
 [Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0004-unsafe.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0004",
+  "kind": "adr",
+  "aliases": ["ADR-0004"],
+  "summary": "Навигация по документу: ADR-0004 — Безопасный Rust и проверяемые границы. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

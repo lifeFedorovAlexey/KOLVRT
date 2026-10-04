@@ -38,3 +38,5 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 - [ADR-0023 — One-process domains and scoped Event grants](0023-domains-and-scoped-grants.md) — Accepted for bounded Phase 3.4; full IPC remains separate.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)
+
+- [ADR-0024 — Documentation knowledge navigation and feature freshness](0024-documentation-knowledge.md) — Accepted for offline navigation.

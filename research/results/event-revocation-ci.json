@@ -1,0 +1,1954 @@
+{
+  "schema_version": 1,
+  "claim": "Imported original PR #72 CI artifacts; bounded synchronous Event admission revocation only. This documentation task did not rerun the kernel, and no physical-hardware or full issue #24 acceptance is claimed.",
+  "provenance": {
+    "run_id": 37214114386,
+    "url": "https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37214114386",
+    "artifact_id": 11307414477,
+    "artifact_name": "kernel-evidence",
+    "head_sha": "4313feb82ea345e15d4a309889a3986b3558848a",
+    "merged_main": "aa756298f4695a35007fe9878f5c7c00650d2ecc",
+    "completed_at": "2026-10-04T15:55:37Z",
+    "ci_conclusion": "success"
+  },
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "7389fc95292ad7461c5092c92b8240e50c83113c546d8e80a51c16cb9aa2b004"
+    },
+    {
+      "path": "crates/kernel-core/src/elf.rs",
+      "sha256_lf": "eace2f23808a826184076b133e768f7707ba1ac98f894da2f9b07c4cf3f268c8"
+    },
+    {
+      "path": "crates/kernel-core/src/execution.rs",
+      "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "sha256_lf": "e3f79a46f98d4cd718b751c545b3563b9b2f85ddefb917905b7f50dd976ae56f"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "6f4d41508e5704f00051845ec7faf14ab4a83474dd62120ec13b51c0abefdb80"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "sha256_lf": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling.rs",
+      "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling/ownership.rs",
+      "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/user_copy.rs",
+      "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+    },
+    {
+      "path": "crates/kernel-core/src/wait.rs",
+      "sha256_lf": "0e3e43f69867d7f9d6d4b30b91b3789a0f1bc0cfb6fa16936a7c8b87b3021442"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+    },
+    {
+      "path": "crates/kernel-core/tests/elf_contract.rs",
+      "sha256_lf": "eddb775cbf56e75096ce963af30cba702e7edf01ee5420b8bb7ea6540edbaa9a"
+    },
+    {
+      "path": "crates/kernel-core/tests/event_revocation.rs",
+      "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+    },
+    {
+      "path": "crates/kernel-core/tests/handle_contract.rs",
+      "sha256_lf": "2120c2ffad2737fa58e594af9d2c3270c6056c41d80831e38775b00849a1716b"
+    },
+    {
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5"
+    },
+    {
+      "path": "crates/kernel-core/tests/wait.rs",
+      "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "0c135f2e346bcd10849b833b68054cb3de6edc9d5f3bb58a11d7c47fac3147e2"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "sha256_lf": "349a01fc447f71ef7540728d5782c3667cd5a92a47bf497feb307a99e1c87c89"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "9409ad577dc86cfb3c0581897415e56c99fcbefa6f7d64d97c9c908829ccabce"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "176afe4b5887dd4a1062d69a2a7f52719093961341be91598c42972cebdd94cf"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+    },
+    {
+      "path": "crates/kernel/src/asid.rs",
+      "sha256_lf": "8ef1f80e78c8a3b95fa429c84484071f51651c8b1b89db02d2ce45f8a7be1003"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.S",
+      "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "sha256_lf": "9a66c8985f2f0b0744e2ddbafef0cb79140ff092b49e785285d739faefb1718d"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+    },
+    {
+      "path": "crates/kernel/src/execution.rs",
+      "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/handles.rs",
+      "sha256_lf": "e550b9545e690823cd776f4a128cacb8c4981eb18c6167e052eb13613cb284a3"
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "sha256_lf": "94cefdfac863fcc185a789b21a01c4d1c6eb2c0ee018c7dc06e38548fa4f01c1"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "79ab7c939c028e242487b7fb0b07707891217d891382fde9526e255b2051d8a5"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "2d60ccb3555a412e0d70a6a4deb1968bf0883248c095af5806f316263cd9d7b0"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "0cbe90f9941116bd7dace00ff5a419e783bbfd57eed249ea9d24e4e319b30991"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "sha256_lf": "2d4e50c0bcf5804fe76ec16bce885ba0b6721ee165e596acac89cf6fc216b0e2"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "sha256_lf": "8d88922c350e5c9539ee06d7d58d563fc4d66c5dc28dcc464743183279d3c22a"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/config.rs",
+      "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "sha256_lf": "be0cf3b0d5750e0cf3f571026d782d0df42454369cdc55e2e1be61c4a9eba037"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "sha256_lf": "76a892b2d0e07062a72d4f89674359f507b5c98d0fb51f267da62d57fe66a76c"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "sha256_lf": "74a686c134c3745be67bd45331644eae537b0bf2b6620f2cdf5a719959c751ee"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "87dac4741eccafee11e76270db155586757e3a2776127f1b598b6fdf8fc1e886"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "179fc0234b9f93150b24dc9457bdcd783a0bdaf67dc9c4cf3c0dd2c9b152681d"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "525112e20cf1bfe7618cbd92c6b07099c57811a4465008506605bb66d2947fee"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy.rs",
+      "sha256_lf": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf"
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "sha256_lf": "4c74584abca38ec9f406d59c86c30b0e90f7aa4833bf27ce7778cba5c522008d"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "d1d1139b4384ecb73499f9c4ef01bd87ad611aa4c297f823278bb6ca668ac661"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "965ccf69eba5ae4822520392da3a4fa6d6a8d78b04a97490c2ef6c7162a0f461"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "c88cd4e2a0626c197010d8b623eb9ffc5a5bdceff4d739b099c03a93597f1da7"
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "sha256_lf": "ce31d83e4ef6d5d54501b137e8f0e6a85f411d43e62fc8f50e37b0284f8ec302"
+    },
+    {
+      "path": "crates/xtask/tests/cli.rs",
+      "sha256_lf": "bf0e6aa8bc4eda83006c7babd29ce8d1d157a7510d664b01063a0859f2e41509"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "crates/xtask/tests/native_boundary.rs",
+      "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+    },
+    {
+      "path": "crates/xtask/tests/output_writer.rs",
+      "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+    },
+    {
+      "path": "crates/xtask/tests/scheduler_boundary.rs",
+      "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    },
+    {
+      "path": "scripts/setup-qemu.ps1",
+      "sha256_lf": "bf22ffe37a93ebb4a28ae7eb6360318a4ccc71e3902d0cc1cdf5cf4be9765c89"
+    }
+  ],
+  "correctness": {
+    "matrix": "passed",
+    "scope": "CI Real kernel matrix and host failure propagation succeeded. Imported positive DEV/PROD artifacts are their final retained files; ASID benchmark may overwrite baseline profiles, so their actual recorded QEMU configuration is authoritative. No new negative-control count is inferred."
+  },
+  "profiles": {
+    "dev": {
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "max",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "aa81453fcfacbb4ee08b12049391c390b25491947c5a391afd92e55549ebe53d",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "build": {
+        "artifact": "target/kernel/dev-tests.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 4077944,
+        "features": ["machine-events", "diagnostics", "kernel-tests"],
+        "load_bytes": 688759,
+        "memory_bytes": 1787831,
+        "sha256": "aa81453fcfacbb4ee08b12049391c390b25491947c5a391afd92e55549ebe53d",
+        "target": "aarch64-unknown-none"
+      },
+      "tests_passed": 84,
+      "events": [
+        {
+          "event": "test",
+          "name": "boot_el1",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "uart_mmio",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "exception_vectors",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_discovery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_allocator",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "allocation_free",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_map",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "invalid_mapping_rejection",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_unmap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "permissions",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "execute_never",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "mmu",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_exclusion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_release",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "monotonic_time",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_masking",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_delivery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "timer_rearm",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "irq_simd_context",
+          "status": "pass"
+        },
+        {
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 64,
+          "median": 10000,
+          "p95": 11600,
+          "p99": 17500,
+          "samples": [
+            9900, 14500, 10500, 10700, 9900, 9800, 10200, 9600, 10000, 10400,
+            9800, 9900, 10800, 10100, 10800, 11600, 11300, 9600, 7600, 8200,
+            10100, 10000, 9500, 10200, 9800, 11600, 10900, 8600, 7700, 9200,
+            10000, 10200, 9700, 9400, 9200, 9800, 10000, 10000, 10400, 11200,
+            10300, 9800, 17500, 10000, 9200, 9400, 9800, 9600, 9700, 9700,
+            10000, 9900, 9100, 10200, 10000, 10100, 9500, 10400, 10300, 9600,
+            10300, 10600, 9900, 9900
+          ],
+          "scope": "lock_uncontended",
+          "units": "timer_ticks",
+          "warmup": 8
+        },
+        {
+          "event": "test",
+          "name": "smp_secondary_boot",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_cpu_identity",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_separate_stacks",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_forward",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_reverse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_repeated",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_lock_publication",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_mapping_visible",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_retirement_pending",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_no_premature_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_ack",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_tlb_invalidation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_safe_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_simultaneous_timers",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_percpu_independent",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "scheduler_generation_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_processes",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_timer_switches",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_user_stacks",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_memory_isolation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_fault_containment",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_quiescent_reclamation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_context_preservation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_smp_ownership",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_kernel_memory_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_foreign_memory_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_code_write_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_stack_guard",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_data_execute_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_privileged_instruction_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_registry_and_cpu_ownership",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_preparation_and_admission",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_normal_exit_and_fault",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_creation_rollback",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_capacity_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "asid_pool_exhaustion_both_cpus",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_slot_generation_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_terminal_rejections",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_authority_boundary",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_sparse_affinity",
+          "status": "pass"
+        },
+        {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 450488900,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        {
+          "event": "test",
+          "name": "asid_reuse_same_va_both_cpus",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "asid_reuse_requires_invalidation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_bounded_stress",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_el0_residency_initial",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_el0_residency_monotonic",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_el0_residency_accumulates",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_quantum_return_and_peer_progress",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_wait_block_and_wakeup",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_invalid_images_are_transactional",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_creation_failure_is_transactional",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_executes_in_isolated_el0_spaces",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_bss_and_page_padding_are_zero",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_reclaims_all_frames",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_resource_reclamation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "user_copy_el0_boundary_and_snapshot",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "user_copy_lifetime_and_reclamation",
+          "status": "pass"
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 75200,
+          "p95": 87400,
+          "p99": 94700,
+          "samples": [
+            75000, 75500, 75300, 75400, 75100, 94700, 77000, 75300, 74800,
+            75200, 81800, 75900, 75200, 75100, 74900, 75000, 74900, 75800,
+            87400, 76600, 75500, 75300, 75200, 75000, 75000, 75200, 75000,
+            74900, 75000, 74800, 75900, 87200
+          ],
+          "scope": "user_copy_small",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 108200,
+          "p95": 118800,
+          "p99": 119000,
+          "samples": [
+            109300, 107900, 108200, 108200, 118500, 109100, 108900, 109000,
+            107700, 108900, 107800, 107800, 107800, 118600, 110100, 107800,
+            107800, 108600, 108900, 107800, 109100, 107400, 119000, 110100,
+            108200, 108000, 109000, 107500, 108000, 107800, 108100, 118800
+          ],
+          "scope": "user_copy_page",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 177100,
+          "p95": 189400,
+          "p99": 192200,
+          "samples": [
+            189200, 181100, 177400, 177100, 176700, 176400, 187000, 177000,
+            179900, 177000, 176200, 182100, 181800, 176500, 175400, 176400,
+            176800, 192200, 183300, 182300, 176300, 176400, 188400, 177600,
+            176200, 175400, 178400, 176400, 189400, 181200, 175900, 178000
+          ],
+          "scope": "user_copy_three_pages",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 12000,
+          "p95": 12400,
+          "p99": 25100,
+          "samples": [
+            12300, 12200, 12200, 11900, 11900, 11800, 11800, 11900, 12000,
+            12000, 12100, 12200, 12100, 12100, 12200, 12200, 11800, 12000,
+            12000, 25100, 12400, 11900, 11900, 12000, 12000, 12000, 11900,
+            12200, 12200, 11900, 12000, 11900
+          ],
+          "scope": "user_copy_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 46200,
+          "p95": 71300,
+          "p99": 79300,
+          "samples": [
+            48400, 51900, 49300, 47900, 48100, 47900, 48000, 48000, 79300,
+            48800, 47000, 46000, 46000, 46200, 46000, 45900, 46400, 46100,
+            46000, 46100, 46200, 46000, 46200, 46200, 46100, 45900, 46700,
+            46700, 71300, 49000, 45300, 45000
+          ],
+          "scope": "user_copy_small",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 75800,
+          "p95": 93200,
+          "p99": 93700,
+          "samples": [
+            77200, 75700, 75700, 76000, 76900, 76100, 93700, 74400, 72000,
+            70900, 70900, 70800, 70700, 75800, 75800, 75700, 77800, 75800,
+            77000, 93200, 78600, 76900, 77100, 75500, 75900, 76500, 75900,
+            77700, 75800, 75700, 76300, 70900
+          ],
+          "scope": "user_copy_page",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 131100,
+          "p95": 155200,
+          "p99": 162900,
+          "samples": [
+            124900, 132300, 124700, 155100, 140900, 137800, 125900, 125600,
+            125600, 125400, 125400, 162900, 131800, 131600, 125800, 131100,
+            130800, 125800, 146200, 134000, 136700, 125500, 131100, 125200,
+            130700, 155200, 138400, 125800, 132000, 131400, 125000, 131400
+          ],
+          "scope": "user_copy_three_pages",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 7500,
+          "p95": 23000,
+          "p99": 29000,
+          "samples": [
+            7400, 7500, 7800, 7700, 7600, 7500, 7600, 23000, 29000, 8300, 7500,
+            7600, 7500, 7400, 7500, 7600, 7500, 7700, 7700, 7400, 7500, 7400,
+            7500, 7500, 7500, 7600, 7600, 7400, 7500, 7500, 7500, 7400
+          ],
+          "scope": "user_copy_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "event": "test",
+          "name": "handle_cross_process_reference_isolation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "handle_el0_identity_type_generation_and_lifetime",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "handle_el0_transfer_transaction_attenuation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "handle_exit_fault_cleanup_and_process_reuse",
+          "status": "pass"
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 2900,
+          "p95": 2900,
+          "p99": 3000,
+          "samples": [
+            2700, 2900, 2800, 2900, 2800, 2900, 2800, 2900, 2700, 2800, 2900,
+            2900, 2900, 2900, 2900, 2800, 2800, 2900, 2900, 2900, 2800, 3000,
+            2900, 2900, 2900, 2800, 2800, 2900, 2900, 2900, 2900, 2900
+          ],
+          "scope": "handle_lookup_success",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 2400,
+          "p95": 3200,
+          "p99": 3600,
+          "samples": [
+            2200, 2600, 2400, 2400, 2300, 2400, 2300, 3600, 2500, 2400, 2400,
+            2300, 2400, 2400, 2400, 2400, 2400, 2400, 2300, 2300, 3200, 2400,
+            2400, 2400, 2300, 2400, 2400, 2300, 2400, 2500, 2400, 2400
+          ],
+          "scope": "handle_lookup_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 7400,
+          "p95": 7800,
+          "p99": 14800,
+          "samples": [
+            6600, 7800, 14800, 7000, 6700, 7500, 7400, 6700, 7500, 7500, 7400,
+            7600, 7300, 7500, 6500, 7400, 7500, 7300, 7400, 7400, 6600, 7500,
+            7400, 7400, 7600, 7500, 7400, 6500, 7200, 7600, 7500, 7500
+          ],
+          "scope": "handle_create",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 3100,
+          "p95": 7400,
+          "p99": 24800,
+          "samples": [
+            3000, 3100, 3000, 3300, 3000, 3000, 3100, 3300, 3100, 3100, 3200,
+            3000, 3000, 4800, 3200, 3000, 3000, 3100, 3000, 3100, 3000, 4100,
+            2900, 3000, 3000, 3100, 3100, 24800, 4600, 7400, 3300, 3200
+          ],
+          "scope": "handle_close",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 18200,
+          "p95": 19300,
+          "p99": 19800,
+          "samples": [
+            19300, 19300, 19200, 19200, 19800, 18000, 18300, 18600, 18200,
+            18200, 18400, 18300, 18300, 18200, 18100, 18300, 17900, 17900,
+            18200, 18100, 18200, 18200, 18200, 18000, 18200, 18200, 18000,
+            17900, 18000, 18300, 18400, 18000
+          ],
+          "scope": "handle_slot_reuse",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 1600,
+          "p95": 1700,
+          "p99": 1800,
+          "samples": [
+            1500, 1800, 1700, 1600, 1600, 1600, 1600, 1600, 1600, 1600, 1600,
+            1600, 1700, 1600, 1600, 1500, 1600, 1600, 1600, 1600, 1600, 1700,
+            1600, 1700, 1600, 1600, 1600, 1500, 1700, 1700, 1600, 1700
+          ],
+          "scope": "handle_lookup_success",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 1400,
+          "p95": 1400,
+          "p99": 1400,
+          "samples": [
+            1200, 1400, 1400, 1400, 1400, 1300, 1400, 1400, 1400, 1400, 1400,
+            1400, 1400, 1400, 1300, 1400, 1300, 1400, 1400, 1400, 1400, 1400,
+            1300, 1400, 1400, 1300, 1300, 1300, 1400, 1300, 1300, 1400
+          ],
+          "scope": "handle_lookup_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 4200,
+          "p95": 4700,
+          "p99": 4700,
+          "samples": [
+            4100, 4700, 4400, 4400, 4100, 4200, 4200, 4300, 4200, 4200, 4200,
+            4300, 4200, 4200, 4200, 4100, 4100, 4000, 4200, 4200, 4200, 4100,
+            4200, 4100, 4700, 4700, 4200, 4200, 4200, 4200, 4100, 4300
+          ],
+          "scope": "handle_create",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 1900,
+          "p95": 2600,
+          "p99": 3100,
+          "samples": [
+            1900, 1900, 1900, 2000, 1900, 3100, 2000, 1900, 2600, 2100, 2000,
+            2000, 2400, 2000, 1900, 1900, 1900, 1900, 2000, 1900, 1900, 1900,
+            1900, 1900, 1900, 1900, 1900, 2000, 2000, 2000, 2000, 2000
+          ],
+          "scope": "handle_close",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 1000000000,
+          "iterations": 32,
+          "median": 12700,
+          "p95": 13400,
+          "p99": 13500,
+          "samples": [
+            12700, 12800, 12800, 13000, 13500, 12700, 12600, 12300, 12700,
+            13300, 12400, 12600, 12600, 12500, 12700, 13200, 12500, 12500,
+            12700, 12700, 12500, 12500, 12600, 12600, 12600, 13400, 12700,
+            12800, 13400, 12700, 12600, 12600
+          ],
+          "scope": "handle_slot_reuse",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "event": "test",
+          "name": "smp_orderly_shutdown",
+          "status": "pass"
+        },
+        {
+          "event": "suite",
+          "status": "pass",
+          "tests": 84
+        }
+      ],
+      "imported_files": [
+        {
+          "path": "target/kernel/dev-tests.run.json",
+          "sha256_lf": "4efbadabfe338f9ead4fcfa019f4680fe434ae5a4279d3e36ba5ce93a03b2570"
+        },
+        {
+          "path": "target/kernel/dev-tests.results.json",
+          "sha256_lf": "1b84557cbef328c3b929f732a26004e8d08db7156e49fcc64c63db3b76bec331"
+        }
+      ]
+    },
+    "prod": {
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "b728a4c811a3cd053341247e2efe7acb85408d6411fc4a537c033a3d49cac4bb",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "build": {
+        "artifact": "target/kernel/prod-tests.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 1496472,
+        "features": ["machine-events", "kernel-tests"],
+        "load_bytes": 400492,
+        "memory_bytes": 1495476,
+        "sha256": "b728a4c811a3cd053341247e2efe7acb85408d6411fc4a537c033a3d49cac4bb",
+        "target": "aarch64-unknown-none"
+      },
+      "tests_passed": 84,
+      "events": [
+        {
+          "event": "test",
+          "name": "boot_el1",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "uart_mmio",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "exception_vectors",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_discovery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_allocator",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "allocation_free",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "physical_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_map",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "invalid_mapping_rejection",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "page_unmap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "permissions",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "execute_never",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "mmu",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "heap_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_exclusion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "locking_release",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "monotonic_time",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_masking",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "interrupt_delivery",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "timer_rearm",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "irq_simd_context",
+          "status": "pass"
+        },
+        {
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 64,
+          "median": 31,
+          "p95": 32,
+          "p99": 38,
+          "samples": [
+            31, 38, 32, 32, 32, 32, 32, 32, 31, 31, 31, 31, 31, 31, 31, 31, 31,
+            31, 31, 32, 32, 32, 32, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31,
+            31, 32, 32, 32, 32, 32, 31, 31, 25, 31, 31, 31, 31, 31, 31, 31, 32,
+            32, 32, 31, 31, 31, 31, 31, 31, 25, 31, 31, 25, 32
+          ],
+          "scope": "lock_uncontended",
+          "units": "timer_ticks",
+          "warmup": 8
+        },
+        {
+          "event": "test",
+          "name": "smp_secondary_boot",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_cpu_identity",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_separate_stacks",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_forward",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_reverse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_ipi_repeated",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_lock_publication",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_mapping_visible",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_retirement_pending",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_no_premature_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_ack",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_remote_tlb_invalidation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_safe_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_simultaneous_timers",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "smp_percpu_independent",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "scheduler_generation_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_processes",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_timer_switches",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_user_stacks",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_memory_isolation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_fault_containment",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_quiescent_reclamation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_context_preservation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_smp_ownership",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_kernel_memory_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_foreign_memory_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_code_write_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_stack_guard",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_data_execute_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "el0_privileged_instruction_rejected",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_registry_and_cpu_ownership",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_preparation_and_admission",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_normal_exit_and_fault",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_creation_rollback",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_capacity_exhaustion",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "asid_pool_exhaustion_both_cpus",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_slot_generation_reuse",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_terminal_rejections",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_authority_boundary",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_sparse_affinity",
+          "status": "pass"
+        },
+        {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 5521313,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        {
+          "event": "test",
+          "name": "asid_reuse_same_va_both_cpus",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "asid_reuse_requires_invalidation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_bounded_stress",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_el0_residency_initial",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_el0_residency_monotonic",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_el0_residency_accumulates",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_quantum_return_and_peer_progress",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_wait_block_and_wakeup",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_invalid_images_are_transactional",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_creation_failure_is_transactional",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_executes_in_isolated_el0_spaces",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_bss_and_page_padding_are_zero",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "elf_reclaims_all_frames",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "process_resource_reclamation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "user_copy_el0_boundary_and_snapshot",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "user_copy_lifetime_and_reclamation",
+          "status": "pass"
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 1743,
+          "p95": 3206,
+          "p99": 3956,
+          "samples": [
+            3206, 3956, 1768, 1731, 1738, 1737, 1738, 1731, 1738, 1743, 1744,
+            1738, 1737, 1732, 1743, 1744, 1738, 1737, 1743, 1744, 1750, 1744,
+            1750, 1744, 1800, 1744, 1781, 1768, 1768, 1743, 1737, 1738
+          ],
+          "scope": "user_copy_small",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 4250,
+          "p95": 5325,
+          "p99": 5362,
+          "samples": [
+            4262, 4250, 4237, 4257, 4231, 4244, 4231, 4225, 4225, 4250, 4213,
+            5362, 4287, 4287, 4294, 4250, 4282, 4300, 4237, 4256, 4225, 4244,
+            4231, 4244, 4225, 5325, 4262, 4257, 4256, 4250, 4238, 4256
+          ],
+          "scope": "user_copy_page",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 9275,
+          "p95": 10450,
+          "p99": 10469,
+          "samples": [
+            9300, 9300, 9269, 9287, 9337, 9331, 10343, 9275, 9319, 9325, 9293,
+            9338, 10450, 9606, 9281, 9263, 9219, 9263, 9331, 10469, 9207, 9231,
+            9244, 9212, 9200, 9225, 10300, 9200, 9225, 9256, 9156, 8888
+          ],
+          "scope": "user_copy_three_pages",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 112,
+          "p95": 332,
+          "p99": 2000,
+          "samples": [
+            2000, 131, 112, 119, 107, 106, 112, 107, 106, 100, 106, 107, 112,
+            107, 100, 125, 125, 332, 144, 131, 93, 138, 131, 163, 94, 100, 94,
+            100, 87, 287, 256, 132
+          ],
+          "scope": "user_copy_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 1769,
+          "p95": 1856,
+          "p99": 3212,
+          "samples": [
+            3212, 1856, 1769, 1769, 1756, 1769, 1775, 1769, 1775, 1769, 1769,
+            1769, 1775, 1775, 1775, 1768, 1768, 1775, 1781, 1782, 1781, 1806,
+            1775, 1781, 1769, 1781, 1762, 1757, 1768, 1793, 1750, 1713
+          ],
+          "scope": "user_copy_small",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 4269,
+          "p95": 4693,
+          "p99": 4775,
+          "samples": [
+            4244, 4237, 4262, 4250, 4257, 4250, 4281, 4281, 4282, 4225, 4231,
+            4693, 4331, 4287, 4288, 4256, 4288, 4262, 4300, 4250, 4269, 4256,
+            4288, 4281, 4281, 4775, 4269, 4269, 4263, 4269, 4269, 4281
+          ],
+          "scope": "user_copy_page",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 9325,
+          "p95": 9806,
+          "p99": 10132,
+          "samples": [
+            9325, 9332, 9387, 9419, 9419, 9350, 9806, 9394, 9306, 9294, 9306,
+            9368, 9331, 10132, 9275, 9344, 9369, 9350, 9319, 9700, 9288, 9269,
+            9237, 9256, 9275, 9250, 9725, 9269, 9244, 9281, 9350, 9225
+          ],
+          "scope": "user_copy_three_pages",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 119,
+          "p95": 238,
+          "p99": 1938,
+          "samples": [
+            1938, 131, 238, 157, 100, 175, 106, 119, 106, 131, 131, 157, 143,
+            144, 138, 113, 106, 100, 100, 118, 100, 181, 163, 118, 112, 113,
+            125, 113, 119, 125, 113, 112
+          ],
+          "scope": "user_copy_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "event": "test",
+          "name": "handle_cross_process_reference_isolation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "handle_el0_identity_type_generation_and_lifetime",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "handle_el0_transfer_transaction_attenuation",
+          "status": "pass"
+        },
+        {
+          "event": "test",
+          "name": "handle_exit_fault_cleanup_and_process_reuse",
+          "status": "pass"
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 19,
+          "p95": 19,
+          "p99": 25,
+          "samples": [
+            19, 25, 18, 19, 19, 19, 19, 18, 19, 19, 18, 19, 19, 19, 19, 18, 19,
+            19, 18, 19, 19, 19, 19, 18, 19, 19, 19, 19, 19, 19, 18, 19
+          ],
+          "scope": "handle_lookup_success",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 13,
+          "p95": 50,
+          "p99": 219,
+          "samples": [
+            50, 44, 13, 13, 12, 12, 219, 43, 19, 13, 12, 12, 13, 13, 19, 12, 12,
+            13, 13, 12, 18, 12, 13, 13, 19, 12, 12, 13, 13, 13, 12, 12
+          ],
+          "scope": "handle_lookup_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 38,
+          "p95": 231,
+          "p99": 1493,
+          "samples": [
+            38, 31, 75, 231, 1493, 37, 37, 37, 125, 44, 44, 44, 37, 37, 119, 44,
+            38, 31, 25, 38, 38, 32, 31, 32, 25, 31, 31, 38, 44, 43, 43, 37
+          ],
+          "scope": "handle_create",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 19,
+          "p95": 56,
+          "p99": 175,
+          "samples": [
+            50, 25, 50, 19, 25, 175, 19, 19, 19, 56, 19, 37, 19, 19, 19, 18, 19,
+            19, 25, 56, 19, 18, 25, 19, 19, 56, 25, 18, 25, 25, 25, 18
+          ],
+          "scope": "handle_close",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 0,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 69,
+          "p95": 169,
+          "p99": 244,
+          "samples": [
+            56, 69, 63, 69, 69, 62, 62, 69, 100, 94, 100, 69, 75, 63, 69, 69,
+            244, 69, 125, 63, 75, 106, 69, 169, 81, 69, 69, 69, 62, 62, 69, 62
+          ],
+          "scope": "handle_slot_reuse",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 19,
+          "p95": 94,
+          "p99": 794,
+          "samples": [
+            12, 19, 19, 19, 19, 19, 12, 19, 12, 12, 13, 44, 794, 25, 18, 19, 19,
+            94, 56, 50, 18, 19, 19, 19, 13, 12, 12, 13, 19, 18, 13, 19
+          ],
+          "scope": "handle_lookup_success",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 13,
+          "p95": 19,
+          "p99": 19,
+          "samples": [
+            13, 12, 13, 19, 19, 18, 12, 13, 13, 12, 18, 12, 13, 13, 12, 18, 12,
+            13, 12, 12, 13, 19, 13, 12, 12, 13, 19, 13, 12, 12, 13, 19
+          ],
+          "scope": "handle_lookup_failure",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 38,
+          "p95": 81,
+          "p99": 112,
+          "samples": [
+            31, 43, 37, 44, 38, 38, 44, 44, 31, 38, 37, 37, 38, 37, 38, 44, 38,
+            44, 44, 38, 32, 38, 44, 38, 37, 81, 44, 31, 37, 112, 44, 38
+          ],
+          "scope": "handle_create",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 19,
+          "p95": 44,
+          "p99": 50,
+          "samples": [
+            25, 19, 19, 19, 19, 25, 19, 25, 44, 19, 25, 19, 19, 50, 19, 19, 19,
+            19, 19, 12, 19, 19, 19, 18, 13, 13, 18, 19, 13, 18, 19, 13
+          ],
+          "scope": "handle_close",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "cpu": 1,
+          "event": "measurement",
+          "frequency": 62500000,
+          "iterations": 32,
+          "median": 63,
+          "p95": 100,
+          "p99": 118,
+          "samples": [
+            62, 100, 69, 82, 68, 63, 63, 62, 62, 62, 62, 56, 118, 68, 62, 62,
+            69, 63, 63, 63, 69, 69, 75, 56, 62, 68, 56, 50, 63, 69, 56, 68
+          ],
+          "scope": "handle_slot_reuse",
+          "units": "timer_ticks",
+          "warmup": 4
+        },
+        {
+          "event": "test",
+          "name": "smp_orderly_shutdown",
+          "status": "pass"
+        },
+        {
+          "event": "suite",
+          "status": "pass",
+          "tests": 84
+        }
+      ],
+      "imported_files": [
+        {
+          "path": "target/kernel/prod-tests.run.json",
+          "sha256_lf": "fba5004ca1dc3107fe078c13ed18619387725d223e47f6e0dca33caa2e8d1cb5"
+        },
+        {
+          "path": "target/kernel/prod-tests.results.json",
+          "sha256_lf": "4e1e7cdd835e198956eed8860fea1c42571679c5f05551d228c33d9766d27aba"
+        }
+      ]
+    }
+  }
+}

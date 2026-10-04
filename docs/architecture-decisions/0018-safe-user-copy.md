@@ -47,3 +47,16 @@ The exact-source [Phase 3.2 receipt](../../research/results/kernel-phase32.json)
 Revisit the 12 KiB limit and per-request stack capacities only with actual workload/evidence. Relaxing synchronous lifetime, immutable mappings, affinity, IRQ exclusion or precise fault recovery requires a new proof and decision. Handles, capabilities, security domains, IPC, stable public ABI and Linux semantics remain separate work.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0018-safe-user-copy.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0018",
+  "kind": "adr",
+  "aliases": ["ADR-0018"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

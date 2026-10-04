@@ -47,3 +47,16 @@ Run formatters, linters, workspace tests, finite models and the host process exp
 Revise the decision, paired specifications and model evidence when the workload or a counterexample changes a premise. Never silently expand the meaning of a passed finite model.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0009-native-slice-baseline.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0009",
+  "kind": "adr",
+  "aliases": ["ADR-0009"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

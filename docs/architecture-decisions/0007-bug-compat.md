@@ -1,5 +1,9 @@
 # ADR-0007 — Bug compatibility and module retirement
 
+Document status: CURRENT
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Status: **Accepted**. Date: 2026-10-02.
 
 ## Context
@@ -83,3 +87,16 @@ A supported module may return as a new artifact before support expires; the nati
 [Cases and sources](../research/case-index.md); [other systems](../research/reference-systems.md).
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0007-bug-compat.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0007",
+  "kind": "adr",
+  "aliases": ["ADR-0007"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

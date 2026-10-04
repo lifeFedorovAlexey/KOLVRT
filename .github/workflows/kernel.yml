@@ -7,6 +7,8 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -22,6 +24,12 @@ jobs:
         run: ./scripts/setup-qemu.ps1
       - run: npm ci --ignore-scripts
       - run: npm run check
+      - name: Canonical feature impact and transition history
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        env:
+          KNOWLEDGE_BASE: ${{ github.event.pull_request.base.sha }}
+        run: cargo run --locked -p repository-checks -- docs check-change "$env:KNOWLEDGE_BASE"
       - name: Exception registry rejection fixtures
         run: cargo test --locked -p repository-checks exceptions::tests
       - name: Routing model contracts
