@@ -438,7 +438,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 The latest retained exact-source integration matrix records **96 kernel checks per DEV and PROD
 profile** and 80 negative host controls. It includes process-local handle transfer, the bounded
-preemption/event-wait paths, the ELF loader and ASID lifecycle. The [receipt](research/measurements/runs/1791128831792-phase3-4-main-integrated-09f078334042.json)
+preemption/event-wait paths, the ELF loader and ASID lifecycle. The [receipt](research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json)
 binds the tested source, artifacts and QEMU TCG scope; it is not evidence of physical ARM64 behavior
 or later source changes. Historical milestone counts remain in their original decision records.
 

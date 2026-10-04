@@ -6,8 +6,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "bc301bf0267bac01bdad3acbb3ed4bf5cf3552177ba918e192d584a2ed85a402",
-        "translation_sha256": "693246805a837b7fda6027847e88d2db0847aac07e5ae0ef9fe301aeda35464f"
+        "source_sha256": "e91c65a00abc739d81bb47c456075808b623c238e745bd2c4973c11c3e23c45d",
+        "translation_sha256": "27cdf0e5a2aa84b48ef780e97b7a4bc86cb32049b8371e8352db467781ed720b"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "6518a598b4f2d4d7abd7618b81d28c6e26dd1596123247cc5cd887db3ffabea3",
@@ -102,8 +102,8 @@
         "translation_sha256": "c570062bd42c189bca4dc0b78cbdb42feef5ff85b9088ab6a377c4e1a2be836b"
       },
       "docs/architecture-decisions/0023-domains-and-scoped-grants.md": {
-        "source_sha256": "517d4388d76127e692e4f218adfa8b5b04538d900e3ea505f82e6b092ba1f515",
-        "translation_sha256": "3ccba47486ce94934a0ff36101393453aa76a4160f9538121aedb62f9791fa2b"
+        "source_sha256": "28684ec8a1b3479e18111c3bc51764d92336a3ff2a40af2e607699d8f0c4174d",
+        "translation_sha256": "3fbdd534a3119800952862c26a9a86e7e62b6a6ce808d1ca72b6785ad28c79d6"
       },
       "docs/architecture-decisions/README.md": {
         "source_sha256": "9a998357ef97de0e97436b37084ff5af499251a2bd339a028f8b4b99f80b492d",
@@ -210,8 +210,8 @@
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/domains.md": {
-        "source_sha256": "48da7d73634615a96d7f5d6b016117b978e40bba8e048d63469a321922dcdeb4",
-        "translation_sha256": "415591e27921cc80cf9e6b1a7f82b3f8c232dfaf552f851b024dbc41cd0a0776"
+        "source_sha256": "b4fadddb3aee3551a4460e439417c07355355d58de1ea02bad3ccfcfbf4f2024",
+        "translation_sha256": "e1b692bf82c3f660d86635556e2731edd9f9e84e873b3177a3ba1ef79c656da6"
       },
       "docs/kernel/el0.md": {
         "source_sha256": "4d2140e9e09cc624d5cd519d8815cb8fe97ba2352d0ff31bf5019c8506cee503",

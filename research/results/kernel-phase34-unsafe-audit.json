@@ -8,7 +8,7 @@
     {
       "path": "crates/kernel/src\\boot_workload.S",
       "review": "INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE",
-      "sha256": "18a7dfff8467965cc9002c9ec040d655a3d414f3349f0011ffaa31a9e3243bd0"
+      "sha256": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
     },
     {
       "path": "crates/kernel/src\\security\\testing.S",

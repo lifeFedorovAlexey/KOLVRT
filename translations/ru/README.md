@@ -436,7 +436,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Тесты должны обнаруживать ошибки ядра
 
-Последняя сохранённая exact-source интеграционная матрица фиксирует **96 kernel checks в каждом профиле DEV и PROD** и 80 отрицательных host controls. Она включает transfer process-local handles, ограниченные пути preemption/event-wait, ELF loader и ASID lifecycle. [Отчёт](../../research/measurements/runs/1791128831792-phase3-4-main-integrated-09f078334042.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
+Последняя сохранённая exact-source интеграционная матрица фиксирует **96 kernel checks в каждом профиле DEV и PROD** и 80 отрицательных host controls. Она включает transfer process-local handles, ограниченные пути preemption/event-wait, ELF loader и ASID lifecycle. [Отчёт](../../research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
 
 Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
 

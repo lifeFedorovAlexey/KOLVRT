@@ -36,7 +36,7 @@ Domain fault/exhaustion ограничивается caller. Exact identity и c
 
 ## Влияние на совместимость
 
-Reference lookup/close/attenuated transfer остаются bounded. Scoped issued Event grants добавляют REVOKE=4; minimum reference defaults остаются Event SEND / Completion NONE. Новый notification contract имеет статус EXPERIMENTAL без ABI-FREEZE. General IPC, multi-process domains, migration и immediate revoke/drain не поддерживаются.
+Reference lookup/close/attenuated transfer остаются bounded. Service-bound Event grants сохраняют REVOKE=4 из ADR-0022; minimum reference defaults остаются Event SEND / Completion NONE. Новый notification contract имеет статус EXPERIMENTAL без ABI-FREEZE. General IPC, multi-process domains, migration и immediate revoke/drain не поддерживаются.
 
 ## Влияние на производительность
 
