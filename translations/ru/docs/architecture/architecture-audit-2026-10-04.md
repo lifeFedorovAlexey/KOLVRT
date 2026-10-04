@@ -1,6 +1,7 @@
 # Аудит архитектуры — 2026-10-04
 
-Document status: HISTORICAL MILESTONE  
+Document status: HISTORICAL MILESTONE
+
 Evidence scope: архитектурная проверка опубликованного main da16d9f; сохранённые результаты выполнения указывают собственный исходный срез c5c440c.
 Current reference: [Состояние проекта](../../README.md)
 

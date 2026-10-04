@@ -80,6 +80,10 @@ Phase 3.1 added no IPC, user-copy, handles, capabilities, domains, ELF loader, m
 
 Issue #22 can build on exact process identity, privately retained address spaces, explicit admission, terminal isolation, scheduler detachment and nonreusable stale references. The Phase 3.2 boundary described below supplies fault-contained copies, access validation, immutable request snapshots and synchronous race exclusion; a ProcessId or numerical address is never a user-copy authorization. No public user-pointer API is introduced. Future asynchronous lifecycle needs an explicit retained lookup/borrow protocol and per-object quiescence before extending this conservative barrier. Handles/capabilities and public creation authority remain separate milestones.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) now bind each process generation to caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The bounded same-CPU notification pilot reports terminal outcomes to EL0; general IPC, automatic wakeups, supervisor policy and persistent services remain later milestones. Its storage and encoding must be rederived from the requirements of #26/#27 before extension.
+
 [Russian translation](../../translations/ru/docs/kernel/processes.md)
 
 ## Phase 3.2 current copy boundary

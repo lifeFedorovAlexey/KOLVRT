@@ -57,4 +57,8 @@ The later [Phase 2 workload](routing.md) reuses this native mechanism with seque
 
 The later [scheduler contract](scheduler.md) supersedes the queue/setup description above: observed CPU/IRQ/phase/generation checks and nonblocking permits gate all storage accesses. The AArch64 frame and static verifier are separate. EL0 writes its own fixture tick word through the existing own-slices call; kernel IRQ no longer writes fixture data. Runtime storage outlives both fixture and payload sessions. Phase 3.1 validation added generation-safe process lifecycle, `Registry::step()` preemption checks and scheduler ownership controls; see the exact-source process and scheduler receipts. Phase 3.2 accepts a bounded [safe user-copy contract](user-copy.md); IPC and public authority remain separately gated work under Phase 3 — Native Process & Service Foundation.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) now bind each process generation to caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The bounded same-CPU notification pilot reports terminal outcomes to EL0; general IPC, automatic wakeups, supervisor policy and persistent services remain later milestones. Its storage and encoding must be rederived from the requirements of #26/#27 before extension.
+
 [Russian translation](../../translations/ru/docs/kernel/el0.md)

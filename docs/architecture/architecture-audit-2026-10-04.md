@@ -1,6 +1,7 @@
 # Architecture audit — 2026-10-04
 
-Document status: HISTORICAL MILESTONE  
+Document status: HISTORICAL MILESTONE
+
 Evidence scope: architecture review of published main da16d9f; retained runtime receipts identify their own c5c440c source.
 Current reference: [Project status](../../README.md)
 

@@ -153,7 +153,8 @@ Safe user-copy                      ✅ bounded Phase 3.2
 Process-local handles               ✅ bounded Phase 3.3
         │
         ▼
-Capabilities, IPC and services       next (#24)
+Scoped grants and security domains  implemented (#24/#25)
+IPC and services                    next (#26)
         │
         ▼
 Compatibility personalities
@@ -164,7 +165,7 @@ Linux ABI compatibility where useful
 
 Compatibility is not being wired into a single-CPU kernel and patched for SMP later.
 
-The native execution model comes first. The bounded EL0/address-space and timer-scheduler foundation runs fixed-affinity processes on two CPUs. Phase 2 routing executes in an optional isolated EL0 image; native core remains independent. Phase 3.1 adds kernel-owned process creation, start, completion and reclaim, plus a limited own-process event latch used by the preemptible step path. These are trusted-bootstrap mechanisms, not public EL0 process or wait APIs. Phase 3.2 adds bounded safe user-copy, and Phase 3.3 adds process-local handles and receiver-local transfer. Native grants, service authority, general IPC, cancellation, persistent services and security domains remain future work; the full native slice is incomplete. See the [process lifecycle](docs/kernel/processes.md), [wait contract](docs/kernel/wait.md), [handles](docs/kernel/handles.md) and [scheduler](docs/kernel/scheduler.md). Issue [#24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) tracks the next native grants, attenuation and revocation work.
+The native execution model comes first. The bounded EL0/address-space and timer-scheduler foundation runs fixed-affinity processes on two CPUs. Phase 2 routing executes in an optional isolated EL0 image; native core remains independent. Phase 3.1 adds kernel-owned process creation, start, completion and reclaim, plus a limited own-process event latch used by the preemptible step path. These are trusted-bootstrap mechanisms, not public EL0 process or wait APIs. Phase 3.2 adds bounded safe user-copy, and Phase 3.3 adds process-local handles and receiver-local transfer. Phase 3.4 adds scoped Event grants, revocation, resource budgets and [security domains](docs/kernel/domains.md). General IPC, cancellation and persistent services remain future work; the full native slice is incomplete. See the [process lifecycle](docs/kernel/processes.md), [wait contract](docs/kernel/wait.md), [handles](docs/kernel/handles.md) and [scheduler](docs/kernel/scheduler.md). Issue [#24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) records the scoped grants, attenuation and revocation gate; [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) is the next IPC gate.
 
 ---
 
@@ -435,9 +436,9 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Tests are supposed to fail when the kernel is wrong
 
-The latest retained exact-source integration matrix records **84 kernel checks per DEV and PROD
-profile** and 70 negative host controls. It includes process-local handle transfer, the bounded
-preemption/event-wait paths, the ELF loader and ASID lifecycle. The [receipt](research/measurements/runs/1791117628604-issue18-main-integrated-fd10fb19115e.json)
+The latest retained exact-source integration matrix records **96 kernel checks per DEV and PROD
+profile** and 80 negative host controls. It includes process-local handle transfer, the bounded
+preemption/event-wait paths, the ELF loader and ASID lifecycle. The [receipt](research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json)
 binds the tested source, artifacts and QEMU TCG scope; it is not evidence of physical ARM64 behavior
 or later source changes. Historical milestone counts remain in their original decision records.
 
@@ -569,4 +570,4 @@ The [user-copy boundary](docs/kernel/user-copy.md) supports bounded current-proc
 
 ## Phase 3.3 process-local handles
 
-[Handles](docs/kernel/handles.md) provide bounded caller-local opaque references, generation/type/live/rights checks, receiver-local transfer with rights attenuation, retained Event targets and deterministic exit/fault cleanup. EL0 transfer currently targets a namespace on the same CPU; cross-CPU delegation is prepared by the coordinator and exercised under concurrent EL0 close/lookup. [ADR-0019](docs/architecture-decisions/0019-process-local-handles.md) records the original identity/lifetime decision; [ADR-0020](docs/architecture-decisions/0020-handle-transfer-and-retention.md) records the transfer and retention contract. The original Phase 3.3 [matrix](research/results/kernel-phase33.json) records 72 checks; the issue #23 [exact-source matrix](research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) records 73 DEV/PROD checks and 69 negative controls. Capabilities, domains and general IPC remain future work.
+[Handles](docs/kernel/handles.md) provide bounded caller-local opaque references, generation/type/live/rights checks, receiver-local transfer with rights attenuation, retained Event targets and deterministic exit/fault cleanup. EL0 transfer currently targets a namespace on the same CPU; cross-CPU delegation is prepared by the coordinator and exercised under concurrent EL0 close/lookup. [ADR-0019](docs/architecture-decisions/0019-process-local-handles.md) records the original identity/lifetime decision; [ADR-0020](docs/architecture-decisions/0020-handle-transfer-and-retention.md) records the transfer and retention contract. The original Phase 3.3 [matrix](research/results/kernel-phase33.json) records 72 checks; the issue #23 [exact-source matrix](research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) records 73 DEV/PROD checks and 69 negative controls. [Phase 3.4](docs/kernel/domains.md) adds scoped grants and domains; general IPC remains future work.

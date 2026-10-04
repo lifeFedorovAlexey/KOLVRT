@@ -86,6 +86,7 @@ const RESERVED_REFS: usize = usize::MAX;
 struct SharedSlot {
     generation: core::sync::atomic::AtomicU64,
     references: core::sync::atomic::AtomicUsize,
+    admissions: core::sync::atomic::AtomicU64,
     state: AtomicU8,
 }
 impl SharedSlot {
@@ -93,6 +94,7 @@ impl SharedSlot {
         Self {
             generation: core::sync::atomic::AtomicU64::new(0),
             references: core::sync::atomic::AtomicUsize::new(0),
+            admissions: core::sync::atomic::AtomicU64::new(0),
             state: AtomicU8::new(0),
         }
     }
@@ -121,6 +123,7 @@ impl SharedEvent {
                 continue;
             };
             slot.state.store(0, Ordering::Relaxed);
+            slot.admissions.store(0, Ordering::Relaxed);
             slot.generation.store(generation, Ordering::Release);
             slot.references.store(1, Ordering::Release);
             return Some(Self {
@@ -161,29 +164,46 @@ impl SharedEvent {
             }
         }
     }
-    pub fn signal(&self) -> bool {
-        self.admit_signal().unwrap_or(false)
+    /// Admission and revocation share one CAS word. Accepted work owns a reference.
+    pub fn admit(&self) -> Option<AcceptedSignal> {
+        self.admit_checked(!cfg!(feature = "capability-revoke-negative"))
     }
-    pub fn admit_signal(&self) -> Result<bool, SignalError> {
-        let state = &self.storage().state;
-        let mut observed = state.load(Ordering::Acquire);
+    fn admit_checked(&self, enforce_revocation: bool) -> Option<AcceptedSignal> {
+        let event = self.try_clone()?;
+        let gate = &self.storage().admissions;
+        let mut s = gate.load(Ordering::Acquire);
         loop {
-            if observed & REVOKED != 0 {
-                return Err(SignalError::Revoked);
+            if s & REVOKED_GATE != 0 && enforce_revocation
+                || s & !REVOKED_GATE >= MAX_SHARED_REFERENCES as u64
+            {
+                return None;
             }
-            match state.compare_exchange_weak(
-                observed,
-                observed | PENDING,
-                Ordering::AcqRel,
-                Ordering::Acquire,
-            ) {
-                Ok(_) => return Ok(observed & PENDING == 0),
-                Err(next) => observed = next,
+            match gate.compare_exchange_weak(s, s + 1, Ordering::AcqRel, Ordering::Acquire) {
+                Ok(_) => return Some(AcceptedSignal { event }),
+                Err(next) => s = next,
             }
         }
     }
     pub fn revoke(&self) -> bool {
-        self.storage().state.fetch_or(REVOKED, Ordering::AcqRel) & REVOKED == 0
+        self.storage()
+            .admissions
+            .fetch_or(REVOKED_GATE, Ordering::AcqRel)
+            & REVOKED_GATE
+            == 0
+    }
+    pub fn revoked(&self) -> bool {
+        self.storage().admissions.load(Ordering::Acquire) & REVOKED_GATE != 0
+    }
+    pub fn signal(&self) -> bool {
+        self.admit_signal().unwrap_or(false)
+    }
+    pub fn admit_signal(&self) -> Result<bool, SignalError> {
+        self.admit_checked(true)
+            .map(AcceptedSignal::finish)
+            .ok_or(SignalError::Revoked)
+    }
+    fn publish_accepted(&self) -> bool {
+        self.storage().state.fetch_or(PENDING, Ordering::AcqRel) & PENDING == 0
     }
     pub fn register(&self) -> bool {
         self.storage().state.fetch_or(WAITING, Ordering::AcqRel);
@@ -193,12 +213,7 @@ impl SharedEvent {
         let state = &self.storage().state;
         let mut observed = state.load(Ordering::Acquire);
         while observed & (WAITING | PENDING) == WAITING | PENDING {
-            match state.compare_exchange_weak(
-                observed,
-                observed & REVOKED,
-                Ordering::AcqRel,
-                Ordering::Acquire,
-            ) {
+            match state.compare_exchange_weak(observed, 0, Ordering::AcqRel, Ordering::Acquire) {
                 Ok(_) => return true,
                 Err(next) => observed = next,
             }
@@ -212,6 +227,57 @@ impl Drop for SharedEvent {
         assert_eq!(slot.generation.load(Ordering::Acquire), self.generation);
         let previous = slot.references.fetch_sub(1, Ordering::AcqRel);
         assert!(previous > 0 && previous != RESERVED_REFS);
+    }
+}
+
+const REVOKED_GATE: u64 = 1 << 63;
+/// Only the already-admitted concrete signal survives revocation. No new lookup.
+pub struct AcceptedSignal {
+    event: SharedEvent,
+}
+impl AcceptedSignal {
+    pub fn finish(self) -> bool {
+        self.event.publish_accepted()
+    }
+}
+impl Drop for AcceptedSignal {
+    fn drop(&mut self) {
+        assert_ne!(
+            self.event
+                .storage()
+                .admissions
+                .fetch_sub(1, Ordering::AcqRel)
+                & !REVOKED_GATE,
+            0
+        );
+    }
+}
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+    #[test]
+    fn revoked_alias_rejects_new_work_and_retains_accepted_effect() {
+        let e = SharedEvent::try_new().unwrap();
+        let alias = e.try_clone().unwrap();
+        let accepted = e.admit().unwrap();
+        alias.revoke();
+        assert!(e.admit().is_none());
+        drop(alias);
+        assert!(accepted.finish());
+        assert!(!e.register());
+    }
+    #[test]
+    fn concurrent_revoke_and_admit_have_one_linearization_order() {
+        let e = SharedEvent::try_new().unwrap();
+        let alias = e.try_clone().unwrap();
+        std::thread::scope(|s| {
+            let work = s.spawn(move || alias.admit());
+            e.revoke();
+            if let Some(accepted) = work.join().unwrap() {
+                accepted.finish();
+            }
+        });
+        assert!(e.admit().is_none());
     }
 }
 

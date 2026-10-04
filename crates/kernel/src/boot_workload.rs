@@ -134,6 +134,7 @@ pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence 
                 Spec {
                     image,
                     image_format: ImageFormat::RawFixture,
+                    limits: limits(),
                     context: contexts[id],
                     owner: id / TASKS,
                     entry: memory::USER_CODE,
@@ -257,6 +258,7 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
                 Spec {
                     image,
                     image_format: ImageFormat::RawFixture,
+                    limits: limits(),
                     context: contexts[id],
                     owner: id / TASKS,
                     entry: config::USER_PAYLOAD_BASE,
@@ -312,4 +314,14 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
     }
     assert_eq!(p.available(), before, "payload frame leak");
     assert!(completed.owners_released);
+}
+
+fn limits() -> kernel_core::domain::Limits {
+    kernel_core::domain::Limits {
+        memory_pages: crate::memory::USER_SPACE_PAGES
+            + crate::platform::config::USER_PAYLOAD_BYTES / crate::platform::config::PAGE_BYTES,
+        handles: crate::handles::CAPACITY as u16,
+        queue: 1,
+        requests: 1,
+    }
 }

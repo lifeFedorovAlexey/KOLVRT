@@ -59,4 +59,8 @@ The original Phase 3.3 [handle contract](handles.md) baseline recorded 72 kernel
 
 The [current integrated receipt](../../research/measurements/runs/1791123211326-docs-main-c5c440c-final-fd10fb19115e.json) records 84 checks per DEV/PROD profile, both non-test boots and 70 host negative controls at `c5c440c`. It includes bounded own-event wait/block/wakeup, safe user-copy, retained handle transfer, ELF validation/rollback and fixed-affinity ASID retirement/reuse. The [separate routing regression](../../research/results/routing-main-c5c440c-regression.json) also passed on this source slice. Historical counts above stay bound to their original receipts. Evidence covers the recorded source hashes, artifacts, two-CPU QEMU and profiles; physical hardware, general IPC, public grants and persistent services remain outside this verification.
 
+## Phase 3.4 security enforcement
+
+[Domain fixtures](../../crates/kernel/src/security/testing.rs) execute the production copied boundary on both EL0 CPUs: scoped denial, attenuation, revoke/admission races, sender/receiver budgets, fault isolation, reclaimed sender retention and observable service-fault cancellation. Five negative features remove actual budget, identity, teardown, revocation or scope checks; each must produce the expected failed machine test and nonzero host result in DEV and PROD. The current kernel matrix has 96 checks per profile and 80 negative controls.
+
 [Russian translation](../../translations/ru/docs/kernel/testing.md)

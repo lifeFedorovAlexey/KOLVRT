@@ -80,6 +80,10 @@ Phase 3.1 не добавила IPC, безопасное копирование
 
 Issue #22 сможет опереться на точную идентичность процесса, закрыто удерживаемые адресные пространства, явный допуск, изоляцию завершённых задач, отсоединение очередей и запрет повторного использования устаревших ссылок. Описанная ниже граница Phase 3.2 предоставляет fault-contained copies, проверку доступа, immutable request snapshots и синхронное исключение гонок. `ProcessId` и числовой адрес не дают права копировать данные пользователя. Публичного API с указателями пользователя нет. Для асинхронного жизненного цикла до ослабления текущего барьера потребуется явный протокол удержания ссылки и заимствования, а также безопасное изменение каждого объекта. Дескрипторы, capabilities и публичные полномочия создания процессов остаются отдельными этапами.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) связывают каждую process generation с локальными handles, явными bootstrap grants и неизменяемыми memory/handle/queue/request quotas, переданными caller. SEND/TRANSFER rights допускают attenuation; REVOKE=4 означает явную issuer authority. Revocation запрещает новые effects, а принятая работа удерживает consumer charge и target до completion либо service-fault cancellation. Закрытие handle не отзывает aliases. Ограниченный same-CPU notification pilot сообщает EL0 terminal outcomes; general IPC, automatic wakeups, supervisor policy и persistent services относятся к следующим этапам. Перед расширением storage и encoding нужно заново вывести из требований #26/#27.
+
 [Английский оригинал](../../../../docs/kernel/processes.md)
 
 ## Текущая copy boundary Phase 3.2

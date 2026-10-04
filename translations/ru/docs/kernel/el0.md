@@ -57,4 +57,8 @@ Fixed affinity остаётся обязательным. Root нельзя за
 
 Более поздний [контракт планировщика](scheduler.md) заменяет описание очереди и подготовки выше: проверки CPU, маски IRQ, фазы и поколения и неблокирующие разрешения контролируют все обращения к хранилищу. Кадр AArch64 и статический проверяющий код разделены. EL0 сам записывает тестовое слово тиков через существующий вызов собственных квантов; IRQ ядра больше не пишет тестовые данные. Хранилище исполнения переживает сессии тестовых образов и полезной нагрузки. Проверки Phase 3.1 добавили жизненный цикл процессов с поколениями, вытеснение в `Registry::step()` и контроли владения планировщиком; см. отчёты процессов и планировщика для точных исходников. Phase 3.2 принимает ограниченный [контракт безопасного копирования пользовательских данных](user-copy.md); IPC и публичные полномочия остаются отдельными этапами Phase 3 — основы собственных процессов и служб.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) связывают каждую process generation с локальными handles, явными bootstrap grants и неизменяемыми memory/handle/queue/request quotas, переданными caller. SEND/TRANSFER rights допускают attenuation; REVOKE=4 означает явную issuer authority. Revocation запрещает новые effects, а принятая работа удерживает consumer charge и target до completion либо service-fault cancellation. Закрытие handle не отзывает aliases. Ограниченный same-CPU notification pilot сообщает EL0 terminal outcomes; general IPC, automatic wakeups, supervisor policy и persistent services относятся к следующим этапам. Перед расширением storage и encoding нужно заново вывести из требований #26/#27.
+
 [Английский оригинал](../../../../docs/kernel/el0.md)

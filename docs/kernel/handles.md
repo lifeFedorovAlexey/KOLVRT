@@ -90,6 +90,10 @@ Recorded timer ticks at 62.5 MHz, 32 samples per cell. Single-operation PROD obs
 
 ## Scope before capabilities
 
-Identity/type/lifetime checks produce a resource reference; they do not authorize effects. Issue #23 adds SEND/TRANSFER admission, attenuation and bounded owned Event retention. A future phase can add an authority issuer, revocation and broader asynchronous work contracts without changing handle identity. Linux fd/Windows HANDLE semantics, general IPC, unrestricted duplication, security domains, capability bits, magic current/root handles and a universal object model are excluded.
+Identity/type/lifetime checks produce a resource reference; they do not authorize effects. Issue #23 adds SEND/TRANSFER admission, attenuation and bounded owned Event retention. Phase 3.4 adds protected bootstrap issuance and revocation; the historical baseline above remains scoped to Phase 3.3. Linux fd/Windows HANDLE semantics, general IPC, unrestricted duplication, magic current/root handles and a universal object model are excluded.
+
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) now bind each process generation to caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The bounded same-CPU notification pilot reports terminal outcomes to EL0; general IPC, automatic wakeups, supervisor policy and persistent services remain later milestones. Its storage and encoding must be rederived from the requirements of #26/#27 before extension.
 
 [Russian translation](../../translations/ru/docs/kernel/handles.md)

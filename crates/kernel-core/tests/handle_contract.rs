@@ -243,3 +243,77 @@ fn exhausted_slot_does_not_hide_other_vacancies_or_reset_after_rebinding() {
     assert_eq!(namespace.slot_state(1), Some((1, None)));
     assert_eq!(namespace.live(), 0);
 }
+
+#[test]
+fn explicit_event_grants_attenuate_all_known_rights_and_share_revocation() {
+    use kernel_core::{
+        domain::{Limits, Owner},
+        wait::SharedEvent,
+    };
+    let (a, b) = owners();
+    let limits = Limits {
+        memory_pages: 1,
+        handles: 1,
+        queue: 1,
+        requests: 1,
+    };
+    let (sender_domain, _sender_memory) = Owner::new(a, limits, 1).unwrap();
+    let (receiver_domain, _receiver_memory) = Owner::new(b, limits, 1).unwrap();
+    for held_bits in 0u8..8 {
+        for requested_bits in 0u8..8 {
+            let mut sender = Namespace::<1>::new();
+            let mut receiver = Namespace::<1>::new();
+            sender.bind_domain(a, sender_domain.reference()).unwrap();
+            receiver
+                .bind_domain(b, receiver_domain.reference())
+                .unwrap();
+            let held = Rights::from_bits(held_bits).unwrap();
+            let requested = Rights::from_bits(requested_bits).unwrap();
+            let grant = sender
+                .create_granted_event(a, b, SharedEvent::try_new().unwrap(), held, |_| {
+                    Ok::<_, ()>(())
+                })
+                .unwrap();
+            let before = (state(&sender), state(&receiver));
+            let transferred = sender.transfer(a, grant, &mut receiver, b, requested);
+            if held_bits & Rights::TRANSFER.bits() == 0 || requested_bits & !held_bits != 0 {
+                assert_eq!(transferred, Err(Error::Rights));
+                assert_eq!((state(&sender), state(&receiver)), before);
+                continue;
+            }
+            let alias = transferred.unwrap();
+            assert_eq!(
+                receiver.lookup(b, alias, Kind::Event).unwrap().signal(),
+                Err(Error::Denied)
+            );
+            assert_eq!(
+                receiver.lookup(b, alias, Kind::Event).unwrap().rights(),
+                requested
+            );
+            let admitted = receiver.admit_signal(b, alias);
+            if requested_bits & Rights::SEND.bits() == 0 {
+                assert_eq!(admitted.err(), Some(Error::Rights));
+            } else {
+                let (service, accepted) = admitted.unwrap();
+                assert_eq!(service, b);
+                if held_bits & Rights::REVOKE.bits() != 0 {
+                    sender.revoke(a, grant).unwrap();
+                    assert_eq!(receiver.admit_signal(b, alias).err(), Some(Error::Denied));
+                } else {
+                    assert_eq!(sender.revoke(a, grant), Err(Error::Rights));
+                }
+                accepted.finish();
+                assert!(
+                    !receiver
+                        .lookup(b, alias, Kind::Event)
+                        .unwrap()
+                        .event()
+                        .unwrap()
+                        .register()
+                );
+            }
+        }
+    }
+    assert_eq!(sender_domain.reference().usage(), (1, 0, 0, 0));
+    assert_eq!(receiver_domain.reference().usage(), (1, 0, 0, 0));
+}

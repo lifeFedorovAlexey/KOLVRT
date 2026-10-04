@@ -92,6 +92,10 @@ Phase 3.1 completes the bounded kernel-internal lifecycle requested for this mil
 
 The [dynamic lifecycle](processes.md) extends this foundation with vacant slots and independent process generations. Kernel bootstrap retains one Registry across callers; old fixtures and the optional image use create/start/step/dispatch/signal/reclaim. The bounded [wait contract](wait.md) lets a stepped EL0 workload block on one own-process event and return to the bootstrap coordinator; it adds no public wait authority or production event loop. Admission descriptors borrow owned spaces, and roots are removed under acquired quiescent editing before returning process completion. Inspection and editing share the existing exclusive permit and three storage dereference sites. Optional bounds belong to the caller; None has no hidden completion deadline. The historical Phase 3.0 result records remain unchanged. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) records the conservative retirement boundary and next user-copy obligations.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) now bind each process generation to caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The bounded same-CPU notification pilot reports terminal outcomes to EL0; general IPC, automatic wakeups, supervisor policy and persistent services remain later milestones. Its storage and encoding must be rederived from the requirements of #26/#27 before extension.
+
 [Russian translation](../../translations/ru/docs/kernel/scheduler.md)
 
 ## Phase 3.2 copy scope
