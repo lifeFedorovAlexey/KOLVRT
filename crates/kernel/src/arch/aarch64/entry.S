@@ -262,12 +262,15 @@ user_sync_vector:
  save_user
  mov x0,sp
  mov x1,xzr
+ mrs x2,cntpct_el0
  bl user_trap
  cbnz x0,user_kernel_return
  return_user
 user_irq_vector:
  save_user
+ mrs x19,cntpct_el0
  bl interrupt_entry
+ mov x2,x19
  mov x0,sp
  mov x1,#USER_TRAP_IRQ
  bl user_trap
@@ -299,6 +302,38 @@ user_kernel_return:
  msr spsr_el1,x9
  restore USER_META_BYTES
 user_kernel_resumed:
+ ret
+
+// INV-USER-COPY: kernel accesses remain fatal; exact user instructions recover.
+// x4 counts completed stores only. No Rust user references, masked IRQ, bounded
+// disjoint buffers and immutable retained root enforced by the Rust wrapper.
+.global user_copy_in,user_copy_out,user_copy_load,user_copy_store,user_copy_resume
+user_copy_in:
+ mov x4,xzr
+1:
+ cmp x4,x2
+ b.eq user_copy_resume
+user_copy_load:
+ ldtrb w3,[x1]
+ strb w3,[x0]
+ add x0,x0,#1
+ add x1,x1,#1
+ add x4,x4,#1
+ b 1b
+user_copy_out:
+ mov x4,xzr
+2:
+ cmp x4,x2
+ b.eq user_copy_resume
+ ldrb w3,[x1]
+user_copy_store:
+ sttrb w3,[x0]
+ add x0,x0,#1
+ add x1,x1,#1
+ add x4,x4,#1
+ b 2b
+user_copy_resume:
+ mov x0,x4
  ret
 
 // INV-PROBE: test-only exact fault PCs; handler resumes only these instructions.

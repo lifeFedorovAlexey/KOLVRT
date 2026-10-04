@@ -135,3 +135,195 @@ lifecycle_image_start:
  svc #USER_FINISHED_TRAP
  b 13b
 lifecycle_image_end:
+
+// Actual EL0 initializes request + several-page byte buffer, then mutates its
+// original request after snapshot admission. The second SVC must use saved bytes.
+.global copy_image_start,copy_image_end
+copy_image_start:
+ mov x20,#0x2000
+ lsl x20,x20,#16
+ add x20,x20,#4096
+ mov x0,#42
+ str x0,[x20]
+ mov x21,#0x2000
+ lsl x21,x21,#16
+ add x21,x21,#3,lsl #12
+ mov x2,#0x4000
+ mov w3,#0xa5
+20:
+ strb w3,[x21],#1
+ subs x2,x2,#1
+ b.ne 20b
+ mov x1,x20
+ svc #0x70
+ mov x22,x0
+ mov x0,#43
+ str x0,[x20]
+ mov x1,x20
+ svc #0x71
+ and x0,x0,x22
+ svc #USER_FINISHED_TRAP
+ b .
+copy_image_end:
+
+// INV-USER-IMAGE: trusted handle fixture, copied into private RX code page.
+.section .rodata.handle_image,"a"
+.balign 16
+.global handle_image_start,handle_image_end
+handle_image_start:
+ mov x22,x2
+ mov x19,#1
+ mov x21,#0x20000000
+ add x21,x21,#4096
+ mov x1,x21
+ svc #0x81
+ and x19,x19,x0
+ ldr x20,[x21,#64]
+ mov x3,#1
+ str x3,[x21]
+ str x3,[x21,#8]
+ str x20,[x21,#16]
+ str x3,[x21,#24]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#2
+ str x3,[x21,#24]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#3
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#1
+ str x3,[x21,#24]
+ mov x3,#-1
+ str x3,[x21,#16]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#1
+ cset x3,eq
+ and x19,x19,x3
+ str x20,[x21,#16]
+ mov x3,#2
+ str x3,[x21,#8]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x21
+ svc #0x80
+ cmp x0,#2
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#1
+ str x3,[x21,#8]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#2
+ cset x3,eq
+ and x19,x19,x3
+ mov x1,x21
+ svc #0x82
+ and x19,x19,x0
+ // Old user-supplied handle must stay stale after the slot contains a new target.
+ mov x0,x21
+ svc #0x80
+ cmp x0,#2
+ cset x3,eq
+ and x19,x19,x3
+ cbz x22,1f
+ // A failed suite must exit 0 rather than hide behind the expected fault.
+ cbz x19,1f
+ mrs x0,currentel
+1:
+ cbz x24,2f
+ // User initiated receiver-local transfer: SEND only, with trusted
+ // receiver identity supplied by this process's provisioned EL0 fixture.
+ ldr x20,[x21,#64]
+ mov x3,#1
+ str x3,[x21]
+ mov x3,#3
+ str x3,[x21,#8]
+ str x20,[x21,#16]
+ str x23,[x21,#24]
+ str x24,[x21,#32]
+ mov x3,#1
+ str x3,[x21,#40]
+ mov x0,x21
+ svc #0x80
+ mov x3,#0x100
+ cmp x0,x3
+ cset x3,eq
+ and x19,x19,x3
+ // Close the source immediately; the receiver's handle must keep the target alive.
+ mov x3,#1
+ str x3,[x21]
+ mov x3,#2
+ str x3,[x21,#8]
+ str x20,[x21,#16]
+ mov x3,#1
+ str x3,[x21,#24]
+ str xzr,[x21,#32]
+ str xzr,[x21,#40]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+2:
+ mov x0,x19
+ svc #0x4e
+ b .
+handle_image_end:
+
+.section .rodata.handle_foreign,"a"
+.balign 16
+.global handle_foreign_start,handle_foreign_end
+handle_foreign_start:
+ cbz x25,2f
+ svc #0x55
+2:
+ mov x23,#0x20000000
+ add x23,x23,#4096
+ mov x3,#1
+ str x3,[x23]
+ str x3,[x23,#8]
+ str x20,[x23,#16]
+ str x3,[x23,#24]
+ mov x0,x23
+ svc #0x80
+ cmp x0,x21
+ cset x19,eq
+ cmp x21,#2
+ b.eq 1f
+ mov x0,x20
+ svc #0x86
+ cmp x0,#0
+ cset x0,eq
+ and x19,x19,x0
+ mov x0,x20
+ svc #0x85
+ cmp x0,#0
+ cset x0,eq
+ and x19,x19,x0
+ b 2f
+1:
+ str x22,[x23,#16]
+ mov x0,x23
+ svc #0x80
+ cmp x0,#0
+ cset x0,eq
+ and x19,x19,x0
+ mov x0,x22
+ svc #0x86
+ cmp x0,#0
+ cset x0,eq
+ and x19,x19,x0
+2:
+ mov x0,x19
+ svc #0x4e
+ b .
+handle_foreign_end:

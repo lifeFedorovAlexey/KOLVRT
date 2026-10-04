@@ -77,6 +77,9 @@ fn policy(issuer: &SigningKey, a: &SigningKey, b: &SigningKey) -> TrustPolicy {
             max_future_skew_secs: 2,
             allow_offline: false,
         }),
+        required_session_id: None,
+        max_attestation_age_seconds: None,
+        max_clock_skew_seconds: None,
         independence: vec![IndependencePolicy {
             role: Role::ContractTest,
             min_producers: 2,
@@ -112,6 +115,8 @@ fn attestation(
         key_id: key_id.into(),
         signature: hex(&key.sign(&message).to_bytes()),
         session: session.cloned(),
+        issued_at_unix_seconds: None,
+        session_id: None,
     }
 }
 fn session_attestation(key: &SigningKey, session: &SessionBinding) -> Attestation {
@@ -426,5 +431,34 @@ fn stale_context_tampered_and_incomplete_sessions_fail_closed() {
     assert!(
         assurance.provisioned_policy && assurance.freshness_checked && assurance.replay_checked
     );
+    std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn provisioned_policy_rejects_deployment_signer_aliases_and_legacy_freshness() {
+    let root = temp("policy-domains");
+    let issuer = SigningKey::from_bytes(&[61; 32]);
+    let a = SigningKey::from_bytes(&[62; 32]);
+    let b = SigningKey::from_bytes(&[63; 32]);
+    let mut aliased = policy(&issuer, &a, &b);
+    aliased.keys.push(producer_key(
+        "deployer-alias",
+        &a,
+        Role::Deployment,
+        "deployer",
+        "vault",
+        "service",
+    ));
+    assert!(matches!(
+        SignedArtifactStore::provisioned(aliased, root.join("artifacts"), root.join("alias"), 1_020),
+        Err(error) if error.contains("dedicated role")
+    ));
+    let mut ambiguous = policy(&issuer, &a, &b);
+    ambiguous.required_session_id = Some("a".repeat(64));
+    ambiguous.max_attestation_age_seconds = Some(60);
+    assert!(matches!(
+        SignedArtifactStore::provisioned(ambiguous, root.join("artifacts"), root.join("legacy"), 1_020),
+        Err(error) if error.contains("legacy freshness")
+    ));
     std::fs::remove_dir_all(root).unwrap();
 }

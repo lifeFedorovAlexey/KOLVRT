@@ -13,6 +13,7 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
     let digest = subject_digest(raw);
     std::fs::write(root.join(&digest), raw).unwrap();
     let key = SigningKey::from_bytes(&[42; 32]); // Public test fixture only.
+    let deployment_key = SigningKey::from_bytes(&[46; 32]); // Separate role fixture.
     let public = hex(&key.verifying_key().to_bytes());
     let payload = br#"{"passed":true,"package":"fixture"}"#;
     let subject = subject_digest(payload);
@@ -21,26 +22,47 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         .to_bytes());
     let attestation = Attestation {
         role: Role::ContractTest,
-        subject_digest: subject,
+        subject_digest: subject.clone(),
         key_id: "test".into(),
         signature,
         session: None,
+        issued_at_unix_seconds: None,
+        session_id: None,
     };
     let policy = TrustPolicy {
         schema: 1,
-        keys: vec![TrustedKey {
-            key_id: "test".into(),
-            public_key: public,
-            roles: vec![Role::ContractTest],
-            revoked: false,
-            compromised: false,
-            producer: None,
-            valid_from_unix: None,
-            valid_until_unix: None,
-        }],
+        keys: vec![
+            TrustedKey {
+                key_id: "test".into(),
+                public_key: public,
+                roles: vec![Role::ContractTest],
+                revoked: false,
+                compromised: false,
+                producer: None,
+                valid_from_unix: None,
+                valid_until_unix: None,
+            },
+            TrustedKey {
+                key_id: "deployment-test".into(),
+                public_key: hex(&deployment_key.verifying_key().to_bytes()),
+                roles: vec![Role::Deployment],
+                revoked: false,
+                compromised: false,
+                producer: None,
+                valid_from_unix: None,
+                valid_until_unix: None,
+            },
+        ],
         session: None,
         independence: vec![],
+        required_session_id: None,
+        max_attestation_age_seconds: None,
+        max_clock_skew_seconds: None,
     };
+    // A second key ID must not disguise reuse of the evidence signing key.
+    let mut aliased_policy = policy.clone();
+    aliased_policy.keys[1].public_key = aliased_policy.keys[0].public_key.clone();
+    assert!(SignedArtifactStore::new(aliased_policy, root.clone()).is_err());
     let store = SignedArtifactStore::new(policy.clone(), root.clone()).unwrap();
     let attestations = vec![attestation];
     let refs = vec![digest.clone()];
@@ -48,6 +70,36 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         store
             .authenticate(Role::ContractTest, payload, &refs, &attestations)
             .is_ok()
+    );
+    let deployment_signature = deployment_key.sign(&signing_message(Role::Deployment, &subject));
+    let deployment_attestation = Attestation {
+        role: Role::Deployment,
+        subject_digest: subject.clone(),
+        key_id: "deployment-test".into(),
+        session: None,
+        signature: hex(&deployment_signature.to_bytes()),
+        issued_at_unix_seconds: None,
+        session_id: None,
+    };
+    assert!(
+        store
+            .authenticate(
+                Role::Deployment,
+                payload,
+                &refs,
+                std::slice::from_ref(&deployment_attestation)
+            )
+            .is_ok()
+    );
+    assert!(
+        store
+            .authenticate(
+                Role::ContractTest,
+                payload,
+                &refs,
+                &[deployment_attestation]
+            )
+            .is_err()
     );
     assert!(
         store
@@ -59,6 +111,9 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
             )
             .is_err()
     );
+    let mut mixed_deployment_role = policy.clone();
+    mixed_deployment_role.keys[0].roles.push(Role::Deployment);
+    assert!(SignedArtifactStore::new(mixed_deployment_role, root.clone()).is_err());
     assert!(
         store
             .authenticate(Role::Catalog, payload, &refs, &attestations)
@@ -113,6 +168,81 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
     assert!(
         store
             .authenticate(Role::ContractTest, payload, &refs, &attestations)
+            .is_err()
+    );
+    std::fs::remove_dir(root).unwrap();
+}
+
+#[test]
+fn session_attestations_require_fresh_timestamp_and_external_challenge() {
+    let root = std::env::temp_dir().join(format!("kolvrt-freshness-{}", std::process::id()));
+    std::fs::create_dir_all(&root).unwrap();
+    let key = SigningKey::from_bytes(&[47; 32]);
+    let payload = br#"{"passed":true}"#;
+    let digest = subject_digest(payload);
+    let session = "a".repeat(64);
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let make = |issued_at, session_id: &str| {
+        let signature = key.sign(&session_signing_message(
+            Role::ContractTest,
+            &digest,
+            issued_at,
+            session_id,
+        ));
+        Attestation {
+            role: Role::ContractTest,
+            subject_digest: digest.clone(),
+            key_id: "fresh-test".into(),
+            signature: hex(&signature.to_bytes()),
+            session: None,
+            issued_at_unix_seconds: Some(issued_at),
+            session_id: Some(session_id.into()),
+        }
+    };
+    let policy = TrustPolicy {
+        schema: 1,
+        keys: vec![TrustedKey {
+            key_id: "fresh-test".into(),
+            public_key: hex(&key.verifying_key().to_bytes()),
+            roles: vec![Role::ContractTest],
+            revoked: false,
+            compromised: false,
+            producer: None,
+            valid_from_unix: None,
+            valid_until_unix: None,
+        }],
+        session: None,
+        independence: vec![],
+        required_session_id: Some(session.clone()),
+        max_attestation_age_seconds: Some(60),
+        max_clock_skew_seconds: Some(5),
+    };
+    let store = SignedArtifactStore::new(policy, root.clone()).unwrap();
+    let valid = make(now, &session);
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[valid])
+            .is_ok()
+    );
+    let stale = make(now.saturating_sub(120), &session);
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[stale])
+            .is_err()
+    );
+    let wrong_session = make(now, &"b".repeat(64));
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[wrong_session])
+            .is_err()
+    );
+    let future = make(now.saturating_add(10), &session);
+    assert!(
+        store
+            .authenticate(Role::ContractTest, payload, &[], &[future])
             .is_err()
     );
     std::fs::remove_dir(root).unwrap();

@@ -46,3 +46,11 @@ The same protocol runs with diagnostics on/off. The matrix requires 16 named SMP
 The [EL0 foundation](el0.md) adds 14 checks and actual non-test execution. Machine boot requires its EL0 result before terminal boot success. New negative controls are `--user-context-control`, `--user-root-control` and `--user-retirement-control`; they corrupt a saved context, omit a root switch and attempt release after forgetting a space guard. Workers must complete after their local peers fault, proving continued execution.
 
 Run `cargo xtask routing test` for the separate [Phase 2 matrix](routing.md): real EL0 native/v1/v2/bug coexistence, feature-minimal PROD profiles, native-only consumers, stripped boot and three routing failure controls. The 53 native checks and eleven foundation controls remain unchanged. Host decoding tests are not substitutes for EL0 execution.
+
+## Phase 3.2 user-copy checks
+
+The [copy contract](user-copy.md) adds actual EL0 copies and snapshot mutation on both CPUs, precise mid-copy fault injection, initialized output and generation/lifetime rejection. The current DEV/PROD matrix requires 69 named checks and 57 failure controls, including live-reread and disabled-recovery controls in both profiles. Four sizes/failure scopes retain raw bounded benchmarks per CPU. Run the same matrix without compatibility source packages and repeat the Phase 2 routing matrix. Host tests/Clippy/repository checks supplement the real kernel evidence; they do not replace it.
+
+## Phase 3.3 handle checks
+
+The [handle contract](handles.md) requires 72 kernel checks and 67 negative controls in DEV/PROD. Five actual enforcement mutations cover generation validation, owner validation, kind validation, unsafe reuse and missing retirement cleanup. Five handle measurement scopes per CPU join the four copy scopes: nineteen unique measurement records including the lock baseline. Physical compatibility-package removal and Phase 2 routing must repeat successfully on the same source candidate.

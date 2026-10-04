@@ -1,10 +1,15 @@
 {
-  "schema": 2,
+  "schema": 4,
   "catalog": [
     {
       "name": "compat-window",
       "version": 1,
       "identity": "0000000000000000000000000000000000000000000000000000000000000001",
+      "variant": {
+        "architecture": "x86_64",
+        "abi": "fixture-v1",
+        "build": "compat-fixture"
+      },
       "provides": [
         {
           "capability_id": "window.reduce",
@@ -74,14 +79,53 @@
   "tests": [],
   "benchmarks": [],
   "statistics": {
-    "min_pairs": 100,
+    "min_resampling_blocks": 100,
+    "resampling_block_length": 1,
     "bootstrap_resamples": 2000,
     "confidence_basis_points": 9500,
     "seed": 7,
     "improvement_margin_ns": 5,
     "p95_regression_budget_ns": 10,
-    "p99_regression_budget_ns": null
+    "p99_regression_budget_ns": null,
+    "p95_memory_regression_budget_bytes": null,
+    "p95_copied_bytes_regression_budget": null,
+    "p95_energy_regression_budget_uj": null
   },
   "attestations": [],
-  "migration_plans": []
+  "migration_plans": [],
+  "scoped_resolutions": {
+    "max_states": 4096,
+    "scenarios": [
+      {
+        "id": "x86_64-fixture",
+        "namespaces": [
+          {
+            "id": "compat-client",
+            "root": "0000000000000000000000000000000000000000000000000000000000000001",
+            "architecture": "x86_64",
+            "abi": "fixture-v1",
+            "requirements": [
+              [
+                {
+                  "capability_id": "window.reduce",
+                  "min_version": {
+                    "major": 1,
+                    "minor": 0,
+                    "patch": 0
+                  },
+                  "max_version": {
+                    "major": 1,
+                    "minor": 9,
+                    "patch": 99
+                  },
+                  "contract_digest": "0000000000000000000000000000000000000000000000000000000000000063"
+                }
+              ]
+            ],
+            "retained": []
+          }
+        ]
+      }
+    ]
+  }
 }

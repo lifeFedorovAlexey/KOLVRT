@@ -10,6 +10,7 @@ use std::{
     io::Read,
     path::PathBuf,
     sync::Mutex,
+    time::{SystemTime, UNIX_EPOCH},
 };
 
 const MAX_ARTIFACT_BYTES: u64 = 512 * 1024 * 1024;
@@ -24,6 +25,7 @@ pub enum Role {
     ContractTest,
     Benchmark,
     Proposal,
+    Deployment,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -34,7 +36,12 @@ pub struct Attestation {
     pub key_id: String,
     pub signature: String,
     #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub session: Option<SessionBinding>,
+    #[serde(default)]
+    pub issued_at_unix_seconds: Option<u64>,
+    #[serde(default)]
+    pub session_id: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -100,6 +107,14 @@ pub struct TrustPolicy {
     pub session: Option<SessionPolicy>,
     #[serde(default)]
     pub independence: Vec<IndependencePolicy>,
+    /// Fresh attestations must match this externally supplied session challenge.
+    #[serde(default)]
+    pub required_session_id: Option<String>,
+    /// Maximum age of a signed timestamp. None keeps legacy timeless policy behavior.
+    #[serde(default)]
+    pub max_attestation_age_seconds: Option<u64>,
+    #[serde(default)]
+    pub max_clock_skew_seconds: Option<u64>,
 }
 
 pub fn subject_digest(payload: &[u8]) -> String {
@@ -109,7 +124,21 @@ pub fn subject_digest(payload: &[u8]) -> String {
 /// Stable domain separation. Sign the serialized typed payload's digest and its role.
 pub fn signing_message(role: Role, digest: &str) -> Vec<u8> {
     format!(
-        "KOLVRT-MIGRATION-ATTESTATION/2\n{}\n{digest}\n",
+        "KOLVRT-MIGRATION-ATTESTATION/3\n{}\n{digest}\n",
+        serde_json::to_string(&role).unwrap()
+    )
+    .into_bytes()
+}
+
+/// Session-aware signature domain. Timestamp and externally issued session challenge are signed.
+pub fn session_signing_message(
+    role: Role,
+    digest: &str,
+    issued_at_unix_seconds: u64,
+    session_id: &str,
+) -> Vec<u8> {
+    format!(
+        "KOLVRT-MIGRATION-ATTESTATION/4\n{}\n{digest}\n{issued_at_unix_seconds}\n{session_id}\n",
         serde_json::to_string(&role).unwrap()
     )
     .into_bytes()
@@ -207,9 +236,28 @@ impl SignedArtifactStore {
         if policy.schema != 1 || policy.session.is_some() || !policy.independence.is_empty() {
             return Err("unsupported trust-policy schema".into());
         }
+        if policy.max_attestation_age_seconds == Some(0)
+            || (policy.max_attestation_age_seconds.is_some()
+                && policy.required_session_id.is_none())
+            || policy
+                .required_session_id
+                .as_ref()
+                .is_some_and(|session| !digest_valid(session))
+        {
+            return Err("invalid freshness age or externally supplied session challenge".into());
+        }
         for key in &policy.keys {
             if key.key_id.trim().is_empty() || key.roles.is_empty() || !ids.insert(&key.key_id) {
                 return Err("empty or duplicate trusted key/roles".into());
+            }
+            if key.roles.contains(&Role::Deployment)
+                && (key.roles.len() != 1
+                    || policy.keys.iter().any(|other| {
+                        other.public_key == key.public_key
+                            && other.roles.iter().any(|role| *role != Role::Deployment)
+                    }))
+            {
+                return Err("deployment authorization keys must have a dedicated role".into());
             }
             let key = VerifyingKey::from_bytes(&hex_bytes(&key.public_key)?)
                 .map_err(|e| e.to_string())?;
@@ -241,6 +289,12 @@ impl SignedArtifactStore {
         if policy.schema != 2 {
             return Err("provisioned verification requires trust-policy schema 2".into());
         }
+        if policy.required_session_id.is_some()
+            || policy.max_attestation_age_seconds.is_some()
+            || policy.max_clock_skew_seconds.is_some()
+        {
+            return Err("provisioned policy rejects legacy freshness configuration".into());
+        }
         let session = policy
             .session
             .as_ref()
@@ -265,6 +319,15 @@ impl SignedArtifactStore {
                     .is_some_and(|(a, b)| a >= b)
             {
                 return Err("empty, duplicate or invalid-lifetime trusted key".into());
+            }
+            if key.roles.contains(&Role::Deployment)
+                && (key.roles.len() != 1
+                    || policy.keys.iter().any(|other| {
+                        other.public_key == key.public_key
+                            && other.roles.iter().any(|role| *role != Role::Deployment)
+                    }))
+            {
+                return Err("deployment authorization keys must have a dedicated role".into());
             }
             let producer = key
                 .producer
@@ -365,6 +428,14 @@ impl SignedArtifactStore {
     fn verify_signature(&self, attestation: &Attestation, role: Role, digest: &str) -> bool {
         let at = if self.policy.schema == 2 {
             self.now_unix
+        } else if self.policy.required_session_id.is_some()
+            || self.policy.max_attestation_age_seconds.is_some()
+            || self.policy.max_clock_skew_seconds.is_some()
+        {
+            let Ok(elapsed) = SystemTime::now().duration_since(UNIX_EPOCH) else {
+                return false;
+            };
+            Some(elapsed.as_secs())
         } else {
             None
         };
@@ -389,6 +460,9 @@ impl SignedArtifactStore {
             return false;
         };
         let message = if self.policy.schema == 2 {
+            if attestation.issued_at_unix_seconds.is_some() || attestation.session_id.is_some() {
+                return false;
+            }
             let Some(session) = attestation.session.as_ref() else {
                 return false;
             };
@@ -403,7 +477,10 @@ impl SignedArtifactStore {
             if attestation.session.is_some() {
                 return false;
             }
-            signing_message(role, digest)
+            let Some(message) = attestation_message(attestation, &self.policy, at) else {
+                return false;
+            };
+            message
         };
         public
             .verify_strict(&message, &Signature::from_bytes(&signature))
@@ -513,6 +590,8 @@ impl EvidenceVerifier for SignedArtifactStore {
                 attestation.role == Role::Session
                     && attestation.subject_digest == digest
                     && attestation.session.is_none()
+                    && attestation.issued_at_unix_seconds.is_none()
+                    && attestation.session_id.is_none()
             })
             .ok_or("missing trusted session challenge signature")?;
         let issuer_key = self
@@ -583,5 +662,54 @@ impl EvidenceVerifier for SignedArtifactStore {
                 ..TrustAssurance::default()
             }
         }
+    }
+}
+
+fn attestation_message(
+    attestation: &Attestation,
+    policy: &TrustPolicy,
+    now: Option<u64>,
+) -> Option<Vec<u8>> {
+    match (
+        attestation.issued_at_unix_seconds,
+        attestation.session_id.as_deref(),
+    ) {
+        (Some(issued_at), Some(session_id)) => {
+            if !digest_valid(session_id)
+                || policy
+                    .required_session_id
+                    .as_deref()
+                    .is_some_and(|required| required != session_id)
+            {
+                return None;
+            }
+            if let Some(now) = now {
+                let skew = policy.max_clock_skew_seconds.unwrap_or(0);
+                if issued_at > now.saturating_add(skew)
+                    || policy
+                        .max_attestation_age_seconds
+                        .is_some_and(|age| now.saturating_sub(issued_at) > age.saturating_add(skew))
+                {
+                    return None;
+                }
+            }
+            Some(session_signing_message(
+                attestation.role,
+                &attestation.subject_digest,
+                issued_at,
+                session_id,
+            ))
+        }
+        (None, None)
+            if policy.required_session_id.is_none()
+                && policy.max_attestation_age_seconds.is_none()
+                && policy.max_clock_skew_seconds.is_none() =>
+        {
+            Some(signing_message(
+                attestation.role,
+                &attestation.subject_digest,
+            ))
+        }
+        _ => None,
     }
 }
