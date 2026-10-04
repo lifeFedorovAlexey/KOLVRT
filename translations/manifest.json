@@ -142,12 +142,12 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "b707e7a8154e9bc7aa47c389c7d7383baef6efb54406b969ce5d5f2d9d685b3a",
-        "translation_sha256": "7c7c7c4c91dd6c30033e13b80916ab0790f61fb180774b93c57e3ba5234efc73"
+        "source_sha256": "cda0f5fc3472fbf101bd521c1a13370b951ed67312de133b828ca95d055e2c47",
+        "translation_sha256": "96e17ddb807f5d9a2b62d9299056c2b2cf3126704663a2637ab0f3b7a60d9526"
       },
       "docs/architecture/migration-workbench.md": {
-        "source_sha256": "d140b7c83a0daab390911f33844126944935f856a0636c5c22a36d6aaac319c9",
-        "translation_sha256": "cb21b403bc26d9309b76de91f43d216b79c49e0f409e720c3d661d011c2a655f"
+        "source_sha256": "d233aac554b7cb12df0a917acf5be250bc3eedf9e7e2d55338ccb4ff3643d780",
+        "translation_sha256": "c994175d71d00d59d9c8e54af384df13d4bd8fe7ec249defeff135baea2fae0c"
       },
       "docs/architecture/native-abi.md": {
         "source_sha256": "50b8550363fdca075f748745be28063c1ebf61edf7cc9a6bb2141b10bdb87e75",

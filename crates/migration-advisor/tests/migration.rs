@@ -166,6 +166,8 @@ fn request() -> Request {
                 package: hash(id),
                 contract: hash(99),
                 suite: hash(80),
+                execution_receipt: None,
+                execution_artifacts: vec![],
                 context: context(),
                 passed: true,
             })
@@ -212,9 +214,11 @@ fn request() -> Request {
             rollback_strategy: RollbackStrategy::ReinstallPrevious {
                 previous_plan: plan_digest(&installed),
             },
+            rollback_execution_receipt: None,
             rollback_preconditions: vec!["old artifact and compatible state retained".into()],
             irreversible_changes: vec![],
         }],
+        scoped_resolutions: None,
     }
 }
 
@@ -384,17 +388,76 @@ fn scoped_solver_selects_side_by_side_abi_and_build_variants() {
     selection.identity = hash(13);
     invalid.selections.sort();
     assert!(verify_scoped(&problem, &invalid).is_err());
+
+    let mut request = request();
+    request.catalog.extend(catalog.clone());
+    request.scoped_resolutions = Some(ScopedResolutionRequest {
+        max_states: 1024,
+        scenarios: vec![ScopedResolutionScenario {
+            id: "legacy-and-next-abi".into(),
+            namespaces: vec![
+                ScopedNamespaceRequest {
+                    id: "legacy-client".into(),
+                    root: old_root_identity,
+                    architecture: "aarch64".into(),
+                    abi: "abi-v1".into(),
+                    requirements: app_requirement.clone(),
+                    retained: retained.clone(),
+                },
+                ScopedNamespaceRequest {
+                    id: "next-client".into(),
+                    root: new_root_identity,
+                    architecture: "aarch64".into(),
+                    abi: "abi-v2".into(),
+                    requirements: app_requirement,
+                    retained,
+                },
+            ],
+        }],
+    });
+    let report = advise(&request, &solver()).unwrap();
+    let measured = &report.scoped_resolutions[0];
+    assert_eq!(measured.status, "solved");
+    assert_eq!(measured.plan.as_ref().unwrap().selections.len(), 4);
+    assert!(
+        measured
+            .plan_digest
+            .as_ref()
+            .is_some_and(|digest| { migration_advisor::digest_valid(digest) })
+    );
+    let metrics = measured.metrics.unwrap();
+    assert!(metrics.visited_states > 0);
+    assert!(metrics.feasible_closures > 0);
+    assert!(metrics.branches_considered > 0);
 }
 
 #[test]
 fn schema_three_requests_remain_readable_without_changing_legacy_package_payloads() {
     let mut request = request();
     request.schema = migration_advisor::COMPATIBLE_SCHEMA;
+    let legacy_json = serde_json::to_vec(&request).unwrap();
+    let decoded: Request = serde_json::from_slice(&legacy_json).unwrap();
+    assert!(decoded.scoped_resolutions.is_none());
     let report = trusted_fixture(&request, &solver()).unwrap();
     assert_eq!(report.schema, migration_advisor::SCHEMA);
     let package: serde_json::Value =
         serde_json::from_str(&serde_json::to_string(&request.catalog[0]).unwrap()).unwrap();
     assert!(package.get("variant").is_none());
+}
+
+#[test]
+fn scoped_resolution_data_requires_schema_four() {
+    let mut request = request();
+    request.scoped_resolutions = Some(ScopedResolutionRequest {
+        max_states: 8,
+        scenarios: vec![ScopedResolutionScenario {
+            id: "v4-only".into(),
+            namespaces: vec![],
+        }],
+    });
+    request.schema = migration_advisor::COMPATIBLE_SCHEMA;
+    let error = advise(&request, &solver()).unwrap_err();
+    assert!(error.contains("require request schema v4"));
 }
 
 #[test]
@@ -598,6 +661,25 @@ fn cli_emits_read_only_report_and_rejects_unknown_fields() {
     r.tests.clear();
     r.benchmarks.clear();
     refresh_power_pilot_binding(&mut r);
+    r.catalog[0].variant = Some(migration_advisor::PackageVariant {
+        architecture: "x86_64".into(),
+        abi: "fixture-v1".into(),
+        build: "fixture-build".into(),
+    });
+    r.scoped_resolutions = Some(ScopedResolutionRequest {
+        max_states: 64,
+        scenarios: vec![ScopedResolutionScenario {
+            id: "installed-fixture-closure".into(),
+            namespaces: vec![ScopedNamespaceRequest {
+                id: "fixture-process".into(),
+                root: hash(1),
+                architecture: "x86_64".into(),
+                abi: "fixture-v1".into(),
+                requirements: vec![vec![requirement("window")]],
+                retained: vec![],
+            }],
+        }],
+    });
     let path = std::env::temp_dir().join(format!("kolvrt-advisor-{}.json", std::process::id()));
     std::fs::write(&path, serde_json::to_vec(&r).unwrap()).unwrap();
     let output = std::process::Command::new(env!("CARGO_BIN_EXE_migration-advisor"))
@@ -609,6 +691,12 @@ fn cli_emits_read_only_report_and_rejects_unknown_fields() {
     let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(report["automatic_replacement"], false);
     assert!(report["preferred_observed"].is_null());
+    assert_eq!(report["scoped_resolutions"][0]["status"], "solved");
+    assert!(
+        report["scoped_resolutions"][0]["metrics"]["visited_states"]
+            .as_u64()
+            .is_some_and(|states| states > 0)
+    );
     let mut json = serde_json::to_value(r).unwrap();
     json["auto_install"] = true.into();
     std::fs::write(&path, serde_json::to_vec(&json).unwrap()).unwrap();
@@ -703,6 +791,8 @@ fn newer_versions_are_candidates_and_dependency_contracts_are_required() {
         package: hash(3),
         contract: hash(99),
         suite: hash(80),
+        execution_receipt: None,
+        execution_artifacts: vec![],
         context: context(),
         passed: true,
     });
@@ -1209,6 +1299,8 @@ fn rollback_and_irreversible_changes_are_part_of_every_solved_proposal() {
     r.migration_plans[0].rollback_strategy = RollbackStrategy::RestoreSnapshot {
         snapshot_digest: hash(55),
     };
+    assert!(trusted_fixture(&r, &solver()).is_err()); // A snapshot plan needs an execution receipt for persistent data.
+    r.migration_plans[0].rollback_execution_receipt = Some(hash(56));
     r.migration_plans[0]
         .irreversible_changes
         .push("external durable state cannot be restored".into());
@@ -1217,14 +1309,24 @@ fn rollback_and_irreversible_changes_are_part_of_every_solved_proposal() {
         report.candidates[0].status,
         CandidateStatus::PartialEvidenceCandidate
     );
+    assert!(!report.candidates[0].assurance.contracts_passed);
+    assert!(!report.candidates[0].assurance.rollback_documented);
     let proposal = report.candidates[0].proposal.as_ref().unwrap();
     assert_eq!(proposal.irreversible_changes.as_ref().unwrap().len(), 1);
+    let rollback_receipt = hash(56);
+    assert_eq!(
+        proposal.rollback_execution_receipt.as_deref(),
+        Some(rollback_receipt.as_str())
+    );
     assert!(!proposal.deployment_authorized);
 }
 
 #[test]
 fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     use ed25519_dalek::{Signer, SigningKey};
+    use migration_advisor::authorization::{
+        DeploymentAuthorization, RouteGeneration, SignedDeploymentAuthorization,
+    };
     use migration_advisor::provenance::*;
     use std::collections::BTreeMap;
     let root = std::env::temp_dir().join(format!("kolvrt-advisor-chain-{}", std::process::id()));
@@ -1278,6 +1380,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     }
     r.benchmarks[0].statistics = r.statistics.clone();
     let key = SigningKey::from_bytes(&[44; 32]);
+    let deployment_key = SigningKey::from_bytes(&[45; 32]);
     let hex = |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
     let sign = |role, payload: Vec<u8>| {
         let digest = subject_digest(&payload);
@@ -1286,6 +1389,19 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
             subject_digest: digest.clone(),
             key_id: "fixture-producer".into(),
             signature: hex(&key.sign(&signing_message(role, &digest)).to_bytes()),
+            issued_at_unix_seconds: None,
+            session_id: None,
+        }
+    };
+    let sign_deployment = |payload: Vec<u8>| {
+        let digest = subject_digest(&payload);
+        Attestation {
+            role: Role::Deployment,
+            subject_digest: digest.clone(),
+            key_id: "fixture-deployer".into(),
+            signature: hex(&deployment_key
+                .sign(&signing_message(Role::Deployment, &digest))
+                .to_bytes()),
             issued_at_unix_seconds: None,
             session_id: None,
         }
@@ -1316,18 +1432,26 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     ));
     let policy = TrustPolicy {
         schema: 1,
-        keys: vec![TrustedKey {
-            key_id: "fixture-producer".into(),
-            public_key: hex(&key.verifying_key().to_bytes()),
-            roles: vec![
-                Role::Catalog,
-                Role::Runtime,
-                Role::ContractTest,
-                Role::Benchmark,
-                Role::Proposal,
-            ],
-            revoked: false,
-        }],
+        keys: vec![
+            TrustedKey {
+                key_id: "fixture-producer".into(),
+                public_key: hex(&key.verifying_key().to_bytes()),
+                roles: vec![
+                    Role::Catalog,
+                    Role::Runtime,
+                    Role::ContractTest,
+                    Role::Benchmark,
+                    Role::Proposal,
+                ],
+                revoked: false,
+            },
+            TrustedKey {
+                key_id: "fixture-deployer".into(),
+                public_key: hex(&deployment_key.verifying_key().to_bytes()),
+                roles: vec![Role::Deployment],
+                revoked: false,
+            },
+        ],
         required_session_id: None,
         max_attestation_age_seconds: None,
         max_clock_skew_seconds: None,
@@ -1374,6 +1498,76 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     assert!(output.status.success());
     let json: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(json["candidates"][0]["status"], "VERIFIED_CANDIDATE");
+    let authorization = DeploymentAuthorization {
+        schema: 1,
+        candidate: r.catalog[1].identity.clone(),
+        plan_digest: r.migration_plans[0].plan_digest.clone(),
+        context: r.context.clone(),
+        route_generations: vec![RouteGeneration {
+            route: r.runtime.as_ref().unwrap().routes[0].route.clone(),
+            generation: r.runtime.as_ref().unwrap().routes[0].generation,
+        }],
+        state_retirement: None,
+        satisfied_rollback_preconditions: r.migration_plans[0].rollback_preconditions.clone(),
+        authorized_irreversible_changes: r.migration_plans[0].irreversible_changes.clone(),
+    };
+    let authorization_payload = serde_json::to_vec(&authorization).unwrap();
+    let signed_authorization = SignedDeploymentAuthorization {
+        attestations: vec![sign_deployment(authorization_payload)],
+        authorization,
+    };
+    let plan = Plan {
+        packages: vec![r.catalog[1].identity.clone()],
+    };
+    std::fs::write(
+        root.join(&signed_authorization.authorization.plan_digest),
+        serde_json::to_vec(&plan).unwrap(),
+    )
+    .unwrap();
+    let receipt =
+        migration_advisor::authorization::authorize(&r, &signed_authorization, &solver(), &store)
+            .unwrap();
+    assert!(receipt.authorization_verified);
+    assert!(!receipt.deployment_executed);
+    let authorization_path = root.join("authorization.json");
+    std::fs::write(
+        &authorization_path,
+        serde_json::to_vec(&signed_authorization).unwrap(),
+    )
+    .unwrap();
+    let authorized_cli = std::process::Command::new(env!("CARGO_BIN_EXE_migration-advisor"))
+        .arg("authorize")
+        .arg(&request_path)
+        .arg(&authorization_path)
+        .arg("--trust-policy")
+        .arg(&trust_path)
+        .arg("--artifact-root")
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(authorized_cli.status.success());
+    let authorization_receipt: serde_json::Value =
+        serde_json::from_slice(&authorized_cli.stdout).unwrap();
+    assert_eq!(authorization_receipt["authorization_verified"], true);
+    assert_eq!(authorization_receipt["deployment_executed"], false);
+    let mut altered_authorization = signed_authorization;
+    altered_authorization.authorization.route_generations[0].generation += 1;
+    std::fs::write(
+        &authorization_path,
+        serde_json::to_vec(&altered_authorization).unwrap(),
+    )
+    .unwrap();
+    let altered_cli = std::process::Command::new(env!("CARGO_BIN_EXE_migration-advisor"))
+        .arg("authorize")
+        .arg(&request_path)
+        .arg(&authorization_path)
+        .arg("--trust-policy")
+        .arg(&trust_path)
+        .arg("--artifact-root")
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(!altered_cli.status.success());
     let pilot_attestation = r.attestations.remove(0);
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
     assert_eq!(

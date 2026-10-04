@@ -162,6 +162,14 @@ fn run() -> Result<PathBuf, String> {
     let artifacts = root.join("artifacts");
     fs::create_dir(&artifacts).map_err(|e| e.to_string())?;
     let suffix = std::env::consts::EXE_SUFFIX;
+    let lifecycle_evidence =
+        execute_lifecycle(&directory.join(format!("lifecycle-fixture{suffix}")), &root)?;
+    let lifecycle_digest = store_json(&artifacts, &lifecycle_evidence)?;
+    fs::write(
+        root.join("lifecycle-evidence.json"),
+        serde_json::to_vec_pretty(&lifecycle_evidence).unwrap(),
+    )
+    .map_err(|error| error.to_string())?;
     let mut binaries = Vec::new();
     let mut identities = Vec::new();
     for name in ["compat-fixture", "native-fixture"] {
@@ -206,6 +214,17 @@ fn run() -> Result<PathBuf, String> {
             package: identities[i].clone(),
             contract: contract.clone(),
             suite: suite.clone(),
+            execution_receipt: (i == 1).then(|| lifecycle_digest.clone()),
+            execution_artifacts: if i == 1 {
+                vec![
+                    lifecycle_evidence.worker_digest.clone(),
+                    lifecycle_evidence.snapshot_digest.clone(),
+                    lifecycle_evidence.invalid_migration_stderr_digest.clone(),
+                    lifecycle_evidence.invalid_path_stderr_digest.clone(),
+                ]
+            } else {
+                vec![]
+            },
             context: context.clone(),
             passed: true,
         });
@@ -384,8 +403,8 @@ fn run() -> Result<PathBuf, String> {
         unfinished: 0,
         pairs,
     };
-    let migration=MigrationPlan {candidate:identities[1].clone(),plan_digest:candidate_digest,context:context.clone(),required_changes:vec!["change client from LE16 inclusive encoding to native half-open Span in a separately authorized next process launch".into()],
-        persistent_data_change:false,rollback_strategy:RollbackStrategy::ReinstallPrevious {previous_plan:baseline_digest},rollback_preconditions:vec!["retained old executable hash and immutable dataset match; rollback process contract/oracle check passed".into()],irreversible_changes:vec![]};
+    let migration=MigrationPlan {candidate:identities[1].clone(),plan_digest:candidate_digest,context:context.clone(),required_changes:vec!["change client from LE16 inclusive encoding to native half-open Span in a separately authorized next process launch".into(), "migrate persistent fixture state from schema v1 to schema v2 and verify the candidate restart".into()],
+        persistent_data_change:true,rollback_strategy:RollbackStrategy::RestoreSnapshot {snapshot_digest:lifecycle_evidence.snapshot_digest.clone()},rollback_execution_receipt:Some(lifecycle_digest.clone()),rollback_preconditions:vec![format!("the candidate lifecycle receipt {lifecycle_digest} records a successful v1-to-v2 restart and byte-identical snapshot restoration before authorization")],irreversible_changes:vec![]};
     let key = SigningKey::generate(&mut OsRng);
     let mut attestations = Vec::new();
     for p in &catalog {
@@ -420,6 +439,7 @@ fn run() -> Result<PathBuf, String> {
         power_pilot,
         attestations,
         migration_plans: vec![migration],
+        scoped_resolutions: None,
     };
     let policy = TrustPolicy {
         schema: 1,
@@ -473,6 +493,202 @@ struct RouteName;
 impl RouteName {
     const COMPAT: &'static str = "host.window.inclusive";
 }
+
+#[derive(Serialize)]
+struct LifecycleEvidence {
+    schema: u32,
+    scenario: String,
+    worker_digest: String,
+    worker_receipts: Vec<serde_json::Value>,
+    snapshot_digest: String,
+    restored_state_digest: String,
+    invalid_migration_stderr_digest: String,
+    invalid_path_stderr_digest: String,
+    failed_migration_rejected: bool,
+    invalid_state_path_rejected: bool,
+}
+
+fn lifecycle_step(
+    worker: &Path,
+    operation: &str,
+    state_dir: &Path,
+    log: &Path,
+) -> Result<(bool, Option<serde_json::Value>), String> {
+    let mut child = Command::new(worker)
+        .arg(operation)
+        .arg(state_dir)
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|error| error.to_string())?;
+    let started = Instant::now();
+    let status = loop {
+        if let Some(status) = child.try_wait().map_err(|error| error.to_string())? {
+            break status;
+        }
+        if started.elapsed() >= CHILD_TIMEOUT {
+            let _ = child.kill();
+            let _ = child.wait();
+            fs::write(log, b"timed-out lifecycle worker; experiment aborted")
+                .map_err(|error| error.to_string())?;
+            return Err(format!("lifecycle worker timed out in {operation}"));
+        }
+        std::thread::sleep(POLL);
+    };
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .take(MAX_RECEIPT_BYTES + 1)
+        .read_to_end(&mut stdout)
+        .map_err(|error| error.to_string())?;
+    child
+        .stderr
+        .take()
+        .unwrap()
+        .take(MAX_RECEIPT_BYTES + 1)
+        .read_to_end(&mut stderr)
+        .map_err(|error| error.to_string())?;
+    fs::write(log, &stdout).map_err(|error| error.to_string())?;
+    fs::write(log.with_extension("stderr"), &stderr).map_err(|error| error.to_string())?;
+    if stdout.len() as u64 > MAX_RECEIPT_BYTES {
+        return Err("lifecycle worker output exceeded its limit".into());
+    }
+    if !status.success() {
+        return Ok((false, None));
+    }
+    if !stderr.is_empty() {
+        return Err("successful lifecycle worker wrote to stderr".into());
+    }
+    let receipt: serde_json::Value =
+        serde_json::from_slice(&stdout).map_err(|error| error.to_string())?;
+    if receipt["passed"] != true || receipt["operation"] != operation {
+        return Err(format!(
+            "lifecycle receipt failed validation for {operation}"
+        ));
+    }
+    Ok((true, Some(receipt)))
+}
+
+fn execute_lifecycle(worker: &Path, root: &Path) -> Result<LifecycleEvidence, String> {
+    let run_dir = root.join("lifecycle");
+    let state_dir = run_dir.join("state");
+    let snapshot = run_dir.join("snapshot-v1.json");
+    let worker_bytes =
+        fs::read(worker).map_err(|error| format!("lifecycle worker unavailable: {error}"))?;
+    let worker_digest = store(&root.join("artifacts"), &worker_bytes)?;
+    fs::create_dir_all(&state_dir).map_err(|error| error.to_string())?;
+    let mut receipts = Vec::new();
+    for (operation, name) in [
+        ("seed", "seed"),
+        ("verify-v1", "startup-v1"),
+        ("migrate", "migrate-v1-to-v2"),
+        ("verify-v2", "restart-v2"),
+    ] {
+        let (passed, receipt) = lifecycle_step(
+            worker,
+            operation,
+            &state_dir,
+            &run_dir.join(format!("{name}.json")),
+        )?;
+        if !passed {
+            return Err(format!("lifecycle step {name} failed"));
+        }
+        receipts.push(receipt.unwrap());
+        if operation == "verify-v1" {
+            fs::copy(state_dir.join("state-v1.json"), &snapshot)
+                .map_err(|error| error.to_string())?;
+        }
+    }
+    let snapshot_digest = store(
+        &root.join("artifacts"),
+        &fs::read(&snapshot).map_err(|error| error.to_string())?,
+    )?;
+
+    fs::remove_dir_all(&state_dir).map_err(|error| error.to_string())?;
+    fs::create_dir_all(&state_dir).map_err(|error| error.to_string())?;
+    fs::copy(&snapshot, state_dir.join("state-v1.json")).map_err(|error| error.to_string())?;
+    let (restored, receipt) = lifecycle_step(
+        worker,
+        "verify-v1",
+        &state_dir,
+        &run_dir.join("rollback-verify.json"),
+    )?;
+    if !restored {
+        return Err("restored state failed the old application restart check".into());
+    }
+    let rollback_receipt = receipt.unwrap();
+    let restored_state_digest = rollback_receipt["state_digest"]
+        .as_str()
+        .ok_or("rollback receipt has no state digest")?
+        .to_owned();
+    if restored_state_digest != snapshot_digest {
+        return Err("restored state differs from the retained snapshot".into());
+    }
+    receipts.push(rollback_receipt);
+
+    let invalid = run_dir.join("invalid-state");
+    fs::create_dir_all(&invalid).map_err(|error| error.to_string())?;
+    fs::write(
+        invalid.join("state-v1.json"),
+        b"{\"schema\":1,\"records\":[999]}",
+    )
+    .map_err(|error| error.to_string())?;
+    let (failed_migration_rejected, _) = lifecycle_step(
+        worker,
+        "migrate",
+        &invalid,
+        &run_dir.join("invalid-migration.json"),
+    )?;
+    if failed_migration_rejected || invalid.join("state-v2.json").exists() {
+        return Err("invalid persistent state was accepted by the migrator".into());
+    }
+    let invalid_migration_stderr =
+        fs::read(run_dir.join("invalid-migration.stderr")).map_err(|error| error.to_string())?;
+    if invalid_migration_stderr.is_empty() {
+        return Err("invalid migration rejection did not retain an error message".into());
+    }
+    let invalid_migration_stderr_digest =
+        store(&root.join("artifacts"), &invalid_migration_stderr)?;
+
+    let invalid_path = run_dir.join("not-a-directory");
+    fs::write(&invalid_path, b"file").map_err(|error| error.to_string())?;
+    let (invalid_state_path_rejected, _) = lifecycle_step(
+        worker,
+        "seed",
+        &invalid_path,
+        &run_dir.join("invalid-path.json"),
+    )?;
+    if invalid_state_path_rejected {
+        return Err("invalid state path was not rejected".into());
+    }
+    let invalid_path_stderr =
+        fs::read(run_dir.join("invalid-path.stderr")).map_err(|error| error.to_string())?;
+    if invalid_path_stderr.is_empty() {
+        return Err("invalid state path rejection did not retain an error message".into());
+    }
+    let invalid_path_stderr_digest = store(&root.join("artifacts"), &invalid_path_stderr)?;
+    let worker_after = fs::read(worker).map_err(|error| error.to_string())?;
+    if subject_digest(&worker_after) != worker_digest {
+        return Err("lifecycle worker changed while executing the scenario".into());
+    }
+    Ok(LifecycleEvidence {
+        schema: 1,
+        scenario: "separate-process persistent-state v1-to-v2 migration, restart, invalid-input rejection, and snapshot rollback".into(),
+        worker_digest,
+        worker_receipts: receipts,
+        snapshot_digest,
+        restored_state_digest,
+        invalid_migration_stderr_digest,
+        invalid_path_stderr_digest,
+        failed_migration_rejected: true,
+        invalid_state_path_rejected: true,
+    })
+}
+
 fn main() {
     match run() {
         Ok(root) => println!(

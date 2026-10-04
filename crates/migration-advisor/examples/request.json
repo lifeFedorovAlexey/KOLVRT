@@ -5,6 +5,11 @@
       "name": "compat-window",
       "version": 1,
       "identity": "0000000000000000000000000000000000000000000000000000000000000001",
+      "variant": {
+        "architecture": "x86_64",
+        "abi": "fixture-v1",
+        "build": "compat-fixture"
+      },
       "provides": [
         {
           "capability_id": "window.reduce",
@@ -87,5 +92,40 @@
     "p95_energy_regression_budget_uj": null
   },
   "attestations": [],
-  "migration_plans": []
+  "migration_plans": [],
+  "scoped_resolutions": {
+    "max_states": 4096,
+    "scenarios": [
+      {
+        "id": "x86_64-fixture",
+        "namespaces": [
+          {
+            "id": "compat-client",
+            "root": "0000000000000000000000000000000000000000000000000000000000000001",
+            "architecture": "x86_64",
+            "abi": "fixture-v1",
+            "requirements": [
+              [
+                {
+                  "capability_id": "window.reduce",
+                  "min_version": {
+                    "major": 1,
+                    "minor": 0,
+                    "patch": 0
+                  },
+                  "max_version": {
+                    "major": 1,
+                    "minor": 9,
+                    "patch": 99
+                  },
+                  "contract_digest": "0000000000000000000000000000000000000000000000000000000000000063"
+                }
+              ]
+            ],
+            "retained": []
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -334,8 +334,16 @@ fn quantum_progress(
     let mut passed = first.owners_released;
     passed &= quantum_context(&first, &ids, registry);
     let mut counters = [0_u64; config::ACTIVE_CPUS];
+    let mut el0_residency = [0_u64; config::ACTIVE_CPUS];
+    let mut first_el0_residency = [0_u64; config::ACTIVE_CPUS];
+    let mut el0_generation_valid = true;
+    let mut el0_monotonic = true;
     for (owner, counter) in counters.iter_mut().enumerate() {
         let id = ids[owner * 2];
+        let task = &first.tasks[id.slot()];
+        el0_residency[owner] = task.el0_residency_ticks;
+        first_el0_residency[owner] = task.el0_residency_ticks;
+        el0_generation_valid &= task.process_generation == id.generation();
         passed &= registry.state(id) == Ok(State::Admitted)
             && registry.completion(id) == Err(Error::Transition)
             && registry.reclaim(p, id) == Err(Error::Transition);
@@ -355,6 +363,11 @@ fn quantum_progress(
         for owner in 0..config::ACTIVE_CPUS {
             let spinner = ids[owner * 2];
             let peer = ids[owner * 2 + 1];
+            let task = &result.tasks[spinner.slot()];
+            if task.process_generation == spinner.generation() {
+                el0_monotonic &= task.el0_residency_ticks >= el0_residency[owner];
+                el0_residency[owner] = task.el0_residency_ticks;
+            }
             if registry.state(spinner) == Ok(State::Admitted) && registry.completion(peer).is_ok() {
                 peer_progress[owner] = true;
             }
@@ -381,6 +394,18 @@ fn quantum_progress(
         }
         registry.reclaim(p, id).unwrap();
     }
+    report(
+        "process_el0_residency_initial",
+        el0_generation_valid && first_el0_residency.iter().all(|ticks| *ticks > 0),
+    );
+    report("process_el0_residency_monotonic", el0_monotonic);
+    report(
+        "process_el0_residency_accumulates",
+        el0_residency
+            .iter()
+            .zip(first_el0_residency)
+            .all(|(final_ticks, initial_ticks)| *final_ticks > initial_ticks),
+    );
     report(
         "process_quantum_return_and_peer_progress",
         passed
