@@ -313,6 +313,8 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
         users.fault_checks[SECONDARY_PRIVILEGED_PROBE],
     );
     crate::process_workload::exercise(p, processes, report);
+    crate::user_copy::testing::exercise(p, processes, report);
+    crate::handles::testing::exercise(p, processes, report);
     // SAFETY: INV-REMOTE-READER: bounded control work has no borrowed pointer; shutdown drains it before CPU_OFF.
     unsafe {
         remote::submit(remote::LOCK, 0);

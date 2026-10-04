@@ -5,7 +5,7 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
-const HEADER: u64 = 0x4b56_5232;
+const HEADER: u64 = 0x4b56_5233;
 const BENCH: u64 = 0x4245_4e43;
 const FINAL: u64 = 0x444f_4e45;
 const HEADER_WORDS: usize = 15;
@@ -23,6 +23,14 @@ const ROUTE_NAMES: [&str; 4] = [
 pub struct Observation {
     pub consumer: u64,
     pub cpu: u64,
+    pub process_slot: u64,
+    pub process_generation: u64,
+    pub owner_cpu: u64,
+    pub resident_pages: u64,
+    pub el0_residency_counter_ticks: u64,
+    pub native_window_service_counter_ticks: u64,
+    pub counter_frequency_hz: u64,
+    pub estimated_el0_residency_ns: u64,
     pub declared_route: String,
     pub generation: u64,
     pub conformance_checks: u64,
@@ -40,15 +48,24 @@ pub struct MeasuredRoute {
     pub conversions: u64,
     pub warmup_ticks: Vec<u64>,
     pub sample_ticks: Vec<u64>,
+    pub route_el0_cpu_ticks: Vec<u64>,
+    pub native_service_cpu_ticks: Vec<u64>,
     pub observed_preemptions: u64,
     pub median_wall_ns: u64,
-    pub adapter_cpu_ns: Option<u64>,
+    pub route_el0_cpu_ns: Option<u64>,
+    pub native_service_cpu_ns: u64,
+    pub measured_segments_cpu_ns: u64,
 }
 #[derive(Debug, Serialize)]
 pub struct Run {
     pub profile: String,
     pub kernel_digest: String,
     pub package_digest: String,
+    pub expected_consumers: u64,
+    pub completed_consumers: u64,
+    pub missing_consumers: u64,
+    pub validated_report_chunks: u64,
+    pub lost_report_chunks: u64,
     pub observations: Vec<Observation>,
 }
 #[derive(Debug, Serialize)]
@@ -99,9 +116,22 @@ fn take<'a>(words: &'a [u64], cursor: &mut usize, count: usize) -> Result<&'a [u
 /// against them. This validates structure, not producer identity or physical performance.
 pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
     let input: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
-    if number(&input, "schema_version")? != 1 {
+    let evidence_schema = number(&input, "schema_version")?;
+    if !matches!(evidence_schema, 4..=6) {
         return Err("unsupported routing evidence schema".into());
     }
+    // v4 used adapter_* names for this same EL0 route-call interval. Normalize the
+    // legacy labels without attributing the interval to adapter-only execution.
+    let (route_el0_cpu_samples_key, route_el0_cpu_ns_key) = if evidence_schema == 4 {
+        ("adapter_cpu_samples", "adapter_cpu_ns")
+    } else {
+        ("route_el0_cpu_samples", "route_el0_cpu_ns")
+    };
+    let measured_segments_cpu_ns_key = if evidence_schema >= 6 {
+        "measured_segments_cpu_ns"
+    } else {
+        "exclusive_cpu_ns"
+    };
     let runs = input["runs"]
         .as_array()
         .filter(|r| !r.is_empty())
@@ -124,6 +154,8 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         }
         let mut raw = BTreeMap::<u64, Vec<u64>>::new();
         let mut finished = BTreeSet::new();
+        let mut process_results = BTreeMap::<u64, (u64, u64, u64, u64, u64, u64, u64)>::new();
+        let mut report_chunks = 0u64;
         let mut boot = false;
         let mut processes = None;
         for event in run["events"].as_array().ok_or("missing raw events")? {
@@ -137,6 +169,9 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             }
             match text(event, "event")? {
                 "user-report" => {
+                    report_chunks = report_chunks
+                        .checked_add(1)
+                        .ok_or("report chunk count overflow")?;
                     let id = number(event, "id")?;
                     if finished.contains(&id) {
                         return Err("report after completion".into());
@@ -149,11 +184,38 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 }
                 "user-result" => {
                     let id = number(event, "id")?;
+                    let process_slot = number(event, "process_slot")?;
+                    let process_generation = number(event, "process_generation")?;
+                    let owner_cpu = number(event, "owner_cpu")?;
+                    let resident_pages = number(event, "resident_pages")?;
+                    let el0_residency_ticks = number(event, "el0_residency_ticks")?;
+                    let native_window_service_ticks = number(event, "native_window_service_ticks")?;
+                    let counter_frequency_hz = number(event, "counter_frequency_hz")?;
                     if !finished.insert(id)
                         || number(event, "state")? != 2
                         || number(event, "exit")? != 1
                         || number(event, "fault")? != 0
                         || number(event, "length")? != raw.get(&id).map_or(0, Vec::len) as u64
+                        || process_slot != id
+                        || process_generation == 0
+                        || resident_pages == 0
+                        || el0_residency_ticks == 0
+                        || native_window_service_ticks == 0
+                        || counter_frequency_hz == 0
+                        || process_results
+                            .insert(
+                                id,
+                                (
+                                    process_slot,
+                                    process_generation,
+                                    owner_cpu,
+                                    resident_pages,
+                                    el0_residency_ticks,
+                                    native_window_service_ticks,
+                                    counter_frequency_hz,
+                                ),
+                            )
+                            .is_some()
                     {
                         return Err("missing/failed/duplicate consumer completion".into());
                     }
@@ -182,8 +244,19 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         let consumers = run["consumers"]
             .as_array()
             .ok_or("missing consumer summaries")?;
+        let accounting = &run["scope_accounting"];
+        let expected_consumers = number(accounting, "expected_consumers")?;
+        let completed_consumers = number(accounting, "completed_consumers")?;
+        let missing_consumers = number(accounting, "missing_consumers")?;
+        let validated_report_chunks = number(accounting, "validated_report_chunks")?;
+        let lost_report_chunks = number(accounting, "lost_report_chunks")?;
         if !boot
             || consumers.is_empty()
+            || expected_consumers != consumers.len() as u64
+            || completed_consumers != finished.len() as u64
+            || missing_consumers != expected_consumers.saturating_sub(completed_consumers)
+            || validated_report_chunks != report_chunks
+            || lost_report_chunks != 0
             || processes != Some(consumers.len() as u64)
             || finished.len() != consumers.len()
             || raw.len() != consumers.len()
@@ -192,15 +265,45 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
         }
         let mut observations = Vec::new();
         let mut seen = BTreeSet::new();
+        let mut seen_process_ids = BTreeSet::new();
         for consumer in consumers {
             let id = number(consumer, "id")?;
             if !seen.insert(id) {
                 return Err("duplicate consumer summary".into());
             }
+            let process_slot = number(&consumer["process_identity"], "process_slot")?;
+            let process_generation = number(&consumer["process_identity"], "process_generation")?;
+            let owner_cpu = number(&consumer["process_identity"], "owner_cpu")?;
+            let resident_pages = number(&consumer["process_identity"], "resident_pages")?;
+            let el0_residency_ticks = number(consumer, "el0_residency_ticks")?;
+            let native_window_service_ticks = number(consumer, "native_window_service_ticks")?;
+            let counter_frequency_hz = number(consumer, "counter_frequency_hz")?;
+            if process_slot != id
+                || process_generation == 0
+                || owner_cpu != number(consumer, "cpu")?
+                || resident_pages == 0
+                || el0_residency_ticks == 0
+                || native_window_service_ticks == 0
+                || counter_frequency_hz == 0
+                || !seen_process_ids.insert((process_slot, process_generation))
+                || process_results.get(&id)
+                    != Some(&(
+                        process_slot,
+                        process_generation,
+                        owner_cpu,
+                        resident_pages,
+                        el0_residency_ticks,
+                        native_window_service_ticks,
+                        counter_frequency_hz,
+                    ))
+            {
+                return Err("kernel process identity/accounting mismatch".into());
+            }
             let data = raw.get(&id).ok_or("summary without raw report")?;
             let mut cursor = 0;
             let header = take(data, &mut cursor, HEADER_WORDS)?;
             if header[0] != HEADER
+                || header[7] != counter_frequency_hz
                 || header[1] != id
                 || header[2] != number(consumer, "route")?
                 || header[3] != number(consumer, "generation")?
@@ -220,6 +323,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             let declared = route(header[2])?;
             let mut measured = Vec::new();
             let mut measured_ids = BTreeSet::new();
+            let mut measured_native_service_ticks = 0u64;
             for benchmark in consumer["benchmarks"]
                 .as_array()
                 .ok_or("missing benchmark summaries")?
@@ -235,14 +339,21 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 let name = route(frame[1])?;
                 let warmup = take(data, &mut cursor, WARMUP)?.to_vec();
                 let samples = take(data, &mut cursor, SAMPLES)?.to_vec();
+                let route_el0_cpu_ticks = take(data, &mut cursor, SAMPLES)?.to_vec();
+                let native_service_cpu_ticks = take(data, &mut cursor, SAMPLES)?.to_vec();
                 let preemptions = take(data, &mut cursor, 1)?[0];
                 let counters = take(data, &mut cursor, COUNTERS)?;
                 if samples != words(&benchmark["samples"])?
                     || warmup != words(&benchmark["warmup_samples"])?
+                    || route_el0_cpu_ticks != words(&benchmark[route_el0_cpu_samples_key])?
+                    || native_service_cpu_ticks != words(&benchmark["native_service_cpu_samples"])?
                     || counters != words(&benchmark["counters"])?
                     || preemptions != number(benchmark, "observed_preemptions")?
                 {
                     return Err("summary/raw measurement mismatch".into());
+                }
+                if route_el0_cpu_ticks.contains(&0) || native_service_cpu_ticks.contains(&0) {
+                    return Err("invalid route-EL0/native CPU accounting".into());
                 }
                 let calls = (SAMPLES + WARMUP) as u64;
                 let compat = frame[1] != 0;
@@ -262,6 +373,42 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                 sorted.sort_unstable();
                 let ticks = sorted[(SAMPLES - 1) / 2];
                 let ns = u128::from(ticks) * 1_000_000_000 / u128::from(header[7]);
+                let median_ticks = |values: &[u64]| {
+                    let mut sorted = values.to_vec();
+                    sorted.sort_unstable();
+                    sorted[(values.len() - 1) / 2]
+                };
+                let route_el0_ticks = median_ticks(&route_el0_cpu_ticks);
+                let native_ticks = median_ticks(&native_service_cpu_ticks);
+                let measured_segments_cpu_samples = route_el0_cpu_ticks
+                    .iter()
+                    .zip(&native_service_cpu_ticks)
+                    .map(|(&route_el0, &native)| {
+                        route_el0
+                            .checked_add(native)
+                            .ok_or_else(|| "measured CPU segment sum overflow".to_string())
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+                let measured_segments_cpu_ticks = median_ticks(&measured_segments_cpu_samples);
+                let to_ns = |ticks: u64| -> Result<u64, String> {
+                    (u128::from(ticks) * 1_000_000_000 / u128::from(header[7]))
+                        .try_into()
+                        .map_err(|_| "CPU time conversion overflow".into())
+                };
+                if number(benchmark, route_el0_cpu_ns_key)? != to_ns(route_el0_ticks)?
+                    || number(benchmark, "native_service_cpu_ns")? != to_ns(native_ticks)?
+                    || number(benchmark, measured_segments_cpu_ns_key)?
+                        != to_ns(measured_segments_cpu_ticks)?
+                {
+                    return Err("exclusive CPU summary disagrees with raw counters".into());
+                }
+                let route_native_service_ticks = native_service_cpu_ticks
+                    .iter()
+                    .try_fold(0u64, |sum, ticks| sum.checked_add(*ticks))
+                    .ok_or("native service counter sum overflow")?;
+                measured_native_service_ticks = measured_native_service_ticks
+                    .checked_add(route_native_service_ticks)
+                    .ok_or("native service counter sum overflow")?;
                 measured.push(MeasuredRoute {
                     route: name.into(),
                     native_admissions: counters[0],
@@ -272,10 +419,17 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
                     conversions: counters[6],
                     warmup_ticks: warmup,
                     sample_ticks: samples,
+                    route_el0_cpu_ticks,
+                    native_service_cpu_ticks,
                     observed_preemptions: preemptions,
                     median_wall_ns: ns.try_into().map_err(|_| "latency conversion overflow")?,
-                    adapter_cpu_ns: None,
+                    route_el0_cpu_ns: Some(to_ns(route_el0_ticks)?),
+                    native_service_cpu_ns: to_ns(native_ticks)?,
+                    measured_segments_cpu_ns: to_ns(measured_segments_cpu_ticks)?,
                 });
+            }
+            if native_window_service_ticks < measured_native_service_ticks {
+                return Err("process native-service total is below measured samples".into());
             }
             if take(data, &mut cursor, 1)? != [FINAL] || cursor != data.len() {
                 return Err("missing/trailing report data".into());
@@ -283,6 +437,17 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             observations.push(Observation {
                 consumer: id,
                 cpu: number(consumer, "cpu")?,
+                process_slot,
+                process_generation,
+                owner_cpu,
+                resident_pages,
+                el0_residency_counter_ticks: el0_residency_ticks,
+                native_window_service_counter_ticks: native_window_service_ticks,
+                counter_frequency_hz,
+                estimated_el0_residency_ns: (u128::from(el0_residency_ticks) * 1_000_000_000
+                    / u128::from(counter_frequency_hz))
+                .try_into()
+                .map_err(|_| "EL0 residency conversion overflow")?,
                 declared_route: declared.into(),
                 generation: header[3],
                 conformance_checks: header[4],
@@ -294,6 +459,11 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             profile: profile.into(),
             kernel_digest: kernel.into(),
             package_digest: package.into(),
+            expected_consumers,
+            completed_consumers,
+            missing_consumers,
+            validated_report_chunks,
+            lost_report_chunks,
             observations,
         });
     }
@@ -309,7 +479,7 @@ pub fn inspect(bytes: &[u8]) -> Result<RoutingReport, String> {
             "saved producer assertions are not authenticated".into(),
             "sequential request samples are not independent alternating paired runs".into(),
             "physical ARM64 workload measurements are absent".into(),
-            "exclusive adapter CPU attribution is unavailable".into(),
+            "exclusive CPU covers the EL0 call region and READ_WINDOW body; shared SVC and other kernel overhead remain unattributed".into(),
             "snapshot rollback execution is not part of this routing exercise".into(),
         ],
         runs: output,
