@@ -654,9 +654,10 @@ mod tests {
             .create_event(a, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
             .unwrap();
         assert_eq!(source.revoke(a, handle), Err(Error::Rights));
-        let event = source.lookup(a, handle, Kind::Event).unwrap();
-        assert_eq!(event.event().unwrap().admit_signal(), Ok(true));
-        drop(event);
+        {
+            let event = source.lookup(a, handle, Kind::Event).unwrap();
+            assert_eq!(event.signal(), Ok(true));
+        }
         source.close(a, handle).unwrap();
     }
     #[test]
