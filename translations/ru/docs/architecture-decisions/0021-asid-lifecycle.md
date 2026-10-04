@@ -1,4 +1,4 @@
-# ADR-0018 — Жизненный цикл AArch64 ASID при фиксированном CPU
+# ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU
 
 Статус: **Принято для ограниченного набора process roots**. Дата: 2026-10-03.
 
@@ -48,10 +48,10 @@ Epoch в каждом root lease отклоняет stale software retirement. A
 
 ## Проверки
 
-DEV/PROD matrix проверяет same-VA isolation, exhaustion на обоих CPU, повторное использование generation-safe tag, stale-translation rejection, scheduler detachment и физическую reclamation. Focused control без invalidation обязан провалить `asid_reuse_requires_invalidation`. QEMU TCG сохраняет isolation при пропуске invalidation; negative control проверяет, что обязательная retirement operation действительно выполнена. `cargo xtask asid-bench` сохраняет парные tagged и ASID-zero/full-flush измерения. Также обязательны repository host checks, Clippy, formatting и git diff checks. QEMU не заменяет hardware review до заявлений о скорости на устройстве.
+DEV/PROD matrix проверяет same-VA isolation, exhaustion на обоих CPU, повторное использование generation-safe tag, stale-translation rejection, scheduler detachment и физическую reclamation. Focused control без invalidation обязан провалить `asid_reuse_requires_invalidation` по наблюдаемому числу retirement TLBI каждого CPU, а не по compile-time feature flag. Аппаратное чтение TTBR проверяет tag при каждом tagged activation; и 8-битные, и 16-битные tags начинаются с бита 48. QEMU TCG сохраняет isolation при пропуске invalidation; negative control проверяет, что обязательная retirement operation действительно выполнена. `cargo xtask asid-bench` сохраняет парные tagged и ASID-zero/full-flush измерения. Также обязательны repository host checks, Clippy, formatting и git diff checks. QEMU не заменяет hardware review до заявлений о скорости на устройстве.
 
 ## Обратимость
 
 Allocator и switch contract приватны для ограниченного kernel process runtime. До увеличения числа CPU, совместного использования roots, мутации process mappings или migration следует пересмотреть residency и remote shootdown. ASID-zero baseline остаётся доступным для сравнения и fallback.
 
-[Английский оригинал](../../../../docs/architecture-decisions/0018-asid-lifecycle.md)
+[Английский оригинал](../../../../docs/architecture-decisions/0021-asid-lifecycle.md)

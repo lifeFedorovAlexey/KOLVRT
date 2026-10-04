@@ -42,7 +42,6 @@ const SGI_TARGET_COUNT: u64 = 16;
 pub const PSCI_SUCCESS: i64 = 0;
 pub const PSCI_AFFINITY_ON: i64 = 0;
 pub const PSCI_AFFINITY_OFF: i64 = 1;
-#[cfg(feature = "kernel-tests")]
 pub const ESR_EC_SHIFT: u32 = 26;
 #[cfg(feature = "kernel-tests")]
 pub const ESR_EC_DATA_ABORT_CURRENT_EL: u64 = 0x25;
@@ -89,6 +88,36 @@ pub fn asid_bits() -> Option<u8> {
 }
 read_reg!(user_esr, "esr_el1");
 read_reg!(user_far, "far_el1");
+/// Query current stage-1 EL0 permissions without dereferencing user bytes.
+pub(crate) fn user_translation(
+    address: usize,
+    write: bool,
+) -> Result<(), kernel_core::user_copy::Error> {
+    const PAR_FAULT: u64 = 1;
+    const PAR_STATUS_SHIFT: u32 = 1;
+    const PAR_STATUS_MASK: u64 = 0x3f;
+    let par: u64;
+    // SAFETY: INV-USER-COPY: masked synchronous current-task section; AT uses
+    // EL0 permissions and current retained TTBR. PAR is read after ISB, no
+    // mapping writer/root switch/IRQ can intervene on this CPU.
+    unsafe {
+        if write {
+            asm!("at s1e0w, {address}", address = in(reg) address, options(nostack));
+        } else {
+            asm!("at s1e0r, {address}", address = in(reg) address, options(nostack));
+        }
+        asm!("isb", "mrs {par}, par_el1", par = out(reg) par, options(nostack));
+    }
+    if par & PAR_FAULT == 0 {
+        return Ok(());
+    }
+    let status = (par >> PAR_STATUS_SHIFT) & PAR_STATUS_MASK;
+    Err(if (12..=15).contains(&status) {
+        kernel_core::user_copy::Error::PermissionDenied
+    } else {
+        kernel_core::user_copy::Error::UserFault { copied: 0 }
+    })
+}
 pub fn affinity() -> u64 {
     mpidr() & kernel_core::platform::MPIDR_AFFINITY_MASK
 }
@@ -260,6 +289,12 @@ pub unsafe fn activate_user_root(root: u64, asid: u16) {
     unsafe {
         asm!("dsb ish", "msr ttbr0_el1, {}", "isb", in(reg) ttbr, options(nostack));
     }
+    #[cfg(feature = "kernel-tests")]
+    assert_eq!(
+        (active_root() >> 48) as u16,
+        asid,
+        "hardware TTBR ASID readback"
+    );
 }
 
 /// Enter the native root while retaining other pinned ASID translations. ASID

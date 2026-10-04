@@ -207,12 +207,9 @@ pub fn release(lease: Lease, unpublished: bool) {
 }
 
 pub fn ttbr(root: u64, asid: u16) -> u64 {
-    let shift = if ASID_LIMIT.load(Ordering::Acquire) == 1 << 8 {
-        56
-    } else {
-        48
-    };
-    (root & 0x0000_ffff_ffff_ffff) | (u64::from(asid) << shift)
+    // TTBR.ASID is always bits [63:48]. In 8-bit mode its upper eight
+    // bits are reserved/ignored, so the tag still starts at bit 48.
+    (root & 0x0000_ffff_ffff_ffff) | (u64::from(asid) << 48)
 }
 
 #[cfg(feature = "kernel-tests")]

@@ -14,7 +14,7 @@ Run `cargo xtask audit` to generate target/kernel/unsafe-audit.json. It inventor
 
 **Necessity and owner:** Assembly preserves exception ABI outside ordinary Rust calls.
 
-**Preconditions and verification:** All GPR/SIMD/FP state, 16-byte stack, 2 KiB vectors, no nesting. BRK/fault tests and deliberate IRQ SIMD corruption test.
+**Preconditions and verification:** All GPR/SIMD/FP state, 16-byte stack, 2 KiB vectors, no nested IRQ. A synchronous user-copy abort may interrupt a lower-EL trap: its EL1 register frame is restored while the outer lower-EL return state stays in saved Context. BRK/fault tests, deliberate IRQ SIMD corruption and precise user-copy recovery cover the supported paths.
 
 ### INV-REG
 
@@ -136,7 +136,7 @@ CPU0 initializes checked exclusively allocated table/data/code/stack/image pages
 
 ### INV-USER-TTBR and INV-USER-IMAGE
 
-Privileged root/barrier instructions require live aligned tables preserving kernel PC/SP. Native ASID zero requires full local invalidation on each switch; fixed-affinity process roots use a hardware-width-checked ASID lease and local `TLBI ASIDE1` before retirement/reuse. The lease epoch rejects stale software retirement, and release requires the owning CPU's completed invalidation plus scheduler quiescence. Unsupported ASID encodings retain the full-flush baseline. Trusted immutable linker extents are copied into checked owned pages, cleaned to PoC and published with instruction-cache maintenance before launch. Root-switch omission and omitted reuse invalidation must fail on QEMU. No loader, migration, multi-CPU root residency or physical cache-coherency proof is claimed.
+Privileged root/barrier instructions require live aligned tables preserving kernel PC/SP. The ASID-zero fallback requires full local invalidation on each switch; fixed-affinity process roots use a hardware-width-checked ASID lease and local `TLBI ASIDE1` before retirement/reuse. The lease epoch rejects stale software retirement, and release requires the owning CPU's completed invalidation plus scheduler quiescence. Unsupported ASID encodings retain the full-flush baseline. Trusted immutable linker extents are copied into checked owned pages, cleaned to PoC and published with instruction-cache maintenance before launch. Root-switch omission and omitted reuse invalidation must fail on QEMU. No loader, migration, multi-CPU root residency or physical cache-coherency proof is claimed.
 
 ### INV-USER-CONTEXT and INV-RUNQUEUE
 
@@ -151,3 +151,21 @@ Phase 3.0 confines scheduler UnsafeCell access to preparation, mutation and insp
 ## Phase 3.1 ownership delta
 
 [Process lifecycle](processes.md) adds no unsafe storage or Sync implementation: Registry owns linear Frames in a non-Send/non-Sync Rust value. Admission borrows owned spaces through synchronous dispatch; acquired Done and final permit release precede root unlink and copied completion. local.rs keeps one Sync and three storage dereference sites using exclusive permits. INV-USER-SPACE, INV-USER-RETIRE and INV-RUNQUEUE include process generation, rollback and unlink-before-reclaim. New unsafe is confined to trusted linker-image slicing, retained post-quiescent tag inspection and a pointer-free CPU1 contract probe, under INV-USER-IMAGE, INV-USER-RETIRE and INV-REMOTE-READER. [Updated inventory](../../research/results/kernel-phase31-unsafe-audit.json) records this scope; model/coordinator add no unsafe. See [ADR-0017](../architecture-decisions/0017-process-lifecycle.md).
+
+## Phase 3.2 copy delta
+
+### INV-USER-COPY
+
+**Necessity and owner:** EL0 permissions and precise EL1 abort containment require privileged AT and unprivileged byte assembly. The indexed executing CPU owns the synchronous copy; the native memory/architecture boundary owns review. [Access](../../crates/kernel/src/user_copy.rs), [permission queries](../../crates/kernel/src/arch/aarch64/mod.rs), [loops](../../crates/kernel/src/arch/aarch64/entry.S) and [decision](../architecture-decisions/0018-safe-user-copy.md) define the boundary.
+
+**Preconditions and failure:** Checked non-null aperture, overflow/size bounds, every page's EL0 permissions, exact retained process/queue generation and root, fixed affinity, exclusive scheduler scope and masked IRQ. Immutable private mappings and Registry admission borrows exclude mutation/retirement until return. Initialized disjoint kernel byte storage has no user Rust references or struct/padding serialization. Only exact LDTRB/STTRB data-abort PCs with active guard, valid in-range FAR and matching direction recover; unrelated EL1 faults remain fatal. Input failure publishes no snapshot; output failure reports its written prefix. No allocation/ordinary lock/yield or reference across ERET. PROD retains enforcement without optional counters.
+
+**Tests and limits:** [Actual EL0 checks](../../crates/kernel/src/user_copy/testing.rs) exercise two CPUs, range/permission failures, cross-page/maximum copy, snapshot mutation, terminal/unlinked identity and stale generation. Disabled-recovery/live-reread controls fail in DEV/PROD. Recovery preserves saved outer EL0 return state and restores EL1 registers. Existing native-root/TLBI completion and reclamation remain mandatory. No mutable/shared mappings, asynchronous exit, migration, DMA or silicon proof is claimed.
+
+### INV-USER-COPY-TEST
+
+**Necessity and owner:** Kernel-test-only injection skips page preflight on eight bounded bytes: four valid bytes then unmapped guard. The fixture owns initialized scratch and retains current process/root. Production assembly and recovery return four completed bytes in both directions; input suffix stays poisoned, peers survive and reclaim. This tests hardware fault containment, not a supported unmap race. Trusted immutable fixture slicing uses INV-USER-IMAGE. No new unsafe Sync or shared mutable process storage.
+
+## Phase 3.3 reference delta
+
+[Handles](handles.md) add zero production unsafe sites. INV-RUNQUEUE already excludes concurrent namespace access during linear moves and requires acquired completion before quiescent extraction. Synchronous Retained borrows prevent close/retire while used. Three test-only lexical sites use INV-USER-IMAGE for immutable linked symbols and two bounded fixture slices; ownership, checked image lengths and two-CPU negative execution remain required. The [inventory](../../research/results/kernel-phase33-unsafe-audit.json) records 109 lexical locations versus 106 at Phase 3.2. No raw resource pointer, UnsafeCell, unsafe Sync or unchecked index is added.

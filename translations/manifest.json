@@ -6,8 +6,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "3a2ffc4cf44f75d5972923aca740b49b170429aaa45993b81dd4e8e703e5c140",
-        "translation_sha256": "ba2dd293b7d0e7244b9969205f227ca475bd1413fadf3cf0ac2cf1a96570622d"
+        "source_sha256": "9e60de955f36a8024388bb6b8c879b7f1de060b1cc70b20affc1147f4846524d",
+        "translation_sha256": "3a7223c3c86237f41270aa1744b712ff66d5f18c8b095475c08b3936822dfe7d"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "6518a598b4f2d4d7abd7618b81d28c6e26dd1596123247cc5cd887db3ffabea3",
@@ -70,8 +70,8 @@
         "translation_sha256": "0099da1c50d415d83da5a08d91692baa18d33d1cf8bd2f2e4f6ef85cabca8893"
       },
       "docs/architecture-decisions/0015-el0-versioned-routing.md": {
-        "source_sha256": "efd4f9dfa680399b6a6f48ea6077d3bbc5a5a047503a9bfd5e6da29b56c4adaf",
-        "translation_sha256": "73e189d9d8a6f543106bd1367790f80e4bfce7d2f927a814848ff42865ee7839"
+        "source_sha256": "6e33adea3416aa4f4baa76fd13e70c475f7c2204494e29bfdb0e98dd6a91c954",
+        "translation_sha256": "3f8c92a5ab40cb4bd06361d2136a20062d7e61aaf04e61f2b8c8baaad7abd52d"
       },
       "docs/architecture-decisions/0016-scheduler-ownership.md": {
         "source_sha256": "3c4d27dc0b833e5db1d7df98fce60cd65b4b1155c64bd389cb24b3e655decf87",
@@ -81,9 +81,25 @@
         "source_sha256": "f2a2b41a70e375f1c5c7492197d65f49440268e7776f8a79f6dc619549e9b1eb",
         "translation_sha256": "14a89e4ee83163f7db2297695e2032a49690fddc3d4db3ea68b840bc8369d90f"
       },
+      "docs/architecture-decisions/0018-safe-user-copy.md": {
+        "source_sha256": "afeed040dedadd6585bfa5430efba81caca18439378eada03dd82ba88f17588d",
+        "translation_sha256": "9edaf7d7c08a1577d8c63c3acf67c4ec191b97ef1d5b936dc2995d8e45e85592"
+      },
+      "docs/architecture-decisions/0019-process-local-handles.md": {
+        "source_sha256": "d5d08300809adbbb88cf1900afb1791879ebd4f1de00146a27d45aa197de390d",
+        "translation_sha256": "071495abaaa7a44fee3f13f4e0f881ebd7511c23ad3762d20ee526668b692d8b"
+      },
+      "docs/architecture-decisions/0020-handle-transfer-and-retention.md": {
+        "source_sha256": "6f8ac58ddfacdd8e968e038cde5ce6e67c40a82be71631dbad168c9a8e6d466a",
+        "translation_sha256": "f13c64b17878bacf572b394861222424031780ee8ccd2fe4d4cbde60abe2510b"
+      },
+      "docs/architecture-decisions/0021-asid-lifecycle.md": {
+        "source_sha256": "87772f7bc7c7ddcba06730116d9d1251d66ca58a32f78bca0b7c5e8025919330",
+        "translation_sha256": "75d107439feffda57598581323bc09b2bdfeb3f7139e8f0d7665059b957cd9a8"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "434611fd6d7202d8a81e151ad59529da89b35d7d658306d018cac25e607f0bb3",
-        "translation_sha256": "0439fcee787f8439b5190dfb87005f6b0c6b28c282b4dbfac57f9a5171cf2309"
+        "source_sha256": "d98bea0207a7e12e5e43b5e90edb044ca696ec2ea687680d3c78c050a49f2e73",
+        "translation_sha256": "49fa2370938a16bd56f9861bbd9460c6f9b4436029412201729bae30943368e0"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
@@ -118,8 +134,8 @@
         "translation_sha256": "08179f352cb61f1c18481ab8959451c187fc6cd9b3daec4d38c318e192fbd7fb"
       },
       "docs/architecture/kernel-laws.md": {
-        "source_sha256": "8661451435e4a7a207979e59b719841b1e165dad82ee6cb09137b50de44a1828",
-        "translation_sha256": "c06060568f2f3a5be17d84c1229225c1256c8cec44874a80edbfa24a42c9625a"
+        "source_sha256": "ff4f1d3f2de6abd708e4b9e78e3c2fb8c9f7aeb8ce3a5cd415bf6cc091a0d392",
+        "translation_sha256": "5901c72a909cbf7cdcf51a4968b3344f14837b64c25ee3aa63c071ba5fb989bf"
       },
       "docs/architecture/law-audit.md": {
         "source_sha256": "552e0f4b06fd5f0a71fbf7c405c45665c88de5a9161b8bb06f2cdf65b9ef21cf",
@@ -130,16 +146,16 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "a7da1abe33a81574c4eda0a211de83513b36db568044a8e8c681979985540949",
-        "translation_sha256": "3c821f45ceef54e06444bccb29c726c0d6c8f3baacea3489ae2e23fe06481678"
+        "source_sha256": "cda0f5fc3472fbf101bd521c1a13370b951ed67312de133b828ca95d055e2c47",
+        "translation_sha256": "96e17ddb807f5d9a2b62d9299056c2b2cf3126704663a2637ab0f3b7a60d9526"
       },
       "docs/architecture/migration-workbench.md": {
-        "source_sha256": "bd1a18820009cf12f852a2773de96139ac7cd1333d0f10829d69f8e7b762202d",
-        "translation_sha256": "03283b2d99d653aba0bcbc287c1312c382f5953ed109018946c647bd88b6cc99"
+        "source_sha256": "d233aac554b7cb12df0a917acf5be250bc3eedf9e7e2d55338ccb4ff3643d780",
+        "translation_sha256": "c994175d71d00d59d9c8e54af384df13d4bd8fe7ec249defeff135baea2fae0c"
       },
       "docs/architecture/native-abi.md": {
-        "source_sha256": "27bd46ca3abcfd7c339a563e89968e21be3f80a9273ee878939be18b050968e4",
-        "translation_sha256": "98b138985034883c1c5a1cfef64d3fa9595233a26b0bcbf5e191bcb9ac444587"
+        "source_sha256": "50b8550363fdca075f748745be28063c1ebf61edf7cc9a6bb2141b10bdb87e75",
+        "translation_sha256": "290b76d10bc4726e1d8200040c6075a70df75ce332107f5c0103a7a1207930cb"
       },
       "docs/architecture/native-model.md": {
         "source_sha256": "d9d6edef331cfba1f6d5fb2236a6d7e45e96810f819a227613aca2f738aae570",
@@ -182,12 +198,16 @@
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/el0.md": {
-        "source_sha256": "4902620d57e3de383238b7e0799baa826c191d600898eb536dedf582ebe1606f",
-        "translation_sha256": "986895a18d858f1526ca1f44c2c967ffa6c0de4c5b6bf339cf14aa8e836a594c"
+        "source_sha256": "77978a4db4360679cd7c6d23637d6cb6eb3aa8204709eafd41a40ce3220f810f",
+        "translation_sha256": "26d7acb6ad1a8fc9ca10dcee7370e6646369206fe824f8dc58122d41df632a0e"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "7ab0345bf609b17bbe42b1f8d5f332473c8245e2cfdb01582626fc3382c62ae0",
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
+      },
+      "docs/kernel/handles.md": {
+        "source_sha256": "9675c1e83377468b96d4ee22c5b6bd69cc6bdcef2acd55dcbba747acddbaea39",
+        "translation_sha256": "89cf3cd295c659e9a3ee0a7660bd2f3f6b6f010e66b66caff762658b25e0ff72"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",
@@ -198,40 +218,44 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "e7fbb34ea5889adbff018744fed571b345ac285e19d5920cbcc7829d80892e33",
-        "translation_sha256": "2fe0b0a97cb992daaf227834f773ffcb411725409ed875a609194847bd20212f"
+        "source_sha256": "f7af057f834359ed9fff5da5d9448e73edb9afdc1267a40a7c817ec17e258700",
+        "translation_sha256": "d49f22085a681fc5a23c5713d00827b46207173095ffad80c9b9f32669af658a"
       },
       "docs/kernel/routing.md": {
-        "source_sha256": "2847615cd7e4dcf9200481102d2b28f1033bea8fe1934ac73886673cf189b017",
-        "translation_sha256": "612f5707cd0e3576b3991ebfea6fa4397c360abdfedae6e92bfca6a9d9c41fc0"
+        "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
+        "translation_sha256": "855db72b1be05ee90a1946ad145f506c61016591c7e32a6abbe85123a7400acd"
       },
       "docs/kernel/scheduler.md": {
-        "source_sha256": "095942a0fa4b2d6b76edbaaf2a575b9962526e9d84b0988d80d93accf5585050",
-        "translation_sha256": "1559ad74203cbcc94feb9a26c05a47ba7401535f2012070018b5e891ee7ac6d0"
+        "source_sha256": "4feacdf7b3b058fba9b76f47e2ae18caa11e6c7730fc47f7cbf33d00c55aaab5",
+        "translation_sha256": "547e4234acacadac46414af5b9f63346181c16755ce0a41fd3527b03dd75ff2b"
       },
       "docs/kernel/smp.md": {
         "source_sha256": "b0a243584c73e2205c4fb1bca8c4847a4eb28015d2ab135d3aed19d4b637e129",
         "translation_sha256": "42527fe33efde8585fd971294d565d95a53a386d04d75da46ad570ae2cfd7678"
       },
       "docs/kernel/testing.md": {
-        "source_sha256": "3cd3f45a83d5830a73d2e5f7e80d8d539e0a270cfa7c54a52d535b0b7e8a393f",
-        "translation_sha256": "f1f50e7d899e3972bbca4e9b5abc943cf45d204471e109aedd7c9864981c3392"
+        "source_sha256": "b1d1bb304e815d3184b42d95dded636b22f41e71b48c2ea5c9dcc0d16d2acba9",
+        "translation_sha256": "57fa4ea1fcf1527b786798ce970fbf5369bd0d93d1a51c86e4f996ac373d814c"
       },
       "docs/kernel/time.md": {
         "source_sha256": "462d6b1a36e874e592b1c3d888ceb26f03254f21a8d5971755637682462a824e",
         "translation_sha256": "46eae4f848da42e521436eafaf5782b716c3b4358b9b675ac2b3d3499f41a20a"
       },
       "docs/kernel/unsafe.md": {
-        "source_sha256": "5af662008618b81dff05076c44444105b6da3e2fab850740f5a1fd563d6c5fae",
-        "translation_sha256": "4b366c708c54019024320419bf44075ee007bd4a27a98202598a26f12d94214b"
+        "source_sha256": "fbba313e9564eb4bb87b1e5762f06bae8c079c02eefcf1691a1b6e5aba219515",
+        "translation_sha256": "94b3464067a6bc5fd0ebf014257a6271d05eea3552bf5e800537c29f869926ff"
       },
-      "docs/project-structure.md": {
-        "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
-        "translation_sha256": "df700031cb5de4d9fa389fd931078a33e0e18518f0d0b8372814eca0768b4099"
+      "docs/kernel/user-copy.md": {
+        "source_sha256": "caaa0b9d7efa279dec800ff4e089f8ff6c40a9ee1f3c702dd21f574b04d32023",
+        "translation_sha256": "d498c2ea25ce511b509cc5d1518872eedef43fa01d93ca94fcf1927dc6f68aae"
       },
       "docs/kernel/wait.md": {
         "source_sha256": "941bb971e521a80a2d05871200eb1a0c88bd92f072c2c0e578b8cbdb44febec6",
         "translation_sha256": "78a5d533e9db0e2700eec2e4f022156955d39b35d425069200d8a3560224310e"
+      },
+      "docs/project-structure.md": {
+        "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
+        "translation_sha256": "df700031cb5de4d9fa389fd931078a33e0e18518f0d0b8372814eca0768b4099"
       },
       "docs/research/case-database.md": {
         "source_sha256": "6332d3678734dcc64e4c5b003c42445f324b4f98e9205091a637be92d7bfe069",
@@ -294,8 +318,8 @@
         "translation_sha256": "2f49d2945fe1d1551623f251740334cf997abb06b2cb9c27c6019c7689971896"
       },
       "docs/security/threat-model.md": {
-        "source_sha256": "ad01baf4d2e91200a8fa9886ac9f70c51ea9a68ebea348ea1fec3ed65fe81f07",
-        "translation_sha256": "c8fb1e4b48942025d2e08a54ae90bf200b404d17de6afbb23b3129d45e519fa9"
+        "source_sha256": "72d7b85e0b1f7882f40223ba5b6af7344bc806506722b59830c2e4b885a7ae3f",
+        "translation_sha256": "9b3e7520eb0e7b20a454e861419b1d5f862b23351d396badc04ae4f02cc1aded"
       },
       "docs/vision.md": {
         "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",
@@ -372,10 +396,6 @@
       "research/other-systems/kasperskyos/typed-interfaces.md": {
         "source_sha256": "ee8a161a7185f054dfb372852769cd112d299c502ba70bf5a4b77dea1da7d81c",
         "translation_sha256": "d3acf3bbc5aca45f4b8a6db6433a05715bfb328d09cd1ddd3db9f08a0c548c3c"
-      },
-      "docs/architecture-decisions/0018-asid-lifecycle.md": {
-        "source_sha256": "c442ee03d98eb32c13b08295132a586873cfa5a483fcd548fb5eeaabf49ccf0b",
-        "translation_sha256": "cded58a56315806ce5f32e3c6f984269f4a0003bf5d6405bd11820b0baab832c"
       }
     }
   },

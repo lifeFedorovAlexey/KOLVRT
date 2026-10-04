@@ -10,6 +10,7 @@ mod boot_workload;
 mod diagnostics;
 mod execution;
 mod hal;
+mod handles;
 mod interrupt;
 mod memory;
 mod percpu;
@@ -22,6 +23,7 @@ mod sync;
 #[cfg(feature = "kernel-tests")]
 mod tests;
 mod time;
+mod user_copy;
 use arch::aarch64 as cpu;
 const BOOT_MEMORY_PATTERN: u64 = 0x4b4f4c565254; // ASCII "KOLVRT".
 const KIBIBYTE_BYTES: usize = 1024;
@@ -89,8 +91,6 @@ pub extern "C" fn kernel_main() -> ! {
         "SMP",
         format_args!("{} CPUs participating", platform::config::ACTIVE_CPUS),
     );
-    #[cfg(feature = "kernel-tests")]
-    tests::run(&d, &mut physical, &mut processes);
     #[cfg(feature = "ownership-test")]
     {
         let _foreign_owner = memory::Physical::new(&d);
@@ -106,6 +106,8 @@ pub extern "C" fn kernel_main() -> ! {
         physical.release(frame);
         panic!("retained mapping release was accepted");
     }
+    #[cfg(feature = "kernel-tests")]
+    tests::run(&d, &mut physical, &mut processes);
     #[cfg(not(feature = "kernel-tests"))]
     {
         let users = boot_workload::exercise(&mut physical, &mut processes);
@@ -131,7 +133,9 @@ pub extern "C" fn kernel_main() -> ! {
                 }
             ),
         );
-        process_workload::exercise(&mut physical, &mut processes, |_, passed| assert!(passed));
+        process_workload::exercise(&mut physical, &mut processes, |name, passed| {
+            assert!(passed, "process workload check failed: {name}");
+        });
         #[cfg(feature = "boot-payload")]
         boot_workload::payload(
             &mut physical,
@@ -194,6 +198,9 @@ pub extern "C" fn kernel_main() -> ! {
 }
 #[unsafe(no_mangle)]
 pub extern "C" fn synchronous(esr: u64, far: u64, pc: u64) -> u64 {
+    if let Some(resume) = user_copy::recover(esr, far, pc) {
+        return resume;
+    }
     #[cfg(feature = "kernel-tests")]
     {
         let ec = esr >> cpu::ESR_EC_SHIFT;
@@ -247,7 +254,10 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     }
     cpu::mask();
     cpu::timer_stop();
-    event!("{{\"event\":\"panic\",\"status\":\"fail\"}}");
+    event!(
+        "{{\"event\":\"panic\",\"status\":\"fail\",\"line\":{}}}",
+        info.location().map_or(0, |location| location.line())
+    );
     diagnostics::status("FAIL", "panic", format_args!("kernel halted"));
     #[cfg(feature = "diagnostics")]
     if let Some(location) = info.location() {

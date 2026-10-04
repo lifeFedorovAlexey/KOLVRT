@@ -99,3 +99,7 @@ ADR указывает `Decision kind: ABI-FREEZE`, `ABI contract: <name/version
 [Декодер](../../../../crates/native-protocol-model/src/lib.rs) без стандартной библиотеки проверяет кодирование, владение снимком, сужение прав и исчерпание поколений. [Модели основной системы](../../../../crates/native-state-models/src/lib.rs) проверяют время жизни, сохранение учёта, регистрацию ожидания, перепривязку, запуск и передачу между областями. Кандидат компилируется для AArch64 без стандартной библиотеки основной системы. Это не проверяет вход исключений, ассемблерные соглашения вызова, таблицы страниц, настоящее копирование пользовательской памяти или неограниченную конкурентную реализацию.
 
 [Английский оригинал](../../../../docs/architecture/native-abi.md)
+
+## Текущая ограниченная handle boundary Phase 3.3
+
+[Process-local handles](../kernel/handles.md) реализуют только reference identity, type и synchronous lifetime. Provisional LE64 encoding и copied 32-byte lookup/close request — explicit byte formats; Rust layout и pointer не экспортируются. Более широкие handle/capability/transfer требования этого документа остаются future contracts; успешного lookup для них недостаточно.

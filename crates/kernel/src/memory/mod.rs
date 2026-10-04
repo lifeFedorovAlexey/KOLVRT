@@ -359,13 +359,36 @@ pub struct OwnedUserSpace {
     id: usize,
     lease: crate::asid::Lease,
 }
+static USER_GENERATIONS: [core::sync::atomic::AtomicU64; crate::process::CAPACITY] =
+    [const { core::sync::atomic::AtomicU64::new(0) }; crate::process::CAPACITY];
+pub(crate) fn current_space(slot: usize, generation: u64, root: u64) -> bool {
+    slot < USER_CHARGES.len()
+        && generation != 0
+        && root != 0
+        && USER_CHARGES[slot].load(Ordering::Acquire) as u64 == root
+        && USER_GENERATIONS[slot].load(Ordering::Acquire) == generation
+}
+#[cfg(feature = "kernel-tests")]
+pub(crate) fn live_space_generation(slot: usize, generation: u64) -> bool {
+    slot < USER_CHARGES.len()
+        && generation != 0
+        && USER_GENERATIONS[slot].load(Ordering::Acquire) == generation
+        && USER_CHARGES[slot].load(Ordering::Acquire) != 0
+}
 impl OwnedUserSpace {
     pub fn slot(&self) -> usize {
         self.id
     }
-    pub fn new(frame: Frame, id: usize, image: &[u8], entry: usize) -> Self {
+    pub fn new(
+        frame: Frame,
+        identity: kernel_core::process::ProcessId,
+        image: &[u8],
+        entry: usize,
+    ) -> Self {
+        let id = identity.slot();
         let space = UserSpace::image(&frame, id, image, entry);
         let lease = crate::asid::allocate(id, id / config::USER_PROCESSES_PER_CPU);
+        USER_GENERATIONS[id].store(identity.generation(), Ordering::Release);
         // Transfer the same charge, not another mapping or allocation. All
         // construction borrows end here; the owned Frame stays live until reclaim.
         core::mem::forget(space);
@@ -373,6 +396,12 @@ impl OwnedUserSpace {
     }
     pub fn root(&self) -> u64 {
         self.frame.address as u64
+    }
+    /// Number of physical frames owned by this process space, including its
+    /// root, fixed mappings and immutable image pages.
+    #[cfg(feature = "machine-events")]
+    pub fn resident_pages(&self) -> usize {
+        self.frame.count
     }
     pub fn data_address(&self) -> usize {
         self.frame.address + USER_DATA_PAGE * PAGE_SIZE
@@ -387,6 +416,7 @@ impl OwnedUserSpace {
             frame: &self.frame,
             id: self.id,
         });
+        USER_GENERATIONS[self.id].store(0, Ordering::Release);
         crate::asid::release(self.lease, false);
         physical.release(self.frame);
     }
@@ -396,6 +426,7 @@ impl OwnedUserSpace {
             frame: &self.frame,
             id: self.id,
         });
+        USER_GENERATIONS[self.id].store(0, Ordering::Release);
         crate::asid::release(self.lease, true);
         physical.release(self.frame);
     }
@@ -500,7 +531,8 @@ impl Drop for UserSpace<'_> {
             "active user space retirement"
         );
         // Execution admission has ended; every participating CPU restored native root and
-        // completed full local TLBI before its release completion. Charge is last to go.
+        // completed ASID retirement (or full-flush fallback) before its release completion.
+        // Charge is last to go.
         assert_eq!(
             USER_CHARGES[self.id].swap(0, Ordering::AcqRel),
             self.frame.address

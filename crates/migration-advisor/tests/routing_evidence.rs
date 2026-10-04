@@ -3,7 +3,7 @@ use serde_json::{Value, json};
 
 fn evidence() -> Value {
     let mut words: Vec<u64> = vec![
-        0x4b56_5232,
+        0x4b56_5233,
         0,
         0,
         1,
@@ -22,19 +22,22 @@ fn evidence() -> Value {
     words.extend([0x4245_4e43, 0, 128]);
     words.extend([10; 16]);
     words.extend([10; 128]);
+    words.extend([20; 128]);
+    words.extend([30; 128]);
     words.push(0);
     let counters = [144, 0, 144, 0, 0, 0, 0, 0, 0];
     words.extend(counters);
     words.push(0x444f_4e45);
     let count = words.len();
-    json!({"schema_version":1,"runs":[{"profile":"fixture-dev","kernel_build":{"sha256":"a".repeat(64)},"user_artifact":{"elf_sha256":"b".repeat(64)},
+    json!({"schema_version":5,"runs":[{"profile":"fixture-dev","kernel_build":{"sha256":"a".repeat(64)},"user_artifact":{"elf_sha256":"b".repeat(64)},
+        "scope_accounting":{"expected_consumers":1,"completed_consumers":1,"missing_consumers":0,"validated_report_chunks":1,"lost_report_chunks":0},
         "run":{"elf_sha256":"a".repeat(64),"accelerator":"TCG"},
         "events":[{"event":"el0","status":"pass","reclaimed":true,"processes":1},
             {"event":"user-report","id":0,"offset":0,"words":words},
-            {"event":"user-result","id":0,"state":2,"exit":1,"fault":0,"length":count},
+            {"event":"user-result","id":0,"state":2,"exit":1,"fault":0,"length":count,"process_slot":0,"process_generation":1,"owner_cpu":0,"resident_pages":7,"el0_residency_ticks":5000,"native_window_service_ticks":5000,"counter_frequency_hz":1000000},
             {"event":"boot","status":"pass","el":1,"secondary_shutdown_verified":true}],
-        "consumers":[{"id":0,"cpu":0,"route":0,"generation":1,"conformance_checks":24,"oracle_sum":123,"frequency":1_000_000,"profile_digest_words":[1,2,3,4],
-            "benchmarks":[{"route":0,"warmup_samples":vec![10;16],"samples":vec![10;128],"counters":counters,"observed_preemptions":0}]}]}]})
+        "consumers":[{"id":0,"cpu":0,"process_identity":{"process_slot":0,"process_generation":1,"owner_cpu":0,"resident_pages":7},"el0_residency_ticks":5000,"native_window_service_ticks":5000,"counter_frequency_hz":1000000,"route":0,"generation":1,"conformance_checks":24,"oracle_sum":123,"frequency":1_000_000,"profile_digest_words":[1,2,3,4],
+            "benchmarks":[{"route":0,"warmup_samples":vec![10;16],"samples":vec![10;128],"route_el0_cpu_samples":vec![20;128],"native_service_cpu_samples":vec![30;128],"route_el0_cpu_ns":20000,"native_service_cpu_ns":30000,"exclusive_cpu_ns":50000,"counters":counters,"observed_preemptions":0}]}]}]})
 }
 
 #[test]
@@ -48,6 +51,39 @@ fn authentic_structure_preserves_raw_observations_without_inventing_ab_pairs() {
         report.runs[0].observations[0].measured_routes[0].native_admissions,
         144
     );
+    assert_eq!(report.runs[0].observations[0].process_slot, 0);
+    assert_eq!(report.runs[0].observations[0].process_generation, 1);
+    assert_eq!(report.runs[0].observations[0].owner_cpu, 0);
+    assert_eq!(report.runs[0].observations[0].resident_pages, 7);
+    assert_eq!(
+        report.runs[0].observations[0].native_window_service_counter_ticks,
+        5000
+    );
+    assert_eq!(
+        report.runs[0].observations[0].measured_routes[0].route_el0_cpu_ns,
+        Some(20_000)
+    );
+    assert_eq!(
+        report.runs[0].observations[0].measured_routes[0].native_service_cpu_ns,
+        30_000
+    );
+    assert_eq!(
+        report.runs[0].observations[0].measured_routes[0].measured_segments_cpu_ns,
+        50_000
+    );
+    assert_eq!(
+        report.runs[0].observations[0].el0_residency_counter_ticks,
+        5000
+    );
+    assert_eq!(
+        report.runs[0].observations[0].estimated_el0_residency_ns,
+        5_000_000
+    );
+    assert_eq!(report.runs[0].expected_consumers, 1);
+    assert_eq!(report.runs[0].completed_consumers, 1);
+    assert_eq!(report.runs[0].missing_consumers, 0);
+    assert_eq!(report.runs[0].validated_report_chunks, 1);
+    assert_eq!(report.runs[0].lost_report_chunks, 0);
     assert!(!report.independent_paired_runs);
     assert!(!report.provenance_verified);
     assert!(!report.automatic_replacement);
@@ -55,13 +91,58 @@ fn authentic_structure_preserves_raw_observations_without_inventing_ab_pairs() {
 }
 
 #[test]
+fn schema_six_names_combined_segments_without_claiming_adapter_cpu() {
+    let mut value = evidence();
+    value["schema_version"] = 6.into();
+    let benchmark = &mut value["runs"][0]["consumers"][0]["benchmarks"][0];
+    let legacy_sum = benchmark
+        .as_object_mut()
+        .unwrap()
+        .remove("exclusive_cpu_ns")
+        .unwrap();
+    benchmark["measured_segments_cpu_ns"] = legacy_sum;
+    let report = inspect(&serde_json::to_vec(&value).unwrap()).unwrap();
+    let route = &report.runs[0].observations[0].measured_routes[0];
+    assert_eq!(route.measured_segments_cpu_ns, 50_000);
+    assert_eq!(route.route_el0_cpu_ns, Some(20_000));
+    assert_eq!(route.native_service_cpu_ns, 30_000);
+}
+
+#[test]
+fn legacy_v4_adapter_labels_normalize_to_route_el0_residency() {
+    let mut data = evidence();
+    data["schema_version"] = 4.into();
+    let benchmark = data["runs"][0]["consumers"][0]["benchmarks"][0]
+        .as_object_mut()
+        .unwrap();
+    let samples = benchmark.remove("route_el0_cpu_samples").unwrap();
+    benchmark.insert("adapter_cpu_samples".into(), samples);
+    let cpu_ns = benchmark.remove("route_el0_cpu_ns").unwrap();
+    benchmark.insert("adapter_cpu_ns".into(), cpu_ns);
+
+    let report = inspect(&serde_json::to_vec(&data).unwrap()).unwrap();
+    let route = &report.runs[0].observations[0].measured_routes[0];
+    assert_eq!(route.route_el0_cpu_ns, Some(20_000));
+    assert_eq!(route.native_service_cpu_ns, 30_000);
+}
+
+#[test]
 fn damaged_missing_or_inconsistent_os_evidence_is_rejected() {
     let mutations: Vec<fn(&mut Value)> = vec![
+        |v| v["schema_version"] = 2.into(),
         |v| v["runs"][0]["consumers"][0]["benchmarks"][0]["samples"][0] = 11.into(),
         |v| v["runs"][0]["consumers"][0]["benchmarks"][0]["counters"][0] = 143.into(),
         |v| v["runs"][0]["consumers"][0]["frequency"] = 0.into(),
         |v| v["runs"][0]["events"][1]["offset"] = 1.into(),
         |v| v["runs"][0]["events"][2]["exit"] = 0.into(),
+        |v| v["runs"][0]["events"][2]["process_generation"] = 0.into(),
+        |v| v["runs"][0]["consumers"][0]["process_identity"]["owner_cpu"] = 1.into(),
+        |v| v["runs"][0]["consumers"][0]["process_identity"]["resident_pages"] = 8.into(),
+        |v| v["runs"][0]["consumers"][0]["el0_residency_ticks"] = 0.into(),
+        |v| v["runs"][0]["events"][2]["counter_frequency_hz"] = 0.into(),
+        |v| v["runs"][0]["consumers"][0]["counter_frequency_hz"] = 2_000_000.into(),
+        |v| v["runs"][0]["scope_accounting"]["lost_report_chunks"] = 1.into(),
+        |v| v["runs"][0]["scope_accounting"]["validated_report_chunks"] = 2.into(),
         |v| {
             v["runs"][0]["events"].as_array_mut().unwrap().pop();
         },

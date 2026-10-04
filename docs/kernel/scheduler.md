@@ -93,3 +93,11 @@ Phase 3.1 completes the bounded kernel-internal lifecycle requested for this mil
 The [dynamic lifecycle](processes.md) extends this foundation with vacant slots and independent process generations. Kernel bootstrap retains one Registry across callers; old fixtures and the optional image use create/start/dispatch/reclaim. Admission descriptors borrow owned spaces, and roots are removed under acquired quiescent editing before returning process completion. Inspection and editing share the existing exclusive permit and three storage dereference sites. Optional bounds belong to the caller; None has no hidden completion deadline. The historical Phase 3.0 result records remain unchanged. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) records the new conservative whole-dispatch retirement boundary and next user-copy obligations.
 
 [Russian translation](../../translations/ru/docs/kernel/scheduler.md)
+
+## Phase 3.2 copy scope
+
+[Safe user-copy](user-copy.md) borrows the current executing Task inside the same masked exclusive local scope. The bounded synchronous call never yields, allocates, locks or retains a user reference. Immutable admission roots/frames stay borrowed from Registry through dispatch. Exact process/space and queue generation, running ownership and current TTBR precede page access. A nested synchronous abort recovers only at audited unprivileged copy PCs; the outer lower-EL Context remains saved until ordinary return. IRQ nesting remains unsupported. Copy guard/borrow ends before task exit, root switching or ERET; the two-CPU retirement barrier is unchanged.
+
+## Phase 3.3 namespace ownership
+
+[Handle ownership](handles.md) uses existing publication/mutation/quiescent permits. Admission exclusively borrows each Registry namespace; a move places it into the indexed CPU state and acquired two-CPU completion returns it exactly once. The namespace remains linear across nonterminal steps. No new global lock or unsafe storage is introduced; retained resource borrows end inside the masked current-task callback.

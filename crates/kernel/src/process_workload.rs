@@ -362,7 +362,6 @@ pub fn exercise(
         }
     }
     let distinct_backing = backing_changed.into_iter().all(|changed| changed);
-    let reuse_invalidation = !cfg!(feature = "asid-reuse-negative");
     #[cfg(feature = "kernel-tests")]
     let elapsed_ticks = cpu::ticks().wrapping_sub(measurement_start);
     #[cfg(feature = "kernel-tests")]
@@ -378,6 +377,18 @@ pub fn exercise(
             reuses: end.reuses - start.reuses,
         }
     });
+    #[cfg(feature = "kernel-tests")]
+    let reuse_invalidation = if crate::asid::enabled() {
+        delta
+            .iter()
+            .all(|count| count.asid_tlbi == STRESS_CYCLES as u64)
+    } else {
+        delta
+            .iter()
+            .all(|count| count.full_tlbi == count.switches && count.full_tlbi > 0)
+    };
+    #[cfg(not(feature = "kernel-tests"))]
+    let reuse_invalidation = true;
     #[cfg(feature = "kernel-tests")]
     crate::event!(
         "{{\"event\":\"asid-measurement\",\"mode\":\"{}\",\"reuse_invalidation\":{},\"elapsed_ticks\":{},\"same_va_isolation\":[{},{}],\"distinct_backing\":[{},{}],\"same_asid_reused\":[{},{}],\"cpus\":[{{\"cpu\":0,\"switches\":{},\"full_tlbi\":{},\"asid_tlbi\":{},\"reuses\":{}}},{{\"cpu\":1,\"switches\":{},\"full_tlbi\":{},\"asid_tlbi\":{},\"reuses\":{}}}]}}",
@@ -448,8 +459,16 @@ fn quantum_progress(
     let mut passed = first.owners_released;
     passed &= quantum_context(&first, &ids, registry);
     let mut counters = [0_u64; config::ACTIVE_CPUS];
+    let mut el0_residency = [0_u64; config::ACTIVE_CPUS];
+    let mut first_el0_residency = [0_u64; config::ACTIVE_CPUS];
+    let mut el0_generation_valid = true;
+    let mut el0_monotonic = true;
     for (owner, counter) in counters.iter_mut().enumerate() {
         let id = ids[owner * 2];
+        let task = &first.tasks[id.slot()];
+        el0_residency[owner] = task.el0_residency_ticks;
+        first_el0_residency[owner] = task.el0_residency_ticks;
+        el0_generation_valid &= task.process_generation == id.generation();
         passed &= registry.state(id) == Ok(State::Admitted)
             && registry.completion(id) == Err(Error::Transition)
             && registry.reclaim(p, id) == Err(Error::Transition);
@@ -469,6 +488,11 @@ fn quantum_progress(
         for owner in 0..config::ACTIVE_CPUS {
             let spinner = ids[owner * 2];
             let peer = ids[owner * 2 + 1];
+            let task = &result.tasks[spinner.slot()];
+            if task.process_generation == spinner.generation() {
+                el0_monotonic &= task.el0_residency_ticks >= el0_residency[owner];
+                el0_residency[owner] = task.el0_residency_ticks;
+            }
             if registry.state(spinner) == Ok(State::Admitted) && registry.completion(peer).is_ok() {
                 peer_progress[owner] = true;
             }
@@ -495,6 +519,18 @@ fn quantum_progress(
         }
         registry.reclaim(p, id).unwrap();
     }
+    report(
+        "process_el0_residency_initial",
+        el0_generation_valid && first_el0_residency.iter().all(|ticks| *ticks > 0),
+    );
+    report("process_el0_residency_monotonic", el0_monotonic);
+    report(
+        "process_el0_residency_accumulates",
+        el0_residency
+            .iter()
+            .zip(first_el0_residency)
+            .all(|(final_ticks, initial_ticks)| *final_ticks > initial_ticks),
+    );
     report(
         "process_quantum_return_and_peer_progress",
         passed

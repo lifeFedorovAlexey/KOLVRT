@@ -1,4 +1,4 @@
-# ADR-0018 — Fixed-affinity AArch64 ASID lifecycle
+# ADR-0021 — Fixed-affinity AArch64 ASID lifecycle
 
 Status: **Accepted for bounded process roots**. Date: 2026-10-03.
 
@@ -36,7 +36,7 @@ Each live process root has its own non-global translation namespace on its owner
 
 ## Compatibility impact
 
-The ASID allocator is private to EL0 process roots. Native processes keep ASID zero, and unsupported or unknown hardware ASID widths retain the existing ASID-zero/full-flush contract. The change does not alter legacy routing, native authority, process image format, or fixed CPU affinity.
+The ASID allocator is private to EL0 process roots. The native root keeps ASID zero, and unsupported or unknown hardware ASID widths retain the existing ASID-zero/full-flush contract. The change does not alter legacy routing, native authority, process image format, or fixed CPU affinity.
 
 ## Performance impact
 
@@ -48,10 +48,10 @@ The per-root epoch rejects stale software retirement operations. The allocator d
 
 ## Testing
 
-The DEV/PROD matrix checks same-VA isolation, exhaustion on both CPUs, generation-safe reuse, stale-translation rejection, scheduler detachment and physical reclamation. The focused omitted-invalidation control must fail `asid_reuse_requires_invalidation`. QEMU TCG still observes isolation with the invalidation omitted; the negative control verifies that the required retirement operation was actually issued. `cargo xtask asid-bench` retains paired tagged and ASID-zero/full-flush runs. Repository host checks, Clippy, formatting and source-diff checks remain required. QEMU does not substitute for hardware review before any hardware performance claim.
+The DEV/PROD matrix checks same-VA isolation, exhaustion on both CPUs, generation-safe reuse, stale-translation rejection, scheduler detachment and physical reclamation. The focused omitted-invalidation control must fail `asid_reuse_requires_invalidation` based on the observed per-CPU retirement TLBI counts, rather than a compile-time feature flag. Hardware TTBR readback checks the effective tag on every tagged activation; both 8-bit and 16-bit tags begin at bit 48. QEMU TCG still observes isolation with the invalidation omitted; the negative control verifies that the required retirement operation was actually issued. `cargo xtask asid-bench` retains paired tagged and ASID-zero/full-flush runs. Repository host checks, Clippy, formatting and source-diff checks remain required. QEMU does not substitute for hardware review before any hardware performance claim.
 
 ## Reversibility
 
 The allocator and switch contract are private to the bounded kernel process runtime. Before increasing CPU count, allowing root sharing, mutating process mappings, or admitting migration, revisit ASID residency and remote shootdown obligations. The ASID-zero baseline remains available for comparison and fallback.
 
-[Russian translation](../../translations/ru/docs/architecture-decisions/0018-asid-lifecycle.md)
+[Russian translation](../../translations/ru/docs/architecture-decisions/0021-asid-lifecycle.md)
