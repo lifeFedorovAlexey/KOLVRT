@@ -48,6 +48,10 @@ fn signatures_bind_payload_role_key_and_artifact_bytes() {
         max_attestation_age_seconds: None,
         max_clock_skew_seconds: None,
     };
+    // A second key ID must not disguise reuse of the evidence signing key.
+    let mut aliased_policy = policy.clone();
+    aliased_policy.keys[1].public_key = aliased_policy.keys[0].public_key.clone();
+    assert!(SignedArtifactStore::new(aliased_policy, root.clone()).is_err());
     let store = SignedArtifactStore::new(policy.clone(), root.clone()).unwrap();
     let attestations = vec![attestation];
     let refs = vec![digest.clone()];
