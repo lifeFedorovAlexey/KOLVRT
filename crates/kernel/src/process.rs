@@ -262,17 +262,19 @@ impl Registry {
         assert_eq!(self.table.state(id), Ok(State::Prepared));
         for _ in 0..CAPACITY - 1 {
             self.handles[id.slot()]
-                .create_event(
+                .create_event_with_rights(
                     id,
                     kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                    kernel_core::handles::Rights::ALL,
                     |_| Ok::<_, ()>(()),
                 )
                 .unwrap();
         }
         self.handles[id.slot()]
-            .create_event(
+            .create_event_with_rights(
                 id,
                 kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                kernel_core::handles::Rights::ALL,
                 |_| Ok::<_, ()>(()),
             )
             .unwrap()

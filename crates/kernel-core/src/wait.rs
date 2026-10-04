@@ -3,6 +3,7 @@
 use core::sync::atomic::{AtomicU8, Ordering};
 const WAITING: u8 = 1;
 const PENDING: u8 = 2;
+const REVOKED: u8 = 4;
 pub struct Event {
     state: AtomicU8,
 }
@@ -19,7 +20,30 @@ impl Event {
     }
     /// Publish retained work before signaling. Repeated signals coalesce.
     pub fn signal(&self) -> bool {
-        self.state.fetch_or(PENDING, Ordering::AcqRel) & PENDING == 0
+        self.admit_signal().unwrap_or(false)
+    }
+    /// Admit a new publisher unless revocation has already linearized. The CAS
+    /// makes signal admission and revoke a single ordered decision.
+    pub fn admit_signal(&self) -> Result<bool, ()> {
+        let mut state = self.state.load(Ordering::Acquire);
+        loop {
+            if state & REVOKED != 0 {
+                return Err(());
+            }
+            match self.state.compare_exchange_weak(
+                state,
+                state | PENDING,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
+                Ok(_) => return Ok(state & PENDING == 0),
+                Err(next) => state = next,
+            }
+        }
+    }
+    /// Prevent future publisher admission while preserving already-pending work.
+    pub fn revoke(&self) -> bool {
+        self.state.fetch_or(REVOKED, Ordering::AcqRel) & REVOKED == 0
     }
     /// Publish registration first, then recheck the pending condition.
     /// True means the caller must block and recheck before leaving its owner.
@@ -33,7 +57,12 @@ impl Event {
         while state & (WAITING | PENDING) == WAITING | PENDING {
             match self
                 .state
-                .compare_exchange_weak(state, 0, Ordering::AcqRel, Ordering::Acquire)
+                .compare_exchange_weak(
+                    state,
+                    state & REVOKED,
+                    Ordering::AcqRel,
+                    Ordering::Acquire,
+                )
             {
                 Ok(_) => return true,
                 Err(next) => state = next,
@@ -132,7 +161,28 @@ impl SharedEvent {
         }
     }
     pub fn signal(&self) -> bool {
-        self.storage().state.fetch_or(PENDING, Ordering::AcqRel) & PENDING == 0
+        self.admit_signal().unwrap_or(false)
+    }
+    pub fn admit_signal(&self) -> Result<bool, ()> {
+        let state = &self.storage().state;
+        let mut observed = state.load(Ordering::Acquire);
+        loop {
+            if observed & REVOKED != 0 {
+                return Err(());
+            }
+            match state.compare_exchange_weak(
+                observed,
+                observed | PENDING,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
+                Ok(_) => return Ok(observed & PENDING == 0),
+                Err(next) => observed = next,
+            }
+        }
+    }
+    pub fn revoke(&self) -> bool {
+        self.storage().state.fetch_or(REVOKED, Ordering::AcqRel) & REVOKED == 0
     }
     pub fn register(&self) -> bool {
         self.storage().state.fetch_or(WAITING, Ordering::AcqRel);
@@ -142,7 +192,12 @@ impl SharedEvent {
         let state = &self.storage().state;
         let mut observed = state.load(Ordering::Acquire);
         while observed & (WAITING | PENDING) == WAITING | PENDING {
-            match state.compare_exchange_weak(observed, 0, Ordering::AcqRel, Ordering::Acquire) {
+            match state.compare_exchange_weak(
+                observed,
+                observed & REVOKED,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
                 Ok(_) => return true,
                 Err(next) => observed = next,
             }
@@ -156,5 +211,32 @@ impl Drop for SharedEvent {
         assert_eq!(slot.generation.load(Ordering::Acquire), self.generation);
         let previous = slot.references.fetch_sub(1, Ordering::AcqRel);
         assert!(previous > 0 && previous != RESERVED_REFS);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn revoke_rejects_future_admission_without_erasing_pending_work() {
+        let event = Event::new();
+        assert_eq!(event.admit_signal(), Ok(true));
+        assert!(event.revoke());
+        assert!(!event.revoke());
+        assert!(event.consume());
+        assert_eq!(event.admit_signal(), Err(()));
+        assert!(!event.signal());
+    }
+
+    #[test]
+    fn shared_alias_observes_revocation_after_owner_close() {
+        let owner = SharedEvent::try_new().unwrap();
+        let alias = owner.try_clone().unwrap();
+        assert_eq!(alias.admit_signal(), Ok(true));
+        owner.revoke();
+        drop(owner);
+        assert_eq!(alias.admit_signal(), Err(()));
+        assert!(alias.consume());
     }
 }

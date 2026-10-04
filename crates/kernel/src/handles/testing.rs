@@ -45,10 +45,7 @@ pub(super) fn call(
             Kind::Event,
             Rights::SEND,
         ) {
-            Ok(reference) => {
-                reference.event().unwrap().signal();
-                0
-            }
+            Ok(reference) => reference.signal().map(|_| 0).unwrap_or_else(status),
             Err(error) => status(error),
         };
         return true;
@@ -60,9 +57,12 @@ pub(super) fn call(
     let access = Access::current(task).expect("current caller");
     let address = frame.gpr[1] as usize;
     if operation == 0x82 {
-        let a = table.create_event(caller, SharedEvent::try_new().unwrap(), |h| {
-            access.copy_to_user(address + 64, &h.encode().to_le_bytes())
-        });
+        let a = table.create_event_with_rights(
+            caller,
+            SharedEvent::try_new().unwrap(),
+            Rights::ALL,
+            |h| access.copy_to_user(address + 64, &h.encode().to_le_bytes()),
+        );
         let b = table.create_completion(
             caller,
             Completion {

@@ -228,7 +228,15 @@ handle_image_start:
  mov x1,x21
  svc #0x82
  and x19,x19,x0
+ mov x26,x20
  // Old user-supplied handle must stay stale after the slot contains a new target.
+ mov x3,#1
+ str x3,[x21]
+ str x3,[x21,#8]
+ str x26,[x21,#16]
+ str x3,[x21,#24]
+ str xzr,[x21,#32]
+ str xzr,[x21,#40]
  mov x0,x21
  svc #0x80
  cmp x0,#2
@@ -256,6 +264,25 @@ handle_image_start:
  svc #0x80
  mov x3,#0x100
  cmp x0,x3
+ cset x3,eq
+ and x19,x19,x3
+ // Revoke is a copied native request; future SEND admissions are denied.
+ mov x3,#1
+ str x3,[x21]
+ mov x3,#4
+ str x3,[x21,#8]
+ str x20,[x21,#16]
+ str xzr,[x21,#24]
+ str xzr,[x21,#32]
+ str xzr,[x21,#40]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x20
+ svc #0x86
+ cmp x0,#11
  cset x3,eq
  and x19,x19,x3
  // Close the source immediately; the receiver's handle must keep the target alive.

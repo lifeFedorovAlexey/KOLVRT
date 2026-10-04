@@ -206,8 +206,8 @@
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
       },
       "docs/kernel/handles.md": {
-        "source_sha256": "9675c1e83377468b96d4ee22c5b6bd69cc6bdcef2acd55dcbba747acddbaea39",
-        "translation_sha256": "89cf3cd295c659e9a3ee0a7660bd2f3f6b6f010e66b66caff762658b25e0ff72"
+        "source_sha256": "08caefa406062227499b8789e3ffddadd28f5a323f4e1406b93699374008133f",
+        "translation_sha256": "c4899fcfda6aa731800f9da0ac8fa452d0c6ee3b32e61c6e65ac0825f1d37bad"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",
