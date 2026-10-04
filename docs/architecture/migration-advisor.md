@@ -75,7 +75,13 @@ The advisor also checks alternating A/B order, stable useful-unit counts, succes
 
 The [provenance module](../../crates/migration-advisor/src/provenance.rs) implements Ed25519 verification using pinned `ed25519-dalek` and its [strict verification API](https://docs.rs/ed25519-dalek/2.2.0/ed25519_dalek/struct.VerifyingKey.html#method.verify_strict). Provisioned trust policy, artifact root and replay ledger are supplied separately from the request. Input cannot install its own trusted key or assert `verified: true`. The CLI grants verified status only with schema-2 provisioned trust; its schema-1 signer remains an internal fixture mode and is not accepted by the CLI.
 
+<<<<<<< HEAD
 Trusted keys have explicit roles (`session`, `catalog`, `runtime`, `contract_test`, `benchmark`, `proposal`, `deployment`), producer identity, custody and enforcement domains, validity windows, revocation and compromise flags. Provisioned policies must set per-role independence thresholds. Weak keys and duplicate key IDs are rejected. Each evidence attestation signs its role, SHA-256 subject digest and exact session binding. Session issuer attestations bind a random session ID, one-time challenge digest, request-context digest and issue/expiry times. Provisioning checks the challenge against an external create-once ledger, validates freshness against the configured UTC clock and rejects offline policy because no trusted offline clock is available. Role signatures are accepted only inside that active session and within key validity windows. Each attestation signs a domain-separated role and digest. The subject is `serde_json::to_vec` of the exact versioned typed payload, excluding the separate attestation list; producers use the exported `subject_digest` and `signing_message` helpers. Field order and serialization belong to this versioned protocol, not arbitrary raw-JSON whitespace or key order. The base signature domain is `KOLVRT-MIGRATION-ATTESTATION/3`; `signing_message_bound` appends the SHA-256 digest of the exact session binding. Deployment keys must have only that role, and their public keys cannot alias evidence keys under another key ID.
+=======
+Trusted keys have explicit roles (`catalog`, `runtime`, `contract_test`, `benchmark`, `proposal`, `deployment`) and revocation flags. Deployment keys must have only the deployment role; policies that reuse one key across deployment and evidence roles are rejected. Weak keys and duplicate key IDs are rejected. Legacy attestations sign a domain-separated role and SHA-256 subject digest (`KOLVRT-MIGRATION-ATTESTATION/3`). Optional session attestations use `/4` and sign the role, digest, Unix timestamp and session challenge. When the external trust policy configures `required_session_id`, it also must configure `max_attestation_age_seconds`; the verifier rejects a different session, a stale timestamp, or a timestamp beyond `max_clock_skew_seconds` (default zero). The challenge must be supplied out of band by the verifier. Policies that do not configure freshness continue to accept legacy `/3` attestations for compatibility.
+
+The verifier compares timestamps with the host system clock. This detects stale or replayed evidence only within the configured policy and challenge lifecycle; it does not provide a trusted clock, persistent replay database, hardware attestation or secure signer provisioning. Do not treat a producer-generated challenge as an independent freshness challenge.
+>>>>>>> origin/main
 
 The signed package manifest binds executable bytes and specification digests. Signed test results bind package, consumer/provider specification, suite and context. Signed benchmark results bind both exact plans, context, statistical policy and raw-artifact digest. Runtime and proposal metadata are separately signed. The verifier streams and hashes referenced package/specification/suite/kernel/workload/protocol/adapter/raw-result/snapshot artifacts. Files are addressed by lowercase SHA-256 filenames under the configured store, limited to 512 MiB each; missing, substituted or escaping artifacts fail authentication. The store must be an owned, stable snapshot during verification. Results do not pin files for later deployment.
 
@@ -87,10 +93,15 @@ Experimental trust-policy schema 1 also accepts optional `/4` attestations that 
 
 ```text
 cargo run --locked -p migration-advisor -- advise crates/migration-advisor/examples/request.json
+<<<<<<< HEAD
 cargo run --locked -p migration-advisor -- advise request.json --trust-policy fixture-trust.json --artifact-root artifacts
 cargo run --locked -p migration-advisor -- authorize request.json authorization.json --trust-policy fixture-trust.json --artifact-root artifacts
 cargo run --locked -p migration-advisor -- advise request.json --trust-policy provisioned-trust.json --artifact-root artifacts --session-ledger session-ledger
 cargo run --locked -p migration-advisor -- authorize request.json authorization.json --trust-policy provisioned-trust.json --artifact-root artifacts --session-ledger authorization-ledger
+=======
+cargo run --locked -p migration-advisor -- advise request.json --trust-policy trust.json --artifact-root artifacts
+cargo run --locked -p migration-advisor -- authorize request.json authorization.json --trust-policy trust.json --artifact-root artifacts
+>>>>>>> origin/main
 cargo test --locked -p migration-advisor
 ```
 
@@ -102,6 +113,10 @@ The [example](../../crates/migration-advisor/examples/request.json) is a host-mo
 
 The [migration workbench](migration-workbench.md) executes host-process contracts, 100 paired A/B runs, local signing and isolated immutable-workload rollback. Its QEMU exporter joins kernel-owned process generations, CPU ownership, resident frames and accumulated generic-counter intervals at EL0 exception boundaries to the exact loaded image digest and route-generation observations. The derived nanoseconds are an estimate of each fixture process's EL0 dispatch residency; counter reads bracket exception entry and return, so they include boundary overhead and exclude native EL1 service time. They do not identify adapter-only CPU cost. This bounded fixture bridge is not a live production OS telemetry service: isolated adapter/native CPU attribution, complete installed-state/catalog ownership, real application contract execution and physical ARM64 KOLVRT A/B remain unimplemented. No installed KOLVRT package migration or physical ARM64 speedup is measured. A benchmark runner waits for two real comparable paths, as required by the existing methodology. A production exporter and trusted catalog must retain causal attribution, loss reporting and actual consumer/installed-state identity.
 
+<<<<<<< HEAD
 Before production add independently operated key onboarding and custody, an authenticated clock source, online revocation and incident recovery, actual contract/rollback execution, stable artifact capture, validated sample dependence and power, production-catalog integration for scoped solving, memory/copy/energy and consumer-specific regression budgets. Expose proposals in userspace; authorize deployment separately with route-generation, state-retirement and restoration checks. **Compatibility cannot be established by words; contracts must test it.** Signatures preserve the evidence chain but cannot replace its execution.
+=======
+Before production add trusted producer provisioning and trusted time/challenge lifecycle, actual contract/rollback execution, stable artifact capture, validated sample dependence and power, production-catalog integration for scoped solving, memory/copy/energy and consumer-specific regression budgets. Expose proposals in userspace; authorize deployment separately with route-generation, state-retirement and restoration checks. **Compatibility cannot be established by words; contracts must test it.** Signatures preserve the evidence chain but cannot replace its execution.
+>>>>>>> origin/main
 
 [Russian translation](../../translations/ru/docs/architecture/migration-advisor.md)

@@ -1383,7 +1383,11 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     let deployment_key = SigningKey::from_bytes(&[47; 32]);
     let issuer = SigningKey::from_bytes(&[46; 32]);
     let key = SigningKey::from_bytes(&[44; 32]);
+<<<<<<< HEAD
     let independent_key = SigningKey::from_bytes(&[45; 32]);
+=======
+    let deployment_key = SigningKey::from_bytes(&[45; 32]);
+>>>>>>> origin/main
     let hex = |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
     let now = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
@@ -1424,6 +1428,19 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
                 .sign(&signing_message_bound(Role::Deployment, &digest, &session))
                 .to_bytes()),
             session: Some(session.clone()),
+            issued_at_unix_seconds: None,
+            session_id: None,
+        }
+    };
+    let sign_deployment = |payload: Vec<u8>| {
+        let digest = subject_digest(&payload);
+        Attestation {
+            role: Role::Deployment,
+            subject_digest: digest.clone(),
+            key_id: "fixture-deployer".into(),
+            signature: hex(&deployment_key
+                .sign(&signing_message(Role::Deployment, &digest))
+                .to_bytes()),
             issued_at_unix_seconds: None,
             session_id: None,
         }
@@ -1490,6 +1507,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         false,
     ));
     let policy = TrustPolicy {
+<<<<<<< HEAD
         schema: 2,
         keys: vec![
             TrustedKey {
@@ -1508,6 +1526,12 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
             },
             TrustedKey {
                 key_id: "producer-a".into(),
+=======
+        schema: 1,
+        keys: vec![
+            TrustedKey {
+                key_id: "fixture-producer".into(),
+>>>>>>> origin/main
                 public_key: hex(&key.verifying_key().to_bytes()),
                 roles: vec![
                     Role::Catalog,
@@ -1517,6 +1541,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
                     Role::Proposal,
                 ],
                 revoked: false,
+<<<<<<< HEAD
                 compromised: false,
                 producer: Some(ProducerIdentity {
                     producer_id: "producer-a".into(),
@@ -1539,12 +1564,15 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
                 }),
                 valid_from_unix: Some(0),
                 valid_until_unix: None,
+=======
+>>>>>>> origin/main
             },
             TrustedKey {
                 key_id: "fixture-deployer".into(),
                 public_key: hex(&deployment_key.verifying_key().to_bytes()),
                 roles: vec![Role::Deployment],
                 revoked: false,
+<<<<<<< HEAD
                 compromised: false,
                 producer: Some(ProducerIdentity {
                     producer_id: "deployer".into(),
@@ -1566,6 +1594,10 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
             min_custody_domains: 2,
             min_enforcement_domains: 2,
         }],
+=======
+            },
+        ],
+>>>>>>> origin/main
         required_session_id: None,
         max_attestation_age_seconds: None,
         max_clock_skew_seconds: None,
@@ -1661,6 +1693,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         serde_json::to_vec(&plan).unwrap(),
     )
     .unwrap();
+<<<<<<< HEAD
     let authorization_store = SignedArtifactStore::provisioned(
         policy.clone(),
         root.clone(),
@@ -1675,6 +1708,11 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         &authorization_store,
     )
     .unwrap();
+=======
+    let receipt =
+        migration_advisor::authorization::authorize(&r, &signed_authorization, &solver(), &store)
+            .unwrap();
+>>>>>>> origin/main
     assert!(receipt.authorization_verified);
     assert!(!receipt.deployment_executed);
     let authorization_path = root.join("authorization.json");
@@ -1691,8 +1729,11 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         .arg(&trust_path)
         .arg("--artifact-root")
         .arg(&root)
+<<<<<<< HEAD
         .arg("--session-ledger")
         .arg(root.join("session-ledger-authorized-cli"))
+=======
+>>>>>>> origin/main
         .output()
         .unwrap();
     assert!(authorized_cli.status.success());
@@ -1715,8 +1756,11 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         .arg(&trust_path)
         .arg("--artifact-root")
         .arg(&root)
+<<<<<<< HEAD
         .arg("--session-ledger")
         .arg(root.join("session-ledger-altered-cli"))
+=======
+>>>>>>> origin/main
         .output()
         .unwrap();
     assert!(!altered_cli.status.success());

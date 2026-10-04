@@ -142,8 +142,13 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
+<<<<<<< HEAD
         "source_sha256": "6e204dc36db48b881ccca4ac04bcc0a7b76f54301a3a41cbf08748981f1c0b7c",
         "translation_sha256": "e637def4c0fd37c216e8163243d00d7e609371edc4175c70e03d2da0f894c44e"
+=======
+        "source_sha256": "cda0f5fc3472fbf101bd521c1a13370b951ed67312de133b828ca95d055e2c47",
+        "translation_sha256": "96e17ddb807f5d9a2b62d9299056c2b2cf3126704663a2637ab0f3b7a60d9526"
+>>>>>>> origin/main
       },
       "docs/architecture/migration-workbench.md": {
         "source_sha256": "d233aac554b7cb12df0a917acf5be250bc3eedf9e7e2d55338ccb4ff3643d780",
