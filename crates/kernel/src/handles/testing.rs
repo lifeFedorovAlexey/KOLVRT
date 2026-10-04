@@ -339,6 +339,7 @@ pub(crate) fn exercise(
                 physical,
                 Origin::Bootstrap,
                 Spec {
+                    image_format: crate::process::ImageFormat::RawFixture,
                     image: foreign_image,
                     context,
                     owner,
@@ -383,6 +384,7 @@ pub(crate) fn exercise(
             physical,
             Origin::Bootstrap,
             Spec {
+                image_format: crate::process::ImageFormat::RawFixture,
                 image,
                 context: Context {
                     pc: memory::USER_CODE as u64,
@@ -401,6 +403,7 @@ pub(crate) fn exercise(
             physical,
             Origin::Bootstrap,
             Spec {
+                image_format: crate::process::ImageFormat::RawFixture,
                 image: foreign_image,
                 context: Context {
                     pc: memory::USER_CODE as u64,
@@ -463,6 +466,7 @@ pub(crate) fn exercise(
                     physical,
                     Origin::Bootstrap,
                     Spec {
+                        image_format: crate::process::ImageFormat::RawFixture,
                         image,
                         context,
                         owner,
