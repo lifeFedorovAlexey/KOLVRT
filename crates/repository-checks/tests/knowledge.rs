@@ -10,6 +10,199 @@ use std::{
 };
 
 static NEXT: AtomicU64 = AtomicU64::new(0);
+
+#[test]
+fn verified_requires_current_sources_and_preserves_historical_receipt_integrity() {
+    use repository_checks::hash;
+    let f = Fixture::new();
+    fs::write(f.0.join("source.rs"), "original\r\n").unwrap();
+    let record = json!({"source_files":[{"path":"source.rs","sha256_lf":hash("original\n")}],"correctness":{"matrix":"passed"},"profiles":{"dev":{"run":{"qemu_version":"fixture"}}}});
+    fs::write(f.0.join("receipt.json"), record.to_string()).unwrap();
+    let mut feature = json!({"implementation":"EXPERIMENTAL","sources":["source.rs"],"acceptance":[],"transitions":[{"from":"UNRECORDED","to":"EXPERIMENTAL"}],"verification":[{"environment":"qemu-arm64","state":"VERIFIED","reason":"fixture","scope":"fixture only","receipt":"receipt.json","receipt_sha256":hash(&record.to_string())}],"readiness":"NOT_READY"});
+    knowledge::validate_feature(&f.0, &feature).unwrap();
+    fs::write(f.0.join("source.rs"), "changed\n").unwrap();
+    assert!(
+        knowledge::validate_feature(&f.0, &feature)
+            .unwrap_err()
+            .contains("record STALE")
+    );
+    feature["verification"][0]["state"] = json!("STALE");
+    knowledge::validate_feature(&f.0, &feature).unwrap();
+    fs::write(f.0.join("receipt.json"), "{}").unwrap();
+    assert!(
+        knowledge::validate_feature(&f.0, &feature)
+            .unwrap_err()
+            .contains("receipt digest mismatch")
+    );
+    fs::write(f.0.join("receipt.json"), record.to_string()).unwrap();
+    feature["verification"][0]["state"] = json!("VERIFIED");
+    feature["sources"] = json!(["receipt.json"]);
+    assert!(knowledge::validate_feature(&f.0, &feature).is_err());
+    let mut duplicate = record.clone();
+    duplicate["source_files"]
+        .as_array_mut()
+        .unwrap()
+        .push(record["source_files"][0].clone());
+    fs::write(f.0.join("receipt.json"), duplicate.to_string()).unwrap();
+    feature["verification"][0]["receipt_sha256"] = json!(hash(&duplicate.to_string()));
+    assert!(
+        knowledge::validate_feature(&f.0, &feature)
+            .unwrap_err()
+            .contains("duplicate")
+    );
+}
+
+#[test]
+fn unicode_queries_match_localized_navigation_and_neutral_ids() {
+    let f = Fixture::new();
+    f.doc("doc.test", "test-section", json!({}));
+    fs::create_dir_all(f.0.join("translations/ru/docs")).unwrap();
+    let text = fs::read_to_string(f.0.join("docs/test.md"))
+        .unwrap()
+        .replace("Useful section", "Отзыв полномочий");
+    fs::write(f.0.join("translations/ru/docs/test.md"), text).unwrap();
+    fs::write(
+        f.0.join("translations/manifest.json"),
+        "{\"locales\":{\"ru\":{}}}",
+    )
+    .unwrap();
+    let k = Knowledge::build(&f.0).unwrap();
+    let result = k
+        .context(&f.0, "ПРОВЕРЬ ОТЗЫВ ПОЛНОМОЧИЙ", 65536, "ru")
+        .unwrap();
+    assert!(
+        result["selected"]
+            .as_array()
+            .unwrap()
+            .contains(&json!("kolvrt.test.section"))
+    );
+    assert!(
+        result["context"]
+            .as_str()
+            .unwrap()
+            .contains("Отзыв полномочий")
+    );
+    assert!(
+        !k.context(&f.0, "kolvrt.test.section", 65536, "ru").unwrap()["selected"]
+            .as_array()
+            .unwrap()
+            .is_empty()
+    );
+    assert!(k.context(&f.0, "отзыв", 65536, "xx").is_err());
+    knowledge::cli(
+        &f.0,
+        &[
+            "context".into(),
+            "отзыв полномочий".into(),
+            "--locale".into(),
+            "ru".into(),
+            "--budget-bytes".into(),
+            "65536".into(),
+        ],
+    )
+    .unwrap();
+    assert!(knowledge::cli(&f.0, &["context".into(), "отзыв".into(), "--locale".into()]).is_err());
+}
+
+#[test]
+fn implementation_declarations_cover_new_files_and_explicit_review_dispositions() {
+    use repository_checks::hash;
+    use std::process::Command;
+    let f = Fixture::new();
+    fs::create_dir_all(f.0.join("crates/example/src")).unwrap();
+    let path = "crates/example/src/lib.rs";
+    fs::write(f.0.join(path), "before\n").unwrap();
+    let feature = json!({"implementation":"EXPERIMENTAL","implementation_scope":"Fixture implementation","sources":[path],"acceptance":[],"issues":[],"adrs":[],"limitations":["fixture only"],"next_gate":"acceptance","verification":[{"environment":"host","state":"UNKNOWN","reason":"fixture only"}],"readiness":"NOT_READY","transitions":[{"from":"UNRECORDED","to":"EXPERIMENTAL","reason":"initial fixture","acceptance":[]}]});
+    f.doc("doc.test","test-section",json!({"units":[{"id":"kolvrt.test.section","kind":"feature","anchor":"test-section","summary":"Fixture","feature":feature}]}));
+    let git = |args: &[&str]| {
+        let out = Command::new("git")
+            .current_dir(&f.0)
+            .args(args)
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        String::from_utf8(out.stdout).unwrap().trim().to_owned()
+    };
+    git(&["init", "--quiet"]);
+    git(&["add", "."]);
+    git(&[
+        "-c",
+        "user.name=Test",
+        "-c",
+        "user.email=test@example.invalid",
+        "commit",
+        "--quiet",
+        "-m",
+        "Fixture",
+    ]);
+    let base = git(&["rev-parse", "HEAD"]);
+    fs::write(f.0.join(path), "after\n").unwrap();
+    assert!(
+        knowledge::check_change(&f.0, "HEAD")
+            .unwrap_err()
+            .contains("require docs/implementation-impact")
+    );
+    let mut declaration = json!({"schema_version":1,"base_commit":base,"files":[{"path":path,"before_sha256_lf":hash("before\n"),"after_sha256_lf":hash("after\n"),"disposition":"existing-feature","reason":"Refactor unrelated helper; fixture feature behavior is unchanged."}],"features":[{"id":"kolvrt.test.section","disposition":"no-impact","reason":"Reviewed helper-only change; no fixture contract or evidence claim changes."}]});
+    let write = |d: &serde_json::Value| {
+        fs::write(f.0.join("docs/implementation-impact.json"), d.to_string()).unwrap()
+    };
+    write(&declaration);
+    knowledge::check_change(&f.0, "HEAD").unwrap();
+    declaration["features"][0]["disposition"] = json!("semantic-change");
+    write(&declaration);
+    let doc = fs::read_to_string(f.0.join("docs/test.md")).unwrap();
+    fs::write(f.0.join("docs/test.md"), format!("{doc}\n\n")).unwrap();
+    assert!(
+        knowledge::check_change(&f.0, "HEAD")
+            .unwrap_err()
+            .contains("substantive")
+    );
+    declaration["features"][0]["disposition"] = json!("evidence-change");
+    write(&declaration);
+    assert!(
+        knowledge::check_change(&f.0, "HEAD")
+            .unwrap_err()
+            .contains("changed evidence")
+    );
+    declaration["features"][0]["disposition"] = json!("no-impact");
+    write(&declaration);
+    fs::write(f.0.join(path), "later\n").unwrap();
+    assert!(
+        knowledge::check_change(&f.0, "HEAD")
+            .unwrap_err()
+            .contains("source digest mismatch")
+    );
+    fs::write(f.0.join(path), "after\n").unwrap();
+    fs::write(f.0.join("crates/example/src/new.rs"), "new mechanism\n").unwrap();
+    assert!(
+        knowledge::check_change(&f.0, "HEAD")
+            .unwrap_err()
+            .contains("every changed")
+    );
+    declaration["files"].as_array_mut().unwrap().push(json!({"path":"crates/example/src/new.rs","before_sha256_lf":null,"after_sha256_lf":hash("new mechanism\n"),"disposition":"new-feature","reason":"This added mechanism must enroll a new canonical feature before merge."}));
+    write(&declaration);
+    assert!(
+        knowledge::check_change(&f.0, "HEAD")
+            .unwrap_err()
+            .contains("newly enrolled")
+    );
+    declaration["files"][1]["disposition"] = json!("no-feature-impact");
+    declaration["files"][1]["reason"] =
+        json!("Fixture-only helper addition; reviewer must confirm no new product mechanism.");
+    write(&declaration);
+    knowledge::check_change(&f.0, "HEAD").unwrap();
+    declaration["base_commit"] = json!("0000000000000000000000000000000000000000");
+    write(&declaration);
+    assert!(
+        knowledge::check_change(&f.0, "HEAD")
+            .unwrap_err()
+            .contains("base_commit")
+    );
+}
 struct Fixture(PathBuf);
 impl Fixture {
     fn new() -> Self {
@@ -24,6 +217,11 @@ impl Fixture {
         fs::copy(
             source.join("schemas/knowledge.schema.json"),
             root.join("schemas/knowledge.schema.json"),
+        )
+        .unwrap();
+        fs::copy(
+            source.join("schemas/implementation-impact.schema.json"),
+            root.join("schemas/implementation-impact.schema.json"),
         )
         .unwrap();
         fs::create_dir_all(root.join("research/cases")).unwrap();

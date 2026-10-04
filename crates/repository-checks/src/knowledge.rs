@@ -8,6 +8,7 @@ use std::{
     path::{Component, Path},
     process::Command,
 };
+mod impact;
 
 const MARKER: &str = "<!-- knowledge -->";
 const MAX_DOCUMENT_BYTES: usize = 1024 * 1024;
@@ -253,7 +254,17 @@ pub fn validate_feature(root: &Path, feature: &Value) -> CheckResult<()> {
         if !environments.insert(environment) {
             return Err("duplicate verification environment".into());
         }
+        // Retained historical evidence remains integrity checked when stale.
+        if let Some(receipt) = v["receipt"].as_str() {
+            safe_path(root, receipt)?;
+            if v["receipt_sha256"] != hash(&read(&root.join(receipt))?) {
+                return Err(format!("verification receipt digest mismatch: {receipt}"));
+            }
+        }
         if v["state"] == "VERIFIED" {
+            if strings(feature, "sources").is_empty() {
+                return Err("VERIFIED requires declared feature sources".into());
+            }
             let receipt = v["receipt"].as_str().ok_or("VERIFIED needs receipt")?;
             safe_path(root, receipt)?;
             if v["receipt_sha256"] != hash(&read(&root.join(receipt))?) {
@@ -263,6 +274,33 @@ pub fn validate_feature(root: &Path, feature: &Value) -> CheckResult<()> {
                 return Err("VERIFIED needs explicit revision/profile/platform scope".into());
             }
             let record = read_json(&root.join(receipt))?;
+            let sources = record["source_files"]
+                .as_array()
+                .ok_or("VERIFIED requires receipt source_files")?;
+            let mut recorded = BTreeMap::new();
+            for source in sources {
+                let path = source["path"]
+                    .as_str()
+                    .ok_or("receipt source path required")?;
+                let digest = source["sha256_lf"].as_str();
+                if digest.is_some_and(|d| {
+                    d.len() != 64
+                        || !d
+                            .bytes()
+                            .all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
+                }) || recorded.insert(path, digest).is_some()
+                {
+                    return Err("duplicate or malformed receipt source digest".into());
+                }
+            }
+            for source in strings(feature, "sources") {
+                let current = hash(&read(&root.join(&source))?);
+                if recorded.get(source.as_str()).copied().flatten() != Some(current.as_str()) {
+                    return Err(format!(
+                        "VERIFIED source mismatch: {source}; record STALE or provide a new exact-source receipt"
+                    ));
+                }
+            }
             if environment == "qemu-arm64"
                 && (record["correctness"]["matrix"] != "passed"
                     || record["source_files"].as_array().is_none_or(Vec::is_empty)
@@ -369,6 +407,7 @@ impl Knowledge {
                     }
                 }
                 let mut locations = BTreeMap::new();
+                let mut localized = BTreeMap::new();
                 locations.insert(
                     "en".to_owned(),
                     json!({"path":rel,"start":start,"end":end,"sha256":hash(&text)}),
@@ -390,11 +429,21 @@ impl Knowledge {
                     {
                         return Err(format!("{rel}: EN/{locale} knowledge metadata differs"));
                     }
-                    let (ls, le, _) = if i == 0 {
-                        (1, local.lines().count(), title.clone())
+                    let (ls, le, local_title) = if i == 0 {
+                        (
+                            1,
+                            local.lines().count(),
+                            headings(&local)
+                                .into_iter()
+                                .find(|h| h.1 == 1)
+                                .ok_or("translation needs H1")?
+                                .2,
+                        )
                     } else {
                         section(&local, unit["anchor"].as_str().unwrap())?
                     };
+                    let local_unit = if i == 0 { &lm } else { &lm["units"][i - 1] };
+                    localized.insert(locale.clone(), json!({"title":local_title,"summary":local_unit["summary"],"tags":local_unit["tags"],"read_when":local_unit["read_when"]}));
                     inputs.insert(translated.clone(), hash(&local));
                     locations.insert(
                         locale.clone(),
@@ -409,6 +458,7 @@ impl Knowledge {
                 node["document_status"] = json!(field(&text, "Document status").unwrap());
                 node["evidence_scope"] = json!(field(&text, "Evidence scope").unwrap());
                 node["locations"] = json!(locations);
+                node["localized"] = json!(localized);
                 let bytes = text
                     .lines()
                     .skip(start - 1)
@@ -570,6 +620,7 @@ impl Knowledge {
                     "sources",
                     "evidence_scope",
                     "schema_version",
+                    "localized",
                 ] {
                     small.as_object_mut().unwrap().remove(key);
                 }
@@ -647,7 +698,18 @@ impl Knowledge {
             json!({"input":input,"affected":seen,"scope":"Declared documentation relationships; review canonical docs, locale pairs, summaries and evidence applicability. Not exhaustive code impact."}),
         )
     }
+    fn check_locale(&self, root: &Path, locale: &str) -> CheckResult<()> {
+        if locale != "en"
+            && read_json(&root.join("translations/manifest.json"))?["locales"]
+                .get(locale)
+                .is_none()
+        {
+            return Err(format!("unsupported locale {locale}"));
+        }
+        Ok(())
+    }
     pub fn render(&self, root: &Path, ids: &[String], locale: &str) -> CheckResult<String> {
+        self.check_locale(root, locale)?;
         let mut ranges = BTreeMap::<String, BTreeSet<usize>>::new();
         let mut headers = String::new();
         for id in ids {
@@ -665,7 +727,10 @@ impl Knowledge {
             }
             headers.push_str(&format!(
                 "{id}: {} [{}; {}; digest {}]\n",
-                node["title"].as_str().unwrap_or(id),
+                node["localized"][locale]["title"]
+                    .as_str()
+                    .or_else(|| node["title"].as_str())
+                    .unwrap_or(id),
                 node["document_status"]
                     .as_str()
                     .unwrap_or("record-owned state"),
@@ -754,9 +819,10 @@ impl Knowledge {
         if query.len() > 4096 || budget > MAX_CONTEXT_BYTES {
             return Err("query/budget limit exceeded".into());
         }
+        self.check_locale(root, locale)?;
         let words: BTreeSet<_> = query
-            .split(|c: char| !c.is_ascii_alphanumeric() && c != '-' && c != '.')
-            .filter(|s| s.len() > 2)
+            .split(|c: char| !c.is_alphanumeric() && c != '-' && c != '.')
+            .filter(|s| s.chars().count() > 2)
             .map(str::to_lowercase)
             .collect();
         let mut ranked = Vec::new();
@@ -770,7 +836,13 @@ impl Knowledge {
             )) && !words.iter().any(|w| {
                 matches!(
                     w.as_str(),
-                    "historical" | "history" | "removed" | "superseded"
+                    "historical"
+                        | "history"
+                        | "removed"
+                        | "superseded"
+                        | "история"
+                        | "исторический"
+                        | "удалённый"
                 )
             }) {
                 continue;
@@ -783,7 +855,12 @@ impl Knowledge {
                 ("title", 3),
                 ("summary", 1),
             ] {
-                let value = node[field].to_string().to_lowercase();
+                let value = format!(
+                    "{} {}",
+                    node[field],
+                    self.graph["nodes"][node["id"].as_str().unwrap()]["localized"][locale][field]
+                )
+                .to_lowercase();
                 score += words.iter().filter(|w| value.contains(w.as_str())).count() * weight;
             }
             if node["kind"] == "feature" {
@@ -814,7 +891,7 @@ impl Knowledge {
             }
         }
         Ok(
-            json!({"query":query,"seeds":seeds,"reason":"Up to three deterministic ID/tag/read-condition/title/summary matches scoring at least 60% of the best candidate, plus mandatory prerequisite closure; related edges are optional.","selected":ids,"missing":missing,"bytes":text.len(),"estimated_tokens":text.len().div_ceil(4),"estimate_method":"ceil UTF-8 bytes/4; approximate, not a tokenizer","budget_bytes":budget,"budget_exceeded":text.len()>budget,"context":text}),
+            json!({"query":query,"locale":locale,"seeds":seeds,"reason":"Up to three deterministic ID/tag/read-condition/title/summary matches scoring at least 60% of the best candidate, plus mandatory prerequisite closure; related edges are optional.","selected":ids,"missing":missing,"bytes":text.len(),"estimated_tokens":text.len().div_ceil(4),"estimate_method":"ceil UTF-8 bytes/4; approximate, not a tokenizer","budget_bytes":budget,"budget_exceeded":text.len()>budget,"context":text}),
         )
     }
 }
@@ -950,7 +1027,9 @@ pub fn pilot(root: &Path, check: bool) -> CheckResult<()> {
     let mut source_files = Vec::new();
     for path in [
         "crates/repository-checks/src/knowledge.rs",
+        "crates/repository-checks/src/knowledge/impact.rs",
         "crates/repository-checks/tests/knowledge.rs",
+        "schemas/implementation-impact.schema.json",
     ] {
         source_files.push(json!({"path":path,"sha256_lf":hash(&read(&root.join(path))?)}));
     }
@@ -958,6 +1037,23 @@ pub fn pilot(root: &Path, check: bool) -> CheckResult<()> {
     let context_bytes = result["bytes"].as_u64().unwrap() as usize;
     let report = json!({"schema_version":1,"claim":"Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.","correctness":{"retrieval":"passed","mandatory_ids":"present","planned_gap":"explicit","budget":"within 131072 bytes"},"query":query,"source_files":source_files,"catalog_sha256":hash(&knowledge.catalog.to_string()),"catalog_serialization":"compact standard JSON, whitespace has no meaning","catalog_bytes":catalog_bytes,"catalog_nodes":knowledge.catalog["entries"].as_array().unwrap().len(),"docs_baseline":{"documents":all.len(),"utf8_bytes":baseline_bytes},"selected_full_documents":{"count":source_paths.len(),"utf8_bytes":full_bytes},"rendered_context_bytes":context_bytes,"context_plus_catalog_bytes":context_bytes+catalog_bytes,"approximate_tokens":(context_bytes+catalog_bytes).div_ceil(4),"estimate":"ceil UTF-8 bytes/4, not a tokenizer","selected":selected_locations,"seeds":result["seeds"],"missing":result["missing"],"optional_raw_acceptance_bytes":evidence,"evidence_loading":"Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.","external_issue_body_bytes_loaded":0,"issue_body_scope":"Planned issue #24 requirements are authored in the canonical feature contract; live issue body is not loaded. Online existence is a separate optional check.","coverage_review":"The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged."});
     let mut report = report;
+    let ru = knowledge.context(root, "проверь отзыв полномочий", 262144, "ru")?;
+    for required in selected {
+        if !ru["selected"].as_array().unwrap().contains(required) {
+            return Err(format!("Russian pilot misses required context {required}"));
+        }
+    }
+    let localized_navigation: BTreeMap<_, _> = knowledge.graph["nodes"]
+        .as_object()
+        .unwrap()
+        .iter()
+        .filter_map(|(id, node)| node["localized"].get("ru").map(|v| (id, v)))
+        .collect();
+    let localized_bytes = serde_json::to_vec(&localized_navigation)
+        .map_err(|e| e.to_string())?
+        .len();
+    let ru_bytes = ru["bytes"].as_u64().unwrap() as usize;
+    report["russian_pilot"] = json!({"query":ru["query"],"locale":"ru","seeds":ru["seeds"],"selected":ru["selected"],"missing":ru["missing"],"rendered_context_bytes":ru_bytes,"catalog_bytes":catalog_bytes,"localized_navigation_bytes":localized_bytes,"context_plus_navigation_bytes":ru_bytes+catalog_bytes+localized_bytes,"approximate_tokens":(ru_bytes+catalog_bytes+localized_bytes).div_ceil(4),"correctness":"English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof."});
     let impact = knowledge.impact("kolvrt.handles.identity")?;
     for id in [
         "kolvrt.security.domains",
@@ -1002,7 +1098,7 @@ fn summaries(root: &Path, knowledge: &Knowledge, check: bool) -> CheckResult<()>
             "\n\n| Canonical feature | Implementation | Evidence limit |\n| --- | --- | --- |\n"
                 .to_owned()
         } else {
-            "\n\n| Каноническая функция | Реализация | Граница доказательств |\n| --- | --- | --- |\n".to_owned()
+            "\n\n| РљР°РЅРѕРЅРёС‡РµСЃРєР°СЏ С„СѓРЅРєС†РёСЏ | Р РµР°Р»РёР·Р°С†РёСЏ | Р“СЂР°РЅРёС†Р° РґРѕРєР°Р·Р°С‚РµР»СЊСЃС‚РІ |\n| --- | --- | --- |\n".to_owned()
         };
         for (id, node) in knowledge.graph["nodes"].as_object().unwrap() {
             if node.get("feature").is_none() {
@@ -1084,7 +1180,11 @@ pub fn check_change(root: &Path, base: &str) -> CheckResult<()> {
         }
         String::from_utf8(out.stdout).map_err(|e| e.to_string())
     };
-    let changed = run(&["diff", "--name-only", base, "--"])?;
+    let changed = format!(
+        "{}{}",
+        run(&["diff", "--name-only", base, "--"])?,
+        run(&["ls-files", "--others", "--exclude-standard"])?
+    );
     let changed: BTreeSet<_> = changed.lines().collect();
     let knowledge = Knowledge::build(root)?;
     let mut old_features = BTreeMap::new();
@@ -1124,20 +1224,11 @@ pub fn check_change(root: &Path, base: &str) -> CheckResult<()> {
             ));
         }
     }
+    impact::check(root, base, &changed, &knowledge, &old_features, run)?;
     for (id, node) in knowledge.graph["nodes"].as_object().unwrap() {
         let Some(feature) = node.get("feature") else {
             continue;
         };
-        let path = node["path"].as_str().unwrap();
-        if strings(feature, "sources")
-            .iter()
-            .any(|p| changed.contains(p.as_str()))
-            && !changed.contains(path)
-        {
-            return Err(format!(
-                "{id}: declared implementation changed without canonical feature impact update"
-            ));
-        }
         if let Some(old_feature) = old_features.get(id) {
             let old_events = &old_feature["transitions"];
             let new_events = &feature["transitions"];
@@ -1181,8 +1272,23 @@ pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
         "deps" if args.len()==2 => println!("{}",json!(k.closure(&[args[1].clone()])?)),
         "impact" if args.len()==2 => println!("{}",k.impact(&args[1])?),
         "related" if args.len()==2 => {let id=k.resolve(&args[1])?;for e in k.graph["edges"].as_array().unwrap(){if e["from"]==id || e["to"]==id{println!("{e}");}}},
-        "context" if args.len()==2 || (args.len()==4 && args[2]=="--budget-bytes") => {let budget=if args.len()==4 {args[3].parse().map_err(|_|"invalid byte budget")?}else{65536};let result=k.context(root,&args[1],budget,"en")?;println!("{}",serde_json::to_string_pretty(&result).map_err(|e|e.to_string())?);if result["budget_exceeded"]==true{return Err("required context exceeds budget; choose narrower units, no dependency was silently dropped".into());}},
-        _=>return Err("docs: generate [--check] | pilot [--check] | check-issues | find TEXT | show ID [--locale ru] | deps ID | related ID | impact ID | context TASK [--budget-bytes N] | check-change BASE".into())
+        "context" if args.len() >= 2 => {
+            let mut budget = 65536;
+            let mut locale = "en";
+            let mut seen = BTreeSet::new();
+            for option in args[2..].chunks(2) {
+                if option.len() != 2 || !seen.insert(option[0].as_str()) { return Err("missing or duplicate context option".into()); }
+                match option[0].as_str() {
+                    "--locale" => locale = &option[1],
+                    "--budget-bytes" => budget = option[1].parse().map_err(|_| "invalid byte budget")?,
+                    _ => return Err("unknown context option".into()),
+                }
+            }
+            let result = k.context(root, &args[1], budget, locale)?;
+            println!("{}", serde_json::to_string_pretty(&result).map_err(|e| e.to_string())?);
+            if result["budget_exceeded"] == true { return Err("required context exceeds budget; choose narrower units, no dependency was silently dropped".into()); }
+        },
+        _=>return Err("docs: generate [--check] | pilot [--check] | check-issues | find TEXT | show ID [--locale ru] | deps ID | related ID | impact ID | context TASK [--locale ru] [--budget-bytes N] | check-change BASE".into())
     }
     Ok(())
 }

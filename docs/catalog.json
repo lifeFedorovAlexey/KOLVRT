@@ -711,7 +711,7 @@
     {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
-      "estimated_bytes": 12540,
+      "estimated_bytes": 15485,
       "id": "doc.kolvrt.docs.knowledge",
       "kind": "policy",
       "path": "docs/knowledge-system.md",
@@ -742,7 +742,7 @@
     {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 9333,
+      "estimated_bytes": 9471,
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "path": "docs/kernel/capabilities.md",
@@ -762,7 +762,7 @@
     {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 18557,
+      "estimated_bytes": 18665,
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
       "path": "docs/kernel/handles.md",
@@ -772,7 +772,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 19475,
+      "estimated_bytes": 19548,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -1147,7 +1147,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 4757,
+      "estimated_bytes": 4830,
       "id": "kolvrt.process.handle-boundary",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -1364,7 +1364,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 7640,
+      "estimated_bytes": 7778,
       "id": "kolvrt.security.event-revocation",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
@@ -1789,6 +1789,7 @@
   ],
   "schema_version": 1,
   "unenrolled_documents": [
+    "AGENTS.md",
     "CONTRIBUTING.md",
     "README.md",
     "crates/repository-checks/README.md",
