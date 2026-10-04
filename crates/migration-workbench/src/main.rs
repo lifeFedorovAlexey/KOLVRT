@@ -92,16 +92,28 @@ fn execute(path: &Path, mode: &str, log: &Path) -> Result<Receipt, String> {
     }
     Ok(receipt)
 }
-fn attest<T: Serialize>(key: &SigningKey, role: Role, payload: &T) -> Attestation {
-    let digest = subject_digest(&serde_json::to_vec(payload).unwrap());
-    let signature = key.sign(&signing_message(role, &digest));
-    Attestation {
-        role,
-        subject_digest: digest,
-        key_id: "ephemeral-local-experiment".into(),
-        signature: hex(&signature.to_bytes()),
-        issued_at_unix_seconds: None,
-        session_id: None,
+/// Local fixture-only signer. Provisioned producer private keys are never loaded
+/// by the advisor or workbench; production evidence enters through external policy.
+struct EphemeralFixtureSigner(SigningKey);
+impl EphemeralFixtureSigner {
+    fn generate() -> Self {
+        Self(SigningKey::generate(&mut OsRng))
+    }
+    fn attest<T: Serialize>(&self, role: Role, payload: &T) -> Attestation {
+        let digest = subject_digest(&serde_json::to_vec(payload).unwrap());
+        let signature = self.0.sign(&signing_message(role, &digest));
+        Attestation {
+            role,
+            subject_digest: digest,
+            key_id: "ephemeral-local-experiment".into(),
+            signature: hex(&signature.to_bytes()),
+            session: None,
+            issued_at_unix_seconds: None,
+            session_id: None,
+        }
+    }
+    fn public_key(&self) -> String {
+        hex(&self.0.verifying_key().to_bytes())
     }
 }
 fn measure_pair(
@@ -405,20 +417,20 @@ fn run() -> Result<PathBuf, String> {
     };
     let migration=MigrationPlan {candidate:identities[1].clone(),plan_digest:candidate_digest,context:context.clone(),required_changes:vec!["change client from LE16 inclusive encoding to native half-open Span in a separately authorized next process launch".into(), "migrate persistent fixture state from schema v1 to schema v2 and verify the candidate restart".into()],
         persistent_data_change:true,rollback_strategy:RollbackStrategy::RestoreSnapshot {snapshot_digest:lifecycle_evidence.snapshot_digest.clone()},rollback_execution_receipt:Some(lifecycle_digest.clone()),rollback_preconditions:vec![format!("the candidate lifecycle receipt {lifecycle_digest} records a successful v1-to-v2 restart and byte-identical snapshot restoration before authorization")],irreversible_changes:vec![]};
-    let key = SigningKey::generate(&mut OsRng);
+    let signer = EphemeralFixtureSigner::generate();
     let mut attestations = Vec::new();
     for p in &catalog {
-        attestations.push(attest(&key, Role::Catalog, p));
+        attestations.push(signer.attest(Role::Catalog, p));
     }
     for t in &contracts {
-        attestations.push(attest(&key, Role::ContractTest, t));
+        attestations.push(signer.attest(Role::ContractTest, t));
     }
     if let Some(pilot) = &power_pilot {
-        attestations.push(attest(&key, Role::Benchmark, pilot));
+        attestations.push(signer.attest(Role::Benchmark, pilot));
     }
-    attestations.push(attest(&key, Role::Runtime, &runtime));
-    attestations.push(attest(&key, Role::Benchmark, &benchmark));
-    attestations.push(attest(&key, Role::Proposal, &migration));
+    attestations.push(signer.attest(Role::Runtime, &runtime));
+    attestations.push(signer.attest(Role::Benchmark, &benchmark));
+    attestations.push(signer.attest(Role::Proposal, &migration));
     let request = Request {
         schema: migration_advisor::SCHEMA,
         catalog,
@@ -438,6 +450,7 @@ fn run() -> Result<PathBuf, String> {
         statistics,
         power_pilot,
         attestations,
+        session: None,
         migration_plans: vec![migration],
         scoped_resolutions: None,
     };
@@ -445,7 +458,7 @@ fn run() -> Result<PathBuf, String> {
         schema: 1,
         keys: vec![TrustedKey {
             key_id: "ephemeral-local-experiment".into(),
-            public_key: hex(&key.verifying_key().to_bytes()),
+            public_key: signer.public_key(),
             roles: vec![
                 Role::Catalog,
                 Role::Runtime,
@@ -454,7 +467,13 @@ fn run() -> Result<PathBuf, String> {
                 Role::Proposal,
             ],
             revoked: false,
+            compromised: false,
+            producer: None,
+            valid_from_unix: None,
+            valid_until_unix: None,
         }],
+        session: None,
+        independence: vec![],
         required_session_id: None,
         max_attestation_age_seconds: None,
         max_clock_skew_seconds: None,

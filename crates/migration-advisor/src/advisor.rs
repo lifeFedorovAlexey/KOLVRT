@@ -7,7 +7,10 @@ use crate::{
     validate_requirements,
 };
 use crate::{
-    provenance::{Attestation, EvidenceVerifier, NoTrust, Role, subject_digest},
+    provenance::{
+        Attestation, EvidenceVerifier, NoTrust, Role, SessionBinding, TrustAssurance,
+        subject_digest,
+    },
     statistics::{StatisticalPolicy, Statistics, analyze_family_with_power},
 };
 use serde::{Deserialize, Serialize};
@@ -167,6 +170,8 @@ pub struct Request {
     #[serde(default)]
     pub power_pilot: Option<PowerPilot>,
     pub attestations: Vec<Attestation>,
+    #[serde(default)]
+    pub session: Option<SessionBinding>,
     pub migration_plans: Vec<MigrationPlan>,
     /// Optional alternative dependency-closure scenarios for ABI-isolated namespaces.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -249,6 +254,7 @@ pub struct Assurance {
     pub statistical_gain_supported: bool,
     pub rollback_documented: bool,
     pub missing_checks: Vec<String>,
+    pub trust: TrustAssurance,
 }
 
 #[derive(Debug, Serialize)]
@@ -666,6 +672,16 @@ pub fn advise_with_verifier(
     verifier: &impl EvidenceVerifier,
 ) -> Result<Report, String> {
     validate(request)?;
+    let session_context =
+        serde_json::to_vec(&request.context).expect("typed context serialization");
+    let session_error = verifier
+        .begin_session(
+            request.session.as_ref(),
+            &session_context,
+            &request.attestations,
+        )
+        .err();
+    let trust_assurance = verifier.assurance();
     let current = request
         .catalog
         .iter()
@@ -765,6 +781,7 @@ pub fn advise_with_verifier(
                 statistical_gain_supported: false,
                 rollback_documented: false,
                 missing_checks: vec![],
+                trust: trust_assurance.clone(),
             },
             proposal: None,
         };
@@ -777,7 +794,7 @@ pub fn advise_with_verifier(
                 let (candidate_tested, candidate_failed, results) =
                     contract_gate(request, &plan, &p.identity);
                 candidate.assurance.contracts_passed = baseline_tested && candidate_tested;
-                let mut provenance_gaps = Vec::new();
+                let mut provenance_gaps: Vec<String> = session_error.clone().into_iter().collect();
                 let power_pilot_verified = if let Some(pilot) = &request.power_pilot {
                     let mut refs = context_references(&pilot.context);
                     refs.push(pilot.artifact.clone());
@@ -971,6 +988,14 @@ pub fn advise_with_verifier(
                 provenance_gaps.sort();
                 provenance_gaps.dedup();
                 candidate.assurance.provenance_verified = provenance_gaps.is_empty();
+                candidate.assurance.trust.evidence_chain_complete = provenance_gaps.is_empty();
+                candidate.assurance.trust.session_verified =
+                    trust_assurance.session_bound && session_error.is_none();
+                candidate.assurance.trust.freshness_checked &= session_error.is_none();
+                candidate.assurance.trust.replay_checked &= session_error.is_none();
+                candidate.assurance.trust.producer_independence_satisfied =
+                    candidate.assurance.trust.producer_independence_checked
+                        && provenance_gaps.is_empty();
                 candidate.assurance.missing_checks.extend(provenance_gaps);
                 for (ready, gap) in [
                     (

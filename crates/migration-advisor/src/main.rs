@@ -16,9 +16,9 @@ const MAX_SOLVER_STATES: u64 = 1 << 19;
 fn run() -> Result<(), String> {
     let args: Vec<_> = env::args().skip(1).collect();
     let valid_args = match args.first().map(String::as_str) {
-        Some("advise") => matches!(args.len(), 2 | 6),
+        Some("advise") => matches!(args.len(), 2 | 6 | 8),
         Some("inspect-routing") => args.len() == 2,
-        Some("authorize") => args.len() == 7,
+        Some("authorize") => matches!(args.len(), 7 | 9),
         _ => false,
     };
     if !valid_args {
@@ -70,14 +70,14 @@ fn run() -> Result<(), String> {
         }
         let policy: TrustPolicy =
             serde_json::from_slice(&policy_bytes).map_err(|e| e.to_string())?;
-        let verifier = SignedArtifactStore::new(policy, args[6].clone().into())?;
+        let verifier = configured_verifier(policy, &args[6], &args[7..])?;
         let receipt = authorize(&request, &signed, &solver, &verifier)?;
         let stdout = io::stdout();
         let mut output = stdout.lock();
         serde_json::to_writer_pretty(&mut output, &receipt).map_err(|e| e.to_string())?;
         return writeln!(output).map_err(|e| e.to_string());
     }
-    let report = if args.len() == 6 {
+    let report = if args.len() >= 6 {
         if args[2] != "--trust-policy" || args[4] != "--artifact-root" {
             return Err(
                 "usage: advise REQUEST.json --trust-policy TRUST.json --artifact-root DIR".into(),
@@ -93,7 +93,7 @@ fn run() -> Result<(), String> {
         }
         let policy: TrustPolicy =
             serde_json::from_slice(&policy_bytes).map_err(|e| e.to_string())?;
-        let verifier = SignedArtifactStore::new(policy, args[5].clone().into())?;
+        let verifier = configured_verifier(policy, &args[5], &args[6..])?;
         advise_with_verifier(&request, &solver, &verifier)?
     } else {
         advise(&request, &solver)?
@@ -102,6 +102,24 @@ fn run() -> Result<(), String> {
     let mut output = stdout.lock();
     serde_json::to_writer_pretty(&mut output, &report).map_err(|e| e.to_string())?;
     writeln!(output).map_err(|e| e.to_string())
+}
+
+fn configured_verifier(
+    policy: TrustPolicy,
+    artifact_root: &str,
+    session_args: &[String],
+) -> Result<SignedArtifactStore, String> {
+    match (policy.schema, session_args) {
+        (1, []) => SignedArtifactStore::new(policy, artifact_root.into()),
+        (2, [flag, ledger]) if flag == "--session-ledger" => {
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map_err(|_| "system UTC clock is before UNIX epoch")?
+                .as_secs();
+            SignedArtifactStore::provisioned(policy, artifact_root.into(), ledger.into(), now)
+        }
+        _ => Err("schema 1 uses fixture policy; schema 2 requires --session-ledger DIR".into()),
+    }
 }
 
 fn main() -> ExitCode {
