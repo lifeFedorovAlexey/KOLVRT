@@ -13,7 +13,6 @@ use crate::{
     memory, percpu,
     platform::config,
     process::{ImageFormat, Origin, Registry, Spec},
-    time,
 };
 use core::sync::atomic::Ordering;
 const TASKS: usize = config::USER_PROCESSES_PER_CPU;
@@ -26,7 +25,8 @@ unsafe extern "C" {
     static user_image_end: u8;
 }
 const PAIR_WORDS: usize = 2;
-const RUN_TIMEOUT: time::Duration = time::Duration::from_secs(2);
+#[cfg(feature = "boot-payload")]
+const PAYLOAD_RUN_TIMEOUT: crate::time::Duration = crate::time::Duration::from_secs(2);
 const MAX_SLICES: usize = 16;
 const REQUIRED_SLICES: usize = 3;
 const REQUIRED_WORKER_SLICES: usize = 5;
@@ -146,7 +146,11 @@ pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence 
         processes.start(identity).unwrap();
         identity
     });
-    let completed = processes.dispatch(Some(RUN_TIMEOUT));
+    // The fixture waits for measured timer slices before exit/fault. Its
+    // per-process slice limit bounds work; a wall-clock deadline can expire on
+    // a descheduled QEMU host before those observations exist. The host runner
+    // still rejects a stalled emulator after its independent timeout.
+    let completed = processes.dispatch(None);
     let mut evidence = Evidence {
         processes: config::USER_PROCESSES,
         switches: 0,
@@ -178,7 +182,11 @@ pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence 
         );
         assert!(
             task.slices >= REQUIRED_SLICES,
-            "user task not timer serviced"
+            "user task not timer serviced: id={} state={} slices={} fault={:#x}",
+            task.id,
+            task.state,
+            task.slices,
+            task.fault_class
         );
         assert!(
             task.context.gpr[REG_COUNTER] > 0,
@@ -261,7 +269,7 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
         processes.start(identity).unwrap();
         identity
     });
-    let completed = processes.dispatch(Some(RUN_TIMEOUT));
+    let completed = processes.dispatch(Some(PAYLOAD_RUN_TIMEOUT));
     #[cfg(feature = "machine-events")]
     for task in &completed.tasks {
         for offset in (0..task.report_len).step_by(scheduler::REPORT_CHUNK_WORDS) {
