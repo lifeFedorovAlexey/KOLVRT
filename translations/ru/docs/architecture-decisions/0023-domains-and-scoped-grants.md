@@ -1,4 +1,4 @@
-# ADR-0022 — One-process domains и scoped Event grants
+# ADR-0023 — One-process domains и scoped Event grants
 
 Статус: **Принято для bounded Phase 3.4**. Дата: 2026-10-04.
 
@@ -9,6 +9,8 @@ Current reference: [Domain contract](../../../../docs/kernel/domains.md)
 ## Контекст
 
 Private address spaces и reference identity не разрешают effects. Issue #24 требует explicit grants и revoke/admission serialization; issue #25 требует domain lifetime и budgets, включая teardown во время accepted work. LAW-005 требует privileged enforcement necessity, а не только performance. Существующие handles или ранние IPC fixtures не определяют последующую архитектуру.
+
+Это расширяет [ADR-0022](0022-native-event-grants-and-revocation.md): minimum defaults Event SEND и Completion NONE, запрет Completion REVOKE и synchronous revoke API сохранены. SharedEvent сериализует synchronous и retained deferred admission на одном atomic gate; pending latch — отдельное storage, а не второй authority ledger. Уже принятый deferred effect публикуется через private completion method даже после revoke. Прямой synchronous signal через service-bound grant запрещён, чтобы исключить обход consumer/service accounting.
 
 ## Решение
 
@@ -34,7 +36,7 @@ Domain fault/exhaustion ограничивается caller. Exact identity и c
 
 ## Влияние на совместимость
 
-Reference lookup/close/attenuated transfer остаются bounded. Scoped issued Event grants добавляют REVOKE=4; bare reference defaults остаются SEND/TRANSFER. Новый notification contract имеет статус EXPERIMENTAL без ABI-FREEZE. General IPC, multi-process domains, migration и immediate revoke/drain не поддерживаются.
+Reference lookup/close/attenuated transfer остаются bounded. Scoped issued Event grants добавляют REVOKE=4; minimum reference defaults остаются Event SEND / Completion NONE. Новый notification contract имеет статус EXPERIMENTAL без ABI-FREEZE. General IPC, multi-process domains, migration и immediate revoke/drain не поддерживаются.
 
 ## Влияние на производительность
 
@@ -52,4 +54,4 @@ Actual EL0 tests проверяют оба CPU, отдельные zero budgets,
 
 Public/stable ABI не заморожен. Более поздний IPC/supervisor reader обязан заново проверить implementation против accepted laws и decisions, включая fixed-affinity и single-process assumptions. Ранняя реализация, затраченные усилия и совместимость с текущими tests недостаточны для сохранения ограничивающего дизайна.
 
-[Английский оригинал](../../../../docs/architecture-decisions/0022-domains-and-scoped-grants.md)
+[Английский оригинал](../../../../docs/architecture-decisions/0023-domains-and-scoped-grants.md)

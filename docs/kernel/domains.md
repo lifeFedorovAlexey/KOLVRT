@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 Evidence scope: bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.
-Current reference: [ADR-0022](../architecture-decisions/0022-domains-and-scoped-grants.md)
+Current reference: [ADR-0023](../architecture-decisions/0023-domains-and-scoped-grants.md)
 
 ABI contract: native.notification/1
 Publication stage: EXPERIMENTAL
@@ -18,7 +18,7 @@ Memory pages include the owned page tables, code, data and guarded stacks, plus 
 
 ## Grants and revocation
 
-[Reference primitives](../../crates/kernel-core/src/handles.rs) retain generation/type/lifetime checks. Bare references authorize no Event effect. Protected bootstrap creates an explicit Event grant bound to one immutable target and one exact service ProcessId. SEND=1 permits notification admission; TRANSFER=2 permits attenuated receiver-local delegation; REVOKE=4 permits revocation. Ordinary reference creation defaults to SEND/TRANSFER, never REVOKE. Unknown bits and absent grants fail before effects. No EL0 grant-creation endpoint exists.
+[Reference primitives](../../crates/kernel-core/src/handles.rs) retain generation/type/lifetime checks. Unscoped references cannot admit a deferred service effect. Protected bootstrap creates an explicit Event grant bound to one immutable target and one exact service ProcessId. SEND=1 permits notification admission; TRANSFER=2 permits attenuated receiver-local delegation; REVOKE=4 permits revocation. Trusted Event creation defaults to SEND and Completion creation to NONE; REVOKE requires an explicit Event grant. Unknown bits and absent grants fail before effects. No EL0 grant-creation endpoint exists.
 
 All delegated aliases share the target's [admission gate](../../crates/kernel-core/src/wait.rs). Admission and revocation linearize on one atomic word. A request or transfer admitted before revoke can retain its target; all later effect admissions fail. Close removes a reference without revoking other aliases. Strong immediate revoke/drain/reset is not implemented. A restarted service cannot acquire the old service generation's grants.
 

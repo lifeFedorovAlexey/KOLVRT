@@ -1,4 +1,4 @@
-# ADR-0022 — One-process domains and scoped Event grants
+# ADR-0023 — One-process domains and scoped Event grants
 
 Status: **Accepted for bounded Phase 3.4**. Date: 2026-10-04.
 
@@ -9,6 +9,8 @@ Current reference: [Domain contract](../kernel/domains.md)
 ## Context
 
 Private address spaces and reference identity do not authorize effects. Issue #24 requires explicit grants and revoke/admission serialization; issue #25 requires domain lifetime and budgets, including teardown during accepted work. LAW-005 requires privileged enforcement necessity, not performance alone. Existing handles or early IPC fixtures cannot dictate the later architecture.
+
+This extends [ADR-0022](0022-native-event-grants-and-revocation.md): minimum Event SEND and Completion NONE defaults, Completion REVOKE denial and synchronous revoke API remain. SharedEvent now linearizes synchronous and retained deferred admission on one atomic gate; its pending latch is separate storage, not a second authority ledger. Already admitted deferred effects publish through a private completion method even after revoke. Direct synchronous signal through a service-bound grant is denied so it cannot bypass consumer/service accounting.
 
 ## Decision
 
@@ -34,7 +36,7 @@ Domain fault/exhaustion is contained to its caller. Exact identity and closing c
 
 ## Compatibility impact
 
-Reference lookup/close/attenuated transfer remain bounded. Scoped issued Event grants add REVOKE=4; bare reference defaults remain SEND/TRANSFER. The new notification contract is EXPERIMENTAL with no ABI-FREEZE. General IPC, multi-process domains, migration and immediate revoke/drain are unsupported.
+Reference lookup/close/attenuated transfer remain bounded. Scoped issued Event grants add REVOKE=4; minimum reference defaults remain Event SEND / Completion NONE. The new notification contract is EXPERIMENTAL with no ABI-FREEZE. General IPC, multi-process domains, migration and immediate revoke/drain are unsupported.
 
 ## Performance impact
 
@@ -52,4 +54,4 @@ Actual EL0 tests exercise both CPUs, separate zero budgets, receiver handle exha
 
 No public/stable ABI is frozen. A later IPC/supervisor reader must revisit this implementation against accepted laws and decisions, including its fixed-affinity and single-process assumptions. Prior implementation, effort and compatibility with current tests are insufficient reasons to preserve a constraining design.
 
-[Russian translation](../../translations/ru/docs/architecture-decisions/0022-domains-and-scoped-grants.md)
+[Russian translation](../../translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md)

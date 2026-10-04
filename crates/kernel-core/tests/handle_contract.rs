@@ -2,6 +2,7 @@
 use kernel_core::{
     handles::{CreationError, Error, Handle, Kind, Namespace, Rights},
     process::{Completion, ProcessId, Reason, Table},
+    wait::SharedEvent,
 };
 
 fn owners() -> (ProcessId, ProcessId) {
@@ -44,72 +45,103 @@ fn state<const N: usize, const L: u64>(namespace: &Namespace<N, L>) -> Namespace
 
 #[test]
 fn all_rights_combinations_gate_lookup_and_transfer_without_escalation() {
+    // ADR-0022 extends the provisional rights set; pin its wire bits while
+    // enumerating all 64 held/requested combinations, including REVOKE.
+    const KNOWN_BITS: u8 = 7;
+    assert_eq!(Rights::SEND.bits(), 1);
+    assert_eq!(Rights::TRANSFER.bits(), 2);
+    assert_eq!(Rights::REVOKE.bits(), 4);
+    assert_eq!(Rights::KNOWN.bits(), KNOWN_BITS);
     let (sender_owner, receiver_owner) = owners();
-    for held_bits in 0u8..4 {
-        let held = Rights::from_bits(held_bits).unwrap();
-        for requested_bits in 0u8..4 {
-            let requested = Rights::from_bits(requested_bits).unwrap();
-            let mut sender = Namespace::<1>::new();
-            let mut receiver = Namespace::<1>::new();
-            sender.bind(sender_owner).unwrap();
-            receiver.bind(receiver_owner).unwrap();
-            let handle = create(&mut sender, sender_owner, held);
-            let target = sender
-                .lookup(sender_owner, handle, Kind::Completion)
-                .unwrap()
-                .target();
-            let subset = requested_bits & !held_bits == 0;
-            let lookup =
-                sender.lookup_with_rights(sender_owner, handle, Kind::Completion, requested);
-            if subset {
-                assert_eq!(lookup.unwrap().rights(), held);
-            } else {
-                assert_eq!(lookup.err(), Some(Error::Rights));
-            }
-            let before = (state(&sender), state(&receiver));
-            let result = sender.transfer(
-                sender_owner,
-                handle,
-                &mut receiver,
-                receiver_owner,
-                requested,
-            );
-            if held_bits & 2 != 0 && subset {
-                let delegated = result.unwrap();
-                let received = receiver
-                    .lookup(receiver_owner, delegated, Kind::Completion)
-                    .unwrap();
-                assert_eq!(received.rights(), requested);
-                assert_eq!(received.target(), target);
-                assert_eq!(
-                    received.completion(),
-                    Some(Completion {
-                        id: sender_owner,
-                        reason: Reason::Exited(73)
-                    })
+    for (kind, grant_bits) in [(Kind::Event, KNOWN_BITS), (Kind::Completion, 3)] {
+        for held_bits in 0u8..=grant_bits {
+            let held = Rights::from_bits(held_bits).unwrap();
+            for requested_bits in 0u8..=KNOWN_BITS {
+                let requested = Rights::from_bits(requested_bits).unwrap();
+                let mut sender = Namespace::<1>::new();
+                let mut receiver = Namespace::<1>::new();
+                sender.bind(sender_owner).unwrap();
+                receiver.bind(receiver_owner).unwrap();
+                let handle = if kind == Kind::Event {
+                    sender
+                        .create_event_with_rights(
+                            sender_owner,
+                            SharedEvent::try_new().unwrap(),
+                            held,
+                            |_| Ok::<_, ()>(()),
+                        )
+                        .unwrap()
+                } else {
+                    create(&mut sender, sender_owner, held)
+                };
+                let target = sender.lookup(sender_owner, handle, kind).unwrap().target();
+                let subset = requested_bits & !held_bits == 0;
+                let lookup = sender.lookup_with_rights(sender_owner, handle, kind, requested);
+                if subset {
+                    assert_eq!(lookup.unwrap().rights(), held);
+                } else {
+                    assert_eq!(lookup.err(), Some(Error::Rights));
+                }
+                let before = (state(&sender), state(&receiver));
+                let result = sender.transfer(
+                    sender_owner,
+                    handle,
+                    &mut receiver,
+                    receiver_owner,
+                    requested,
                 );
-                assert_eq!(state(&sender), before.0);
-                assert_eq!(receiver.live(), 1);
-                let accepted = received.retain().unwrap();
-                sender.retire(sender_owner).unwrap();
-                receiver.retire(receiver_owner).unwrap();
-                assert_eq!(accepted.target(), target);
-                assert_eq!(accepted.rights(), requested);
-                assert_eq!(accepted.completion().unwrap().reason, Reason::Exited(73));
-            } else {
-                assert_eq!(
-                    result,
-                    Err(Error::Rights),
-                    "held={held_bits} requested={requested_bits}"
-                );
-                assert_eq!((state(&sender), state(&receiver)), before);
+                if held_bits & 2 != 0 && subset {
+                    let delegated = result.unwrap();
+                    let received = receiver.lookup(receiver_owner, delegated, kind).unwrap();
+                    assert_eq!(received.rights(), requested);
+                    assert_eq!(received.target(), target);
+                    if kind == Kind::Completion {
+                        assert_eq!(
+                            received.completion(),
+                            Some(Completion {
+                                id: sender_owner,
+                                reason: Reason::Exited(73)
+                            })
+                        );
+                    } else {
+                        assert!(received.event().is_some());
+                        assert_eq!(
+                            received.signal(),
+                            if requested_bits & 1 != 0 {
+                                Ok(true)
+                            } else {
+                                Err(Error::Rights)
+                            }
+                        );
+                    }
+                    assert_eq!(state(&sender), before.0);
+                    assert_eq!(receiver.live(), 1);
+                    let accepted = received.retain().unwrap();
+                    sender.retire(sender_owner).unwrap();
+                    receiver.retire(receiver_owner).unwrap();
+                    assert_eq!(accepted.target(), target);
+                    assert_eq!(accepted.rights(), requested);
+                    if kind == Kind::Completion {
+                        assert_eq!(accepted.completion().unwrap().reason, Reason::Exited(73));
+                    } else {
+                        assert_eq!(
+                            accepted.event().unwrap().register(),
+                            requested_bits & 1 == 0
+                        );
+                        assert!(!accepted.event().unwrap().consume());
+                    }
+                } else {
+                    assert_eq!(
+                        result,
+                        Err(Error::Rights),
+                        "held={held_bits} requested={requested_bits}"
+                    );
+                    assert_eq!((state(&sender), state(&receiver)), before);
+                }
             }
         }
     }
-    for known in 4u8..8 {
-        assert_eq!(Rights::from_bits(known).unwrap().bits(), known);
-    }
-    for unknown in 8u8..=255 {
+    for unknown in (KNOWN_BITS + 1)..=255 {
         assert_eq!(Rights::from_bits(unknown), None);
     }
 }
@@ -120,7 +152,8 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
     let mut sender = Namespace::<1>::new();
     let mut receiver = Namespace::<1, 1>::new();
     sender.bind(a).unwrap();
-    let source = create(&mut sender, a, Rights::ALL);
+    let send_transfer = Rights::from_bits(Rights::SEND.bits() | Rights::TRANSFER.bits()).unwrap();
+    let source = create(&mut sender, a, send_transfer);
     let before = (state(&sender), state(&receiver));
     assert_eq!(
         sender.transfer(a, source, &mut receiver, b, Rights::SEND),
@@ -141,7 +174,7 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
         );
         assert_eq!((state(&sender), state(&receiver)), before);
     }
-    let full = create(&mut receiver, b, Rights::ALL);
+    let full = create(&mut receiver, b, send_transfer);
     let before = (state(&sender), state(&receiver));
     assert_eq!(
         sender.transfer(a, source, &mut receiver, b, Rights::SEND),
@@ -157,7 +190,7 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
     assert_eq!((state(&sender), state(&receiver)), before);
     assert_eq!(
         sender.lookup(a, source, Kind::Completion).unwrap().rights(),
-        Rights::ALL
+        send_transfer
     );
 }
 
@@ -183,7 +216,7 @@ fn exhausted_slot_does_not_hide_other_vacancies_or_reset_after_rebinding() {
     );
     assert_eq!(namespace.slot_state(0), Some((1, None)));
     assert_eq!(namespace.live(), 0);
-    let next = create(&mut namespace, a, Rights::ALL);
+    let next = create(&mut namespace, a, Rights::from_bits(3).unwrap());
     assert_eq!(next.encode(), 257); // second slot, generation one
     assert_eq!(
         namespace
@@ -249,6 +282,10 @@ fn explicit_event_grants_attenuate_all_known_rights_and_share_revocation() {
                 continue;
             }
             let alias = transferred.unwrap();
+            assert_eq!(
+                receiver.lookup(b, alias, Kind::Event).unwrap().signal(),
+                Err(Error::Denied)
+            );
             assert_eq!(
                 receiver.lookup(b, alias, Kind::Event).unwrap().rights(),
                 requested

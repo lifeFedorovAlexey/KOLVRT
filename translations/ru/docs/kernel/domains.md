@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 Evidence scope: bounded Phase 3.4, один процесс на домен, два CPU с fixed affinity, Event-notification requests.
-Current reference: [ADR-0022](../../../../docs/architecture-decisions/0022-domains-and-scoped-grants.md)
+Current reference: [ADR-0023](../../../../docs/architecture-decisions/0023-domains-and-scoped-grants.md)
 
 ABI contract: native.notification/1
 Publication stage: EXPERIMENTAL
@@ -18,7 +18,7 @@ Memory pages включают owned page tables, code, data и guarded stacks, �
 
 ## Grants и revocation
 
-[Reference primitives](../../../../crates/kernel-core/src/handles.rs) сохраняют generation/type/lifetime checks. Bare references не разрешают Event effects. Protected bootstrap создаёт explicit Event grant, привязанный к одному immutable target и точному service ProcessId. SEND=1 разрешает notification admission; TRANSFER=2 разрешает attenuated receiver-local delegation; REVOKE=4 разрешает revocation. Обычное создание reference по умолчанию даёт SEND/TRANSFER, но не REVOKE. Unknown bits и отсутствующие grants отклоняются до effects. EL0 grant-creation endpoint отсутствует.
+[Reference primitives](../../../../crates/kernel-core/src/handles.rs) сохраняют generation/type/lifetime checks. Unscoped references не разрешают deferred service effects. Protected bootstrap создаёт explicit Event grant, привязанный к одному immutable target и точному service ProcessId. SEND=1 разрешает notification admission; TRANSFER=2 разрешает attenuated receiver-local delegation; REVOKE=4 разрешает revocation. Trusted Event creation по умолчанию даёт SEND, а Completion creation — NONE; REVOKE требует explicit Event grant. Unknown bits и отсутствующие grants отклоняются до effects. EL0 grant-creation endpoint отсутствует.
 
 Все delegated aliases разделяют target [admission gate](../../../../crates/kernel-core/src/wait.rs). Admission и revocation линеаризуются на одном atomic word. Request или transfer, admitted до revoke, может удерживать target; все последующие effect admissions отклоняются. Close удаляет reference без revocation других aliases. Strong immediate revoke/drain/reset не реализован. Перезапущенный service не получает grants старого service generation.
 

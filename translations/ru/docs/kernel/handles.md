@@ -1,8 +1,8 @@
 # Локальные дескрипторы процессов
 
 Document status: CURRENT
-Evidence scope: ограниченные caller-local handles с проверкой поколений, типов, rights, attenuation transfer и retention общих targets; два CPU с fixed affinity.
-Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md)
+Evidence scope: ограниченные caller-local handles с явными правами SEND/TRANSFER/REVOKE, attenuation общих targets и отзывом admission общего Event; два CPU с fixed affinity.
+Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) для identity/transfer/lifetime handles с дополнением [ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) для минимального Event grant/revoke среза.
 
 ## Представление и caller context
 
@@ -11,14 +11,17 @@ Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and
 Process slot сохраняет линейный namespace при ProcessId reuse. Binding хранит точный ProcessId; lookup проверяет caller, bounds, generation, live entry, requested kind и необходимые rights. Одинаковые числа в разных namespaces могут означать разные ресурсы. Wire handle не выбирает таблицу другого процесса. [Native request path](../../../../crates/kernel/src/handles.rs) получает caller из scheduler-owned task и bound namespace, проверяет executing context и копирует 48-byte request в immutable snapshot до обращения к namespace.
 
 ```text
-LE64[6] version=1, operation=(1 lookup | 2 close | 3 transfer)
+LE64[6] version=1, operation=(1 lookup | 2 close | 3 transfer | 4 revoke)
 lookup/close: handle, kind, required_rights, reserved=0
 transfer:     handle, receiver_process_slot, receiver_generation, requested_rights
+revoke:       handle, reserved=0, reserved=0, reserved=0
 safe copy -> decode snapshot -> current caller table -> generation/type/rights check
            -> receiver-local handle with the same target binding
 ```
 
-EL0 доступны lookup, close и transfer. Rights: `SEND=1`, `TRANSFER=2`; неизвестные bits отклоняются. Transfer требует TRANSFER и subset от выданных прав. Получатель задаётся live ProcessId, уже привязанным к namespace на CPU вызывающего; запрос на другой CPU возвращает ForeignProcess. Status words: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure, 9 rights denied, 10 retained-reference quota exhausted. Unknown version/opcode/kind отклоняется. Close проверяет kind и generation. Pointer, physical address, global object ID, internal enum layout и compatibility errno не передаются EL0. Создание остаётся trusted bootstrap operation, не unprivileged object-creation authority API.
+EL0 доступны lookup, close, transfer и revoke общего Event. Rights: `SEND=1`, `TRANSFER=2`, `REVOKE=4`; неизвестные bits отклоняются. Bootstrap по умолчанию выдаёт Event только SEND, а Completion не получает прав; более широкие grants требуют явного trusted `create_*_with_rights`. REVOKE применим только к Event; такой grant для Completion отклоняется до резервирования поколения slot и публикации. Transfer требует TRANSFER и subset от выданных прав. Revoke требует REVOKE и атомарно запрещает новые signal admissions через все aliases. Сигнал, состязающийся с revoke, упорядочивается CAS состояния target; ранее принятая работа и уже pending notification сохраняются. Close удаляет только локальную ссылку и не является revoke. Получатель задаётся live ProcessId, уже привязанным к namespace на CPU вызывающего; запрос на другой CPU возвращает ForeignProcess. Status words: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure, 9 rights denied, 10 retained-reference quota exhausted, 11 revoked. Unknown version/opcode/kind отклоняется. Close проверяет kind и generation. Pointer, physical address, global object ID, internal enum layout и compatibility errno не передаются EL0. Создание остаётся trusted bootstrap operation, не unprivileged object-creation authority API.
+
+Real EL0 fixture отправляет revoke как copied 48-byte request и проверяет, что следующее SEND admission возвращает `Revoked`. Host controls проверяют, что delegated alias остаётся отозванным после source close. Эти проверки покрывают только Event slice и не подтверждают полные grant, service-lifecycle и security-domain критерии issue #24.
 
 ## Владение и target lifetime
 
@@ -26,7 +29,7 @@ EL0 доступны lookup, close и transfer. Rights: `SEND=1`, `TRANSFER=2`; 
 
 Два конкретных targets — existing coalescing wait Event и owned immutable process Completion record. Completion удерживает значение, а не живой процесс или address space; его close не может завершить процесс. Делегированные Event handles разделяют один atomic latch в fixed kernel pool из 512 слотов. У каждого слота nonwrapping generation и не более 1,024 live references. Namespace процесса по-прежнему содержит восемь записей; исчерпание пула или квоты references возвращает явную ошибку. Этот узкий sum type не является universal KernelObject hierarchy или generic invocation interface.
 
-Каждая запись namespace владеет одной ссылкой на target. Lookup возвращает Retained borrow; `.retain()` создаёт owned reference для accepted work. Используемый borrow исключает mutable close/retire на уровне компилятора. Transfer проверяет обе таблицы до публикации новой receiver-local generation, attenuates rights и сохраняет TargetId. Close убирает одну запись и запрещает дальнейший lookup по этому token, а delegated entries и owned retained work сохраняют target. Double close — Stale. Resource-specific методы остаются kernel-only; rights проверяются перед admission, но не добавляют EL0 object pointer или универсальный invoke interface.
+Каждая запись namespace владеет одной ссылкой на target. Lookup возвращает Retained borrow; `.retain()` создаёт owned reference для accepted work. Используемый borrow исключает mutable close/retire на уровне компилятора. Transfer проверяет обе таблицы до публикации новой receiver-local generation, attenuates rights и сохраняет TargetId. Revoke Event действует на все aliases; close убирает только одну запись и запрещает дальнейший lookup по этому token, а delegated entries и owned retained work сохраняют target. Double close — Stale. Resource-specific методы остаются kernel-only; rights проверяются перед admission, но не добавляют EL0 object pointer или универсальный invoke interface.
 
 ```mermaid
 flowchart TD

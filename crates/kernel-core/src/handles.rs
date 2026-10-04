@@ -1,7 +1,7 @@
 //! Process-local references and explicit scoped grants to two native primitives.
 use crate::{
     process::{Completion, ProcessId},
-    wait::SharedEvent,
+    wait::{SharedEvent, SignalError},
 };
 pub const MAX_GENERATION: u64 = u64::MAX >> 8;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -26,8 +26,8 @@ impl Rights {
     pub const SEND: Self = Self(1);
     pub const TRANSFER: Self = Self(2);
     pub const REVOKE: Self = Self(4);
-    pub const KNOWN: Self = Self(7);
-    pub const ALL: Self = Self(3);
+    pub const KNOWN: Self = Self(Self::SEND.0 | Self::TRANSFER.0 | Self::REVOKE.0);
+    pub const ALL: Self = Self::KNOWN;
     pub const ISSUER: Self = Self::KNOWN;
     pub const fn from_bits(bits: u8) -> Option<Self> {
         if bits & !Self::KNOWN.0 == 0 {
@@ -56,6 +56,7 @@ pub enum Error {
     ReferenceExhausted,
     Denied,
     Budget,
+    Revoked,
 }
 #[derive(Debug, PartialEq, Eq)]
 pub enum CreationError<E> {
@@ -158,6 +159,32 @@ impl Retained<'_> {
         match &self.resource.value {
             Primitive::Completion(c) => Some(*c),
             _ => None,
+        }
+    }
+    /// Revoke future admissions for a shared Event target. Existing accepted
+    /// references and already-pending notification remain valid.
+    pub fn revoke(&self) -> Result<bool, Error> {
+        if !self.resource.rights.contains(Rights::REVOKE) {
+            return Err(Error::Rights);
+        }
+        match &self.resource.value {
+            Primitive::Event(event) => Ok(event.revoke()),
+            Primitive::Completion(_) => Err(Error::WrongType),
+        }
+    }
+    pub fn signal(&self) -> Result<bool, Error> {
+        // Deferred service effects require admission with consumer/service charges.
+        if self.resource.service.is_some() {
+            return Err(Error::Denied);
+        }
+        if !self.resource.rights.contains(Rights::SEND) {
+            return Err(Error::Rights);
+        }
+        match &self.resource.value {
+            Primitive::Event(event) => event
+                .admit_signal()
+                .map_err(|SignalError::Revoked| Error::Revoked),
+            Primitive::Completion(_) => Err(Error::WrongType),
         }
     }
     pub fn rights(&self) -> Rights {
@@ -376,6 +403,15 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         self.slots[index].resource = None;
         Ok(())
     }
+    /// Revoke an Event for every delegated alias. Admission races with this
+    /// operation are linearized in the target's atomic state; close stays local.
+    pub fn revoke(&self, caller: ProcessId, handle: Handle) -> Result<bool, Error> {
+        if let Some(domain) = &self.domain {
+            domain.validate(caller).map_err(|_| Error::Denied)?;
+        }
+        self.lookup_with_rights(caller, handle, Kind::Event, Rights::REVOKE)?
+            .revoke()
+    }
     pub fn retire(&mut self, caller: ProcessId) -> Result<usize, Error> {
         self.context(caller)?;
         let count = self.live();
@@ -395,6 +431,9 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
         self.context(caller).map_err(CreationError::Handle)?;
+        if matches!(&value, Primitive::Completion(_)) && rights.contains(Rights::REVOKE) {
+            return Err(CreationError::Handle(Error::Rights));
+        }
         let index = self
             .slots
             .iter()
@@ -440,7 +479,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         event: SharedEvent,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create_event_with_rights(caller, event, Rights::ALL, publish)
+        self.create_event_with_rights(caller, event, Rights::SEND, publish)
     }
     pub fn create_event_with_rights<E>(
         &mut self,
@@ -479,22 +518,13 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         let event = r.event().ok_or(Error::WrongType)?;
         Ok((service, event.admit().ok_or(Error::Denied)?))
     }
-    pub fn revoke(&self, caller: ProcessId, handle: Handle) -> Result<(), Error> {
-        self.domain()?.validate(caller).map_err(|_| Error::Denied)?;
-        let r = self.lookup_with_rights(caller, handle, Kind::Event, Rights::REVOKE)?;
-        if r.resource.service.is_none() {
-            return Err(Error::Denied);
-        }
-        r.event().ok_or(Error::WrongType)?.revoke();
-        Ok(())
-    }
     pub fn create_completion<E>(
         &mut self,
         caller: ProcessId,
         completion: Completion,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create_completion_with_rights(caller, completion, Rights::ALL, publish)
+        self.create_completion_with_rights(caller, completion, Rights::NONE, publish)
     }
     pub fn create_completion_with_rights<E>(
         &mut self,
@@ -692,6 +722,78 @@ mod tests {
             receiver.transfer(b, delegated, &mut sender, a, Rights::ALL),
             Err(Error::Stale)
         );
+    }
+
+    #[test]
+    fn event_revocation_serializes_with_admission_and_survives_aliases() {
+        let (a, b) = ids();
+        let mut source = Namespace::<2>::new();
+        source.bind(a).unwrap();
+        let event = SharedEvent::try_new().unwrap();
+        let handle = source
+            .create_event_with_rights(a, event, Rights::ALL, |_| Ok::<_, ()>(()))
+            .unwrap();
+        let mut receiver = Namespace::<1>::new();
+        receiver.bind(b).unwrap();
+        let delegated = source
+            .transfer(a, handle, &mut receiver, b, Rights::SEND)
+            .unwrap();
+        assert_eq!(source.revoke(a, handle), Ok(true));
+        assert_eq!(source.revoke(a, handle), Ok(false));
+        assert_eq!(
+            receiver
+                .lookup(b, delegated, Kind::Event)
+                .unwrap()
+                .event()
+                .unwrap()
+                .admit_signal(),
+            Err(crate::wait::SignalError::Revoked)
+        );
+        assert_eq!(source.close(a, handle), Ok(()));
+        assert_eq!(
+            receiver
+                .lookup(b, delegated, Kind::Event)
+                .unwrap()
+                .event()
+                .unwrap()
+                .admit_signal(),
+            Err(crate::wait::SignalError::Revoked)
+        );
+    }
+
+    #[test]
+    fn revoke_requires_explicit_right_and_does_not_alias_close() {
+        let (a, _) = ids();
+        let mut source = Namespace::<2>::new();
+        source.bind(a).unwrap();
+        let handle = source
+            .create_event(a, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
+            .unwrap();
+        assert_eq!(source.revoke(a, handle), Err(Error::Rights));
+        {
+            let event = source.lookup(a, handle, Kind::Event).unwrap();
+            assert_eq!(event.signal(), Ok(true));
+        }
+        source.close(a, handle).unwrap();
+    }
+
+    #[test]
+    fn event_revocation_right_cannot_be_granted_on_completion() {
+        let (owner, _) = ids();
+        let mut namespace = Namespace::<1>::new();
+        namespace.bind(owner).unwrap();
+        let result = namespace.create_completion_with_rights(
+            owner,
+            Completion {
+                id: owner,
+                reason: crate::process::Reason::Exited(1),
+            },
+            Rights::REVOKE,
+            |_| Ok::<_, ()>(()),
+        );
+        assert_eq!(result, Err(CreationError::Handle(Error::Rights)));
+        assert_eq!(namespace.live(), 0);
+        assert_eq!(namespace.slot_state(0), Some((0, None)));
     }
     #[test]
     fn process_local_equal_values_and_stress() {
