@@ -172,4 +172,4 @@ Phase 3.0 ограничивает scheduler UnsafeCell access операция�
 
 ## Phase 3.4 security enforcement
 
-[Domains and grants](domains.md) добавляют zero production unsafe sites. Retained fixed atomic pool не требует UnsafeCell, unsafe Sync, heap lock или raw object pointer. Owner-local queues используют INV-RUNQUEUE permits; copied requests не удерживают user references. Три kernel-test-only lexical sites создают slices immutable linked images под INV-USER-IMAGE. Final charge/reference release остаётся безопасным внутри masked scheduler scope.
+[Domains and grants](domains.md) добавляют zero production unsafe sites. Retained fixed atomic pool не требует UnsafeCell, unsafe Sync, heap lock или raw object pointer. Owner-local queues используют INV-RUNQUEUE permits; copied requests не удерживают user references. Два kernel-test-only lexical sites объявляют linked symbols и создают slice immutable image под INV-USER-IMAGE. Final charge/reference release остаётся безопасным внутри masked scheduler scope.
