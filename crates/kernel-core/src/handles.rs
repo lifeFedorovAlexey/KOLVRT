@@ -355,6 +355,9 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
         self.context(caller).map_err(CreationError::Handle)?;
+        if matches!(&value, Primitive::Completion(_)) && rights.contains(Rights::REVOKE) {
+            return Err(CreationError::Handle(Error::Rights));
+        }
         let index = self
             .slots
             .iter()
@@ -659,6 +662,25 @@ mod tests {
             assert_eq!(event.signal(), Ok(true));
         }
         source.close(a, handle).unwrap();
+    }
+
+    #[test]
+    fn event_revocation_right_cannot_be_granted_on_completion() {
+        let (owner, _) = ids();
+        let mut namespace = Namespace::<1>::new();
+        namespace.bind(owner).unwrap();
+        let result = namespace.create_completion_with_rights(
+            owner,
+            Completion {
+                id: owner,
+                reason: crate::process::Reason::Exited(1),
+            },
+            Rights::REVOKE,
+            |_| Ok::<_, ()>(()),
+        );
+        assert_eq!(result, Err(CreationError::Handle(Error::Rights)));
+        assert_eq!(namespace.live(), 0);
+        assert_eq!(namespace.slot_state(0), Some((0, None)));
     }
     #[test]
     fn process_local_equal_values_and_stress() {

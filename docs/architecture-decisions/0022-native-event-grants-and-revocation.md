@@ -21,8 +21,10 @@ is not needed for one Event publication operation.
   from EL0, routing metadata, diagnostics or package policy.
 - Define known rights as `SEND=1`, `TRANSFER=2`, and `REVOKE=4`. Unknown bits fail.
   Bootstrap-created Events default to SEND, Completion records default to no rights, and
-  broader grants require an explicit trusted `create_*_with_rights` call. There is no
-  EL0 grant or object-creation operation in this slice.
+  broader grants require an explicit trusted `create_*_with_rights` call. REVOKE is
+  Event-specific; granting it to a Completion is rejected before slot generation is
+  reserved or anything is published. There is no EL0 grant or object-creation operation
+  in this slice.
 - TRANSFER still requires the source TRANSFER right and a known subset of source rights.
   The transferred entry gets a fresh receiver-local token and keeps the same TargetId and
   Event state. REVOKE may be delegated only when the source grant includes it.

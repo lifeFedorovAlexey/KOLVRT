@@ -1,10 +1,53 @@
 //! ADR-0022: synchronous admission versus target-wide revocation; host evidence.
 use kernel_core::{
-    handles::{Error, Kind, Namespace, Rights},
+    handles::{CreationError, Error, Kind, Namespace, Rights},
     process::{Completion, Reason, Table},
     wait::{Event, SharedEvent, SignalError},
 };
 use std::sync::{Arc, Barrier};
+
+#[test]
+fn every_completion_revoke_grant_rejects_before_generation_or_publication() {
+    let mut processes = Table::<1>::new();
+    let owner = processes.reserve(0..1).unwrap();
+    let mut namespace = Namespace::<1, 1>::new();
+    namespace.bind(owner).unwrap();
+    for bits in 4..=7 {
+        assert_eq!(
+            namespace.create_completion_with_rights(
+                owner,
+                Completion {
+                    id: owner,
+                    reason: Reason::Exited(1)
+                },
+                Rights::from_bits(bits).unwrap(),
+                |_| -> Result<(), ()> { panic!("invalid grant must reject before publication") }
+            ),
+            Err(CreationError::Handle(Error::Rights))
+        );
+        assert_eq!(namespace.slot_state(0), Some((0, None)));
+        assert_eq!(namespace.live(), 0);
+        assert_eq!(namespace.owner(), Some(owner));
+    }
+    let handle = namespace
+        .create_completion(
+            owner,
+            Completion {
+                id: owner,
+                reason: Reason::Exited(1),
+            },
+            |_| Ok::<_, ()>(()),
+        )
+        .unwrap();
+    assert_eq!(handle.encode(), 256);
+    assert_eq!(
+        namespace
+            .lookup(owner, handle, Kind::Completion)
+            .unwrap()
+            .rights(),
+        Rights::NONE
+    );
+}
 
 #[test]
 fn default_grants_are_minimal_and_denied_effects_leave_the_latch_unchanged() {

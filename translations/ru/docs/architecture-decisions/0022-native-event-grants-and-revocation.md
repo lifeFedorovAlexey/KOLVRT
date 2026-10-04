@@ -21,8 +21,9 @@ operation не нужны.
   задавать caller, authority pointer или права.
 - Известные rights: `SEND=1`, `TRANSFER=2`, `REVOKE=4`. Неизвестные bits отклоняются.
   Bootstrap Event по умолчанию получает SEND, Completion — NONE; более широкие grants
-  выдаются только явным trusted-вызовом `create_*_with_rights`. В этом срезе нет EL0
-  операции создания объекта или выдачи гранта.
+  выдаются только явным trusted-вызовом `create_*_with_rights`. REVOKE относится только к
+  Event; grant для Completion отклоняется до резервирования поколения slot и публикации.
+  В этом срезе нет EL0 операции создания объекта или выдачи гранта.
 - TRANSFER по-прежнему требует TRANSFER у источника и разрешённое подмножество его прав.
   Переданная запись получает новый receiver-local token и сохраняет тот же TargetId и
   состояние Event. REVOKE можно делегировать, только если он есть в исходном grant.
