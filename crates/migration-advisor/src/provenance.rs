@@ -521,10 +521,23 @@ impl EvidenceVerifier for SignedArtifactStore {
                         .and_then(|key| key.producer.as_ref())
                 })
                 .collect();
+            // Different key IDs and declared domains do not make aliases of one
+            // signing key independent evidence producers.
+            let signers: BTreeSet<_> = matching
+                .iter()
+                .filter_map(|attestation| {
+                    self.policy
+                        .keys
+                        .iter()
+                        .find(|key| key.key_id == attestation.key_id)
+                        .map(|key| &key.public_key)
+                })
+                .collect();
             let producer_ids: BTreeSet<_> = eligible.iter().map(|p| &p.producer_id).collect();
             let custody: BTreeSet<_> = eligible.iter().map(|p| &p.custody_domain).collect();
             let enforcement: BTreeSet<_> = eligible.iter().map(|p| &p.enforcement_domain).collect();
-            if producer_ids.len() < rule.min_producers
+            if signers.len() < rule.min_producers
+                || producer_ids.len() < rule.min_producers
                 || custody.len() < rule.min_custody_domains
                 || enforcement.len() < rule.min_enforcement_domains
             {

@@ -462,3 +462,51 @@ fn provisioned_policy_rejects_deployment_signer_aliases_and_legacy_freshness() {
     ));
     std::fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn signing_key_aliases_cannot_supply_independent_producer_evidence() {
+    let root = temp("signer-alias");
+    std::fs::create_dir_all(root.join("artifacts")).unwrap();
+    let issuer = SigningKey::from_bytes(&[71; 32]);
+    let a = SigningKey::from_bytes(&[72; 32]);
+    let b = SigningKey::from_bytes(&[73; 32]);
+    let mut aliased = policy(&issuer, &a, &b);
+    aliased.keys[2].public_key = aliased.keys[1].public_key.clone();
+    let verifier = SignedArtifactStore::provisioned(
+        aliased,
+        root.join("artifacts"),
+        root.join("sessions"),
+        1_020,
+    )
+    .unwrap();
+    let context = b"independence context";
+    let session = make_session(context, 8, 1_000, 1_060);
+    let payload = b"contract result";
+    let attestations = vec![
+        session_attestation(&issuer, &session),
+        attestation(
+            &a,
+            "producer-a",
+            Role::ContractTest,
+            payload,
+            Some(&session),
+        ),
+        attestation(
+            &a,
+            "producer-b",
+            Role::ContractTest,
+            payload,
+            Some(&session),
+        ),
+    ];
+    verifier
+        .begin_session(Some(&session), context, &attestations)
+        .unwrap();
+    assert!(
+        verifier
+            .authenticate(Role::ContractTest, payload, &[], &attestations)
+            .unwrap_err()
+            .contains("independence")
+    );
+    std::fs::remove_dir_all(root).unwrap();
+}
