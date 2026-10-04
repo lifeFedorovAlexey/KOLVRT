@@ -23,6 +23,7 @@
     "ADR-0021": "adr.0021",
     "ADR-0022": "adr.0022",
     "ADR-0023": "adr.0023",
+    "ADR-0024": "adr.0024",
     "COST-L-0001": "cost-l.0001",
     "COST-L-0002": "cost-l.0002",
     "COST-L-0003": "cost-l.0003",
@@ -352,12 +353,30 @@
       "aliases": ["ADR-0023"],
       "document": "adr.0023",
       "document_status": "CURRENT",
-      "estimated_bytes": 3643,
+      "estimated_bytes": 6955,
       "id": "adr.0023",
       "kind": "adr",
-      "path": "docs/architecture-decisions/0023-documentation-knowledge.md",
+      "path": "docs/architecture-decisions/0023-domains-and-scoped-grants.md",
+      "relationships": [
+        {
+          "scope": "Extends the Event admission/lifetime contract with scoped deferred work; not general IPC architecture.",
+          "to": "adr.0022",
+          "type": "related_to"
+        }
+      ],
+      "summary": "Bounded one-process domains and scoped Event grants.",
+      "title": "ADR-0023 — One-process domains and scoped Event grants"
+    },
+    {
+      "aliases": ["ADR-0024"],
+      "document": "adr.0024",
+      "document_status": "CURRENT",
+      "estimated_bytes": 3643,
+      "id": "adr.0024",
+      "kind": "adr",
+      "path": "docs/architecture-decisions/0024-documentation-knowledge.md",
       "summary": "Bounded shared documentation navigation and feature freshness contract.",
-      "title": "ADR-0023 — Documentation knowledge navigation and feature freshness"
+      "title": "ADR-0024 — Documentation knowledge navigation and feature freshness"
     },
     {
       "aliases": ["KOL-PATH-0001"],
@@ -692,7 +711,7 @@
     {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
-      "estimated_bytes": 12533,
+      "estimated_bytes": 12540,
       "id": "doc.kolvrt.docs.knowledge",
       "kind": "policy",
       "path": "docs/knowledge-system.md",
@@ -723,17 +742,27 @@
     {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 8353,
+      "estimated_bytes": 9333,
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "path": "docs/kernel/capabilities.md",
-      "summary": "Planned native capability admission and revocation; current bounded handles are not general grants.",
+      "summary": "Bounded Phase 3.4 grants, domains and revocation; general IPC and supervisor policy remain separate gates.",
       "title": "Native capability scope and revocation"
+    },
+    {
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 13095,
+      "id": "doc.kolvrt.kernel.domains",
+      "kind": "subsystem-contract",
+      "path": "docs/kernel/domains.md",
+      "summary": "Current bounded Phase 3.4 domains and scoped grants.",
+      "title": "Native domains and scoped grants"
     },
     {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 17955,
+      "estimated_bytes": 18557,
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
       "path": "docs/kernel/handles.md",
@@ -743,7 +772,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 18733,
+      "estimated_bytes": 19475,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -844,7 +873,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 4546,
+      "estimated_bytes": 510,
       "id": "kolvrt.handles.limits",
       "kind": "contract-section",
       "path": "docs/kernel/handles.md",
@@ -1164,7 +1193,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1307,
+      "estimated_bytes": 1191,
       "id": "kolvrt.process.limits",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -1218,22 +1247,23 @@
         "adr.0013",
         "kolvrt.security.trust",
         "kolvrt.security.threats",
-        "kolvrt.security.event-revocation"
+        "kolvrt.security.event-revocation",
+        "kolvrt.security.domains"
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 1464,
+      "estimated_bytes": 1374,
       "gaps": [
-        "Issue #24 broader issuer independence, service restart/rebind, nested authority, domains and IPC acceptance remain missing; the synchronous Event slice is implemented separately."
+        "General IPC, multi-process domains, trusted supervisor policy installation and immediate revoke/drain are separate future gates."
       ],
       "id": "kolvrt.security.capability-revocation",
-      "implementation": "PLANNED",
+      "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
       "path": "docs/kernel/capabilities.md",
       "read_when": ["review Phase 3.4 capability revocation"],
-      "summary": "Planned Phase 3.4 capability revocation and admission race review.",
+      "summary": "Current bounded Phase 3.4 capability revocation with explicit remaining gates.",
       "tags": ["capability", "revocation", "phase", "3.4"],
-      "title": "Planned feature contract"
+      "title": "Bounded current feature contract"
     },
     {
       "anchor": "kolvrt-security-compat-authority",
@@ -1248,6 +1278,80 @@
       "title": "Compatibility invariant"
     },
     {
+      "anchor": "kolvrt-domains-scope",
+      "depends_on": [
+        "kolvrt.security.domains.identity",
+        "kolvrt.security.domains.grants",
+        "kolvrt.security.domains.notification",
+        "kolvrt.security.domains.teardown",
+        "kolvrt.process.identity",
+        "kolvrt.process.reclamation",
+        "kolvrt.handles.identity",
+        "kolvrt.handles.lifetime",
+        "kolvrt.memory.user-copy",
+        "law.009",
+        "law.013",
+        "law.025"
+      ],
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 297,
+      "gaps": [
+        "General IPC and trusted supervisor policy-installation acceptance are not delivered by this bounded notification pilot."
+      ],
+      "id": "kolvrt.security.domains",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/kernel/domains.md",
+      "summary": "Bounded domains, budgets and retained notification outcomes.",
+      "tags": ["domain", "security", "grant", "notification"],
+      "title": "Implemented feature scope"
+    },
+    {
+      "anchor": "kolvrt-domains-grants",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1159,
+      "id": "kolvrt.security.domains.grants",
+      "kind": "contract-section",
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Grants and revocation",
+      "title": "Grants and revocation"
+    },
+    {
+      "anchor": "kolvrt-domains-identity",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1814,
+      "id": "kolvrt.security.domains.identity",
+      "kind": "contract-section",
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Identity, ownership and limits",
+      "title": "Identity, ownership and limits"
+    },
+    {
+      "anchor": "kolvrt-domains-notification",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 2914,
+      "id": "kolvrt.security.domains.notification",
+      "kind": "contract-section",
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Concrete notification boundary",
+      "title": "Concrete notification boundary"
+    },
+    {
+      "anchor": "kolvrt-domains-teardown",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 6721,
+      "id": "kolvrt.security.domains.teardown",
+      "kind": "contract-section",
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Teardown and evidence",
+      "title": "Teardown and evidence"
+    },
+    {
       "anchor": "kolvrt-security-event-revocation",
       "depends_on": [
         "kolvrt.handles.identity",
@@ -1259,7 +1363,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6585,
+      "estimated_bytes": 7640,
       "id": "kolvrt.security.event-revocation",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",

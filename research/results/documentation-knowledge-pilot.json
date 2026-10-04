@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 39502,
-  "catalog_bytes": 52285,
-  "catalog_nodes": 132,
+  "approximate_tokens": 44899,
+  "catalog_bytes": 55240,
+  "catalog_nodes": 139,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "ba6f5c73e00818931e2ef8b65f552797e4252db30adc407784d1ba016735c829",
+  "catalog_sha256": "2cf3333fb87cf75fe6d9ab04f9f267a351a3ba49e7c33afcdcf72c760a12c245",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 158008,
+  "context_plus_catalog_bytes": 179595,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,26 +14,42 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 85,
-    "utf8_bytes": 606694
+    "documents": 87,
+    "utf8_bytes": 631801
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
   "external_issue_body_bytes_loaded": 0,
-  "issue_body_scope": "Planned issue #24 requirements are authored in the canonical feature contract; live issue body is not loaded. Online existence is a separate optional check.",
+  "impact": {
+    "affected": [
+      "kolvrt.handles.identity",
+      "kolvrt.handles.local",
+      "kolvrt.security.capability-revocation",
+      "kolvrt.security.domains",
+      "kolvrt.security.event-revocation"
+    ],
+    "input": "kolvrt.handles.identity",
+    "scope": "Declared documentation relationships; review canonical docs, locale pairs, summaries and evidence applicability. Not exhaustive code impact."
+  },
+  "issue_body_scope": "Current requirements and remaining gates are authored in canonical contracts; live issue bodies are not loaded. Online existence is a separate optional check.",
   "missing": [
     {
       "id": "kolvrt.security.capability-revocation",
-      "missing": "Issue #24 broader issuer independence, service restart/rebind, nested authority, domains and IPC acceptance remain missing; the synchronous Event slice is implemented separately."
+      "missing": "General IPC, multi-process domains, trusted supervisor policy installation and immediate revoke/drain are separate future gates."
+    },
+    {
+      "id": "kolvrt.security.domains",
+      "missing": "General IPC and trusted supervisor policy-installation acceptance are not delivered by this bounded notification pilot."
     }
   ],
   "optional_raw_acceptance_bytes": {
     "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json": 53405,
+    "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json": 62722,
     "research/results/event-revocation-ci.json": 57928,
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 105723,
+  "rendered_context_bytes": 124355,
   "schema_version": 1,
   "seeds": ["kolvrt.security.capability-revocation"],
   "selected": [
@@ -101,11 +117,20 @@
       }
     },
     {
+      "id": "adr.0023",
+      "location": {
+        "end": 76,
+        "path": "docs/architecture-decisions/0023-domains-and-scoped-grants.md",
+        "sha256": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
+        "start": 1
+      }
+    },
+    {
       "id": "kolvrt.handles.identity",
       "location": {
         "end": 37,
         "path": "docs/kernel/handles.md",
-        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
         "start": 13
       }
     },
@@ -114,16 +139,16 @@
       "location": {
         "end": 67,
         "path": "docs/kernel/handles.md",
-        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
         "start": 36
       }
     },
     {
       "id": "kolvrt.handles.limits",
       "location": {
-        "end": 220,
+        "end": 110,
         "path": "docs/kernel/handles.md",
-        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
         "start": 105
       }
     },
@@ -132,7 +157,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/handles.md",
-        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
         "start": 7
       }
     },
@@ -141,7 +166,7 @@
       "location": {
         "end": 84,
         "path": "docs/kernel/handles.md",
-        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
         "start": 66
       }
     },
@@ -222,7 +247,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+        "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
         "start": 13
       }
     },
@@ -231,7 +256,7 @@
       "location": {
         "end": 82,
         "path": "docs/kernel/processes.md",
-        "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+        "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
         "start": 58
       }
     },
@@ -240,16 +265,61 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+        "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
         "start": 7
+      }
+    },
+    {
+      "id": "kolvrt.security.domains",
+      "location": {
+        "end": 18,
+        "path": "docs/kernel/domains.md",
+        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "start": 11
+      }
+    },
+    {
+      "id": "kolvrt.security.domains.grants",
+      "location": {
+        "end": 36,
+        "path": "docs/kernel/domains.md",
+        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "start": 27
+      }
+    },
+    {
+      "id": "kolvrt.security.domains.identity",
+      "location": {
+        "end": 28,
+        "path": "docs/kernel/domains.md",
+        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "start": 17
+      }
+    },
+    {
+      "id": "kolvrt.security.domains.notification",
+      "location": {
+        "end": 56,
+        "path": "docs/kernel/domains.md",
+        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "start": 35
+      }
+    },
+    {
+      "id": "kolvrt.security.domains.teardown",
+      "location": {
+        "end": 176,
+        "path": "docs/kernel/domains.md",
+        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "start": 55
       }
     },
     {
       "id": "kolvrt.security.event-revocation",
       "location": {
-        "end": 163,
+        "end": 175,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+        "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
         "start": 17
       }
     },
@@ -363,17 +433,17 @@
     }
   ],
   "selected_full_documents": {
-    "count": 14,
-    "utf8_bytes": 163990
+    "count": 16,
+    "utf8_bytes": 186364
   },
   "source_files": [
     {
       "path": "crates/repository-checks/src/knowledge.rs",
-      "sha256_lf": "81b8799bc6bb94f8090ccba25a7a552c97762339facdda65f9155578e03b1107"
+      "sha256_lf": "cc1e7ec389b4c769d76658c4e22ebb1c2fd627b3b7d3729811f721a412378b0a"
     },
     {
       "path": "crates/repository-checks/tests/knowledge.rs",
-      "sha256_lf": "487b1101e5e30a6619a83091ae50ebe08bb03c1338b5a8b347b864cf30b5e330"
+      "sha256_lf": "18676d1182138c04fdb4a6b0991add97ee63a5aaf1036da08c8146e7d11bffd0"
     }
   ]
 }

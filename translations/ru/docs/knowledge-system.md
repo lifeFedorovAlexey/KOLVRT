@@ -65,7 +65,7 @@ cargo xtask docs check-change origin/main
 
 ## Миграция и пределы доказательств
 
-Stage A задаёт schema/policy/checks; B мигрирует processes/user-copy/handles и planned capability revocation; C добавляет law/ADR navigation и производные README rows; D проецирует COST-L/cases; E добавляет Linux mechanisms и навигацию hardware/security/benchmark/advisor; F поэтапно включает остальные historical docs. Каждый этап сохраняет человеческую навигацию, доказательства и переводы. Пилот измеряет выбранный контекст вместе с catalog overhead, не доказывая достаточность источников для всех будущих задач.
+Stage A задаёт schema/policy/checks; B мигрирует processes/user-copy/handles и ограниченные capability/domain acceptance; C добавляет law/ADR navigation и производные README rows; D проецирует COST-L/cases; E добавляет Linux mechanisms и навигацию hardware/security/benchmark/advisor; F поэтапно включает остальные historical docs. Каждый этап сохраняет человеческую навигацию, доказательства и переводы. Пилот измеряет выбранный контекст вместе с catalog overhead, не доказывая достаточность источников для всех будущих задач.
 
 Linux research использует [шаблон механизма](../research/linux/mechanism-template.md); первичные источники фиксируют version/commit/path/configuration и review date. COST-L lifecycle, native decision, driver observations, compatibility modules и feature states различаются. Инструмент не собирает и не публикует личный hardware inventory. Используйте существующие research issues и provenance gates.
 
@@ -106,7 +106,7 @@ Linux research использует [шаблон механизма](../researc
             "state": "VERIFIED",
             "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "141aead41dd3f36c3d7299c450805292070890e5ab35b0b8c5641d2f4cf90e42",
+            "receipt_sha256": "9856cf5ea263d21d92d39bb19f9494288b6ac02e40c8403c0c29bb462bc280f3",
             "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance."
           },
           {

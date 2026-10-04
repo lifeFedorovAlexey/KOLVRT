@@ -15,8 +15,14 @@
       "type": "supersedes"
     },
     {
+      "from": "adr.0023",
+      "scope": "Extends the Event admission/lifetime contract with scoped deferred work; not general IPC architecture.",
+      "to": "adr.0022",
+      "type": "related_to"
+    },
+    {
       "from": "kolvrt.docs.navigation",
-      "to": "adr.0023",
+      "to": "adr.0024",
       "type": "depends_on"
     },
     {
@@ -47,6 +53,11 @@
     {
       "from": "kolvrt.handles.local",
       "to": "adr.0022",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.handles.local",
+      "to": "adr.0023",
       "type": "depends_on"
     },
     {
@@ -261,6 +272,31 @@
     },
     {
       "from": "kolvrt.security.capability-revocation",
+      "to": "adr.0022",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
+      "to": "adr.0023",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
+      "to": "crates/kernel-core/src/handles.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
+      "to": "crates/kernel-core/src/wait.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
+      "to": "crates/kernel/src/security.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
       "to": "kolvrt.handles.identity",
       "type": "depends_on"
     },
@@ -292,6 +328,11 @@
     {
       "from": "kolvrt.security.capability-revocation",
       "to": "kolvrt.process.reclamation",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
+      "to": "kolvrt.security.domains",
       "type": "depends_on"
     },
     {
@@ -360,6 +401,101 @@
       "type": "depends_on"
     },
     {
+      "from": "kolvrt.security.capability-revocation",
+      "to": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "adr.0023",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "crates/kernel-core/src/domain.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "crates/kernel-core/src/domain/pool.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "crates/kernel/src/process.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "crates/kernel/src/security.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.handles.identity",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.handles.lifetime",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.memory.user-copy",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.process.identity",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.process.reclamation",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.security.domains.grants",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.security.domains.identity",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.security.domains.notification",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "kolvrt.security.domains.teardown",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "law.009",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "law.013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "law.025",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
+      "to": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
+      "type": "validated_by"
+    },
+    {
       "from": "kolvrt.security.event-revocation",
       "to": "adr.0022",
       "type": "depends_on"
@@ -421,16 +557,19 @@
     }
   ],
   "inputs": {
-    "crates/kernel-core/src/handles.rs": "e3f79a46f98d4cd718b751c545b3563b9b2f85ddefb917905b7f50dd976ae56f",
+    "crates/kernel-core/src/domain.rs": "17c2ca3dfc9f25510a1780ae6745737801d90fa575e7471977e31d945c5e37c5",
+    "crates/kernel-core/src/domain/pool.rs": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05",
+    "crates/kernel-core/src/handles.rs": "4d7c64d95bfa34377065728b51242e63c8c6a4822989587c500c818de130fedb",
     "crates/kernel-core/src/process.rs": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979",
     "crates/kernel-core/src/user_copy.rs": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da",
-    "crates/kernel-core/src/wait.rs": "0e3e43f69867d7f9d6d4b30b91b3789a0f1bc0cfb6fa16936a7c8b87b3021442",
-    "crates/kernel/src/handles.rs": "e550b9545e690823cd776f4a128cacb8c4981eb18c6167e052eb13613cb284a3",
-    "crates/kernel/src/handles/testing.rs": "94cefdfac863fcc185a789b21a01c4d1c6eb2c0ee018c7dc06e38548fa4f01c1",
-    "crates/kernel/src/process.rs": "2d4e50c0bcf5804fe76ec16bce885ba0b6721ee165e596acac89cf6fc216b0e2",
+    "crates/kernel-core/src/wait.rs": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a",
+    "crates/kernel/src/handles.rs": "52b5e9abced2988a68ac0438f3b67237ab0b52f6dc97141d1dc31dc6dce5cfe6",
+    "crates/kernel/src/handles/testing.rs": "749a978761de7705e39ba3567e1279279f00edd1f7afb90f4b851ea999d9076f",
+    "crates/kernel/src/process.rs": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
+    "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
-    "crates/repository-checks/src/knowledge.rs": "81b8799bc6bb94f8090ccba25a7a552c97762339facdda65f9155578e03b1107",
-    "crates/repository-checks/tests/knowledge.rs": "487b1101e5e30a6619a83091ae50ebe08bb03c1338b5a8b347b864cf30b5e330",
+    "crates/repository-checks/src/knowledge.rs": "cc1e7ec389b4c769d76658c4e22ebb1c2fd627b3b7d3729811f721a412378b0a",
+    "crates/repository-checks/tests/knowledge.rs": "18676d1182138c04fdb4a6b0991add97ee63a5aaf1036da08c8146e7d11bffd0",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
     "docs/architecture-decisions/0003-profiles.md": "e468a33090c9ab7ae112cf41f222edfd7faf459907a1117106dbfc19c64e3280",
@@ -453,15 +592,17 @@
     "docs/architecture-decisions/0020-handle-transfer-and-retention.md": "123c8480d21d65b8a9d8284ab1d029b4fbad58217eef667540e7d566e7a41527",
     "docs/architecture-decisions/0021-asid-lifecycle.md": "fd2181dadc72323938de89d9f56edd4af8da6fb66b1b1833969ba6d2b4608723",
     "docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "17179221ff4e65bb1e06e11f57f5ef721e34d040acf00e6e0fa476cc15f065bd",
-    "docs/architecture-decisions/0023-documentation-knowledge.md": "11d16aa9de8426f1b22def59c74008b7187a71abaab8c5c8b7f4833234f03902",
+    "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
+    "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
-    "docs/kernel/capabilities.md": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
-    "docs/kernel/handles.md": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
-    "docs/kernel/processes.md": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+    "docs/kernel/capabilities.md": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
+    "docs/kernel/domains.md": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+    "docs/kernel/handles.md": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+    "docs/kernel/processes.md": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "d8d57a0349c6e0ad444c0e3fd0d23e7cbbadd66cfe197051eab261a4f38cebb7",
-    "docs/knowledge-system.md": "57115b4b46e5d091cb945cc0fb572e52dd93849b4233febdef5bd19627af5211",
+    "docs/knowledge-enrollment.json": "eb86acfa5b712ae63ab096afb1d1edc7491afc33689f8f1a8eb0074d4d9bb2bf",
+    "docs/knowledge-system.md": "488a58b2c7f06c228e5a9c1d317caa8e7154bbb4838f1ad4b30013962d49e211",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -499,7 +640,7 @@
     "research/cost-l/COST-L-0003.json": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794",
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "225bf3eb78ef4024547dca21bf2c4177c31b69d77bc982fed69c2286e76b807d",
+    "translations/manifest.json": "88cea0ddcdb6817d74639d4808672e782399bbebb0e940863c8eef1022a88a22",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -522,14 +663,16 @@
     "translations/ru/docs/architecture-decisions/0020-handle-transfer-and-retention.md": "e945a848869d3a9cfda588a461ffb7db5a0ef420f6c474f08258aca610d63f80",
     "translations/ru/docs/architecture-decisions/0021-asid-lifecycle.md": "83cc6c3bdf4dfacd0611439fa78ee0f7ede50748baa3d88c2d8c354480291b6c",
     "translations/ru/docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "a01b2ec4c7f890ee7a08c1febf431bc786f0056deaf175924c6746f8c0b8fddf",
-    "translations/ru/docs/architecture-decisions/0023-documentation-knowledge.md": "aecf29aed76fecde6e592ba911bb5d32e334cbd63cff19e25b8c9a5435cd7abd",
+    "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
+    "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
-    "translations/ru/docs/kernel/capabilities.md": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
-    "translations/ru/docs/kernel/handles.md": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
-    "translations/ru/docs/kernel/processes.md": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+    "translations/ru/docs/kernel/capabilities.md": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
+    "translations/ru/docs/kernel/domains.md": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+    "translations/ru/docs/kernel/handles.md": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+    "translations/ru/docs/kernel/processes.md": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "edabc32207358f3c023eacf4cb3a3315681365035208aab96c940512ba4c0663",
+    "translations/ru/docs/knowledge-system.md": "c6b7b8c258c468c6d5810e03390165eadd268d928ebd6644c805254115f5462e",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
@@ -1161,28 +1304,62 @@
       "aliases": ["ADR-0023"],
       "document": "adr.0023",
       "document_status": "CURRENT",
-      "estimated_bytes": 3643,
-      "evidence_scope": "host navigation contracts only; no kernel feature acceptance.",
+      "estimated_bytes": 6955,
+      "evidence_scope": "generation-aware one-process domains, fixed-affinity notification services and retained terminal outcomes on two QEMU CPUs.",
       "id": "adr.0023",
       "kind": "adr",
       "locations": {
         "en": {
+          "end": 76,
+          "path": "docs/architecture-decisions/0023-domains-and-scoped-grants.md",
+          "sha256": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
+          "start": 1
+        },
+        "ru": {
+          "end": 76,
+          "path": "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md",
+          "sha256": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture-decisions/0023-domains-and-scoped-grants.md",
+      "relationships": [
+        {
+          "scope": "Extends the Event admission/lifetime contract with scoped deferred work; not general IPC architecture.",
+          "to": "adr.0022",
+          "type": "related_to"
+        }
+      ],
+      "schema_version": 1,
+      "summary": "Bounded one-process domains and scoped Event grants.",
+      "title": "ADR-0023 — One-process domains and scoped Event grants"
+    },
+    "adr.0024": {
+      "aliases": ["ADR-0024"],
+      "document": "adr.0024",
+      "document_status": "CURRENT",
+      "estimated_bytes": 3643,
+      "evidence_scope": "host navigation contracts only; no kernel feature acceptance.",
+      "id": "adr.0024",
+      "kind": "adr",
+      "locations": {
+        "en": {
           "end": 61,
-          "path": "docs/architecture-decisions/0023-documentation-knowledge.md",
-          "sha256": "11d16aa9de8426f1b22def59c74008b7187a71abaab8c5c8b7f4833234f03902",
+          "path": "docs/architecture-decisions/0024-documentation-knowledge.md",
+          "sha256": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
           "start": 1
         },
         "ru": {
           "end": 61,
-          "path": "translations/ru/docs/architecture-decisions/0023-documentation-knowledge.md",
-          "sha256": "aecf29aed76fecde6e592ba911bb5d32e334cbd63cff19e25b8c9a5435cd7abd",
+          "path": "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md",
+          "sha256": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
           "start": 1
         }
       },
-      "path": "docs/architecture-decisions/0023-documentation-knowledge.md",
+      "path": "docs/architecture-decisions/0024-documentation-knowledge.md",
       "schema_version": 1,
       "summary": "Bounded shared documentation navigation and feature freshness contract.",
-      "title": "ADR-0023 — Documentation knowledge navigation and feature freshness"
+      "title": "ADR-0024 — Documentation knowledge navigation and feature freshness"
     },
     "case.kol-path.0001": {
       "aliases": ["KOL-PATH-0001"],
@@ -2290,7 +2467,7 @@
     "doc.kolvrt.docs.knowledge": {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
-      "estimated_bytes": 12533,
+      "estimated_bytes": 12540,
       "evidence_scope": "deterministic offline navigation and the enrolled Phase 3 pilot; no kernel or hardware acceptance is inferred.",
       "id": "doc.kolvrt.docs.knowledge",
       "kind": "policy",
@@ -2298,13 +2475,13 @@
         "en": {
           "end": 139,
           "path": "docs/knowledge-system.md",
-          "sha256": "57115b4b46e5d091cb945cc0fb572e52dd93849b4233febdef5bd19627af5211",
+          "sha256": "488a58b2c7f06c228e5a9c1d317caa8e7154bbb4838f1ad4b30013962d49e211",
           "start": 1
         },
         "ru": {
           "end": 139,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "edabc32207358f3c023eacf4cb3a3315681365035208aab96c940512ba4c0663",
+          "sha256": "c6b7b8c258c468c6d5810e03390165eadd268d928ebd6644c805254115f5462e",
           "start": 1
         }
       },
@@ -2369,47 +2546,73 @@
     "doc.kolvrt.kernel.capabilities": {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 8353,
-      "evidence_scope": "broader issue #24 requirements remain planned; the synchronous Event grant/revocation slice is separately bounded implemented at aa75629, with retained CI reports.",
+      "estimated_bytes": 9333,
+      "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "locations": {
         "en": {
-          "end": 163,
+          "end": 175,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+          "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
           "start": 1
         },
         "ru": {
-          "end": 163,
+          "end": 175,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
+          "sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
           "start": 1
         }
       },
       "path": "docs/kernel/capabilities.md",
       "schema_version": 1,
-      "summary": "Planned native capability admission and revocation; current bounded handles are not general grants.",
+      "summary": "Bounded Phase 3.4 grants, domains and revocation; general IPC and supervisor policy remain separate gates.",
       "title": "Native capability scope and revocation"
+    },
+    "doc.kolvrt.kernel.domains": {
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 13095,
+      "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
+      "id": "doc.kolvrt.kernel.domains",
+      "kind": "subsystem-contract",
+      "locations": {
+        "en": {
+          "end": 176,
+          "path": "docs/kernel/domains.md",
+          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "start": 1
+        },
+        "ru": {
+          "end": 176,
+          "path": "translations/ru/docs/kernel/domains.md",
+          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "start": 1
+        }
+      },
+      "path": "docs/kernel/domains.md",
+      "schema_version": 1,
+      "summary": "Current bounded Phase 3.4 domains and scoped grants.",
+      "title": "Native domains and scoped grants"
     },
     "doc.kolvrt.kernel.handles": {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 17955,
+      "estimated_bytes": 18557,
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
       "locations": {
         "en": {
-          "end": 220,
+          "end": 224,
           "path": "docs/kernel/handles.md",
-          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
           "start": 1
         },
         "ru": {
-          "end": 220,
+          "end": 224,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
           "start": 1
         }
       },
@@ -2421,21 +2624,21 @@
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 18733,
+      "estimated_bytes": 19475,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "locations": {
         "en": {
-          "end": 247,
+          "end": 251,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 1
         },
         "ru": {
-          "end": 247,
+          "end": 251,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 1
         }
       },
@@ -2556,7 +2759,7 @@
       "evidence_scope": "deterministic offline navigation and the enrolled Phase 3 pilot; no kernel or hardware acceptance is inferred.",
       "feature": {
         "acceptance": ["research/results/documentation-knowledge-pilot.json"],
-        "adrs": ["adr.0023"],
+        "adrs": ["adr.0024"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Offline metadata validation, ID/locale extraction, prerequisite closure, impact and deterministic candidate ranking.",
         "issues": [74],
@@ -2590,7 +2793,7 @@
             "environment": "host-process",
             "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "141aead41dd3f36c3d7299c450805292070890e5ab35b0b8c5641d2f4cf90e42",
+            "receipt_sha256": "9856cf5ea263d21d92d39bb19f9494288b6ac02e40c8403c0c29bb462bc280f3",
             "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance.",
             "state": "VERIFIED"
           },
@@ -2607,13 +2810,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "57115b4b46e5d091cb945cc0fb572e52dd93849b4233febdef5bd19627af5211",
+          "sha256": "488a58b2c7f06c228e5a9c1d317caa8e7154bbb4838f1ad4b30013962d49e211",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "edabc32207358f3c023eacf4cb3a3315681365035208aab96c940512ba4c0663",
+          "sha256": "c6b7b8c258c468c6d5810e03390165eadd268d928ebd6644c805254115f5462e",
           "start": 7
         }
       },
@@ -2635,13 +2838,13 @@
         "en": {
           "end": 106,
           "path": "docs/kernel/handles.md",
-          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
           "start": 83
         },
         "ru": {
           "end": 106,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
           "start": 81
         }
       },
@@ -2662,13 +2865,13 @@
         "en": {
           "end": 37,
           "path": "docs/kernel/handles.md",
-          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
           "start": 13
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
           "start": 13
         }
       },
@@ -2689,13 +2892,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/handles.md",
-          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
           "start": 36
         },
         "ru": {
           "end": 65,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
           "start": 34
         }
       },
@@ -2708,21 +2911,21 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 4546,
+      "estimated_bytes": 510,
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.limits",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 220,
+          "end": 110,
           "path": "docs/kernel/handles.md",
-          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
           "start": 105
         },
         "ru": {
-          "end": 220,
+          "end": 110,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
           "start": 105
         }
       },
@@ -2751,14 +2954,14 @@
         "acceptance": [
           "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
         ],
-        "adrs": ["adr.0019", "adr.0020", "adr.0022"],
+        "adrs": ["adr.0019", "adr.0020", "adr.0022", "adr.0023"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Bounded caller-local namespaces and receiver-local transfer on fixed-affinity CPUs.",
         "issues": [23],
         "limitations": [
           "Close does not revoke retained work; no general grants, domains or IPC."
         ],
-        "next_gate": "Issue #24 issuer independence, service restart/rebind, nested authority and broader IPC/domain acceptance remain separate; ADR-0022 delivers only synchronous Event revocation.",
+        "next_gate": "General IPC and supervisor policy installation require independently derived contracts; bounded Phase 3.4 scoped grants/domains are separately documented.",
         "readiness": "NOT_READY",
         "roadmap_gate": "Phase 3.3",
         "sources": [
@@ -2797,13 +3000,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/handles.md",
-          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
           "start": 7
         }
       },
@@ -2824,13 +3027,13 @@
         "en": {
           "end": 84,
           "path": "docs/kernel/handles.md",
-          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
           "start": 66
         },
         "ru": {
           "end": 82,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
           "start": 64
         }
       },
@@ -3279,13 +3482,13 @@
         "en": {
           "end": 96,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 89
         },
         "ru": {
           "end": 96,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 89
         }
       },
@@ -3304,16 +3507,16 @@
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 112,
+          "end": 116,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
-          "start": 105
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "start": 109
         },
         "ru": {
-          "end": 112,
+          "end": 116,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
-          "start": 105
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "start": 109
         }
       },
       "path": "docs/kernel/processes.md",
@@ -3333,13 +3536,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 42
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 42
         }
       },
@@ -3360,13 +3563,13 @@
         "en": {
           "end": 90,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 81
         },
         "ru": {
           "end": 90,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 81
         }
       },
@@ -3385,16 +3588,16 @@
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 247,
+          "end": 251,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
-          "start": 111
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "start": 115
         },
         "ru": {
-          "end": 247,
+          "end": 251,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
-          "start": 111
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "start": 115
         }
       },
       "path": "docs/kernel/processes.md",
@@ -3414,13 +3617,13 @@
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 13
         }
       },
@@ -3490,13 +3693,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 7
         }
       },
@@ -3509,21 +3712,21 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1307,
+      "estimated_bytes": 1191,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.limits",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 106,
+          "end": 102,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 95
         },
         "ru": {
-          "end": 106,
+          "end": 102,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 95
         }
       },
@@ -3544,13 +3747,13 @@
         "en": {
           "end": 82,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 58
         },
         "ru": {
           "end": 82,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 58
         }
       },
@@ -3571,13 +3774,13 @@
         "en": {
           "end": 43,
           "path": "docs/kernel/processes.md",
-          "sha256": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
+          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
           "start": 23
         },
         "ru": {
           "end": 43,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
+          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
           "start": 23
         }
       },
@@ -3608,38 +3811,50 @@
         "adr.0013",
         "kolvrt.security.trust",
         "kolvrt.security.threats",
-        "kolvrt.security.event-revocation"
+        "kolvrt.security.event-revocation",
+        "kolvrt.security.domains"
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 1464,
-      "evidence_scope": "broader issue #24 requirements remain planned; the synchronous Event grant/revocation slice is separately bounded implemented at aa75629, with retained CI reports.",
+      "estimated_bytes": 1374,
+      "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "feature": {
-        "acceptance": [],
-        "adrs": ["adr.0013"],
-        "implementation": "PLANNED",
-        "implementation_scope": "Broader issue #24 service/issuer authority, restart/rebind and general capability admission beyond synchronous Event grants.",
+        "acceptance": [
+          "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+        ],
+        "adrs": ["adr.0013", "adr.0022", "adr.0023"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Merged bounded Phase 3.4 explicit scoped Event grants, generation-aware domains and retained service notification with revoke/admission serialization.",
         "issues": [24],
         "limitations": [
-          "The ADR-0022 Event slice is separate bounded implementation; full issuer/service/domain authority and asynchronous drain are not delivered."
+          "The full general IPC/supervisor production contract is not delivered; one-process fixed-affinity domains and single-cell Event notification remain bounded."
         ],
-        "next_gate": "Real EL0 and exact-source acceptance for remaining issuer/service/domain obligations; re-derive architecture before extending Event mechanisms.",
+        "next_gate": "Review #26/#27 general IPC/supervisor invariants and policy installation; refactor the early notification pilot if it constrains them.",
         "readiness": "NOT_READY",
         "roadmap_gate": "Phase 3.4",
-        "sources": [],
+        "sources": [
+          "crates/kernel/src/security.rs",
+          "crates/kernel-core/src/handles.rs",
+          "crates/kernel-core/src/wait.rs"
+        ],
         "transitions": [
           {
-            "acceptance": [],
+            "acceptance": [
+              "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+            ],
             "from": "UNRECORDED",
-            "reason": "Adopt issue #24 requirements without an implementation claim.",
-            "to": "PLANNED"
+            "reason": "Adopt then-current merged #75 Phase 3.4 behavior and exact-source receipt; the earlier planning snapshot cannot dictate current reality.",
+            "to": "BOUNDED_IMPLEMENTED"
           }
         ],
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Broader issuer/service/domain acceptance is absent; scoped Event verification is a different feature.",
-            "state": "UNKNOWN"
+            "reason": "Passing historical integrated Phase 3.4 receipt; no later-source or silicon inference.",
+            "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
+            "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3",
+            "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -3649,7 +3864,7 @@
         ]
       },
       "gaps": [
-        "Issue #24 broader issuer independence, service restart/rebind, nested authority, domains and IPC acceptance remain missing; the synchronous Event slice is implemented separately."
+        "General IPC, multi-process domains, trusted supervisor policy installation and immediate revoke/drain are separate future gates."
       ],
       "id": "kolvrt.security.capability-revocation",
       "kind": "feature",
@@ -3657,21 +3872,21 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+          "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
           "start": 7
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
+          "sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
           "start": 7
         }
       },
       "path": "docs/kernel/capabilities.md",
       "read_when": ["review Phase 3.4 capability revocation"],
-      "summary": "Planned Phase 3.4 capability revocation and admission race review.",
+      "summary": "Current bounded Phase 3.4 capability revocation with explicit remaining gates.",
       "tags": ["capability", "revocation", "phase", "3.4"],
-      "title": "Planned feature contract"
+      "title": "Bounded current feature contract"
     },
     "kolvrt.security.compat-authority": {
       "anchor": "kolvrt-security-compat-authority",
@@ -3700,6 +3915,200 @@
       "summary": "Security requirement: compat-authority",
       "title": "Compatibility invariant"
     },
+    "kolvrt.security.domains": {
+      "anchor": "kolvrt-domains-scope",
+      "depends_on": [
+        "kolvrt.security.domains.identity",
+        "kolvrt.security.domains.grants",
+        "kolvrt.security.domains.notification",
+        "kolvrt.security.domains.teardown",
+        "kolvrt.process.identity",
+        "kolvrt.process.reclamation",
+        "kolvrt.handles.identity",
+        "kolvrt.handles.lifetime",
+        "kolvrt.memory.user-copy",
+        "law.009",
+        "law.013",
+        "law.025"
+      ],
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 297,
+      "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
+      "feature": {
+        "acceptance": [
+          "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+        ],
+        "adrs": ["adr.0023"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Generation-aware one-process domains, explicit limits and grants, same-CPU Event notification, retained terminal outcomes and revoke/admission serialization.",
+        "issues": [24, 25, 75],
+        "limitations": [
+          "One process/domain and fixed-affinity single-cell notification; no general IPC, supervisor installation policy, multi-process domains, immediate revoke/drain, migration or silicon verification."
+        ],
+        "next_gate": "Rederive general IPC and supervision contracts for #26/#27; early notification encoding, queue and grants cannot freeze later architecture.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Phase 3.4",
+        "sources": [
+          "crates/kernel-core/src/domain.rs",
+          "crates/kernel-core/src/domain/pool.rs",
+          "crates/kernel/src/security.rs",
+          "crates/kernel/src/process.rs"
+        ],
+        "transitions": [
+          {
+            "acceptance": [
+              "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+            ],
+            "from": "UNRECORDED",
+            "reason": "Adopt merged #75 bounded domain contract and exact-source acceptance; this navigation change introduces no kernel behavior.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "reason": "Passing historical integrated Phase 3.4 receipt; no later-source or silicon inference.",
+            "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
+            "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3",
+            "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "No physical ARM64 receipt exists.",
+            "state": "UNKNOWN"
+          }
+        ]
+      },
+      "gaps": [
+        "General IPC and trusted supervisor policy-installation acceptance are not delivered by this bounded notification pilot."
+      ],
+      "id": "kolvrt.security.domains",
+      "kind": "feature",
+      "locations": {
+        "en": {
+          "end": 18,
+          "path": "docs/kernel/domains.md",
+          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "start": 11
+        },
+        "ru": {
+          "end": 18,
+          "path": "translations/ru/docs/kernel/domains.md",
+          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "start": 11
+        }
+      },
+      "path": "docs/kernel/domains.md",
+      "summary": "Bounded domains, budgets and retained notification outcomes.",
+      "tags": ["domain", "security", "grant", "notification"],
+      "title": "Implemented feature scope"
+    },
+    "kolvrt.security.domains.grants": {
+      "anchor": "kolvrt-domains-grants",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1159,
+      "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
+      "id": "kolvrt.security.domains.grants",
+      "kind": "contract-section",
+      "locations": {
+        "en": {
+          "end": 36,
+          "path": "docs/kernel/domains.md",
+          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "start": 27
+        },
+        "ru": {
+          "end": 36,
+          "path": "translations/ru/docs/kernel/domains.md",
+          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "start": 27
+        }
+      },
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Grants and revocation",
+      "title": "Grants and revocation"
+    },
+    "kolvrt.security.domains.identity": {
+      "anchor": "kolvrt-domains-identity",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1814,
+      "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
+      "id": "kolvrt.security.domains.identity",
+      "kind": "contract-section",
+      "locations": {
+        "en": {
+          "end": 28,
+          "path": "docs/kernel/domains.md",
+          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "start": 17
+        },
+        "ru": {
+          "end": 28,
+          "path": "translations/ru/docs/kernel/domains.md",
+          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "start": 17
+        }
+      },
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Identity, ownership and limits",
+      "title": "Identity, ownership and limits"
+    },
+    "kolvrt.security.domains.notification": {
+      "anchor": "kolvrt-domains-notification",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 2914,
+      "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
+      "id": "kolvrt.security.domains.notification",
+      "kind": "contract-section",
+      "locations": {
+        "en": {
+          "end": 56,
+          "path": "docs/kernel/domains.md",
+          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "start": 35
+        },
+        "ru": {
+          "end": 56,
+          "path": "translations/ru/docs/kernel/domains.md",
+          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "start": 35
+        }
+      },
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Concrete notification boundary",
+      "title": "Concrete notification boundary"
+    },
+    "kolvrt.security.domains.teardown": {
+      "anchor": "kolvrt-domains-teardown",
+      "document": "doc.kolvrt.kernel.domains",
+      "document_status": "CURRENT",
+      "estimated_bytes": 6721,
+      "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
+      "id": "kolvrt.security.domains.teardown",
+      "kind": "contract-section",
+      "locations": {
+        "en": {
+          "end": 176,
+          "path": "docs/kernel/domains.md",
+          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "start": 55
+        },
+        "ru": {
+          "end": 176,
+          "path": "translations/ru/docs/kernel/domains.md",
+          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "start": 55
+        }
+      },
+      "path": "docs/kernel/domains.md",
+      "summary": "Domain contract: Teardown and evidence",
+      "title": "Teardown and evidence"
+    },
     "kolvrt.security.event-revocation": {
       "anchor": "kolvrt-security-event-revocation",
       "depends_on": [
@@ -3712,8 +4121,8 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6585,
-      "evidence_scope": "broader issue #24 requirements remain planned; the synchronous Event grant/revocation slice is separately bounded implemented at aa75629, with retained CI reports.",
+      "estimated_bytes": 7640,
+      "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "feature": {
         "acceptance": ["research/results/event-revocation-ci.json"],
         "adrs": ["adr.0022"],
@@ -3760,15 +4169,15 @@
       "kind": "feature",
       "locations": {
         "en": {
-          "end": 163,
+          "end": 175,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+          "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
           "start": 17
         },
         "ru": {
-          "end": 163,
+          "end": 175,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
+          "sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
           "start": 17
         }
       },

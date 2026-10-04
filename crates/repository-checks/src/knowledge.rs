@@ -615,6 +615,38 @@ impl Knowledge {
         }
         Ok(visited.into_iter().collect())
     }
+    pub fn impact(&self, input: &str) -> CheckResult<Value> {
+        let mut seen = BTreeSet::new();
+        if let Ok(id) = self.resolve(input) {
+            seen.insert(id.to_owned());
+        }
+        for (id, node) in self.graph["nodes"].as_object().unwrap() {
+            if node["path"] == input {
+                seen.insert(id.clone());
+            }
+        }
+        let edges = self.graph["edges"].as_array().unwrap();
+        if edges.iter().any(|e| e["to"] == input) {
+            seen.insert(input.to_owned());
+        }
+        if seen.is_empty() {
+            return Err(format!("unknown knowledge ID or declared path {input}"));
+        }
+        loop {
+            let before = seen.len();
+            for e in edges {
+                if seen.contains(e["to"].as_str().unwrap()) {
+                    seen.insert(e["from"].as_str().unwrap().to_owned());
+                }
+            }
+            if seen.len() == before {
+                break;
+            }
+        }
+        Ok(
+            json!({"input":input,"affected":seen,"scope":"Declared documentation relationships; review canonical docs, locale pairs, summaries and evidence applicability. Not exhaustive code impact."}),
+        )
+    }
     pub fn render(&self, root: &Path, ids: &[String], locale: &str) -> CheckResult<String> {
         let mut ranges = BTreeMap::<String, BTreeSet<usize>>::new();
         let mut headers = String::new();
@@ -884,13 +916,15 @@ pub fn pilot(root: &Path, check: bool) -> CheckResult<()> {
         "adr.0020",
         "adr.0022",
         "kolvrt.security.event-revocation",
+        "kolvrt.security.domains",
+        "adr.0023",
     ] {
         if !selected.contains(&json!(required)) {
             return Err(format!("pilot misses mandatory context {required}"));
         }
     }
     if result["missing"].as_array().unwrap().is_empty() || result["budget_exceeded"] == true {
-        return Err("pilot must preserve planned gaps within budget".into());
+        return Err("pilot must preserve remaining gaps within budget".into());
     }
     let catalog_bytes = serde_json::to_vec(&knowledge.catalog)
         .map_err(|e| e.to_string())?
@@ -923,6 +957,20 @@ pub fn pilot(root: &Path, check: bool) -> CheckResult<()> {
     let selected_locations:Vec<_>=selected.iter().map(|id|json!({"id":id,"location":knowledge.graph["nodes"][id.as_str().unwrap()]["locations"]["en"]})).collect();
     let context_bytes = result["bytes"].as_u64().unwrap() as usize;
     let report = json!({"schema_version":1,"claim":"Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.","correctness":{"retrieval":"passed","mandatory_ids":"present","planned_gap":"explicit","budget":"within 131072 bytes"},"query":query,"source_files":source_files,"catalog_sha256":hash(&knowledge.catalog.to_string()),"catalog_serialization":"compact standard JSON, whitespace has no meaning","catalog_bytes":catalog_bytes,"catalog_nodes":knowledge.catalog["entries"].as_array().unwrap().len(),"docs_baseline":{"documents":all.len(),"utf8_bytes":baseline_bytes},"selected_full_documents":{"count":source_paths.len(),"utf8_bytes":full_bytes},"rendered_context_bytes":context_bytes,"context_plus_catalog_bytes":context_bytes+catalog_bytes,"approximate_tokens":(context_bytes+catalog_bytes).div_ceil(4),"estimate":"ceil UTF-8 bytes/4, not a tokenizer","selected":selected_locations,"seeds":result["seeds"],"missing":result["missing"],"optional_raw_acceptance_bytes":evidence,"evidence_loading":"Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.","external_issue_body_bytes_loaded":0,"issue_body_scope":"Planned issue #24 requirements are authored in the canonical feature contract; live issue body is not loaded. Online existence is a separate optional check.","coverage_review":"The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged."});
+    let mut report = report;
+    let impact = knowledge.impact("kolvrt.handles.identity")?;
+    for id in [
+        "kolvrt.security.domains",
+        "kolvrt.security.capability-revocation",
+    ] {
+        if !impact["affected"].as_array().unwrap().contains(&json!(id)) {
+            return Err(format!("pilot impact misses {id}"));
+        }
+    }
+    report["impact"] = impact;
+    report["issue_body_scope"] = json!(
+        "Current requirements and remaining gates are authored in canonical contracts; live issue bodies are not loaded. Online existence is a separate optional check."
+    );
     let path = root.join("research/results/documentation-knowledge-pilot.json");
     if check {
         if read_json(&path)? != report {
@@ -1131,7 +1179,8 @@ pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
         "find" if args.len()==2 => { let q=args[1].to_lowercase();for n in k.catalog["entries"].as_array().unwrap(){if n.to_string().to_lowercase().contains(&q){println!("{}",n);}} },
         "show" if args.len()==2 || (args.len()==4 && args[2]=="--locale") => {let locale=if args.len()==4 {&args[3]}else{"en"};println!("{}",k.render(root,&[args[1].clone()],locale)?);},
         "deps" if args.len()==2 => println!("{}",json!(k.closure(&[args[1].clone()])?)),
-        "related" | "impact" if args.len()==2 => {let id=k.resolve(&args[1])?;let mut seen=BTreeSet::from([id.to_owned()]);loop{let before=seen.len();for e in k.graph["edges"].as_array().unwrap(){if command=="impact"{if seen.contains(e["to"].as_str().unwrap()){seen.insert(e["from"].as_str().unwrap().into());}}else if e["from"]==id || e["to"]==id{println!("{e}");}}if command=="related" || seen.len()==before{break;}}if command=="impact"{println!("{}",json!({"affected":seen,"scope":"Declared documentation relationships; review canonical docs, locale pairs, summaries and evidence applicability."}));}},
+        "impact" if args.len()==2 => println!("{}",k.impact(&args[1])?),
+        "related" if args.len()==2 => {let id=k.resolve(&args[1])?;for e in k.graph["edges"].as_array().unwrap(){if e["from"]==id || e["to"]==id{println!("{e}");}}},
         "context" if args.len()==2 || (args.len()==4 && args[2]=="--budget-bytes") => {let budget=if args.len()==4 {args[3].parse().map_err(|_|"invalid byte budget")?}else{65536};let result=k.context(root,&args[1],budget,"en")?;println!("{}",serde_json::to_string_pretty(&result).map_err(|e|e.to_string())?);if result["budget_exceeded"]==true{return Err("required context exceeds budget; choose narrower units, no dependency was silently dropped".into());}},
         _=>return Err("docs: generate [--check] | pilot [--check] | check-issues | find TEXT | show ID [--locale ru] | deps ID | related ID | impact ID | context TASK [--budget-bytes N] | check-change BASE".into())
     }

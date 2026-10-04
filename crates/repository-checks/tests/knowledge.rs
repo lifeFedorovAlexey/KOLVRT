@@ -210,15 +210,31 @@ fn actual_pilot_closure_includes_authority_and_reports_planned_gaps() {
         "adr.0013",
         "adr.0022",
         "kolvrt.security.event-revocation",
+        "kolvrt.security.domains",
+        "adr.0023",
     ] {
         assert!(ids.contains(&json!(id)), "missing {id}");
     }
     assert!(!result["missing"].as_array().unwrap().is_empty());
     assert_eq!(
         k.graph["nodes"]["kolvrt.security.capability-revocation"]["feature"]["implementation"],
-        "PLANNED"
+        "BOUNDED_IMPLEMENTED"
     );
     assert_eq!(result["budget_exceeded"], false);
+    for input in [
+        "kolvrt.handles.identity",
+        "crates/kernel-core/src/handles.rs",
+        "docs/kernel/handles.md",
+    ] {
+        let impact = k.impact(input).unwrap();
+        assert!(
+            impact["affected"]
+                .as_array()
+                .unwrap()
+                .contains(&json!("kolvrt.security.capability-revocation"))
+        );
+    }
+    assert!(k.impact("unknown/not-declared.rs").is_err());
     assert_eq!(
         k.graph["nodes"]["kolvrt.security.event-revocation"]["feature"]["implementation"],
         "BOUNDED_IMPLEMENTED"

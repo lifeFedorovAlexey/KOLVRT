@@ -8,6 +8,14 @@ ABI contract: native.notification/1
 Publication stage: EXPERIMENTAL
 ABI-FREEZE: none
 
+<a name="kolvrt-domains-scope"></a>
+
+## Границы реализованной функции
+
+Phase 3.4 реализована в обозначенных ограниченных границах. Читайте нижеследующие contracts и exact-source receipt; очередь notification и experimental ABI не определяют общую IPC архитектуру.
+
+<a name="kolvrt-domains-identity"></a>
+
 ## Identity, ownership и limits
 
 [Domain primitives](../../../../crates/kernel-core/src/domain.rs) связывают ровно один generation-aware ProcessId с retained DomainId. [Атомарный пул](../../../../crates/kernel-core/src/domain/pool.rs) содержит 32 cells с nonwrapping generations и максимум 1 024 references на cell. DomainId — внутренняя metadata; пользовательское поле не выбирает principal. Retained lease запрещает reuse cell. Exhaustion возвращает явную ошибку. Multi-process domains, root sharing и migration в этом subset не поддерживаются.
@@ -16,11 +24,15 @@ ABI-FREEZE: none
 
 Memory pages включают owned page tables, code, data и guarded stacks, плюс loaded ELF pages. Memory limit проверяется до physical allocation. Handle charges учитывают каждый live namespace entry; transfer списывает receiver budget до publication. Request admission списывает consumer outstanding-request budget и service queue/request budgets. Denial откатывает все временные charges и references. Текущая namespace имеет восемь slots, а service — один queue cell; эти storage bounds не задают постоянные ABI maxima. Domain metadata и Event storage имеют отдельные явные fixed kernel pool bounds.
 
+<a name="kolvrt-domains-grants"></a>
+
 ## Grants и revocation
 
 [Reference primitives](../../../../crates/kernel-core/src/handles.rs) сохраняют generation/type/lifetime checks. Unscoped references не разрешают deferred service effects. Protected bootstrap создаёт explicit Event grant, привязанный к одному immutable target и точному service ProcessId. SEND=1 разрешает notification admission; TRANSFER=2 разрешает attenuated receiver-local delegation; REVOKE=4 разрешает revocation. Trusted Event creation по умолчанию даёт SEND, а Completion creation — NONE; REVOKE требует explicit Event grant. Unknown bits и отсутствующие grants отклоняются до effects. EL0 grant-creation endpoint отсутствует.
 
 Все delegated aliases разделяют target [admission gate](../../../../crates/kernel-core/src/wait.rs). Admission и revocation линеаризуются на одном atomic word. Request или transfer, admitted до revoke, может удерживать target; все последующие effect admissions отклоняются. Close удаляет reference без revocation других aliases. Strong immediate revoke/drain/reset не реализован. Перезапущенный service не получает grants старого service generation.
+
+<a name="kolvrt-domains-notification"></a>
 
 ## Конкретная notification boundary
 
@@ -40,6 +52,8 @@ Memory pages включают owned page tables, code, data и guarded stacks, �
 
 Service получает authority только для уже admitted concrete effect. Его собственные grants не могут заменить consumer target. Terminal receipt запрещает второй request до consumption; copied identity и sequence не дают stale outcomes связаться с более поздним процессом. Arbitrary payload, general endpoint, request cancellation API, automatic request-wait wakeup, deadline, persistent service и cross-CPU request queue отсутствуют. Это отдельные IPC/supervisor milestones, архитектура которых должна заново выводиться из accepted invariants, а не замораживаться этим pilot.
 
+<a name="kolvrt-domains-teardown"></a>
+
 ## Teardown и evidence
 
 Exit/fault/budget termination закрывает domain admission на masked scheduler boundary. Namespace retirement освобождает handle charges. Accepted work удерживает target и domain request charge до completion либо cancellation. Умирающий service публикует cancelled-before-effect до освобождения work. Private memory sender можно reclaim после scheduler detachment, пока его copied request остаётся retained; user pointer не удерживается. Final pool release использует atomics, без heap allocation/deallocation или ordinary locks внутри scheduler ownership.
@@ -53,3 +67,110 @@ Exit/fault/budget termination закрывает domain admission на masked sc
 [Native-only verification](../../../../research/results/native-compat-removal-phase34.json) compares 70 identical native/harness files and repeats the same matrix without compatibility packages. [Routing regression](../../../../research/results/routing-phase34-regression.json) retains six configurations and three rejected controls.
 
 [Английский оригинал](../../../../docs/kernel/domains.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.kernel.domains",
+  "kind": "subsystem-contract",
+  "summary": "Текущие домены и grants Phase 3.4.",
+  "units": [
+    {
+      "id": "kolvrt.security.domains",
+      "kind": "feature",
+      "anchor": "kolvrt-domains-scope",
+      "summary": "Домены, budgets и retained notification outcomes.",
+      "tags": ["domain", "security", "grant", "notification"],
+      "depends_on": [
+        "kolvrt.security.domains.identity",
+        "kolvrt.security.domains.grants",
+        "kolvrt.security.domains.notification",
+        "kolvrt.security.domains.teardown",
+        "kolvrt.process.identity",
+        "kolvrt.process.reclamation",
+        "kolvrt.handles.identity",
+        "kolvrt.handles.lifetime",
+        "kolvrt.memory.user-copy",
+        "law.009",
+        "law.013",
+        "law.025"
+      ],
+      "gaps": [
+        "General IPC and trusted supervisor policy-installation acceptance are not delivered by this bounded notification pilot."
+      ],
+      "feature": {
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Generation-aware one-process domains, explicit limits and grants, same-CPU Event notification, retained terminal outcomes and revoke/admission serialization.",
+        "sources": [
+          "crates/kernel-core/src/domain.rs",
+          "crates/kernel-core/src/domain/pool.rs",
+          "crates/kernel/src/security.rs",
+          "crates/kernel/src/process.rs"
+        ],
+        "acceptance": [
+          "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+        ],
+        "issues": [24, 25, 75],
+        "adrs": ["adr.0023"],
+        "limitations": [
+          "One process/domain and fixed-affinity single-cell notification; no general IPC, supervisor installation policy, multi-process domains, immediate revoke/drain, migration or silicon verification."
+        ],
+        "next_gate": "Rederive general IPC and supervision contracts for #26/#27; early notification encoding, queue and grants cannot freeze later architecture.",
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "state": "VERIFIED",
+            "reason": "Passing historical integrated Phase 3.4 receipt; no later-source or silicon inference.",
+            "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
+            "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
+            "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"
+          },
+          {
+            "environment": "physical-arm64",
+            "state": "UNKNOWN",
+            "reason": "No physical ARM64 receipt exists."
+          }
+        ],
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Phase 3.4",
+        "transitions": [
+          {
+            "from": "UNRECORDED",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Adopt merged #75 bounded domain contract and exact-source acceptance; this navigation change introduces no kernel behavior.",
+            "acceptance": [
+              "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kolvrt.security.domains.identity",
+      "kind": "contract-section",
+      "anchor": "kolvrt-domains-identity",
+      "summary": "Контракт: Identity, ownership и limits"
+    },
+    {
+      "id": "kolvrt.security.domains.grants",
+      "kind": "contract-section",
+      "anchor": "kolvrt-domains-grants",
+      "summary": "Контракт: Grants и revocation"
+    },
+    {
+      "id": "kolvrt.security.domains.notification",
+      "kind": "contract-section",
+      "anchor": "kolvrt-domains-notification",
+      "summary": "Контракт: Конкретная notification boundary"
+    },
+    {
+      "id": "kolvrt.security.domains.teardown",
+      "kind": "contract-section",
+      "anchor": "kolvrt-domains-teardown",
+      "summary": "Контракт: Teardown и evidence"
+    }
+  ]
+}
+```

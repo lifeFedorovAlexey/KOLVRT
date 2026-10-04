@@ -65,7 +65,7 @@ The normal repository check rejects schema/IDs/aliases/edges/cycles, missing enr
 
 ## Migration and evidence limits
 
-Stage A establishes schema/policy/checks; B migrates processes/user-copy/handles and planned capability revocation; C adds law/ADR navigation and derived README pilot rows; D projects existing COST-L/cases; E seeds Linux mechanisms and maps hardware/security/benchmark/advisor entry points; F incrementally enrolls remaining historical docs. Each stage preserves human navigation, evidence and translations. The pilot measures actual selected context plus catalog overhead; it does not prove all future tasks retrieve sufficient sources.
+Stage A establishes schema/policy/checks; B migrates processes/user-copy/handles and bounded capability/domain acceptance; C adds law/ADR navigation and derived README pilot rows; D projects existing COST-L/cases; E seeds Linux mechanisms and maps hardware/security/benchmark/advisor entry points; F incrementally enrolls remaining historical docs. Each stage preserves human navigation, evidence and translations. The pilot measures actual selected context plus catalog overhead; it does not prove all future tasks retrieve sufficient sources.
 
 Linux research uses the [mechanism template](../research/linux/mechanism-template.md); primary sources pin version/commit/path/configuration and review date. COST-L debt lifecycle, native decision, driver observations, compatibility modules and KOLVRT feature states remain distinct. Hardware research does not collect or publish personal inventory under this tooling. Reuse existing research issues and provenance gates.
 
@@ -106,7 +106,7 @@ Linux research uses the [mechanism template](../research/linux/mechanism-templat
             "state": "VERIFIED",
             "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "141aead41dd3f36c3d7299c450805292070890e5ab35b0b8c5641d2f4cf90e42",
+            "receipt_sha256": "9856cf5ea263d21d92d39bb19f9494288b6ac02e40c8403c0c29bb462bc280f3",
             "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance."
           },
           {

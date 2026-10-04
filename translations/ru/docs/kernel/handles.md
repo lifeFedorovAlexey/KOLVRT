@@ -150,11 +150,11 @@ Handle generation остаётся identity, а SEND/TRANSFER отдельно �
           "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
         ],
         "issues": [23],
-        "adrs": ["adr.0019", "adr.0020", "adr.0022"],
+        "adrs": ["adr.0019", "adr.0020", "adr.0022", "adr.0023"],
         "limitations": [
           "Close does not revoke retained work; no general grants, domains or IPC."
         ],
-        "next_gate": "Issue #24 issuer independence, service restart/rebind, nested authority and broader IPC/domain acceptance remain separate; ADR-0022 delivers only synchronous Event revocation.",
+        "next_gate": "General IPC and supervisor policy installation require independently derived contracts; bounded Phase 3.4 scoped grants/domains are separately documented.",
         "verification": [
           {
             "environment": "qemu-arm64",

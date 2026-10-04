@@ -1,18 +1,18 @@
 # Границы нативных полномочий и отзыв
 
 Document status: DESIGN BASELINE
-Evidence scope: общие требования issue #24 остаются планом; синхронный Event-срез grants/revocation отдельно реализован в ограниченных границах aa75629 и имеет сохранённые CI reports.
+Evidence scope: ограниченные scoped grants и домены Phase 3.4 приняты в 3124d65; исторический синхронный Event-срез имеет отдельный CI receipt, общий IPC остаётся планом.
 Current reference: [Границы полномочий](../architecture-decisions/0013-security-boundaries.md)
 
 <a name="kolvrt-security-capability-revocation"></a>
 
-## Планируемый контракт функции
+## Ограниченный текущий контракт функции
 
 Идентичность потребителя должна поступать из доверенного entry context. Нативные bootstrap grants и проверки ограниченных прав допускают effects только после проверки полномочий. Attenuation не создаёт прав. Revocation сериализуется с admission: уже принятая работа сохраняет удержание lifetime; новая отклоняется. Close не означает revoke. Немедленное аннулирование требует отдельного проверенного drain/reset contract.
 
 Приватные grants службы не расширяют effects вызывающего, включая вложенные вызовы. Restart/rebind не обновляет authority и не стирает обязательства. Acceptance требует реального EL0 allow/deny, отказа unauthorized grants/transfer, attenuation и revoke/admission races, одинакового DEV/PROD enforcement и exact-source evidence. Универсальный policy interpreter и новые обязанности EL1 ради удобства не допускаются.
 
-Канонический unit общего плана фиксирует [issue #24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24), не реализуя её. Текущие handles также обеспечивают отдельный Event-срез SEND/TRANSFER/REVOKE и retained targets. Общий issuer/service/domain контракт остаётся планом. Читайте подходящие законы, принятые ADR, identity/lifetime handles, process reclamation, user-copy и security requirements через явное prerequisite closure. Аппаратная и ядерная проверка этой функции остаётся UNKNOWN.
+[Домены и scoped grants](domains.md) описывают принятую Phase 3.4 реализацию требований [issue #24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) в границах одного процесса на домен и Event notification. Общий IPC, supervisor policy installation и немедленный drain остаются отдельными условиями. Читайте текущие законы, ADR, identity/lifetime, reclamation и user-copy через явное prerequisite closure; QEMU receipt не доказывает silicon.
 
 <a name="kolvrt-security-event-revocation"></a>
 
@@ -20,7 +20,7 @@ Current reference: [Границы полномочий](../architecture-decisio
 
 [ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) задаёт отдельные явные права SEND/TRANSFER/REVOKE и общий атомарный state Event. Signal и revoke упорядочиваются этим state; уже принятое pending уведомление сохраняется, новые SEND отклоняются через все aliases. Close снимает одну ссылку и не означает revoke. Revocation не освобождает target и не разрешает Completion, device или общую службу.
 
-[Сохранённый CI receipt](../../../../research/results/event-revocation-ci.json) импортирует реальные результаты принятого #72. Это исходный снимок QEMU DEV/PROD, а не новый запуск в этой задаче или silicon acceptance. Отдельные issuer, restart/rebind, вложенные consumer/service полномочия и асинхронный drain остаются условиями полного #24.
+[Сохранённый CI receipt](../../../../research/results/event-revocation-ci.json) импортирует реальные результаты принятого #72. Это исходный снимок QEMU DEV/PROD, а не новый запуск в этой задаче или silicon acceptance. Этот ранний снимок не проверяет последующее scoped deferred admission. Текущая Phase 3.4 описана в [контракте доменов](domains.md); общие IPC, supervisor policy installation и немедленный drain остаются отдельными этапами.
 
 [Английский оригинал](../../../../docs/kernel/capabilities.md)
 
@@ -31,13 +31,13 @@ Current reference: [Границы полномочий](../architecture-decisio
   "schema_version": 1,
   "id": "doc.kolvrt.kernel.capabilities",
   "kind": "subsystem-contract",
-  "summary": "Навигация по документу: Планируемое аннулирование нативных полномочий. Доказательства имеют указанные границы.",
+  "summary": "Ограниченные grants, domains и revocation Phase 3.4; общие IPC и supervisor policy остаются отдельными этапами.",
   "units": [
     {
       "id": "kolvrt.security.capability-revocation",
       "anchor": "kolvrt-security-capability-revocation",
       "kind": "feature",
-      "summary": "Каноническая секция: Планируемый контракт функции.",
+      "summary": "Текущие ограниченные Phase 3.4 grants и отзыв с явными оставшимися этапами.",
       "tags": ["capability", "revocation", "phase", "3.4"],
       "read_when": ["review Phase 3.4 capability revocation"],
       "depends_on": [
@@ -61,27 +61,37 @@ Current reference: [Границы полномочий](../architecture-decisio
         "adr.0013",
         "kolvrt.security.trust",
         "kolvrt.security.threats",
-        "kolvrt.security.event-revocation"
+        "kolvrt.security.event-revocation",
+        "kolvrt.security.domains"
       ],
       "gaps": [
-        "Issue #24 broader issuer independence, service restart/rebind, nested authority, domains and IPC acceptance remain missing; the synchronous Event slice is implemented separately."
+        "General IPC, multi-process domains, trusted supervisor policy installation and immediate revoke/drain are separate future gates."
       ],
       "feature": {
-        "implementation": "PLANNED",
-        "implementation_scope": "Broader issue #24 service/issuer authority, restart/rebind and general capability admission beyond synchronous Event grants.",
-        "sources": [],
-        "acceptance": [],
-        "issues": [24],
-        "adrs": ["adr.0013"],
-        "limitations": [
-          "The ADR-0022 Event slice is separate bounded implementation; full issuer/service/domain authority and asynchronous drain are not delivered."
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Merged bounded Phase 3.4 explicit scoped Event grants, generation-aware domains and retained service notification with revoke/admission serialization.",
+        "sources": [
+          "crates/kernel/src/security.rs",
+          "crates/kernel-core/src/handles.rs",
+          "crates/kernel-core/src/wait.rs"
         ],
-        "next_gate": "Real EL0 and exact-source acceptance for remaining issuer/service/domain obligations; re-derive architecture before extending Event mechanisms.",
+        "acceptance": [
+          "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+        ],
+        "issues": [24],
+        "adrs": ["adr.0013", "adr.0022", "adr.0023"],
+        "limitations": [
+          "The full general IPC/supervisor production contract is not delivered; one-process fixed-affinity domains and single-cell Event notification remain bounded."
+        ],
+        "next_gate": "Review #26/#27 general IPC/supervisor invariants and policy installation; refactor the early notification pilot if it constrains them.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "UNKNOWN",
-            "reason": "Broader issuer/service/domain acceptance is absent; scoped Event verification is a different feature."
+            "state": "VERIFIED",
+            "reason": "Passing historical integrated Phase 3.4 receipt; no later-source or silicon inference.",
+            "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
+            "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
+            "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"
           },
           {
             "environment": "physical-arm64",
@@ -94,9 +104,11 @@ Current reference: [Границы полномочий](../architecture-decisio
         "transitions": [
           {
             "from": "UNRECORDED",
-            "to": "PLANNED",
-            "reason": "Adopt issue #24 requirements without an implementation claim.",
-            "acceptance": []
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Adopt then-current merged #75 Phase 3.4 behavior and exact-source receipt; the earlier planning snapshot cannot dictate current reality.",
+            "acceptance": [
+              "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
+            ]
           }
         ]
       }
