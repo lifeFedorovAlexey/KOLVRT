@@ -117,7 +117,8 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
     let mut sender = Namespace::<1>::new();
     let mut receiver = Namespace::<1, 1>::new();
     sender.bind(a).unwrap();
-    let source = create(&mut sender, a, Rights::TRANSFER);
+    let send_transfer = Rights::from_bits(Rights::SEND.bits() | Rights::TRANSFER.bits()).unwrap();
+    let source = create(&mut sender, a, send_transfer);
     let before = (state(&sender), state(&receiver));
     assert_eq!(
         sender.transfer(a, source, &mut receiver, b, Rights::SEND),
@@ -138,7 +139,7 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
         );
         assert_eq!((state(&sender), state(&receiver)), before);
     }
-    let full = create(&mut receiver, b, Rights::TRANSFER);
+    let full = create(&mut receiver, b, send_transfer);
     let before = (state(&sender), state(&receiver));
     assert_eq!(
         sender.transfer(a, source, &mut receiver, b, Rights::SEND),
@@ -154,7 +155,7 @@ fn rejected_transfer_never_changes_owner_generation_or_live_entries() {
     assert_eq!((state(&sender), state(&receiver)), before);
     assert_eq!(
         sender.lookup(a, source, Kind::Completion).unwrap().rights(),
-        Rights::TRANSFER
+        send_transfer
     );
 }
 
