@@ -207,14 +207,9 @@ pub(super) fn call(
         stress &= table.lookup(caller, h, Kind::Event).is_err();
     }
     let h = table
-        .create_event_with_rights(
-            caller,
-            SharedEvent::try_new().unwrap(),
-            Rights::ALL,
-            |h| {
-                access.copy_to_user(address + 64, &h.encode().to_le_bytes())
-            },
-        )
+        .create_event_with_rights(caller, SharedEvent::try_new().unwrap(), Rights::ALL, |h| {
+            access.copy_to_user(address + 64, &h.encode().to_le_bytes())
+        })
         .unwrap();
     benchmark(table, caller, h);
     let stale_after_reuse = table.lookup(caller, old, Kind::Event).is_err();
