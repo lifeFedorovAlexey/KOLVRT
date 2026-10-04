@@ -225,7 +225,7 @@ mod tests {
         assert_eq!(event.admit_signal(), Ok(true));
         assert!(event.revoke());
         assert!(!event.revoke());
-        assert!(event.consume());
+        assert!(!event.register());
         assert_eq!(event.admit_signal(), Err(SignalError::Revoked));
         assert!(!event.signal());
     }
@@ -238,6 +238,6 @@ mod tests {
         owner.revoke();
         drop(owner);
         assert_eq!(alias.admit_signal(), Err(SignalError::Revoked));
-        assert!(alias.consume());
+        assert!(!alias.register());
     }
 }
