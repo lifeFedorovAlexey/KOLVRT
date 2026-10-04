@@ -85,4 +85,10 @@ The [process lifecycle](../kernel/processes.md) separates retained address-space
 
 ## Phase 3.3 bounded reference identity
 
+Historical milestone scope: the paragraph below describes ADR-0019 before the accepted ADR-0020 extension.
+
 [Handle namespaces](../kernel/handles.md) reject stale/forged/foreign/wrong-kind references without selecting another process table or dereferencing user object pointers. Protected concrete wait/completion storage remains kernel-owned; lookup returns a synchronous retained borrow, and exit/fault cleanup precedes frame reclaim. Eight slots and generation quarantine bound resource use and prevent stale aliasing. These guarantees confer no authority; rights, delegation, asynchronous retained work and revocation remain separate gates. No general object dispatch is added.
+
+## Current bounded handle authority and retention
+
+[ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) adds SEND/TRANSFER checks, subset attenuation, receiver-local handles and bounded owned Event references. The executing scheduler task supplies the caller identity; EL0 cannot select a source principal. Transfer through EL0 is restricted to a live receiver on the same fixed-affinity CPU. Closing one entry leaves other retained references valid and does not revoke descendants. This is limited authority over two concrete primitive kinds, not general grant issuance, security domains or revocation. Shared Event retention does not establish a multi-waiter IPC contract. General admission, domain budgets and authorized IPC remain issues #24–#26.

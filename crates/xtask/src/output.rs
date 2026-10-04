@@ -465,17 +465,55 @@ mod tests {
     }
     #[test]
     fn terminal_is_not_overwritable_and_failures_win() {
+        validate(&[el0(), boot()], false, &[], 2).unwrap();
         for events in [
             vec![],
-            vec![boot(), boot()],
-            vec![boot(), json!({"event":"panic","status":"fail"})],
+            vec![el0(), boot(), boot()],
+            vec![el0(), boot(), json!({"event":"panic","status":"fail"})],
+            vec![el0(), json!({"event":"panic","status":"fail"}), boot()],
+            vec![el0(), boot(), el0()],
             vec![json!({"event":"unknown"})],
         ] {
             assert!(validate(&events, false, &[], 2).is_err());
         }
         let mut wrong = boot();
         wrong["secondary_shutdown_verified"] = json!(false);
-        assert!(validate(&[wrong], false, &[], 2).is_err());
+        assert!(validate(&[el0(), wrong], false, &[], 2).is_err());
+    }
+    #[test]
+    fn boot_and_el0_fields_are_independently_required() {
+        let valid = vec![el0(), boot()];
+        validate(&valid, false, &[], 2).unwrap();
+        for (index, field, bad) in [
+            (0, "status", json!("fail")),
+            (0, "reclaimed", json!(false)),
+            (0, "processes", json!(0)),
+            (0, "workers", json!(0)),
+            (0, "faults", json!(0)),
+            (0, "switches", json!(crate::platform_config::USER_PROCESSES)),
+            (1, "status", json!("fail")),
+            (1, "el", json!(0)),
+            (1, "timer_irq", json!(false)),
+            (1, "active_cpus", json!(1)),
+            (1, "secondary_shutdown_verified", json!(false)),
+        ] {
+            for value in [bad, Value::Null, json!("invalid-type")] {
+                let mut corrupt = valid.clone();
+                corrupt[index][field] = value.clone();
+                assert!(
+                    validate(&corrupt, false, &[], 2).is_err(),
+                    "accepted {index}.{field}={value}"
+                );
+            }
+            let mut missing = valid.clone();
+            missing[index].as_object_mut().unwrap().remove(field);
+            assert!(
+                validate(&missing, false, &[], 2).is_err(),
+                "accepted missing {index}.{field}"
+            );
+        }
+        assert!(validate(&[boot()], false, &[], 2).is_err());
+        assert!(validate(&[el0(), el0(), boot()], false, &[], 2).is_err());
     }
     #[test]
     fn retained_qemu_output_still_validates_without_human_json() {
@@ -513,6 +551,108 @@ mod tests {
         ] {
             assert!(validate(&events, true, &["real"], 2).is_err());
         }
+    }
+    #[test]
+    fn asid_evidence_requires_each_cpu_isolation_and_invalidation_counter() {
+        let expected = ["asid_reuse_requires_invalidation"];
+        let measurement = json!({
+            "event":"asid-measurement", "mode":"tagged", "hardware_asid_bits":16,
+            "elapsed_ticks":100, "reuse_invalidation":true,
+            "same_va_isolation":[true,true], "distinct_backing":[true,true],
+            "same_asid_reused":[true,true],
+            "cpus":[
+                {"cpu":0,"switches":64,"full_tlbi":0,"asid_tlbi":32,"reuses":32},
+                {"cpu":1,"switches":64,"full_tlbi":0,"asid_tlbi":32,"reuses":32}
+            ]
+        });
+        let valid = vec![
+            json!({"event":"test","name":expected[0],"status":"pass"}),
+            measurement,
+            json!({"event":"suite","status":"pass","tests":1}),
+        ];
+        validate(&valid, true, &expected, 2).unwrap();
+        for bits in [8, 16] {
+            let mut supported = valid.clone();
+            supported[1]["hardware_asid_bits"] = json!(bits);
+            validate(&supported, true, &expected, 2).unwrap();
+        }
+        for (field, value) in [
+            ("mode", json!("unknown")),
+            ("hardware_asid_bits", json!(0)),
+            ("hardware_asid_bits", json!(12)),
+            ("elapsed_ticks", json!(0)),
+            ("reuse_invalidation", json!("true")),
+            ("cpus", json!([])),
+        ] {
+            let mut corrupt = valid.clone();
+            corrupt[1][field] = value;
+            assert!(
+                validate(&corrupt, true, &expected, 2).is_err(),
+                "accepted ASID {field}"
+            );
+        }
+        for field in ["same_va_isolation", "distinct_backing", "same_asid_reused"] {
+            for value in [
+                json!([]),
+                json!([true]),
+                json!([true, true, true]),
+                json!([false, true]),
+                json!([true, false]),
+                json!([true, "true"]),
+            ] {
+                let mut corrupt = valid.clone();
+                corrupt[1][field] = value;
+                assert!(
+                    validate(&corrupt, true, &expected, 2).is_err(),
+                    "accepted ASID {field}"
+                );
+            }
+        }
+        for cpu in 0..2 {
+            for (field, value) in [
+                ("cpu", json!(2)),
+                ("switches", json!(0)),
+                ("full_tlbi", json!(1)),
+                ("asid_tlbi", json!(0)),
+                ("reuses", json!(0)),
+            ] {
+                let mut corrupt = valid.clone();
+                corrupt[1]["cpus"][cpu][field] = value;
+                assert!(
+                    validate(&corrupt, true, &expected, 2).is_err(),
+                    "accepted CPU{cpu}.{field}"
+                );
+                let mut missing = valid.clone();
+                missing[1]["cpus"][cpu]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove(field);
+                assert!(
+                    validate(&missing, true, &expected, 2).is_err(),
+                    "accepted missing CPU{cpu}.{field}"
+                );
+            }
+        }
+        let mut baseline = valid.clone();
+        baseline[1]["mode"] = json!("asid-zero-baseline");
+        baseline[1]["hardware_asid_bits"] = json!(0);
+        for cpu in baseline[1]["cpus"].as_array_mut().unwrap() {
+            cpu["full_tlbi"] = json!(64);
+            cpu["asid_tlbi"] = json!(0);
+            cpu["reuses"] = json!(0);
+        }
+        validate(&baseline, true, &expected, 2).unwrap();
+        for cpu in 0..2 {
+            let mut corrupt = baseline.clone();
+            corrupt[1]["cpus"][cpu]["full_tlbi"] = json!(0);
+            assert!(validate(&corrupt, true, &expected, 2).is_err());
+        }
+        let mut missing = valid.clone();
+        missing.remove(1);
+        assert!(validate(&missing, true, &expected, 2).is_err());
+        let mut duplicate = valid.clone();
+        duplicate.insert(1, valid[1].clone());
+        assert!(validate(&duplicate, true, &expected, 2).is_err());
     }
     #[test]
     fn copy_measurements_require_complete_unique_attribution_and_valid_samples() {
