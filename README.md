@@ -107,7 +107,7 @@ KOLVRT already boots as a native AArch64 kernel in QEMU.
 | ARM physical timer IRQ        | ✅                                                     |
 | DEV / PROD profiles           | ✅                                                     |
 | Automated kernel test harness | ✅                                                     |
-| Real in-kernel tests          | ✅ 73 checks in the exact-source DEV/PROD matrix       |
+| Real in-kernel tests          | ✅ 84 checks in the exact-source DEV/PROD matrix       |
 | Negative failure controls     | ✅                                                     |
 | GDB debugging                 | ✅                                                     |
 | SMP                           | ✅ Two-CPU QEMU foundation                             |
@@ -434,9 +434,9 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Tests are supposed to fail when the kernel is wrong
 
-The latest retained exact-source issue #23 matrix records **73 kernel checks per DEV and PROD
-profile** and 69 negative host controls. It includes process-local handle transfer and the bounded
-preemption/event-wait paths. The [receipt](research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json)
+The latest retained exact-source integration matrix records **84 kernel checks per DEV and PROD
+profile** and 70 negative host controls. It includes process-local handle transfer, the bounded
+preemption/event-wait paths, the ELF loader and ASID lifecycle. The [receipt](research/measurements/runs/1791117628604-issue18-main-integrated-fd10fb19115e.json)
 binds the tested source, artifacts and QEMU TCG scope; it is not evidence of physical ARM64 behavior
 or later source changes. Historical milestone counts remain in their original decision records.
 

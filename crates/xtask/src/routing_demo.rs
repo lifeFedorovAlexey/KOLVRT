@@ -647,7 +647,7 @@ pub fn run(args: &[String]) -> Result<()> {
         };
         guest(&["v1", feature], true)?;
         let elf = build(true, false, Some("boot-payload"), true)?;
-        execute_mode(&elf, false, true, true)?;
+        execute_mode(&elf, false, true, true, false)?;
         let events =
             serde_json::from_slice::<Vec<Value>>(&fs::read(elf.with_extension("results.json"))?)?;
         reports(&events, [0, 1, 0, 0], false)?;
@@ -676,7 +676,7 @@ pub fn run(args: &[String]) -> Result<()> {
         let elf = build(prod, false, Some("boot-payload"), true)?;
         let retained = PathBuf::from(format!("target/kernel/routing-{label}.elf"));
         fs::copy(&elf, &retained)?;
-        execute_mode(&retained, false, true, true)?;
+        execute_mode(&retained, false, true, true, false)?;
         let events: Vec<Value> =
             serde_json::from_slice(&fs::read(retained.with_extension("results.json"))?)?;
         let consumers = reports(&events, routes, !prod)?;
@@ -700,7 +700,7 @@ pub fn run(args: &[String]) -> Result<()> {
     let elf = build(true, false, Some("boot-payload"), false)?;
     let retained = PathBuf::from("target/kernel/routing-prod-stripped.elf");
     fs::copy(&elf, &retained)?;
-    execute_mode(&retained, false, false, true)?;
+    execute_mode(&retained, false, false, true, false)?;
     let stripped_kernel = read_json("target/kernel/prod-boot-payload-build.json")?;
     for (control, marker) in [
         ("profile", "EL0 workload failed"),

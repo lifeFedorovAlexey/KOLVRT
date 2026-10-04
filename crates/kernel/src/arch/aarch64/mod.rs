@@ -18,6 +18,7 @@ const TCR_ORGN0_WB: u64 = 1 << 10;
 const TCR_SH0_INNER: u64 = 3 << 12;
 const TCR_EPD1: u64 = 1 << 23;
 const TCR_IPS_40_BIT: u64 = 2 << 32;
+const TCR_ASID_16_BIT: u64 = 1 << 36;
 const DAIF_IRQ_MASK: u8 = 2;
 const CNTP_CTL_ENABLE: u64 = 1;
 const ICC_SRE_ENABLE: u64 = 1;
@@ -77,6 +78,14 @@ pub fn irq_masked() -> bool {
     daif() & PSTATE_IRQ_MASK != 0
 }
 read_reg!(mpidr, "mpidr_el1");
+read_reg!(id_aa64mmfr0, "id_aa64mmfr0_el1");
+pub fn asid_bits() -> Option<u8> {
+    match (id_aa64mmfr0() >> 4) & 0xf {
+        0 => Some(8),
+        2 => Some(16),
+        _ => None,
+    }
+}
 read_reg!(user_esr, "esr_el1");
 read_reg!(user_far, "far_el1");
 /// Query current stage-1 EL0 permissions without dereferencing user bytes.
@@ -228,6 +237,7 @@ pub fn cpu_interface() {
     }
 }
 pub fn enable_mmu(root: u64) {
+    crate::asid::initialize(asid_bits());
     let control = sctlr()
         | SCTLR_MMU_ENABLE
         | SCTLR_DATA_CACHE_ENABLE
@@ -235,7 +245,7 @@ pub fn enable_mmu(root: u64) {
         | SCTLR_WRITE_EXECUTE_NEVER;
     // SAFETY: INV-MMU: root is aligned initialized owned tables; current PC/SP identity mapped.
     unsafe {
-        asm!("dsb sy", "msr mair_el1, {mair}", "msr tcr_el1, {tcr}", "msr ttbr0_el1, {root}", "isb", "tlbi vmalle1", "dsb sy", "isb", "msr sctlr_el1, {control}", "isb", mair=in(reg) MAIR_DEVICE_NGNRNE_NORMAL_WB, tcr=in(reg) (TCR_T0SZ_39_BIT | TCR_IRGN0_WB | TCR_ORGN0_WB | TCR_SH0_INNER | TCR_EPD1 | TCR_IPS_40_BIT), root=in(reg) root, control=in(reg) control, options(nostack));
+        asm!("dsb sy", "msr mair_el1, {mair}", "msr tcr_el1, {tcr}", "msr ttbr0_el1, {root}", "isb", "tlbi vmalle1", "dsb sy", "isb", "msr sctlr_el1, {control}", "isb", mair=in(reg) MAIR_DEVICE_NGNRNE_NORMAL_WB, tcr=in(reg) (TCR_T0SZ_39_BIT | TCR_IRGN0_WB | TCR_ORGN0_WB | TCR_SH0_INNER | TCR_EPD1 | TCR_IPS_40_BIT | if asid_bits() == Some(16) { TCR_ASID_16_BIT } else { 0 }), root=in(reg) root, control=in(reg) control, options(nostack));
     }
 }
 pub fn poweroff() -> ! {
@@ -253,10 +263,66 @@ pub fn poweroff() -> ! {
 /// IRQ is masked; caller retains the address space until all CPUs leave it. No ASID reuse
 /// without completed local invalidation. The foundation pins each space to one CPU.
 pub unsafe fn activate_root(root: u64) {
-    // SAFETY: INV-USER-TTBR: caller retains root; ASID zero, full local invalidation on every switch.
+    #[cfg(feature = "kernel-tests")]
+    crate::asid::record_switch();
+    #[cfg(feature = "kernel-tests")]
+    crate::asid::record_full_tlbi();
+    // SAFETY: INV-USER-TTBR: native ASID zero, caller retains the live root; this is the explicit full-flush baseline and quiescent return path.
     unsafe {
         asm!("dsb ish", "msr ttbr0_el1, {}", "isb", "tlbi vmalle1", "dsb ish", "isb", in(reg) root, options(nostack));
     }
+}
+
+/// Switch between fixed-affinity process roots. ASID-tagged switches need no TLBI.
+pub unsafe fn activate_user_root(root: u64, asid: u16) {
+    if asid == 0 {
+        // Unsupported hardware and the explicit baseline preserve the original contract.
+        unsafe {
+            activate_root(root);
+        }
+        return;
+    }
+    #[cfg(feature = "kernel-tests")]
+    crate::asid::record_switch();
+    let ttbr = crate::asid::ttbr(root, asid);
+    // SAFETY: INV-USER-TTBR: the pinned root owns live tables and ASID lease; IRQ is masked.
+    unsafe {
+        asm!("dsb ish", "msr ttbr0_el1, {}", "isb", in(reg) ttbr, options(nostack));
+    }
+    #[cfg(feature = "kernel-tests")]
+    assert_eq!(
+        (active_root() >> 48) as u16,
+        asid,
+        "hardware TTBR ASID readback"
+    );
+}
+
+/// Enter the native root while retaining other pinned ASID translations. ASID
+/// zero hardware fallback keeps the full-flush correctness baseline.
+pub unsafe fn activate_native_root(root: u64) {
+    if !crate::asid::enabled() {
+        unsafe {
+            activate_root(root);
+        }
+        return;
+    }
+    #[cfg(feature = "kernel-tests")]
+    crate::asid::record_switch();
+    // SAFETY: INV-USER-RETIRE: native ASID zero maps the permanent kernel stack/code.
+    unsafe {
+        asm!("dsb ish", "msr ttbr0_el1, {}", "isb", in(reg) root, options(nostack));
+    }
+}
+
+pub fn local_invalidate_asid(asid: u16) {
+    let operand = (u64::from(asid)) << 48;
+    // SAFETY: INV-ASID-RETIRE: pinned owner CPU has stopped using this lease; local TLBI completes before retirement acknowledgement.
+    #[cfg(not(feature = "asid-reuse-negative"))]
+    unsafe {
+        asm!("dsb ish", "tlbi aside1, {}", "dsb ish", "isb", in(reg) operand, options(nostack));
+    }
+    #[cfg(feature = "asid-reuse-negative")]
+    let _ = operand;
 }
 pub fn publish_instructions(start: usize, end: usize) {
     clean_boot(start, end);

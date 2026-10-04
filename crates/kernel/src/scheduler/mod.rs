@@ -142,6 +142,7 @@ fn dispatch_inner(
                         id,
                         admitted.identity.generation(),
                         admitted.space.root(),
+                        admitted.space.lease(),
                         admitted.context,
                         admitted.slice_budget,
                     );
@@ -265,7 +266,7 @@ fn release_process(id: usize) {
 }
 /// # Safety
 /// Same retained live-root contract as activate_root; used only for pinned user roots.
-unsafe fn activate(root: u64) {
+unsafe fn activate(root: u64, asid: u16) {
     #[cfg(feature = "user-root-negative")]
     let root = {
         let _ = root;
@@ -273,7 +274,7 @@ unsafe fn activate(root: u64) {
     };
     // SAFETY: INV-USER-TTBR: caller retains the root and mask/stack preconditions.
     unsafe {
-        cpu::activate_root(root);
+        cpu::activate_user_root(root, asid);
     }
 }
 pub fn on_timer() {
@@ -337,15 +338,16 @@ fn run_local() {
         Some((
             state.tasks[index].context,
             state.tasks[index].root(),
+            state.tasks[index].lease(),
             state.tasks[index].id(),
         ))
     });
     if let Some(first) = first {
-        acquire_process(first.2);
+        acquire_process(first.3);
     }
     #[cfg(feature = "scheduler-owner-negative")]
     if percpu::id() == percpu::BOOT_CPU {
-        acquire_process(first.expect("control needs task").2);
+        acquire_process(first.expect("control needs task").3);
     }
     // Both CPUs rendezvous before first EL0 entry, so the test covers concurrent queues.
     ARRIVED.fetch_or(1 << percpu::id(), Ordering::AcqRel);
@@ -362,11 +364,11 @@ fn run_local() {
         // SAFETY: INV-USER-TTBR: caller retains live immutable roots through acquired
         // completion; no State reference spans ERET, native stack/code remain mapped.
         unsafe {
-            activate(first.1);
+            activate(first.1, first.2.asid);
         }
         cpu::timer(time::deadline_after(QUANTUM));
         local.with(generation, |state| {
-            state.tasks[first.2 % TASKS].entered_at = cpu::ticks();
+            state.tasks[first.3 % TASKS].entered_at = cpu::ticks();
         });
         // SAFETY: INV-USER-CONTEXT: checked frame ABI and permanent native stack.
         unsafe {
@@ -508,13 +510,21 @@ fn trap_owned(
         }
     }
     release_process(state.tasks[current].id());
+    for task in &state.tasks {
+        if matches!(
+            task.state,
+            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+        ) {
+            crate::asid::retire(task.lease());
+        }
+    }
     if STEP.load(Ordering::Acquire) {
         CURSOR[percpu::id()].store(current, Ordering::Release);
         cpu::timer_stop();
         // SAFETY: INV-USER-RETIRE: saved READY contexts remain owned by the
         // Registry; native root/TLBI precede returning a nonterminal step.
         unsafe {
-            cpu::activate_root(NATIVE_ROOT.load(Ordering::Acquire));
+            cpu::activate_native_root(NATIVE_ROOT.load(Ordering::Acquire));
         }
         return local.resume_sp.load(Ordering::Acquire);
     }
@@ -523,7 +533,7 @@ fn trap_owned(
         *frame = state.tasks[next].context;
         // SAFETY: INV-USER-TTBR: next pinned live root; completed flush precedes ERET.
         unsafe {
-            activate(state.tasks[next].root());
+            activate(state.tasks[next].root(), state.tasks[next].lease().asid);
         }
         cpu::timer(time::deadline_after(QUANTUM));
         state.tasks[next].entered_at = cpu::ticks();
@@ -533,7 +543,7 @@ fn trap_owned(
         // SAFETY: INV-USER-RETIRE: no ready/running process remains on this CPU;
         // native root and local TLBI precede release completion and frame reclamation.
         unsafe {
-            cpu::activate_root(NATIVE_ROOT.load(Ordering::Acquire));
+            cpu::activate_native_root(NATIVE_ROOT.load(Ordering::Acquire));
         }
         local.resume_sp.load(Ordering::Acquire)
     }
@@ -618,6 +628,6 @@ pub(crate) fn copy_context(task: &Task) -> bool {
         && task.state == CONTEXT_RUNNING
         && task.linked()
         && RUNNING_OWNER[task.id()].load(Ordering::Acquire) == owner
-        && cpu::active_root() == task.root()
+        && cpu::active_root() == crate::asid::ttbr(task.root(), task.lease().asid)
         && memory::current_space(task.id(), task.process_generation(), task.root())
 }

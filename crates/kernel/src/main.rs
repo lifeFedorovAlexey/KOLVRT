@@ -2,6 +2,7 @@
 #![no_main]
 #![deny(unsafe_op_in_unsafe_fn)]
 extern crate alloc;
+mod asid;
 mod arch {
     pub mod aarch64;
 }

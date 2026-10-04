@@ -172,6 +172,11 @@ pub fn exercise(
         "process_capacity_exhaustion",
         exhausted && p.available() == full_pages && registry.live() == config::USER_PROCESSES,
     );
+    #[cfg(feature = "kernel-tests")]
+    report(
+        "asid_pool_exhaustion_both_cpus",
+        (0..config::ACTIVE_CPUS).all(crate::asid::exhaustion_probe),
+    );
     for id in ids.iter().flatten() {
         registry.start(*id).unwrap();
     }
@@ -179,13 +184,22 @@ pub fn exercise(
     for id in ids.iter().flatten() {
         registry.reclaim(p, *id).unwrap();
     }
+    let first_data = registry.data_address(first).unwrap();
     registry.reclaim(p, first).unwrap();
     registry.reclaim(p, fault).unwrap();
+    let retired_extent = p
+        .pin_extent_at(
+            first_data - memory::USER_DATA_FRAME_OFFSET,
+            memory::USER_SPACE_PAGES,
+        )
+        .expect("ASID reuse witness frame");
     let new = create(
         registry,
         p,
         spec(percpu::BOOT_CPU, MODE_EXIT, NEW_EXIT_CODE),
     );
+    let distinct_backing = registry.data_address(new).unwrap() != first_data;
+    p.release(retired_extent);
     #[cfg(feature = "process-stale-negative")]
     registry
         .start(first)
@@ -200,6 +214,7 @@ pub fn exercise(
     report(
         "process_slot_generation_reuse",
         generation_ok
+            && distinct_backing
             && registry.completion(new).unwrap().reason == Reason::Exited(NEW_EXIT_CODE)
             && tag(registry, new) == NEW_EXIT_CODE,
     );
@@ -265,7 +280,19 @@ pub fn exercise(
             && registry.completion(sparse).unwrap().reason == Reason::Exited(EXIT_CODE),
     );
     registry.reclaim(p, sparse).unwrap();
+    #[cfg(feature = "kernel-tests")]
+    let measurement_start = cpu::ticks();
+    #[cfg(feature = "kernel-tests")]
+    let measurement_before = crate::asid::counters();
     let mut stress = true;
+    let mut asid_reuse = true;
+    let mut cpu_isolation = [true; config::ACTIVE_CPUS];
+    let mut backing_changed = [true; config::ACTIVE_CPUS];
+    let mut previous_data = [0; config::ACTIVE_CPUS];
+    let mut previous_asid = [0; config::ACTIVE_CPUS];
+    let mut asid_reused = [false; config::ACTIVE_CPUS];
+    let mut retired_extents: [Option<memory::Frame>; config::ACTIVE_CPUS] =
+        core::array::from_fn(|_| None);
     for cycle in 0..STRESS_CYCLES {
         let code = EXIT_CODE + cycle as u64;
         let left = create(registry, p, spec(percpu::BOOT_CPU, MODE_EXIT, code));
@@ -282,12 +309,28 @@ pub fn exercise(
                 code,
             ),
         );
+        if cycle != 0 {
+            backing_changed[0] &= registry.data_address(left).unwrap() != previous_data[0];
+            backing_changed[1] &= registry.data_address(right).unwrap() != previous_data[1];
+            asid_reused[0] |= registry.asid(left).unwrap() == previous_asid[0];
+            asid_reused[1] |= registry.asid(right).unwrap() == previous_asid[1];
+        }
+        for extent in &mut retired_extents {
+            if let Some(frame) = extent.take() {
+                p.release(frame);
+            }
+        }
         registry.start(left).unwrap();
         registry.start(right).unwrap();
         registry.dispatch(Some(VERIFY_TIMEOUT));
-        stress &= registry.completion(left).unwrap().reason == Reason::Exited(code)
-            && tag(registry, left) == code
-            && tag(registry, right) == code;
+        let left_isolation = registry.completion(left).unwrap().reason == Reason::Exited(code)
+            && tag(registry, left) == code;
+        let right_isolation = tag(registry, right) == code;
+        cpu_isolation[0] &= left_isolation;
+        cpu_isolation[1] &= right_isolation;
+        let same_va_isolation = left_isolation && right_isolation;
+        stress &= same_va_isolation;
+        asid_reuse &= same_va_isolation;
         let expected = if cycle % 2 == 0 {
             Reason::Exited(code)
         } else {
@@ -297,10 +340,93 @@ pub fn exercise(
             }
         };
         stress &= registry.completion(right).unwrap().reason == expected;
+        previous_data = [
+            registry.data_address(left).unwrap(),
+            registry.data_address(right).unwrap(),
+        ];
+        previous_asid = [registry.asid(left).unwrap(), registry.asid(right).unwrap()];
         registry.reclaim(p, left).unwrap();
         registry.reclaim(p, right).unwrap();
-        stress &= registry.live() == 0 && p.available() == before;
+        retired_extents[0] = Some(
+            p.pin_extent_at(
+                previous_data[0] - memory::USER_DATA_FRAME_OFFSET,
+                memory::USER_SPACE_PAGES,
+            )
+            .expect("CPU0 retired extent witness"),
+        );
+        retired_extents[1] = Some(
+            p.pin_extent_at(
+                previous_data[1] - memory::USER_DATA_FRAME_OFFSET,
+                memory::USER_SPACE_PAGES,
+            )
+            .expect("CPU1 retired extent witness"),
+        );
+        stress &= registry.live() == 0 && p.available() == before - 2 * memory::USER_SPACE_PAGES;
     }
+    for extent in &mut retired_extents {
+        if let Some(frame) = extent.take() {
+            p.release(frame);
+        }
+    }
+    let distinct_backing = backing_changed.into_iter().all(|changed| changed);
+    #[cfg(feature = "kernel-tests")]
+    let elapsed_ticks = cpu::ticks().wrapping_sub(measurement_start);
+    #[cfg(feature = "kernel-tests")]
+    let measurement_after = crate::asid::counters();
+    #[cfg(feature = "kernel-tests")]
+    let delta = core::array::from_fn::<_, { config::ACTIVE_CPUS }, _>(|owner| {
+        let start = measurement_before[owner];
+        let end = measurement_after[owner];
+        crate::asid::Counters {
+            switches: end.switches - start.switches,
+            full_tlbi: end.full_tlbi - start.full_tlbi,
+            asid_tlbi: end.asid_tlbi - start.asid_tlbi,
+            reuses: end.reuses - start.reuses,
+        }
+    });
+    #[cfg(feature = "kernel-tests")]
+    let reuse_invalidation = if crate::asid::enabled() {
+        delta
+            .iter()
+            .all(|count| count.asid_tlbi == STRESS_CYCLES as u64)
+    } else {
+        delta
+            .iter()
+            .all(|count| count.full_tlbi == count.switches && count.full_tlbi > 0)
+    };
+    #[cfg(not(feature = "kernel-tests"))]
+    let reuse_invalidation = true;
+    #[cfg(feature = "kernel-tests")]
+    crate::event!(
+        "{{\"event\":\"asid-measurement\",\"mode\":\"{}\",\"hardware_asid_bits\":{},\"reuse_invalidation\":{},\"elapsed_ticks\":{},\"same_va_isolation\":[{},{}],\"distinct_backing\":[{},{}],\"same_asid_reused\":[{},{}],\"cpus\":[{{\"cpu\":0,\"switches\":{},\"full_tlbi\":{},\"asid_tlbi\":{},\"reuses\":{}}},{{\"cpu\":1,\"switches\":{},\"full_tlbi\":{},\"asid_tlbi\":{},\"reuses\":{}}}]}}",
+        if crate::asid::enabled() {
+            "tagged"
+        } else {
+            "asid-zero-baseline"
+        },
+        cpu::asid_bits().unwrap_or(0),
+        reuse_invalidation,
+        elapsed_ticks,
+        cpu_isolation[0],
+        cpu_isolation[1],
+        backing_changed[0],
+        backing_changed[1],
+        asid_reused[0],
+        asid_reused[1],
+        delta[0].switches,
+        delta[0].full_tlbi,
+        delta[0].asid_tlbi,
+        delta[0].reuses,
+        delta[1].switches,
+        delta[1].full_tlbi,
+        delta[1].asid_tlbi,
+        delta[1].reuses,
+    );
+    report(
+        "asid_reuse_same_va_both_cpus",
+        asid_reuse && distinct_backing && asid_reused.into_iter().all(|reused| reused),
+    );
+    report("asid_reuse_requires_invalidation", reuse_invalidation);
     report("process_bounded_stress", stress);
     quantum_progress(p, registry, &mut report);
     blocking_progress(p, registry, &mut report);

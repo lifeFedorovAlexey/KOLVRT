@@ -229,7 +229,7 @@ impl Registry {
         if let Err((error, step)) = transaction {
             if let Some(space) = space {
                 #[cfg(not(feature = "process-rollback-negative"))]
-                space.reclaim(physical);
+                space.rollback(physical);
                 #[cfg(feature = "process-rollback-negative")]
                 core::mem::forget(space);
             }
@@ -363,6 +363,16 @@ impl Registry {
             .ok_or(Error::Stale)?
             .space
             .data_address())
+    }
+    pub fn asid(&self, id: ProcessId) -> Result<u16, Error> {
+        context_contract()?;
+        self.table.state(id)?;
+        Ok(self.objects[id.slot()]
+            .as_ref()
+            .ok_or(Error::Stale)?
+            .space
+            .lease()
+            .asid)
     }
     #[cfg(feature = "kernel-tests")]
     pub fn image_address(&self, id: ProcessId) -> Result<usize, Error> {

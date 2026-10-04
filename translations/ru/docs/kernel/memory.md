@@ -10,7 +10,7 @@ Map отклоняет неверное выравнивание, W+X, испо�
 
 ## Heap
 
-[Фундамент EL0](el0.md) дополнительно удерживает UserSpace allocations из шести страниц. Заимствованные frames и постоянные per-space charges защищают lifetime tables/code/data/stack даже при забывании guard. Roots immutable во время admission, user aliases не дают доступа к kernel mappings, а оба CPU восстанавливают native root с local TLBI до снятия charges. Native mapping mutation завершается отказом при активном user batch; это ограниченное admission rule, а не постоянное CPU0 ownership для будущих workloads.
+[Фундамент EL0](el0.md) дополнительно удерживает UserSpace allocations и fixed-affinity ASID leases. Заимствованные frames и постоянные per-space charges защищают lifetime tables/code/data/stack даже при забывании guard. Roots immutable во время admission, user aliases не дают доступа к kernel mappings, а CPU-владелец локально инвалидирует terminal ASID до освобождения frames или повторной выдачи tag. Переход к native root с ASID zero сохраняет другие живые process translations. Native mapping mutation завершается отказом при активном user batch; это ограниченное admission rule, а не постоянное CPU0 ownership для будущих workloads.
 
 Heap постоянно владеет 16 выровненными физическими страницами: 64 KiB, квант выделения 64 байта, bitmap 128 байт. Выделение ограничено, проверяет выравнивание и возвращает null при исчерпании. Lock защищает метаданные; обработчики IRQ не входят в allocator. Освобождение требует исходного живого указателя и точного Layout согласно GlobalAlloc.
 

@@ -10,7 +10,7 @@ Map rejects misalignment, W+X, executable dynamic data, kernel aliases, out-of-r
 
 ## Heap
 
-The [EL0 foundation](el0.md) additionally retains six-page UserSpace allocations. Borrowed frames plus persistent per-space charges protect table/code/data/stack lifetime even if a guard is forgotten. Roots are immutable while admitted, user aliases cannot access kernel mappings, and both CPUs restore the native root with local TLBI before charges can be removed. Native mapping mutation fails while the user batch is active; this is a scoped admission rule, not permanent CPU0 ownership for future workloads.
+The [EL0 foundation](el0.md) additionally retains UserSpace allocations and fixed-affinity ASID leases. Borrowed frames plus persistent per-space charges protect table/code/data/stack lifetime even if a guard is forgotten. Roots are immutable while admitted, user aliases cannot access kernel mappings, and the owning CPU locally invalidates a terminal ASID before the coordinator can release its frames or reuse the tag. Entering the native ASID-0 root preserves unrelated live process translations. Native mapping mutation fails while the user batch is active; this is a scoped admission rule, not permanent CPU0 ownership for future workloads.
 
 The heap permanently owns 16 aligned physical pages: 64 KiB, 64-byte allocation quantum, 128-byte bitmap. Allocation is bounded, checks alignment and returns null on exhaustion. A lock protects allocation metadata; IRQ handlers never enter the allocator. Deallocation requires the original live pointer and exact Layout, as required by GlobalAlloc.
 

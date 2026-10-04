@@ -2,7 +2,7 @@
 
 Framing и семантика отказов следуют [политике вывода](../architecture/output-policy.md). cargo xtask run показывает human-консоль, run --prod — PROD, run --machine — framed evidence. cargo xtask test включает события в обоих профилях; console summaries скрывают JSON, а raw logs сохраняют его.
 
-Установите Rust 1.99.0 с rustfmt, clippy и target aarch64-unknown-none, Node.js 18 или новее, а на Windows — 7-Zip. Первое скачивание зависимостей и инструментов требует сети. Windows setup QEMU извлекает закреплённый installer в игнорируемый cache, проверяет SHA-512 и записывает происхождение; service не устанавливается. Другие hosts могут указать QEMU 10.1.0 через QEMU_AARCH64.
+Установите Rust 1.99.0 с rustfmt, clippy и target aarch64-unknown-none, Node.js 18 или новее, а на Windows — 7-Zip. Первое скачивание зависимостей и инструментов требует сети. Windows setup QEMU извлекает закреплённый installer в игнорируемый cache, проверяет SHA-512 и записывает происхождение; service не устанавливается. Другие hosts могут указать QEMU 10.1.0 через QEMU_AARCH64. `QEMU_CPU` выбирает другой emulated CPU; default остаётся `cortex-a57`, а `max` проверяет конфигурацию с более широким ASID. Run metadata сохраняет точный CPU argument.
 
 ## Команды
 
@@ -15,11 +15,11 @@ npm run check
 cargo xtask test
 ```
 
-Матрица xtask собирается с locked dependencies, выполняет 53 настоящих kernel tests в каждом профиле и отдельно загружает DEV и PROD без test features. Образы отрицательной assertion, panic, второго physical owner, освобождения retained mapping, secondary panic, release retiring frame, отсутствия acknowledgement и пропуска remote TLBI запускаются дочерними host commands: все одиннадцать обязаны завершиться с ненулевым кодом и ожидаемыми свидетельствами. Положительная матрица отказывает, если какой-либо контроль ошибочно проходит. JSON events обязаны содержать точный набор тестов и итоговое количество suite. Отсутствие результатов, ошибка эмулятора или timeout в 30 секунд завершают команду ошибкой.
+Матрица xtask собирается с locked dependencies, выполняет точный зарегистрированный набор kernel tests в каждом профиле и отдельно загружает DEV и PROD без test features. Двенадцать failure-propagation controls, включая пропуск process-ASID reuse invalidation, и scheduler rejection controls обязаны завершиться с ненулевым кодом и ожидаемыми свидетельствами. Положительная матрица отказывает, если какой-либо контроль ошибочно проходит. JSON events обязаны содержать точный набор тестов и итоговое количество suite. Отсутствие результатов, ошибка эмулятора или timeout в 30 секунд завершают команду ошибкой.
 
 Артефакты в target/kernel включают ELF, SHA-256 и build reports features/размеров, полную версию и аргументы QEMU, UART logs, structured results и unsafe inventory. ELF bytes включают debug information; load_bytes считает файловую нагрузку PT_LOAD; memory_bytes включает обнуляемую память. PROD использует release optimization и сохраняет debug information для исследования; diagnostics и kernel-tests отсутствуют в его boot image.
 
-Каждый успешный test run также проверяет raw measurement samples и пересчитывает их quantiles. Используйте `cargo xtask test --record LABEL` для сохранения запуска и дальнейшего сравнения; см. [историю измерений](../../research/measurements/README.md). Host test allocator проверяет линейный объём сканирования относительно той же реализации с отключённым cursor. Эти проверки не означают, что каждый алгоритм глобально самый быстрый.
+Каждый успешный test run также проверяет raw measurement samples и пересчитывает их quantiles. Используйте `cargo xtask test --record LABEL` для сохранения запуска и дальнейшего сравнения; см. [историю измерений](../../../../research/measurements/README.md). `cargo xtask asid-bench` выполняет восемь counterbalanced QEMU-пар: tagged process workload против ASID-zero/full-flush baseline; результаты timer ticks, switch и TLBI counts сохраняются в [issue18-asid-measurements.json](../../../../research/results/issue18-asid-measurements.json). Это emulator evidence, не hardware throughput. Host test allocator проверяет линейный объём сканирования относительно той же реализации с отключённым cursor. Эти проверки не означают, что каждый алгоритм глобально самый быстрый.
 
 ## Отладка
 

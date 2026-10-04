@@ -187,6 +187,8 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
     let mut names = BTreeSet::new();
     let mut terminal = false;
     let mut measurements = BTreeSet::new();
+    let mut asid_measurement = false;
+    let asid_required = expected.iter().any(|name| name.starts_with("asid_"));
     let mut el0 = false;
     for event in events {
         if matches!(event["event"].as_str(), Some("fatal" | "panic")) || event["status"] == "fail" {
@@ -251,6 +253,67 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 }
                 crate::validate_samples(event)?;
             }
+            Some("asid-measurement") if tests => {
+                let mode = event["mode"]
+                    .as_str()
+                    .ok_or("ASID measurement missing mode")?;
+                let reuse_invalidation = event["reuse_invalidation"]
+                    .as_bool()
+                    .ok_or("ASID measurement missing reuse invalidation status")?;
+                let cpu_events = event["cpus"]
+                    .as_array()
+                    .ok_or("ASID measurement missing CPU counters")?;
+                if asid_measurement
+                    || event["elapsed_ticks"]
+                        .as_u64()
+                        .is_none_or(|ticks| ticks == 0)
+                    || cpu_events.len() != cpus
+                    || !matches!(mode, "tagged" | "asid-zero-baseline")
+                    || !matches!(event["hardware_asid_bits"].as_u64(), Some(0 | 8 | 16))
+                    || (mode == "tagged" && event["hardware_asid_bits"] == 0)
+                {
+                    return Err("invalid or duplicate ASID measurement".into());
+                }
+                let isolation = event["same_va_isolation"]
+                    .as_array()
+                    .ok_or("ASID measurement missing isolation checks")?;
+                let backing = event["distinct_backing"]
+                    .as_array()
+                    .ok_or("ASID measurement missing backing checks")?;
+                let reused_asid = event["same_asid_reused"]
+                    .as_array()
+                    .ok_or("ASID measurement missing repeated-ASID checks")?;
+                if isolation.len() != cpus
+                    || backing.len() != cpus
+                    || reused_asid.len() != cpus
+                    || (reuse_invalidation
+                        && (isolation.iter().any(|v| v != true)
+                            || backing.iter().any(|v| v != true)
+                            || reused_asid.iter().any(|v| v != true)))
+                {
+                    return Err("ASID same-VA or physical-backing check failed".into());
+                }
+                for (index, cpu) in cpu_events.iter().enumerate() {
+                    if cpu["cpu"].as_u64() != Some(index as u64)
+                        || ["switches", "full_tlbi", "asid_tlbi", "reuses"]
+                            .iter()
+                            .any(|field| cpu[field].as_u64().is_none())
+                        || cpu["switches"].as_u64().is_none_or(|count| count == 0)
+                        || (mode == "tagged"
+                            && cpu["reuses"].as_u64().is_none_or(|count| count == 0))
+                        || (mode == "tagged"
+                            && (cpu["full_tlbi"] != 0
+                                || (reuse_invalidation
+                                    && cpu["asid_tlbi"].as_u64().is_none_or(|count| count == 0))
+                                || (!reuse_invalidation && cpu["asid_tlbi"] != 0)))
+                        || (mode == "asid-zero-baseline"
+                            && cpu["full_tlbi"].as_u64().is_none_or(|count| count == 0))
+                    {
+                        return Err("invalid ASID CPU switch/invalidation counters".into());
+                    }
+                }
+                asid_measurement = true;
+            }
             Some("el0") if !tests && event["status"] == "pass" => {
                 let processes = cpus * crate::platform_config::USER_PROCESSES_PER_CPU;
                 if el0
@@ -278,6 +341,7 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                 if event["status"] != "pass"
                     || event["tests"].as_u64() != Some(expected.len() as u64)
                     || names != expected.iter().copied().collect()
+                    || (asid_required && !asid_measurement)
                 {
                     return Err("missing or unexpected real kernel tests".into());
                 }

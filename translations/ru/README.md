@@ -107,7 +107,7 @@ KOLVRT уже загружается как native AArch64 kernel в QEMU.
 | ARM physical timer IRQ             | ✅                                                        |
 | DEV / PROD профили                 | ✅                                                        |
 | Автоматический kernel test harness | ✅                                                        |
-| Настоящие in-kernel tests          | ✅ 73 checks в exact-source матрице DEV/PROD              |
+| Настоящие in-kernel tests          | ✅ 84 checks в exact-source матрице DEV/PROD              |
 | Negative failure controls          | ✅                                                        |
 | Отладка GDB                        | ✅                                                        |
 | SMP                                | ✅ Основа двух CPU в QEMU                                 |
@@ -434,7 +434,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Тесты должны обнаруживать ошибки ядра
 
-Последняя сохранённая exact-source матрица issue #23 фиксирует **73 kernel checks в каждом профиле DEV и PROD** и 69 отрицательных host controls. Она включает transfer process-local handles и ограниченные пути preemption/event-wait. [Отчёт](../../research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
+Последняя сохранённая exact-source интеграционная матрица фиксирует **84 kernel checks в каждом профиле DEV и PROD** и 70 отрицательных host controls. Она включает transfer process-local handles, ограниченные пути preemption/event-wait, ELF loader и ASID lifecycle. [Отчёт](../../research/measurements/runs/1791117628604-issue18-main-integrated-fd10fb19115e.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
 
 Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
 

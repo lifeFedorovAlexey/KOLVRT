@@ -1,0 +1,887 @@
+{
+  "builds": {
+    "baseline": {
+      "artifact": "target/kernel/dev-asid-baseline.elf",
+      "compiler": "1.99.0",
+      "elf_bytes": 4320824,
+      "features": [
+        "machine-events",
+        "diagnostics",
+        "kernel-tests",
+        "asid-baseline"
+      ],
+      "load_bytes": 686343,
+      "memory_bytes": 1785415,
+      "sha256": "1243f93d23b300b2a426b9e1c2794915dcbe0f7d9487d9926fc5ba6778352f8a",
+      "target": "aarch64-unknown-none"
+    },
+    "baseline_run": {
+      "accelerator": "TCG",
+      "active_cpus": 2,
+      "arguments": [
+        "-machine",
+        "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+        "-cpu",
+        "cortex-a57",
+        "-accel",
+        "tcg",
+        "-smp",
+        "2",
+        "-m",
+        "256M",
+        "-display",
+        "none",
+        "-serial",
+        "stdio",
+        "-monitor",
+        "none",
+        "-nic",
+        "none",
+        "-no-reboot",
+        "-kernel",
+        "target/kernel/dev-asid-baseline.elf"
+      ],
+      "configured_cpus": 2,
+      "elf_sha256": "1243f93d23b300b2a426b9e1c2794915dcbe0f7d9487d9926fc5ba6778352f8a",
+      "measurement_claim": "emulator timer ticks; not hardware throughput",
+      "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+      "timeout_seconds": 30
+    },
+    "tagged": {
+      "artifact": "target/kernel/dev-tests.elf",
+      "compiler": "1.99.0",
+      "elf_bytes": 4320848,
+      "features": ["machine-events", "diagnostics", "kernel-tests"],
+      "load_bytes": 686447,
+      "memory_bytes": 1785519,
+      "sha256": "364673910f2b2a2ce556208221117d19072dcb3748da40c0871ac9233af3a28d",
+      "target": "aarch64-unknown-none"
+    },
+    "tagged_run": {
+      "accelerator": "TCG",
+      "active_cpus": 2,
+      "arguments": [
+        "-machine",
+        "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+        "-cpu",
+        "cortex-a57",
+        "-accel",
+        "tcg",
+        "-smp",
+        "2",
+        "-m",
+        "256M",
+        "-display",
+        "none",
+        "-serial",
+        "stdio",
+        "-monitor",
+        "none",
+        "-nic",
+        "none",
+        "-no-reboot",
+        "-kernel",
+        "target/kernel/dev-tests.elf"
+      ],
+      "configured_cpus": 2,
+      "elf_sha256": "364673910f2b2a2ce556208221117d19072dcb3748da40c0871ac9233af3a28d",
+      "measurement_claim": "emulator timer ticks; not hardware throughput",
+      "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+      "timeout_seconds": 30
+    }
+  },
+  "issue": 18,
+  "measurement": {
+    "claim": "QEMU TCG comparison only; not hardware throughput or a universal performance claim",
+    "median_paired_delta_ticks": 647356.0,
+    "paired_delta_direction": "baseline minus tagged; positive favors tagged",
+    "paired_deltas_ticks": [
+      604855, -507119, 689857, 200424, 827582, 945363, 501050, 778975
+    ],
+    "scope": "process lifecycle stress on both pinned CPUs",
+    "units": "cntpct_el0 timer_ticks"
+  },
+  "pairs": [
+    {
+      "order": ["baseline", "tagged"],
+      "pair": 1,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11912668,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11307813,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    },
+    {
+      "order": ["tagged", "baseline"],
+      "pair": 2,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11177937,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11685056,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    },
+    {
+      "order": ["baseline", "tagged"],
+      "pair": 3,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11965594,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11275737,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    },
+    {
+      "order": ["tagged", "baseline"],
+      "pair": 4,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11904087,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11703663,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    },
+    {
+      "order": ["baseline", "tagged"],
+      "pair": 5,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 12001657,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11174075,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    },
+    {
+      "order": ["tagged", "baseline"],
+      "pair": 6,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 12066144,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11120781,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    },
+    {
+      "order": ["baseline", "tagged"],
+      "pair": 7,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11313062,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 10812012,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    },
+    {
+      "order": ["tagged", "baseline"],
+      "pair": 8,
+      "results": {
+        "baseline": {
+          "cpus": [
+            {
+              "asid_tlbi": 0,
+              "cpu": 0,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 0,
+              "cpu": 1,
+              "full_tlbi": 96,
+              "reuses": 0,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 11466631,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "asid-zero-baseline",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        },
+        "tagged": {
+          "cpus": [
+            {
+              "asid_tlbi": 32,
+              "cpu": 0,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            },
+            {
+              "asid_tlbi": 32,
+              "cpu": 1,
+              "full_tlbi": 0,
+              "reuses": 32,
+              "switches": 96
+            }
+          ],
+          "distinct_backing": [true, true],
+          "elapsed_ticks": 10687656,
+          "event": "asid-measurement",
+          "hardware_asid_bits": 16,
+          "mode": "tagged",
+          "reuse_invalidation": true,
+          "same_asid_reused": [true, true],
+          "same_va_isolation": [true, true]
+        }
+      }
+    }
+  ],
+  "platform": {
+    "accelerator": "TCG",
+    "cpus": 2,
+    "measured_cycles": 32,
+    "pair_order": "counterbalanced",
+    "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+    "repeats": 8,
+    "warmup_cycles": 0
+  },
+  "schema_version": 1,
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "0c135f2e346bcd10849b833b68054cb3de6edc9d5f3bb58a11d7c47fac3147e2"
+    },
+    {
+      "path": "crates/kernel/assets/minimal-exit.elf",
+      "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "sha256_lf": "349a01fc447f71ef7540728d5782c3667cd5a92a47bf497feb307a99e1c87c89"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "9409ad577dc86cfb3c0581897415e56c99fcbefa6f7d64d97c9c908829ccabce"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "176afe4b5887dd4a1062d69a2a7f52719093961341be91598c42972cebdd94cf"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+    },
+    {
+      "path": "crates/kernel/src/asid.rs",
+      "sha256_lf": "8ef1f80e78c8a3b95fa429c84484071f51651c8b1b89db02d2ce45f8a7be1003"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.S",
+      "sha256_lf": "18a7dfff8467965cc9002c9ec040d655a3d414f3349f0011ffaa31a9e3243bd0"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "sha256_lf": "f79b733b9d825078a5e156c91568775e8aa0cc97c897783378d288911e140bd9"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+    },
+    {
+      "path": "crates/kernel/src/execution.rs",
+      "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "sha256_lf": "28efe7334d533aa502f7b266309854291b1ad3b5c3ee4e40170ebc1e7f70f907"
+    },
+    {
+      "path": "crates/kernel/src/handles.rs",
+      "sha256_lf": "1ec7f35145140541ab091487791415b1124c5f9375f43541a599f24b45ec6e2d"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "79ab7c939c028e242487b7fb0b07707891217d891382fde9526e255b2051d8a5"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "2d60ccb3555a412e0d70a6a4deb1968bf0883248c095af5806f316263cd9d7b0"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "0cbe90f9941116bd7dace00ff5a419e783bbfd57eed249ea9d24e4e319b30991"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "sha256_lf": "c6047978cdd66a631bb6dbd69279ad2890536dc79aa90751ca48960da83ed5f8"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "sha256_lf": "8d88922c350e5c9539ee06d7d58d563fc4d66c5dc28dcc464743183279d3c22a"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/config.rs",
+      "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "sha256_lf": "be0cf3b0d5750e0cf3f571026d782d0df42454369cdc55e2e1be61c4a9eba037"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "sha256_lf": "76a892b2d0e07062a72d4f89674359f507b5c98d0fb51f267da62d57fe66a76c"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "sha256_lf": "74a686c134c3745be67bd45331644eae537b0bf2b6620f2cdf5a719959c751ee"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "87dac4741eccafee11e76270db155586757e3a2776127f1b598b6fdf8fc1e886"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "179fc0234b9f93150b24dc9457bdcd783a0bdaf67dc9c4cf3c0dd2c9b152681d"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "525112e20cf1bfe7618cbd92c6b07099c57811a4465008506605bb66d2947fee"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "sha256_lf": "4c74584abca38ec9f406d59c86c30b0e90f7aa4833bf27ce7778cba5c522008d"
+    },
+    {
+      "path": "crates/kernel/src/user_copy.rs",
+      "sha256_lf": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "7389fc95292ad7461c5092c92b8240e50c83113c546d8e80a51c16cb9aa2b004"
+    },
+    {
+      "path": "crates/kernel-core/src/elf.rs",
+      "sha256_lf": "eace2f23808a826184076b133e768f7707ba1ac98f894da2f9b07c4cf3f268c8"
+    },
+    {
+      "path": "crates/kernel-core/src/execution.rs",
+      "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "sha256_lf": "0f14d2b03c8133e164faedb2cd68401443fd12ed6333add3d263db39b86ff660"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "6f4d41508e5704f00051845ec7faf14ab4a83474dd62120ec13b51c0abefdb80"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "sha256_lf": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling/ownership.rs",
+      "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling.rs",
+      "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/user_copy.rs",
+      "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+    },
+    {
+      "path": "crates/kernel-core/src/wait.rs",
+      "sha256_lf": "c246e9fae92e6326259e210e7132bb1b164d9e7a1b96476642bfc333d03cedd5"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+    },
+    {
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5"
+    },
+    {
+      "path": "crates/kernel-core/tests/wait.rs",
+      "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "9548e345350d519945be7a4c840f0ecf855056c484b0bf277d91501f60a62af8"
+    },
+    {
+      "path": "crates/routing/build.rs",
+      "sha256_lf": "89c475575801c9877959b4f6856837d52fd51e5290681504b37b521ce0241fc3"
+    },
+    {
+      "path": "crates/routing/src/conformance.rs",
+      "sha256_lf": "44a17a56a4112f570ac6e5932b0a84a827d7332e12fe7acc9fc8577576b5bfa4"
+    },
+    {
+      "path": "crates/routing/src/lib.rs",
+      "sha256_lf": "d4c8e1c0d5b2968f32fcbd6c41de552108ff7ea2232c76d75018db00f2de2322"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "593c770bfbec0501375e7ce0179c8fd2812c74f5289ff1c24cdec9ffe0935b67"
+    },
+    {
+      "path": "crates/routing-demo/build.rs",
+      "sha256_lf": "14b3b0b7dc7c3c087fa1b5c630894018dfbb29a0ff2f231edd6775bfe6cf7e18"
+    },
+    {
+      "path": "crates/routing-demo/linker.ld",
+      "sha256_lf": "ac7202177d96d09a00d2a1ac6176d78723ba901d5c11601cda5ff4e07aa27a6f"
+    },
+    {
+      "path": "crates/routing-demo/src/main.rs",
+      "sha256_lf": "f7241ab5b6147051b5439b27162f117b250e368e13e3848f8251b8be01a87a93"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "e2fdd65e579e9c390012950eba013c4f06cbe17077ed613d35ef9bfd98bc6465"
+    },
+    {
+      "path": "crates/window-compat/src/lib.rs",
+      "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+    },
+    {
+      "path": "crates/window-compat/tests/protocols.rs",
+      "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "d1d1139b4384ecb73499f9c4ef01bd87ad611aa4c297f823278bb6ca668ac661"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "cf53e6756c09c92ba120768ac670d9a5b7ac2d287932a06c8e56cab16fab5718"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "2cacb9e3ad9fd3b944b8e9674414591f53b1434582ea028c5dc51a0993dca2b9"
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "sha256_lf": "ce31d83e4ef6d5d54501b137e8f0e6a85f411d43e62fc8f50e37b0284f8ec302"
+    },
+    {
+      "path": "crates/xtask/tests/cli.rs",
+      "sha256_lf": "bf0e6aa8bc4eda83006c7babd29ce8d1d157a7510d664b01063a0859f2e41509"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "crates/xtask/tests/native_boundary.rs",
+      "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+    },
+    {
+      "path": "crates/xtask/tests/output_writer.rs",
+      "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+    },
+    {
+      "path": "crates/xtask/tests/scheduler_boundary.rs",
+      "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    }
+  ],
+  "source_inventory_sha256": "fd10fb19115efd4ba033d37dc0bdfe9df0f1ca9b5bb3f56952d60d2bf64773a4"
+}

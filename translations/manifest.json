@@ -6,8 +6,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "e7093c08c3c54e81dbfd1078d2bc7ca4c8f2d9f4af7e3a1ea634ef077f9b6488",
-        "translation_sha256": "cc4c3b78aee58b5809a9274d36cb8e1f40e63e93d0cc312bc28bf4ad959ea9e9"
+        "source_sha256": "34c3206e28e0fe8f57d55b1c5f1c56fe50be3be776cb3b7b88962984e18e5463",
+        "translation_sha256": "aa9c4decc4fe9a4ecf5e6eb2d4073f294e5790fa3d2a55d552f675609c0cbc3f"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "6518a598b4f2d4d7abd7618b81d28c6e26dd1596123247cc5cd887db3ffabea3",
@@ -93,9 +93,13 @@
         "source_sha256": "6f8ac58ddfacdd8e968e038cde5ce6e67c40a82be71631dbad168c9a8e6d466a",
         "translation_sha256": "f13c64b17878bacf572b394861222424031780ee8ccd2fe4d4cbde60abe2510b"
       },
+      "docs/architecture-decisions/0021-asid-lifecycle.md": {
+        "source_sha256": "8fbabe70f5c64c782018853778ed236f0ad8199e1f09d1dede1ac26d3cd829cf",
+        "translation_sha256": "c1820f46c67837b1d866101c0553f3b1cfd2e5bc25d384be9290247c4c511d9e"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "9659031e19d4c5c62f210ffeff927a709039cfc100a39f2748402452745c28d5",
-        "translation_sha256": "239da88b4bb14c3faf0c3ca349ed9d924ead3586fdcf69fbc71e49d6577d9c86"
+        "source_sha256": "d98bea0207a7e12e5e43b5e90edb044ca696ec2ea687680d3c78c050a49f2e73",
+        "translation_sha256": "49fa2370938a16bd56f9861bbd9460c6f9b4436029412201729bae30943368e0"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
@@ -194,8 +198,8 @@
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/el0.md": {
-        "source_sha256": "598dbe5fb13a2ebd1ea7e417c156293a16c37bfdc43cbf685fdcf0b1d1f2269d",
-        "translation_sha256": "74b6f8d77b98d57c7583af0d74bcf52763da971408c44b7db1f414e21f5dcc2c"
+        "source_sha256": "155f8a67cfcd028bf0055ce24fbd8e24706e2ae792af0914b5e52bcc73ea3a82",
+        "translation_sha256": "d2de9f68539a10512ce363bc09ec4b070011739ea3601dd5938af0e79593d5c0"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "7ab0345bf609b17bbe42b1f8d5f332473c8245e2cfdb01582626fc3382c62ae0",
@@ -210,36 +214,36 @@
         "translation_sha256": "4ed4607ca4c2d2aa5f1ad485f539fc736fac13916750c88bb67bd35b7ac66c99"
       },
       "docs/kernel/memory.md": {
-        "source_sha256": "49de8c407cbda38098ac7bae399c6f457fb737a3e28cf2c3aec2546acea3de75",
-        "translation_sha256": "11ca37fba32faba9e19edf460ac90a08e52875489fc7887e00f1f400d617e3bc"
+        "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
+        "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "4780c69c0712c5d30994fc5902b871f080acc121bcaa000c43be7ccf35d85510",
-        "translation_sha256": "e3cc8b60c70ff58ae4d257bc510622ddc2d9d5598daaa7eec8e86d71fbd404d4"
+        "source_sha256": "f7af057f834359ed9fff5da5d9448e73edb9afdc1267a40a7c817ec17e258700",
+        "translation_sha256": "d49f22085a681fc5a23c5713d00827b46207173095ffad80c9b9f32669af658a"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
         "translation_sha256": "855db72b1be05ee90a1946ad145f506c61016591c7e32a6abbe85123a7400acd"
       },
       "docs/kernel/scheduler.md": {
-        "source_sha256": "cc34e0bb716d953263fd7dc59d0c9cfab99281b572334aa8ab2fa38cfee21d5a",
-        "translation_sha256": "7c1a2d1e7b873c0d3be7ca9e099ad258ea4ec6ede5dcf523f7d88bd976cf7253"
+        "source_sha256": "4feacdf7b3b058fba9b76f47e2ae18caa11e6c7730fc47f7cbf33d00c55aaab5",
+        "translation_sha256": "547e4234acacadac46414af5b9f63346181c16755ce0a41fd3527b03dd75ff2b"
       },
       "docs/kernel/smp.md": {
         "source_sha256": "b0a243584c73e2205c4fb1bca8c4847a4eb28015d2ab135d3aed19d4b637e129",
         "translation_sha256": "42527fe33efde8585fd971294d565d95a53a386d04d75da46ad570ae2cfd7678"
       },
       "docs/kernel/testing.md": {
-        "source_sha256": "e510ac964e34448eaa962b6dece81c14a5c3907aa75fb5fa4170eb6d22c0ce9a",
-        "translation_sha256": "905201406a55f8e90d5c1a56476cbb4dac8532eb997bb1d3edc8780cfba683ea"
+        "source_sha256": "b1d1bb304e815d3184b42d95dded636b22f41e71b48c2ea5c9dcc0d16d2acba9",
+        "translation_sha256": "57fa4ea1fcf1527b786798ce970fbf5369bd0d93d1a51c86e4f996ac373d814c"
       },
       "docs/kernel/time.md": {
         "source_sha256": "462d6b1a36e874e592b1c3d888ceb26f03254f21a8d5971755637682462a824e",
         "translation_sha256": "46eae4f848da42e521436eafaf5782b716c3b4358b9b675ac2b3d3499f41a20a"
       },
       "docs/kernel/unsafe.md": {
-        "source_sha256": "38c2d48fd058a6bf057307a8538eae4820d2d027849c0cb9cfaa1f2d5cc840e1",
-        "translation_sha256": "4667e0cad5742a1264bd0b23ee3e492e0b143ef5d292a2d41a48b6102825a304"
+        "source_sha256": "2a21f01a5205cb98deb702c7b2d360b7d8d738b9fa3a2c057374de7401d32a78",
+        "translation_sha256": "ddb3ea0c4bc97d60b88ec5d9142801a78cc93daeac0f9ee3a23361c940c36c59"
       },
       "docs/kernel/user-copy.md": {
         "source_sha256": "caaa0b9d7efa279dec800ff4e089f8ff6c40a9ee1f3c702dd21f574b04d32023",
