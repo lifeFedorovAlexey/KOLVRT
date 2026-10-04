@@ -107,7 +107,7 @@ KOLVRT already boots as a native AArch64 kernel in QEMU.
 | ARM physical timer IRQ        | ✅                                                     |
 | DEV / PROD profiles           | ✅                                                     |
 | Automated kernel test harness | ✅                                                     |
-| Real in-kernel tests          | ✅ 72 in the latest recorded DEV and PROD run          |
+| Real in-kernel tests          | ✅ 73 checks in the exact-source DEV/PROD matrix       |
 | Negative failure controls     | ✅                                                     |
 | GDB debugging                 | ✅                                                     |
 | SMP                           | ✅ Two-CPU QEMU foundation                             |
@@ -116,6 +116,7 @@ KOLVRT already boots as a native AArch64 kernel in QEMU.
 | Process lifecycle             | ✅ Bounded create/start/exit/reclaim on two CPUs       |
 | Own-process event wait        | ✅ Bounded block/wakeup path in `Registry::step()`     |
 | Runtime versioned routing     | ✅ Bounded EL0 vertical slice; native core independent |
+| Migration advisor             | ✅ Host planner; production integrations remain open   |
 | Linux compatibility           | ⏳ Not started                                         |
 
 Both configured CPUs execute native EL1 code. The QEMU matrix checks secondary boot, per-CPU ownership, bidirectional IPI, acknowledged remote TLB retirement and multicore shutdown. Real hardware remains unverified.
@@ -151,7 +152,7 @@ Safe user-copy                      ✅ bounded Phase 3.2
 Process-local handles               ✅ bounded Phase 3.3
         │
         ▼
-Capabilities, IPC and services       next
+Capabilities, IPC and services       next (#24)
         │
         ▼
 Compatibility personalities
@@ -162,7 +163,7 @@ Linux ABI compatibility where useful
 
 Compatibility is not being wired into a single-CPU kernel and patched for SMP later.
 
-The native execution model comes first. The bounded EL0/address-space and timer-scheduler foundation runs fixed-affinity processes on two CPUs. Phase 2 routing executes in an optional isolated EL0 image; native core remains independent. Phase 3.1 adds kernel-owned process creation, start, completion and reclaim, plus a limited own-process event latch used by the preemptible step path. These are trusted-bootstrap mechanisms, not public EL0 process or wait APIs. Phase 3.2 now adds bounded safe user-copy. IPC, capabilities, cancellation, persistent services and security domains remain future work; the full native slice is incomplete. See the [process lifecycle](docs/kernel/processes.md), [wait contract](docs/kernel/wait.md) and [scheduler](docs/kernel/scheduler.md).
+The native execution model comes first. The bounded EL0/address-space and timer-scheduler foundation runs fixed-affinity processes on two CPUs. Phase 2 routing executes in an optional isolated EL0 image; native core remains independent. Phase 3.1 adds kernel-owned process creation, start, completion and reclaim, plus a limited own-process event latch used by the preemptible step path. These are trusted-bootstrap mechanisms, not public EL0 process or wait APIs. Phase 3.2 adds bounded safe user-copy, and Phase 3.3 adds process-local handles and receiver-local transfer. Native grants, service authority, general IPC, cancellation, persistent services and security domains remain future work; the full native slice is incomplete. See the [process lifecycle](docs/kernel/processes.md), [wait contract](docs/kernel/wait.md), [handles](docs/kernel/handles.md) and [scheduler](docs/kernel/scheduler.md). Issue [#24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) tracks the next native grants, attenuation and revocation work.
 
 ---
 
@@ -240,6 +241,10 @@ No fake penalties.
 No marketing benchmarks.
 
 No hiding inconvenient numbers.
+
+### Migration advisor
+
+The read-only host-side [migration advisor](docs/architecture/migration-advisor.md) models capability-based dependency alternatives, verifies evidence and contract receipts, analyzes paired measurements, and prepares rollback proposals. A separate signed authorization gate is implemented, but it does not deploy packages or mutate routes. Production catalog/installed-state collection, complete OS telemetry, real application contract and rollback executors, production key custody, validated dependence/power analysis, and physical ARM64 A/B evidence remain open under [issue #14](https://github.com/lifeFedorovAlexey/KOLVRT/issues/14).
 
 ---
 
@@ -429,10 +434,11 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Tests are supposed to fail when the kernel is wrong
 
-The latest passing recorded matrix ran **72 real kernel tests in both DEV and PROD test profiles**.
-It includes the bounded preemption step and own-process event wait/block path. The exact-source
-receipt preserves the tested files, artifacts and QEMU scope; later working-tree edits are not
-covered by that receipt. Historical milestone counts remain in their original decision records.
+The latest retained exact-source issue #23 matrix records **73 kernel checks per DEV and PROD
+profile** and 69 negative host controls. It includes process-local handle transfer and the bounded
+preemption/event-wait paths. The [receipt](research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json)
+binds the tested source, artifacts and QEMU TCG scope; it is not evidence of physical ARM64 behavior
+or later source changes. Historical milestone counts remain in their original decision records.
 
 It also runs negative controls that are required to fail correctly.
 
