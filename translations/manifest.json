@@ -98,8 +98,8 @@
         "translation_sha256": "c1820f46c67837b1d866101c0553f3b1cfd2e5bc25d384be9290247c4c511d9e"
       },
       "docs/architecture-decisions/0022-native-event-grants-and-revocation.md": {
-        "source_sha256": "cc1927c82548bfaa6d1c539d8076fc8954e2aa65201d0fe9512332aaad8c6018",
-        "translation_sha256": "dae2d288c5b4bfd31cd409207e1509d234c62e5c966a58d8f893636b5eb23947"
+        "source_sha256": "a1ae58c87edfcca0c5ac738e6741dd851e610ec553d044ed8f65b14e0a1b879c",
+        "translation_sha256": "ef25e7a75db2c5a994dae09ab6731c57edb132981c94a0e55fb2a43303fcc201"
       },
       "docs/architecture-decisions/README.md": {
         "source_sha256": "5ae44447c97cf4d5fde093b8aa9220813a8cfdb11b6e0c638d9b3b8b1e86158a",

@@ -50,7 +50,26 @@ shared Event state used for signal admission; there is no second policy ledger. 
 bounded SVC path uses safe copied request bytes and existing per-CPU namespace ownership;
 EL1 adds no global interpreter, allocation, lock or service policy.
 
-## Consequences and limits
+## Alternatives
+
+- Leave Event grants at implicit `ALL` and defer revocation. This fails the missing-grant
+  and revoke/admission requirements in issue #24.
+- Revoke only one handle entry. This leaves delegated aliases authorized and does not
+  implement target-scoped authority revocation.
+- Invalidate the target under already accepted work or free it at revoke. This confuses
+  authority with lifetime and violates ADR-0020 retention semantics.
+- Add a generic EL1 policy interpreter or universal capability/object framework. The
+  single bounded Event operation does not justify those privileged mechanisms.
+
+## Why rejected
+
+Implicit ALL grants make missing authority indistinguishable from default construction.
+Per-handle close is intentionally local and cannot stop admission through aliases.
+Freeing a revoked target would invalidate retained borrowers or erase a committed pending
+event. A universal interpreter would add arbitrary policy and failure paths beyond the
+native operation that needs enforcement.
+
+## Consequences
 
 The provisional 48-byte request adds operation 4 (`revoke`) without changing frame size.
 Status 11 is added; previous status values keep their meanings. Existing decoders reject
@@ -58,11 +77,30 @@ unknown operations. This is not a frozen ABI and does not complete issue #24: is
 independence, restart/rebind policy for production services, nested consumer/service
 authority, security domains and broader IPC grants remain separate work.
 
-## Verification
+## Compatibility impact
+
+The provisional 48-byte request adds operation 4 (`revoke`) without changing frame size.
+Status 11 is added; previous status values keep their meanings. Existing decoders reject
+unknown operations. The format remains provisional and unfrozen.
+
+## Performance impact
+
+Admission and revoke add one bounded compare/exchange on the shared Event's atomic byte.
+No allocation, global lock or additional table scan is introduced. No throughput claim is
+made before the QEMU/profile measurements land.
+
+## Security impact
+
+Only a caller holding SEND may publish and only a caller holding REVOKE may stop future
+publication. Transfer can only attenuate. Revocation state is shared with the target, so
+all aliases observe one authoritative decision. The Event remains allocated until its
+normal final-reference release.
+
+## Testing
 
 Host checks cover attenuation, explicit rights, close-versus-revoke, alias lifetime and
-the signal/revoke linearization. A real EL0 request must exercise revoke in both DEV and
-PROD, followed by a denied SEND admission. CI and exact-source evidence are required
+the signal/revoke linearization. The real EL0 fixture must exercise revoke in both DEV
+and PROD, followed by a denied SEND admission. CI and exact-source evidence are required
 before claiming implementation acceptance.
 
 ## Reversibility

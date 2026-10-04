@@ -50,7 +50,25 @@ signal admission; второго policy ledger нет. Ограниченный 
 копию request и существующее per-CPU владение namespace; в EL1 не добавляются общий
 interpreter, allocation, lock или service policy.
 
-## Последствия и ограничения
+## Альтернативы
+
+- Оставить неявные `ALL` grants для Event и отложить revoke. Это не удовлетворяет
+  требованиям missing grants и revoke/admission из issue #24.
+- Отзывать только одну запись handle. Делегированные aliases останутся действующими,
+  значит target-scoped отзыв полномочий не реализован.
+- Инвалидировать target под уже принятой работой или освобождать его при revoke. Это
+  смешивает authority с lifetime и нарушает retention семантику ADR-0020.
+- Добавить общий EL1 policy interpreter или universal capability/object framework. Один
+  ограниченный Event operation не оправдывает такие privileged mechanisms.
+
+## Почему отклонены
+
+Неявный ALL grant скрывает отсутствие полномочий за поведением по умолчанию. Close
+одного handle намеренно локален и не останавливает admission через aliases. Освобождение
+отозванного target инвалидировало бы retained borrowers или удалило pending event. Общий
+interpreter добавил бы произвольную policy и failure paths вне операции, требующей защиты.
+
+## Последствия
 
 В provisional 48-byte request добавляется operation 4 (`revoke`) без изменения размера
 frame. Добавляется status 11; предыдущие значения сохраняют смысл. Старые decoders
@@ -58,10 +76,29 @@ frame. Добавляется status 11; предыдущие значения �
 управление issuer, production restart/rebind, nested consumer/service authority, security
 domains и общие IPC grants остаются отдельными задачами.
 
+## Влияние на совместимость
+
+В provisional 48-byte request добавляется operation 4 (`revoke`) без изменения frame.
+Добавляется status 11; предыдущие значения сохраняют смысл. Старые decoders отклоняют
+неизвестные operations. Формат остаётся provisional и не заморожен.
+
+## Влияние на производительность
+
+Admission и revoke добавляют один bounded compare/exchange общего atomic byte Event. Новых
+allocation, global lock или дополнительных scans таблицы нет. До получения QEMU/profile
+измерений пропускная способность не заявляется.
+
+## Влияние на безопасность
+
+Публиковать может только caller с SEND, а остановить новые публикации — только caller с
+REVOKE. Transfer может лишь сужать права. Состояние revoke общее для target, поэтому все
+aliases видят одно authoritative решение. Event остаётся выделенным до обычного release
+последней ссылки.
+
 ## Проверка
 
 Host checks покрывают attenuation, явные rights, различие close/revoke, lifetime aliases
-и linearization signal/revoke. Реальный EL0 request должен выполнить revoke в DEV и PROD,
+и linearization signal/revoke. Реальный EL0 fixture должен выполнить revoke в DEV и PROD,
 затем получить отказ SEND admission. До заявления о приёмке нужны CI и exact-source
 evidence.
 
