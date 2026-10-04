@@ -54,3 +54,7 @@ Host tests проверяют безопасные алгоритмы, откл�
 ## Проверки handles в Phase 3.3
 
 [Контракт handles](handles.md) требует 72 kernel checks и 67 negative controls в DEV/PROD. Пять actual enforcement mutations проверяют generation validation, owner validation, kind validation, unsafe reuse и missing retirement cleanup. Пять handle measurement scopes на CPU добавляются к четырём copy scopes: nineteen unique measurement records вместе с lock baseline. Physical compatibility-package removal и Phase 2 routing должны успешно повториться на том же source candidate.
+
+## Phase 3.4 security enforcement
+
+[Domain fixtures](../../../../crates/kernel/src/security/testing.rs) выполняют production copied boundary на обоих EL0 CPUs: scoped denial, attenuation, revoke/admission races, sender/receiver budgets, fault isolation, reclaimed sender retention и наблюдаемую service-fault cancellation. Пять negative features отключают реальные budget, identity, teardown, revocation либо scope checks; каждая обязана дать ожидаемый failed machine test и nonzero host result в DEV и PROD. Текущая kernel matrix содержит 96 checks на профиль и 80 negative controls.

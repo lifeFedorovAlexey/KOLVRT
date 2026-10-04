@@ -89,4 +89,8 @@ Five per-CPU scopes сохраняют четыре warmups и 32 raw timer obse
 
 Handle generation остаётся identity, а SEND/TRANSFER отдельно ограничивают lookup/admission и delegation. Issue #23 добавляет attenuation и bounded owned Event retention. В будущем можно определить grant issuer, revocation и более широкие async work guarantees без изменения handle identity. EL0 transfer адресует receiver namespace того же CPU; другой CPU отклоняется до изменения таблиц. Семантика Linux fd/Windows HANDLE, общий IPC, security domains, magic current/root handles и universal object model исключены.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) связывают каждую process generation с локальными handles, явными bootstrap grants и неизменяемыми memory/handle/queue/request quotas, переданными caller. SEND/TRANSFER rights допускают attenuation; REVOKE=4 означает явную issuer authority. Revocation запрещает новые effects, а принятая работа удерживает consumer charge и target до completion либо service-fault cancellation. Закрытие handle не отзывает aliases. Ограниченный same-CPU notification pilot сообщает EL0 terminal outcomes; general IPC, automatic wakeups, supervisor policy и persistent services относятся к следующим этапам. Перед расширением storage и encoding нужно заново вывести из требований #26/#27.
+
 [Английский оригинал](../../../../docs/kernel/handles.md)

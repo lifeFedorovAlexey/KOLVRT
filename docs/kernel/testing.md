@@ -54,3 +54,7 @@ The [copy contract](user-copy.md) adds actual EL0 copies and snapshot mutation o
 ## Phase 3.3 handle checks
 
 The [handle contract](handles.md) requires 72 kernel checks and 67 negative controls in DEV/PROD. Five actual enforcement mutations cover generation validation, owner validation, kind validation, unsafe reuse and missing retirement cleanup. Five handle measurement scopes per CPU join the four copy scopes: nineteen unique measurement records including the lock baseline. Physical compatibility-package removal and Phase 2 routing must repeat successfully on the same source candidate.
+
+## Phase 3.4 security enforcement
+
+[Domain fixtures](../../crates/kernel/src/security/testing.rs) execute the production copied boundary on both EL0 CPUs: scoped denial, attenuation, revoke/admission races, sender/receiver budgets, fault isolation, reclaimed sender retention and observable service-fault cancellation. Five negative features remove actual budget, identity, teardown, revocation or scope checks; each must produce the expected failed machine test and nonzero host result in DEV and PROD. The current kernel matrix has 96 checks per profile and 80 negative controls.

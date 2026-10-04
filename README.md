@@ -434,9 +434,9 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Tests are supposed to fail when the kernel is wrong
 
-The latest retained exact-source integration matrix records **84 kernel checks per DEV and PROD
-profile** and 70 negative host controls. It includes process-local handle transfer, the bounded
-preemption/event-wait paths, the ELF loader and ASID lifecycle. The [receipt](research/measurements/runs/1791117628604-issue18-main-integrated-fd10fb19115e.json)
+The latest retained exact-source integration matrix records **96 kernel checks per DEV and PROD
+profile** and 80 negative host controls. It includes process-local handle transfer, the bounded
+preemption/event-wait paths, the ELF loader and ASID lifecycle. The [receipt](research/measurements/runs/1791128001893-phase3-4-final-e08829fce5b9.json)
 binds the tested source, artifacts and QEMU TCG scope; it is not evidence of physical ARM64 behavior
 or later source changes. Historical milestone counts remain in their original decision records.
 

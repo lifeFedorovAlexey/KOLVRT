@@ -45,6 +45,7 @@ fn spec(owner: usize, mode: u64, code: u64) -> Spec<'static> {
     Spec {
         image: image(),
         image_format: process::ImageFormat::RawFixture,
+        limits: limits(),
         context,
         owner,
         entry: memory::USER_CODE,
@@ -473,6 +474,7 @@ fn exercise_elf(
             Spec {
                 image: &damaged,
                 image_format: process::ImageFormat::Elf64Aarch64,
+                limits: limits(),
                 context,
                 owner: 0,
                 entry: config::USER_PAYLOAD_BASE,
@@ -497,6 +499,7 @@ fn exercise_elf(
             Spec {
                 image: MINIMAL_ELF,
                 image_format: process::ImageFormat::Elf64Aarch64,
+                limits: limits(),
                 context,
                 owner: 0,
                 entry: image.entry,
@@ -522,6 +525,7 @@ fn exercise_elf(
             Spec {
                 image: MINIMAL_ELF,
                 image_format: process::ImageFormat::Elf64Aarch64,
+                limits: limits(),
                 context,
                 owner: percpu::BOOT_CPU,
                 entry: image.entry,
@@ -537,6 +541,7 @@ fn exercise_elf(
             Spec {
                 image: MINIMAL_ELF,
                 image_format: process::ImageFormat::Elf64Aarch64,
+                limits: limits(),
                 context,
                 owner: percpu::SECONDARY_CPU,
                 entry: image.entry,
@@ -795,4 +800,14 @@ fn blocking_progress(
 // reserving one debug-build stack temporary for every call site in the scenario.
 fn advance(registry: &mut Registry) {
     registry.step();
+}
+
+fn limits() -> kernel_core::domain::Limits {
+    kernel_core::domain::Limits {
+        memory_pages: crate::memory::USER_SPACE_PAGES
+            + crate::platform::config::USER_PAYLOAD_BYTES / crate::platform::config::PAGE_BYTES,
+        handles: crate::handles::CAPACITY as u16,
+        queue: 1,
+        requests: 1,
+    }
 }

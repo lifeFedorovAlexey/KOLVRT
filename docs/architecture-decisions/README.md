@@ -34,4 +34,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 
 - [ADR-0021 — Fixed-affinity AArch64 ASID lifecycle](0021-asid-lifecycle.md) — Accepted for bounded process roots; migration remains unsupported.
 
+- [ADR-0022 — One-process domains and scoped Event grants](0022-domains-and-scoped-grants.md) — Accepted for bounded Phase 3.4; full IPC remains separate.
+
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

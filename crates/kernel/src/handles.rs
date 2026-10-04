@@ -4,7 +4,7 @@ use kernel_core::handles::{Error, Handle, Kind, Rights};
 pub(crate) const CAPACITY: usize = 8;
 pub(crate) type Namespace = kernel_core::handles::Namespace<CAPACITY>;
 pub(crate) const REQUEST: u16 = 0x80;
-fn status(error: Error) -> u64 {
+pub(crate) fn status(error: Error) -> u64 {
     match error {
         Error::Invalid => 1,
         Error::Stale => 2,
@@ -15,6 +15,8 @@ fn status(error: Error) -> u64 {
         Error::GenerationExhausted => 7,
         Error::Rights => 9,
         Error::ReferenceExhausted => 10,
+        Error::Denied => 11,
+        Error::Budget => 12,
     }
 }
 pub(crate) fn call(

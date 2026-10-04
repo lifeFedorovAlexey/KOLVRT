@@ -169,3 +169,7 @@ Phase 3.0 confines scheduler UnsafeCell access to preparation, mutation and insp
 ## Phase 3.3 reference delta
 
 [Handles](handles.md) add zero production unsafe sites. INV-RUNQUEUE already excludes concurrent namespace access during linear moves and requires acquired completion before quiescent extraction. Synchronous Retained borrows prevent close/retire while used. Three test-only lexical sites use INV-USER-IMAGE for immutable linked symbols and two bounded fixture slices; ownership, checked image lengths and two-CPU negative execution remain required. The [inventory](../../research/results/kernel-phase33-unsafe-audit.json) records 109 lexical locations versus 106 at Phase 3.2. No raw resource pointer, UnsafeCell, unsafe Sync or unchecked index is added.
+
+## Phase 3.4 security enforcement
+
+[Domains and grants](domains.md) add zero production unsafe sites. The retained fixed atomic pool needs no UnsafeCell, unsafe Sync, heap lock or raw object pointer. Owner-local queues reuse INV-RUNQUEUE permits; copied requests retain no user references. Three kernel-test-only lexical sites slice immutable linked images under INV-USER-IMAGE. Final charge/reference release remains safe inside the masked scheduler scope.

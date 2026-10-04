@@ -34,4 +34,6 @@
 
 - [ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU](0021-asid-lifecycle.md) — Принято для ограниченного набора process roots; migration не поддерживается.
 
+- [ADR-0022 — One-process domains and scoped Event grants](0022-domains-and-scoped-grants.md) — Accepted for bounded Phase 3.4; full IPC remains separate.
+
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)

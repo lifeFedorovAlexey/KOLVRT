@@ -18,6 +18,7 @@ mod platform;
 mod process;
 mod process_workload;
 mod scheduler;
+mod security;
 mod smp;
 mod sync;
 #[cfg(feature = "kernel-tests")]

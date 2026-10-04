@@ -92,6 +92,10 @@ Phase 3.1 завершает ограниченный внутренний жи�
 
 [Жизненный цикл](processes.md) дополняет основу незанятыми слотами и независимыми поколениями процессов. При запуске ядра создаётся один `Registry`, сохраняемый между вызовами; тестовые образы и необязательная полезная нагрузка используют общий путь создания, запуска, диспетчеризации и освобождения. Дескрипторы допуска заимствуют принадлежащие процессам адресные пространства; корни очереди удаляются при подтверждённом безопасном изменении до возврата результата завершения. Для изменения используется существующее исключительное разрешение и те же три места разыменования хранилища. Необязательные пределы задаются вызывающей стороной; `None` не вводит скрытого срока завершения. Исторические результаты Phase 3.0 сохранены. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) фиксирует консервативную границу освобождения и дальнейшие обязательства по копированию данных пользователя.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) связывают каждую process generation с локальными handles, явными bootstrap grants и неизменяемыми memory/handle/queue/request quotas, переданными caller. SEND/TRANSFER rights допускают attenuation; REVOKE=4 означает явную issuer authority. Revocation запрещает новые effects, а принятая работа удерживает consumer charge и target до completion либо service-fault cancellation. Закрытие handle не отзывает aliases. Ограниченный same-CPU notification pilot сообщает EL0 terminal outcomes; general IPC, automatic wakeups, supervisor policy и persistent services относятся к следующим этапам. Перед расширением storage и encoding нужно заново вывести из требований #26/#27.
+
 [English original](../../../../docs/kernel/scheduler.md)
 
 ## Границы copy в Phase 3.2

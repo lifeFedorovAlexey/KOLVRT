@@ -6,8 +6,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "34c3206e28e0fe8f57d55b1c5f1c56fe50be3be776cb3b7b88962984e18e5463",
-        "translation_sha256": "aa9c4decc4fe9a4ecf5e6eb2d4073f294e5790fa3d2a55d552f675609c0cbc3f"
+        "source_sha256": "d3aeec27cd8b7839c10701e5280581fef3bcb3d02fe68708f9f801eb7d278bc4",
+        "translation_sha256": "9a6457100e95cadcf67e8457528a3c42ea58c5c938e1ffbd463434dab6a391aa"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "6518a598b4f2d4d7abd7618b81d28c6e26dd1596123247cc5cd887db3ffabea3",
@@ -97,9 +97,13 @@
         "source_sha256": "8fbabe70f5c64c782018853778ed236f0ad8199e1f09d1dede1ac26d3cd829cf",
         "translation_sha256": "c1820f46c67837b1d866101c0553f3b1cfd2e5bc25d384be9290247c4c511d9e"
       },
+      "docs/architecture-decisions/0022-domains-and-scoped-grants.md": {
+        "source_sha256": "429c1415b5a4ccaa1bed66f58e85318584345734cd071767b0a406476af94f42",
+        "translation_sha256": "60ea6feff2921a5b65f36882ea7261c9c85c4294767211b61d19e0123ca9df99"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "d98bea0207a7e12e5e43b5e90edb044ca696ec2ea687680d3c78c050a49f2e73",
-        "translation_sha256": "49fa2370938a16bd56f9861bbd9460c6f9b4436029412201729bae30943368e0"
+        "source_sha256": "13d36021cfa57b671dba3ba65b3f06192c71a74f5b71621161e1cc670956a554",
+        "translation_sha256": "2433fa1d06fc5e4b5d5ba74a31436a02f14709afa27fc6a90a5755a6af6413ae"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
@@ -154,8 +158,8 @@
         "translation_sha256": "c994175d71d00d59d9c8e54af384df13d4bd8fe7ec249defeff135baea2fae0c"
       },
       "docs/architecture/native-abi.md": {
-        "source_sha256": "50b8550363fdca075f748745be28063c1ebf61edf7cc9a6bb2141b10bdb87e75",
-        "translation_sha256": "290b76d10bc4726e1d8200040c6075a70df75ce332107f5c0103a7a1207930cb"
+        "source_sha256": "81b816e8ef622cff447540c5ac408c96ad06f2faa4134cdc595c727f6d0632d9",
+        "translation_sha256": "ca1c5ba07d68c5e5d7ad3207fd9ddd5e26edee11fbb9bd66253198e9571d28d1"
       },
       "docs/architecture/native-model.md": {
         "source_sha256": "d9d6edef331cfba1f6d5fb2236a6d7e45e96810f819a227613aca2f738aae570",
@@ -197,17 +201,21 @@
         "source_sha256": "954bdb7cf092fab4af77f592981da339db2e14dc901ca3735864a6e29169112f",
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
+      "docs/kernel/domains.md": {
+        "source_sha256": "7fd608cbfdb374c3a38c9de9010a4a24501083a2e5d6d4ddcaf224710d0baeb7",
+        "translation_sha256": "a0a6bfad6bf1153b78ae28f8f852ee731c209c7212a0d46105bb5985caa69c77"
+      },
       "docs/kernel/el0.md": {
-        "source_sha256": "155f8a67cfcd028bf0055ce24fbd8e24706e2ae792af0914b5e52bcc73ea3a82",
-        "translation_sha256": "d2de9f68539a10512ce363bc09ec4b070011739ea3601dd5938af0e79593d5c0"
+        "source_sha256": "b6244b9130bef643885852bc9316fcca2f99d0a470aed6a8391c27963fc8f318",
+        "translation_sha256": "099fd9a25150b5d79673bc4d9dfc321ed2c14803ee775533662f13e8296243a9"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "7ab0345bf609b17bbe42b1f8d5f332473c8245e2cfdb01582626fc3382c62ae0",
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
       },
       "docs/kernel/handles.md": {
-        "source_sha256": "9675c1e83377468b96d4ee22c5b6bd69cc6bdcef2acd55dcbba747acddbaea39",
-        "translation_sha256": "89cf3cd295c659e9a3ee0a7660bd2f3f6b6f010e66b66caff762658b25e0ff72"
+        "source_sha256": "a72127090373b4e9575efc06dbd660334117d8c07e70bea7ff9b73aaa0ffbd69",
+        "translation_sha256": "f07577383138e438bd8bbf2c72ed81f71142c13d7184c81b21575ebf9ae3d988"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",
@@ -218,32 +226,32 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "f7af057f834359ed9fff5da5d9448e73edb9afdc1267a40a7c817ec17e258700",
-        "translation_sha256": "d49f22085a681fc5a23c5713d00827b46207173095ffad80c9b9f32669af658a"
+        "source_sha256": "db5c9934748a3df355319c58c8cc710ddca16dd6d99ec26b6db0815d8f4f89c8",
+        "translation_sha256": "d7d43a347e8d4832f138ed9934bfdfffe275b9919e8d31fe6f7f3f66cbbb8b4d"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
         "translation_sha256": "855db72b1be05ee90a1946ad145f506c61016591c7e32a6abbe85123a7400acd"
       },
       "docs/kernel/scheduler.md": {
-        "source_sha256": "4feacdf7b3b058fba9b76f47e2ae18caa11e6c7730fc47f7cbf33d00c55aaab5",
-        "translation_sha256": "547e4234acacadac46414af5b9f63346181c16755ce0a41fd3527b03dd75ff2b"
+        "source_sha256": "3e0d0fb0c430b4a5e7ed1ddd5a00246fb2e368ba684d01326800d571ba40a088",
+        "translation_sha256": "46381b99b5b3510601852d2bf1d0f8f0f83e2a2d27139d0d4d5288f5b48667b1"
       },
       "docs/kernel/smp.md": {
         "source_sha256": "b0a243584c73e2205c4fb1bca8c4847a4eb28015d2ab135d3aed19d4b637e129",
         "translation_sha256": "42527fe33efde8585fd971294d565d95a53a386d04d75da46ad570ae2cfd7678"
       },
       "docs/kernel/testing.md": {
-        "source_sha256": "b1d1bb304e815d3184b42d95dded636b22f41e71b48c2ea5c9dcc0d16d2acba9",
-        "translation_sha256": "57fa4ea1fcf1527b786798ce970fbf5369bd0d93d1a51c86e4f996ac373d814c"
+        "source_sha256": "c60af2a48cee9e9cbb5f8408366caf554e7bf87e19ba46428af5c685fa9bccc9",
+        "translation_sha256": "4136185fdc7cba34650d52cef23aafdb4d5e5caf1ac702ad821cfcc1feb0e264"
       },
       "docs/kernel/time.md": {
         "source_sha256": "462d6b1a36e874e592b1c3d888ceb26f03254f21a8d5971755637682462a824e",
         "translation_sha256": "46eae4f848da42e521436eafaf5782b716c3b4358b9b675ac2b3d3499f41a20a"
       },
       "docs/kernel/unsafe.md": {
-        "source_sha256": "2a21f01a5205cb98deb702c7b2d360b7d8d738b9fa3a2c057374de7401d32a78",
-        "translation_sha256": "ddb3ea0c4bc97d60b88ec5d9142801a78cc93daeac0f9ee3a23361c940c36c59"
+        "source_sha256": "6560775a3bf0bcdfc564a2f24c5825419f79c4a664674403b0e931d7af13c511",
+        "translation_sha256": "24b55d049befe46d7517207a0caff8f7e89623279b09be2504638103b8c26cde"
       },
       "docs/kernel/user-copy.md": {
         "source_sha256": "caaa0b9d7efa279dec800ff4e089f8ff6c40a9ee1f3c702dd21f574b04d32023",

@@ -102,4 +102,4 @@ The no_std [decoder](../../crates/native-protocol-model/src/lib.rs) checks encod
 
 ## Current bounded Phase 3.3 handle boundary
 
-[Process-local handles](../kernel/handles.md) implement reference identity, type and synchronous lifetime only. The provisional LE64 encoding and copied 32-byte lookup/close request are explicit byte formats; no Rust layout or pointer is exported. Broader handle/capability/transfer requirements in this document remain future contracts and are not satisfied merely by a successful lookup.
+[Process-local handles](../kernel/handles.md) implement caller-local reference identity, type, lifetime and attenuated transfer through explicit LE64 handles and copied 48-byte requests. [Domains and grants](../kernel/domains.md) add explicit Event authority, revocation, quotas and retained terminal outcomes. native.notification/1 is a separate experimental pilot, not a freeze of the candidate general IPC frame above. Full payload IPC, cancellation/deadline arbitration and automatic wait registration remain future contracts.

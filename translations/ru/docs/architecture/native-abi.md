@@ -102,4 +102,4 @@ ADR указывает `Decision kind: ABI-FREEZE`, `ABI contract: <name/version
 
 ## Текущая ограниченная handle boundary Phase 3.3
 
-[Process-local handles](../kernel/handles.md) реализуют только reference identity, type и synchronous lifetime. Provisional LE64 encoding и copied 32-byte lookup/close request — explicit byte formats; Rust layout и pointer не экспортируются. Более широкие handle/capability/transfer требования этого документа остаются future contracts; успешного lookup для них недостаточно.
+[Process-local handles](../kernel/handles.md) реализуют caller-local reference identity, type, lifetime и attenuated transfer через явные LE64 handles и копируемые 48-byte requests. [Domains and grants](../kernel/domains.md) добавляют явную Event authority, revocation, quotas и retained terminal outcomes. native.notification/1 — отдельный experimental pilot, а не freeze candidate general IPC frame выше. Full payload IPC, cancellation/deadline arbitration и automatic wait registration остаются будущими контрактами.

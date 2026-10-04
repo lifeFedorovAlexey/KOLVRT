@@ -57,4 +57,8 @@ User context размером 816 байт расширяет GPR/SIMD/FP frame 
 
 Более поздний [контракт scheduler](scheduler.md) заменяет описание queue/setup выше: проверки наблюдаемых CPU/IRQ/phase/generation и nonblocking permits контролируют все обращения к storage. AArch64 frame и static verifier разделены. EL0 сам пишет fixture tick word через существующий own-slices call; kernel IRQ больше не пишет fixture data. Runtime storage переживает fixture и payload sessions. Текущая проверка расширяет матрицу до 69 tests и сохраняет ownership controls в обоих profiles. Исторические результаты выше сохраняют первоначальные source scope. Dynamic lifecycle, safe user-copy и IPC остаются отдельно разрешаемыми prerequisites Phase 3 — Native Process & Service Foundation.
 
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) связывают каждую process generation с локальными handles, явными bootstrap grants и неизменяемыми memory/handle/queue/request quotas, переданными caller. SEND/TRANSFER rights допускают attenuation; REVOKE=4 означает явную issuer authority. Revocation запрещает новые effects, а принятая работа удерживает consumer charge и target до completion либо service-fault cancellation. Закрытие handle не отзывает aliases. Ограниченный same-CPU notification pilot сообщает EL0 terminal outcomes; general IPC, automatic wakeups, supervisor policy и persistent services относятся к следующим этапам. Перед расширением storage и encoding нужно заново вывести из требований #26/#27.
+
 [Английский оригинал](../../../../docs/kernel/el0.md)

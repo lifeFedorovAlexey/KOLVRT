@@ -56,6 +56,7 @@ const RESERVED_REFS: usize = usize::MAX;
 struct SharedSlot {
     generation: core::sync::atomic::AtomicU64,
     references: core::sync::atomic::AtomicUsize,
+    admissions: core::sync::atomic::AtomicU64,
     state: AtomicU8,
 }
 impl SharedSlot {
@@ -63,6 +64,7 @@ impl SharedSlot {
         Self {
             generation: core::sync::atomic::AtomicU64::new(0),
             references: core::sync::atomic::AtomicUsize::new(0),
+            admissions: core::sync::atomic::AtomicU64::new(0),
             state: AtomicU8::new(0),
         }
     }
@@ -91,6 +93,7 @@ impl SharedEvent {
                 continue;
             };
             slot.state.store(0, Ordering::Relaxed);
+            slot.admissions.store(0, Ordering::Relaxed);
             slot.generation.store(generation, Ordering::Release);
             slot.references.store(1, Ordering::Release);
             return Some(Self {
@@ -131,6 +134,31 @@ impl SharedEvent {
             }
         }
     }
+    /// Admission and revocation share one CAS word. Accepted work owns a reference.
+    pub fn admit(&self) -> Option<AcceptedSignal> {
+        let event = self.try_clone()?;
+        let gate = &self.storage().admissions;
+        let mut s = gate.load(Ordering::Acquire);
+        loop {
+            if s & REVOKED != 0 && !cfg!(feature = "capability-revoke-negative")
+                || s & !REVOKED >= MAX_SHARED_REFERENCES as u64
+            {
+                return None;
+            }
+            match gate.compare_exchange_weak(s, s + 1, Ordering::AcqRel, Ordering::Acquire) {
+                Ok(_) => return Some(AcceptedSignal { event }),
+                Err(next) => s = next,
+            }
+        }
+    }
+    pub fn revoke(&self) {
+        self.storage()
+            .admissions
+            .fetch_or(REVOKED, Ordering::AcqRel);
+    }
+    pub fn revoked(&self) -> bool {
+        self.storage().admissions.load(Ordering::Acquire) & REVOKED != 0
+    }
     pub fn signal(&self) -> bool {
         self.storage().state.fetch_or(PENDING, Ordering::AcqRel) & PENDING == 0
     }
@@ -156,5 +184,56 @@ impl Drop for SharedEvent {
         assert_eq!(slot.generation.load(Ordering::Acquire), self.generation);
         let previous = slot.references.fetch_sub(1, Ordering::AcqRel);
         assert!(previous > 0 && previous != RESERVED_REFS);
+    }
+}
+
+const REVOKED: u64 = 1 << 63;
+/// Only the already-admitted concrete signal survives revocation. No new lookup.
+pub struct AcceptedSignal {
+    event: SharedEvent,
+}
+impl AcceptedSignal {
+    pub fn finish(self) -> bool {
+        self.event.signal()
+    }
+}
+impl Drop for AcceptedSignal {
+    fn drop(&mut self) {
+        assert_ne!(
+            self.event
+                .storage()
+                .admissions
+                .fetch_sub(1, Ordering::AcqRel)
+                & !REVOKED,
+            0
+        );
+    }
+}
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+    #[test]
+    fn revoked_alias_rejects_new_work_and_retains_accepted_effect() {
+        let e = SharedEvent::try_new().unwrap();
+        let alias = e.try_clone().unwrap();
+        let accepted = e.admit().unwrap();
+        alias.revoke();
+        assert!(e.admit().is_none());
+        drop(alias);
+        assert!(accepted.finish());
+        assert!(!e.register());
+    }
+    #[test]
+    fn concurrent_revoke_and_admit_have_one_linearization_order() {
+        let e = SharedEvent::try_new().unwrap();
+        let alias = e.try_clone().unwrap();
+        std::thread::scope(|s| {
+            let work = s.spawn(move || alias.admit());
+            e.revoke();
+            if let Some(accepted) = work.join().unwrap() {
+                accepted.finish();
+            }
+        });
+        assert!(e.admit().is_none());
     }
 }
