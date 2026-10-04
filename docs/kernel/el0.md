@@ -1,6 +1,6 @@
 # EL0 and scheduling foundation
 
-This milestone implements real AArch64 EL0 execution and timer-driven switching on both pinned CPUs. Eight statically selected processes run in independent address spaces, four pinned to each CPU. Two workers finish; six other processes fault without terminating their peers or the kernel. The boot workload then reclaims resources and powers off. This is a bounded foundation, not a running general-purpose OS. IPC, handles/capabilities, cancellation, service models and security domains remain the next stage. Routing/adapters remain outside the kernel dependency closure.
+This milestone implements real AArch64 EL0 execution and timer-driven switching on both pinned CPUs. Eight statically selected processes run in independent address spaces, four pinned to each CPU. Two workers finish; six other processes fault without terminating their peers or the kernel. The boot workload then reclaims resources and powers off. This is a bounded foundation, not a running general-purpose OS. This paragraph records the original foundation workload. Later milestones add bounded user-copy, process-local handles, transfer, ELF loading and fixed-affinity ASIDs; general IPC, native grants, cancellation, service models and security domains remain separate gates. Routing/adapters remain outside the kernel dependency closure.
 
 ## Execution and ownership
 
@@ -55,7 +55,7 @@ The later [Phase 2 workload](routing.md) reuses this native mechanism with seque
 
 ## Phase 3.0 ownership update
 
-The later [scheduler contract](scheduler.md) supersedes the queue/setup description above: observed CPU/IRQ/phase/generation checks and nonblocking permits gate all storage accesses. The AArch64 frame and static verifier are separate. EL0 writes its own fixture tick word through the existing own-slices call; kernel IRQ no longer writes fixture data. Runtime storage outlives both fixture and payload sessions. Current validation adds generation reuse to the previous 53 tests and ownership controls in both profiles. Historical results above retain their original source scope. Dynamic lifecycle, safe user-copy and IPC remain separately authorized prerequisites under Phase 3 — Native Process & Service Foundation.
+The later [scheduler contract](scheduler.md) supersedes the queue/setup description above: observed CPU/IRQ/phase/generation checks and nonblocking permits gate all storage accesses. The AArch64 frame and static verifier are separate. EL0 writes its own fixture tick word through the existing own-slices call; kernel IRQ no longer writes fixture data. Runtime storage outlives both fixture and payload sessions. Phase 3.1 validation added generation-safe process lifecycle, `Registry::step()` preemption checks and scheduler ownership controls; see the exact-source process and scheduler receipts. Phase 3.2 accepts a bounded [safe user-copy contract](user-copy.md); IPC and public authority remain separately gated work under Phase 3 — Native Process & Service Foundation.
 
 ## Phase 3.4 current security boundary
 

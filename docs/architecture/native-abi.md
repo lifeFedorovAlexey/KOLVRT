@@ -68,7 +68,7 @@ production consumer conformance and a reviewed freeze remain verification gaps.
 | 36     | 4        | Reserved, zero                                                        |
 | 40     | variable | Owned payload snapshot                                                |
 
-The receiver validates exact length, supported version/operation, reserved fields and an unexpired deadline before admission. The tick frequency is negotiated in boot information; converting durations uses checked arithmetic. Counter overflow ends that clock epoch rather than reinterpreting old deadlines. The decoder accepts only a copied slice; real user-copy must additionally handle mapping changes and faults.
+The receiver validates exact length, supported version/operation, reserved fields and an unexpired deadline before admission. The tick frequency is negotiated in boot information; converting durations uses checked arithmetic. Counter overflow ends that clock epoch rather than reinterpreting old deadlines. The decoder accepts only a copied slice; the [bounded user-copy boundary](../kernel/user-copy.md) additionally checks EL0 permissions, retains immutable mappings and reports precise faults. Mutable mapping changes remain unsupported.
 
 ## Authority and ownership
 
@@ -96,7 +96,7 @@ The cancellation linearization point competes with effect commitment. If cancell
 
 ## Verification boundary
 
-The no_std [decoder](../../crates/native-protocol-model/src/lib.rs) checks encoding, snapshot ownership, rights attenuation and generation exhaustion. The [host models](../../crates/native-state-models/src/lib.rs) check lifetime, charge retention, wait registration, rebinding, startup and domain transfer. The candidate compiles for AArch64 without a host standard library. This does not verify exception entry, assembly calling conventions, page tables, real user-copy or an unbounded concurrent implementation.
+The no_std [decoder](../../crates/native-protocol-model/src/lib.rs) checks encoding, snapshot ownership, rights attenuation and generation exhaustion. The [host models](../../crates/native-state-models/src/lib.rs) check lifetime, charge retention, wait registration, rebinding, startup and domain transfer. The candidate compiles for AArch64 without a host standard library. These host checks do not verify exception entry, assembly calling conventions, page tables or an unbounded concurrent implementation; the actual bounded user-copy path has separate [kernel execution evidence](../kernel/user-copy.md).
 
 [Russian translation](../../translations/ru/docs/architecture/native-abi.md)
 

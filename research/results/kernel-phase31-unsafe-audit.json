@@ -8,7 +8,7 @@
     {
       "path": "crates/kernel/src\\boot_workload.S",
       "review": "INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE",
-      "sha256": "3f69dbec817d830714d9e40bbf0221bd6cd266ce7c89300460d7744ed5c3458e"
+      "sha256": "76809b65d1013d2a474ee4891e131a5445a1e3827f6257d2e343495697077038"
     }
   ],
   "compiler": "Rust 1.99.0",
@@ -369,27 +369,39 @@
     },
     {
       "context": "const TIMER_SLICES: u64 = 1;\nconst ENTRY_ARGUMENTS: usize = 5;\nconst STRESS_CYCLES: usize = 32;\nconst VERIFY_TIMEOUT: time::Duration = time::Duration::from_secs(2);\nunsafe extern \"C\" {",
-      "line": 14,
+      "line": 17,
       "path": "crates/kernel/src\\process_workload.rs",
       "text": "unsafe extern \"C\" {"
     },
     {
       "context": "    let start = &raw const lifecycle_image_start as usize;\n    let end = &raw const lifecycle_image_end as usize;\n    assert!(end > start && end - start <= config::PAGE_BYTES);\n    // SAFETY: INV-USER-IMAGE: immutable trusted linker extents, checked bounded size.\n    unsafe { core::slice::from_raw_parts(start as *const u8, end - start) }",
-      "line": 23,
+      "line": 26,
       "path": "crates/kernel/src\\process_workload.rs",
       "text": "unsafe { core::slice::from_raw_parts(start as *const u8, end - start) }"
     },
     {
       "context": "    assert_eq!(registry.state(id), Ok(State::Completed));\n    assert!(crate::scheduler::detached(id));\n    // SAFETY: INV-USER-RETIRE: retained private space, acquired scheduler unlink,\n    // all CPU writers quiescent; inspection ends before explicit reclamation.\n    unsafe { core::ptr::read_volatile(registry.data_address(id).unwrap() as *const u64) }",
-      "line": 54,
+      "line": 57,
       "path": "crates/kernel/src\\process_workload.rs",
       "text": "unsafe { core::ptr::read_volatile(registry.data_address(id).unwrap() as *const u64) }"
     },
     {
       "context": "    {\n        let duplicate = Registry::try_new().err() == Some(Error::AlreadyOwned);\n        // SAFETY: INV-REMOTE-READER: control carries no pointer; CPU1 returns only\n        // its observed coordinator rejection, and CPU0 waits before reading it.\n        unsafe {",
-      "line": 68,
+      "line": 71,
       "path": "crates/kernel/src\\process_workload.rs",
       "text": "unsafe {"
+    },
+    {
+      "context": "            && registry.reclaim(p, id) == Err(Error::Transition);\n        assert!(crate::scheduler::detached(id));\n        // SAFETY: INV-USER-RETIRE: step restored native roots and all writers are\n        // quiescent; the registry still retains the private space across steps.\n        *counter = unsafe {",
+      "line": 345,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "*counter = unsafe {"
+    },
+    {
+      "context": "        passed &= tag(registry, id) == EXIT_CODE + index as u64;\n        if index % 2 == 0 {\n            // SAFETY: INV-USER-RETIRE: terminal retained space, all CPU writers\n            // quiescent; this read ends before reclamation below.\n            let counter = unsafe {",
+      "line": 377,
+      "path": "crates/kernel/src\\process_workload.rs",
+      "text": "let counter = unsafe {"
     },
     {
       "context": "}\n// SAFETY: INV-RUNQUEUE: every storage access owns the nonblocking acquire/release\n// permit and checks observed CPU, IRQ mask, phase and generation. HRTB closures\n// cannot return storage references; no permit spans ERET, waits or completion.\nunsafe impl Sync for Local {}",
@@ -417,37 +429,43 @@
     },
     {
       "context": "    );\n}\n/// # Safety\n/// Same retained live-root contract as activate_root; used only for pinned user roots.\nunsafe fn activate(root: u64) {",
-      "line": 193,
+      "line": 242,
       "path": "crates/kernel/src\\scheduler\\mod.rs",
       "text": "unsafe fn activate(root: u64) {"
     },
     {
       "context": "        let _ = root;\n        NATIVE_ROOT.load(Ordering::Acquire)\n    };\n    // SAFETY: INV-USER-TTBR: caller retains the root and mask/stack preconditions.\n    unsafe {",
-      "line": 200,
+      "line": 249,
       "path": "crates/kernel/src\\scheduler\\mod.rs",
       "text": "unsafe {"
     },
     {
       "context": "    }\n    if let Some(first) = first {\n        // SAFETY: INV-USER-TTBR: caller retains live immutable roots through acquired\n        // completion; no State reference spans ERET, native stack/code remain mapped.\n        unsafe {",
-      "line": 289,
+      "line": 338,
       "path": "crates/kernel/src\\scheduler\\mod.rs",
       "text": "unsafe {"
     },
     {
       "context": "            activate(first.1);\n        }\n        cpu::timer(time::deadline_after(QUANTUM));\n        // SAFETY: INV-USER-CONTEXT: checked frame ABI and permanent native stack.\n        unsafe {",
-      "line": 294,
+      "line": 343,
+      "path": "crates/kernel/src\\scheduler\\mod.rs",
+      "text": "unsafe {"
+    },
+    {
+      "context": "            CURSOR[percpu::id()].store(current, Ordering::Release);\n            cpu::timer_stop();\n            // SAFETY: INV-USER-RETIRE: saved READY contexts remain owned by the\n            // Registry; native root/TLBI precede returning a nonterminal step.\n            unsafe {",
+      "line": 444,
       "path": "crates/kernel/src\\scheduler\\mod.rs",
       "text": "unsafe {"
     },
     {
       "context": "        if let Some(next) = choose(state, generation) {\n            acquire_process(state.tasks[next].id());\n            *frame = state.tasks[next].context;\n            // SAFETY: INV-USER-TTBR: next pinned live root; completed flush precedes ERET.\n            unsafe {",
-      "line": 383,
+      "line": 453,
       "path": "crates/kernel/src\\scheduler\\mod.rs",
       "text": "unsafe {"
     },
     {
       "context": "        } else {\n            cpu::timer_stop();\n            // SAFETY: INV-USER-RETIRE: no ready/running process remains on this CPU;\n            // native root and local TLBI precede release completion and frame reclamation.\n            unsafe {",
-      "line": 392,
+      "line": 462,
       "path": "crates/kernel/src\\scheduler\\mod.rs",
       "text": "unsafe {"
     },

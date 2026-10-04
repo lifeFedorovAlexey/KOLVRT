@@ -4,7 +4,7 @@
 
 Use `Document status`, `Evidence scope` and a local `Current reference` link on documents
 whose milestones can be confused. Add `Supersedes` when a document replaces another
-decision in whole or in part. These roles are distinct from ABI publication stages. Only these field names are accepted; legacy names are rejected even when combined with current metadata.
+decision in whole or in part. These roles are distinct from ABI publication stages. Legacy names are not aliases and cannot substitute for the required current field names.
 
 | Status               | Meaning                                                                                  |
 | -------------------- | ---------------------------------------------------------------------------------------- |
@@ -21,7 +21,9 @@ Supersession may be partial: a scheduler does not complete IPC, handles or cance
 
 ## Reviewed status audit
 
-Issue #6 reviews merged implementation through `d6bf7da`, excluding local Phase 2 changes.
+This table is the historical Issue #6 audit of merged implementation through `d6bf7da`;
+it excludes Phase 2 changes that were local at that reviewed revision. It is not a status
+audit of the current tree.
 [ADR-0010](architecture-decisions/0010-kernel-foundation.md) records original CPU0-only
 execution; [ADR-0012](architecture-decisions/0012-multicore-retirement.md) and
 [ADR-0014](architecture-decisions/0014-el0-foundation.md) record later bounded milestones.
@@ -33,7 +35,7 @@ execution; [ADR-0012](architecture-decisions/0012-multicore-retirement.md) and
 | CPU0-only execution               | Original Phase 1 scope; CPU0 allocator ownership is a separate still-valid restriction.                                                                |
 | First native slice                | DESIGN BASELINE; bounded EL0, scheduling and routing milestones are implemented, while IPC/handles/cancellation/service acceptance remains incomplete. |
 | Compatibility and unsafe policies | CURRENT obligations with historical Phase 0 passages; no general loader or complete safety proof is claimed.                                           |
-| Local Phase 2 routing             | Uncommitted code/results are not merged implementation or evidence for this reviewed revision.                                                         |
+| Phase 2 routing at that revision  | Local code/results were not merged implementation or evidence for that reviewed revision.                                                              |
 
 Retained [foundation results](../research/results/kernel-foundation.json) cover 23 tests
 per profile and one active CPU; [SMP results](../research/results/kernel-smp.json) cover
@@ -69,6 +71,14 @@ The earlier audit explicitly excludes the then-local Phase 2 work. The verified 
 
 ## Phase 3.1 evidence update
 
-[Dynamic processes](kernel/processes.md) and [ADR-0017](architecture-decisions/0017-process-lifecycle.md) describe the completed bounded kernel-internal milestone. [Kernel results](../research/results/kernel-phase31.json) retain 65 tests per DEV/PROD profile and 53 failure controls, preserving the previous 54 tests and 41 controls. Stress runs 32 two-CPU rounds, or 64 lifecycle cycles per profile, with generation reuse, contained faults and restored resource counts. [Routing regression](../research/results/routing-phase31-regression.json) and [physical compatibility removal](../research/results/native-compat-removal-phase31.json) preserve their exact execution scopes. Public EL0 creation authority and wait, persistent services, asynchronous retirement and safe user-copy remain deferred. This evidence establishes bounded QEMU behavior, not silicon validation or completion of the full native slice.
+[Dynamic processes](kernel/processes.md), the bounded [wait/wakeup contract](kernel/wait.md), and [ADR-0017](architecture-decisions/0017-process-lifecycle.md) describe the accepted kernel-internal milestones and their extension. The Phase 3.1 [kernel results](../research/results/kernel-phase31.json) retain 67 tests per DEV/PROD profile and 53 host negative controls; the previous 54-test/41-control and 66-test/step receipts remain in measurement history. This exact-source snapshot includes 32 two-CPU process stress rounds, preemptible steps, and bounded own-event wait/block/wakeup. The separate [routing regression](../research/results/routing-phase31-regression.json) covers the optional EL0 image. The [physical compatibility-removal record](../research/results/native-compat-removal-phase31.json) reports 65 tests per profile at source commit `825d8d561e69e414088d6501dfa1ee939d495c99`; it is historical evidence, not a removal check of the latest tree. Public EL0 creation authority and waiting, persistent services, asynchronous retirement, IPC and capabilities remain deferred. The separately accepted Phase 3.2 user-copy boundary is documented below. These receipts establish bounded QEMU behavior only, not silicon validation or completion of the full native slice.
+
+## Phase 3.2 user-copy evidence update
+
+[ADR-0018](architecture-decisions/0018-safe-user-copy.md) accepts a bounded synchronous copy boundary for the current process. The [contract](kernel/user-copy.md) defines the initialized snapshot API, EL0 permission checks, precise fault recovery, lifetime rules, partial output errors and non-goals. The exact-source [Phase 3.2 results](../research/results/kernel-phase3-2.json) pass 69 checks per DEV/PROD profile and 57 host negative controls; the source hashes identify that historical snapshot. The [unsafe inventory](../research/results/kernel-phase3-2-unsafe-audit.json) records its privileged and assembly boundaries. Tests cover both CPUs, snapshot mutation, page/range faults, partial copies, stale generation rejection and frame recovery. This establishes bounded QEMU behavior only. A public pointer ABI, IPC, handles/capabilities, mutable/shared user mappings, asynchronous exit, arbitrary programs and silicon behavior remain outside the accepted phase.
+
+## Integrated implementation evidence
+
+[ADR-0021](architecture-decisions/0021-asid-lifecycle.md) accepts fixed-affinity ASID leases and invalidation before reuse. The [EL0 contract](kernel/el0.md) also records the bounded AArch64 ELF loader; these mechanisms preserve the earlier process, user-copy and handle boundaries. The [integrated source receipt](../research/measurements/runs/1791123211326-docs-main-c5c440c-final-fd10fb19115e.json) records 84 DEV/PROD checks per profile, both non-test boots and 70 host negative controls for `c5c440c`. It supersedes no historical measurement counts and establishes only its recorded QEMU/source scope. Native grants, domains, general IPC, revocation, persistent services and silicon validation remain separate acceptance gates.
 
 [Russian translation](../translations/ru/docs/documentation-policy.md)

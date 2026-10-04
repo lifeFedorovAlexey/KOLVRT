@@ -59,7 +59,7 @@ Generations reject stale references; private ownership keeps address-space resou
 
 ## Testing
 
-The Phase 3.1 QEMU matrix exercises both DEV and PROD profiles on two CPUs, including creation and rollback boundaries, admission, exit and fault completion, capacity, stale generations, duplicate operations, sparse queues, and physical-resource recovery. The recorded evidence is linked from [the lifecycle contract](../kernel/processes.md); it is a bounded deterministic run, not long-term reliability, fuzzing, or hardware weak-memory evidence.
+The Phase 3.1 QEMU matrix exercises both DEV and PROD profiles on two CPUs, including creation and rollback boundaries, admission, exit and fault completion, capacity, stale generations, duplicate operations, sparse queues, physical-resource recovery, preemptible steps, and the bounded own-event wait/block path. The exact-source 67-check result is linked from [the lifecycle contract](../kernel/processes.md) and [wait contract](../kernel/wait.md); it is a bounded deterministic run, not long-term reliability, fuzzing, or hardware weak-memory evidence. The wait extension remains kernel-internal and does not add the public blocking/wait API excluded by this decision.
 
 ## Reversibility
 

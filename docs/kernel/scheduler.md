@@ -75,22 +75,22 @@ Compiler privacy encapsulates raw storage and immutable definitions; higher-rank
 
 Phase 3 — Native Process & Service Foundation proceeds only with separate authorization:
 
-| Stage | Scope                                                                                         |
-| ----- | --------------------------------------------------------------------------------------------- |
-| 3.0   | Scheduler decomposition and ownership, #16/#17                                                |
-| 3.1   | Dynamic kernel-internal process lifecycle, #20; public EL0 admission and wait remain deferred |
-| 3.2   | Safe user-copy, #22                                                                           |
-| 3.3   | Handles and capabilities, #23/#24                                                             |
-| 3.4   | Security domains, #25                                                                         |
-| 3.5   | IPC, waits and cancellation, #26                                                              |
-| 3.6   | Supervisor, #27                                                                               |
-| 3.7   | First persistent EL0 service, #28                                                             |
+| Stage | Scope                                                                                                                          |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 3.0   | Scheduler decomposition and ownership, #16/#17                                                                                 |
+| 3.1   | Dynamic kernel-internal process lifecycle and bounded own-event wait/block, #20; public EL0 admission and wait remain deferred |
+| 3.2   | Safe user-copy, #22                                                                                                            |
+| 3.3   | Handles and capabilities, #23/#24                                                                                              |
+| 3.4   | Security domains, #25                                                                                                          |
+| 3.5   | IPC, waits and cancellation, #26                                                                                               |
+| 3.6   | Supervisor, #27                                                                                                                |
+| 3.7   | First persistent EL0 service, #28                                                                                              |
 
-Phase 3.1 completes the bounded kernel-internal lifecycle requested for this milestone: generation-aware identity, transactional preparation, explicit admission, copied exit/fault completion and reclamation after scheduler detachment. Its process identity grants no authority. Public EL0 creation and waiting, persistent service admission and asynchronous retirement remain future work; the broader issue #20 is not automatically closed. No IPC, handles, capabilities, migration, work stealing or routing policy is added here. ELF #21 remains separate. [ASID lifecycle](el0.md#address-spaces-and-context) adds fixed-affinity leases without migration support. [Master tracker](https://github.com/lifeFedorovAlexey/KOLVRT/issues/37) records prerequisite order.
+Phase 3.1 completes the bounded kernel-internal lifecycle requested for this milestone: generation-aware identity, transactional preparation, explicit admission, copied exit/fault completion and reclamation after scheduler detachment. Its process identity grants no authority. Public EL0 creation and waiting, persistent service admission and asynchronous retirement remain future work; the broader issue #20 is not automatically closed. No IPC, handles, capabilities, migration, work stealing or routing policy is added here. The bounded ELF loader in #21 is implemented; executable trust and a general loader ABI remain separate. [ASID lifecycle](el0.md#address-spaces-and-context) adds fixed-affinity leases without migration support. [Master tracker](https://github.com/lifeFedorovAlexey/KOLVRT/issues/37) records prerequisite order.
 
 ## Phase 3.1 lifecycle boundary
 
-The [dynamic lifecycle](processes.md) extends this foundation with vacant slots and independent process generations. Kernel bootstrap retains one Registry across callers; old fixtures and the optional image use create/start/dispatch/reclaim. Admission descriptors borrow owned spaces, and roots are removed under acquired quiescent editing before returning process completion. Inspection and editing share the existing exclusive permit and three storage dereference sites. Optional bounds belong to the caller; None has no hidden completion deadline. The historical Phase 3.0 result records remain unchanged. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) records the new conservative whole-dispatch retirement boundary and next user-copy obligations.
+The [dynamic lifecycle](processes.md) extends this foundation with vacant slots and independent process generations. Kernel bootstrap retains one Registry across callers; old fixtures and the optional image use create/start/step/dispatch/signal/reclaim. The bounded [wait contract](wait.md) lets a stepped EL0 workload block on one own-process event and return to the bootstrap coordinator; it adds no public wait authority or production event loop. Admission descriptors borrow owned spaces, and roots are removed under acquired quiescent editing before returning process completion. Inspection and editing share the existing exclusive permit and three storage dereference sites. Optional bounds belong to the caller; None has no hidden completion deadline. The historical Phase 3.0 result records remain unchanged. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) records the conservative retirement boundary and next user-copy obligations.
 
 ## Phase 3.4 current security boundary
 

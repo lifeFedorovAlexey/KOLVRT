@@ -1,38 +1,38 @@
 # Закреплённые наблюдения Linux driver API
 
 Document status: CURRENT
-Evidence scope: выполненное lexical extraction из трёх pinned source files; без исполнения драйверов или полного dependency analysis.
+Evidence scope: выполнено лексическое извлечение из трёх зафиксированных исходников; драйверы не запускались, полный анализ зависимостей не проводился.
 Current reference: [Артефакт наблюдений](../../../../research/compatibility/linux-driver-api-observations.json)
 
-## Corpus и получение источников
+## Корпус и получение исходников
 
-Закреплён Linux v6.12 commit adc218676eef25575469234709c2d87185ca223a. Намеренный convenience sample включает [igb](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/net/ethernet/intel/igb/igb_main.c), [USB storage](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/usb/storage/usb.c) и [VirtIO block](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/block/virtio_blk.c). Они дают разные transport/class paths, но не representative Linux population или hardware relevance ranking.
+Зафиксирован коммит Linux v6.12 `adc218676eef25575469234709c2d87185ca223a`. В намеренно небольшой выборке для удобства анализа представлены [igb](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/net/ethernet/intel/igb/igb_main.c), [USB storage](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/usb/storage/usb.c) и [VirtIO block](https://github.com/torvalds/linux/blob/adc218676eef25575469234709c2d87185ca223a/drivers/block/virtio_blk.c). Они показывают разные транспортные пути и классы устройств, но не представляют всё множество Linux-драйверов и не позволяют ранжировать оборудование по значимости.
 
-Получить каждый файл из точного commit, сохранив basenames igb_main.c, usb.c и virtio_blk.c в SOURCE_DIRECTORY. Для каждого upstream path GitHub contents API принимает ref=adc218676eef25575469234709c2d87185ca223a и Accept: application/vnd.github.raw+json. Extractor проверяет pinned SHA-256 после UTF-8 decoding, удаления BOM и CRLF-to-LF normalization; подменённые или чрезмерные inputs отклоняются. Upstream source files и личные acquisition paths не включаются в artifact.
+Получить каждый файл из указанного коммита и сохранить имена `igb_main.c`, `usb.c` и `virtio_blk.c` в `SOURCE_DIRECTORY`. Для каждого исходного пути GitHub Contents API принимает `ref=adc218676eef25575469234709c2d87185ca223a` и заголовок `Accept: application/vnd.github.raw+json`. Анализатор проверяет закреплённую контрольную сумму SHA-256 после декодирования UTF-8, удаления BOM и нормализации переводов строк CRLF в LF; подменённые или слишком большие входные файлы отклоняются. Исходники Linux и локальные пути получения файлов в артефакт не включаются.
 
 ```text
 node scripts/analyze-linux-driver-apis.cjs SOURCE_DIRECTORY
 node --test scripts/tests/linux-driver-apis.test.cjs
 ```
 
-[Extractor](../../../../scripts/analyze-linux-driver-apis.cjs) удаляет comments/string/character literals, сохраняя line positions, затем наблюдает точные identifiers из конечного проверяемого vocabulary. [Тесты](../../../../scripts/tests/linux-driver-apis.test.cjs) проверяют comments/strings/longer identifiers, inactive preprocessor branches, bounded locators и подменённые/чрезмерные files. Каждое observation сохраняет source path/URL, normalized digest, lexical occurrence count и до 32 первых line locators. Усечение locator list отмечается явно.
+[Анализатор](../../../../scripts/analyze-linux-driver-apis.cjs) удаляет комментарии и строковые либо символьные литералы, сохраняя позиции строк, а затем ищет точные идентификаторы из ограниченного проверяемого словаря. [Тесты](../../../../scripts/tests/linux-driver-apis.test.cjs) проверяют обработку комментариев, строк, более длинных идентификаторов, неактивных ветвей препроцессора, ограниченный размер указателей на строки, а также подменённых и чрезмерно больших файлов. Для каждого наблюдения сохраняются путь или URL исходника, нормализованная контрольная сумма, число лексических совпадений и не более 32 первых номеров строк. Усечение списка номеров строк отмечается явно.
 
 ## Наблюдаемые family references
 
-| File         | Families с lexical references                                                                     |
+| Файл         | Группы с лексическими упоминаниями                                                                |
 | ------------ | ------------------------------------------------------------------------------------------------- |
 | igb_main.c   | allocation, locking, IRQ, deferred work, DMA, PCI, power management, device model, ioctl, network |
 | usb.c        | allocation, locking, deferred work, USB                                                           |
 | virtio_blk.c | allocation, locking, deferred work, sysfs, block                                                  |
 
-Все три файла содержат references из vocabulary allocation, locking и deferred work. Это наблюдаемый source reach в данном sample, а не compatible-driver reach. Ноль firmware references означает отсутствие выбранных firmware identifiers в этих translation units; indirect/conditional requirements остаются неизвестными.
+Во всех трёх файлах встречаются термины из словаря выделения памяти, блокировок и отложенной работы. Это наблюдаемый охват исходников в данной выборке, а не доля совместимых драйверов. Отсутствие упоминаний прошивки означает лишь, что в этих единицах трансляции не найдено выбранных идентификаторов; косвенные и условные требования остаются неизвестными.
 
 ## Dependency и границы evidence
 
-Нет preprocessing, configuration selection, macro expansion, generated code, transitive includes/helpers, call graph или runtime execution. Declarations, assignments и inactive branches являются lexical references; counts не обозначают API calls. Отсутствующий identifier не доказывает отсутствие semantic dependency.
+Не выполнялись препроцессинг, выбор конфигураций, раскрытие макросов, анализ сгенерированного кода, транзитивных включений и вспомогательных функций, построение графа вызовов или запуск драйверов. Объявления, присваивания и неактивные ветви считаются лексическими упоминаниями; их число не равно числу вызовов API. Отсутствие идентификатора не доказывает отсутствия семантической зависимости.
 
-Driver → API observation → semantic hypothesis → COST-L остаётся evidence chain, требующим review. Allocation references мотивируют проверку COST-L-0001; sysfs/ioctl references — конкретных attributes/commands для COST-L-0002/0003. Автоматические confirmed edges не выдаются. Named supported consumers остаются пустыми до установления exact behavior, native difference и scope.
+Связь «драйвер → наблюдение API → семантическая гипотеза → COST-L» остаётся цепочкой свидетельств, требующей проверки. Упоминания выделения памяти служат основанием исследовать COST-L-0001; упоминания sysfs/ioctl — конкретные атрибуты и команды для COST-L-0002/0003. Автоматически подтверждённые связи не создаются. Список именованных поддерживаемых потребителей остаётся пустым, пока не установлены точное поведение, отличие собственного контракта и границы поддержки.
 
-Дальнейшая работа #45/#55 требует documented configured corpus, transitive dependency evidence, callback/lifetime/shared-state review и false-positive/false-negative audits. [Taxonomy](taxonomy.md) и [adapter method](high-leverage-adapters.md) сохраняют эти ограничения. Ни source reach, ни hash verification не доказывают, что driver загружается или безопасно работает.
+Для дальнейшей работы по #45/#55 нужны описанный корпус с учётом конфигураций, свидетельства транзитивных зависимостей, анализ обратных вызовов, времени жизни и общего состояния, а также проверка ложноположительных и ложноотрицательных результатов. [Таксономия](taxonomy.md) и [метод выбора адаптеров](high-leverage-adapters.md) фиксируют эти ограничения. Ни охват исходников, ни проверка контрольных сумм не доказывают, что драйвер загружается или работает безопасно.
 
 [Английский оригинал](../../../../research/compatibility/linux-driver-api-map.md)

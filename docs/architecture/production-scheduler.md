@@ -1,7 +1,7 @@
 # Production scheduling and request lifecycle: next implementation order
 
 Document status: DESIGN BASELINE
-Evidence scope: user-directed implementation sequence; this document does not implement production scheduling, blocking, or IPC.
+Evidence scope: user-directed implementation sequence. The current bounded preemption step and own-process event wait/block/wakeup foundation pass DEV/PROD QEMU checks; this document does not implement a production service loop, general event sources, or IPC.
 Current reference: [Current scheduler foundation](../kernel/scheduler.md)
 
 ## Scope and existing mechanism
@@ -12,7 +12,7 @@ Keep the current synchronous dispatcher as a bootstrap/test execution path after
 
 ## Ordered implementation gates
 
-The first incremental code change adds `Registry::step()`: each fixed CPU returns
+The first incremental code change added `Registry::step()`: each fixed CPU returns
 after one timer quantum or terminal event. Surviving processes remain admitted;
 their architectural context, slice accounting, native observations and diagnostic
 report stream survive the next step. A retained round-robin cursor gives peers
@@ -24,16 +24,18 @@ noncooperative EL0 loop beside a finishing peer on each CPU. Steps return while
 the loops remain alive, reject their reclamation, preserve register-backed loop
 progress, and let peers finish before the loops exhaust explicitly requested CPU
 slice budgets. This is a preemption foundation: the two-CPU rendezvous/barrier
-remains, with no BLOCKED state, event loop or wall-time deadline protocol yet.
+remains, with no production event loop or wall-time deadline protocol. A bounded one-event-per-process wait/block/wakeup path has since been added to the step driver; it is described below and does not provide general event sources or public wait authority.
 
-| Order | Mechanism                         | Acceptance boundary and coordination                                                                                                                                                                                                                       |
-| ----- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | Preemption and deadline handling  | Timer preemption continues without cooperative yield; CPU fairness/progress and requested budget/deadline expiry do not depend on all peers exiting. Preserve architectural context and fixed owner checks. Extend scheduler/process work #17/#20.         |
-| 2     | Wait/block primitive              | READY → RUNNING → BLOCKED; atomic wait registration plus condition recheck, generation-safe wakeup and no lost wakeup. No ready tasks means idle/wait for an event, not runtime shutdown. Coordinate #20/#26.                                              |
-| 3     | IPC transport                     | Bounded immutable messages, admission/backpressure, publication and event-driven wakeup. Initially only explicitly authorized bootstrap peers; prerequisite user-copy #22, identity/domain checks and retained ownership remain mandatory. Coordinate #26. |
-| 4     | Handles and capabilities          | Caller-local generation-safe handles and per-operation native authorization before public send/receive/create. Process IDs, endpoint numbers and protocol opcodes confer no rights. Coordinate #23/#24/#25.                                                |
-| 5     | Resource grants and revocation    | Temporary bounded access, retained resource ownership, attenuation and admission/revocation linearization. Closing/revoking access does not free resources still retained by accepted work. Coordinate #24/#25 and scoped device contracts.                |
-| 6     | Complete request outcome protocol | One terminal arbiter for completed / cancelled / unknown effect, deadline, caller/service death and shutdown. Cancellation before commitment guarantees no effect; uncertainty after commitment prohibits blind replay. Coordinate #26/#27/#30.            |
+The bounded wait addition uses a coalescing event latch retained per process slot, with reuse reset only after scheduler quiescence. During `Registry::step()`, one reserved harness SVC registers and rechecks the event; if still absent, the scheduler saves context, marks the task BLOCKED, detaches it and returns. Kernel bootstrap signals by exact live `ProcessId`; stale generations and terminal processes are rejected. The passing QEMU check covers retained signals, all tasks blocked, no runnable work, one task waking while its peer remains blocked, and slot-generation reuse; a host test races publication and registration. The [wait contract](../kernel/wait.md) records exact limits. This does not create a public EL0 wait API, generic wait queues, interrupt/device event sources, cross-process signaling or a production event loop.
+
+| Order | Mechanism                         | Acceptance boundary and coordination                                                                                                                                                                                                                                                      |
+| ----- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Bounded preemption step           | Implemented and exercised by the two-CPU noncooperative-loop QEMU check; preserve context, fixed affinity and explicit CPU-slice budgets. General deadline and persistent service policy remain open under #17/#20.                                                                       |
+| 2     | Bounded own-event wait/block      | The own-process coalescing latch, generation-safe wakeup and empty-runnable-set step are implemented and tested. General retained event sources, idle/event-loop integration, and close/death/shutdown race coverage remain. Coordinate #20/#26.                                          |
+| 3     | IPC transport                     | Bounded immutable messages, admission/backpressure, publication and event-driven wakeup. The bounded synchronous user-copy prerequisite is accepted in Phase 3.2; explicit bootstrap authorization, identity/domain checks and retained ownership still remain mandatory. Coordinate #26. |
+| 4     | Handles and capabilities          | Caller-local generation-safe handles and per-operation native authorization before public send/receive/create. Process IDs, endpoint numbers and protocol opcodes confer no rights. Coordinate #23/#24/#25.                                                                               |
+| 5     | Resource grants and revocation    | Temporary bounded access, retained resource ownership, attenuation and admission/revocation linearization. Closing/revoking access does not free resources still retained by accepted work. Coordinate #24/#25 and scoped device contracts.                                               |
+| 6     | Complete request outcome protocol | One terminal arbiter for completed / cancelled / unknown effect, deadline, caller/service death and shutdown. Cancellation before commitment guarantees no effect; uncertainty after commitment prohibits blind replay. Coordinate #26/#27/#30.                                           |
 
 This is an implementation sequence, not permission to expose an unauthorized IPC API at step 3 or to add outcome correctness only at step 6. Initial transport must already identify requests, retain accepted work and reject duplicate terminal publication. Define its restricted effects/cancellation limits before execution. Step 6 completes the outcome protocol across races, revocation, deadlines, failures and actual service effects; it is required before a persistent production service is admitted under #28.
 
@@ -49,12 +51,12 @@ A production scheduler returns to its event loop even when a peer remains alive 
 
 - Preemption: noncooperative infinite EL0 loop beside a productive peer on each CPU, full context preservation, bounded peer progress and scheduler operation without terminating the infinite process merely to return from dispatch.
 - Deadline: expiry during READY/RUNNING/BLOCKED and native-call/IRQ boundaries, exactly one observed expiry, no unauthorized effect or premature reclamation. Specify wall-time versus CPU-budget units explicitly.
-- Blocking: event before registration, during registration/recheck and after blocking; duplicate/stale wakeup; empty ready queue; close/death/shutdown races. No busy-loop worker or lost event.
+- General blocking: the current bounded own-event foundation covers notification before registration, registration/recheck, post-block wake, coalescing, stale identity, and an empty runnable set under QEMU; host tests race signal against registration. General event-source registration, close/death/shutdown races, idle integration, and a production worker that does not busy-loop still require execution evidence.
 - IPC/rights: full queue, malformed frame, failed copy, unauthorized/stale handle, foreign buffer, revoke-versus-admission, retained references after close and denial before effect.
 - Outcomes: cancel before commitment, cancellation after uncertain effect, delayed completion after restart, timeout versus completion, service death and shutdown under load. Exactly one truthful terminal result; unknown effect is retained, never relabeled as rollback.
 
-These are future executable-test requirements, not recorded passing results. Use real two-CPU QEMU DEV/PROD execution, meaningful negative controls, exact-source receipts and separate physical-hardware scope where applicable. Host protocol tests complement execution evidence. ASID optimization #18, ELF #21 and benchmark/reliability tooling are separate work and do not justify bypassing the safety gates above.
+The bounded foundations above have passing executable evidence; the remaining general mechanisms are future executable-test requirements. Use real two-CPU QEMU DEV/PROD execution, meaningful negative controls, exact-source receipts and separate physical-hardware scope where applicable. Host protocol tests complement execution evidence. Fixed-affinity ASIDs (#18) and the bounded ELF loader (#21) are implemented in their separate scopes; benchmark/reliability tooling remains a separate concern and do not justify bypassing the safety gates above.
 
-The first quantum-step increment has an [exact-source QEMU receipt](../../research/results/scheduler-quantum-step.json): 66 checks per DEV/PROD profile and 53 host rejection controls passed. This covers the bounded step and existing foundation; the remaining mechanisms and full admission gates require their own evidence.
+The original preemption increment has an [exact-source receipt](../../research/results/scheduler-quantum-step.json): 66 checks per profile. The follow-on [wait/block receipt](../../research/results/scheduler-wait-block.json) records 67 checks per DEV/PROD profile and 53 host rejection controls. The [Phase 3.2 user-copy receipt](../../research/results/kernel-phase3-2.json) records 69 checks per profile and 57 host negative controls. Remaining general event sources, production idle/event-loop integration, IPC and full admission gates require their own evidence.
 
 [Russian translation](../../translations/ru/docs/architecture/production-scheduler.md)

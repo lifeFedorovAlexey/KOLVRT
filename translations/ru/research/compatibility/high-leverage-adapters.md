@@ -1,39 +1,39 @@
-# Исследование compatibility adapters с широким охватом
+# Поиск адаптеров совместимости с широким охватом
 
 Document status: CURRENT
-Evidence scope: начальный observed source reach и метод решений; без working adapters или coverage percentages.
+Evidence scope: начальный охват исходников и метод принятия решений; адаптеры не реализованы, доли охвата не рассчитаны.
 Current reference: [Сохранённые наблюдения](../../../../research/compatibility/linux-driver-api-observations.json)
 
 ## Фактическое начальное наблюдение
 
 [Закреплённый sample из трёх файлов](linux-driver-api-map.md) содержит следующие observed lexical family references. Counts относятся к source files в выбранном sample, а не к executed или compatible drivers.
 
-| Family                                                       | Files с observed references | Значение                                                                           |
-| ------------------------------------------------------------ | --------------------------- | ---------------------------------------------------------------------------------- |
-| Allocation, locking, deferred work                           | По 3                        | Общие investigation candidates; semantics/configuration closure не разрешены       |
-| IRQ, DMA, PCI, USB                                           | По 1                        | Device/transport authority и lifetime требуют отдельных contracts                  |
-| Power management, device model, sysfs, ioctl, network, block | По 1                        | Конкретные source references; не выводить самостоятельные reusable adapters        |
-| Firmware                                                     | 0                           | Выбранный symbol не наблюдается; indirect requirements и broader corpus неизвестны |
+| Группа                                                                        | Файлы с упоминаниями | Значение                                                                                  |
+| ----------------------------------------------------------------------------- | -------------------- | ----------------------------------------------------------------------------------------- |
+| Выделение памяти, блокировки, отложенная работа                               | По 3                 | Общие направления для исследования; полный охват семантики и конфигураций не установлен   |
+| IRQ, DMA, PCI, USB                                                            | По 1                 | Полномочия устройств и транспортов, а также время жизни требуют отдельных контрактов      |
+| Управление питанием, модель устройств, sysfs, ioctl, сеть, блочные устройства | По 1                 | Упоминания в конкретных исходниках; это не основание создавать универсальные адаптеры     |
+| Прошивка                                                                      | 0                    | Выбранный идентификатор не найден; косвенные требования и более широкий корпус неизвестны |
 
-Результат поддерживает первоочередную проверку общих allocation/context/deferred-work assumptions. Он не показывает, что три adapters включают эти drivers. Малый direct DMA reach особенно обманчив для USB/VirtIO paths, чьи helpers и transport layers находятся вне sample.
+Результат указывает, что сначала стоит проверить общие предположения о выделении памяти, контексте исполнения и отложенной работе. Он не показывает, что все три адаптера включают эти драйверы. Небольшое число прямых упоминаний DMA особенно обманчиво для USB- и VirtIO-путей: их вспомогательные функции и транспортные уровни не вошли в выборку.
 
 ## Метод исследования и stop conditions
 
-1. Закрепить Linux revision, architectures/configurations, driver selection и exclusions. Включить representative hardware/classes и disconfirming cases; указать convenience-sample bias.
-2. Построить direct и transitive API/callback/state dependencies. Соотнести реальные observable semantic differences с reviewed COST-L causes; одного family name недостаточно.
-3. Для каждого candidate adapter доказать требуемый semantic closure, shared-state identity, supported operation/layout versions и узкую native authorization/effect boundary.
-4. Указывать potential reach только для consumers с установленными полными prerequisites. Сохранять incomplete/conditional edges; любой будущий proportion сопровождается denominator и corpus scope.
-5. Сравнивать hardware relevance, ARM64 applicability, security/TCB, complexity/API churn, measured-or-unknown runtime cost, maintenance, migration/support и native alternatives как отдельные dimensions.
-6. Прекращать compatibility work при authority expansion, необходимости Linux semantics в native EL1, отсутствии bounded progress или невозможности установить IRQ/DMA quiescence/reset. Пересмотреть native rewrite, deferral или unsupported status до роста второго Linux kernel.
+1. Зафиксировать ревизию Linux, архитектуры и конфигурации, выбранные драйверы и исключения. Включить типичные классы оборудования и случаи, опровергающие гипотезу; указать смещение из-за удобства выборки.
+2. Построить прямые и транзитивные зависимости от API, обратных вызовов и состояния. Связать наблюдаемые семантические различия с проверенными причинами из COST-L; одного названия группы недостаточно.
+3. Для каждого возможного адаптера доказать полноту требуемой семантики, идентичность общего состояния, поддерживаемые версии операций и структур, а также узкую границу собственных полномочий и эффектов.
+4. Оценивать возможный охват только для потребителей с подтверждёнными полными предпосылками. Сохранять неполные и условные связи; любую будущую долю сопровождать знаменателем и описанием корпуса.
+5. Отдельно сравнивать значимость для оборудования, применимость на ARM64, безопасность и TCB, сложность и изменения API, измеренную или неизвестную стоимость во время работы, сопровождение, переход и поддержку, а также собственные альтернативы.
+6. Останавливать работу над совместимостью, если она расширяет полномочия, требует семантики Linux в собственном EL1, не обеспечивает ограниченного продвижения или не позволяет подтвердить безопасную остановку и сброс IRQ/DMA. До того как появится второе ядро Linux, пересмотреть собственную реализацию, отсрочку или отказ от поддержки.
 
-Weighted security/debt score и выдуманные 10/20/40-family percentages не выдаются. Actual hardware popularity и enabled IOMMU/device containment остаются UNKNOWN; source IDs сами по себе их не устанавливают. Hardware requirement с источниками может требовать native support, не являясь software debt.
+Взвешенная оценка безопасности или долга и выдуманные доли в 10, 20 или 40 групп не приводятся. Фактическая распространённость оборудования и наличие изоляции через IOMMU остаются `UNKNOWN`: одни идентификаторы в исходниках этого не устанавливают. Аппаратное требование может нуждаться в собственной поддержке и при этом не быть программным долгом.
 
 ## Текущие решения и оставшаяся работа
 
-Allocation-context COST-L-0001 — research candidate, а не implemented adapter proposal. Context-coupled locking/deferred work остаются dossiers для разделения по actual state/progress assumptions. DMA ownership — counterexample blanket legacy criticism: upstream guide уже задаёт map/unmap lifetime и barriers. Сохранить [решения по seeds](taxonomy.md).
+Запись COST-L-0001 о выделении памяти в разных контекстах — исследовательская гипотеза, а не предложение реализовать адаптер. Связанные с контекстом блокировки и отложенная работа требуют отдельных досье, основанных на реальных предположениях о состоянии и продвижении. Владение DMA опровергает общую критику устаревшей модели: руководство Linux уже задаёт время жизни операций `map`/`unmap` и барьеры. См. [решения по исходным примерам](taxonomy.md).
 
-[Критерии adapter/native и разобранные случаи VirtIO/USB](adapter-versus-native.md) дают начальное исследование #57, явные причины отклонения и условия пересмотра отложенной реализации. Issue #55 отвечает за confirmed driver/debt graph edges. #45 остаётся открытым для configured/transitive и historical analysis. #59 рассматривает host grouping/crash containment после явного определения native service/device contracts; его prototype здесь не разрешён.
+[Критерии выбора адаптера или собственной реализации и разбор случаев VirtIO/USB](adapter-versus-native.md) содержат начальное исследование для #57, явные причины отклонения и условия пересмотра отложенных решений. Issue #55 посвящён подтверждённым связям между драйверами и записями долга. #45 остаётся открытым для анализа выбранных конфигураций, транзитивных зависимостей и истории. В #59 рассматривается объединение драйверов в отдельный процесс и изоляция сбоев после определения собственных контрактов служб и устройств; создавать прототип в рамках этой работы не решено.
 
-Benchmark contracts переиспользуют #49/#50 и существующий migration advisor. Сравнивать одинаковые useful results, authority, outcomes и lifetime; сохранять raw provenance и честно более быструю compatibility. Наблюдаемые source counts не являются costs. Linux Driver Host, driver port, physical inventory или runtime compatibility не реализованы.
+Контракты измерений переиспользуют #49/#50 и существующий советник по переходу. Сравнивать одинаковые полезные результаты, полномочия, исходы и время жизни; сохранять исходные данные и честно признавать, если вариант совместимости быстрее. Число упоминаний в исходниках не является стоимостью. Linux Driver Host, перенос драйвера, инвентаризация оборудования и совместимость во время выполнения не реализованы.
 
 [Английский оригинал](../../../../research/compatibility/high-leverage-adapters.md)

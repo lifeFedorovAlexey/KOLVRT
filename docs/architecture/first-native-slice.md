@@ -1,10 +1,10 @@
 # First native slice
 
 Document status: DESIGN BASELINE
-Evidence scope: full isolated-task IPC/handles/cancellation workload; the scheduler is partial implementation.
-Current reference: [Partial EL0 implementation](../kernel/el0.md)
+Evidence scope: complete isolated-task workload defined here (IPC, handles, cancellation, and failure containment); bounded EL0, scheduler, and routing milestones have separate implementation evidence.
+Current reference: [Scheduler ownership and Phase 3.0](../architecture-decisions/0016-scheduler-ownership.md)
 
-Status: accepted EL0 workload design baseline, not a completed EL0 implementation. A native EL1 kernel and two-CPU foundation now exist; this document describes the later isolated-task workload. The slice demonstrates native isolation and bounded communication: a supervisor creates two isolated tasks, grants one endpoint, exchanges a bounded message, revokes future admission, observes cancellation or service death, and shuts down without leaked ownership. This is a correctness workload, not a performance claim.
+Status: accepted full native workload design baseline; this document does not claim that workload is complete. The bounded EL0/address-space, timer-scheduler and Phase 2 routing milestones have separate implementation evidence. This document describes the broader isolated-task workload: a supervisor creates two isolated tasks, grants one endpoint, exchanges a bounded message, revokes future admission, observes cancellation or service death, and shuts down without leaked ownership. This is a correctness workload, not a performance claim.
 
 ## Observable acceptance
 
@@ -33,8 +33,8 @@ Start with a single scheduling domain and equal round-robin task shares. A ready
 
 No filesystem, network stack, persistent transactions, DMA-capable driver, hardware hotplug, foreign ABI, live code replacement or compatibility score is required for this slice. Their contracts remain in the architecture; implementation is activated only by a later workload and its acceptance tests. Static task images are selected by the trusted supervisor; arbitrary executable loading and package trust are separate work.
 
-The [threat model](threat-model.md), [candidate ABI](native-abi.md), [platform contract](platform-contract.md) and [law audit](law-audit.md) define the design baseline. Phase 0 verifies finite host models and encoding; Phase 1 must implement and test real privilege separation, faults, interrupts and page tables before claiming this workload works in KOLVRT.
+The [threat model](threat-model.md), [candidate ABI](native-abi.md), [platform contract](platform-contract.md) and [law audit](law-audit.md) define the design baseline. Phase 0 established finite host models and encoding. Later accepted milestones provide evidence for privilege separation, faults, interrupts and page tables; the full workload still needs acceptance evidence for IPC, handles, cancellation and failure containment before it can be claimed as implemented in KOLVRT.
 
-The later [EL0 foundation](../kernel/el0.md) implements isolated processes and timer scheduling on both CPUs. The IPC/handles/cancellation/service workload above remains unimplemented and requires its own acceptance checks.
+The later [EL0 foundation](../kernel/el0.md), [versioned routing](../architecture-decisions/0015-el0-versioned-routing.md) and [scheduler ownership](../architecture-decisions/0016-scheduler-ownership.md) milestones implement their bounded scopes. The IPC/handles/cancellation/service workload above remains unimplemented and requires its own acceptance checks.
 
 [Russian translation](../../translations/ru/docs/architecture/first-native-slice.md)

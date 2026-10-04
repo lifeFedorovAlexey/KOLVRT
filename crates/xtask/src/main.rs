@@ -152,27 +152,27 @@ const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--handle-generation-control",
         "handle-generation-negative",
-        "handle_el0_identity_type_generation_and_lifetime",
+        "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-owner-control",
         "handle-owner-negative",
-        "handle_el0_identity_type_generation_and_lifetime",
+        "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-type-control",
         "handle-type-negative",
-        "handle_el0_identity_type_generation_and_lifetime",
+        "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-reuse-control",
         "handle-reuse-negative",
-        "handle_el0_identity_type_generation_and_lifetime",
+        "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-retirement-control",
         "handle-retirement-negative",
-        "\"event\":\"handle-retirement-reject\"",
+        "\"event\":\"handle-retirement-reject\",\"status\":\"fail\"",
     ),
     (
         "--handle-transfer-rights-control",
@@ -211,7 +211,7 @@ const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--user-copy-snapshot-control",
         "user-copy-snapshot-negative",
-        "user_copy_el0_boundary_and_snapshot",
+        "\"name\":\"user_copy_el0_boundary_and_snapshot\",\"status\":\"fail\"",
     ),
     (
         "--user-copy-recovery-control",
@@ -1125,6 +1125,54 @@ fn enforce_native_source(source: &str) -> Result<()> {
 
 #[cfg(test)]
 mod native_architecture_tests {
+    use serde_json::json;
+    #[test]
+    fn snapshot_and_handle_controls_require_the_expected_failure_not_a_pass_then_panic() {
+        for &(flag, _, marker) in super::USER_COPY_CONTROLS
+            .iter()
+            .chain(super::HANDLE_CONTROLS.iter())
+        {
+            if flag == "--user-copy-recovery-control" {
+                continue; // Recovery deliberately causes a fatal architectural exception.
+            }
+            let (event, name) = if flag == "--handle-retirement-control" {
+                ("handle-retirement-reject", None)
+            } else if flag == "--user-copy-snapshot-control" {
+                ("test", Some("user_copy_el0_boundary_and_snapshot"))
+            } else {
+                (
+                    "test",
+                    Some("handle_el0_identity_type_generation_and_lifetime"),
+                )
+            };
+            let mut expected = json!({"event":event,"status":"fail"});
+            if let Some(name) = name {
+                expected["name"] = json!(name);
+            }
+            assert!(
+                expected.to_string().contains(marker),
+                "missing precise failure marker: {flag}"
+            );
+            expected["status"] = json!("pass");
+            let unrelated = format!(
+                "{expected}\n{}",
+                json!({"event":"panic","status":"fail","message":"unrelated"})
+            );
+            assert!(
+                !unrelated.contains(marker),
+                "pass then unrelated panic accepted: {flag}"
+            );
+            expected["status"] = json!("fail");
+            expected["event"] = json!("unrelated");
+            if name.is_some() {
+                expected["name"] = json!("unrelated_test");
+            }
+            assert!(
+                !expected.to_string().contains(marker),
+                "unrelated failure accepted: {flag}"
+            );
+        }
+    }
     #[test]
     fn reject_legacy_types_imports_and_conditionals() {
         for code in [

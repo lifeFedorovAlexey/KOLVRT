@@ -86,4 +86,10 @@ DEV поддерживает bounded traces, grant inspection и явную faul
 
 ## Ограниченная reference identity Phase 3.3
 
+Исторический этап: следующий абзац описывает ADR-0019 до принятия расширения ADR-0020.
+
 [Handle namespaces](../kernel/handles.md) отклоняют stale/forged/foreign/wrong-kind references без выбора чужой таблицы или dereference user object pointer. Concrete wait/completion storage защищено и принадлежит kernel; lookup возвращает synchronous retained borrow, cleanup exit/fault предшествует frame reclaim. Eight slots и generation quarantine ограничивают resource use и исключают stale aliasing. Эти гарантии не дают authority; rights, delegation, asynchronous retained work и revocation — отдельные gates. General object dispatch не добавлен.
+
+## Текущие ограниченные полномочия дескрипторов и удержание ресурсов
+
+[ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) добавляет проверки SEND/TRANSFER, передачу с сужением прав, дескрипторы в пространстве получателя и ограниченные владеющие ссылки на Event. Идентичность вызывающего берётся из выполняемой задачи планировщика; EL0 не может выбрать исходного субъекта полномочий. Передача из EL0 допускается только живому получателю на том же CPU с фиксированной привязкой. Закрытие одной записи сохраняет остальные удерживаемые ссылки и не отзывает права производных дескрипторов. Это ограниченные полномочия для двух конкретных видов примитивов; общая выдача прав, домены безопасности и отзыв прав не реализованы. Удержание общего Event не доказывает наличие IPC-контракта для нескольких ожидающих. Общий допуск, бюджеты доменов и авторизованный IPC остаются задачами #24–#26.

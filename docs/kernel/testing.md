@@ -2,7 +2,7 @@
 
 Output framing and failure semantics follow the [output policy](../architecture/output-policy.md). Use cargo xtask run for the human console, run --prod for PROD and run --machine for framed evidence. cargo xtask test enables machine events in both profiles; console summaries hide JSON while raw logs retain it.
 
-Install Rust 1.99.0 with rustfmt, clippy and target aarch64-unknown-none, Node.js 18 or later, and 7-Zip on Windows. First dependency/tool download requires network access. The Windows QEMU setup extracts the pinned installer into an ignored cache, checks SHA-512 and records provenance; it does not install a service. Other hosts may provide QEMU 10.1.0 via QEMU_AARCH64.
+Install Rust 1.99.0 with rustfmt, clippy and target aarch64-unknown-none, Node.js 18 or later, and 7-Zip on Windows. First dependency/tool download requires network access. The Windows QEMU setup extracts the pinned installer into an ignored cache, checks SHA-512 and records provenance; it does not install a service. Other hosts may provide QEMU 10.1.0 via QEMU_AARCH64. `QEMU_CPU` selects another emulated CPU; the default is `cortex-a57`, and `max` checks an alternative ASID configuration. Run metadata records the exact CPU argument.
 
 ## Commands
 
@@ -43,18 +43,24 @@ Host tests check safe algorithms, malformed DTB rejection, descriptor encoding a
 
 The same protocol runs with diagnostics on/off. The matrix requires 16 named SMP tests and actual CPU_OFF, not only an ONLINE flag. Additional flags are `--secondary-panic-control`, `--retirement-control`, `--shootdown-control` and `--remote-tlbi-control`. Each is expected to fail; the positive runner checks both nonzero status and the failure marker. The omitted-TLBI image must fail after CPU1 reads the mapping. `cargo test --locked` also rejects native dependency reversal. Standalone Phase 2 checks are `cargo test --locked -p routing --all-features` and `cargo test --locked -p routing --no-default-features`; neither connects to the kernel.
 
-The [EL0 foundation](el0.md) adds 14 checks and actual non-test execution. Machine boot requires its EL0 result before terminal boot success. New negative controls are `--user-context-control`, `--user-root-control` and `--user-retirement-control`; they corrupt a saved context, omit a root switch and attempt release after forgetting a space guard. Workers must complete after their local peers fault, proving continued execution.
+The historical [EL0 foundation](el0.md) added 14 checks and actual non-test execution. Machine boot requires its EL0 result before terminal boot success. Its negative controls are `--user-context-control`, `--user-root-control` and `--user-retirement-control`; they corrupt a saved context, omit a root switch and attempt release after forgetting a space guard. Workers must complete after their local peers fault, proving continued execution. Later scheduler and process checks are recorded in the Phase 3.0/3.1 receipts.
 
-Run `cargo xtask routing test` for the separate [Phase 2 matrix](routing.md): real EL0 native/v1/v2/bug coexistence, feature-minimal PROD profiles, native-only consumers, stripped boot and three routing failure controls. The 53 native checks and eleven foundation controls remain unchanged. Host decoding tests are not substitutes for EL0 execution.
+Run `cargo xtask routing test` for the separate [Phase 2 matrix](routing.md): real EL0 native/v1/v2/bug coexistence, feature-minimal PROD profiles, native-only consumers, stripped boot and three routing failure controls. The historical Phase 2 foundation covered 53 native checks and eleven foundation controls; later native milestones retain separate receipts. Host decoding tests are not substitutes for EL0 execution.
 
 ## Phase 3.2 user-copy checks
 
-The [copy contract](user-copy.md) adds actual EL0 copies and snapshot mutation on both CPUs, precise mid-copy fault injection, initialized output and generation/lifetime rejection. The current DEV/PROD matrix requires 69 named checks and 57 failure controls, including live-reread and disabled-recovery controls in both profiles. Four sizes/failure scopes retain raw bounded benchmarks per CPU. Run the same matrix without compatibility source packages and repeat the Phase 2 routing matrix. Host tests/Clippy/repository checks supplement the real kernel evidence; they do not replace it.
+The [copy contract](user-copy.md) adds actual EL0 copies and snapshot mutation on both CPUs, precise mid-copy fault injection, initialized output and generation/lifetime rejection. The recorded Phase 3.2 DEV/PROD matrix required 69 named checks and 57 failure controls, including live-reread and disabled-recovery controls in both profiles. Four sizes/failure scopes retain raw bounded benchmarks per CPU. Run the same matrix without compatibility source packages and repeat the Phase 2 routing matrix. Host tests/Clippy/repository checks supplement the real kernel evidence; they do not replace it.
 
 ## Phase 3.3 handle checks
 
-The [handle contract](handles.md) requires 72 kernel checks and 67 negative controls in DEV/PROD. Five actual enforcement mutations cover generation validation, owner validation, kind validation, unsafe reuse and missing retirement cleanup. Five handle measurement scopes per CPU join the four copy scopes: nineteen unique measurement records including the lock baseline. Physical compatibility-package removal and Phase 2 routing must repeat successfully on the same source candidate.
+The original Phase 3.3 [handle contract](handles.md) baseline recorded 72 kernel checks and 67 negative controls in DEV/PROD; later transfer, ELF and ASID checks have separate receipts. Five actual enforcement mutations cover generation validation, owner validation, kind validation, unsafe reuse and missing retirement cleanup. Five handle measurement scopes per CPU join the four copy scopes: nineteen unique measurement records including the lock baseline. Physical compatibility-package removal and Phase 2 routing must repeat successfully on the same source candidate.
+
+## Integrated ELF and ASID verification
+
+The [current integrated receipt](../../research/measurements/runs/1791123211326-docs-main-c5c440c-final-fd10fb19115e.json) records 84 checks per DEV/PROD profile, both non-test boots and 70 host negative controls at `c5c440c`. It includes bounded own-event wait/block/wakeup, safe user-copy, retained handle transfer, ELF validation/rollback and fixed-affinity ASID retirement/reuse. The [separate routing regression](../../research/results/routing-main-c5c440c-regression.json) also passed on this source slice. Historical counts above stay bound to their original receipts. Evidence covers the recorded source hashes, artifacts, two-CPU QEMU and profiles; physical hardware, general IPC, public grants and persistent services remain outside this verification.
 
 ## Phase 3.4 security enforcement
 
 [Domain fixtures](../../crates/kernel/src/security/testing.rs) execute the production copied boundary on both EL0 CPUs: scoped denial, attenuation, revoke/admission races, sender/receiver budgets, fault isolation, reclaimed sender retention and observable service-fault cancellation. Five negative features remove actual budget, identity, teardown, revocation or scope checks; each must produce the expected failed machine test and nonzero host result in DEV and PROD. The current kernel matrix has 96 checks per profile and 80 negative controls.
+
+[Russian translation](../../translations/ru/docs/kernel/testing.md)

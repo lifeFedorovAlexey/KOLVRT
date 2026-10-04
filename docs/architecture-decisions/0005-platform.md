@@ -2,6 +2,10 @@
 
 Status: **Accepted**. Date: 2026-10-02.
 
+Document status: HISTORICAL MILESTONE
+Evidence scope: initial ARM64 platform decision; Phase 0.1 and 0.2 statements describe that planning snapshot.
+Current reference: [Current scheduler milestone](0016-scheduler-ownership.md)
+
 ## Context
 
 QEMU virt is a useful starting point. Device descriptions, DMA and silicon defects are distinct concerns (cases 10–13, 27).
