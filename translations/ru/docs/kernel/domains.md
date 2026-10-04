@@ -95,7 +95,8 @@ Exit/fault/budget termination закрывает domain admission на masked sc
         "kolvrt.memory.user-copy",
         "law.009",
         "law.013",
-        "law.025"
+        "law.025",
+        "kolvrt.handles.local"
       ],
       "gaps": [
         "General IPC and trusted supervisor policy-installation acceptance are not delivered by this bounded notification pilot."

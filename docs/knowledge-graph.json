@@ -442,6 +442,11 @@
     },
     {
       "from": "kolvrt.security.domains",
+      "to": "kolvrt.handles.local",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.domains",
       "to": "kolvrt.memory.user-copy",
       "type": "depends_on"
     },
@@ -569,7 +574,7 @@
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
     "crates/repository-checks/src/knowledge.rs": "cc1e7ec389b4c769d76658c4e22ebb1c2fd627b3b7d3729811f721a412378b0a",
-    "crates/repository-checks/tests/knowledge.rs": "18676d1182138c04fdb4a6b0991add97ee63a5aaf1036da08c8146e7d11bffd0",
+    "crates/repository-checks/tests/knowledge.rs": "090fe869bf22dade4f57ef80576cd7eb72ce583a4718257499a42f280c0217df",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
     "docs/architecture-decisions/0003-profiles.md": "e468a33090c9ab7ae112cf41f222edfd7faf459907a1117106dbfc19c64e3280",
@@ -597,12 +602,12 @@
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/kernel/capabilities.md": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
-    "docs/kernel/domains.md": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+    "docs/kernel/domains.md": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
     "docs/kernel/handles.md": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
     "docs/kernel/processes.md": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "eb86acfa5b712ae63ab096afb1d1edc7491afc33689f8f1a8eb0074d4d9bb2bf",
-    "docs/knowledge-system.md": "488a58b2c7f06c228e5a9c1d317caa8e7154bbb4838f1ad4b30013962d49e211",
+    "docs/knowledge-system.md": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -640,7 +645,7 @@
     "research/cost-l/COST-L-0003.json": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794",
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "88cea0ddcdb6817d74639d4808672e782399bbebb0e940863c8eef1022a88a22",
+    "translations/manifest.json": "85835a69a00053162b3b7e0e1be3b498cc3f746a277124663ca70c4b1d552a4f",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -668,11 +673,11 @@
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/kernel/capabilities.md": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
-    "translations/ru/docs/kernel/domains.md": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+    "translations/ru/docs/kernel/domains.md": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
     "translations/ru/docs/kernel/handles.md": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
     "translations/ru/docs/kernel/processes.md": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "c6b7b8c258c468c6d5810e03390165eadd268d928ebd6644c805254115f5462e",
+    "translations/ru/docs/knowledge-system.md": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
@@ -2475,13 +2480,13 @@
         "en": {
           "end": 139,
           "path": "docs/knowledge-system.md",
-          "sha256": "488a58b2c7f06c228e5a9c1d317caa8e7154bbb4838f1ad4b30013962d49e211",
+          "sha256": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
           "start": 1
         },
         "ru": {
           "end": 139,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "c6b7b8c258c468c6d5810e03390165eadd268d928ebd6644c805254115f5462e",
+          "sha256": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7",
           "start": 1
         }
       },
@@ -2572,21 +2577,21 @@
     "doc.kolvrt.kernel.domains": {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13095,
+      "estimated_bytes": 13127,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
       "locations": {
         "en": {
-          "end": 176,
+          "end": 177,
           "path": "docs/kernel/domains.md",
-          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
           "start": 1
         },
         "ru": {
-          "end": 176,
+          "end": 177,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
           "start": 1
         }
       },
@@ -2793,7 +2798,7 @@
             "environment": "host-process",
             "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "9856cf5ea263d21d92d39bb19f9494288b6ac02e40c8403c0c29bb462bc280f3",
+            "receipt_sha256": "75244623262d0564348b55704e9e49c0b77afbe6ea9767d605497b500950b932",
             "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance.",
             "state": "VERIFIED"
           },
@@ -2810,13 +2815,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "488a58b2c7f06c228e5a9c1d317caa8e7154bbb4838f1ad4b30013962d49e211",
+          "sha256": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "c6b7b8c258c468c6d5810e03390165eadd268d928ebd6644c805254115f5462e",
+          "sha256": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7",
           "start": 7
         }
       },
@@ -3929,7 +3934,8 @@
         "kolvrt.memory.user-copy",
         "law.009",
         "law.013",
-        "law.025"
+        "law.025",
+        "kolvrt.handles.local"
       ],
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
@@ -3990,13 +3996,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/domains.md",
-          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
           "start": 11
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
           "start": 11
         }
       },
@@ -4017,13 +4023,13 @@
         "en": {
           "end": 36,
           "path": "docs/kernel/domains.md",
-          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
           "start": 27
         },
         "ru": {
           "end": 36,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
           "start": 27
         }
       },
@@ -4043,13 +4049,13 @@
         "en": {
           "end": 28,
           "path": "docs/kernel/domains.md",
-          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
           "start": 17
         },
         "ru": {
           "end": 28,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
           "start": 17
         }
       },
@@ -4069,13 +4075,13 @@
         "en": {
           "end": 56,
           "path": "docs/kernel/domains.md",
-          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
           "start": 35
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
           "start": 35
         }
       },
@@ -4087,21 +4093,21 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6721,
+      "estimated_bytes": 6753,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 176,
+          "end": 177,
           "path": "docs/kernel/domains.md",
-          "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
           "start": 55
         },
         "ru": {
-          "end": 176,
+          "end": 177,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615",
+          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
           "start": 55
         }
       },

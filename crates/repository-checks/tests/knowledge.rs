@@ -233,6 +233,12 @@ fn actual_pilot_closure_includes_authority_and_reports_planned_gaps() {
                 .unwrap()
                 .contains(&json!("kolvrt.security.capability-revocation"))
         );
+        assert!(
+            impact["affected"]
+                .as_array()
+                .unwrap()
+                .contains(&json!("kolvrt.security.domains"))
+        );
     }
     assert!(k.impact("unknown/not-declared.rs").is_err());
     assert_eq!(

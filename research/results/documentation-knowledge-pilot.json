@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 44899,
-  "catalog_bytes": 55240,
+  "approximate_tokens": 44905,
+  "catalog_bytes": 55263,
   "catalog_nodes": 139,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "2cf3333fb87cf75fe6d9ab04f9f267a351a3ba49e7c33afcdcf72c760a12c245",
+  "catalog_sha256": "20b50d844ed2280ff71202702daafb06a52210ca71982d0f467eee2c4d86eed8",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 179595,
+  "context_plus_catalog_bytes": 179618,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 87,
-    "utf8_bytes": 631801
+    "utf8_bytes": 631833
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -274,7 +274,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
         "start": 11
       }
     },
@@ -283,7 +283,7 @@
       "location": {
         "end": 36,
         "path": "docs/kernel/domains.md",
-        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
         "start": 27
       }
     },
@@ -292,7 +292,7 @@
       "location": {
         "end": 28,
         "path": "docs/kernel/domains.md",
-        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
         "start": 17
       }
     },
@@ -301,16 +301,16 @@
       "location": {
         "end": 56,
         "path": "docs/kernel/domains.md",
-        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
         "start": 35
       }
     },
     {
       "id": "kolvrt.security.domains.teardown",
       "location": {
-        "end": 176,
+        "end": 177,
         "path": "docs/kernel/domains.md",
-        "sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
+        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
         "start": 55
       }
     },
@@ -434,7 +434,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 186364
+    "utf8_bytes": 186396
   },
   "source_files": [
     {
@@ -443,7 +443,7 @@
     },
     {
       "path": "crates/repository-checks/tests/knowledge.rs",
-      "sha256_lf": "18676d1182138c04fdb4a6b0991add97ee63a5aaf1036da08c8146e7d11bffd0"
+      "sha256_lf": "090fe869bf22dade4f57ef80576cd7eb72ce583a4718257499a42f280c0217df"
     }
   ]
 }

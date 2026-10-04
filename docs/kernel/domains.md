@@ -95,7 +95,8 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
         "kolvrt.memory.user-copy",
         "law.009",
         "law.013",
-        "law.025"
+        "law.025",
+        "kolvrt.handles.local"
       ],
       "gaps": [
         "General IPC and trusted supervisor policy-installation acceptance are not delivered by this bounded notification pilot."

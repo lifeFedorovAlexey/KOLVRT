@@ -752,7 +752,7 @@
     {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13095,
+      "estimated_bytes": 13127,
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
       "path": "docs/kernel/domains.md",
@@ -1291,7 +1291,8 @@
         "kolvrt.memory.user-copy",
         "law.009",
         "law.013",
-        "law.025"
+        "law.025",
+        "kolvrt.handles.local"
       ],
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
@@ -1344,7 +1345,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6721,
+      "estimated_bytes": 6753,
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
       "path": "docs/kernel/domains.md",

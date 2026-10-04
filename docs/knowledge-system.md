@@ -106,7 +106,7 @@ Linux research uses the [mechanism template](../research/linux/mechanism-templat
             "state": "VERIFIED",
             "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "9856cf5ea263d21d92d39bb19f9494288b6ac02e40c8403c0c29bb462bc280f3",
+            "receipt_sha256": "75244623262d0564348b55704e9e49c0b77afbe6ea9767d605497b500950b932",
             "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance."
           },
           {

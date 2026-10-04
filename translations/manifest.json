@@ -226,8 +226,8 @@
         "translation_sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b"
       },
       "docs/kernel/domains.md": {
-        "source_sha256": "b48a426138ebcd49b8a69ed2e7029199396d41c3b83f7923c8670a205d715025",
-        "translation_sha256": "08a1fdd216758d94781ea2d4b2acba927d8b62b055157df167d51a3502f9c615"
+        "source_sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+        "translation_sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e"
       },
       "docs/kernel/el0.md": {
         "source_sha256": "4d2140e9e09cc624d5cd519d8815cb8fe97ba2352d0ff31bf5019c8506cee503",
@@ -286,8 +286,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "488a58b2c7f06c228e5a9c1d317caa8e7154bbb4838f1ad4b30013962d49e211",
-        "translation_sha256": "c6b7b8c258c468c6d5810e03390165eadd268d928ebd6644c805254115f5462e"
+        "source_sha256": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
+        "translation_sha256": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
