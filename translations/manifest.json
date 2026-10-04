@@ -6,8 +6,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "9e60de955f36a8024388bb6b8c879b7f1de060b1cc70b20affc1147f4846524d",
-        "translation_sha256": "3a7223c3c86237f41270aa1744b712ff66d5f18c8b095475c08b3936822dfe7d"
+        "source_sha256": "34c3206e28e0fe8f57d55b1c5f1c56fe50be3be776cb3b7b88962984e18e5463",
+        "translation_sha256": "aa9c4decc4fe9a4ecf5e6eb2d4073f294e5790fa3d2a55d552f675609c0cbc3f"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "6518a598b4f2d4d7abd7618b81d28c6e26dd1596123247cc5cd887db3ffabea3",
@@ -94,8 +94,8 @@
         "translation_sha256": "f13c64b17878bacf572b394861222424031780ee8ccd2fe4d4cbde60abe2510b"
       },
       "docs/architecture-decisions/0021-asid-lifecycle.md": {
-        "source_sha256": "87772f7bc7c7ddcba06730116d9d1251d66ca58a32f78bca0b7c5e8025919330",
-        "translation_sha256": "75d107439feffda57598581323bc09b2bdfeb3f7139e8f0d7665059b957cd9a8"
+        "source_sha256": "8fbabe70f5c64c782018853778ed236f0ad8199e1f09d1dede1ac26d3cd829cf",
+        "translation_sha256": "c1820f46c67837b1d866101c0553f3b1cfd2e5bc25d384be9290247c4c511d9e"
       },
       "docs/architecture-decisions/README.md": {
         "source_sha256": "d98bea0207a7e12e5e43b5e90edb044ca696ec2ea687680d3c78c050a49f2e73",
@@ -146,8 +146,8 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "cda0f5fc3472fbf101bd521c1a13370b951ed67312de133b828ca95d055e2c47",
-        "translation_sha256": "96e17ddb807f5d9a2b62d9299056c2b2cf3126704663a2637ab0f3b7a60d9526"
+        "source_sha256": "6e204dc36db48b881ccca4ac04bcc0a7b76f54301a3a41cbf08748981f1c0b7c",
+        "translation_sha256": "e637def4c0fd37c216e8163243d00d7e609371edc4175c70e03d2da0f894c44e"
       },
       "docs/architecture/migration-workbench.md": {
         "source_sha256": "d233aac554b7cb12df0a917acf5be250bc3eedf9e7e2d55338ccb4ff3643d780",
@@ -198,8 +198,8 @@
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/el0.md": {
-        "source_sha256": "77978a4db4360679cd7c6d23637d6cb6eb3aa8204709eafd41a40ce3220f810f",
-        "translation_sha256": "26d7acb6ad1a8fc9ca10dcee7370e6646369206fe824f8dc58122d41df632a0e"
+        "source_sha256": "155f8a67cfcd028bf0055ce24fbd8e24706e2ae792af0914b5e52bcc73ea3a82",
+        "translation_sha256": "d2de9f68539a10512ce363bc09ec4b070011739ea3601dd5938af0e79593d5c0"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "7ab0345bf609b17bbe42b1f8d5f332473c8245e2cfdb01582626fc3382c62ae0",
@@ -242,8 +242,8 @@
         "translation_sha256": "46eae4f848da42e521436eafaf5782b716c3b4358b9b675ac2b3d3499f41a20a"
       },
       "docs/kernel/unsafe.md": {
-        "source_sha256": "fbba313e9564eb4bb87b1e5762f06bae8c079c02eefcf1691a1b6e5aba219515",
-        "translation_sha256": "94b3464067a6bc5fd0ebf014257a6271d05eea3552bf5e800537c29f869926ff"
+        "source_sha256": "2a21f01a5205cb98deb702c7b2d360b7d8d738b9fa3a2c057374de7401d32a78",
+        "translation_sha256": "ddb3ea0c4bc97d60b88ec5d9142801a78cc93daeac0f9ee3a23361c940c36c59"
       },
       "docs/kernel/user-copy.md": {
         "source_sha256": "caaa0b9d7efa279dec800ff4e089f8ff6c40a9ee1f3c702dd21f574b04d32023",

@@ -136,7 +136,7 @@ CPU0 initializes checked exclusively allocated table/data/code/stack/image pages
 
 ### INV-USER-TTBR and INV-USER-IMAGE
 
-Privileged root/barrier instructions require live aligned tables preserving kernel PC/SP. The ASID-zero fallback requires full local invalidation on each switch; fixed-affinity process roots use a hardware-width-checked ASID lease and local `TLBI ASIDE1` before retirement/reuse. The lease epoch rejects stale software retirement, and release requires the owning CPU's completed invalidation plus scheduler quiescence. Unsupported ASID encodings retain the full-flush baseline. Trusted immutable linker extents are copied into checked owned pages, cleaned to PoC and published with instruction-cache maintenance before launch. Root-switch omission and omitted reuse invalidation must fail on QEMU. No loader, migration, multi-CPU root residency or physical cache-coherency proof is claimed.
+Privileged root/barrier instructions require live aligned tables preserving kernel PC/SP. The ASID-zero fallback requires full local invalidation on each switch; fixed-affinity process roots use a hardware-width-checked ASID lease and local `TLBI ASIDE1` before retirement/reuse. The lease epoch rejects stale software retirement, and release requires the owning CPU's completed invalidation plus scheduler quiescence. Unsupported ASID encodings retain the full-flush baseline. Trusted immutable linker extents are copied into checked owned pages, cleaned to PoC and published with instruction-cache maintenance before launch. Root-switch omission and omitted reuse invalidation must fail on QEMU. No general executable ABI, migration, multi-CPU root residency or physical cache-coherency proof is claimed.
 
 ### INV-USER-CONTEXT and INV-RUNQUEUE
 

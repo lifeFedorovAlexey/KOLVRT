@@ -22,7 +22,7 @@
         "-machine",
         "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
         "-cpu",
-        "cortex-a57",
+        "max",
         "-accel",
         "tcg",
         "-smp",
@@ -64,7 +64,7 @@
         "-machine",
         "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
         "-cpu",
-        "cortex-a57",
+        "max",
         "-accel",
         "tcg",
         "-smp",
@@ -93,10 +93,10 @@
   "issue": 18,
   "measurement": {
     "claim": "QEMU TCG comparison only; not hardware throughput or a universal performance claim",
-    "median_paired_delta_ticks": 647356.0,
+    "median_paired_delta_ticks": 6185900.0,
     "paired_delta_direction": "baseline minus tagged; positive favors tagged",
     "paired_deltas_ticks": [
-      604855, -507119, 689857, 200424, 827582, 945363, 501050, 778975
+      3296200, 16974100, 9494600, 11494700, 4393000, 5581000, 1754500, 6790800
     ],
     "scope": "process lifecycle stress on both pinned CPUs",
     "units": "cntpct_el0 timer_ticks"
@@ -124,7 +124,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11912668,
+          "elapsed_ticks": 203017100,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -150,7 +150,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11307813,
+          "elapsed_ticks": 199720900,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",
@@ -182,7 +182,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11177937,
+          "elapsed_ticks": 198939200,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -208,7 +208,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11685056,
+          "elapsed_ticks": 181965100,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",
@@ -240,7 +240,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11965594,
+          "elapsed_ticks": 199978800,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -266,7 +266,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11275737,
+          "elapsed_ticks": 190484200,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",
@@ -298,7 +298,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11904087,
+          "elapsed_ticks": 199974700,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -324,7 +324,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11703663,
+          "elapsed_ticks": 188480000,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",
@@ -356,7 +356,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 12001657,
+          "elapsed_ticks": 196821500,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -382,7 +382,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11174075,
+          "elapsed_ticks": 192428500,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",
@@ -414,7 +414,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 12066144,
+          "elapsed_ticks": 203470300,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -440,7 +440,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11120781,
+          "elapsed_ticks": 197889300,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",
@@ -472,7 +472,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11313062,
+          "elapsed_ticks": 192173700,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -498,7 +498,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 10812012,
+          "elapsed_ticks": 190419200,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",
@@ -530,7 +530,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 11466631,
+          "elapsed_ticks": 191394400,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "asid-zero-baseline",
@@ -556,7 +556,7 @@
             }
           ],
           "distinct_backing": [true, true],
-          "elapsed_ticks": 10687656,
+          "elapsed_ticks": 184603600,
           "event": "asid-measurement",
           "hardware_asid_bits": 16,
           "mode": "tagged",

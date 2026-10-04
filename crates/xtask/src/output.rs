@@ -269,6 +269,8 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                         .is_none_or(|ticks| ticks == 0)
                     || cpu_events.len() != cpus
                     || !matches!(mode, "tagged" | "asid-zero-baseline")
+                    || !matches!(event["hardware_asid_bits"].as_u64(), Some(0 | 8 | 16))
+                    || (mode == "tagged" && event["hardware_asid_bits"] == 0)
                 {
                     return Err("invalid or duplicate ASID measurement".into());
                 }

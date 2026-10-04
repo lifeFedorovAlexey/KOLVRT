@@ -196,6 +196,7 @@ pub(crate) fn exercise(
                 physical,
                 Origin::Bootstrap,
                 Spec {
+                    image_format: crate::process::ImageFormat::RawFixture,
                     image,
                     context,
                     owner,

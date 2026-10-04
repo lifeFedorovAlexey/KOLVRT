@@ -269,6 +269,11 @@ const TESTS: &[&str] = &[
     "process_el0_residency_accumulates",
     "process_quantum_return_and_peer_progress",
     "process_wait_block_and_wakeup",
+    "elf_invalid_images_are_transactional",
+    "elf_creation_failure_is_transactional",
+    "elf_executes_in_isolated_el0_spaces",
+    "elf_bss_and_page_padding_are_zero",
+    "elf_reclaims_all_frames",
     "process_resource_reclamation",
     "user_copy_el0_boundary_and_snapshot",
     "user_copy_lifetime_and_reclamation",
@@ -711,8 +716,14 @@ fn source_inventory() -> Result<Value> {
     files.sort();
     let mut inventory = Vec::new();
     for file in files {
-        let text = fs::read_to_string(&file)?.replace("\r\n", "\n");
-        inventory.push(json!({"path":file.to_string_lossy().replace('\\',"/"),"sha256_lf":format!("{:x}",Sha256::digest(text.as_bytes()))}));
+        let bytes = fs::read(&file)?;
+        let path = file.to_string_lossy().replace('\\', "/");
+        if let Ok(text) = std::str::from_utf8(&bytes) {
+            let normalized = text.replace("\r\n", "\n");
+            inventory.push(json!({"path":path,"sha256_lf":format!("{:x}",Sha256::digest(normalized.as_bytes()))}));
+        } else {
+            inventory.push(json!({"path":path,"sha256":format!("{:x}",Sha256::digest(bytes))}));
+        }
     }
     Ok(json!(inventory))
 }

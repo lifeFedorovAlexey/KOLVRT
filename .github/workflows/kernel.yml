@@ -36,8 +36,23 @@ jobs:
         run: cargo xtask test
       - name: Real EL0 routing matrix and failure propagation
         run: cargo xtask routing test
+      - name: Real 16-bit ASID baseline comparison
+        shell: pwsh
+        env:
+          QEMU_CPU: max
+        run: |
+          cargo xtask asid-bench
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $asidReceipt = Get-Content research/results/issue18-asid-measurements.json -Raw | ConvertFrom-Json
+          foreach ($asidPair in $asidReceipt.pairs) {
+            if ($asidPair.results.tagged.hardware_asid_bits -ne 16 -or $asidPair.results.baseline.hardware_asid_bits -ne 16) {
+              throw 'Expected actual 16-bit ASID hardware profile'
+            }
+          }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: kernel-evidence
-          path: target/kernel/
+          path: |
+            target/kernel/
+            research/results/issue18-asid-measurements.json

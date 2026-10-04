@@ -40,7 +40,7 @@ The ASID allocator is private to EL0 process roots. The native root keeps ASID z
 
 ## Performance impact
 
-The issue #18 benchmark runs eight counterbalanced QEMU pairs of 32 process create/run/reclaim cycles on each CPU. It records timer ticks, TTBR switches, full and ASID-scoped TLBI counts, process-tag reuse, build/run metadata and exact source inventory in [issue18-asid-measurements.json](../../research/results/issue18-asid-measurements.json). Positive paired differences favor tagged mode. These are QEMU TCG observations only; they do not establish silicon throughput or a hardware speedup.
+The issue #18 benchmark runs eight counterbalanced QEMU pairs of 32 process create/run/reclaim cycles on each CPU. It records timer ticks, TTBR switches, full and ASID-scoped TLBI counts, process-tag reuse, build/run metadata and exact source inventory in [issue18-asid-measurements.json](../../research/results/issue18-asid-measurements.json). The default Cortex-A57 receipt records actual 16-bit ASIDs; the [QEMU max receipt](../../research/results/issue18-asid-measurements-16bit.json) records actual 16-bit ASIDs on the same source. CI repeats the 16-bit paired comparison and checks the reported hardware width. The implemented 8-bit fallback has no separate emulator receipt. Positive paired differences favor tagged mode. These are QEMU TCG observations only; they do not establish silicon throughput or a hardware speedup.
 
 ## Security impact
 

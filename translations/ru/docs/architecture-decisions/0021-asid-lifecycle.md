@@ -36,11 +36,11 @@ Current reference: [Адресные пространства EL0](../../../../d
 
 ## Влияние на совместимость
 
-Распределитель ASID применяется только к корням EL0-процессов. Нативные процессы сохраняют ASID 0, а для неизвестной или неподдерживаемой ширины аппаратного ASID остаётся прежний контракт ASID 0 с полной инвалидацией. Изменение не затрагивает legacy-маршрутизацию, native authority, формат образа процесса и закрепление за CPU.
+Распределитель ASID применяется только к корням EL0-процессов. Корень ядра сохраняет ASID 0, а для неизвестной или неподдерживаемой ширины аппаратного ASID остаётся прежний контракт ASID 0 с полной инвалидацией. Изменение не затрагивает legacy-маршрутизацию, native authority, формат образа процесса и закрепление за CPU.
 
 ## Влияние на производительность
 
-Benchmark issue #18 выполняет восемь counterbalanced QEMU-пар: по 32 process create/run/reclaim цикла на каждом CPU. В [issue18-asid-measurements.json](../../../../research/results/issue18-asid-measurements.json) сохраняются timer ticks, TTBR switches, full и ASID-scoped TLBI counts, reuse tags, build/run metadata и точная source inventory. Положительная парная разница означает преимущество tagged mode. Это только QEMU TCG observations; они не доказывают throughput или ускорение на silicon.
+Benchmark issue #18 выполняет восемь counterbalanced QEMU-пар: по 32 process create/run/reclaim цикла на каждом CPU. В [issue18-asid-measurements.json](../../../../research/results/issue18-asid-measurements.json) сохраняются timer ticks, TTBR switches, full и ASID-scoped TLBI counts, reuse tags, build/run metadata и точная source inventory. Отчёт стандартного Cortex-A57 фиксирует реальные 16-битные ASID; [отчёт QEMU max](../../../../research/results/issue18-asid-measurements-16bit.json) фиксирует реальные 16-битные ASID на тех же исходниках. CI повторяет 16-битное парное сравнение и проверяет сообщённую аппаратную ширину. Реализованный 8-битный fallback не имеет отдельного отчёта эмулятора. Положительная парная разница означает преимущество tagged mode. Это только QEMU TCG observations; они не доказывают throughput или ускорение на silicon.
 
 ## Влияние на безопасность
 
