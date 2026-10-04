@@ -2,6 +2,10 @@
 
 Status: **Accepted for the first native slice**. Date: 2026-10-02.
 
+Document status: HISTORICAL MILESTONE
+Evidence scope: Phase 0 design experiment; the statement below that combined kernel execution had not occurred describes the experiment's state at decision time.
+Current reference: [EL0 foundation](0014-el0-foundation.md); [scheduler ownership](0016-scheduler-ownership.md)
+
 ## Context
 
 A library boundary cannot contain memory corruption. The [threat model](../architecture/threat-model.md) treats application and service failures as separate from privileged mechanism failures. The [host experiment](../../research/results/native-state-models.json) compares identical request and response frames inside one process and across a child-process pipe.

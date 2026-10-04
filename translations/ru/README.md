@@ -115,6 +115,7 @@ KOLVRT уже загружается как native AArch64 kernel в QEMU.
 | Scheduler                          | ✅ Timer-driven с фиксированной per-CPU affinity          |
 | Жизненный цикл процессов           | ✅ Ограниченные create/start/exit/reclaim на двух CPU     |
 | Ожидание собственного события      | ✅ Ограниченный block/wakeup в `Registry::step()`         |
+| Копирование из памяти пользователя | ✅ Ограниченный синхронный снимок Phase 3.2               |
 | Runtime versioned routing          | ✅ Ограниченный EL0 vertical slice; native core независим |
 | Migration advisor                  | ✅ Host planner; production integrations ещё не готовы    |
 | Linux compatibility                | ⏳ Не начата                                              |

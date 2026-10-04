@@ -1,47 +1,47 @@
-# ADR-0014 — Фундамент EL0 execution с фиксированной affinity
+# ADR-0014 — Основа исполнения в EL0 с фиксированным закреплением за CPU
 
-Status: **Принят для ограниченного фундамента**. Date: 2026-10-02.
+Статус: **принято для ограниченного фундамента**. Дата: 2026-10-02.
 
-## Context
+## Контекст
 
-После проверенного SMP пользователь разрешил address spaces, переходы EL1/EL0, stacks, context switching, timer scheduling, process isolation и локализацию faults на обоих CPU. IPC, handles, cancellation, service models и security domains явно отложены. [Контракт EL0](../kernel/el0.md) определяет фактический workload; полный native slice не завершён.
+После проверки SMP пользователь разрешил реализовать адресные пространства, переходы EL1/EL0, стеки, переключение контекста, планирование по таймеру, изоляцию процессов и локализацию отказов на обоих CPU. IPC, дескрипторы, отмена, модели служб и домены безопасности явно отложены. [Контракт EL0](../kernel/el0.md) определяет фактическую нагрузку; полный собственный сценарий пока не завершён.
 
-## Decision
+## Решение
 
-Использовать независимые per-CPU queues с фиксированной process affinity и atomic executing owner на процесс. Сохранять полный architectural context и разделять между private roots только privileged kernel mappings. ASID zero и завершённый local TLBI при каждом switch исключают преждевременное ASID reuse. Удерживать все space guards, пока оба CPU не восстановят native root и не опубликуют completion. Global scheduler lock, remote address-space mutation и migration не добавляются.
+Использовать отдельные очереди для каждого CPU, фиксированное закрепление процесса за CPU и атомарную запись исполняющего владельца для каждого процесса. Сохранять полный архитектурный контекст, а между закрытыми корнями таблиц страниц разделять только привилегированные отображения ядра. Нулевой ASID и завершённая локальная инвалидация TLB (`TLBI`) при каждом переключении исключают преждевременное повторное использование ASID. Удерживать все объекты-защитники адресных пространств, пока оба CPU не восстановят собственный корень и не подтвердят завершение. Глобальная блокировка планировщика, удалённое изменение адресных пространств и миграция не добавляются.
 
-## Alternatives
+## Альтернативы
 
-Только один CPU; global locked queue; migration/work stealing; ASID-tagged targeted invalidation; cooperative switching; lazy SIMD/FP saving.
+Использовать только один CPU; общую очередь с глобальной блокировкой; миграцию и кражу задач; адресную инвалидацию с тегами ASID; кооперативное переключение; отложенное сохранение SIMD/FP.
 
-## Why rejected
+## Почему альтернативы отклонены
 
-Первый вариант не проверяет требуемую SMP boundary. Shared queue добавляет IRQ lock ownership и progress obligations без потребности этого workload в cross-CPU admission. Migration и ASID reuse требуют participant/lifetime protocols за пределами fixed-affinity контракта. Только cooperative execution не ограничивает non-yielding process. Lazy FP требует отдельного trap/ownership handling. Full local invalidation имеет видимую стоимость; утверждения о самом быстром методе нет.
+Вариант с одним CPU не проверяет требуемую границу SMP. Общая очередь добавляет владение блокировкой в IRQ и обязательства по продвижению, хотя этой нагрузке не нужен межпроцессорный допуск. Миграция и повторное использование ASID требуют протоколов участников и времени жизни за пределами контракта с фиксированным закреплением. Кооперативное исполнение не ограничивает процесс, который не уступает CPU. Отложенное сохранение FP требует отдельной обработки исключений и владения состоянием. Полная локальная инвалидация имеет заметную стоимость; утверждений о самом быстром методе нет.
 
-## Consequences
+## Последствия
 
-Восемь процессов работают за одну статическую boot session. Dynamic loading/creation, migration и общее process management не поддерживаются. Чистый round-robin selection отделён от architecture mechanisms. Trusted boot fixture выбирает images и budgets; её validation assertions не являются user authority service.
+Восемь процессов выполняются в одной статической загрузочной сессии. Динамическая загрузка и создание, миграция и общее управление процессами не поддерживаются. Выбор по кругу отделён от механизмов архитектуры. Доверенная загрузочная тестовая конфигурация выбирает образы и бюджеты; её проверки не являются пользовательской службой полномочий.
 
-## Compatibility impact
+## Влияние на совместимость
 
-Kernel dependency closure остаётся kernel и kernel-core. Routing/adapter groundwork сохранён и отключён. Foreign semantics, syscall compatibility и version-dependent task behavior не добавляются.
+Замыкание зависимостей ядра по-прежнему включает только `kernel` и `kernel-core`. Основа маршрутизации и адаптеров сохранена, но отключена. Внешняя семантика, совместимость системных вызовов и поведение задач, зависящее от версии, не добавляются.
 
-## Performance impact
+## Влияние на производительность
 
-Выбранный quantum — типизированный Duration 1 ms. Fairness зависит от timer delivery и ограниченных handlers; TCG observations не устанавливают рейтинг latency или throughput. Каждый switch сохраняет весь GPR/SIMD/FP/TLS state и очищает local translations. ASIDs, lazy state или targeted flushes требуют evidence до оптимизации.
+Выбранный квант — типизированное значение `Duration` в 1 мс. Справедливость зависит от доставки прерываний таймера и ограниченного времени обработчиков; наблюдения TCG не позволяют ранжировать задержки или пропускную способность. При каждом переключении сохраняются все регистры GPR/SIMD/FP/TLS и очищаются локальные трансляции. Перед оптимизацией с ASID, отложенным сохранением состояния или адресной очисткой нужны свидетельства.
 
-## Security impact
+## Влияние на безопасность
 
-ERET/exception vectors, TTBR/TLBI и timer enforcement требуют privileged instructions; EL0 process не может безопасно установить собственные trusted exception return или protection root. Это аргумент privileged necessity по [admission policy](../architecture/kernel-admission-policy.md). Allocation/image selection и round-robin policy — bootstrap choices, а не irreducible global-authority services. Их placement пересматривается при появлении IPC/supervision. Privileged identity aliases остаются частью TCB; DMA или security-domain гарантии не заявляются.
+`ERET`, векторы исключений, `TTBR`/`TLBI` и принудительное переключение по таймеру требуют привилегированных инструкций; процесс EL0 не может безопасно задавать доверенный возврат из исключения или корень защиты памяти. Это обосновывает необходимость привилегий согласно [политике допуска](../architecture/kernel-admission-policy.md). Выделение памяти, выбор образа и политика обходного планирования — загрузочные решения, а не службы с неизбежно глобальными полномочиями. Размещение будет пересмотрено при появлении IPC и супервизии. Псевдонимы привилегированной идентичности остаются частью TCB; гарантии для DMA или доменов безопасности не заявляются.
 
-[Arm exception model](https://documentation-service.arm.com/static/67ac57fb091bfc3e0a9479cc), sections 5.1–5.2, описывает vector/stack selection и ERET restoration из SPSR/ELR. [Arm memory management](https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Learn%20the%20Architecture/LearnTheArchitecture-MemoryManagement-101811_0100_00_en.pdf), sections 5.2 и 8, обосновывает ASID identity и TLB maintenance. Эти архитектурные источники подтверждают механизмы; фактические correctness evidence даёт workload выбранного ядра.
+[Модель исключений Arm](https://documentation-service.arm.com/static/67ac57fb091bfc3e0a9479cc), разделы 5.1–5.2, описывает выбор вектора и стека, а также восстановление через `ERET` из `SPSR`/`ELR`. [Управление памятью Arm](https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Learn%20the%20Architecture/LearnTheArchitecture-MemoryManagement-101811_0100_00_en.pdf), разделы 5.2 и 8, обосновывает идентичность ASID и обслуживание TLB. Архитектурные источники подтверждают механизмы; фактические свидетельства корректности даёт нагрузка выбранного ядра.
 
-## Testing
+## Проверки
 
-DEV/PROD требуют 53 real tests, настоящее non-test boot execution и одиннадцать negative host controls. EL0 tests проверяют same-VA private data tags, восстановление registers/SIMD/FP/TLS и stack, отказ kernel/foreign memory, RO/NX/guard faults, запрет privileged instruction, выживание peers и возврат frames. Root/context/forgotten-guard controls должны завершаться ошибкой. [Unsafe register](../kernel/unsafe.md) определяет local proof obligations; hardware weak-memory behavior остаётся непроверенным.
+В профилях DEV и PROD выполнены 53 теста, обычная загрузка без тестового режима и одиннадцать отрицательных проверок на хосте. Тесты EL0 проверяют закрытые метки данных по одинаковому виртуальному адресу, восстановление регистров SIMD/FP/TLS и стека, отказ при доступе к памяти ядра или другого процесса, ошибки RO/NX/защитных страниц, запрет привилегированных инструкций, сохранение работы соседних процессов и возврат кадров памяти. Проверки неправильного корня, контекста и забытого объекта-защитника должны завершаться ошибкой. [Реестр unsafe-кода](../kernel/unsafe.md) описывает локальные обязательства доказательства корректности; поведение слабой модели памяти на оборудовании не проверялось.
 
-## Reversibility
+## Обратимость
 
-Будущие scheduling domains или EL0 policy services могут заменить static selector только при явных ownership, admission, lifetime, timeout и remote quiescence contracts. Migration/ASID reuse требуют нового проверенного решения. Этап не создаёт stable userspace ABI.
+В будущем домены планирования или службы политики в EL0 могут заменить статический селектор только при наличии явных контрактов владения, допуска, времени жизни, тайм-аутов и безопасной остановки на других CPU. Для миграции и повторного использования ASID потребуется новое проверенное решение. Этот этап не создаёт стабильный пользовательский ABI.
 
 [Английский оригинал](../../../../docs/architecture-decisions/0014-el0-foundation.md)

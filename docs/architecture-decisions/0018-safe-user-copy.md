@@ -12,7 +12,7 @@ Issue #22 requires protected copying before future IPC payload admission. [Phase
 
 ## Decision
 
-Use a synchronous current-task Access borrowed under existing indexed scheduler exclusion, with explicit bounded initialized Snapshot capacity and byte-slice output. Require exact root/process/queue identity and executing ownership; keep immutable mappings and the existing two-CPU retirement barrier. Hardware AT S1E0R/W preflight checks all covered pages; LDTRB/STTRB enforce EL0 permissions at actual access. Recover only precise translation/access/permission faults at those instructions while a per-CPU copy guard is active. Input publishes all-or-nothing snapshots; output errors report the completed prefix. Keep ordinary EL1 invariant faults fatal.
+Use a synchronous current-task Access borrowed under existing indexed scheduler exclusion, with explicit bounded initialized Snapshot capacity and byte-slice output. Require exact root/process/queue identity and executing ownership; keep immutable mappings and the existing two-CPU retirement barrier. Hardware AT S1E0R/W preflight checks all covered pages; LDTRB/STTRB enforce EL0 permissions at actual access. Recover only precise translation/access/permission faults at those exact instructions while a per-CPU copy guard is active, with matching syndrome, access direction and in-range FAR. Input publishes all-or-nothing snapshots; output errors report the completed prefix. Keep ordinary EL1 invariant faults fatal.
 
 ## Alternatives
 

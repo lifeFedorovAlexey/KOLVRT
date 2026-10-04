@@ -4,7 +4,7 @@ Status: **Accepted**. Date: 2026-10-02.
 
 Document status: HISTORICAL
 Evidence scope: original Phase 1 CPU0-only milestone; accepted isolation and ownership obligations remain applicable.
-Current reference: [Later multicore milestone](0012-multicore-retirement.md)
+Current reference: [Later multicore milestone](0012-multicore-retirement.md); [EL0 foundation](0014-el0-foundation.md); [scheduler ownership](0016-scheduler-ownership.md); [process lifecycle](0017-process-lifecycle.md)
 
 Issue #6 clarifies the historical scope without changing kernel contracts. The CPU0-only
 execution claim below belongs to the original [foundation result](../../research/results/kernel-foundation.json).

@@ -2,6 +2,10 @@
 
 Status: **Accepted**. Date: 2026-10-02.
 
+Document status: HISTORICAL MILESTONE
+Evidence scope: Phase 0 design baseline; the Phase 1 authorization statement records the decision state at acceptance.
+Current reference: [Current handle milestone](0020-handle-transfer-and-retention.md)
+
 ## Context
 
 Phase 0 needs a concrete stopping condition. Broad subsystem promises and a fixed law count cannot establish readiness.

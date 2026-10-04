@@ -2,6 +2,10 @@
 
 Status: **Accepted**. Date: 2026-10-02.
 
+Document status: HISTORICAL MILESTONE
+Evidence scope: compatibility-route creation state at ADR acceptance; compatibility routing is later accepted in Phase 2.
+Current reference: [Versioned EL0 routing](0015-el0-versioned-routing.md)
+
 ## Context
 
 The user requires performance-first method selection balanced against reliability, with historical OS errors checked before adoption. Benchmarks alone cannot establish this requirement.

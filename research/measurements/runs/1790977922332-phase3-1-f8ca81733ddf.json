@@ -3,36 +3,36 @@
   "correctness": {
     "matrix": "passed",
     "negative_host_controls": 53,
-    "tests_per_profile": 67
+    "tests_per_profile": 65
   },
-  "git_commit": "66dff156855c4e83c1998d8cf478c2a21348f1be",
-  "label": "phase3-1-block-wakeup",
+  "git_commit": "bb1d0486b6c2454a180c94f2b687c4ba00bbc1d0",
+  "label": "phase3-1",
   "method_review": "docs/architecture/implementation-review.md",
   "profiles": {
     "dev": {
       "boot_build": {
         "artifact": "target/kernel/dev-boot.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 2744264,
+        "elf_bytes": 2563904,
         "features": ["machine-events", "diagnostics"],
-        "load_bytes": 370019,
-        "memory_bytes": 1455187,
-        "sha256": "7241915150abb9847dcc3ed0c47f15d73c6521532c9f593cc05e39c83ec539fe",
+        "load_bytes": 344743,
+        "memory_bytes": 1429927,
+        "sha256": "27f690e06c317142555fa7b45b5b537f58d0b38a673c92b6b65097035aede718",
         "target": "aarch64-unknown-none"
       },
       "measurement": {
         "event": "measurement",
         "frequency": 62500000,
         "iterations": 64,
-        "median": 138,
-        "p95": 200,
-        "p99": 269,
+        "median": 144,
+        "p95": 150,
+        "p99": 225,
         "samples": [
-          137, 144, 143, 144, 138, 144, 138, 138, 138, 138, 144, 137, 137, 137,
-          137, 137, 137, 137, 137, 137, 131, 138, 138, 138, 238, 137, 137, 137,
-          137, 225, 138, 138, 138, 138, 200, 269, 169, 132, 138, 138, 138, 138,
-          138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 131,
-          137, 131, 137, 137, 131, 144, 138, 138
+          144, 150, 144, 144, 150, 144, 138, 150, 143, 137, 150, 225, 162, 150,
+          150, 144, 144, 150, 150, 143, 150, 144, 150, 144, 143, 150, 144, 143,
+          150, 144, 143, 144, 144, 143, 144, 144, 144, 143, 144, 144, 144, 144,
+          144, 144, 144, 150, 143, 150, 144, 150, 150, 143, 150, 144, 137, 144,
+          144, 150, 144, 143, 144, 144, 143, 156
         ],
         "scope": "lock_uncontended",
         "units": "timer_ticks",
@@ -65,7 +65,7 @@
           "target/kernel/dev-tests.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "d64af1d2f76e8599783542bd1791016f0b0c2e3f48d4f252f3beae665ea2c4cd",
+        "elf_sha256": "2ae30091a6abecd22ace34cb6d475b1cebdebae6d360f7fbe651d6b54742d162",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
@@ -73,11 +73,11 @@
       "test_build": {
         "artifact": "target/kernel/dev-tests.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 2978664,
+        "elf_bytes": 2799080,
         "features": ["machine-events", "diagnostics", "kernel-tests"],
-        "load_bytes": 427819,
-        "memory_bytes": 1512923,
-        "sha256": "d64af1d2f76e8599783542bd1791016f0b0c2e3f48d4f252f3beae665ea2c4cd",
+        "load_bytes": 402587,
+        "memory_bytes": 1487707,
+        "sha256": "2ae30091a6abecd22ace34cb6d475b1cebdebae6d360f7fbe651d6b54742d162",
         "target": "aarch64-unknown-none"
       },
       "test_events": [
@@ -200,15 +200,15 @@
           "event": "measurement",
           "frequency": 62500000,
           "iterations": 64,
-          "median": 138,
-          "p95": 200,
-          "p99": 269,
+          "median": 144,
+          "p95": 150,
+          "p99": 225,
           "samples": [
-            137, 144, 143, 144, 138, 144, 138, 138, 138, 138, 144, 137, 137,
-            137, 137, 137, 137, 137, 137, 137, 131, 138, 138, 138, 238, 137,
-            137, 137, 137, 225, 138, 138, 138, 138, 200, 269, 169, 132, 138,
-            138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 138, 138,
-            138, 138, 138, 131, 137, 131, 137, 137, 131, 144, 138, 138
+            144, 150, 144, 144, 150, 144, 138, 150, 143, 137, 150, 225, 162,
+            150, 150, 144, 144, 150, 150, 143, 150, 144, 150, 144, 143, 150,
+            144, 143, 150, 144, 143, 144, 144, 143, 144, 144, 144, 143, 144,
+            144, 144, 144, 144, 144, 144, 150, 143, 150, 144, 150, 150, 143,
+            150, 144, 137, 144, 144, 150, 144, 143, 144, 144, 143, 156
           ],
           "scope": "lock_uncontended",
           "units": "timer_ticks",
@@ -416,16 +416,6 @@
         },
         {
           "event": "test",
-          "name": "process_quantum_return_and_peer_progress",
-          "status": "pass"
-        },
-        {
-          "event": "test",
-          "name": "process_wait_block_and_wakeup",
-          "status": "pass"
-        },
-        {
-          "event": "test",
           "name": "process_resource_reclamation",
           "status": "pass"
         },
@@ -437,7 +427,7 @@
         {
           "event": "suite",
           "status": "pass",
-          "tests": 67
+          "tests": 65
         }
       ]
     },
@@ -445,11 +435,11 @@
       "boot_build": {
         "artifact": "target/kernel/prod-boot.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 745968,
+        "elf_bytes": 635360,
         "features": ["machine-events"],
-        "load_bytes": 204980,
-        "memory_bytes": 1286052,
-        "sha256": "60294e0fbc06c0633828e60d4254f97a90792c5ad94dc38cefa8b050afa8c08d",
+        "load_bytes": 191175,
+        "memory_bytes": 1272263,
+        "sha256": "b88e3eb40b43edab959a64a3235d1d2e430b2572b711ccde08d8f8b164674d95",
         "target": "aarch64-unknown-none"
       },
       "measurement": {
@@ -460,10 +450,9 @@
         "p95": 13,
         "p99": 13,
         "samples": [
-          12, 12, 13, 6, 6, 6, 6, 6, 6, 6, 12, 13, 12, 13, 6, 7, 6, 7, 6, 7, 6,
-          13, 12, 13, 12, 6, 6, 6, 6, 6, 6, 12, 13, 12, 13, 6, 7, 6, 7, 6, 7, 6,
-          7, 12, 13, 12, 6, 6, 6, 6, 6, 6, 12, 13, 12, 13, 12, 7, 6, 7, 6, 7, 6,
-          7
+          13, 12, 13, 12, 13, 12, 13, 12, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7,
+          12, 13, 12, 13, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12, 13,
+          12, 13, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 12, 13, 12, 13
         ],
         "scope": "lock_uncontended",
         "units": "timer_ticks",
@@ -496,7 +485,7 @@
           "target/kernel/prod-tests.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "5ab729d5411f3d1696e42fa29185f547cbe689f5e94fcc66c091a9be96123c1d",
+        "elf_sha256": "a2c37dcacf53358cb00cef3467ceaccc62752686b9ed1a93710d74cbf0455073",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
@@ -504,11 +493,11 @@
       "test_build": {
         "artifact": "target/kernel/prod-tests.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 923040,
+        "elf_bytes": 851536,
         "features": ["machine-events", "kernel-tests"],
-        "load_bytes": 242271,
-        "memory_bytes": 1323279,
-        "sha256": "5ab729d5411f3d1696e42fa29185f547cbe689f5e94fcc66c091a9be96123c1d",
+        "load_bytes": 231635,
+        "memory_bytes": 1312659,
+        "sha256": "a2c37dcacf53358cb00cef3467ceaccc62752686b9ed1a93710d74cbf0455073",
         "target": "aarch64-unknown-none"
       },
       "test_events": [
@@ -635,10 +624,10 @@
           "p95": 13,
           "p99": 13,
           "samples": [
-            12, 12, 13, 6, 6, 6, 6, 6, 6, 6, 12, 13, 12, 13, 6, 7, 6, 7, 6, 7,
-            6, 13, 12, 13, 12, 6, 6, 6, 6, 6, 6, 12, 13, 12, 13, 6, 7, 6, 7, 6,
-            7, 6, 7, 12, 13, 12, 6, 6, 6, 6, 6, 6, 12, 13, 12, 13, 12, 7, 6, 7,
-            6, 7, 6, 7
+            13, 12, 13, 12, 13, 12, 13, 12, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6,
+            7, 12, 13, 12, 13, 12, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12,
+            13, 12, 13, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 12, 13,
+            12, 13
           ],
           "scope": "lock_uncontended",
           "units": "timer_ticks",
@@ -846,16 +835,6 @@
         },
         {
           "event": "test",
-          "name": "process_quantum_return_and_peer_progress",
-          "status": "pass"
-        },
-        {
-          "event": "test",
-          "name": "process_wait_block_and_wakeup",
-          "status": "pass"
-        },
-        {
-          "event": "test",
           "name": "process_resource_reclamation",
           "status": "pass"
         },
@@ -867,7 +846,7 @@
         {
           "event": "suite",
           "status": "pass",
-          "tests": 67
+          "tests": 65
         }
       ]
     }
@@ -920,7 +899,7 @@
     },
     {
       "path": "crates/kernel/src/boot_workload.S",
-      "sha256_lf": "76809b65d1013d2a474ee4891e131a5445a1e3827f6257d2e343495697077038"
+      "sha256_lf": "3f69dbec817d830714d9e40bbf0221bd6cd266ce7c89300460d7744ed5c3458e"
     },
     {
       "path": "crates/kernel/src/boot_workload.rs",
@@ -964,11 +943,11 @@
     },
     {
       "path": "crates/kernel/src/process.rs",
-      "sha256_lf": "fc72114e53d6fcdd467bfa18039c4de473ec6d57e9c1b401a981550919ee026a"
+      "sha256_lf": "dfdb294dc44e45225a0644d281fe71c4759b1160d275eaa68981fa9c0955e82a"
     },
     {
       "path": "crates/kernel/src/process_workload.rs",
-      "sha256_lf": "8547b03c6c0537793ebf1c4ff43a3dd3e48b8a3359c5b856af49d9b5227e0c73"
+      "sha256_lf": "5f944612017a704d63f7ad5aeeed65107c7714aae982b87b09c2374022603c06"
     },
     {
       "path": "crates/kernel/src/scheduler/config.rs",
@@ -980,11 +959,11 @@
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
-      "sha256_lf": "9434c3c098e837caa4537d77dc6d09d359a9d11b2985036db8d691a13bb1f509"
+      "sha256_lf": "ddca572571f17e358ae851e748a6c75bedf48969b3f65ee3807fb2ed5f4df63a"
     },
     {
       "path": "crates/kernel/src/scheduler/task.rs",
-      "sha256_lf": "cbeac2cdb3cce1c88219dfa67f6fc4c1c28e0897090ef64e4e1a64a5ae562b07"
+      "sha256_lf": "9a53a5a400ea7b436b646156faf4b375bede275cffbdb53d1274a8fa7ba765ff"
     },
     {
       "path": "crates/kernel/src/smp.rs",
@@ -1012,7 +991,7 @@
     },
     {
       "path": "crates/kernel-core/src/lib.rs",
-      "sha256_lf": "11d74088af954abe5c31c600c470d12175e076191cc28bfe8fd01b89966b4762"
+      "sha256_lf": "0f7e6957a8b4312280d4a84bba636c4f8fcbe9befb9fbf081533656e0ac32b49"
     },
     {
       "path": "crates/kernel-core/src/memory.rs",
@@ -1039,10 +1018,6 @@
       "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
     },
     {
-      "path": "crates/kernel-core/src/wait.rs",
-      "sha256_lf": "8919f52cfb3e4e5651b0d59377f8678e755597435b1f7b83d8cf825562592791"
-    },
-    {
       "path": "crates/kernel-core/src/window.rs",
       "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
     },
@@ -1052,11 +1027,7 @@
     },
     {
       "path": "crates/kernel-core/tests/process_protocol.rs",
-      "sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5"
-    },
-    {
-      "path": "crates/kernel-core/tests/wait.rs",
-      "sha256_lf": "1ed02408023c6752f64bb8f7ee6a50a0dcc703e5cd51f618e615dc57c786a465"
+      "sha256_lf": "42af412ac0878d8ca612d216f50eb04747d69f5ccf9266e824cc571d8e6f80f5"
     },
     {
       "path": "crates/routing/Cargo.toml",
@@ -1068,7 +1039,7 @@
     },
     {
       "path": "crates/routing/src/conformance.rs",
-      "sha256_lf": "44a17a56a4112f570ac6e5932b0a84a827d7332e12fe7acc9fc8577576b5bfa4"
+      "sha256_lf": "0d4c33a5a7b0f0dfa44ea4ae9a28268e77b5f682eb8361a2a52fda8d59ff384b"
     },
     {
       "path": "crates/routing/src/lib.rs",
@@ -1108,7 +1079,7 @@
     },
     {
       "path": "crates/xtask/src/main.rs",
-      "sha256_lf": "cc8febfcfcc51f826d70922570745d173d1f790dbe2f18232df8425e1db5d077"
+      "sha256_lf": "832f3eca2f16ccea003dcc35bb3ab2f0b6688b07a97086a4f0016a940ee89dfc"
     },
     {
       "path": "crates/xtask/src/output.rs",
@@ -1120,7 +1091,7 @@
     },
     {
       "path": "crates/xtask/tests/cli.rs",
-      "sha256_lf": "bf0e6aa8bc4eda83006c7babd29ce8d1d157a7510d664b01063a0859f2e41509"
+      "sha256_lf": "b16996f16daba63492ffe73d39dc3a99acdc961764a1aedbbc5da9b54187cbe3"
     },
     {
       "path": "crates/xtask/tests/locking.rs",
@@ -1143,6 +1114,6 @@
       "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
     }
   ],
-  "timestamp_unix_ms": 1790981456192,
+  "timestamp_unix_ms": 1790977922332,
   "worktree_dirty": true
 }

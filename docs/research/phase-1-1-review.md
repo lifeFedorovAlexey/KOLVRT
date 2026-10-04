@@ -1,5 +1,9 @@
 # Phase 1.1 completion and Phase 2 boundary
 
+Document status: HISTORICAL MILESTONE
+Evidence scope: Phase 1.1 review revision; Phase 2 integration was still future work when this report was written.
+Current reference: [Current scheduler contract](../kernel/scheduler.md); [Phase 2 routing contract](../kernel/routing.md)
+
 Phase 1 remains the completed historical native foundation. Phase 1.1 adds real two-CPU execution, PSCI startup, affinity-correct GICv3, SGI/IPI, acknowledged reader/TLB retirement and orderly CPU_OFF. [SMP contract](../kernel/smp.md) contains the architecture/boot/shootdown diagrams, ownership table and limits. [ADR-0012](../architecture-decisions/0012-multicore-retirement.md) records alternatives; existing Kernel Laws need no changes.
 
 ## Evidence
@@ -52,6 +56,6 @@ No kernel hooks, shared routing registry, live kernel switching, compatibility d
 | Compatibility adapters are privileged library candidates                            | Review placement/threat model; no EL0 isolation or safety bypass is implied                                                    |
 | Physical ownership/PTE mutation is CPU0-scoped in Phase 1.1                         | Future routing must not treat CPU0 as permanent sole writer; use reviewed SMP ownership/publication primitives                 |
 
-The next milestone is Phase 2 integration after this review and the corresponding ADR. No EL0, scheduler or Linux ABI work starts automatically.
+At the time of this review, the next milestone was Phase 2 integration after review and a corresponding ADR. The later Phase 2 and Phase 3.0 evidence is recorded separately in the [documentation status policy](../documentation-policy.md); this report remains evidence for Phase 1.1 only.
 
 [Russian translation](../../translations/ru/docs/research/phase-1-1-review.md)

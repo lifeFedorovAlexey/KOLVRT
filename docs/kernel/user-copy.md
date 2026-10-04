@@ -94,6 +94,6 @@ The [physical native-only matrix](../../research/results/native-compat-removal-p
 
 [INV-USER-COPY](unsafe.md) records ownership, necessity, failure and test obligations. The lexical inventory rises from 98 locations at the base commit to 106: four production sites (permission query, extern declarations and two calls), plus four test-only sites (fixture declaration/slice and two deliberate fault calls). There is no new unsafe process storage or Sync implementation. INV-USER-COPY-TEST adds only deliberate bounded fault injection. A lexical inventory is not a proof.
 
-Phase 3.3 Handles can use completed bounded immutable request bytes, initialized output, explicit partial-write failure and generation-retained memory lifetime. It still needs its own handle identity/type/rights/close/revocation/admission rules; successful copying supplies no authority. No later phase starts automatically.
+The separately accepted [handle contract](handles.md) uses completed bounded immutable request bytes, initialized output, explicit partial-write failure and generation-retained memory lifetime. It supplies its own identity/type/rights/close/transfer rules; general revocation and authority issuance remain separate gates. Successful copying supplies no authority and does not authorize later phases.
 
 [Russian translation](../../translations/ru/docs/kernel/user-copy.md)

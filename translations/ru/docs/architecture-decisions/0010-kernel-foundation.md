@@ -3,8 +3,8 @@
 Статус: **Принято**. Дата: 2026-10-02.
 
 Document status: HISTORICAL
-Evidence scope: исходный этап Phase 1 только CPU0; принятые обязательства изоляции и владения остаются применимыми.
-Current reference: [Последующий многоядерный этап](0012-multicore-retirement.md)
+Evidence scope: исходный этап Phase 1 с исполнением только на CPU0; принятые требования изоляции и владения остаются в силе.
+Current reference: [Последующий этап для нескольких CPU](0012-multicore-retirement.md); [основа EL0](0014-el0-foundation.md); [владение планировщиком](0016-scheduler-ownership.md); [жизненный цикл процессов](0017-process-lifecycle.md)
 
 Задача #6 уточняет историческую область без изменения контрактов ядра. Заявление ниже о
 выполнении только CPU0 относится к исходному [результату основы](../../../../research/results/kernel-foundation.json).

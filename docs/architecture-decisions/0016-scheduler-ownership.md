@@ -2,6 +2,10 @@
 
 Status: **Accepted for bounded Phase 3.0**. Date: 2026-10-02.
 
+Document status: HISTORICAL MILESTONE
+Evidence scope: accepted Phase 3.0 scheduler-ownership milestone; issue #20 process lifecycle was future work at decision time.
+Current reference: [Scheduler and process-lifecycle contract](../kernel/scheduler.md)
+
 ## Context
 
 [Issue #16](https://github.com/lifeFedorovAlexey/KOLVRT/issues/16) and [issue #17](https://github.com/lifeFedorovAlexey/KOLVRT/issues/17) require decomposition and enforced ownership before dynamic processes. Review uses current main and [ADR-0015](0015-el0-versioned-routing.md), not the issue's historical commit. A comment-only UnsafeCell contract, mixed fixture fields and raw setup/inspection cannot safely serve as an extensible lifecycle boundary. LAW-013, LAW-018, LAW-035, LAW-041 and LAW-043 remain obligations; no law or privilege exception is added.
