@@ -107,7 +107,7 @@ KOLVRT уже загружается как native AArch64 kernel в QEMU.
 | ARM physical timer IRQ             | ✅                                                        |
 | DEV / PROD профили                 | ✅                                                        |
 | Автоматический kernel test harness | ✅                                                        |
-| Настоящие in-kernel tests          | ✅ 72 в последнем записанном прогоне DEV и PROD           |
+| Настоящие in-kernel tests          | ✅ 73 checks в exact-source матрице DEV/PROD              |
 | Negative failure controls          | ✅                                                        |
 | Отладка GDB                        | ✅                                                        |
 | SMP                                | ✅ Основа двух CPU в QEMU                                 |
@@ -116,6 +116,7 @@ KOLVRT уже загружается как native AArch64 kernel в QEMU.
 | Жизненный цикл процессов           | ✅ Ограниченные create/start/exit/reclaim на двух CPU     |
 | Ожидание собственного события      | ✅ Ограниченный block/wakeup в `Registry::step()`         |
 | Runtime versioned routing          | ✅ Ограниченный EL0 vertical slice; native core независим |
+| Migration advisor                  | ✅ Host planner; production integrations ещё не готовы    |
 | Linux compatibility                | ⏳ Не начата                                              |
 
 Оба настроенных CPU исполняют native EL1 code. QEMU matrix проверяет secondary boot, per-CPU ownership, двусторонние IPI, подтверждённый remote TLB retirement и multicore shutdown. Настоящее hardware остаётся непроверенным.
@@ -151,7 +152,7 @@ Safe user-copy                      ✅ bounded Phase 3.2
 Process-local handles               ✅ bounded Phase 3.3
         │
         ▼
-Capabilities, IPC and services       next
+Capabilities, IPC and services       next (#24)
         │
         ▼
 Compatibility personalities
@@ -162,7 +163,7 @@ Linux ABI compatibility where useful
 
 Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
 
-Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Phase 3.2 теперь добавляет bounded safe user-copy. IPC, capabilities, cancellation, постоянные services и security domains остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md) и [scheduler](docs/kernel/scheduler.md).
+Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Phase 3.2 добавляет bounded safe user-copy, Phase 3.3 — process-local handles и receiver-local transfer. Native grants, authority для services, общий IPC, cancellation, постоянные services и security domains остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md), [handles](docs/kernel/handles.md) и [scheduler](docs/kernel/scheduler.md). Issue [#24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) описывает ближайшую работу над native grants, attenuation и revocation.
 
 ---
 
@@ -240,6 +241,10 @@ memory           18.4 MB      14.1 MB
 Без маркетинговых benchmarks.
 
 Без сокрытия неудобных чисел.
+
+### Migration advisor
+
+Read-only [migration advisor](docs/architecture/migration-advisor.md) работает как host subsystem: описывает capability-based dependency alternatives, проверяет evidence и contract receipts, анализирует парные измерения и готовит rollback proposals. Отдельный signed authorization gate реализован, но он не устанавливает packages и не меняет routes. Production catalog/installed-state collection, полный OS telemetry, настоящие contract/rollback executors, custody production keys, validated dependence/power analysis и physical ARM64 A/B evidence остаются открытыми по [issue #14](https://github.com/lifeFedorovAlexey/KOLVRT/issues/14).
 
 ---
 
@@ -429,7 +434,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Тесты должны обнаруживать ошибки ядра
 
-Последняя успешно записанная матрица выполнила **72 проверок ядра в каждом профиле DEV и PROD**. Она включает ограниченное вытеснение и путь ожидания/блокировки/пробуждения по собственному событию процесса, а также 67 отрицательных контролей. Отчёт относится только к указанным в нём хешам исходников и не покрывает более поздние изменения рабочего дерева. Более ранние результаты остаются историческими и не подменяются текущим свидетельством.
+Последняя сохранённая exact-source матрица issue #23 фиксирует **73 kernel checks в каждом профиле DEV и PROD** и 69 отрицательных host controls. Она включает transfer process-local handles и ограниченные пути preemption/event-wait. [Отчёт](../../research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
 
 Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
 
