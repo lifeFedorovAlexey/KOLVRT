@@ -29,3 +29,7 @@ cargo run --locked -p repository-checks -- record-translation ru docs/research/c
 Команды `check` и `validate` также проверяют ограниченный реестр затрат на совместимость COST-L и его записи. Команда `check-cost-l` выполняет только эту проверку; параметр `--directory PATH` позволяет указать набор записей для отрицательных проверок. [Контракт реестра](../../docs/architecture/compatibility-debt.md) описывает жизненный цикл записей, конечные сроки поддержки, неизвестные наблюдения и сохранённые контрольные суммы артефактов. Успешная проверка подтверждает внутреннюю согласованность деклараций офлайн, но не поддержку драйверов Linux, полномочия в собственной системе, историческую достоверность или фактическую остановку обращений во время выполнения.
 
 [Английский оригинал](../../../../crates/repository-checks/README.md)
+
+## Команды знаний документации
+
+Подкоманда docs и фасад cargo xtask docs используют существующую библиотеку. См. [контракт знаний](../../docs/knowledge-system.md) и [контракт загрузки](../../docs/ai-retrieval.md). docs generate генерирует каталог/граф/README rows; --check проверяет их. docs pilot записывает настоящий детерминированный запрос Phase 3; docs pilot --check отклоняет устаревшие size/source/selection receipts. Основной check включает оба этапа. Необязательная docs check-issues обращается к GitHub и возвращает UNKNOWN при недоступности, не доказывая behavioral acceptance. CI docs check-change BASE обеспечивает сохранение включённых IDs/history и declared implementation impact.

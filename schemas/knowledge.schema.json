@@ -1,0 +1,687 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+      "maxLength": 160
+    },
+    "kind": {
+      "enum": [
+        "subsystem-contract",
+        "feature",
+        "contract-section",
+        "adr",
+        "law",
+        "policy",
+        "navigation",
+        "linux-mechanism",
+        "research",
+        "hardware-research",
+        "benchmark-evidence",
+        "security-analysis",
+        "api-contract",
+        "compatibility-module"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4096
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "read_when": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4096
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4096
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+        "maxLength": 160
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "depends_on",
+              "related_to",
+              "supersedes",
+              "implemented_by",
+              "validated_by",
+              "motivates",
+              "contrasts_with",
+              "blocked_by",
+              "cost_l",
+              "source_of_truth"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "confidence": {
+            "enum": ["UNKNOWN", "HYPOTHESIS", "REVIEWED"]
+          }
+        },
+        "required": ["type", "to"],
+        "additionalProperties": false
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4096
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "feature": {
+      "type": "object",
+      "properties": {
+        "implementation": {
+          "enum": [
+            "PLANNED",
+            "RESEARCH",
+            "EXPERIMENTAL",
+            "BOUNDED_IMPLEMENTED",
+            "IMPLEMENTED",
+            "SUPERSEDED",
+            "REMOVED"
+          ]
+        },
+        "implementation_scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "acceptance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "adrs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+            "maxLength": 160
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "next_gate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "verification": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "environment": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "state": {
+                "enum": [
+                  "UNKNOWN",
+                  "VERIFIED",
+                  "FAILED",
+                  "STALE",
+                  "NOT_APPLICABLE"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "receipt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "receipt_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": ["environment", "state", "reason"],
+            "additionalProperties": false
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "readiness": {
+          "enum": ["UNKNOWN", "NOT_READY", "READY"]
+        },
+        "readiness_acceptance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "enum": [
+                  "UNRECORDED",
+                  "PLANNED",
+                  "RESEARCH",
+                  "EXPERIMENTAL",
+                  "BOUNDED_IMPLEMENTED",
+                  "IMPLEMENTED",
+                  "SUPERSEDED",
+                  "REMOVED"
+                ]
+              },
+              "to": {
+                "enum": [
+                  "PLANNED",
+                  "RESEARCH",
+                  "EXPERIMENTAL",
+                  "BOUNDED_IMPLEMENTED",
+                  "IMPLEMENTED",
+                  "SUPERSEDED",
+                  "REMOVED"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "acceptance": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              }
+            },
+            "required": ["from", "to", "reason"],
+            "additionalProperties": false
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "roadmap_gate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "implementation",
+        "implementation_scope",
+        "sources",
+        "acceptance",
+        "issues",
+        "adrs",
+        "limitations",
+        "next_gate",
+        "verification",
+        "readiness",
+        "transitions"
+      ],
+      "additionalProperties": false
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+            "maxLength": 160
+          },
+          "kind": {
+            "enum": [
+              "subsystem-contract",
+              "feature",
+              "contract-section",
+              "adr",
+              "law",
+              "policy",
+              "navigation",
+              "linux-mechanism",
+              "research",
+              "hardware-research",
+              "benchmark-evidence",
+              "security-analysis",
+              "api-contract",
+              "compatibility-module"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "read_when": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+              "maxLength": 160
+            },
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "depends_on",
+                    "related_to",
+                    "supersedes",
+                    "implemented_by",
+                    "validated_by",
+                    "motivates",
+                    "contrasts_with",
+                    "blocked_by",
+                    "cost_l",
+                    "source_of_truth"
+                  ]
+                },
+                "to": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "scope": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "maxItems": 256,
+                  "uniqueItems": true
+                },
+                "confidence": {
+                  "enum": ["UNKNOWN", "HYPOTHESIS", "REVIEWED"]
+                }
+              },
+              "required": ["type", "to"],
+              "additionalProperties": false
+            },
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "feature": {
+            "type": "object",
+            "properties": {
+              "implementation": {
+                "enum": [
+                  "PLANNED",
+                  "RESEARCH",
+                  "EXPERIMENTAL",
+                  "BOUNDED_IMPLEMENTED",
+                  "IMPLEMENTED",
+                  "SUPERSEDED",
+                  "REMOVED"
+                ]
+              },
+              "implementation_scope": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "acceptance": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "issues": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "adrs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+                  "maxLength": 160
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "limitations": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "next_gate": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "verification": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "environment": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "state": {
+                      "enum": [
+                        "UNKNOWN",
+                        "VERIFIED",
+                        "FAILED",
+                        "STALE",
+                        "NOT_APPLICABLE"
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "scope": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "receipt": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "receipt_sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    }
+                  },
+                  "required": ["environment", "state", "reason"],
+                  "additionalProperties": false
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "readiness": {
+                "enum": ["UNKNOWN", "NOT_READY", "READY"]
+              },
+              "readiness_acceptance": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "transitions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "enum": [
+                        "UNRECORDED",
+                        "PLANNED",
+                        "RESEARCH",
+                        "EXPERIMENTAL",
+                        "BOUNDED_IMPLEMENTED",
+                        "IMPLEMENTED",
+                        "SUPERSEDED",
+                        "REMOVED"
+                      ]
+                    },
+                    "to": {
+                      "enum": [
+                        "PLANNED",
+                        "RESEARCH",
+                        "EXPERIMENTAL",
+                        "BOUNDED_IMPLEMENTED",
+                        "IMPLEMENTED",
+                        "SUPERSEDED",
+                        "REMOVED"
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    "acceptance": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      },
+                      "maxItems": 256,
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": ["from", "to", "reason"],
+                  "additionalProperties": false
+                },
+                "maxItems": 256,
+                "uniqueItems": true
+              },
+              "roadmap_gate": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "required": [
+              "implementation",
+              "implementation_scope",
+              "sources",
+              "acceptance",
+              "issues",
+              "adrs",
+              "limitations",
+              "next_gate",
+              "verification",
+              "readiness",
+              "transitions"
+            ],
+            "additionalProperties": false
+          },
+          "anchor": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]+$",
+            "maxLength": 160
+          }
+        },
+        "required": ["id", "kind", "summary", "anchor"],
+        "additionalProperties": false
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    }
+  },
+  "required": ["schema_version", "id", "kind", "summary"],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KOLVRT authored knowledge metadata v1"
+}

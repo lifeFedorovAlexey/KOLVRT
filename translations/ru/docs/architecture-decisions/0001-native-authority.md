@@ -1,5 +1,9 @@
 # ADR-0001 — Приоритет собственной модели и изоляция наследуемого поведения
 
+Document status: CURRENT
+Evidence scope: Принятые требования; реализация и проверка имеют отдельные границы доказательств.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Статус: **Принято**. Дата: 2026-10-02.
 
 ## Контекст
@@ -55,3 +59,16 @@ CANDIDATE, PUBLIC и STABLE для именованного контракта �
 [Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0001-native-authority.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0001",
+  "kind": "adr",
+  "aliases": ["ADR-0001"],
+  "summary": "Навигация по документу: ADR-0001 — Приоритет собственной модели и изоляция наследуемого поведения. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

@@ -82,3 +82,11 @@ The earlier audit explicitly excludes the then-local Phase 2 work. The verified 
 [ADR-0021](architecture-decisions/0021-asid-lifecycle.md) accepts fixed-affinity ASID leases and invalidation before reuse. The [EL0 contract](kernel/el0.md) also records the bounded AArch64 ELF loader; these mechanisms preserve the earlier process, user-copy and handle boundaries. The [integrated source receipt](../research/measurements/runs/1791123211326-docs-main-c5c440c-final-fd10fb19115e.json) records 84 DEV/PROD checks per profile, both non-test boots and 70 host negative controls for `c5c440c`. It supersedes no historical measurement counts and establishes only its recorded QEMU/source scope. Native grants, domains, general IPC, revocation, persistent services and silicon validation remain separate acceptance gates.
 
 [Russian translation](../translations/ru/docs/documentation-policy.md)
+
+## Feature change and selective context contract
+
+Any reviewed feature change MUST update its canonical description, status, implementation/verification scope, evidence applicability, limitations and next gate in the same change. Regenerate affected catalog/graph and public summaries, review complete EN/RU pairs and pass repository checks. This covers addition, partial/experimental/bounded implementation, removal, supersession, production readiness and platform verification. Merged code without acceptance, issue closure, host research and QEMU evidence cannot substitute for scoped implementation/hardware acceptance.
+
+Implementation order is NOT architectural authority. Before using early functionality as a later milestone foundation, re-derive architecture from current laws, accepted decisions, invariants and intended authority/lifetime. Refactor, replace or remove contradicting or prematurely freezing code. Prior implementation, effort, tests and rework cost do not justify preserving a design.
+
+Use the [knowledge system](knowledge-system.md) and [AI retrieval contract](ai-retrieval.md) for stable IDs, deterministic prerequisites, section scope, evidence states and staged migration. Roadmap gate order remains independent of implementation reality. Do not require loading all docs for a subsystem change.

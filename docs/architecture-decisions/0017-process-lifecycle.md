@@ -66,3 +66,16 @@ The Phase 3.1 QEMU matrix exercises both DEV and PROD profiles on two CPUs, incl
 This internal protocol can be revised before public callers depend on it. Once external APIs or persistent services rely on process identity and lifecycle semantics, changes will require an explicit compatibility plan.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0017-process-lifecycle.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0017",
+  "kind": "adr",
+  "aliases": ["ADR-0017"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

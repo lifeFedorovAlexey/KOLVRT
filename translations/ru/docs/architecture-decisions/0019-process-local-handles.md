@@ -49,3 +49,16 @@ Protected resource — kernel-owned wait/completion storage. EL0 не может
 Encoding/capacity изменяются с explicit provisional ABI review. Ослабление affinity, synchronous borrows или private mappings требует нового proof. Capability admission использует unchanged identity/type lookup, но независимо задаёт rights, revocation и accepted-work retention. Handles не являются authority.
 
 [Английский оригинал](../../../../docs/architecture-decisions/0019-process-local-handles.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0019",
+  "kind": "adr",
+  "aliases": ["ADR-0019"],
+  "summary": "Навигация по документу: ADR-0019 — Линейные namespace дескрипторов процессов. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

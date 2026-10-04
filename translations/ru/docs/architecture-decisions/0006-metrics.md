@@ -1,5 +1,9 @@
 # ADR-0006 — Измерение зависимостей и честное сравнение
 
+Document status: CURRENT
+Evidence scope: Принятые требования; реализация и проверка имеют отдельные границы доказательств.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Статус: **Принято**. Дата: 2026-10-02.
 
 ## Контекст
@@ -47,3 +51,16 @@
 [Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0006-metrics.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0006",
+  "kind": "adr",
+  "aliases": ["ADR-0006"],
+  "summary": "Навигация по документу: ADR-0006 — Измерение зависимостей и честное сравнение. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

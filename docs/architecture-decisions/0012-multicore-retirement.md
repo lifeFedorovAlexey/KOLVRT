@@ -1,5 +1,9 @@
 # ADR-0012 — Multicore ownership and acknowledged retirement
 
+Document status: CURRENT
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Status: **Accepted for two-CPU QEMU**. Date: 2026-10-02.
 
 ## Context
@@ -43,3 +47,16 @@ Same 39 tests in DEV/PROD, separate boot images and eight negative controls. Omi
 Future writers replace CPU0 admission only through a reviewed per-domain protocol. Preserve drained generations and ownership; changing a CPU-count constant is insufficient. Phase 1 evidence remains historical. No Kernel Law changes are needed; scoped enforcement advances LAW-013, LAW-018, LAW-035, LAW-041 and LAW-043.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0012-multicore-retirement.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0012",
+  "kind": "adr",
+  "aliases": ["ADR-0012"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
 
-use repository_checks::{CheckResult, cost_l, database, documents, report};
+use repository_checks::{CheckResult, cost_l, database, documents, knowledge, report};
 use std::{env, path::PathBuf};
 
 fn run() -> CheckResult<()> {
@@ -13,12 +13,13 @@ fn run() -> CheckResult<()> {
         }
     }
     match command {
+        "docs" => return knowledge::cli(&root, &args[1..]),
         "check" | "validate" | "check-docs" | "check-translations" if args.len() <= 1 => {
             if matches!(command,"check" | "validate") { database::validate(&root, &root.join("research/cases"), repository_checks::MINIMUM_RESEARCH_CASES)?; }
             if matches!(command,"check" | "validate") { cost_l::validate(&root, &root.join("research/cost-l"))?; }
             if matches!(command,"check" | "check-docs") { documents::check_docs(&root)?; }
             if matches!(command,"check" | "check-translations") { documents::check_translations(&root)?; }
-            if command == "check" { report::report(&root, true)?; }
+            if command == "check" { report::report(&root, true)?; knowledge::generate(&root, true)?; knowledge::pilot(&root, true)?; }
             println!("{command}: passed. Structural checks do not establish historical truth or kernel behavior.");
         }
         "check-cost-l" if args.len() == 1 || (args.len() == 3 && args[1] == "--directory") => {

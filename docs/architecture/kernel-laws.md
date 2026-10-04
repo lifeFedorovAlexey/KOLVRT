@@ -1,8 +1,14 @@
 # Kernel laws
 
+Document status: CURRENT
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 These are language-independent architectural obligations, not a numbered design target. The set has no required size. Stable IDs preserve history; gaps are intentional. Enforcement and tests are obligations for future implementations, not claims of completed kernel tests.
 
 Each law addresses a distinct review obligation. Consolidated requirements and implementation-specific policies are traced in the [law review](law-review.md). Changing a law requires an architecture decision with evidence and tests.
+
+<a name="law-001"></a>
 
 ## LAW-001 — Native authority and dependency isolation
 
@@ -20,6 +26,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Remove all software adapters and run the unchanged native contract suite.
 
+<a name="law-003"></a>
+
 ## LAW-003 — Concurrent native and compatibility routes
 
 **Rule:** Routing must support different consumers and API families concurrently; one global compatibility mode must not determine their behavior.
@@ -35,6 +43,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Review route selection scope and manifest constraints.
 
 **Testing:** Run native, mixed and personality-bound consumers together without changing a global switch.
+
+<a name="law-004"></a>
 
 ## LAW-004 — Explicit semantic binding
 
@@ -52,6 +62,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Missing modules, conflicting policies and unsupported versions never execute a substitute contract.
 
+<a name="law-005"></a>
+
 ## LAW-005 — Shared-state consistency
 
 **Rule:** Operations sharing state use compatible bindings and one object identity. Handle transfer cannot reinterpret existing state through receiver defaults.
@@ -67,6 +79,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Declare state domains and explicit cross-domain conversion contracts.
 
 **Testing:** Reject incompatible close/lock and wait/wake bindings and unauthorized handle imports.
+
+<a name="law-008"></a>
 
 ## LAW-008 — Controlled evolution and retirement
 
@@ -84,6 +98,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Exercise timeout, outstanding callbacks, dormant dependencies and failure before and after irreversible effects.
 
+<a name="law-009"></a>
+
 ## LAW-009 — Translation cannot expand effective authority
 
 **Rule:** For consumer C and operation O, EffectiveAuthority_via_compat(C,O) ⊆ NativeAuthorizedAuthority(C,O) in the applicable native authorization/revocation context. Translation, identity mapping and delegation cannot bypass memory protection, quotas or delegation restrictions. Service-private capabilities may differ from consumer capabilities but enable only caller-authorized objects and effects. Additional consumer grants require a separate native flow before admission, never compat issuance.
@@ -99,6 +115,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Review issuer, consumer, operation, scope and revocation context at every boundary; follow [ADR-0013](../architecture-decisions/0013-security-boundaries.md).
 
 **Testing:** Sufficient and denied authority, missing grants, broader substitutes, nested adapters, other/private authority, restart/rebind, PROD, private disk and split/combined operations.
+
+<a name="law-013"></a>
 
 ## LAW-013 — Explicit identity and lifetime ownership
 
@@ -116,6 +134,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Explore last-release/upgrade races, name reuse, unrelated close and stalled readers.
 
+<a name="law-018"></a>
+
 ## LAW-018 — Validated boundary data
 
 **Rule:** External messages define widths, lengths, versions, byte order and reserved fields. Initialize all observable data before publication. Validate bounds, provenance, permissions and lifetimes; authorization and execution use the same immutable data. Time includes a clock domain and checked conversion. Unchecked boundary operations require documented assumptions, necessity, review and negative tests.
@@ -131,6 +151,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Audit boundary contracts and maintain a reviewable inventory of unverified assumptions. [Safe user-copy](../kernel/user-copy.md) centralizes bounded initialized snapshots, current-space lifetime and EL0 permission checks, with implementation and test links in its contract.
 
 **Testing:** Fuzz malformed messages, reuse poisoned buffers, mutate foreign memory and test clock/size overflow. The [EL0 copy contract](../kernel/user-copy.md) links checks for range/permission errors, poisoned partial-fault scratch, initialized output and user mutation after snapshot in both profiles. General message fuzzing and shared-mapping races remain future gates.
+
+<a name="law-020"></a>
 
 ## LAW-020 — Device memory ownership and ordering
 
@@ -148,6 +170,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Test device timeout, concurrent unmapping, noncoherent memory and weak-order publication.
 
+<a name="law-025"></a>
+
 ## LAW-025 — Single resource authority and accounting
 
 **Rule:** Shared resources use one authoritative ownership and quota arbiter across native and compatibility clients. Every charge has an identified owner or an explicit shared-accounting rule; queues and retained resources have limits.
@@ -163,6 +187,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Review resource-domain identity, charge transfer and removal.
 
 **Testing:** Compete across personalities, exhaust quotas and remove domains with outstanding shared charges.
+
+<a name="law-026"></a>
 
 ## LAW-026 — Observable outcomes are explicit
 
@@ -180,6 +206,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Reorder completions, fail flush, cancel after effects and kill synchronization owners.
 
+<a name="law-027"></a>
+
 ## LAW-027 — Visible scheduling scope
 
 **Rule:** Priority and fairness parameters identify their scheduling domain. Group weights and task weights are separate; unrelated session changes do not silently replace native policy.
@@ -195,6 +223,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Expose policy domains and review scheduler interfaces.
 
 **Testing:** Compare identical competing tasks in one and multiple domains against declared shares.
+
+<a name="law-030"></a>
 
 ## LAW-030 — Atomic waiting and rollback of preparation
 
@@ -212,6 +242,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Insert wakeups between every preparation step and race cancellation with timeouts.
 
+<a name="law-031"></a>
+
 ## LAW-031 — Scoped platform adaptation
 
 **Rule:** Firmware input is validated and translated into native descriptors. Workarounds identify affected hardware, obligations, owners and removal conditions. Reconnection revokes old identity unless a recovery protocol proves continuity; matching descriptions alone is insufficient.
@@ -227,6 +259,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Audit support manifests, parser boundaries and device generations.
 
 **Testing:** Test affected and unaffected devices, malformed firmware and replacement devices with identical descriptors.
+
+<a name="law-035"></a>
 
 ## LAW-035 — Profiles preserve correctness
 
@@ -244,6 +278,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Compare diagnostic-on/off outcomes and inject supported failures in controlled test builds.
 
+<a name="law-036"></a>
+
 ## LAW-036 — Honest observations and comparisons
 
 **Rule:** Metrics state scope, units, denominator, coverage and attribution. Missing data is unknown, not zero. Comparisons use equivalent work and guarantees, predeclared sampling, retained raw results and reported failures; neither route receives an artificial advantage.
@@ -259,6 +295,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Review metric definitions and experiment manifests; keep hardware adaptation separate from software dependence. Follow the [document status policy](../documentation-policy.md) and scoped ADR-0010 evidence when reporting implementation milestones.
 
 **Testing:** Check zero denominators, lost events, nested spans, censored tails and a legitimately faster compatibility result.
+
+<a name="law-040"></a>
 
 ## LAW-040 — Evidence and reviewable architectural change
 
@@ -276,6 +314,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Reject missing evidence, unmapped prior obligations and fabricated execution claims; permit any justified nonempty law set.
 
+<a name="law-041"></a>
+
 ## LAW-041 — Progress has explicit dependencies and bounds
 
 **Rule:** Every blocking protocol states its progress assumptions, lock order, cancellation path and resource bounds. Do not hold a resource across a call that can require the same resource to complete. Interrupt and non-preemptible work must be bounded.
@@ -292,6 +332,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Testing:** Exhaust every bounded queue, enumerate runnable sets, interrupt dependency transitions and test timeout without reclaiming still-accessible storage.
 
+<a name="law-042"></a>
+
 ## LAW-042 — Failure containment and recovery are explicit
 
 **Rule:** Each component declares its trust and failure domain. Recovery starts from a known valid state with explicitly restored authority; it cannot treat unknown effects as absent or silently continue after a trusted invariant failure.
@@ -307,6 +349,8 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Enforcement:** Record isolation, termination, supervisor responsibility, recovery state and externally observable failure. [ADR-0008](../architecture-decisions/0008-placement.md) and the [admission policy](kernel-admission-policy.md) require privileged necessity for each EL1 responsibility; performance or authoritative state alone cannot revise a protection boundary.
 
 **Testing:** Kill a service before and after acceptance, reject malformed replies, preserve supervisor operation and restart without inheriting old handles.
+
+<a name="law-043"></a>
 
 ## LAW-043 — Publication and shutdown follow dependency order
 
@@ -325,3 +369,176 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 **Testing:** Fail each initialization stage and race admission, completion and shutdown; a negative control must expose premature resource release.
 
 [Russian translation](../../translations/ru/docs/architecture/kernel-laws.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.kernel-laws",
+  "kind": "policy",
+  "summary": "Normative kernel invariants; choose relevant law units.",
+  "units": [
+    {
+      "id": "law.001",
+      "anchor": "law-001",
+      "kind": "law",
+      "summary": "Native authority and dependency isolation",
+      "depends_on": [],
+      "aliases": ["LAW-001"]
+    },
+    {
+      "id": "law.003",
+      "anchor": "law-003",
+      "kind": "law",
+      "summary": "Concurrent native and compatibility routes",
+      "depends_on": [],
+      "aliases": ["LAW-003"]
+    },
+    {
+      "id": "law.004",
+      "anchor": "law-004",
+      "kind": "law",
+      "summary": "Explicit semantic binding",
+      "depends_on": [],
+      "aliases": ["LAW-004"]
+    },
+    {
+      "id": "law.005",
+      "anchor": "law-005",
+      "kind": "law",
+      "summary": "Shared-state consistency",
+      "depends_on": [],
+      "aliases": ["LAW-005"]
+    },
+    {
+      "id": "law.008",
+      "anchor": "law-008",
+      "kind": "law",
+      "summary": "Controlled evolution and retirement",
+      "depends_on": [],
+      "aliases": ["LAW-008"]
+    },
+    {
+      "id": "law.009",
+      "anchor": "law-009",
+      "kind": "law",
+      "summary": "Translation cannot expand effective authority",
+      "depends_on": [],
+      "aliases": ["LAW-009"]
+    },
+    {
+      "id": "law.013",
+      "anchor": "law-013",
+      "kind": "law",
+      "summary": "Explicit identity and lifetime ownership",
+      "depends_on": [],
+      "aliases": ["LAW-013"]
+    },
+    {
+      "id": "law.018",
+      "anchor": "law-018",
+      "kind": "law",
+      "summary": "Validated boundary data",
+      "depends_on": [],
+      "aliases": ["LAW-018"]
+    },
+    {
+      "id": "law.020",
+      "anchor": "law-020",
+      "kind": "law",
+      "summary": "Device memory ownership and ordering",
+      "depends_on": [],
+      "aliases": ["LAW-020"]
+    },
+    {
+      "id": "law.025",
+      "anchor": "law-025",
+      "kind": "law",
+      "summary": "Single resource authority and accounting",
+      "depends_on": [],
+      "aliases": ["LAW-025"]
+    },
+    {
+      "id": "law.026",
+      "anchor": "law-026",
+      "kind": "law",
+      "summary": "Observable outcomes are explicit",
+      "depends_on": [],
+      "aliases": ["LAW-026"]
+    },
+    {
+      "id": "law.027",
+      "anchor": "law-027",
+      "kind": "law",
+      "summary": "Visible scheduling scope",
+      "depends_on": [],
+      "aliases": ["LAW-027"]
+    },
+    {
+      "id": "law.030",
+      "anchor": "law-030",
+      "kind": "law",
+      "summary": "Atomic waiting and rollback of preparation",
+      "depends_on": [],
+      "aliases": ["LAW-030"]
+    },
+    {
+      "id": "law.031",
+      "anchor": "law-031",
+      "kind": "law",
+      "summary": "Scoped platform adaptation",
+      "depends_on": [],
+      "aliases": ["LAW-031"]
+    },
+    {
+      "id": "law.035",
+      "anchor": "law-035",
+      "kind": "law",
+      "summary": "Profiles preserve correctness",
+      "depends_on": [],
+      "aliases": ["LAW-035"]
+    },
+    {
+      "id": "law.036",
+      "anchor": "law-036",
+      "kind": "law",
+      "summary": "Honest observations and comparisons",
+      "depends_on": [],
+      "aliases": ["LAW-036"]
+    },
+    {
+      "id": "law.040",
+      "anchor": "law-040",
+      "kind": "law",
+      "summary": "Evidence and reviewable architectural change",
+      "depends_on": [],
+      "aliases": ["LAW-040"]
+    },
+    {
+      "id": "law.041",
+      "anchor": "law-041",
+      "kind": "law",
+      "summary": "Progress has explicit dependencies and bounds",
+      "depends_on": [],
+      "aliases": ["LAW-041"]
+    },
+    {
+      "id": "law.042",
+      "anchor": "law-042",
+      "kind": "law",
+      "summary": "Failure containment and recovery are explicit",
+      "depends_on": [],
+      "aliases": ["LAW-042"]
+    },
+    {
+      "id": "law.043",
+      "anchor": "law-043",
+      "kind": "law",
+      "summary": "Publication and shutdown follow dependency order",
+      "depends_on": [],
+      "aliases": ["LAW-043"]
+    }
+  ]
+}
+```
