@@ -33,5 +33,6 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 - [ADR-0020 — Attenuated handle transfer and retained targets](0020-handle-transfer-and-retention.md) — Accepted for bounded issue #23 implementation.
 
 - [ADR-0021 — Fixed-affinity AArch64 ASID lifecycle](0021-asid-lifecycle.md) — Accepted for bounded process roots; migration remains unsupported.
+- [ADR-0022 — Bounded native Event grants and revocation](0022-native-event-grants-and-revocation.md) — Accepted for the minimal Event authority slice.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)

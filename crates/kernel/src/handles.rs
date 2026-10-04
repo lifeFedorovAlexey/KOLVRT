@@ -1,4 +1,4 @@
-//! Narrow process-local reference boundary. No authority or delegation.
+//! Copied caller-local lookup, close, attenuated transfer and Event revocation.
 use crate::{cpu::context::Context, scheduler::task::Task, user_copy::Access};
 use kernel_core::handles::{Error, Handle, Kind, Rights};
 pub(crate) const CAPACITY: usize = 8;
@@ -15,6 +15,7 @@ fn status(error: Error) -> u64 {
         Error::GenerationExhausted => 7,
         Error::Rights => 9,
         Error::ReferenceExhausted => 10,
+        Error::Revoked => 11,
     }
 }
 pub(crate) fn call(
@@ -110,6 +111,17 @@ pub(crate) fn call(
             )
         };
         frame.gpr[0] = result.map(Handle::encode).unwrap_or_else(status);
+        return true;
+    }
+    if word(1) == 4 {
+        if word(3) != 0 || word(4) != 0 || word(5) != 0 {
+            frame.gpr[0] = 1;
+            return true;
+        }
+        frame.gpr[0] = namespaces[current]
+            .revoke(caller, handle)
+            .map(|_| 0)
+            .unwrap_or_else(status);
         return true;
     }
     let kind = match word(3) {

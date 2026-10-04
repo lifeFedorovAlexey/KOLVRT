@@ -1,8 +1,8 @@
 # Process-local handles
 
 Document status: CURRENT
-Evidence scope: bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.
-Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md)
+Evidence scope: bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.
+Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) for handle identity/transfer/lifetime, supplemented by [ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) for the minimal Event grant/revocation slice.
 
 ## Representation and caller context
 
@@ -11,14 +11,19 @@ Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and
 Each process slot retains one linear namespace across ProcessId reuse. Binding records the exact ProcessId; lookup checks caller, bounds, generation, live entry, requested kind and required rights. Equal numbers in different namespaces can refer to different resources. A wire handle never selects another process table. [Native request handling](../../crates/kernel/src/handles.rs) derives caller context from the scheduler-owned task and bound namespace, verifies the executing context, and copies a 48-byte request into an immutable snapshot before touching namespace entries.
 
 ```text
-LE64[6] version=1, operation=(1 lookup | 2 close | 3 transfer)
+LE64[6] version=1, operation=(1 lookup | 2 close | 3 transfer | 4 revoke)
 lookup/close: handle, kind, required_rights, reserved=0
 transfer:     handle, receiver_process_slot, receiver_generation, requested_rights
+revoke:       handle, reserved=0, reserved=0, reserved=0
 safe copy -> decode snapshot -> current caller table -> generation/type/rights check
            -> receiver-local handle with the same target binding
 ```
 
-Lookup, close and transfer are exposed. Rights are `SEND=1` and `TRANSFER=2`; unknown bits fail. Transfer requires TRANSFER and a subset of the held rights. The receiver is identified by a live ProcessId already bound to a namespace on the caller's CPU; other-CPU requests fail with ForeignProcess. Status words are native bounded outcomes: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure, 9 rights denied, 10 retained-reference quota exhausted. Unknown version/opcode/kind fails. Close validates kind and generation. No pointer, physical address, global object ID, internal enum layout or compatibility errno crosses EL0. Creation remains trusted bootstrap work, not an unprivileged object-creation authority API.
+Lookup, close, transfer and shared-Event revoke are exposed. Rights are `SEND=1`, `TRANSFER=2` and `REVOKE=4`; unknown bits fail. Bootstrap defaults grant SEND to Events and no rights to Completion records; broader rights require an explicit trusted `create_*_with_rights` grant. REVOKE is valid only for Events; Completion rejects that grant before reserving a generation or publishing. Transfer requires TRANSFER and a subset of held rights. Revoke requires REVOKE and atomically prevents later Event signal admissions through every alias. A signal racing revoke is ordered by the target state CAS; work admitted earlier and already-pending notification remain valid. Close drops only one local reference and is not revoke. The receiver is identified by a live ProcessId already bound to a namespace on the caller's CPU; other-CPU requests fail with ForeignProcess. Status words are native bounded outcomes: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure, 9 rights denied, 10 retained-reference quota exhausted. Unknown version/opcode/kind fails. Close validates kind and generation. No pointer, physical address, global object ID, internal enum layout or compatibility errno crosses EL0. Creation remains trusted bootstrap work, not an unprivileged object-creation authority API.
+
+The real EL0 fixture submits the revoke operation through its copied 48-byte request and verifies that a subsequent SEND admission returns `Revoked`. Host controls verify that a delegated alias stays revoked after source close. These controls cover the Event slice; they do not establish the full grant, service-lifecycle or security-domain acceptance for issue #24.
+
+The revoked admission result is wire status 11; existing status values retain their prior meanings.
 
 ## Ownership and target lifetime
 
@@ -26,7 +31,7 @@ Each owned target carries an immutable kernel-only TargetId (creating ProcessId,
 
 The two concrete targets are the existing coalescing wait Event and an owned immutable process Completion record. The completion retains its value, not a live process or address space. Closing it cannot terminate a process. Delegated Event handles share one atomic latch in a fixed 512-slot kernel pool. Each slot carries a nonwrapping generation and allows at most 1,024 live references. The per-process namespace remains eight entries; exhausted pool or reference quotas fail explicitly. This narrow sum is not a universal KernelObject hierarchy or generic invocation interface.
 
-A namespace owns one reference per entry. Lookup returns a Retained borrow; its `.retain()` operation creates an owned reference for accepted work. A used borrow excludes mutable close/retire at compile time. Transfer validates both tables before publishing a fresh receiver-local generation, attenuates rights, and preserves TargetId. Closing removes one entry and blocks future lookup through that token, while delegated entries and owned retained work keep the object alive. Double close is Stale. Resource-specific methods remain kernel-only; handle rights gate admission but do not add an EL0 object pointer or general invoke interface.
+A namespace owns one reference per entry. Lookup returns a Retained borrow; its `.retain()` operation creates an owned reference for accepted work. A used borrow excludes mutable close/retire at compile time. Transfer validates both tables before publishing a fresh receiver-local generation, attenuates rights, and preserves TargetId. Revoking an Event is target-wide across aliases, while close removes one entry and blocks future lookup through that token; delegated entries and owned retained work keep the target alive. Double close is Stale. Resource-specific methods remain kernel-only; handle rights gate admission but do not add an EL0 object pointer or general invoke interface.
 
 ```mermaid
 flowchart TD

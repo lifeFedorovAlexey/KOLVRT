@@ -229,6 +229,13 @@ handle_image_start:
  svc #0x82
  and x19,x19,x0
  // Old user-supplied handle must stay stale after the slot contains a new target.
+ mov x3,#1
+ str x3,[x21]
+ str x3,[x21,#8]
+ str x20,[x21,#16]
+ str x3,[x21,#24]
+ str xzr,[x21,#32]
+ str xzr,[x21,#40]
  mov x0,x21
  svc #0x80
  cmp x0,#2
@@ -256,6 +263,58 @@ handle_image_start:
  svc #0x80
  mov x3,#0x100
  cmp x0,x3
+ cset x3,eq
+ and x19,x19,x3
+ // Revoke is a copied native request; future SEND admissions are denied.
+ mov x3,#1
+ str x3,[x21]
+ mov x3,#4
+ str x3,[x21,#8]
+ str x20,[x21,#16]
+ str xzr,[x21,#24]
+ str xzr,[x21,#32]
+ str xzr,[x21,#40]
+ // Each malformed revoke field must reject independently before any effect.
+ mov x3,#2
+ str x3,[x21]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#1
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x20
+ svc #0x86
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#1
+ str x3,[x21]
+ mov x26,#24
+.Lhandle_revoke_reserved:
+ mov x3,#1
+ str x3,[x21,x26]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#1
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x20
+ svc #0x86
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ str xzr,[x21,x26]
+ add x26,x26,#8
+ cmp x26,#48
+ b.ne .Lhandle_revoke_reserved
+ mov x0,x21
+ svc #0x80
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x20
+ svc #0x86
+ cmp x0,#11
  cset x3,eq
  and x19,x19,x3
  // Close the source immediately; the receiver's handle must keep the target alive.
@@ -319,7 +378,15 @@ handle_foreign_start:
  and x19,x19,x0
  mov x0,x22
  svc #0x86
+ // The waited receiver runs after source revocation; its alias remains live
+ // for lookup/close, but a new SEND must fail with Revoked. The independent
+ // cross-CPU close/lifetime scenario still requires a successful SEND.
+ cbz x25,.Lhandle_alias_signal_unrevoked
+ cmp x0,#11
+ b .Lhandle_alias_signal_checked
+.Lhandle_alias_signal_unrevoked:
  cmp x0,#0
+.Lhandle_alias_signal_checked:
  cset x0,eq
  and x19,x19,x0
 2:
