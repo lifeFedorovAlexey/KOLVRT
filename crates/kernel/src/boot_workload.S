@@ -274,6 +274,39 @@ handle_image_start:
  str xzr,[x21,#24]
  str xzr,[x21,#32]
  str xzr,[x21,#40]
+ // Each malformed revoke field must reject independently before any effect.
+ mov x3,#2
+ str x3,[x21]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#1
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x20
+ svc #0x86
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ mov x3,#1
+ str x3,[x21]
+ mov x26,#24
+.Lhandle_revoke_reserved:
+ mov x3,#1
+ str x3,[x21,x26]
+ mov x0,x21
+ svc #0x80
+ cmp x0,#1
+ cset x3,eq
+ and x19,x19,x3
+ mov x0,x20
+ svc #0x86
+ cmp x0,#0
+ cset x3,eq
+ and x19,x19,x3
+ str xzr,[x21,x26]
+ add x26,x26,#8
+ cmp x26,#48
+ b.ne .Lhandle_revoke_reserved
  mov x0,x21
  svc #0x80
  cmp x0,#0
