@@ -228,12 +228,11 @@ handle_image_start:
  mov x1,x21
  svc #0x82
  and x19,x19,x0
- mov x26,x20
  // Old user-supplied handle must stay stale after the slot contains a new target.
  mov x3,#1
  str x3,[x21]
  str x3,[x21,#8]
- str x26,[x21,#16]
+ str x20,[x21,#16]
  str x3,[x21,#24]
  str xzr,[x21,#32]
  str xzr,[x21,#40]
