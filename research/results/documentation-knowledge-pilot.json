@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 36271,
-  "catalog_bytes": 51011,
-  "catalog_nodes": 130,
+  "approximate_tokens": 39502,
+  "catalog_bytes": 52285,
+  "catalog_nodes": 132,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "3f5d480d0bc0773e6f2b5a7a3d2a93d0082d9dd1def9e92e1b10934c815b15be",
+  "catalog_sha256": "ba6f5c73e00818931e2ef8b65f552797e4252db30adc407784d1ba016735c829",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 145083,
+  "context_plus_catalog_bytes": 158008,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 84,
-    "utf8_bytes": 593788
+    "documents": 85,
+    "utf8_bytes": 606694
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -24,15 +24,16 @@
   "missing": [
     {
       "id": "kolvrt.security.capability-revocation",
-      "missing": "Issue #24 native revocation implementation and behavioral acceptance are missing."
+      "missing": "Issue #24 broader issuer independence, service restart/rebind, nested authority, domains and IPC acceptance remain missing; the synchronous Event slice is implemented separately."
     }
   ],
   "optional_raw_acceptance_bytes": {
     "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json": 53405,
+    "research/results/event-revocation-ci.json": 57928,
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 94072,
+  "rendered_context_bytes": 105723,
   "schema_version": 1,
   "seeds": ["kolvrt.security.capability-revocation"],
   "selected": [
@@ -91,30 +92,39 @@
       }
     },
     {
+      "id": "adr.0022",
+      "location": {
+        "end": 138,
+        "path": "docs/architecture-decisions/0022-native-event-grants-and-revocation.md",
+        "sha256": "17179221ff4e65bb1e06e11f57f5ef721e34d040acf00e6e0fa476cc15f065bd",
+        "start": 1
+      }
+    },
+    {
       "id": "kolvrt.handles.identity",
       "location": {
-        "end": 32,
+        "end": 37,
         "path": "docs/kernel/handles.md",
-        "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
+        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
         "start": 13
       }
     },
     {
       "id": "kolvrt.handles.lifetime",
       "location": {
-        "end": 62,
+        "end": 67,
         "path": "docs/kernel/handles.md",
-        "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
-        "start": 31
+        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "start": 36
       }
     },
     {
       "id": "kolvrt.handles.limits",
       "location": {
-        "end": 215,
+        "end": 220,
         "path": "docs/kernel/handles.md",
-        "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
-        "start": 100
+        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "start": 105
       }
     },
     {
@@ -122,17 +132,17 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/handles.md",
-        "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
+        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
         "start": 7
       }
     },
     {
       "id": "kolvrt.handles.publication",
       "location": {
-        "end": 79,
+        "end": 84,
         "path": "docs/kernel/handles.md",
-        "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
-        "start": 61
+        "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+        "start": 66
       }
     },
     {
@@ -228,10 +238,19 @@
     {
       "id": "kolvrt.security.capability-revocation",
       "location": {
-        "end": 97,
+        "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "8bea9106c7e7a5af02fcece7b473a6a32ab80b6b0dbfd9b2a94e0fcb6e82a57b",
+        "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
         "start": 7
+      }
+    },
+    {
+      "id": "kolvrt.security.event-revocation",
+      "location": {
+        "end": 163,
+        "path": "docs/kernel/capabilities.md",
+        "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+        "start": 17
       }
     },
     {
@@ -344,17 +363,17 @@
     }
   ],
   "selected_full_documents": {
-    "count": 13,
-    "utf8_bytes": 151240
+    "count": 14,
+    "utf8_bytes": 163990
   },
   "source_files": [
     {
       "path": "crates/repository-checks/src/knowledge.rs",
-      "sha256_lf": "3b106d4bcb311dfd7499473255dc4635a62c247646a682f8bc805fd768cbdabb"
+      "sha256_lf": "81b8799bc6bb94f8090ccba25a7a552c97762339facdda65f9155578e03b1107"
     },
     {
       "path": "crates/repository-checks/tests/knowledge.rs",
-      "sha256_lf": "885303263de9136088a19c9986d6254dffafca718d145da7b80a97edfdfb055b"
+      "sha256_lf": "487b1101e5e30a6619a83091ae50ebe08bb03c1338b5a8b347b864cf30b5e330"
     }
   ]
 }

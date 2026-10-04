@@ -1,4 +1,4 @@
-# ADR-0023 — Навигация знаний документации и актуальность функций
+# ADR-0024 — Навигация знаний документации и актуальность функций
 
 Status: **Accepted for bounded offline documentation infrastructure**. Date: 2026-10-04.
 
@@ -46,16 +46,16 @@ Native ABI, Linux semantics, kernel authority, COST-L allocation/lifecycle и mi
 
 Формат metadata и host tooling пересматриваются по текущим инвариантам. Сохраняйте semantic IDs через aliases/tombstones, evidence и переводы, проверяйте границы supersession. Порядок реализации и затраты не закрепляют формат.
 
-[Английский оригинал](../../../../docs/architecture-decisions/0023-documentation-knowledge.md)
+[Английский оригинал](../../../../docs/architecture-decisions/0024-documentation-knowledge.md)
 
 <!-- knowledge -->
 
 ```json
 {
   "schema_version": 1,
-  "id": "adr.0023",
+  "id": "adr.0024",
   "kind": "adr",
   "summary": "Контракт общей навигации документации и актуальности функций.",
-  "aliases": ["ADR-0023"]
+  "aliases": ["ADR-0024"]
 }
 ```

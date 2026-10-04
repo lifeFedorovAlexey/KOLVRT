@@ -208,6 +208,8 @@ fn actual_pilot_closure_includes_authority_and_reports_planned_gaps() {
         "law.009",
         "law.013",
         "adr.0013",
+        "adr.0022",
+        "kolvrt.security.event-revocation",
     ] {
         assert!(ids.contains(&json!(id)), "missing {id}");
     }
@@ -217,6 +219,10 @@ fn actual_pilot_closure_includes_authority_and_reports_planned_gaps() {
         "PLANNED"
     );
     assert_eq!(result["budget_exceeded"], false);
+    assert_eq!(
+        k.graph["nodes"]["kolvrt.security.event-revocation"]["feature"]["implementation"],
+        "BOUNDED_IMPLEMENTED"
+    );
     assert_eq!(
         k.context(&root, "review Phase 3.4 capability revocation", 1, "en")
             .unwrap()["budget_exceeded"],

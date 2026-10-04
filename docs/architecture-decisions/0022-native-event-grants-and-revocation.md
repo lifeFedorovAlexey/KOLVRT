@@ -1,5 +1,8 @@
 # ADR-0022 — Bounded native Event grants and revocation
 
+Document status: CURRENT
+Evidence scope: accepted minimal Event-slice obligations; separate CI receipt binds QEMU sources, not general grants/domains.
+Current reference: [Handle contract](../kernel/handles.md)
 Status: **Accepted for the minimal Event authority slice**. Date: 2026-10-04.
 
 Supersedes only ADR-0020's rights-set and deferred-revocation clauses for this slice. The
@@ -114,3 +117,22 @@ requires a reviewed successor decision and migration evidence. No compatibility 
 may expand authority.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0022-native-event-grants-and-revocation.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0022",
+  "kind": "adr",
+  "summary": "Minimal Event grants and target-wide admission revocation.",
+  "aliases": ["ADR-0022"],
+  "relationships": [
+    {
+      "type": "supersedes",
+      "to": "adr.0020",
+      "scope": "Only rights-set and deferred-revocation clauses for synchronous Event SEND; identity, transfer, retention, close and fixed affinity remain binding."
+    }
+  ]
+}
+```

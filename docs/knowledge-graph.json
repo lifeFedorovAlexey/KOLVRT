@@ -9,8 +9,14 @@
       "type": "motivates"
     },
     {
+      "from": "adr.0022",
+      "scope": "Only rights-set and deferred-revocation clauses for synchronous Event SEND; identity, transfer, retention, close and fixed affinity remain binding.",
+      "to": "adr.0020",
+      "type": "supersedes"
+    },
+    {
       "from": "kolvrt.docs.navigation",
-      "to": "adr.0022",
+      "to": "adr.0023",
       "type": "depends_on"
     },
     {
@@ -36,6 +42,11 @@
     {
       "from": "kolvrt.handles.local",
       "to": "adr.0020",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.handles.local",
+      "to": "adr.0022",
       "type": "depends_on"
     },
     {
@@ -285,6 +296,11 @@
     },
     {
       "from": "kolvrt.security.capability-revocation",
+      "to": "kolvrt.security.event-revocation",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
       "to": "kolvrt.security.handle-retention",
       "type": "depends_on"
     },
@@ -342,17 +358,79 @@
       "from": "kolvrt.security.capability-revocation",
       "to": "law.043",
       "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "adr.0022",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "crates/kernel-core/src/handles.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "crates/kernel-core/src/wait.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "crates/kernel/src/handles.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "crates/kernel/src/handles/testing.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "kolvrt.handles.identity",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "kolvrt.handles.lifetime",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "kolvrt.memory.user-copy",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "law.009",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "law.013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "law.025",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.event-revocation",
+      "to": "research/results/event-revocation-ci.json",
+      "type": "validated_by"
     }
   ],
   "inputs": {
-    "crates/kernel-core/src/handles.rs": "0f14d2b03c8133e164faedb2cd68401443fd12ed6333add3d263db39b86ff660",
+    "crates/kernel-core/src/handles.rs": "e3f79a46f98d4cd718b751c545b3563b9b2f85ddefb917905b7f50dd976ae56f",
     "crates/kernel-core/src/process.rs": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979",
     "crates/kernel-core/src/user_copy.rs": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da",
-    "crates/kernel/src/handles.rs": "1ec7f35145140541ab091487791415b1124c5f9375f43541a599f24b45ec6e2d",
-    "crates/kernel/src/process.rs": "c6047978cdd66a631bb6dbd69279ad2890536dc79aa90751ca48960da83ed5f8",
+    "crates/kernel-core/src/wait.rs": "0e3e43f69867d7f9d6d4b30b91b3789a0f1bc0cfb6fa16936a7c8b87b3021442",
+    "crates/kernel/src/handles.rs": "e550b9545e690823cd776f4a128cacb8c4981eb18c6167e052eb13613cb284a3",
+    "crates/kernel/src/handles/testing.rs": "94cefdfac863fcc185a789b21a01c4d1c6eb2c0ee018c7dc06e38548fa4f01c1",
+    "crates/kernel/src/process.rs": "2d4e50c0bcf5804fe76ec16bce885ba0b6721ee165e596acac89cf6fc216b0e2",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
-    "crates/repository-checks/src/knowledge.rs": "3b106d4bcb311dfd7499473255dc4635a62c247646a682f8bc805fd768cbdabb",
-    "crates/repository-checks/tests/knowledge.rs": "885303263de9136088a19c9986d6254dffafca718d145da7b80a97edfdfb055b",
+    "crates/repository-checks/src/knowledge.rs": "81b8799bc6bb94f8090ccba25a7a552c97762339facdda65f9155578e03b1107",
+    "crates/repository-checks/tests/knowledge.rs": "487b1101e5e30a6619a83091ae50ebe08bb03c1338b5a8b347b864cf30b5e330",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
     "docs/architecture-decisions/0003-profiles.md": "e468a33090c9ab7ae112cf41f222edfd7faf459907a1117106dbfc19c64e3280",
@@ -374,15 +452,16 @@
     "docs/architecture-decisions/0019-process-local-handles.md": "546381814187398e242006c4ad48906145dd1c63ff6120b3ab6761743cb69147",
     "docs/architecture-decisions/0020-handle-transfer-and-retention.md": "123c8480d21d65b8a9d8284ab1d029b4fbad58217eef667540e7d566e7a41527",
     "docs/architecture-decisions/0021-asid-lifecycle.md": "fd2181dadc72323938de89d9f56edd4af8da6fb66b1b1833969ba6d2b4608723",
-    "docs/architecture-decisions/0022-documentation-knowledge.md": "8137773b089e95f8c24aedf4985917241c04909cef4ba46286f1c761eedb77fd",
+    "docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "17179221ff4e65bb1e06e11f57f5ef721e34d040acf00e6e0fa476cc15f065bd",
+    "docs/architecture-decisions/0023-documentation-knowledge.md": "11d16aa9de8426f1b22def59c74008b7187a71abaab8c5c8b7f4833234f03902",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
-    "docs/kernel/capabilities.md": "8bea9106c7e7a5af02fcece7b473a6a32ab80b6b0dbfd9b2a94e0fcb6e82a57b",
-    "docs/kernel/handles.md": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
+    "docs/kernel/capabilities.md": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+    "docs/kernel/handles.md": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
     "docs/kernel/processes.md": "f1cea28cfc2281014e6231e8f8531962bda6d8c3da46a20425303d7b1fdeb63c",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "699fad392019a154ff74c986c0406a2e37d7750e98b1fd6acc122b367d999dce",
-    "docs/knowledge-system.md": "2462ad12a0a3c79699c915e3580ff57f366a3726e3cdfa3646b00271e8a8782c",
+    "docs/knowledge-enrollment.json": "d8d57a0349c6e0ad444c0e3fd0d23e7cbbadd66cfe197051eab261a4f38cebb7",
+    "docs/knowledge-system.md": "57115b4b46e5d091cb945cc0fb572e52dd93849b4233febdef5bd19627af5211",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -420,7 +499,7 @@
     "research/cost-l/COST-L-0003.json": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794",
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "958765812a766f057ec9451269f852d7413bf7eb3927bd627ff55036a3fe4185",
+    "translations/manifest.json": "225bf3eb78ef4024547dca21bf2c4177c31b69d77bc982fed69c2286e76b807d",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -442,14 +521,15 @@
     "translations/ru/docs/architecture-decisions/0019-process-local-handles.md": "d1673e44579bc09d9d6e7e785cfca328a4f49e5a5d845ce139d258fba630acff",
     "translations/ru/docs/architecture-decisions/0020-handle-transfer-and-retention.md": "e945a848869d3a9cfda588a461ffb7db5a0ef420f6c474f08258aca610d63f80",
     "translations/ru/docs/architecture-decisions/0021-asid-lifecycle.md": "83cc6c3bdf4dfacd0611439fa78ee0f7ede50748baa3d88c2d8c354480291b6c",
-    "translations/ru/docs/architecture-decisions/0022-documentation-knowledge.md": "85efd37f2306c06cf9ac449bf2a416cf2f856209d3165a3a2e09445c9814951e",
+    "translations/ru/docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "a01b2ec4c7f890ee7a08c1febf431bc786f0056deaf175924c6746f8c0b8fddf",
+    "translations/ru/docs/architecture-decisions/0023-documentation-knowledge.md": "aecf29aed76fecde6e592ba911bb5d32e334cbd63cff19e25b8c9a5435cd7abd",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
-    "translations/ru/docs/kernel/capabilities.md": "1f1a5f60716a68f838a8c94b595287f6a547bb178f0a252d9cbbaa4dca85f99f",
-    "translations/ru/docs/kernel/handles.md": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
+    "translations/ru/docs/kernel/capabilities.md": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
+    "translations/ru/docs/kernel/handles.md": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
     "translations/ru/docs/kernel/processes.md": "0cfd5e517f59ee530d4e6bd663f0ed57317e763c0eb2dcfed5469ee267129aba",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "d5dd994a0339607fced144f3c0828f098f58395b4eb46e92f871806fa374e14f",
+    "translations/ru/docs/knowledge-system.md": "edabc32207358f3c023eacf4cb3a3315681365035208aab96c940512ba4c0663",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
@@ -1047,28 +1127,62 @@
       "aliases": ["ADR-0022"],
       "document": "adr.0022",
       "document_status": "CURRENT",
-      "estimated_bytes": 3643,
-      "evidence_scope": "host navigation contracts only; no kernel feature acceptance.",
+      "estimated_bytes": 7084,
+      "evidence_scope": "accepted minimal Event-slice obligations; separate CI receipt binds QEMU sources, not general grants/domains.",
       "id": "adr.0022",
       "kind": "adr",
       "locations": {
         "en": {
+          "end": 138,
+          "path": "docs/architecture-decisions/0022-native-event-grants-and-revocation.md",
+          "sha256": "17179221ff4e65bb1e06e11f57f5ef721e34d040acf00e6e0fa476cc15f065bd",
+          "start": 1
+        },
+        "ru": {
+          "end": 136,
+          "path": "translations/ru/docs/architecture-decisions/0022-native-event-grants-and-revocation.md",
+          "sha256": "a01b2ec4c7f890ee7a08c1febf431bc786f0056deaf175924c6746f8c0b8fddf",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture-decisions/0022-native-event-grants-and-revocation.md",
+      "relationships": [
+        {
+          "scope": "Only rights-set and deferred-revocation clauses for synchronous Event SEND; identity, transfer, retention, close and fixed affinity remain binding.",
+          "to": "adr.0020",
+          "type": "supersedes"
+        }
+      ],
+      "schema_version": 1,
+      "summary": "Minimal Event grants and target-wide admission revocation.",
+      "title": "ADR-0022 — Bounded native Event grants and revocation"
+    },
+    "adr.0023": {
+      "aliases": ["ADR-0023"],
+      "document": "adr.0023",
+      "document_status": "CURRENT",
+      "estimated_bytes": 3643,
+      "evidence_scope": "host navigation contracts only; no kernel feature acceptance.",
+      "id": "adr.0023",
+      "kind": "adr",
+      "locations": {
+        "en": {
           "end": 61,
-          "path": "docs/architecture-decisions/0022-documentation-knowledge.md",
-          "sha256": "8137773b089e95f8c24aedf4985917241c04909cef4ba46286f1c761eedb77fd",
+          "path": "docs/architecture-decisions/0023-documentation-knowledge.md",
+          "sha256": "11d16aa9de8426f1b22def59c74008b7187a71abaab8c5c8b7f4833234f03902",
           "start": 1
         },
         "ru": {
           "end": 61,
-          "path": "translations/ru/docs/architecture-decisions/0022-documentation-knowledge.md",
-          "sha256": "85efd37f2306c06cf9ac449bf2a416cf2f856209d3165a3a2e09445c9814951e",
+          "path": "translations/ru/docs/architecture-decisions/0023-documentation-knowledge.md",
+          "sha256": "aecf29aed76fecde6e592ba911bb5d32e334cbd63cff19e25b8c9a5435cd7abd",
           "start": 1
         }
       },
-      "path": "docs/architecture-decisions/0022-documentation-knowledge.md",
+      "path": "docs/architecture-decisions/0023-documentation-knowledge.md",
       "schema_version": 1,
       "summary": "Bounded shared documentation navigation and feature freshness contract.",
-      "title": "ADR-0022 — Documentation knowledge navigation and feature freshness"
+      "title": "ADR-0023 — Documentation knowledge navigation and feature freshness"
     },
     "case.kol-path.0001": {
       "aliases": ["KOL-PATH-0001"],
@@ -2184,13 +2298,13 @@
         "en": {
           "end": 139,
           "path": "docs/knowledge-system.md",
-          "sha256": "2462ad12a0a3c79699c915e3580ff57f366a3726e3cdfa3646b00271e8a8782c",
+          "sha256": "57115b4b46e5d091cb945cc0fb572e52dd93849b4233febdef5bd19627af5211",
           "start": 1
         },
         "ru": {
           "end": 139,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "d5dd994a0339607fced144f3c0828f098f58395b4eb46e92f871806fa374e14f",
+          "sha256": "edabc32207358f3c023eacf4cb3a3315681365035208aab96c940512ba4c0663",
           "start": 1
         }
       },
@@ -2255,47 +2369,47 @@
     "doc.kolvrt.kernel.capabilities": {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 4261,
-      "evidence_scope": "issue #24 requirements over the accepted bounded handle foundation; no grants/revocation implementation or acceptance is claimed.",
+      "estimated_bytes": 8353,
+      "evidence_scope": "broader issue #24 requirements remain planned; the synchronous Event grant/revocation slice is separately bounded implemented at aa75629, with retained CI reports.",
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "locations": {
         "en": {
-          "end": 97,
+          "end": 163,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "8bea9106c7e7a5af02fcece7b473a6a32ab80b6b0dbfd9b2a94e0fcb6e82a57b",
+          "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
           "start": 1
         },
         "ru": {
-          "end": 97,
+          "end": 163,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "1f1a5f60716a68f838a8c94b595287f6a547bb178f0a252d9cbbaa4dca85f99f",
+          "sha256": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
           "start": 1
         }
       },
       "path": "docs/kernel/capabilities.md",
       "schema_version": 1,
       "summary": "Planned native capability admission and revocation; current bounded handles are not general grants.",
-      "title": "Planned native capability revocation"
+      "title": "Native capability scope and revocation"
     },
     "doc.kolvrt.kernel.handles": {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 16381,
-      "evidence_scope": "bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.",
+      "estimated_bytes": 17955,
+      "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
       "locations": {
         "en": {
-          "end": 215,
+          "end": 220,
           "path": "docs/kernel/handles.md",
-          "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
+          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
           "start": 1
         },
         "ru": {
-          "end": 217,
+          "end": 220,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
+          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
           "start": 1
         }
       },
@@ -2442,7 +2556,7 @@
       "evidence_scope": "deterministic offline navigation and the enrolled Phase 3 pilot; no kernel or hardware acceptance is inferred.",
       "feature": {
         "acceptance": ["research/results/documentation-knowledge-pilot.json"],
-        "adrs": ["adr.0022"],
+        "adrs": ["adr.0023"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Offline metadata validation, ID/locale extraction, prerequisite closure, impact and deterministic candidate ranking.",
         "issues": [74],
@@ -2476,7 +2590,7 @@
             "environment": "host-process",
             "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "f8c5836ad60ebb2f2d2cf08c109bab169b4846bdac817d3ace325f17299bd63e",
+            "receipt_sha256": "141aead41dd3f36c3d7299c450805292070890e5ab35b0b8c5641d2f4cf90e42",
             "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance.",
             "state": "VERIFIED"
           },
@@ -2493,13 +2607,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "2462ad12a0a3c79699c915e3580ff57f366a3726e3cdfa3646b00271e8a8782c",
+          "sha256": "57115b4b46e5d091cb945cc0fb572e52dd93849b4233febdef5bd19627af5211",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "d5dd994a0339607fced144f3c0828f098f58395b4eb46e92f871806fa374e14f",
+          "sha256": "edabc32207358f3c023eacf4cb3a3315681365035208aab96c940512ba4c0663",
           "start": 7
         }
       },
@@ -2514,21 +2628,21 @@
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
       "estimated_bytes": 3953,
-      "evidence_scope": "bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.",
+      "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.evidence",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 101,
+          "end": 106,
           "path": "docs/kernel/handles.md",
-          "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
-          "start": 78
+          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "start": 83
         },
         "ru": {
-          "end": 103,
+          "end": 106,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
-          "start": 78
+          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "start": 81
         }
       },
       "path": "docs/kernel/handles.md",
@@ -2540,21 +2654,21 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 2264,
-      "evidence_scope": "bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.",
+      "estimated_bytes": 3370,
+      "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.identity",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 32,
+          "end": 37,
           "path": "docs/kernel/handles.md",
-          "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
+          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
           "start": 13
         },
         "ru": {
-          "end": 32,
+          "end": 35,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
+          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
           "start": 13
         }
       },
@@ -2567,22 +2681,22 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 3856,
-      "evidence_scope": "bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.",
+      "estimated_bytes": 3903,
+      "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.lifetime",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 62,
+          "end": 67,
           "path": "docs/kernel/handles.md",
-          "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
-          "start": 31
+          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "start": 36
         },
         "ru": {
-          "end": 62,
+          "end": 65,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
-          "start": 31
+          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "start": 34
         }
       },
       "path": "docs/kernel/handles.md",
@@ -2594,22 +2708,22 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 4360,
-      "evidence_scope": "bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.",
+      "estimated_bytes": 4546,
+      "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.limits",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 215,
+          "end": 220,
           "path": "docs/kernel/handles.md",
-          "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
-          "start": 100
+          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "start": 105
         },
         "ru": {
-          "end": 217,
+          "end": 220,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
-          "start": 102
+          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "start": 105
         }
       },
       "path": "docs/kernel/handles.md",
@@ -2632,19 +2746,19 @@
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
       "estimated_bytes": 262,
-      "evidence_scope": "bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.",
+      "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "feature": {
         "acceptance": [
           "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
         ],
-        "adrs": ["adr.0019", "adr.0020"],
+        "adrs": ["adr.0019", "adr.0020", "adr.0022"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Bounded caller-local namespaces and receiver-local transfer on fixed-affinity CPUs.",
         "issues": [23],
         "limitations": [
           "Close does not revoke retained work; no general grants, domains or IPC."
         ],
-        "next_gate": "Issue #24 native grants/revocation requires separate admission and lifetime acceptance.",
+        "next_gate": "Issue #24 issuer independence, service restart/rebind, nested authority and broader IPC/domain acceptance remain separate; ADR-0022 delivers only synchronous Event revocation.",
         "readiness": "NOT_READY",
         "roadmap_gate": "Phase 3.3",
         "sources": [
@@ -2683,13 +2797,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/handles.md",
-          "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
+          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
+          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
           "start": 7
         }
       },
@@ -2703,21 +2817,21 @@
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
       "estimated_bytes": 1595,
-      "evidence_scope": "bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.",
+      "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.publication",
       "kind": "contract-section",
       "locations": {
         "en": {
-          "end": 79,
+          "end": 84,
           "path": "docs/kernel/handles.md",
-          "sha256": "692f5608fca7a151fd551c215f00b90baa9ca100ed6404d2a5d740d17ddde2d3",
-          "start": 61
+          "sha256": "773d25bd16967230849ef1bbdc7619ce320c72df63036ba1e4a4f1e3897b7add",
+          "start": 66
         },
         "ru": {
-          "end": 79,
+          "end": 82,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "6a66d03c30a88326d77b268c7ed62ce93e7ca97605b86d371e9e20afb3264f8c",
-          "start": 61
+          "sha256": "9d0384864ba2c6fa05d987dd3dea43f16880ca2c103d12ced27c6e630ca6c801",
+          "start": 64
         }
       },
       "path": "docs/kernel/handles.md",
@@ -3493,22 +3607,23 @@
         "law.043",
         "adr.0013",
         "kolvrt.security.trust",
-        "kolvrt.security.threats"
+        "kolvrt.security.threats",
+        "kolvrt.security.event-revocation"
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 3944,
-      "evidence_scope": "issue #24 requirements over the accepted bounded handle foundation; no grants/revocation implementation or acceptance is claimed.",
+      "estimated_bytes": 1464,
+      "evidence_scope": "broader issue #24 requirements remain planned; the synchronous Event grant/revocation slice is separately bounded implemented at aa75629, with retained CI reports.",
       "feature": {
         "acceptance": [],
         "adrs": ["adr.0013"],
         "implementation": "PLANNED",
-        "implementation_scope": "Issue #24 native grants, attenuation and revocation serialized with admission.",
+        "implementation_scope": "Broader issue #24 service/issuer authority, restart/rebind and general capability admission beyond synchronous Event grants.",
         "issues": [24],
         "limitations": [
-          "Not implemented; close is not revoke; retained admitted work needs its own lifetime."
+          "The ADR-0022 Event slice is separate bounded implementation; full issuer/service/domain authority and asynchronous drain are not delivered."
         ],
-        "next_gate": "Real EL0 acceptance from issue #24 with exact-source DEV/PROD negative controls.",
+        "next_gate": "Real EL0 and exact-source acceptance for remaining issuer/service/domain obligations; re-derive architecture before extending Event mechanisms.",
         "readiness": "NOT_READY",
         "roadmap_gate": "Phase 3.4",
         "sources": [],
@@ -3523,7 +3638,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Revocation implementation and acceptance are absent.",
+            "reason": "Broader issuer/service/domain acceptance is absent; scoped Event verification is a different feature.",
             "state": "UNKNOWN"
           },
           {
@@ -3534,21 +3649,21 @@
         ]
       },
       "gaps": [
-        "Issue #24 native revocation implementation and behavioral acceptance are missing."
+        "Issue #24 broader issuer independence, service restart/rebind, nested authority, domains and IPC acceptance remain missing; the synchronous Event slice is implemented separately."
       ],
       "id": "kolvrt.security.capability-revocation",
       "kind": "feature",
       "locations": {
         "en": {
-          "end": 97,
+          "end": 18,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "8bea9106c7e7a5af02fcece7b473a6a32ab80b6b0dbfd9b2a94e0fcb6e82a57b",
+          "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
           "start": 7
         },
         "ru": {
-          "end": 97,
+          "end": 18,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "1f1a5f60716a68f838a8c94b595287f6a547bb178f0a252d9cbbaa4dca85f99f",
+          "sha256": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
           "start": 7
         }
       },
@@ -3584,6 +3699,83 @@
       "path": "docs/security/threat-model.md",
       "summary": "Security requirement: compat-authority",
       "title": "Compatibility invariant"
+    },
+    "kolvrt.security.event-revocation": {
+      "anchor": "kolvrt-security-event-revocation",
+      "depends_on": [
+        "kolvrt.handles.identity",
+        "kolvrt.handles.lifetime",
+        "kolvrt.memory.user-copy",
+        "law.009",
+        "law.013",
+        "law.025"
+      ],
+      "document": "doc.kolvrt.kernel.capabilities",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 6585,
+      "evidence_scope": "broader issue #24 requirements remain planned; the synchronous Event grant/revocation slice is separately bounded implemented at aa75629, with retained CI reports.",
+      "feature": {
+        "acceptance": ["research/results/event-revocation-ci.json"],
+        "adrs": ["adr.0022"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Trusted explicit Event SEND/TRANSFER/REVOKE grants, attenuation and atomic target-wide revocation serialized with synchronous signal admission.",
+        "issues": [24, 72],
+        "limitations": [
+          "Event-only synchronous publication; no issuer independence, general service/domain grants, async cancellation/drain or silicon acceptance."
+        ],
+        "next_gate": "Review remaining issue #24 contracts independently; earlier Event implementation must not freeze broader authority/lifetime architecture.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Phase 3.4 bounded Event slice",
+        "sources": [
+          "crates/kernel-core/src/handles.rs",
+          "crates/kernel-core/src/wait.rs",
+          "crates/kernel/src/handles.rs",
+          "crates/kernel/src/handles/testing.rs"
+        ],
+        "transitions": [
+          {
+            "acceptance": ["research/results/event-revocation-ci.json"],
+            "from": "UNRECORDED",
+            "reason": "Adopt already-merged PR #72 with its actual passing CI receipt; this documentation change implements no kernel behavior.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "reason": "Original merged PR #72 CI profiles imported with source and ELF digests; not a rerun by this documentation change.",
+            "receipt": "research/results/event-revocation-ci.json",
+            "receipt_sha256": "b403eab6ca342921cff86c1d48c07395ebe5c2a18d4f4f1a6a331c17cbb8d8bf",
+            "scope": "Only synchronous Event SEND/TRANSFER/REVOKE and retained positive DEV/PROD CI profiles at 4313feb82ea345e15d4a309889a3986b3558848a. Actual max/TCG/QEMU configuration is recorded; no issuer/service/domain, async drain, current-host-tool or silicon verification.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "No physical hardware acceptance exists.",
+            "state": "UNKNOWN"
+          }
+        ]
+      },
+      "id": "kolvrt.security.event-revocation",
+      "kind": "feature",
+      "locations": {
+        "en": {
+          "end": 163,
+          "path": "docs/kernel/capabilities.md",
+          "sha256": "3055537ba6221aa46a94b1f9b2934f25819e74c7390c8b159866a4e52c774bf9",
+          "start": 17
+        },
+        "ru": {
+          "end": 163,
+          "path": "translations/ru/docs/kernel/capabilities.md",
+          "sha256": "ac90894d81c24d0c7dfdc8b4fa6e71cfafcca7a73e43dc92664e946d605e71dd",
+          "start": 17
+        }
+      },
+      "path": "docs/kernel/capabilities.md",
+      "summary": "Synchronous Event grants and target-wide admission revocation.",
+      "tags": ["event", "revocation", "grant"],
+      "title": "Bounded synchronous Event slice"
     },
     "kolvrt.security.handle-retention": {
       "anchor": "kolvrt-security-handle-retention",

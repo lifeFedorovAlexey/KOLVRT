@@ -882,6 +882,8 @@ pub fn pilot(root: &Path, check: bool) -> CheckResult<()> {
         "adr.0018",
         "adr.0019",
         "adr.0020",
+        "adr.0022",
+        "kolvrt.security.event-revocation",
     ] {
         if !selected.contains(&json!(required)) {
             return Err(format!("pilot misses mandatory context {required}"));

@@ -22,6 +22,7 @@
     "ADR-0020": "adr.0020",
     "ADR-0021": "adr.0021",
     "ADR-0022": "adr.0022",
+    "ADR-0023": "adr.0023",
     "COST-L-0001": "cost-l.0001",
     "COST-L-0002": "cost-l.0002",
     "COST-L-0003": "cost-l.0003",
@@ -333,12 +334,30 @@
       "aliases": ["ADR-0022"],
       "document": "adr.0022",
       "document_status": "CURRENT",
-      "estimated_bytes": 3643,
+      "estimated_bytes": 7084,
       "id": "adr.0022",
       "kind": "adr",
-      "path": "docs/architecture-decisions/0022-documentation-knowledge.md",
+      "path": "docs/architecture-decisions/0022-native-event-grants-and-revocation.md",
+      "relationships": [
+        {
+          "scope": "Only rights-set and deferred-revocation clauses for synchronous Event SEND; identity, transfer, retention, close and fixed affinity remain binding.",
+          "to": "adr.0020",
+          "type": "supersedes"
+        }
+      ],
+      "summary": "Minimal Event grants and target-wide admission revocation.",
+      "title": "ADR-0022 — Bounded native Event grants and revocation"
+    },
+    {
+      "aliases": ["ADR-0023"],
+      "document": "adr.0023",
+      "document_status": "CURRENT",
+      "estimated_bytes": 3643,
+      "id": "adr.0023",
+      "kind": "adr",
+      "path": "docs/architecture-decisions/0023-documentation-knowledge.md",
       "summary": "Bounded shared documentation navigation and feature freshness contract.",
-      "title": "ADR-0022 — Documentation knowledge navigation and feature freshness"
+      "title": "ADR-0023 — Documentation knowledge navigation and feature freshness"
     },
     {
       "aliases": ["KOL-PATH-0001"],
@@ -704,17 +723,17 @@
     {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 4261,
+      "estimated_bytes": 8353,
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "path": "docs/kernel/capabilities.md",
       "summary": "Planned native capability admission and revocation; current bounded handles are not general grants.",
-      "title": "Planned native capability revocation"
+      "title": "Native capability scope and revocation"
     },
     {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 16381,
+      "estimated_bytes": 17955,
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
       "path": "docs/kernel/handles.md",
@@ -801,7 +820,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 2264,
+      "estimated_bytes": 3370,
       "id": "kolvrt.handles.identity",
       "kind": "contract-section",
       "path": "docs/kernel/handles.md",
@@ -813,7 +832,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 3856,
+      "estimated_bytes": 3903,
       "id": "kolvrt.handles.lifetime",
       "kind": "contract-section",
       "path": "docs/kernel/handles.md",
@@ -825,7 +844,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 4360,
+      "estimated_bytes": 4546,
       "id": "kolvrt.handles.limits",
       "kind": "contract-section",
       "path": "docs/kernel/handles.md",
@@ -1198,13 +1217,14 @@
         "law.043",
         "adr.0013",
         "kolvrt.security.trust",
-        "kolvrt.security.threats"
+        "kolvrt.security.threats",
+        "kolvrt.security.event-revocation"
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 3944,
+      "estimated_bytes": 1464,
       "gaps": [
-        "Issue #24 native revocation implementation and behavioral acceptance are missing."
+        "Issue #24 broader issuer independence, service restart/rebind, nested authority, domains and IPC acceptance remain missing; the synchronous Event slice is implemented separately."
       ],
       "id": "kolvrt.security.capability-revocation",
       "implementation": "PLANNED",
@@ -1226,6 +1246,27 @@
       "path": "docs/security/threat-model.md",
       "summary": "Security requirement: compat-authority",
       "title": "Compatibility invariant"
+    },
+    {
+      "anchor": "kolvrt-security-event-revocation",
+      "depends_on": [
+        "kolvrt.handles.identity",
+        "kolvrt.handles.lifetime",
+        "kolvrt.memory.user-copy",
+        "law.009",
+        "law.013",
+        "law.025"
+      ],
+      "document": "doc.kolvrt.kernel.capabilities",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 6585,
+      "id": "kolvrt.security.event-revocation",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/kernel/capabilities.md",
+      "summary": "Synchronous Event grants and target-wide admission revocation.",
+      "tags": ["event", "revocation", "grant"],
+      "title": "Bounded synchronous Event slice"
     },
     {
       "anchor": "kolvrt-security-handle-retention",

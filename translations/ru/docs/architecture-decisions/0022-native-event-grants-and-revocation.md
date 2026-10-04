@@ -1,5 +1,8 @@
 # ADR-0022 — Ограниченные grants и отзыв прав для собственного Event
 
+Document status: CURRENT
+Evidence scope: принятые обязательства минимального Event-среза; отдельный CI receipt фиксирует QEMU исходники, а не общие grants/domains.
+Current reference: [Контракт handles](../kernel/handles.md)
 Статус: **Принято для минимального среза authority Event**. Дата: 2026-10-04.
 
 Заменяет только положения ADR-0020 о наборе прав и отложенном отзыве в этом срезе.
@@ -112,3 +115,22 @@ evidence.
 может расширять authority.
 
 [English original](../../../../docs/architecture-decisions/0022-native-event-grants-and-revocation.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0022",
+  "kind": "adr",
+  "summary": "Минимальные Event grants и аннулирование admission.",
+  "aliases": ["ADR-0022"],
+  "relationships": [
+    {
+      "type": "supersedes",
+      "to": "adr.0020",
+      "scope": "Only rights-set and deferred-revocation clauses for synchronous Event SEND; identity, transfer, retention, close and fixed affinity remain binding."
+    }
+  ]
+}
+```

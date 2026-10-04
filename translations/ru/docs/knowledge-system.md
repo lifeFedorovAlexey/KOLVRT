@@ -95,7 +95,7 @@ Linux research использует [шаблон механизма](../researc
         ],
         "acceptance": ["research/results/documentation-knowledge-pilot.json"],
         "issues": [74],
-        "adrs": ["adr.0023"],
+        "adrs": ["adr.0024"],
         "limitations": [
           "No automatic semantic-completeness proof, LLM search or all-doc migration."
         ],
@@ -106,7 +106,7 @@ Linux research использует [шаблон механизма](../researc
             "state": "VERIFIED",
             "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "f8c5836ad60ebb2f2d2cf08c109bab169b4846bdac817d3ace325f17299bd63e",
+            "receipt_sha256": "141aead41dd3f36c3d7299c450805292070890e5ab35b0b8c5641d2f4cf90e42",
             "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance."
           },
           {

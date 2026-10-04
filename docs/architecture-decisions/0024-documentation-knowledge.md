@@ -1,4 +1,4 @@
-# ADR-0023 — Documentation knowledge navigation and feature freshness
+# ADR-0024 — Documentation knowledge navigation and feature freshness
 
 Status: **Accepted for bounded offline documentation infrastructure**. Date: 2026-10-04.
 
@@ -46,16 +46,16 @@ Focused rejection fixtures and the actual Phase 3 context test live in [knowledg
 
 Metadata encoding and host tooling are revisable against current invariants. Preserve semantic identities through aliases/tombstones, retain original evidence and translations, and review supersession scope. Implementation order and sunk cost cannot freeze this format.
 
-[Russian translation](../../translations/ru/docs/architecture-decisions/0023-documentation-knowledge.md)
+[Russian translation](../../translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md)
 
 <!-- knowledge -->
 
 ```json
 {
   "schema_version": 1,
-  "id": "adr.0023",
+  "id": "adr.0024",
   "kind": "adr",
   "summary": "Bounded shared documentation navigation and feature freshness contract.",
-  "aliases": ["ADR-0023"]
+  "aliases": ["ADR-0024"]
 }
 ```
