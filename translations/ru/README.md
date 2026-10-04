@@ -153,7 +153,8 @@ Safe user-copy                      ✅ bounded Phase 3.2
 Process-local handles               ✅ bounded Phase 3.3
         │
         ▼
-Capabilities, IPC and services       next (#24)
+Scoped grants and security domains  implemented (#24/#25)
+IPC and services                    next (#26)
         │
         ▼
 Compatibility personalities
@@ -164,7 +165,7 @@ Linux ABI compatibility where useful
 
 Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
 
-Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Phase 3.2 добавляет bounded safe user-copy, Phase 3.3 — process-local handles и receiver-local transfer. Native grants, authority для services, общий IPC, cancellation, постоянные services и security domains остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md), [handles](docs/kernel/handles.md) и [scheduler](docs/kernel/scheduler.md). Issue [#24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) описывает ближайшую работу над native grants, attenuation и revocation.
+Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Phase 3.2 добавляет bounded safe user-copy, Phase 3.3 — process-local handles и receiver-local transfer. Phase 3.4 добавляет scoped Event grants, revocation, resource budgets и [security domains](docs/kernel/domains.md). Общий IPC, cancellation и постоянные services остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md), [handles](docs/kernel/handles.md) и [scheduler](docs/kernel/scheduler.md). Issue [#24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) фиксирует gate для scoped grants, attenuation и revocation; [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) — следующий IPC gate.
 
 ---
 
@@ -435,7 +436,7 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 
 ## Тесты должны обнаруживать ошибки ядра
 
-Последняя сохранённая exact-source интеграционная матрица фиксирует **96 kernel checks в каждом профиле DEV и PROD** и 80 отрицательных host controls. Она включает transfer process-local handles, ограниченные пути preemption/event-wait, ELF loader и ASID lifecycle. [Отчёт](../../research/measurements/runs/1791128001893-phase3-4-final-e08829fce5b9.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
+Последняя сохранённая exact-source интеграционная матрица фиксирует **96 kernel checks в каждом профиле DEV и PROD** и 80 отрицательных host controls. Она включает transfer process-local handles, ограниченные пути preemption/event-wait, ELF loader и ASID lifecycle. [Отчёт](../../research/measurements/runs/1791128831792-phase3-4-main-integrated-09f078334042.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
 
 Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
 
@@ -565,4 +566,4 @@ Stable userspace ABI пока отсутствует.
 
 ## Локальные handles процессов в Phase 3.3
 
-[Handles](docs/kernel/handles.md) дают bounded caller-local opaque references, generation/type/live/rights checks, receiver-local transfer с rights attenuation, retained Event targets и deterministic exit/fault cleanup. EL0 transfer сейчас адресует namespace на том же CPU; cross-CPU delegation подготавливает coordinator, а затем тест проверяет конкурентные EL0 close/lookup. [ADR-0019](docs/architecture-decisions/0019-process-local-handles.md) фиксирует исходное решение об identity/lifetime; [ADR-0020](docs/architecture-decisions/0020-handle-transfer-and-retention.md) описывает transfer и retention. Исходная Phase 3.3 [матрица](../../research/results/kernel-phase33.json) фиксирует 72 checks; exact-source [матрица issue #23](../../research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) фиксирует 73 DEV/PROD checks и 69 negative controls. Capabilities, domains и общий IPC остаются будущей работой.
+[Handles](docs/kernel/handles.md) дают bounded caller-local opaque references, generation/type/live/rights checks, receiver-local transfer с rights attenuation, retained Event targets и deterministic exit/fault cleanup. EL0 transfer сейчас адресует namespace на том же CPU; cross-CPU delegation подготавливает coordinator, а затем тест проверяет конкурентные EL0 close/lookup. [ADR-0019](docs/architecture-decisions/0019-process-local-handles.md) фиксирует исходное решение об identity/lifetime; [ADR-0020](docs/architecture-decisions/0020-handle-transfer-and-retention.md) описывает transfer и retention. Исходная Phase 3.3 [матрица](../../research/results/kernel-phase33.json) фиксирует 72 checks; exact-source [матрица issue #23](../../research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) фиксирует 73 DEV/PROD checks и 69 negative controls. [Phase 3.4](docs/kernel/domains.md) добавляет scoped grants и domains; общий IPC остаётся будущей работой.

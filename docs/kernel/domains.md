@@ -48,6 +48,8 @@ Exit/fault/budget termination closes domain admission at the masked scheduler bo
 
 Five controls remove actual budget, identity, teardown, revocation or reserved-scope enforcement. The DEV/PROD runner requires the corresponding failed machine test record and nonzero host status. Host tests and Clippy supplement kernel execution. Retained exact-source receipts define the tested source and named matrix; QEMU TCG does not prove physical ARM64 ordering or performance.
 
-[Exact-source matrix](../../research/measurements/runs/1791128001893-phase3-4-final-e08829fce5b9.json) records 96 DEV/PROD checks and 80 negative controls. [Unsafe inventory](../../research/results/kernel-phase34-unsafe-audit.json) retains the reviewed source locations.
+[Exact-source matrix](../../research/measurements/runs/1791128831792-phase3-4-main-integrated-09f078334042.json) records 96 DEV/PROD checks and 80 negative controls. [Unsafe inventory](../../research/results/kernel-phase34-unsafe-audit.json) retains the reviewed source locations.
+
+[Native-only verification](../../research/results/native-compat-removal-phase34.json) compares 69 identical native/harness files and repeats the same matrix without compatibility packages. [Routing regression](../../research/results/routing-phase34-regression.json) retains six configurations and three rejected controls.
 
 [Russian translation](../../translations/ru/docs/kernel/domains.md)

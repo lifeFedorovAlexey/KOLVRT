@@ -267,7 +267,7 @@
     },
     {
       "context": "#[cfg(feature = \"boot-payload\")]\nconst PAYLOAD_MAX_SLICES: usize = 512;\n// SAFETY: INV-USER-IMAGE: trusted position-independent EL0 fixture, copied into owned RX pages.\ncore::arch::global_asm!(include_str!(\"boot_workload.S\"));\nunsafe extern \"C\" {",
-      "line": 24,
+      "line": 23,
       "path": "crates/kernel/src\\boot_workload.rs",
       "text": "unsafe extern \"C\" {"
     },
@@ -279,7 +279,7 @@
     },
     {
       "context": "            \"user register context lost\"\n        );\n        // SAFETY: INV-USER-RETIRE: all CPUs acquired done, no user/kernel page writer;\n        // retained frame's initialized tag is read before any space/charge is retired.\n        let tag = unsafe {",
-      "line": 169,
+      "line": 173,
       "path": "crates/kernel/src\\boot_workload.rs",
       "text": "let tag = unsafe {"
     },
