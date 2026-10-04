@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 Evidence scope: bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.
-Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md)
+Current references: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) for handle identity/transfer/lifetime and [ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) for the minimal Event grant/revocation slice.
 
 ## Representation and caller context
 

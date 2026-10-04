@@ -97,9 +97,13 @@
         "source_sha256": "8fbabe70f5c64c782018853778ed236f0ad8199e1f09d1dede1ac26d3cd829cf",
         "translation_sha256": "c1820f46c67837b1d866101c0553f3b1cfd2e5bc25d384be9290247c4c511d9e"
       },
+      "docs/architecture-decisions/0022-native-event-grants-and-revocation.md": {
+        "source_sha256": "cc1927c82548bfaa6d1c539d8076fc8954e2aa65201d0fe9512332aaad8c6018",
+        "translation_sha256": "dae2d288c5b4bfd31cd409207e1509d234c62e5c966a58d8f893636b5eb23947"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "d98bea0207a7e12e5e43b5e90edb044ca696ec2ea687680d3c78c050a49f2e73",
-        "translation_sha256": "49fa2370938a16bd56f9861bbd9460c6f9b4436029412201729bae30943368e0"
+        "source_sha256": "5ae44447c97cf4d5fde093b8aa9220813a8cfdb11b6e0c638d9b3b8b1e86158a",
+        "translation_sha256": "ca3a06f42dca16f2b20c405301e04d1f362cff0751b4ab1f736cbfc57e97bee6"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
@@ -206,8 +210,8 @@
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
       },
       "docs/kernel/handles.md": {
-        "source_sha256": "08caefa406062227499b8789e3ffddadd28f5a323f4e1406b93699374008133f",
-        "translation_sha256": "c4899fcfda6aa731800f9da0ac8fa452d0c6ee3b32e61c6e65ac0825f1d37bad"
+        "source_sha256": "b9309debb92e8222a28f0f51e344e07cd7b715f79930f4806253e1792b09b1ab",
+        "translation_sha256": "b58534c3f9cb25ef148891fb25c82079476f1fa6493c739fb121a184af42be1c"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",
