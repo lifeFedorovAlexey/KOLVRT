@@ -1,5 +1,67 @@
 //! Optional EL0 image build and evidence decoding. Kernel sees only native operations.
 use super::*;
+
+/// Required report fields are decoded before emitting any status output.
+#[derive(serde::Deserialize)]
+struct StatusRecord {
+    runs: Vec<StatusRun>,
+}
+#[derive(serde::Deserialize)]
+struct StatusRun {
+    profile: String,
+    consumers: Vec<StatusConsumer>,
+}
+#[derive(serde::Deserialize)]
+struct StatusConsumer {
+    id: usize,
+    route: u8,
+    cpu: usize,
+    generation: u32,
+    benchmarks: Vec<StatusBenchmark>,
+}
+#[derive(serde::Deserialize)]
+struct StatusBenchmark {
+    route: u8,
+    median_ticks: u64,
+    p95_ticks: u64,
+    p99_ticks: u64,
+    samples: Vec<u64>,
+}
+
+fn decode_status_record(value: serde_json::Value) -> Result<StatusRecord> {
+    let record: StatusRecord = serde_json::from_value(value)?;
+    if record.runs.is_empty() {
+        return Err("missing required routing runs".into());
+    }
+    for run in &record.runs {
+        if !matches!(
+            run.profile.as_str(),
+            "dev-full" | "prod-full" | "prod-v1" | "prod-v2" | "prod-bug" | "prod-native"
+        ) || run.consumers.is_empty()
+        {
+            return Err("invalid routing profile or missing required consumers".into());
+        }
+        for (index, consumer) in run.consumers.iter().enumerate() {
+            routing::Route::parse(consumer.route).map_err(|_| "invalid consumer route")?;
+            if consumer.id != index
+                || consumer.cpu >= platform_config::ACTIVE_CPUS
+                || consumer.generation == 0
+            {
+                return Err("invalid required consumer identity, CPU or generation".into());
+            }
+            if run.profile == "dev-full" && consumer.benchmarks.is_empty() {
+                return Err("missing required DEV benchmarks".into());
+            }
+            for benchmark in &consumer.benchmarks {
+                routing::Route::parse(benchmark.route).map_err(|_| "invalid benchmark route")?;
+                if benchmark.samples.is_empty() {
+                    return Err("missing required benchmark samples".into());
+                }
+            }
+        }
+    }
+    Ok(record)
+}
 const USER_BASE: u64 = platform_config::USER_PAYLOAD_BASE as u64;
 const ELF_SEGMENT_FILE_OFFSET: usize = 8;
 const ELF_SEGMENT_ADDRESS: usize = 16;
@@ -569,23 +631,24 @@ pub fn run(args: &[String]) -> Result<()> {
         Some("status" | "inspect" | "compare" | "top")
     ) {
         let command = &args[0];
-        let record = read_json("research/results/routing-phase2.json")?;
-        let consumers = record["runs"][0]["consumers"]
-            .as_array()
-            .ok_or("missing verified consumers")?;
+        let record = decode_status_record(read_json("research/results/routing-phase2.json")?)?;
+        let consumers = &record.runs[0].consumers;
         if command == "status" || command == "top" {
-            for run in record["runs"].as_array().ok_or("missing runs")? {
-                let list = run["consumers"].as_array().ok_or("missing consumers")?;
-                let native = list.iter().filter(|c| c["route"] == 0).count();
+            for run in &record.runs {
+                let list = &run.consumers;
+                let native = list.iter().filter(|c| c.route == 0).count();
                 println!(
                     "{}: native consumers {}; compatibility consumers {}; observed concurrent CPUs {}",
-                    run["profile"].as_str().unwrap_or("unknown"),
+                    run.profile,
                     native,
                     list.len() - native,
-                    platform_config::ACTIVE_CPUS
+                    list.iter()
+                        .map(|consumer| consumer.cpu)
+                        .collect::<std::collections::BTreeSet<_>>()
+                        .len()
                 );
                 for route in 1..=3 {
-                    let bindings = list.iter().filter(|c| c["route"] == route).count();
+                    let bindings = list.iter().filter(|c| c.route == route).count();
                     println!(
                         "  {}: {} declared bindings",
                         routing::Route::parse(route).unwrap().name(),
@@ -600,12 +663,11 @@ pub fn run(args: &[String]) -> Result<()> {
                 .parse()?;
             let consumer = consumers.get(id).ok_or("unknown consumer")?;
             let route =
-                routing::Route::parse(consumer["route"].as_u64().ok_or("missing route")? as u8)
-                    .unwrap();
+                routing::Route::parse(consumer.route).map_err(|_| "invalid consumer route")?;
             println!(
                 "Consumer {id}, CPU {}, generation {}: [{}] {}",
-                consumer["cpu"],
-                consumer["generation"],
+                consumer.cpu,
+                consumer.generation,
                 if route == routing::Route::Native {
                     "NATIVE"
                 } else {
@@ -621,16 +683,13 @@ pub fn run(args: &[String]) -> Result<()> {
             println!(
                 "Observations are isolated benchmark admissions, not production workload cost. No scalar score."
             );
-            for benchmark in consumer["benchmarks"]
-                .as_array()
-                .ok_or("missing DEV benchmarks")?
-            {
+            for benchmark in &consumer.benchmarks {
                 println!(
                     "  route {}: median {} / p95 {} / p99 {} timer ticks; raw samples retained; CPU attribution unavailable",
-                    benchmark["route"],
-                    benchmark["median_ticks"],
-                    benchmark["p95_ticks"],
-                    benchmark["p99_ticks"]
+                    benchmark.route,
+                    benchmark.median_ticks,
+                    benchmark.p95_ticks,
+                    benchmark.p99_ticks
                 );
             }
         }
@@ -828,5 +887,60 @@ mod tests {
         );
         let chunk = json!({"event":"user-report","id":0,"offset":0,"words":[1]});
         assert!(reports(&[chunk.clone(), chunk], [0, 1, 2, 3], true).is_err());
+    }
+}
+
+#[cfg(test)]
+mod status_tests {
+    use super::*;
+
+    #[test]
+    fn reports_reject_missing_required_data_in_any_run() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let original = read_json(root.join("research/results/routing-phase2.json")).unwrap();
+        assert!(decode_status_record(original.clone()).is_ok());
+        for pointer in [
+            "/runs/0/profile",
+            "/runs/1/profile",
+            "/runs/0/consumers/0/id",
+            "/runs/0/consumers/0/route",
+            "/runs/0/consumers/0/cpu",
+            "/runs/0/consumers/0/generation",
+            "/runs/0/consumers/0/benchmarks/0/p95_ticks",
+        ] {
+            let mut invalid = original.clone();
+            *invalid.pointer_mut(pointer).unwrap() = serde_json::Value::Null;
+            assert!(
+                decode_status_record(invalid).is_err(),
+                "accepted null {pointer}"
+            );
+            let mut absent = original.clone();
+            let (parent, field) = pointer.rsplit_once('/').unwrap();
+            absent
+                .pointer_mut(parent)
+                .unwrap()
+                .as_object_mut()
+                .unwrap()
+                .remove(field);
+            assert!(
+                decode_status_record(absent).is_err(),
+                "accepted absent {pointer}"
+            );
+        }
+        for (pointer, value) in [
+            ("/runs", serde_json::json!([])),
+            ("/runs/1/profile", serde_json::json!("")),
+            ("/runs/0/consumers/0/route", serde_json::json!(256)),
+            ("/runs/0/consumers/0/route", serde_json::json!(4)),
+            ("/runs/0/consumers/0/generation", serde_json::json!(0)),
+            ("/runs/0/consumers/0/benchmarks", serde_json::json!([])),
+        ] {
+            let mut invalid = original.clone();
+            *invalid.pointer_mut(pointer).unwrap() = value;
+            assert!(
+                decode_status_record(invalid).is_err(),
+                "accepted invalid {pointer}"
+            );
+        }
     }
 }

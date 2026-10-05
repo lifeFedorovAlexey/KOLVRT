@@ -312,6 +312,9 @@ dependencies = [
 [[package]]
 name = "host-process-metrics"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "icu_collections"

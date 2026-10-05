@@ -979,7 +979,10 @@ pub fn advise_with_verifier(
                                 );
                                 stats = Some(result);
                             }
-                            Err(error) => candidate.assurance.missing_checks.push(error),
+                            Err(error) => {
+                                benchmark_failed = true;
+                                candidate.assurance.missing_checks.push(error);
+                            }
                         }
                     }
                 } else {

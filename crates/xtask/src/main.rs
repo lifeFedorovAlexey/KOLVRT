@@ -36,7 +36,10 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
     ("--secondary-panic-control", "secondary CPU failure"),
     ("--retirement-control", "retiring frame release"),
     ("--shootdown-control", "remote TLB acknowledgement timeout"),
-    ("--remote-tlbi-control", "secondary CPU failure"),
+    (
+        "--remote-tlbi-control",
+        "kernel test failed: smp_remote_ack",
+    ),
     ("--user-context-control", "user register context lost"),
     ("--user-root-control", "user address-space alias leaked"),
     (

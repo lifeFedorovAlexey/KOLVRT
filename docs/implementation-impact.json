@@ -1,76 +1,125 @@
 {
-  "base_commit": "7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca",
   "schema_version": 1,
+  "base_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
   "files": [
     {
-      "path": "scripts/host-survey.cjs",
-      "after_sha256_lf": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
-      "before_sha256_lf": null,
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
+      "path": "Cargo.lock",
+      "before_sha256_lf": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712",
+      "after_sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+      "disposition": "existing-feature",
+      "reason": "Typed host metric receipts add the already pinned serde dependency to host-process-metrics; the enrolled COST-L query feature declares this lockfile and its exact-source verification is explicitly STALE."
     },
     {
-      "path": "scripts/collect-host-survey.ps1",
-      "after_sha256_lf": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
-      "before_sha256_lf": null,
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
-    },
-    {
-      "path": "scripts/tests/host-survey.test.cjs",
-      "after_sha256_lf": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-      "before_sha256_lf": null,
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
-    },
-    {
-      "path": "crates/repository-checks/tests/host_survey_schema.rs",
-      "after_sha256_lf": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a",
-      "before_sha256_lf": null,
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
-    },
-    {
-      "path": "schemas/host-survey.schema.json",
-      "after_sha256_lf": "af897efaa4d052a8a10d36bda983544cd16884fa5a6500e1476239da20b65ae2",
-      "before_sha256_lf": null,
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
-    },
-    {
-      "path": "research/hardware/fixtures/synthetic-survey-input.json",
-      "after_sha256_lf": "b0f825985be7d3cde2a8c04f729ac7a78beee9633721847ffebc30d649771971",
-      "before_sha256_lf": null,
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
-    },
-    {
-      "path": "research/hardware/fixtures/synthetic-survey-report.json",
-      "after_sha256_lf": "d14121245afe12b622eade249c4030e8961f6d1f721cf77c89330d6f66684e76",
-      "before_sha256_lf": null,
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
-    },
-    {
-      "path": "package.json",
-      "after_sha256_lf": "0976fae10a6766c302bfba03e70555c9bb1893ee40822b1777a5204a23d2fc82",
-      "before_sha256_lf": "0d6ae16dfed9be27b639a4ee02230f50a21064793e55cd72981dfdb9920db684",
-      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
-      "disposition": "new-feature"
-    },
-    {
-      "path": "crates/kernel/src/process_workload.rs",
-      "before_sha256_lf": "d6cfc72822c74fd030d51a735ded89aa7f38f40fc0f1bfccb8e0888c690ca05a",
-      "after_sha256_lf": "df98675c81934a0219547a89e50540b45d6648dd23fc33c2221e95b70fd54a76",
+      "path": "crates/host-process-metrics/Cargo.toml",
+      "before_sha256_lf": "dc530a9f895d3bb399894012d2bca430632bccdcafbaf1523956e368054d46f2",
+      "after_sha256_lf": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6",
       "disposition": "no-feature-impact",
-      "reason": "Verification-only authority fixture: require the unsupported SVC outcome without racing an unrelated two-second deadline, retain the existing eight-quantum internal slice cap, and report precise DEV failure conditions. Expiry stays a failed probe. Kernel authorization, production scheduler deadlines, slice-budget enforcement and fault classification are unchanged; the external QEMU watchdog still rejects hangs."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/host-process-metrics/src/lib.rs",
+      "before_sha256_lf": "07545360dff084fb941a05f283deece282420e7df2358e7ecec77b90bf294a9e",
+      "after_sha256_lf": "ee1d24ab87e9c15328f3a07a629f5734ec58aacb41eac61d295baeddd6ff96d4",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/kernel/src/test_support/irq_wait.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "fad0e7a7e220c1fc511acb672a0bc5db9fc8d9fc2964e744e9d6aac05e14bc9b",
+      "disposition": "no-feature-impact",
+      "reason": "Fix bounded verification fixture polling order: observe actual IRQ delivery before timeout and take a final observation at expiration. The 500 ms bound remains and missing delivery fails; native IRQ handling and process lifetime semantics do not change."
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "before_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
+      "after_sha256_lf": "3fa2f4e5785bb3e1703b709811cc7012c34fdd83a73733f47f0535041affb91b",
+      "disposition": "no-feature-impact",
+      "reason": "Strengthen kernel-test acceptance with a separately recorded generation published after the actual completed remote TLBI sequence and before its ACK. The test requires that witness, so the omission control fails even when a stale translation is naturally evicted; the host expects the specific smp_remote_ack rejection. The witness is absent from non-test builds; native invalidation and retirement contracts do not change."
+    },
+    {
+      "path": "crates/migration-advisor/src/advisor.rs",
+      "before_sha256_lf": "40a93f93bf7e998a2d583c920f2b66025b153ed2ea00a26a27eb6d8f7f6ace58",
+      "after_sha256_lf": "243db38f10af82f4eadb6733894a5be86d1778e0fc6da961c64661dc1400b51f",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-advisor/src/statistics.rs",
+      "before_sha256_lf": "d807602091c9858da837a4d88f1845aa486145ff21eece705a14ad1f06c0467a",
+      "after_sha256_lf": "0ce91e28eb36bf95b3f906b0644b6809cfbc4cd3f83dc2e26e9e9b13560ac656",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-advisor/tests/migration.rs",
+      "before_sha256_lf": "ad4f814b9a9f2c6015fb1952fe64ea90f00923614290a018d3ace1c84fcbf73e",
+      "after_sha256_lf": "cbfde512183c620d55d84524b4682f3e9d8ee65c11b281802025e8d7c8aeff0e",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-workbench/src/lib.rs",
+      "before_sha256_lf": "51e8b41928b5534e9d7a2b08d70bae3ca5462e893e1a0d55cc4b7a8fd416e6bc",
+      "after_sha256_lf": "6b7c994a73433d599b908f2cbc5e78bab1a7d0b1366a03dd4e50477a9e6d0857",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-workbench/src/main.rs",
+      "before_sha256_lf": "516973dd03334f3752516b88d4c6a9081322eef6af5fa160e81e9533cd95d2a8",
+      "after_sha256_lf": "68c8de14c3f26868a676d457245b442f37c1f4e01bdc92c677e2bc75e2a622b3",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-workbench/tests/workload.rs",
+      "before_sha256_lf": "8b73270a4f61c7455e1fcaaf5a9ee71d6cd013edac46e5875381ad7fc0f58de9",
+      "after_sha256_lf": "198c6c09f52f819b99618ce728324988f189fee2734ef56f1b12b29dacf3c75e",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "before_sha256_lf": "d1d1139b4384ecb73499f9c4ef01bd87ad611aa4c297f823278bb6ca668ac661",
+      "after_sha256_lf": "694f5ce95a7b52ffcb19172f724b7dbec7b58880d32322d838f146dff26afbe2",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "before_sha256_lf": "ce31d83e4ef6d5d54501b137e8f0e6a85f411d43e62fc8f50e37b0284f8ec302",
+      "after_sha256_lf": "427b0bb8048844b2a5e6e0db39f25df9e4d2dbad6f5108b273f5400050807c33",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/xtask/tests/timer_wait.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "439b2b70df1d62d70d4ae63bc8f03ea8699cc91d26c863fe30907d943a6a5791",
+      "disposition": "no-feature-impact",
+      "reason": "Fix bounded verification fixture polling order: observe actual IRQ delivery before timeout and take a final observation at expiration. The 500 ms bound remains and missing delivery fails; native IRQ handling and process lifetime semantics do not change."
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "before_sha256_lf": "87dac4741eccafee11e76270db155586757e3a2776127f1b598b6fdf8fc1e886",
+      "after_sha256_lf": "ea2b134265b738ba4fedc77647ecd22e6fe473139afec407aba7dcb26ad89a0a",
+      "disposition": "no-feature-impact",
+      "reason": "Strengthen kernel-test acceptance with a separately recorded generation published after the actual completed remote TLBI sequence and before its ACK. The test requires that witness, so the omission control fails even when a stale translation is naturally evicted; the host expects the specific smp_remote_ack rejection. The witness is absent from non-test builds; native invalidation and retirement contracts do not change."
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "before_sha256_lf": "c8c061917a18e871c039b7a4de4d0c664f44b23140e95468a650b831fc9d5878",
+      "after_sha256_lf": "e100795dffd676c18feceec446da2546a96037f9e504c0724b04e05e89c016c0",
+      "disposition": "no-feature-impact",
+      "reason": "Strengthen kernel-test acceptance with a separately recorded generation published after the actual completed remote TLBI sequence and before its ACK. The test requires that witness, so the omission control fails even when a stale translation is naturally evicted; the host expects the specific smp_remote_ack rejection. The witness is absent from non-test builds; native invalidation and retirement contracts do not change."
     }
   ],
   "features": [
     {
-      "id": "kolvrt.research.host-survey",
-      "reason": "New complete EN/RU contract records privacy field minimization, provider limits, explicit UNKNOWN, research_host versus boot_target, synthetic evidence and separate physical/publication gates.",
-      "disposition": "semantic-change"
+      "id": "kolvrt.cost-l.offline-queries",
+      "disposition": "evidence-change",
+      "reason": "The declared Cargo.lock source digest changed due to the already pinned serde dependency added to host metric serialization. Historical receipts remain immutable; current exact-source verification is explicitly STALE without changing COST-L query semantics."
     }
   ]
 }

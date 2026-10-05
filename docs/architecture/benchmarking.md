@@ -73,6 +73,15 @@ cost and end-to-end cost. A run artifact contains its manifest, workload digest,
 result, raw samples, rejected-run log, analysis version and report. Implement a benchmark
 runner only when two real comparable paths exist. Case records specify workload-specific obligations.
 
+Missing required data rejects the analysis; a configured resource budget makes both
+baseline and candidate measurements mandatory for every selected observation. Optional
+measurements use typed available/unavailable results with the specific cause and missing
+observation counts. Budget assessments distinguish passed, failed and not evaluated:
+an absent budget is `not_evaluated` with `budget_not_configured`, never a pass. Insufficient
+tail samples cannot pass a configured budget. Reports expose global and per-consumer
+assessments, including p99. A supported latency gain applies only to the evaluated
+latency claim; it does not establish compliance with unconfigured resource budgets.
+
 ## Replaceable component comparisons
 
 [KOLVRT Arena](component-arena.md) extends this methodology to replaceable components

@@ -817,7 +817,7 @@
     }
   ],
   "inputs": {
-    "Cargo.lock": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712",
+    "Cargo.lock": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
     "crates/kernel-core/src/domain.rs": "17c2ca3dfc9f25510a1780ae6745737801d90fa575e7471977e31d945c5e37c5",
     "crates/kernel-core/src/domain/pool.rs": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05",
     "crates/kernel-core/src/handles.rs": "4d7c64d95bfa34377065728b51242e63c8c6a4822989587c500c818de130fedb",
@@ -864,7 +864,7 @@
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
-    "docs/architecture/benchmarking.md": "f79a97abd46d97bcdcb761787e8ffae52926907b39cf5c0b538f5c2a8f2e3690",
+    "docs/architecture/benchmarking.md": "f1830d127dc789a35f2a52930375169e986358e5cb9163a7ec71993b27abfe30",
     "docs/architecture/component-arena.md": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
@@ -874,8 +874,8 @@
     "docs/kernel/processes.md": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "5d7ea35578423fa0c70ac7235c6cd5e13d6eeaa12c2afeeff47bedce560b7ec5",
-    "docs/knowledge-system.md": "c5c72d1de4b7acaad15a7de929d2c8ec0027157270318a88727dbf194eee9d0f",
-    "docs/research/cost-l-queries.md": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
+    "docs/knowledge-system.md": "0b999ceaad9ce013632fc475dea777829f36c2f2fbebe5524072f3744224bcea",
+    "docs/research/cost-l-queries.md": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
     "docs/research/host-survey.md": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
@@ -926,7 +926,7 @@
     "scripts/collect-host-survey.ps1": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
     "scripts/host-survey.cjs": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "7fe325c9e22e99cf4abd49977ae8906ae0a38bc87daae5dded4e526cb3161d6b",
+    "translations/manifest.json": "f5e7ad2d19cadff16e763c99e00789c65667234826a7cdba166b80b5cba1f8e1",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -952,7 +952,7 @@
     "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
-    "translations/ru/docs/architecture/benchmarking.md": "ee7f5578fa8766424ec8f9a49011371cebeefb4bd5e5c0c1ce68d07c8cbe85d5",
+    "translations/ru/docs/architecture/benchmarking.md": "238dd8c769f118c77f0e1252e1f6912f63c672837b91fac0b246993651470e9f",
     "translations/ru/docs/architecture/component-arena.md": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
@@ -961,8 +961,8 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "41b3aba2375736cd13128cd7ea21dfef0733d4039a182a228913cedd70f3b43c",
-    "translations/ru/docs/research/cost-l-queries.md": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
+    "translations/ru/docs/knowledge-system.md": "6e301eecde312e186c214ec2fe9d21421b94504b3023057c64dac9562ddeeb01",
+    "translations/ru/docs/research/cost-l-queries.md": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032",
     "translations/ru/docs/research/host-survey.md": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
@@ -3018,7 +3018,7 @@
     "doc.kolvrt.architecture.benchmarking": {
       "document": "doc.kolvrt.architecture.benchmarking",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5722,
+      "estimated_bytes": 6413,
       "evidence_scope": "measurement and reproducibility requirements; no new execution results are claimed.",
       "id": "doc.kolvrt.architecture.benchmarking",
       "kind": "policy",
@@ -3032,15 +3032,15 @@
       },
       "locations": {
         "en": {
-          "end": 94,
+          "end": 103,
           "path": "docs/architecture/benchmarking.md",
-          "sha256": "f79a97abd46d97bcdcb761787e8ffae52926907b39cf5c0b538f5c2a8f2e3690",
+          "sha256": "f1830d127dc789a35f2a52930375169e986358e5cb9163a7ec71993b27abfe30",
           "start": 1
         },
         "ru": {
-          "end": 99,
+          "end": 109,
           "path": "translations/ru/docs/architecture/benchmarking.md",
-          "sha256": "ee7f5578fa8766424ec8f9a49011371cebeefb4bd5e5c0c1ce68d07c8cbe85d5",
+          "sha256": "238dd8c769f118c77f0e1252e1f6912f63c672837b91fac0b246993651470e9f",
           "start": 1
         }
       },
@@ -3068,13 +3068,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "c5c72d1de4b7acaad15a7de929d2c8ec0027157270318a88727dbf194eee9d0f",
+          "sha256": "0b999ceaad9ce013632fc475dea777829f36c2f2fbebe5524072f3744224bcea",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "41b3aba2375736cd13128cd7ea21dfef0733d4039a182a228913cedd70f3b43c",
+          "sha256": "6e301eecde312e186c214ec2fe9d21421b94504b3023057c64dac9562ddeeb01",
           "start": 1
         }
       },
@@ -3359,7 +3359,7 @@
     "doc.kolvrt.research.cost-l-queries": {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 8969,
+      "estimated_bytes": 9086,
       "evidence_scope": "bounded host queries over validated registry declarations; issue #48 remains open for production-manifest integration after #47.",
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
@@ -3375,13 +3375,13 @@
         "en": {
           "end": 115,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
+          "sha256": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
           "start": 1
         },
         "ru": {
           "end": 115,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
+          "sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032",
           "start": 1
         }
       },
@@ -4042,11 +4042,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Five real-binary end-to-end tests and current-registry query passed against these exact declared source digests.",
+            "reason": "The declared Cargo.lock digest changed when typed host measurement serialization added the existing pinned serde dependency. Historical receipts remain immutable; current source verification requires a new exact-source host receipt.",
             "receipt": "research/results/issue48-cost-l-queries.json",
             "receipt_sha256": "beeeca5564e1abf20147531a1bd19b25b34063f70a11c9162c5503359cb13fbb",
             "scope": "Windows host only; synthetic fixtures do not establish production consumers or observed runtime costs.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -4069,13 +4069,13 @@
         "en": {
           "end": 26,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
+          "sha256": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
           "start": 7
         },
         "ru": {
           "end": 26,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
+          "sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032",
           "start": 7
         }
       },
@@ -4127,7 +4127,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "93a4503385e4b88dbc0376400a10cef6aa3e55d8dcb69aaddf23b3784afb0cb3",
+            "receipt_sha256": "eed7cf72c3c839c3dc21b9bcfb90824b3b41cf74a3f5d16d6620d5aeeb5f41ab",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4152,13 +4152,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "c5c72d1de4b7acaad15a7de929d2c8ec0027157270318a88727dbf194eee9d0f",
+          "sha256": "0b999ceaad9ce013632fc475dea777829f36c2f2fbebe5524072f3744224bcea",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "41b3aba2375736cd13128cd7ea21dfef0733d4039a182a228913cedd70f3b43c",
+          "sha256": "6e301eecde312e186c214ec2fe9d21421b94504b3023057c64dac9562ddeeb01",
           "start": 7
         }
       },

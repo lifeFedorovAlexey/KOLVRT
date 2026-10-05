@@ -1,3 +1,5 @@
+#[path = "test_support/irq_wait.rs"]
+mod irq_wait;
 use crate::time::Duration;
 use crate::{cpu, event, interrupt, memory, percpu, platform, smp, sync};
 use alloc::{boxed::Box, vec::Vec};
@@ -57,12 +59,10 @@ fn expected(pc: usize) {
 }
 fn wait_irq() -> bool {
     let end = crate::time::deadline_after(TEST_IRQ_TIMEOUT);
-    while cpu::ticks() < end {
-        if interrupt::delivered().load(Ordering::Acquire) > 0 {
-            return true;
-        }
-    }
-    false
+    irq_wait::wait_for_delivery(
+        || interrupt::delivered().load(Ordering::Acquire) > 0,
+        || cpu::ticks() >= end,
+    )
 }
 pub fn remote_fault(address: usize) {
     expected(&raw const probe_read_pc as usize);
@@ -213,7 +213,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
         drop(retirement);
         report(
             "smp_remote_ack",
-            p.reclaimable(&a) && second.tlb_ack.load(Ordering::Acquire) > 0,
+            p.reclaimable(&a) && smp::remote_tlbi_completed(second.tlb_ack.load(Ordering::Acquire)),
         );
         // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.
         unsafe {
