@@ -258,7 +258,11 @@ fn guest(features: &[&str], evidence: bool) -> Result<Value> {
         .map(|byte| format!("{byte:02x}"))
         .collect::<String>();
     fs::write("target/kernel/routing-profile.bin", profile)?;
-    if !Command::new(&cargo)
+    let observation = super::timing::Observation::start(
+        "cargo-build",
+        format!("routing-demo release features={selected}"),
+    );
+    let status = Command::new(&cargo)
         .env("CARGO_ENCODED_RUSTFLAGS", &guest_flags)
         .env(
             "KOLVRT_ROUTING_PROFILE",
@@ -277,9 +281,13 @@ fn guest(features: &[&str], evidence: bool) -> Result<Value> {
             "--features",
             &selected,
         ])
-        .status()?
-        .success()
-    {
+        .status();
+    observation.finish(if status.as_ref().is_ok_and(|status| status.success()) {
+        "success"
+    } else {
+        "failure"
+    });
+    if !status?.success() {
         return Err("user image build failed".into());
     }
     let elf = fs::read("target/aarch64-unknown-none/release/routing-demo")?;

@@ -21,4 +21,6 @@
 | Миграция              | [Host advisor](architecture/migration-advisor.md); production integration проверяется отдельно                                                                                                             |
 | Historical evidence   | [Исторический аудит архитектуры](architecture/architecture-audit-2026-10-04.md), [Отчёт Phase 0](research/phase-0-1-report.md); сохраняет исходные границы этапа                                           |
 
+| Производительность CI | [Измерение и оптимизация](ci/performance.md); экспериментальный параллельный CI и exact-source matrix shards; приёмка hosted ускорения ожидается |
+
 [Английский оригинал](../../../docs/index.md)

@@ -1,0 +1,549 @@
+{
+  "schema_version": 1,
+  "scope": "Three successful pre-optimization push runs with identical kernel/workspace/tool/workflow Git blob inventory; Markdown/evidence differ. Descriptive CI wall baseline, not isolated compiler/QEMU CPU time or paired speed proof.",
+  "inputs": [
+    {
+      "head_sha": "ab44dac6d9b16ae4524c00899927b571e2cbbe6b",
+      "git_blob_inventory_sha256": "3719b5514b7f7007cd8bfa78322ea287a1e06cf4eb9f805c0a7f960bd792fb19"
+    },
+    {
+      "head_sha": "555e4d7d69bed27668fe3c54baa23a435331f43d",
+      "git_blob_inventory_sha256": "3719b5514b7f7007cd8bfa78322ea287a1e06cf4eb9f805c0a7f960bd792fb19"
+    },
+    {
+      "head_sha": "2ff6e14cd5eb1c665816d7ba74479f4644424370",
+      "git_blob_inventory_sha256": "3719b5514b7f7007cd8bfa78322ea287a1e06cf4eb9f805c0a7f960bd792fb19"
+    }
+  ],
+  "baseline_median_seconds": 1970,
+  "baselines": [
+    {
+      "run_id": 37347021424,
+      "run_attempt": 1,
+      "head_sha": "ab44dac6d9b16ae4524c00899927b571e2cbbe6b",
+      "workflow_id": 373211006,
+      "event": "push",
+      "conclusion": "success",
+      "execution_span_seconds": 2002,
+      "steps": [
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Set up job",
+          "number": 1,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/checkout@v7.0.1",
+          "number": 2,
+          "conclusion": "success",
+          "wall_seconds": 5
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/setup-node@v7.0.0",
+          "number": 3,
+          "conclusion": "success",
+          "wall_seconds": 4
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Pinned compiler",
+          "number": 4,
+          "conclusion": "success",
+          "wall_seconds": 13
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Pinned emulator",
+          "number": 5,
+          "conclusion": "success",
+          "wall_seconds": 20
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run npm ci --ignore-scripts",
+          "number": 6,
+          "conclusion": "success",
+          "wall_seconds": 5
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run npm run check",
+          "number": 7,
+          "conclusion": "success",
+          "wall_seconds": 211
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Canonical feature impact and transition history",
+          "number": 8,
+          "conclusion": "skipped",
+          "wall_seconds": null
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Exception registry rejection fixtures",
+          "number": 9,
+          "conclusion": "success",
+          "wall_seconds": 22
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Routing model contracts",
+          "number": 10,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Production model and absent switching",
+          "number": 11,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Architecture lint",
+          "number": 12,
+          "conclusion": "success",
+          "wall_seconds": 1
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Production architecture lint",
+          "number": 13,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real kernel matrix and host failure propagation",
+          "number": 14,
+          "conclusion": "success",
+          "wall_seconds": 1281
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real EL0 routing matrix and failure propagation",
+          "number": 15,
+          "conclusion": "success",
+          "wall_seconds": 168
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real 16-bit ASID baseline comparison",
+          "number": 16,
+          "conclusion": "success",
+          "wall_seconds": 242
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/upload-artifact@v7.0.1",
+          "number": 17,
+          "conclusion": "success",
+          "wall_seconds": 17
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Post Run actions/setup-node@v7.0.0",
+          "number": 33,
+          "conclusion": "success",
+          "wall_seconds": 0
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Post Run actions/checkout@v7.0.1",
+          "number": 34,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Complete job",
+          "number": 35,
+          "conclusion": "success",
+          "wall_seconds": 0
+        }
+      ],
+      "cargo_compilation_seconds": null,
+      "qemu_execution_seconds": null,
+      "cache_outcomes": "See per-workload job.json artifacts; UNKNOWN in API timestamps",
+      "declared_dag_seconds": 2002,
+      "check_inventory_id": "kernel-130-v1"
+    },
+    {
+      "run_id": 37346699067,
+      "run_attempt": 1,
+      "head_sha": "555e4d7d69bed27668fe3c54baa23a435331f43d",
+      "workflow_id": 373211006,
+      "event": "push",
+      "conclusion": "success",
+      "execution_span_seconds": 1970,
+      "steps": [
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Set up job",
+          "number": 1,
+          "conclusion": "success",
+          "wall_seconds": 1
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/checkout@v7.0.1",
+          "number": 2,
+          "conclusion": "success",
+          "wall_seconds": 5
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/setup-node@v7.0.0",
+          "number": 3,
+          "conclusion": "success",
+          "wall_seconds": 6
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Pinned compiler",
+          "number": 4,
+          "conclusion": "success",
+          "wall_seconds": 21
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Pinned emulator",
+          "number": 5,
+          "conclusion": "success",
+          "wall_seconds": 19
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run npm ci --ignore-scripts",
+          "number": 6,
+          "conclusion": "success",
+          "wall_seconds": 8
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run npm run check",
+          "number": 7,
+          "conclusion": "success",
+          "wall_seconds": 223
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Canonical feature impact and transition history",
+          "number": 8,
+          "conclusion": "skipped",
+          "wall_seconds": null
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Exception registry rejection fixtures",
+          "number": 9,
+          "conclusion": "success",
+          "wall_seconds": 23
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Routing model contracts",
+          "number": 10,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Production model and absent switching",
+          "number": 11,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Architecture lint",
+          "number": 12,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Production architecture lint",
+          "number": 13,
+          "conclusion": "success",
+          "wall_seconds": 1
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real kernel matrix and host failure propagation",
+          "number": 14,
+          "conclusion": "success",
+          "wall_seconds": 1271
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real EL0 routing matrix and failure propagation",
+          "number": 15,
+          "conclusion": "success",
+          "wall_seconds": 160
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real 16-bit ASID baseline comparison",
+          "number": 16,
+          "conclusion": "success",
+          "wall_seconds": 203
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/upload-artifact@v7.0.1",
+          "number": 17,
+          "conclusion": "success",
+          "wall_seconds": 17
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Post Run actions/setup-node@v7.0.0",
+          "number": 33,
+          "conclusion": "success",
+          "wall_seconds": 0
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Post Run actions/checkout@v7.0.1",
+          "number": 34,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Complete job",
+          "number": 35,
+          "conclusion": "success",
+          "wall_seconds": 0
+        }
+      ],
+      "cargo_compilation_seconds": null,
+      "qemu_execution_seconds": null,
+      "cache_outcomes": "See per-workload job.json artifacts; UNKNOWN in API timestamps",
+      "declared_dag_seconds": 1970,
+      "check_inventory_id": "kernel-130-v1"
+    },
+    {
+      "run_id": 37352057634,
+      "run_attempt": 1,
+      "head_sha": "2ff6e14cd5eb1c665816d7ba74479f4644424370",
+      "workflow_id": 373211006,
+      "event": "push",
+      "conclusion": "success",
+      "execution_span_seconds": 1829,
+      "steps": [
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Set up job",
+          "number": 1,
+          "conclusion": "success",
+          "wall_seconds": 1
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/checkout@v7.0.1",
+          "number": 2,
+          "conclusion": "success",
+          "wall_seconds": 8
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/setup-node@v7.0.0",
+          "number": 3,
+          "conclusion": "success",
+          "wall_seconds": 11
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Pinned compiler",
+          "number": 4,
+          "conclusion": "success",
+          "wall_seconds": 17
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Pinned emulator",
+          "number": 5,
+          "conclusion": "success",
+          "wall_seconds": 25
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run npm ci --ignore-scripts",
+          "number": 6,
+          "conclusion": "success",
+          "wall_seconds": 16
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run npm run check",
+          "number": 7,
+          "conclusion": "success",
+          "wall_seconds": 189
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Canonical feature impact and transition history",
+          "number": 8,
+          "conclusion": "skipped",
+          "wall_seconds": null
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Exception registry rejection fixtures",
+          "number": 9,
+          "conclusion": "success",
+          "wall_seconds": 18
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Routing model contracts",
+          "number": 10,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Production model and absent switching",
+          "number": 11,
+          "conclusion": "success",
+          "wall_seconds": 1
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Architecture lint",
+          "number": 12,
+          "conclusion": "success",
+          "wall_seconds": 1
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Production architecture lint",
+          "number": 13,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real kernel matrix and host failure propagation",
+          "number": 14,
+          "conclusion": "success",
+          "wall_seconds": 1173
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real EL0 routing matrix and failure propagation",
+          "number": 15,
+          "conclusion": "success",
+          "wall_seconds": 142
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Real 16-bit ASID baseline comparison",
+          "number": 16,
+          "conclusion": "success",
+          "wall_seconds": 206
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Run actions/upload-artifact@v7.0.1",
+          "number": 17,
+          "conclusion": "success",
+          "wall_seconds": 13
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Post Run actions/setup-node@v7.0.0",
+          "number": 33,
+          "conclusion": "success",
+          "wall_seconds": 0
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Post Run actions/checkout@v7.0.1",
+          "number": 34,
+          "conclusion": "success",
+          "wall_seconds": 2
+        },
+        {
+          "job": "foundation",
+          "runner_labels": ["windows-2022"],
+          "name": "Complete job",
+          "number": 35,
+          "conclusion": "success",
+          "wall_seconds": 0
+        }
+      ],
+      "cargo_compilation_seconds": null,
+      "qemu_execution_seconds": null,
+      "cache_outcomes": "See per-workload job.json artifacts; UNKNOWN in API timestamps",
+      "declared_dag_seconds": 1829,
+      "check_inventory_id": "kernel-130-v1"
+    }
+  ]
+}

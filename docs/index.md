@@ -21,4 +21,6 @@ This is navigation, not a feature-completion checklist. Use the [knowledge contr
 | Migration               | [Host advisor](architecture/migration-advisor.md); production integrations remain separately gated                                                                                                   |
 | Historical evidence     | [Historical architecture audit](architecture/architecture-audit-2026-10-04.md), [Phase 0 report](research/phase-0-1-report.md); retain its original milestone scope                                  |
 
+| CI performance | [Timing and optimization](ci/performance.md); experimental parallel CI and exact-source sharded matrix; hosted speed acceptance pending |
+
 [Russian translation](../translations/ru/docs/index.md)

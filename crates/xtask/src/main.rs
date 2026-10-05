@@ -1,6 +1,8 @@
+mod matrix;
 mod output;
 #[cfg(feature = "route-tools")]
 mod routing_demo;
+mod timing;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
@@ -487,7 +489,18 @@ fn run() -> Result<()> {
             if status.success() { Ok(()) } else { Err("repository tooling command failed".into()) }
         }
         Some("audit") => audit(),
-        Some("ipc-controls") if args.len() == 1 => ipc_controls(),
+        Some("ipc-controls") if args.len() == 1 => matrix::run_ipc(),
+        Some("matrix-plan") if args.len() == 1 => {
+            println!("{}", serde_json::to_string_pretty(&matrix::plan_document()?)?);
+            Ok(())
+        }
+        Some("matrix-shard") if args.len() == 3 => {
+            let index: usize = args[1].parse()?;
+            let count: usize = args[2].parse()?;
+            qemu()?;
+            audit()?;
+            matrix::run(Some((index, count)))
+        }
         Some("ipc-bench") if args.len()==1 => {
             let sources=source_inventory()?;
             for prod in [false,true] {
@@ -572,128 +585,20 @@ fn run() -> Result<()> {
                 let elf = build(false, true, Some("retained-mapping-test"), true)?;
                 return execute(&elf, true, true);
             }
-            let starting_sources = source_inventory()?;
-            qemu()?;
-            audit()?;
-            for prod in [false, true] {
-                let elf = build(prod, true, None, true)?;
-                execute(&elf, true, true)?;
-                let elf = build(prod, false, None, true)?;
-                execute(&elf, false, true)?;
-            }
-            for &(flag, marker) in NEGATIVE_CONTROLS {
-                let output = Command::new(env::current_exe()?)
-                    .args(["test", flag])
-                    .output()?;
-                let text = format!(
-                    "{}{}",
-                    String::from_utf8_lossy(&output.stdout),
-                    String::from_utf8_lossy(&output.stderr)
-                );
-                fs::write(format!("target/kernel/{flag}.log"), &text)?;
-                if output.status.success() || !text.contains(marker) {
-                    return Err(format!(
-                        "host failure propagation control did not fail correctly: {flag}; status={}; expected={marker:?}; output:\n{text}",
-                        output.status
-                    )
-                    .into());
-                }
-                println!(
-                    "host failure propagation verified: {flag} exit={:?}",
-                    output.status.code()
-                );
-            }
-            for prod in [false, true] {
-                for &(flag, _, error) in SCHEDULER_CONTROLS {
-                    let mut command = Command::new(env::current_exe()?);
-                    command.args(["test", flag]);
-                    if prod { command.arg("--prod"); }
-                    let output = command.output()?;
-                    let text = format!("{}{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
-                    fs::write(format!("target/kernel/{}-{flag}.log", if prod { "prod" } else { "dev" }), &text)?;
-                    let marker = format!("\"error\":\"{error}\"");
-                    if output.status.success() || !text.contains(&marker) {
-                        return Err(format!("scheduler rejection not witnessed: {flag} prod={prod}").into());
-                    }
-                    println!("scheduler rejection verified: {flag} prod={prod} error={error}");
-                }
-            }
-            println!("Native kernel matrix passed (two active CPUs; scheduler ownership enforced).");
-            for prod in [false, true] {
-                for &(flag, _, marker) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
-                    let mut command = Command::new(env::current_exe()?);
-                    command.args(["test", flag]);
-                    if prod { command.arg("--prod"); }
-                    let output = command.output()?;
-                    let text = format!("{}{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
-                    fs::write(format!("target/kernel/{}-{flag}.log", if prod { "prod" } else { "dev" }), &text)?;
-                    if output.status.success() || !text.contains(marker) {
-                        return Err(format!("user-copy control did not fail correctly: {flag} prod={prod}").into());
-                    }
-                    println!("user-copy rejection verified: {flag} prod={prod}");
-                }
-            }
             let label = match args.as_slice() {
                 [_] => None,
                 [_, flag, label] if flag == "--record" => Some(label.as_str()),
                 _ => return Err("usage: cargo xtask test [--record LABEL]".into()),
             };
-            ipc_controls()?;
+            let starting_sources = source_inventory()?;
+            qemu()?;
+            audit()?;
+            matrix::run(None)?;
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
         _ => Err("usage: cargo xtask test [--record LABEL] | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
-}
-/// Inspect the actual parsed kernel sidecar. Exit failure or an unrelated panic
-/// alone is insufficient: each mutation must fail its named real EL0 test.
-fn ipc_controls() -> Result<()> {
-    for prod in [false, true] {
-        for &(flag, feature, test) in IPC_CONTROLS {
-            let profile = if prod { "prod" } else { "dev" };
-            let receipt = PathBuf::from(format!("target/kernel/{profile}-{feature}.results.json"));
-            match fs::remove_file(&receipt) {
-                Ok(()) => {}
-                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-                Err(error) => return Err(error.into()),
-            }
-            let mut command = Command::new(env::current_exe()?);
-            command.args(["test", flag]);
-            if prod {
-                command.arg("--prod");
-            }
-            let output = command.output()?;
-            fs::write(
-                format!("target/kernel/{profile}-{flag}.log"),
-                format!(
-                    "{}{}",
-                    String::from_utf8_lossy(&output.stdout),
-                    String::from_utf8_lossy(&output.stderr)
-                ),
-            )?;
-            let events = read_json(receipt)?;
-            if output.status.success()
-                || !events
-                    .as_array()
-                    .ok_or("IPC control events absent")?
-                    .iter()
-                    .any(|event| {
-                        ((event["event"] == "test" && event["name"] == test)
-                            || test.strip_prefix("reject:").is_some_and(|error| {
-                                event["event"] == "ipc-reject" && event["error"] == error
-                            }))
-                            && event["status"] == "fail"
-                    })
-            {
-                return Err(format!(
-                    "IPC mutation not detected by exact test: {flag} prod={prod} expected={test}"
-                )
-                .into());
-            }
-            println!("IPC rejection verified: {flag} prod={prod} test={test}");
-        }
-    }
-    Ok(())
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
     let mut profiles = serde_json::Map::new();
@@ -790,7 +695,14 @@ fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<
     if !features.is_empty() {
         c.args(["--features", &features.join(",")]);
     }
-    if !c.status()?.success() {
+    let observation = timing::Observation::start("cargo-build", format!("{c:?}"));
+    let status = c.status();
+    observation.finish(if status.as_ref().is_ok_and(|status| status.success()) {
+        "success"
+    } else {
+        "failure"
+    });
+    if !status?.success() {
         return Err("kernel build failed".into());
     }
     let source = format!(
@@ -951,6 +863,8 @@ fn execute_mode(
             &json!({"qemu_version":String::from_utf8(version.stdout)?,"arguments":qemu_args(elf),"active_cpus":platform_config::ACTIVE_CPUS,"configured_cpus":platform_config::CONFIGURED_CPUS,"elf_sha256":(Sha256::digest(fs::read(elf)?)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"timeout_seconds":QEMU_TIMEOUT.as_secs(),"accelerator":"TCG","measurement_claim":"emulator timer ticks; not hardware throughput"}),
         )?,
     )?;
+    let observation =
+        timing::Observation::start("qemu", format!("{} {:?}", elf.display(), qemu_args(elf)));
     let mut child = Command::new(emulator)
         .args(qemu_args(elf))
         .stdin(Stdio::null())
@@ -960,6 +874,11 @@ fn execute_mode(
     let start = Instant::now();
     loop {
         if let Some(status) = child.try_wait()? {
+            observation.finish(if status.success() {
+                "success"
+            } else {
+                "failure"
+            });
             if !status.success() {
                 return Err(format!("QEMU failed: {}", fs::read_to_string(&err)?).into());
             }
@@ -968,6 +887,7 @@ fn execute_mode(
         if start.elapsed() > QEMU_TIMEOUT {
             child.kill()?;
             child.wait()?;
+            observation.finish("timeout");
             return Err(format!("QEMU timeout: {}", fs::read_to_string(&log)?).into());
         }
         thread::sleep(QEMU_POLL_INTERVAL);

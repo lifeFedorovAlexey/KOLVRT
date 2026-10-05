@@ -17,10 +17,28 @@ jobs:
       - uses: actions/setup-node@v7.0.0
         with:
           node-version-file: ".nvmrc"
+          cache: npm
       - name: Pinned Rust
         run: rustup toolchain install 1.99.0 --profile minimal
+      - name: Pinned cargo-deny cache
+        id: deny-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            target/ci-tools/cargo-deny/bin/
+            target/cache-integrity.json
+          key: cargo-deny-v1-${{ runner.os }}-1.99.0-0.19.9-${{ hashFiles('scripts/cache-integrity.cjs', '.github/workflows/dependencies.yml') }}
+      - name: Verify cached audit tool bytes
+        if: steps.deny-cache.outputs.cache-hit == 'true'
+        run: node scripts/cache-integrity.cjs verify target/cache-integrity.json
       - name: Install pinned host audit tool
-        run: cargo install --locked cargo-deny --version 0.19.9
+        if: steps.deny-cache.outputs.cache-hit != 'true'
+        run: cargo install --locked cargo-deny --version 0.19.9 --root target/ci-tools/cargo-deny
+      - name: Verify version and record tool cache
+        run: |
+          test "$(target/ci-tools/cargo-deny/bin/cargo-deny --version)" = "cargo-deny 0.19.9"
+          echo "$GITHUB_WORKSPACE/target/ci-tools/cargo-deny/bin" >> "$GITHUB_PATH"
+          node scripts/cache-integrity.cjs record target/cache-integrity.json
       - name: Boundary rejection controls
         run: node --test scripts/tests/dependency-audit.test.cjs
       - name: Inventory and supply chain

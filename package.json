@@ -9,8 +9,13 @@
     "format:check": "prettier --check . && taplo format --check && cargo fmt --all -- --check",
     "lint": "markdownlint-cli2 && taplo lint --no-schema && cargo clippy --locked --all-targets -- -D warnings",
     "test:research": "node --test scripts/tests/linux-driver-apis.test.cjs scripts/tests/host-survey.test.cjs",
-    "check": "npm run check:dependencies && npm run format:check && npm run lint && npm run test:research && cargo test --locked && cargo run --locked -p native-state-models -- --check && cargo run --locked -p repository-checks -- check",
-    "check:dependencies": "node --test scripts/tests/dependency-audit.test.cjs && node scripts/dependency-audit.cjs check"
+    "check": "npm run check:static && npm run check:host",
+    "check:dependencies": "node --test scripts/tests/dependency-audit.test.cjs && node scripts/dependency-audit.cjs check",
+    "check:static": "npm run check:dependencies && npm run format:check && markdownlint-cli2 && taplo lint --no-schema && cargo run --locked -p repository-checks -- check",
+    "check:host": "cargo clippy --locked --all-targets -- -D warnings && npm run test:research && node --test scripts/tests/ci-timings.test.cjs scripts/tests/ci-infrastructure.test.cjs && cargo test --locked && cargo run --locked -p native-state-models -- --check && cargo test --locked -p routing --all-features && cargo test --locked -p routing --no-default-features",
+    "check:kernel-dev": "cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --features diagnostics,kernel-tests -- -D warnings",
+    "check:kernel-prod": "cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --release --no-default-features -- -D warnings",
+    "check:qemu": "cargo xtask test && cargo xtask routing test && cargo xtask asid-bench"
   },
   "devDependencies": {
     "@taplo/cli": "0.7.0",

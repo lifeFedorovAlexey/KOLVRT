@@ -1,66 +1,104 @@
 name: Kernel foundation
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "baseline preserves the old serial checks; optimized enables the new graph"
+        type: choice
+        options: [baseline, optimized]
+        default: optimized
 permissions:
   contents: read
+  actions: read
 jobs:
+  baseline:
+    if: ${{ inputs.mode == 'baseline' }}
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: baseline
+      cached: false
+  static:
+    if: ${{ inputs.mode != 'baseline' }}
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: static
+      cached: true
+  host:
+    needs: static
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: host
+      cached: true
+  kernel-dev:
+    needs: static
+    if: needs.static.outputs.kernel_required == 'true'
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: kernel-dev
+      cached: true
+  kernel-prod:
+    needs: static
+    if: needs.static.outputs.kernel_required == 'true'
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: kernel-prod
+      cached: true
+  matrix:
+    needs: static
+    if: needs.static.outputs.kernel_required == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: matrix
+      shard: ${{ matrix.shard }}
+      cached: true
+  routing:
+    needs: static
+    if: needs.static.outputs.kernel_required == 'true'
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: routing
+      cached: true
+  asid:
+    needs: static
+    if: needs.static.outputs.kernel_required == 'true'
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: asid
+      cached: true
+  evidence:
+    needs: matrix
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: evidence
+      cached: true
   foundation:
-    runs-on: windows-2022
+    if: always()
+    needs:
+      [
+        baseline,
+        static,
+        host,
+        kernel-dev,
+        kernel-prod,
+        matrix,
+        routing,
+        asid,
+        evidence,
+      ]
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
         with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v7.0.0
-        with:
-          node-version-file: ".nvmrc"
-      - name: Pinned compiler
-        shell: pwsh
-        run: |
-          rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          rustup target add --toolchain 1.99.0 aarch64-unknown-none
-          exit $LASTEXITCODE
-      - name: Pinned emulator
-        shell: pwsh
-        run: ./scripts/setup-qemu.ps1
-      - run: npm ci --ignore-scripts
-      - run: npm run check
-      - name: Canonical feature impact and transition history
-        if: github.event_name == 'pull_request'
-        shell: pwsh
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Require every mandatory workload
         env:
-          KNOWLEDGE_BASE: ${{ github.event.pull_request.base.sha }}
-        run: cargo run --locked -p repository-checks -- docs check-change "$env:KNOWLEDGE_BASE"
-      - name: Exception registry rejection fixtures
-        run: cargo test --locked -p repository-checks exceptions::tests
-      - name: Routing model contracts
-        run: cargo test --locked -p routing --all-features
-      - name: Production model and absent switching
-        run: cargo test --locked -p routing --no-default-features
-      - name: Architecture lint
-        run: cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --features diagnostics,kernel-tests -- -D warnings
-      - name: Production architecture lint
-        run: cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --release --no-default-features -- -D warnings
-      - name: Real kernel matrix and host failure propagation
-        run: cargo xtask test
-      - name: Real EL0 routing matrix and failure propagation
-        run: cargo xtask routing test
-      - name: Real 16-bit ASID baseline comparison
-        shell: pwsh
-        env:
-          QEMU_CPU: max
-        run: |
-          cargo xtask asid-bench
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $asidReceipt = Get-Content research/results/issue18-asid-measurements.json -Raw | ConvertFrom-Json
-          foreach ($asidPair in $asidReceipt.pairs) {
-            if ($asidPair.results.tagged.hardware_asid_bits -ne 16 -or $asidPair.results.baseline.hardware_asid_bits -ne 16) {
-              throw 'Expected actual 16-bit ASID hardware profile'
-            }
-          }
-      - uses: actions/upload-artifact@v7.0.1
-        if: always()
-        with:
-          name: kernel-evidence
-          path: |
-            target/kernel/
-            research/results/issue18-asid-measurements.json
+          RESULTS: ${{ toJSON(needs) }}
+          KERNEL_REQUIRED: ${{ needs.static.outputs.kernel_required }}
+          MODE: ${{ inputs.mode != 'baseline' }}
+        run: node scripts/ci-gate.cjs

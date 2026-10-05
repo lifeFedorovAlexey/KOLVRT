@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "Named DEV/PROD positive builds and one DEV negative feature; same paths, compiler and source. Not a proof for every feature, cross-machine reproducibility, cache service or QEMU reuse.",
+  "observations": [
+    {
+      "label": "cold-dev",
+      "profile": "dev",
+      "features": ["kernel-tests", "machine-events", "diagnostics"],
+      "elf_sha256": "a77b5439d5d0c2614d6e3068cf284b818c174eecaf94a6502099ed57e799f1b1",
+      "cargo_build_wall_seconds": 2.9241981
+    },
+    {
+      "label": "warm-dev",
+      "profile": "dev",
+      "features": ["kernel-tests", "machine-events", "diagnostics"],
+      "elf_sha256": "a77b5439d5d0c2614d6e3068cf284b818c174eecaf94a6502099ed57e799f1b1",
+      "cargo_build_wall_seconds": 0.0841151
+    },
+    {
+      "label": "negative-dev",
+      "profile": "dev",
+      "features": [
+        "kernel-tests",
+        "machine-events",
+        "diagnostics",
+        "negative-test"
+      ],
+      "elf_sha256": "d2857ef8bbf209edd4d89f47091a70f83d475ff5156acde3260814b4425c11fd",
+      "cargo_build_wall_seconds": 2.1415996
+    },
+    {
+      "label": "dev-after-negative",
+      "profile": "dev",
+      "features": ["kernel-tests", "machine-events", "diagnostics"],
+      "elf_sha256": "a77b5439d5d0c2614d6e3068cf284b818c174eecaf94a6502099ed57e799f1b1",
+      "cargo_build_wall_seconds": 0.0852355
+    },
+    {
+      "label": "cold-prod",
+      "profile": "prod",
+      "features": ["kernel-tests", "machine-events"],
+      "elf_sha256": "e23241a4bf93c51b45c881490a1db4a80b8c3510bde0fb36c9800baa7f7f31f3",
+      "cargo_build_wall_seconds": 6.7940571
+    },
+    {
+      "label": "warm-prod",
+      "profile": "prod",
+      "features": ["kernel-tests", "machine-events"],
+      "elf_sha256": "e23241a4bf93c51b45c881490a1db4a80b8c3510bde0fb36c9800baa7f7f31f3",
+      "cargo_build_wall_seconds": 0.0809642
+    },
+    {
+      "label": "clean-dev-again",
+      "profile": "dev",
+      "features": ["kernel-tests", "machine-events", "diagnostics"],
+      "elf_sha256": "a77b5439d5d0c2614d6e3068cf284b818c174eecaf94a6502099ed57e799f1b1",
+      "cargo_build_wall_seconds": 2.7114033
+    },
+    {
+      "label": "clean-prod-again",
+      "profile": "prod",
+      "features": ["kernel-tests", "machine-events"],
+      "elf_sha256": "e23241a4bf93c51b45c881490a1db4a80b8c3510bde0fb36c9800baa7f7f31f3",
+      "cargo_build_wall_seconds": 6.8572578
+    }
+  ],
+  "correctness": "passed"
+}
