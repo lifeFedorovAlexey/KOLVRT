@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 47313,
+  "approximate_tokens": 47349,
   "catalog_bytes": 63012,
   "catalog_nodes": 158,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "19bea045c948bc08753bf39187d752bd5d0312e20817b057bea1e833ecf5385a",
+  "catalog_sha256": "303392deb71defab4dab8e762ef3b510b46c07c20b3774857ef3c46ca0a09c41",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 189250,
+  "context_plus_catalog_bytes": 189396,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 89,
-    "utf8_bytes": 666853
+    "utf8_bytes": 667330
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -50,11 +50,11 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 126238,
+  "rendered_context_bytes": 126384,
   "russian_pilot": {
-    "approximate_tokens": 72624,
+    "approximate_tokens": 72661,
     "catalog_bytes": 63012,
-    "context_plus_navigation_bytes": 290495,
+    "context_plus_navigation_bytes": 290641,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
     "localized_navigation_bytes": 34107,
@@ -69,7 +69,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 193376,
+    "rendered_context_bytes": 193522,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -344,7 +344,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
         "start": 11
       }
     },
@@ -353,7 +353,7 @@
       "location": {
         "end": 36,
         "path": "docs/kernel/domains.md",
-        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
         "start": 27
       }
     },
@@ -362,7 +362,7 @@
       "location": {
         "end": 28,
         "path": "docs/kernel/domains.md",
-        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
         "start": 17
       }
     },
@@ -371,7 +371,7 @@
       "location": {
         "end": 56,
         "path": "docs/kernel/domains.md",
-        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
         "start": 35
       }
     },
@@ -380,7 +380,7 @@
       "location": {
         "end": 177,
         "path": "docs/kernel/domains.md",
-        "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
         "start": 55
       }
     },
@@ -513,7 +513,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 188497
+    "utf8_bytes": 188643
   },
   "source_files": [
     {

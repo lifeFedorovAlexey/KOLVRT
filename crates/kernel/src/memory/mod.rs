@@ -400,7 +400,7 @@ impl OwnedUserSpace {
     }
     /// Number of physical frames owned by this process space, including its
     /// root, fixed mappings and immutable image pages.
-    #[cfg(feature = "machine-events")]
+    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
     pub fn resident_pages(&self) -> usize {
         self.frame.count
     }
@@ -426,6 +426,7 @@ impl OwnedUserSpace {
         physical.release(self.frame);
     }
     /// Roll back a fully constructed but never published root.
+    #[cfg(not(feature = "process-rollback-negative"))]
     pub fn rollback(self, physical: &mut Physical) {
         drop(UserSpace {
             frame: &self.frame,

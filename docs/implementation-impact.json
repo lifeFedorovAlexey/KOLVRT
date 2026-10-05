@@ -36,6 +36,62 @@
       "after_sha256_lf": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
       "reason": "Documentation-only command discoverability in the crate README; the substantive new feature contract is separately enrolled and reviewed in docs/research/cost-l-queries.md.",
       "disposition": "no-feature-impact"
+    },
+    {
+      "path": ".cargo/config.toml",
+      "before_sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6",
+      "after_sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41",
+      "disposition": "no-feature-impact",
+      "reason": "Require warning-free AArch64 compilation in every Cargo build, including machine-event and negative-control configurations. This changes build acceptance only, not kernel runtime or architectural authority."
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "before_sha256_lf": "2d60ccb3555a412e0d70a6a4deb1968bf0883248c095af5806f316263cd9d7b0",
+      "after_sha256_lf": "138a815965a33980c33f3f0923c62ce914b02f0b087abffab1236d6e8ada7248",
+      "disposition": "no-feature-impact",
+      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. No mappings, accounting, ownership, allocations or runtime observations change in supported payload builds."
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "before_sha256_lf": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
+      "after_sha256_lf": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
+      "disposition": "existing-feature",
+      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. Process identity, state, charges, lifetime and the existing payload observation remain unchanged; domain source verification is explicitly STALE."
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "before_sha256_lf": "1ebc12733c073213f0ea00f03fe957630e516b2a20acc1950ae8a19fd6a34ee8",
+      "after_sha256_lf": "1362087d5ec4701aa54ba017866ced514017b1a3028bc2edd5a29e4c0d3087cd",
+      "disposition": "no-feature-impact",
+      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "before_sha256_lf": "2232acbc22694d35e0726ed42a458d07fbe6c548a61609727732c66b192cf656",
+      "after_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
+      "disposition": "no-feature-impact",
+      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "before_sha256_lf": "fd41700102fc9819ae2069092fb5708cfd0746a57b3afe8276a0f54b3d378de1",
+      "after_sha256_lf": "6b74202e42c957ab2963f1f106be81c24333b94bf932e767b7b2cdf8dff393a9",
+      "disposition": "no-feature-impact",
+      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "before_sha256_lf": "be0cf3b0d5750e0cf3f571026d782d0df42454369cdc55e2e1be61c4a9eba037",
+      "after_sha256_lf": "86f071a62cd3736062741424e43f0183bb6b1bf7e95448aa65be453e2cb41e11",
+      "disposition": "no-feature-impact",
+      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "before_sha256_lf": "932b14a5442b365f6a23257f8eb70c260af543e6d7719007fdcd84c86882027f",
+      "after_sha256_lf": "025ed1e0f69dc3b1729d5f050b123c6c95c022b257f16b0d2b9150a27517bedd",
+      "disposition": "no-feature-impact",
+      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
     }
   ],
   "features": [
@@ -43,6 +99,16 @@
       "disposition": "semantic-change",
       "reason": "New canonical EN/RU bounded CLI contract owns these sources and states pagination, UNKNOWN, independent dimensions and the remaining production-manifest gate.",
       "id": "kolvrt.cost-l.offline-queries"
+    },
+    {
+      "id": "kolvrt.process.lifecycle",
+      "disposition": "no-impact",
+      "reason": "The optional observation helper is unavailable when there is no boot-payload caller. Lifecycle semantics and historical STALE verification remain unchanged."
+    },
+    {
+      "id": "kolvrt.security.domains",
+      "disposition": "evidence-change",
+      "reason": "The compile-time caller gate changes the declared process.rs digest, so historical exact-source QEMU verification is explicitly marked STALE without rewriting its receipt."
     }
   ]
 }

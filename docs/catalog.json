@@ -782,7 +782,7 @@
     {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13127,
+      "estimated_bytes": 13273,
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
       "path": "docs/kernel/domains.md",
@@ -1571,7 +1571,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6753,
+      "estimated_bytes": 6899,
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
       "path": "docs/kernel/domains.md",

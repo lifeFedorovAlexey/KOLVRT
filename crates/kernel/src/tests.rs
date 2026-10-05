@@ -75,6 +75,20 @@ pub fn remote_fault(address: usize) {
         address as u64
     );
 }
+#[cfg(feature = "secondary-panic-test")]
+fn secondary_panic_control() {
+    use smp::experiment as remote;
+    // SAFETY: INV-REMOTE-READER: control carries no pointer; PANIC is the
+    // registered secondary failure probe and completion must reject its failure.
+    unsafe { remote::submit(remote::PANIC, 0) };
+    remote::complete(remote::PANIC);
+    panic!("secondary panic not detected");
+}
+#[cfg(feature = "retirement-negative")]
+fn retirement_control(p: &mut memory::Physical, frame: memory::Frame) {
+    p.release(frame);
+    panic!("premature retirement release accepted");
+}
 fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     use percpu::{BOOT_CPU, SECONDARY_CPU};
     use smp::experiment as remote;
@@ -156,6 +170,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
             && pair.1 == pair.0 ^ remote::PUBLICATION_XOR,
     );
     let a = p.allocate(1, 1).unwrap();
+    #[cfg(not(feature = "retirement-negative"))]
     let address = a.address();
     let mut mapping = memory::map(&a, memory::DYNAMIC_BASE, true, false).unwrap();
     mapping.write_word(SMP_WORD_PATTERN).unwrap();
@@ -186,8 +201,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
     #[cfg(feature = "retirement-negative")]
     {
         core::mem::forget(retirement);
-        p.release(a);
-        panic!("premature retirement release accepted");
+        retirement_control(p, a);
     }
     #[cfg(not(feature = "retirement-negative"))]
     {
@@ -244,14 +258,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
             && second.fault_far.load(Ordering::Acquire) == memory::DYNAMIC_BASE as u64,
     );
     #[cfg(feature = "secondary-panic-test")]
-    {
-        // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.
-        unsafe {
-            remote::submit(remote::PANIC, 0);
-        }
-        remote::complete(remote::PANIC);
-        panic!("secondary panic not detected");
-    }
+    secondary_panic_control();
     let users = crate::boot_workload::exercise(p, processes);
     let repeated_users = crate::boot_workload::exercise(p, processes);
     report(
