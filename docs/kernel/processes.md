@@ -30,12 +30,15 @@ stateDiagram-v2
     Creating --> Free: failed creation, complete rollback
     Creating --> Prepared: initialized private resources and context
     Prepared --> Admitted: explicit start
+    Prepared --> Reclaiming: unpublished retirement with acquired detachment
     Admitted --> Completed: terminal scheduler result, acquired quiescence and unlink
     Completed --> Reclaiming: exact identity and detached owner
     Reclaiming --> Free: charges cleared and frames released
 ```
 
 Admitted includes runnable, executing and internally blocked ownership; Ready/Running/Blocked and terminal frame state are enforced inside the per-CPU scheduler. There is no misleading process-level Running flag updated by a coordinator before CPU execution. Completed is unavailable while any admitted task/root can execute. Repeated start, premature completion/reclaim, duplicate terminal publication and double reclaim fail; inaccessible Free slots reject even their last generation. Reuse cannot retarget stale process, task, report or completion references.
+
+A prepared namespace that fails publication retires directly from Prepared to Reclaiming after acquired detachment, without becoming Admitted or publishing a waitable completion. Its handles and endpoints close, private frames roll back, and releasing the slot burns its identity. A real EL0 quota-exhaustion scenario exercises this failure and subsequent healthy-peer progress, replacement and final zero-resource quiescence. Host protocol checks also reject retirement without detachment or of an admitted process.
 
 Completion distinguishes Exited(code), Faulted(class,address), BudgetExpired and CreationFailed(step). FAR is included only for architectural abort classes; SVC/sysreg/unknown faults report zero instead of leaking a previous process's undefined FAR value. CreationFailed is returned with the failed attempt identity; it is not a partially live waitable object. Successful completion is a copied kernel-internal observation, repeatable until reclaim. validate_completion checks the live exact identity and terminal reason. This is not the future public wait API.
 
@@ -94,7 +97,7 @@ Bounded stress performs 32 rounds with one process on each CPU: 64 create/start/
 
 ## ASID lifecycle update (#18)
 
-The current scheduler uses hardware-width-checked, fixed-affinity process ASID leases with a monotonic software epoch. Native root uses ASID zero. Ordinary tagged root switches do not issue TLBI; the owning CPU completes `TLBI ASIDE1` before terminal retirement and tag reuse. Both roots and frames remain retained until scheduler detachment and completion. Unsupported width keeps the full-flush mode. The DEV/PROD matrix includes four-ASID-per-CPU forced exhaustion, changed physical backing at the same user VA, same-VA isolation on both CPUs and frame reclamation. The negative `--asid-reuse-control` omits retirement invalidation and must fail `asid_reuse_requires_invalidation`; QEMU TCG still observes isolation with invalidation omitted. Eight counterbalanced QEMU pairs are retained in [issue18-asid-measurements.json](../../research/results/issue18-asid-measurements.json); they are TCG timer observations, not hardware throughput. See [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
+The current scheduler uses hardware-width-checked, fixed-affinity process ASID leases with a monotonic software epoch. Native root uses ASID zero. Ordinary tagged root switches do not issue TLBI; the owning CPU completes `TLBI ASIDE1` before terminal retirement and tag reuse. Both roots and frames remain retained until scheduler detachment and completion. Unsupported width keeps the full-flush mode. The DEV/PROD matrix includes four-ASID-per-CPU forced exhaustion, changed physical backing at the same user VA, same-VA isolation on both CPUs and frame reclamation. The negative `--asid-reuse-control` omits retirement invalidation and must fail `asid_reuse_requires_invalidation`; Omission can expose stale translations in QEMU TCG. The mandatory invalidation witness is checked before the dependent same-VA observation, so either TLB residency outcome preserves the exact expected rejection. Eight counterbalanced QEMU pairs are retained in [issue18-asid-measurements.json](../../research/results/issue18-asid-measurements.json); they are TCG timer observations, not hardware throughput. See [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
 
 <a name="kolvrt-process-limits"></a>
 

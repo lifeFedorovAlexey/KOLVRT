@@ -5,114 +5,121 @@
     {
       "path": "crates/kernel-core/src/process.rs",
       "before_sha256_lf": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73",
-      "after_sha256_lf": "3e5495a849246cb904f39442429adfe04e26a40a39a9478bae6ffdaa4bd5e853",
+      "after_sha256_lf": "53f19c3658319b5908efdedca44c6b3c5d733f5c523f0ea52bf96f3110c6ed05",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel-core/tests/process_protocol.rs",
       "before_sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5",
-      "after_sha256_lf": "11018fe4419e11fcd577aa555f9b684589f38f65aeaa45f64a395ad0d8ab3fb8",
+      "after_sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/Cargo.toml",
       "before_sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50",
-      "after_sha256_lf": "837d0028308d980a0ff915dc25b052ec0433288f31b3cafbf1d985bc382553dc",
+      "after_sha256_lf": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/src/main.rs",
       "before_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
       "after_sha256_lf": "0b135621d47beaf5a63813c2217306b8e2bad89ce5389aca1fea7b6458a726f9",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/src/process.rs",
       "before_sha256_lf": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
-      "after_sha256_lf": "a3305a500a2ea07b301cf0fd2da14341e414fc933b3347075c9c4f2c6d87ba79",
+      "after_sha256_lf": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "disposition": "existing-feature",
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison.",
+      "before_sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
+      "after_sha256_lf": "59c6c440e068edb27ace525137ab6c0c52a32bd477ccd3799c699751cf937499"
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
       "before_sha256_lf": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
       "after_sha256_lf": "d530ea58baef2e4019a972437df3b1f3c1ce9a20cb26e26acf8b8bf93a891742",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/src/scheduler/task.rs",
       "before_sha256_lf": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5",
       "after_sha256_lf": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/src/supervision.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "83edf8ec2c9db1e71b950a234b72eac5a4e4f92a97c7c4ca1fef4f463bffcfa8",
+      "after_sha256_lf": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401",
       "disposition": "new-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/src/supervision_workload.S",
       "before_sha256_lf": null,
-      "after_sha256_lf": "5381ca8ef27242cd82aef33cf4d8aa2a990ec15b70af031b05a350fdfdb1721f",
+      "after_sha256_lf": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
       "disposition": "new-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/src/supervision_workload.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "ea5320fbef9116e34d16bff94ef25ff0791cecb359c721e56b02b13b7ccc7a04",
+      "after_sha256_lf": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599",
       "disposition": "new-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
       "after_sha256_lf": "48b7f71740e54f3059d2fdda1e8ca4dab258992c92b86c43577ee5a631493e25",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/xtask/src/main.rs",
       "before_sha256_lf": "caa349117180e8ccd204747695933dc8a6e1a424ea78b891339be6ece403c885",
-      "after_sha256_lf": "a991346219f95f224084828211ac7a869c883ad0401a8f6f8e43215644f5e86c",
+      "after_sha256_lf": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/xtask/src/matrix.rs",
       "before_sha256_lf": "f74e946dbc3ed3de56d5155501f7fc35a0a812398076a3bc0803fb0e1c36e161",
       "after_sha256_lf": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "crates/xtask/src/output.rs",
       "before_sha256_lf": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff",
       "after_sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "scripts/ci-timings.cjs",
       "before_sha256_lf": "fe5a1d32bd128db3bd79fd5e77d60c66f9f8fd7658ede3a7fc6b50bc38a26d80",
-      "after_sha256_lf": "b6fc06968cd315ff55cd2fa08fbee8d5500028c429c6192ff04bb1ecb039ef5c",
+      "after_sha256_lf": "25a235b21da2994d8423b997967ce4bf4eeb207c0c2aaf0b69afcb54b4926caf",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
       "path": "scripts/tests/ci-timings.test.cjs",
       "before_sha256_lf": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
-      "after_sha256_lf": "17d3c365b1a3936750db4473650d6f2974f69794ddfa60948888796c7385cf88",
+      "after_sha256_lf": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
       "disposition": "existing-feature",
-      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
+      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     }
   ],
   "features": [

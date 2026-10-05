@@ -236,6 +236,16 @@ const IPC_CONTROLS: &[(&str, &str, &str)] = &[
         "supervision:Scenario",
     ),
     (
+        "--supervision-dependency-control",
+        "supervision-dependency-negative",
+        "supervision:DependencyNotRejected",
+    ),
+    (
+        "--supervision-commit-control",
+        "supervision-commit-negative",
+        "supervision:CommitNotProven",
+    ),
+    (
         "--supervision-wait-control",
         "supervision-wait-negative",
         "supervision:WaitIdentityLost",

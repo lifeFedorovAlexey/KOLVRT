@@ -186,6 +186,14 @@ impl<const N: usize> Table<N> {
         }
         self.transition(id, State::Completed, State::Reclaiming)
     }
+    /// Unpublished prepared state has no runnable owner or waitable completion.
+    /// The caller must acquire detachment before retiring its private resources.
+    pub fn discard_prepared(&mut self, id: ProcessId, detached: bool) -> Result<(), Error> {
+        if !detached {
+            return Err(Error::NotQuiescent);
+        }
+        self.transition(id, State::Prepared, State::Reclaiming)
+    }
     pub fn released(&mut self, id: ProcessId) -> Result<(), Error> {
         self.transition(id, State::Reclaiming, State::Free)
     }

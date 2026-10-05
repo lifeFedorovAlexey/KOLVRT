@@ -180,6 +180,7 @@ impl Scope {
                 context.pc = memory::USER_CODE as u64;
                 context.sp = memory::USER_STACK_TOP as u64;
                 context.gpr[23] = argument; // opaque initialized service input, never authority
+                let before_creation = physical.available();
                 let created = registry.create(
                     physical,
                     Origin::Bootstrap,
@@ -203,6 +204,13 @@ impl Scope {
                         .discard_prepared(physical, id)
                         .expect("unpublished creation rollback");
                     crate::ipc::deferred::poll(&[]);
+                    crate::ipc::reap();
+                    assert_eq!(
+                        physical.available(),
+                        before_creation,
+                        "unpublished frame rollback"
+                    );
+                    assert_eq!(registry.state(id), Err(kernel_core::process::Error::Stale));
                     return [12, 0, 0, 0, 0];
                 };
                 let fresh = self.next_token;

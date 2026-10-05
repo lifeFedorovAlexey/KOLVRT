@@ -46,11 +46,11 @@ Under accepted load, the service sends a commit acknowledgement over its exact-i
 
 ## Verification and next gate
 
-The [exact-source execution receipt](../../research/results/supervision-phase36.json) records 125 DEV and 125 PROD checks, both non-test boots and 132 rejected control runs. Its six supervisor-specific mutations are included in the 52 IPC/supervision controls. The latest source set distinguishes actual Terminated from BudgetExpired; the two earlier development snapshots remain immutable. Technical QEMU verification does not complete proposed architecture or human EN/RU acceptance.
+The retained [exact-source execution receipt](../../research/results/supervision-phase36.json) records 125 DEV and 125 PROD checks, both non-test boots and 132 rejected control runs. Its six supervisor-specific mutations are included in the 52 IPC/supervision controls. The latest source set distinguishes actual Terminated from BudgetExpired; the two earlier development snapshots remain immutable. Technical QEMU verification does not complete proposed architecture or human EN/RU acceptance.
 
 The real images check eight scenario groups: ordered normal startup; missing dependency and forged grant selector; irreversible seal, unused launch-grant extinction, instance-credit exhaustion, unsupported-version and repeated launch denial; forged readiness denial; crash, fresh restart and stale binding denial; startup timeout; bounded restart storm and healthy peer progress; shutdown under committed load. A bitmap is returned by EL0 control flow and checked together with actual process completion, released CPU owners, zero live domains/processes and restored physical page count. It does not replace source review.
 
-Focused mutations remove supervisor provenance, stale service-token rejection or retained IPC wait identity. Each must produce its named exact rejection in both DEV and PROD. Full existing kernel checks and controls remain mandatory. [Runner](../../crates/xtask/src/main.rs) supports `cargo xtask test --positive-only [--prod]` for iteration; that command does not run or replace the full matrix. Exact-source receipts are recorded after the full matrix. Semantic and complete EN/RU human review are required before issue #27 closes. #28 owns persistent service integration; #38 owns production bootstrap trust.
+Focused mutations remove supervisor provenance, stale service-token rejection retained IPC wait identity or commitment before the load acknowledgement. The false commit acknowledgement control must produce exact CommitNotProven in both profiles. Normal worker launch and the missing-dependency launch request use the same EL0 manifest policy routine; it requires every dependency bit, rejects the absent dependency before invoking native launch and initializes the denial result. Bypassing that EL0 guard must produce exact DependencyNotRejected in both profiles. The ASID mutation checks mandatory invalidation before its dependent same-VA observation, so a stale translation cannot mask the expected witness. Each must produce its named exact rejection in both DEV and PROD. Full existing kernel checks and controls remain mandatory. [Runner](../../crates/xtask/src/main.rs) supports `cargo xtask test --positive-only [--prod]` for iteration; that command does not run or replace the full matrix. Exact-source receipts are recorded after the full matrix. Semantic and complete EN/RU human review are required before issue #27 closes. #28 owns persistent service integration; #38 owns production bootstrap trust.
 
 Sources: [lifecycle mechanism](../../crates/kernel/src/supervision.rs), [EL0 images](../../crates/kernel/src/supervision_workload.S), [bootstrap fixture](../../crates/kernel/src/supervision_workload.rs), [process ownership](../../crates/kernel/src/process.rs), [checkpoint](../../crates/kernel/src/scheduler/mod.rs).
 
@@ -58,7 +58,7 @@ Sources: [lifecycle mechanism](../../crates/kernel/src/supervision.rs), [EL0 ima
 
 ## CI integration source boundary
 
-The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, including the shared serial/four-shard CI task inventory. All six supervisor controls remain mandatory, bringing the plan to 136 tasks. The matrix runner recognizes exact supervision: failure events rather than any panic. Earlier execution receipts retain their original source scopes. The new exact-source receipt verifies the combined QEMU max matrix and the commit-acknowledgement fix; the source-matching GitHub ASID receipt records eight successful 16-bit pairs. Human architecture/EN-RU acceptance remains open.
+The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, including the shared serial/four-shard CI task inventory. All ten supervisor control runs remain mandatory, bringing the plan to 140 tasks. The matrix runner recognizes exact supervision: failure events rather than any panic. Earlier execution receipts retain their original source scopes. The new exact-source receipt verifies the combined QEMU max matrix and the commit-acknowledgement fix; the GitHub ASID receipt records eight successful 16-bit pairs for that source snapshot. These historical receipts do not verify the new regression inputs; current verification is STALE pending the new full matrix. Human architecture/EN-RU acceptance remains open.
 
 <!-- knowledge -->
 
@@ -116,8 +116,8 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Full exact-source QEMU max DEV/PROD matrix passed; CI eight-pair 16-bit ASID receipt matches every source digest. Human architecture/EN-RU acceptance remains pending.",
+            "state": "STALE",
+            "reason": "ASID mutation now reports its deterministic invalidation violation before dependent same-VA observations; an exact CommitNotProven regression control is added. Historical receipts remain immutable; current full matrix verification is pending.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "ca1e2ff9472fac6273bb18d2fc5eb217592bd4d210cbc2fe93183b9b07a216e3",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

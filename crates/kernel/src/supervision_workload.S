@@ -47,7 +47,8 @@ supervisor_image_start:
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
  mov x11,#2
- lifecycle 1
+ adr x9,.Lsup_worker_definition
+ bl .Lsup_launch_definition
  cbnz x0,.Lsup_fail
  mov x24,x1
  mov x25,x2
@@ -58,9 +59,13 @@ supervisor_image_start:
  sup_event 1
  // The manifest's missing dependency (readiness bit 4) prevents its dependent start.
  adr x9,.Lsup_missing_definition
- ldr x10,[x9,#8]
- and x10,x10,x11
- cbnz x10,.Lsup_fail
+ bl .Lsup_launch_definition
+ cmp x0,#20
+ b.ne .Lsup_dependency_fail
+ // Native quota exhaustion must roll back an unpublished child without a completion.
+ lifecycle 1,2
+ cmp x0,#12
+ b.ne .Lsup_fail
  // Forged manifest/grant selector is independently rejected.
  lifecycle 1,99
  cmp x0,#11
@@ -214,7 +219,7 @@ supervisor_image_start:
  cbnz x0,.Lsup_fail
  ldrh w0,[x19,#514]
  cmp x0,#5
- b.ne .Lsup_fail
+ b.ne .Lsup_unproven_commit
  lifecycle 4,1,x27
  cbnz x0,.Lsup_fail
  mov x24,x27
@@ -223,6 +228,14 @@ supervisor_image_start:
  b.ne .Lsup_fail
  sup_event 8
  mov x0,#1
+ svc #0x4e
+.Lsup_dependency_fail:
+ mov x29,x0
+ mov x0,#1200
+ svc #0x4e
+.Lsup_unproven_commit:
+ mov x29,x0
+ mov x0,#1100
  svc #0x4e
 .Lsup_fail:
  mov x29,x0
@@ -290,7 +303,31 @@ supervisor_image_start:
  cbnz x0,.Lsup_fail
  cbz x1,.Lsup_peer_death
  ret
+// The same EL0 policy path handles a launch request with satisfied or absent dependencies.
+.Lsup_launch_definition:
+ ldr x8,[x9,#8]
+ and x10,x8,x11
+ cmp x10,x8
+ .if !{dependency_negative}
+ b.ne .Lsup_dependency_denied
+ .endif
+ mov x0,#1
+ ldr x1,[x9]
+ mov x2,#0
+ mov x3,#0
+ mov x4,#1
+ svc #0xb0
+ ret
+.Lsup_dependency_denied:
+ mov x0,#20
+ mov x1,#0
+ mov x2,#0
+ mov x3,#0
+ mov x4,#0
+ ret
 .balign 8
+.Lsup_worker_definition:
+ .quad 0,2,3,128
 .Lsup_missing_definition:
  .quad 2,4,3,128 // grant selector, dependency readiness mask, restart budget, backoff divisor
 supervisor_image_end:
@@ -313,6 +350,11 @@ supervised_service_start:
  ldr x26,[x19,#552]
  cmp x23,#1
  b.eq .Lservice_silent
+ .if {commit_negative}
+ // Mutation: forge the commit acknowledgement before the load is committed.
+ cmp x26,#3
+ b.eq .Lservice_committed_load
+ .endif
  sup_header 3
  str x22,[x19,#16]
  sup_ipc

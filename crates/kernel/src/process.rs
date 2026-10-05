@@ -764,10 +764,7 @@ impl Registry {
         self.handles[id.slot()]
             .retire(id)
             .map_err(|_| Error::Transition)?;
-        self.table.start(id)?;
-        self.table
-            .complete(id, Reason::CreationFailed(CreationStep::Commit), true)?;
-        self.table.reclaim(id, true)?;
+        self.table.discard_prepared(id, true)?;
         let object = self.objects[id.slot()].take().ok_or(Error::Stale)?;
         #[cfg(not(feature = "process-rollback-negative"))]
         object.space.rollback(physical);

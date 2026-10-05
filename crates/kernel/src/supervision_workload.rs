@@ -7,7 +7,11 @@ use crate::{
 };
 use kernel_core::domain::Limits;
 // SAFETY: INV-USER-IMAGE: permanent bounded immutable position-independent images.
-core::arch::global_asm!(include_str!("supervision_workload.S"));
+core::arch::global_asm!(
+    include_str!("supervision_workload.S"),
+    commit_negative = const cfg!(feature = "supervision-commit-negative") as u8,
+    dependency_negative = const cfg!(feature = "supervision-dependency-negative") as u8,
+);
 unsafe extern "C" {
     static supervisor_image_start: u8;
     static supervisor_image_end: u8;
@@ -97,7 +101,14 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
     let coverage = completed.tasks[supervisor.slot()].context.gpr[12];
     if reason != Reason::Exited(1) || coverage != 255 {
         crate::event!(
-            "{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"Scenario\",\"exit\":\"{:?}\",\"coverage\":{},\"actual\":{},\"value\":{}}}",
+            "{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"{}\",\"exit\":\"{:?}\",\"coverage\":{},\"actual\":{},\"value\":{}}}",
+            if reason == Reason::Exited(1100) {
+                "CommitNotProven"
+            } else if reason == Reason::Exited(1200) {
+                "DependencyNotRejected"
+            } else {
+                "Scenario"
+            },
             reason,
             coverage,
             completed.tasks[supervisor.slot()].context.gpr[29],

@@ -441,11 +441,13 @@ pub fn exercise(
         delta[1].asid_tlbi,
         delta[1].reuses,
     );
+    // The mutation must report its deterministic mechanism violation before
+    // a stale translation can fail the dependent functional observation.
+    report("asid_reuse_requires_invalidation", reuse_invalidation);
     report(
         "asid_reuse_same_va_both_cpus",
         asid_reuse && distinct_backing && asid_reused.into_iter().all(|reused| reused),
     );
-    report("asid_reuse_requires_invalidation", reuse_invalidation);
     report("process_bounded_stress", stress);
     quantum_progress(p, registry, &mut report);
     blocking_progress(p, registry, &mut report);

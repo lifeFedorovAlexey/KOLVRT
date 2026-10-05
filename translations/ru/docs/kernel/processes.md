@@ -30,12 +30,15 @@ stateDiagram-v2
     Creating --> Free: failed creation, complete rollback
     Creating --> Prepared: initialized private resources and context
     Prepared --> Admitted: explicit start
+    Prepared --> Reclaiming: unpublished retirement with acquired detachment
     Admitted --> Completed: terminal scheduler result, acquired quiescence and unlink
     Completed --> Reclaiming: exact identity and detached owner
     Reclaiming --> Free: charges cleared and frames released
 ```
 
 Состояние `Admitted` охватывает и готовность к запуску, и фактическое исполнение; состояния `Ready`/`Running` и конечное состояние кадра контролирует внутренний планировщик каждого CPU. Координатор не выставляет вводящий в заблуждение признак `Running` до начала исполнения на CPU. Процесс нельзя считать завершённым, пока допущенная задача или её корень адресного пространства могут исполняться. Повторный запуск, преждевременное завершение или освобождение, повторная публикация конечного результата и двойное освобождение отклоняются. Свободный слот не принимает устаревшее поколение. Повторное использование слота не перенаправляет устаревшие ссылки на процесс, задачу, отчёт или результат.
+
+Подготовленный namespace при отказе publication переходит напрямую из Prepared в Reclaiming после подтверждённого detachment, не становится Admitted и не публикует доступный для ожидания completion. Его handles и endpoints закрываются, private frames откатываются; освобождение слота прекращает использование его identity. Реальный сценарий EL0 с исчерпанием квоты проверяет этот отказ, дальнейшую работу healthy peer, replacement и final quiescence без ресурсов. Host protocol checks также отвергают retirement без detachment и retirement admitted процесса.
 
 Результат завершения различает `Exited(code)`, `Faulted(class,address)`, `BudgetExpired` и `CreationFailed(step)`. Адрес FAR указывается только для соответствующих архитектурных исключений отмены доступа; при отказах SVC, системных регистрах и неизвестных причинах возвращается ноль, чтобы не раскрыть неопределённое значение FAR предыдущего процесса. При `CreationFailed` возвращается идентификатор неудачной попытки; такой процесс не остаётся частично созданным объектом, за завершением которого можно наблюдать. Успешный результат — внутренняя копия состояния ядра; её можно читать повторно до освобождения процесса. `validate_completion` проверяет точное совпадение действующего идентификатора и конечной причины. Это не будущий открытый API ожидания.
 
@@ -94,7 +97,7 @@ flowchart TD
 
 ## Обновление ASID lifecycle (#18)
 
-Текущий scheduler использует process ASID leases с проверенной аппаратной шириной, fixed affinity и монотонным software epoch. Native root использует ASID zero. Обычный tagged-root switch не выполняет TLBI; CPU-владелец завершает `TLBI ASIDE1` до terminal retirement и повторной выдачи tag. Roots и frames удерживаются до scheduler detachment и completion. Для неподдерживаемой ширины остаётся full-flush mode. Матрица DEV/PROD проверяет exhaustion с четырьмя ASID на CPU, новую physical backing для того же user VA, same-VA isolation на обоих CPU и frame reclamation. Негативный `--asid-reuse-control` убирает retirement invalidation и обязан провалить `asid_reuse_requires_invalidation`; QEMU TCG при этом сохраняет isolation. Восемь counterbalanced QEMU-пар сохранены в [issue18-asid-measurements.json](../../../../research/results/issue18-asid-measurements.json); это TCG timer observations, не hardware throughput. См. [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
+Текущий scheduler использует process ASID leases с проверенной аппаратной шириной, fixed affinity и монотонным software epoch. Native root использует ASID zero. Обычный tagged-root switch не выполняет TLBI; CPU-владелец завершает `TLBI ASIDE1` до terminal retirement и повторной выдачи tag. Roots и frames удерживаются до scheduler detachment и completion. Для неподдерживаемой ширины остаётся full-flush mode. Матрица DEV/PROD проверяет exhaustion с четырьмя ASID на CPU, новую physical backing для того же user VA, same-VA isolation на обоих CPU и frame reclamation. Негативный `--asid-reuse-control` убирает retirement invalidation и обязан провалить `asid_reuse_requires_invalidation`; Без invalidation QEMU TCG может наблюдать stale translations. Обязательный invalidation witness проверяется до зависимого same-VA observation, поэтому точный ожидаемый отказ сохраняется при любом состоянии TLB. Восемь counterbalanced QEMU-пар сохранены в [issue18-asid-measurements.json](../../../../research/results/issue18-asid-measurements.json); это TCG timer observations, не hardware throughput. См. [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
 
 <a name="kolvrt-process-limits"></a>
 

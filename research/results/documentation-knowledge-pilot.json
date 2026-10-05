@@ -3,7 +3,7 @@
   "catalog_bytes": 79794,
   "catalog_nodes": 198,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "8402248e136d1dac5037333e2057dc4d1239f68dd9459261d4ab5aef3d942033",
+  "catalog_sha256": "e767d737e2d7b26ef6e52690efa860c5f15684fb8d28b1ec7a83ca526ce12812",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
   "context_plus_catalog_bytes": 207815,
   "correctness": {
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 102,
-    "utf8_bytes": 861478
+    "utf8_bytes": 863379
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -332,17 +332,17 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "e01a57a44d1c381e78b8ad9330bbefbbaa178d1451c4b62c4dc95ef2efbb9b29",
+        "sha256": "8ea1b047759f78e708335a92506fcd5d7662ee43d4b2eafefd7e2248f6d7f604",
         "start": 13
       }
     },
     {
       "id": "kolvrt.process.reclamation",
       "location": {
-        "end": 82,
+        "end": 85,
         "path": "docs/kernel/processes.md",
-        "sha256": "e01a57a44d1c381e78b8ad9330bbefbbaa178d1451c4b62c4dc95ef2efbb9b29",
-        "start": 58
+        "sha256": "8ea1b047759f78e708335a92506fcd5d7662ee43d4b2eafefd7e2248f6d7f604",
+        "start": 61
       }
     },
     {
@@ -528,7 +528,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 193036
+    "utf8_bytes": 193782
   },
   "source_files": [
     {
