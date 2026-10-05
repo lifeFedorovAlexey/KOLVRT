@@ -871,10 +871,10 @@
     "docs/kernel/capabilities.md": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
     "docs/kernel/domains.md": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
-    "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+    "docs/kernel/processes.md": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "5d7ea35578423fa0c70ac7235c6cd5e13d6eeaa12c2afeeff47bedce560b7ec5",
-    "docs/knowledge-system.md": "a3fb339779602fa7eed5e48660f1e5da7e9c80011644780db8b8b4e6ab166b42",
+    "docs/knowledge-system.md": "c5c72d1de4b7acaad15a7de929d2c8ec0027157270318a88727dbf194eee9d0f",
     "docs/research/cost-l-queries.md": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
     "docs/research/host-survey.md": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
@@ -926,7 +926,7 @@
     "scripts/collect-host-survey.ps1": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
     "scripts/host-survey.cjs": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "5b8a8fa977500955dcbf8d74b9d06e8d1c801b6c81e148909f579467a67c2ff6",
+    "translations/manifest.json": "7fe325c9e22e99cf4abd49977ae8906ae0a38bc87daae5dded4e526cb3161d6b",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -959,9 +959,9 @@
     "translations/ru/docs/kernel/capabilities.md": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
     "translations/ru/docs/kernel/domains.md": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
-    "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+    "translations/ru/docs/kernel/processes.md": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "d0351a22afc1b8f09a48f7471b71925a42fe18cda5297a8b530c03357fffd38e",
+    "translations/ru/docs/knowledge-system.md": "41b3aba2375736cd13128cd7ea21dfef0733d4039a182a228913cedd70f3b43c",
     "translations/ru/docs/research/cost-l-queries.md": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
     "translations/ru/docs/research/host-survey.md": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
@@ -3068,13 +3068,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "a3fb339779602fa7eed5e48660f1e5da7e9c80011644780db8b8b4e6ab166b42",
+          "sha256": "c5c72d1de4b7acaad15a7de929d2c8ec0027157270318a88727dbf194eee9d0f",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "d0351a22afc1b8f09a48f7471b71925a42fe18cda5297a8b530c03357fffd38e",
+          "sha256": "41b3aba2375736cd13128cd7ea21dfef0733d4039a182a228913cedd70f3b43c",
           "start": 1
         }
       },
@@ -3257,7 +3257,7 @@
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 19548,
+      "estimated_bytes": 20903,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
@@ -3271,15 +3271,15 @@
       },
       "locations": {
         "en": {
-          "end": 251,
+          "end": 255,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
           "start": 1
         },
         "ru": {
-          "end": 251,
+          "end": 255,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
           "start": 1
         }
       },
@@ -4127,7 +4127,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "a79b421de0376a65fb49792dbf068332c31b63a15df2e5f3f80725c97c2008b3",
+            "receipt_sha256": "93a4503385e4b88dbc0376400a10cef6aa3e55d8dcb69aaddf23b3784afb0cb3",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4152,13 +4152,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "a3fb339779602fa7eed5e48660f1e5da7e9c80011644780db8b8b4e6ab166b42",
+          "sha256": "c5c72d1de4b7acaad15a7de929d2c8ec0027157270318a88727dbf194eee9d0f",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "d0351a22afc1b8f09a48f7471b71925a42fe18cda5297a8b530c03357fffd38e",
+          "sha256": "41b3aba2375736cd13128cd7ea21dfef0733d4039a182a228913cedd70f3b43c",
           "start": 7
         }
       },
@@ -4990,16 +4990,16 @@
       },
       "locations": {
         "en": {
-          "end": 96,
+          "end": 100,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
-          "start": 89
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "start": 93
         },
         "ru": {
-          "end": 96,
+          "end": 100,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
-          "start": 89
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "start": 93
         }
       },
       "path": "docs/kernel/processes.md",
@@ -5025,16 +5025,16 @@
       },
       "locations": {
         "en": {
-          "end": 116,
+          "end": 120,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
-          "start": 109
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "start": 113
         },
         "ru": {
-          "end": 116,
+          "end": 120,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
-          "start": 109
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "start": 113
         }
       },
       "path": "docs/kernel/processes.md",
@@ -5062,13 +5062,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
           "start": 42
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
           "start": 42
         }
       },
@@ -5081,7 +5081,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1794,
+      "estimated_bytes": 3149,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
@@ -5095,15 +5095,15 @@
       },
       "locations": {
         "en": {
-          "end": 90,
+          "end": 94,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
           "start": 81
         },
         "ru": {
-          "end": 90,
+          "end": 94,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
           "start": 81
         }
       },
@@ -5130,16 +5130,16 @@
       },
       "locations": {
         "en": {
-          "end": 251,
+          "end": 255,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
-          "start": 115
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "start": 119
         },
         "ru": {
-          "end": 251,
+          "end": 255,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
-          "start": 115
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "start": 119
         }
       },
       "path": "docs/kernel/processes.md",
@@ -5167,13 +5167,13 @@
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
           "start": 13
         }
       },
@@ -5251,13 +5251,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
           "start": 7
         }
       },
@@ -5284,16 +5284,16 @@
       },
       "locations": {
         "en": {
-          "end": 102,
+          "end": 106,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
-          "start": 95
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "start": 99
         },
         "ru": {
-          "end": 102,
+          "end": 106,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
-          "start": 95
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "start": 99
         }
       },
       "path": "docs/kernel/processes.md",
@@ -5321,13 +5321,13 @@
         "en": {
           "end": 82,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
           "start": 58
         },
         "ru": {
           "end": 82,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
           "start": 58
         }
       },
@@ -5356,13 +5356,13 @@
         "en": {
           "end": 43,
           "path": "docs/kernel/processes.md",
-          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
           "start": 23
         },
         "ru": {
           "end": 43,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
+          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
           "start": 23
         }
       },

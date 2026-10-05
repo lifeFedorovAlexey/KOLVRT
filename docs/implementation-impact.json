@@ -57,6 +57,13 @@
       "before_sha256_lf": "0d6ae16dfed9be27b639a4ee02230f50a21064793e55cd72981dfdb9920db684",
       "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
       "disposition": "new-feature"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "before_sha256_lf": "d6cfc72822c74fd030d51a735ded89aa7f38f40fc0f1bfccb8e0888c690ca05a",
+      "after_sha256_lf": "df98675c81934a0219547a89e50540b45d6648dd23fc33c2221e95b70fd54a76",
+      "disposition": "no-feature-impact",
+      "reason": "Verification-only authority fixture: require the unsupported SVC outcome without racing an unrelated two-second deadline, retain the existing eight-quantum internal slice cap, and report precise DEV failure conditions. Expiry stays a failed probe. Kernel authorization, production scheduler deadlines, slice-budget enforcement and fault classification are unchanged; the external QEMU watchdog still rejects hangs."
     }
   ],
   "features": [

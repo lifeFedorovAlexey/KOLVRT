@@ -3,7 +3,7 @@
   "catalog_bytes": 63942,
   "catalog_nodes": 160,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "eb9c6f81ad85e3fcfda7cc48c2faf2436ba68961e9aece4a0fe2b1ab84071535",
+  "catalog_sha256": "f492f011dff6babc25d606ac51efae4c81b80b40575046ffe588bc20be59e8a6",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
   "context_plus_catalog_bytes": 190326,
   "correctness": {
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 90,
-    "utf8_bytes": 679907
+    "utf8_bytes": 681262
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -317,7 +317,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
         "start": 13
       }
     },
@@ -326,7 +326,7 @@
       "location": {
         "end": 82,
         "path": "docs/kernel/processes.md",
-        "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
         "start": 58
       }
     },
@@ -513,7 +513,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 188643
+    "utf8_bytes": 189998
   },
   "source_files": [
     {

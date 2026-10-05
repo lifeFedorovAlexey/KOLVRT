@@ -258,8 +258,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
-        "translation_sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d"
+        "source_sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+        "translation_sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
@@ -294,8 +294,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "a3fb339779602fa7eed5e48660f1e5da7e9c80011644780db8b8b4e6ab166b42",
-        "translation_sha256": "d0351a22afc1b8f09a48f7471b71925a42fe18cda5297a8b530c03357fffd38e"
+        "source_sha256": "c5c72d1de4b7acaad15a7de929d2c8ec0027157270318a88727dbf194eee9d0f",
+        "translation_sha256": "41b3aba2375736cd13128cd7ea21dfef0733d4039a182a228913cedd70f3b43c"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
