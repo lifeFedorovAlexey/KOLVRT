@@ -40,6 +40,7 @@
     "docs/architecture/native-abi.md",
     "docs/architecture/native-model.md",
     "docs/architecture/production-scheduler.md",
+    "docs/ci/performance.md",
     "docs/kernel/capabilities.md",
     "docs/kernel/domains.md",
     "docs/kernel/handles.md",

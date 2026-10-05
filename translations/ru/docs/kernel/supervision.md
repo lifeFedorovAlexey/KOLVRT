@@ -58,6 +58,10 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
 
 [English original](../../../../docs/kernel/supervision.md)
 
+## Граница исходников при интеграции CI
+
+Ветка интегрирует reviewed main `0ec75af8477423f89debc6c98b56ada98dad106b`, включая общий serial/four-shard CI task inventory. Все шесть supervisor controls обязательны, поэтому plan содержит 136 задач. Matrix runner распознаёт точные supervision: failure events, а не любой panic. Предыдущие execution receipts сохраняют свои source scopes и имеют статус STALE для изменённых shared runner inputs до записи нового combined-source receipt. Human architecture/EN-RU acceptance остаётся открытой.
+
 <!-- knowledge -->
 
 ```json
@@ -98,7 +102,9 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
           "crates/kernel/src/supervision_workload.rs",
           "crates/kernel/src/tests.rs",
           "crates/xtask/src/main.rs",
-          "crates/xtask/src/output.rs"
+          "crates/xtask/src/matrix.rs",
+          "crates/xtask/src/output.rs",
+          "crates/xtask/src/timing.rs"
         ],
         "acceptance": [],
         "issues": [27],
@@ -112,8 +118,8 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Exact-source 125 DEV/125 PROD checks, both non-test boots and 132 required rejection runs, including 52 IPC/supervision controls and six supervisor-specific controls; human architecture/semantic/EN-RU acceptance remains pending.",
+            "state": "STALE",
+            "reason": "Merged CI runner/source changes invalidate the previous exact-source scope; immutable receipts are retained, and combined DEV/PROD verification is in progress.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "81274a301885a7de99e87696394caa52e1ba01fe3c9a3aedc52bc82e489124ab",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

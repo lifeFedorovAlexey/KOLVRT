@@ -52,6 +52,8 @@ Rejection controls include real Cargo metadata for optional/target-specific, bui
 
 Both CI workflows use Node 24.21.0 from `.nvmrc`; locally, install/use that version with nvm (`nvm install 24.21.0`, `nvm use 24.21.0`). Checkout 7.0.1, setup-node 7.0.0 and upload-artifact 7.0.1 explicitly use the Node 24 action runtime. The dependency runner is pinned to `ubuntu-24.04`, so a future `ubuntu-latest` migration cannot silently change the audit environment. The kernel runner remains `windows-2022`. Local checks under Node 24 do not verify either hosted runner; fresh CI evidence is required before restoring exact-source VERIFIED status.
 
+Issue #109 adds an integrity-checked pinned cargo-deny 0.19.9 tool cache and mandatory version checks on Ubuntu. The kernel workflow splits static/host checks and runs a complete four-shard matrix with exact-source aggregation; npm run check preserves all unique host validations. Download caches and compiled artifacts never authorize skipping supply-chain or kernel checks. Hosted cache behavior remains unverified; historical dependency receipts stay STALE.
+
 <!-- knowledge -->
 
 ```json

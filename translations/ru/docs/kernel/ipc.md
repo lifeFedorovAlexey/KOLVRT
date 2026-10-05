@@ -6,7 +6,7 @@
 # Ограниченный IPC между нативными EL0-процессами
 
 Document status: CURRENT
-Evidence scope: принятая bounded Phase 3.5 на source main 9b4687a: 124 DEV/124 PROD checks и 46 свежих focused mutations. READY ограничено этим milestone; physical ARM не проверен.
+Evidence scope: принятая bounded Phase 3.5 на source main 9b4687a: 124 DEV/124 PROD checks и 46 focused mutations для сохранённого snapshot. Текущая проверка host runner имеет статус STALE после #109; READY ограничено этим milestone; physical ARM не проверен.
 Current reference: [Повторное выведение архитектуры](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -89,7 +89,7 @@ Independent admission, migration, mutable user mappings, supervisor/service poli
 
 Двадцать три focused mutation controls проверяют authority, queue bounds/FIFO, client-ID и internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wake неверного процесса, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, потерю и повторный release charge, endpoint teardown, copy transactions и service death. Все 46 DEV/PROD прогонов отклонены с точным expected event либо named failing test; любой panic не считается достаточным. Kernel failure CPU1 передаёт точную причину через bounded atomic record на CPU0, который прекращает continuous session без ложного reclaim.
 
-Текущие source-bound artifacts: [kernel acceptance](../../../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../../../research/results/routing-phase35-regression.json) и [unsafe inventory](../../../../research/results/kernel-phase35-unsafe-audit.json). Исходные receipts сохраняют свои snapshots. [Receipt integration с main](../../../../research/results/ipc-phase35-main-integration.json) фиксирует положительные проверки текущих исходников и review неизменности enforcement; изменились package metadata и test-only финализация IRQ. [Приёмочное review](../architecture/ipc-phase35-acceptance-review.md) фиксирует смысловое соответствие code/EN-RU и scoped readiness. Свежие current-source controls и readiness receipts дополняют исторические записи. Следующий gate — #27; ABI остаётся EXPERIMENTAL и unfrozen.
+Сохранённые source-bound artifacts: [kernel acceptance](../../../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../../../research/results/routing-phase35-regression.json) и [unsafe inventory](../../../../research/results/kernel-phase35-unsafe-audit.json). Исходные receipts сохраняют свои snapshots. [Receipt integration с main](../../../../research/results/ipc-phase35-main-integration.json) фиксирует положительные проверки его именованного snapshot исходников и review неизменности enforcement; изменились package metadata и test-only финализация IRQ. [Приёмочное review](../architecture/ipc-phase35-acceptance-review.md) фиксирует смысловое соответствие code/EN-RU и scoped readiness. Controls и readiness receipts дополняют исторические записи для своих именованных snapshots. Issue #109 меняет только host inventory исполнения/проверки: актуальная проверка исходников runner имеет статус STALE до свежего scoped receipt и смыслового review. Native IPC implementation и его предыдущая ограниченная приёмка готовности не изменены; исторические receipts не проверяют новый runner. Следующий gate — #27; ABI остаётся EXPERIMENTAL и unfrozen.
 
 Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [identity](../../../../crates/kernel-core/src/ipc/identity.rs), [wire](../../../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../../../crates/kernel/src/ipc/native.rs), [storage](../../../../crates/kernel/src/ipc/storage.rs), [deferred work](../../../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../../../crates/kernel/src/ipc_workload.rs), [runner](../../../../crates/xtask/src/main.rs).
 
@@ -187,7 +187,8 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           "crates/kernel/src/ipc_multi_workload.S",
           "crates/kernel/src/ipc_paths_benchmark.S",
           "crates/kernel/src/ipc_revoke_workload.S",
-          "crates/kernel/src/test_support/irq_wait.rs"
+          "crates/kernel/src/test_support/irq_wait.rs",
+          "crates/xtask/src/matrix.rs"
         ],
         "acceptance": [
           "research/results/ipc-phase35-acceptance.json",
@@ -213,8 +214,8 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Current-source 125 checks per DEV/PROD profile and 46 unchanged transport enforcement mutations pass; six separately scoped supervisor controls also pass. Historical Phase 3.5 acceptance remains immutable; proposed checkpoint architecture and human EN/RU acceptance are pending.",
+            "state": "STALE",
+            "reason": "Merged CI runner/source changes invalidate the previous exact-source scope; immutable receipts are retained, and combined DEV/PROD verification is in progress.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "81274a301885a7de99e87696394caa52e1ba01fe3c9a3aedc52bc82e489124ab",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64."

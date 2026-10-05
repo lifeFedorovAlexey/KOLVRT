@@ -1,0 +1,137 @@
+name: Windows CI workload
+on:
+  workflow_call:
+    inputs:
+      workload:
+        required: true
+        type: string
+      shard:
+        type: number
+        default: -1
+      cached:
+        required: true
+        type: boolean
+    outputs:
+      kernel_required:
+        value: ${{ jobs.run.outputs.kernel_required }}
+permissions:
+  contents: read
+  actions: read
+jobs:
+  run:
+    runs-on: windows-2022
+    outputs:
+      kernel_required: ${{ steps.impact.outputs.kernel_required }}
+    env:
+      CI_MATRIX_SHARD: ${{ inputs.shard >= 0 && format('{0}', inputs.shard) || '' }}
+      CI_TIMING_DIR: ${{ github.workspace }}/target/ci-timings
+      KNOWLEDGE_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || '' }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v7.0.0
+        id: node-cache
+        with:
+          node-version-file: ".nvmrc"
+          cache: ${{ inputs.cached && 'npm' || '' }}
+      - name: Pinned compiler and target
+        shell: pwsh
+        run: |
+          ./scripts/run-timed.ps1 -Kind tool-setup -Label rust-toolchain -Command rustup -CommandArguments @('toolchain', 'install', '1.99.0', '--profile', 'minimal', '--component', 'rustfmt', '--component', 'clippy')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./scripts/run-timed.ps1 -Kind tool-setup -Label aarch64-target -Command rustup -CommandArguments @('target', 'add', '--toolchain', '1.99.0', 'aarch64-unknown-none')
+          exit $LASTEXITCODE
+      - name: Cargo cache
+        id: cargo-cache
+        if: inputs.cached
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5 (Node 24)
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/debug/
+            target/aarch64-unknown-none/
+            target/route-tools/debug/
+            target/cache-integrity.json
+          key: cargo-v1-${{ runner.os }}-1.99.0-x86_64-msvc-aarch64-${{ inputs.workload }}-${{ inputs.shard }}-${{ hashFiles('Cargo.lock', 'Cargo.toml', 'rust-toolchain.toml', '.cargo/**', 'crates/**', 'assets/branding/boot-logo.txt', 'scripts/**', 'package.json', '.github/workflows/ci-windows-workload.yml') }}
+      - name: Verify restored Git dependency objects
+        if: inputs.cached
+        shell: pwsh
+        run: |
+          $gitCache = Join-Path $env:USERPROFILE '.cargo/git/db'
+          if (Test-Path -LiteralPath $gitCache) {
+            foreach ($repository in Get-ChildItem -LiteralPath $gitCache -Directory) {
+              git -C $repository.FullName fsck --full
+              if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            }
+          }
+      - name: Validate restored compiled cache
+        if: inputs.cached && steps.cargo-cache.outputs.cache-hit == 'true'
+        run: node scripts/cache-integrity.cjs verify target/cache-integrity.json
+      - name: QEMU archive cache
+        id: qemu-cache
+        if: inputs.cached && contains(fromJSON('["baseline","matrix","routing","asid"]'), inputs.workload)
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5 (Node 24)
+        with:
+          path: .toolchains/qemu/setup.exe
+          key: qemu-archive-v1-${{ runner.os }}-10.1.0-${{ hashFiles('scripts/setup-qemu.ps1') }}
+      - name: Verified pinned emulator
+        if: contains(fromJSON('["baseline","matrix","routing","asid"]'), inputs.workload)
+        shell: pwsh
+        run: ./scripts/run-timed.ps1 -Kind tool-setup -Label verified-qemu -Command ./scripts/setup-qemu.ps1
+      - name: Install Node dependencies
+        shell: pwsh
+        run: ./scripts/run-timed.ps1 -Kind tool-setup -Label npm-ci -Command npm.cmd -CommandArguments @('ci', '--ignore-scripts')
+      - name: Download current-run shard evidence
+        if: inputs.workload == 'evidence'
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          pattern: ci-matrix-*
+          path: target/shards
+      - name: Execute required workload
+        shell: pwsh
+        env:
+          CI_WORKLOAD: ${{ inputs.workload }}
+        run: ./scripts/ci-workload.ps1 "$env:CI_WORKLOAD"
+      - name: Knowledge-backed workload impact
+        id: impact
+        if: inputs.workload == 'static'
+        shell: pwsh
+        env:
+          IMPACT_BASE: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+        run: |
+          cargo xtask matrix-plan | Set-Content target/kernel/impact-plan.json -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/ci-impact.cjs "$env:IMPACT_BASE" target/kernel/impact-plan.json target/ci-timings/impact.json
+          exit $LASTEXITCODE
+      - name: Record compiled cache integrity
+        if: inputs.cached
+        run: node scripts/cache-integrity.cjs record target/cache-integrity.json
+      - name: Cache outcomes and exact source
+        if: always()
+        shell: pwsh
+        env:
+          CARGO_CACHE_HIT: ${{ steps.cargo-cache.outputs.cache-hit || 'disabled-or-miss' }}
+          QEMU_CACHE_HIT: ${{ steps.qemu-cache.outputs.cache-hit || 'disabled-or-miss' }}
+          CI_WORKLOAD: ${{ inputs.workload }}
+          NODE_CACHE_HIT: ${{ steps.node-cache.outputs.cache-hit || 'unknown-or-disabled' }}
+        run: |
+          New-Item -ItemType Directory -Force target/ci-timings | Out-Null
+          $source = git rev-parse HEAD
+          @{ schema_version = 1; source_commit = $source; expected_commit = '${{ github.event.pull_request.head.sha || github.sha }}'; workload = $env:CI_WORKLOAD; cargo_cache = $env:CARGO_CACHE_HIT; qemu_archive_cache = $env:QEMU_CACHE_HIT; npm_cache = $env:NODE_CACHE_HIT; reused_qemu_observations = 0 } | ConvertTo-Json | Set-Content target/ci-timings/job.json
+          if ($source -ne '${{ github.event.pull_request.head.sha || github.sha }}') { throw 'Evidence source commit mismatch' }
+      - name: Summarize nested executed observations
+        if: always()
+        run: node scripts/ci-observations.cjs target/ci-timings
+      - uses: actions/upload-artifact@v7.0.1
+        if: always()
+        with:
+          name: ci-${{ inputs.workload }}-${{ inputs.shard }}-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: |
+            target/ci-timings/
+            target/kernel/
+            target/cargo-timings/
+          retention-days: 90

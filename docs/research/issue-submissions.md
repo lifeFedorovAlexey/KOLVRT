@@ -1,7 +1,7 @@
 # Hardware and compatibility issue submissions
 
 Document status: CURRENT
-Evidence scope: repository issue-form definitions and local validation; no hardware collection or live GitHub rendering claim.
+Evidence scope: repository issue-form definitions, local validation and authenticated GitHub render/sample validation on 2026-10-05; no hardware collection or sample issue publication.
 Current reference: [Research program](../../research/compatibility/taxonomy.md)
 
 ## Choose a form
@@ -32,6 +32,8 @@ GitHub form validations require answers and checkbox acknowledgements; these for
 
 ## Validation and availability
 
-The YAML uses GitHub's [issue-form syntax](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms) and [form schema](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema). Local validation parses all five forms, checks identifiers, required fields, distinct dropdown options, acknowledgement controls, classification choices and repository links, and constructs a sample/preview for each. PR #60 merged the five forms into the default branch. Local checks establish structure, not GitHub's live rendering or semantic validity of future answers. Live chooser/rendering remains unverified; after signing in, verify the chooser without publishing sample inventories.
+The YAML uses GitHub's [issue-form syntax](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms) and [form schema](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema). Local validation parses all five forms, checks identifiers, required fields, distinct dropdown options, acknowledgement controls, classification choices and repository links, and constructs a sample/preview for each. PR #60 merged the five forms into the default branch. Local checks establish structure, not GitHub's live rendering or semantic validity of future answers.
+
+On 2026-10-05, authenticated browser validation for [issue #56](https://github.com/lifeFedorovAlexey/KOLVRT/issues/56) exercised the actual chooser and all five forms. Synthetic drafts verified editable fields, Markdown previews, dropdown choices and privacy acknowledgements. Empty titles, required text fields and unchecked acknowledgements produced GitHub validation errors; the optional upstream field in Hardware Bring-up remained optional. The chooser retained Blank issue and no labels were added. Malformed/reserved/unallocated COST-L text remained editable as documented; reviewer validation is still required. The [validation record](../../research/results/issue56-live-forms.json) identifies the exact form sources and observation limits. No sample issue, inventory, attachment or hardware result was published. Future changes to the forms require renewed validation; this observation does not certify future submissions or GitHub UI versions.
 
 [Russian translation](../../translations/ru/docs/research/issue-submissions.md)

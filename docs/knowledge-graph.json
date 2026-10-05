@@ -41,6 +41,16 @@
       "type": "depends_on"
     },
     {
+      "from": "doc.kolvrt.ci.performance",
+      "to": "adr.0006",
+      "type": "depends_on"
+    },
+    {
+      "from": "doc.kolvrt.ci.performance",
+      "to": "doc.kolvrt.docs.knowledge",
+      "type": "depends_on"
+    },
+    {
       "from": "doc.kolvrt.ipc.acceptance-review",
       "scope": "Evidence and scoped readiness review; no physical ARM or stable ABI acceptance.",
       "to": "kolvrt.ipc.transport",
@@ -179,6 +189,126 @@
     {
       "from": "kolvrt.arena",
       "to": "scripts/run-arena.ps1",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": ".github/workflows/ci-timings.yml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": ".github/workflows/ci-windows-workload.yml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": ".github/workflows/dependencies.yml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": ".github/workflows/kernel.yml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "adr.0006",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "crates/xtask/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "crates/xtask/src/matrix.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "crates/xtask/src/routing_demo.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "crates/xtask/src/timing.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "package.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "research/measurements/ci-build-reuse.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "research/measurements/ci-legacy-baseline.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/cache-integrity.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/ci-build-reuse.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/ci-evidence.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/ci-gate.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/ci-impact.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/ci-observations.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/ci-timings.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/ci-workload.ps1",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/run-timed.ps1",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/setup-qemu.ps1",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/tests/ci-infrastructure.test.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ci.performance",
+      "to": "scripts/tests/ci-timings.test.cjs",
       "type": "implemented_by"
     },
     {
@@ -1153,6 +1283,11 @@
     },
     {
       "from": "kolvrt.ipc.transport",
+      "to": "crates/xtask/src/matrix.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
       "to": "crates/xtask/src/output.rs",
       "type": "implemented_by"
     },
@@ -1953,7 +2088,17 @@
     },
     {
       "from": "kolvrt.services.supervision",
+      "to": "crates/xtask/src/matrix.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
       "to": "crates/xtask/src/output.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/xtask/src/timing.rs",
       "type": "implemented_by"
     },
     {
@@ -1989,8 +2134,10 @@
   ],
   "inputs": {
     ".github/dependabot.yml": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b",
-    ".github/workflows/dependencies.yml": "df98db96ce44420768364891dee5dde65ab44438c9bcfcf245b19ca04efd2172",
-    ".github/workflows/kernel.yml": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
+    ".github/workflows/ci-timings.yml": "85dd44a96b14f9ecbb627f8b5d8a713c9a5bf954d25e1620887222d938432c3d",
+    ".github/workflows/ci-windows-workload.yml": "5a8d4245a6d88e913713ef1ee1ae6bac7d1740fc7d73bcc8b6720834d8abb76d",
+    ".github/workflows/dependencies.yml": "996e8caf186d7f7376f5e566c040172f5d156a1431022d0a678aacbb8e3affc2",
+    ".github/workflows/kernel.yml": "57b4d69983349bcceea4db7f152eda02f85003a7ed7bfa609f8a018e429ca6cd",
     ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
     "Cargo.lock": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86",
     "Cargo.toml": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
@@ -2030,7 +2177,7 @@
     "crates/kernel/src/ipc_revoke_workload.S": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb",
     "crates/kernel/src/ipc_workload.S": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465",
     "crates/kernel/src/ipc_workload.rs": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
-    "crates/kernel/src/main.rs": "8da6a007667900ba4978a480f99da74f33535a4b95101bf31e97e0013f851786",
+    "crates/kernel/src/main.rs": "0b135621d47beaf5a63813c2217306b8e2bad89ce5389aca1fea7b6458a726f9",
     "crates/kernel/src/process.rs": "133ae8018948d6cef86a4d59fd3a9d0a9bb7f9705921d7e6fac527e236bde790",
     "crates/kernel/src/process_workload.rs": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
     "crates/kernel/src/scheduler/local.rs": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
@@ -2075,8 +2222,11 @@
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
-    "crates/xtask/src/main.rs": "0bf6c3e01fca8d62740b8138160ef804fcbeeb7439d3a4d1b36e9ba4b835ba60",
+    "crates/xtask/src/main.rs": "a991346219f95f224084828211ac7a869c883ad0401a8f6f8e43215644f5e86c",
+    "crates/xtask/src/matrix.rs": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
     "crates/xtask/src/output.rs": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
+    "crates/xtask/src/routing_demo.rs": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
+    "crates/xtask/src/timing.rs": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598",
     "deny.toml": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
     "dependencies/policy.json": "557c5214d437d2ca01516cc0d6cee6ddc3827901080c89a01803838d1c66664c",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
@@ -2110,7 +2260,7 @@
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/compatibility-manifests.md": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
     "docs/architecture/component-arena.md": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
-    "docs/architecture/dependency-hygiene.md": "016dc4b29754bdfdeece2e4caa618c0a5253b6ce3d6ef3144c4f04c010561a9a",
+    "docs/architecture/dependency-hygiene.md": "36724636e522c0ca216a6a0a2b00d2383c74ac7b1b97127285373b569055f73e",
     "docs/architecture/first-native-slice.md": "da70ec18f6ea14cd67a35ae001762b801e28c464761eb9704511119fcbe04d3a",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
     "docs/architecture/ipc-phase35-review.md": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
@@ -2118,24 +2268,25 @@
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
+    "docs/ci/performance.md": "08f055a6359c3e0c9949d565b9a304955fddae0ecdbb1e1ab8f5f74fadbc6c36",
     "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
     "docs/kernel/domains.md": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+    "docs/kernel/ipc.md": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
     "docs/kernel/processes.md": "e01a57a44d1c381e78b8ad9330bbefbbaa178d1451c4b62c4dc95ef2efbb9b29",
     "docs/kernel/scheduler.md": "257b84fec35689b995876a308aecb6f11acf98ad1c3ff84e25bbdd42ed018cce",
-    "docs/kernel/supervision.md": "f3353b846c9fd417861852da4dade0649b654d71783edec69055c601949ee902",
+    "docs/kernel/supervision.md": "b5fd7129ea861f3ba12e1734942ef279b0dd9456b3582e849ab44db2ecb5a023",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
-    "docs/knowledge-enrollment.json": "9974d4a752bdcb83be552e2450e410c6a232168b248efb2d9891eb16e1e258df",
+    "docs/knowledge-enrollment.json": "d0883b3680410178d89a81907db2bd5b123ebc5678d1a1a14b7a6f1475a19fc0",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
     "docs/research/cost-l-queries.md": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "docs/security/verifier-time.md": "ee7e3401b184b27edf1ce9ac1a31f341d0327889f6f8505ccf3d2ee5f58d543e",
-    "package.json": "7aa54fc1c9f90dacd2e7aeab0339b4cc2d7ac2bd55e833cdd51d75a824a2c3b6",
+    "package.json": "52f006ec589a437637af166d547e57aba80089c39e9887dd336d446cd0cdb979",
     "policy/compatibility-modules.json": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631",
     "policy/exceptions.json": "6405d8b34e84bf4317be1ba349cce4fae2078f82776733bb75af94933f24241c",
     "research/arena/profiles/user-copy-range.json": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
@@ -2188,14 +2339,26 @@
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
     "scripts/audit-heavy-dependencies.cjs": "84194ea6cd1b0b4ecbe3a33186cd5aefcf5d35666a5fc3bcad67db39d7d55eac",
+    "scripts/cache-integrity.cjs": "f42cb71b34c3859e05db7c58f18908841b22a0a6b9493959967191a530dba365",
+    "scripts/ci-build-reuse.cjs": "c8d9f3e7da672a71f04a1ca6f4dc68a9ec7d32914bccf63b32cab602512b2767",
+    "scripts/ci-evidence.cjs": "a74e61a7bfd4c6736a46ebd2b4f15cc7182944ceacd2add41ed9eb0c2e3d9b97",
+    "scripts/ci-gate.cjs": "d561264643eb2052f30d2225722860d656c5cd291cc67ed0255d06bc30b415fc",
+    "scripts/ci-impact.cjs": "76df8cacf98947a359352930d67b50a61c456eb0442b08482e3f89933cb577a5",
+    "scripts/ci-observations.cjs": "83175acd9e5b11910e2a4d7d38fbd12f5df14b5d68fbc528e62a2f81ec9d37fb",
+    "scripts/ci-timings.cjs": "a9e0d5a23a16f2536fdc4985690af70e0bd52cc423118cfa02089c33ebf55990",
+    "scripts/ci-workload.ps1": "3c72fb5951ef093721d44cf26cd6bc615f9836d2d1b079557c39f89d4da5ba02",
     "scripts/collect-host-survey.ps1": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
     "scripts/dependency-audit.cjs": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee",
     "scripts/dependency-base.cjs": "46e2343c13a4d6e1f9bcc3a6b54a2d8e1fdeb6508cdd00550de96b3377071f8f",
     "scripts/host-survey.cjs": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
     "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
+    "scripts/run-timed.ps1": "533fa2fbf8b3a69794ace806175597e1475226e745f3a3730183da37d428b4e7",
+    "scripts/setup-qemu.ps1": "b77e6ebeeb391cf931340193927e99b8f9e51b46ed30e86ef5e0d4b2defe4bae",
+    "scripts/tests/ci-infrastructure.test.cjs": "11596fd719a95604fb7c682d2c6d99805d8a45a68a009b8cf52c4426f76162d1",
+    "scripts/tests/ci-timings.test.cjs": "e65ce4c3ee75829dab5c9c2b614bac46e325661287afa37267417d4bffcf7308",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "6670e77cbc45f220df85abdba432c018298ce5d19499c52ff7677015077b6442",
+    "translations/manifest.json": "1f2d3eae01f93589e3d9565c8bcfb28fee30a42f5ee4a80252f2c11df1db2687",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2227,7 +2390,7 @@
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/compatibility-manifests.md": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3",
     "translations/ru/docs/architecture/component-arena.md": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
-    "translations/ru/docs/architecture/dependency-hygiene.md": "a2e666a9a0aed6065cdb4fd590d3556ad3c5ada393063132c9e74e359b10ae31",
+    "translations/ru/docs/architecture/dependency-hygiene.md": "35712efc3e665353b58a6f88a179a486e3801e52b1aeaf75d9eb0e127fdfec0a",
     "translations/ru/docs/architecture/first-native-slice.md": "20dfab89806ded6d3a50a9b15b4a1d54b9f1116699d9f911186ba0fc48392fc8",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
     "translations/ru/docs/architecture/ipc-phase35-review.md": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074",
@@ -2235,14 +2398,15 @@
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
+    "translations/ru/docs/ci/performance.md": "49b24d3f8a661f86a84904dbff74a23bf54d025974fc02333852c086e3441158",
     "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
     "translations/ru/docs/kernel/domains.md": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+    "translations/ru/docs/kernel/ipc.md": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
     "translations/ru/docs/kernel/processes.md": "12b73ae3e2a077a2c2f5ce6b9a517aa4f51fe25a40ce7b30cf0d30bb360baea7",
     "translations/ru/docs/kernel/scheduler.md": "e3527af3145a5faf78b4d2e7e99ac062ed6efb135c284cb94dbc6a867c0d02b2",
-    "translations/ru/docs/kernel/supervision.md": "1403e138cca0b24c2a7e817ed28a2c82d8a522abe33fb9a3724eba34c5831c5e",
+    "translations/ru/docs/kernel/supervision.md": "c2ecd02b7869c8e6e92f6f9142354b65b8886289f8d2ccfe8d625e1235c58ba2",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -4584,10 +4748,45 @@
       "tags": ["arena", "standards", "measurement", "security"],
       "title": "Arena measurement contract"
     },
+    "doc.kolvrt.ci.performance": {
+      "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
+      "document": "doc.kolvrt.ci.performance",
+      "document_status": "CURRENT",
+      "estimated_bytes": 15483,
+      "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
+      "id": "doc.kolvrt.ci.performance",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Измерение CI и поэтапная оптимизация без ослабления доказательств ядра.",
+          "tags": null,
+          "title": "Работа над производительностью CI"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 144,
+          "path": "docs/ci/performance.md",
+          "sha256": "08f055a6359c3e0c9949d565b9a304955fddae0ecdbb1e1ab8f5f74fadbc6c36",
+          "start": 1
+        },
+        "ru": {
+          "end": 144,
+          "path": "translations/ru/docs/ci/performance.md",
+          "sha256": "49b24d3f8a661f86a84904dbff74a23bf54d025974fc02333852c086e3441158",
+          "start": 1
+        }
+      },
+      "path": "docs/ci/performance.md",
+      "schema_version": 1,
+      "summary": "CI timing and staged optimization without weakening kernel evidence.",
+      "title": "CI performance work"
+    },
     "doc.kolvrt.dependencies.hygiene": {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 11810,
+      "estimated_bytes": 12272,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
@@ -4601,15 +4800,15 @@
       },
       "locations": {
         "en": {
-          "end": 128,
+          "end": 130,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "016dc4b29754bdfdeece2e4caa618c0a5253b6ce3d6ef3144c4f04c010561a9a",
+          "sha256": "36724636e522c0ca216a6a0a2b00d2383c74ac7b1b97127285373b569055f73e",
           "start": 1
         },
         "ru": {
-          "end": 128,
+          "end": 130,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "a2e666a9a0aed6065cdb4fd590d3556ad3c5ada393063132c9e74e359b10ae31",
+          "sha256": "35712efc3e665353b58a6f88a179a486e3801e52b1aeaf75d9eb0e127fdfec0a",
           "start": 1
         }
       },
@@ -4901,8 +5100,8 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22199,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "estimated_bytes": 22535,
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "localized": {
@@ -4915,15 +5114,15 @@
       },
       "locations": {
         "en": {
-          "end": 337,
+          "end": 338,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 1
         },
         "ru": {
-          "end": 337,
+          "end": 338,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 1
         }
       },
@@ -5037,7 +5236,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 13883,
+      "estimated_bytes": 14438,
       "evidence_scope": "experimental Phase 3.6 development fixture and bounded lifecycle implementation; acceptance review, production bootstrap trust and physical ARM64 remain pending.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -5051,15 +5250,15 @@
       },
       "locations": {
         "en": {
-          "end": 138,
+          "end": 144,
           "path": "docs/kernel/supervision.md",
-          "sha256": "f3353b846c9fd417861852da4dade0649b654d71783edec69055c601949ee902",
+          "sha256": "b5fd7129ea861f3ba12e1734942ef279b0dd9456b3582e849ab44db2ecb5a023",
           "start": 1
         },
         "ru": {
-          "end": 140,
+          "end": 146,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "1403e138cca0b24c2a7e817ed28a2c82d8a522abe33fb9a3724eba34c5831c5e",
+          "sha256": "c2ecd02b7869c8e6e92f6f9142354b65b8886289f8d2ccfe8d625e1235c58ba2",
           "start": 1
         }
       },
@@ -5871,6 +6070,94 @@
       "summary": "Historical architecture audit: scope",
       "title": "Scope and result"
     },
+    "kolvrt.ci.performance": {
+      "anchor": "ci-performance",
+      "document": "doc.kolvrt.ci.performance",
+      "document_status": "CURRENT",
+      "estimated_bytes": 521,
+      "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
+      "feature": {
+        "acceptance": [
+          "research/measurements/ci-legacy-baseline.json",
+          "research/measurements/ci-build-reuse.json"
+        ],
+        "adrs": ["adr.0006"],
+        "implementation": "EXPERIMENTAL",
+        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending.",
+        "issues": [109],
+        "limitations": [
+          "Hosted cold/warm acceleration, cache service behavior and semantic/EN-RU review remain pending. No compiler-exclusive CPU attribution or retained QEMU observation replay is claimed; conservative impact scheduling cannot prove semantic completeness."
+        ],
+        "next_gate": "Run the optimized graph on GitHub, compare cold/warm feedback with the three-run legacy baseline, review cache integrity and complete semantic/EN-RU review before issue closure.",
+        "readiness": "NOT_READY",
+        "sources": [
+          ".github/workflows/kernel.yml",
+          ".github/workflows/dependencies.yml",
+          ".github/workflows/ci-timings.yml",
+          ".github/workflows/ci-windows-workload.yml",
+          "package.json",
+          "scripts/setup-qemu.ps1",
+          "scripts/run-timed.ps1",
+          "scripts/ci-workload.ps1",
+          "scripts/ci-timings.cjs",
+          "scripts/ci-observations.cjs",
+          "scripts/cache-integrity.cjs",
+          "scripts/ci-gate.cjs",
+          "scripts/ci-evidence.cjs",
+          "scripts/ci-build-reuse.cjs",
+          "scripts/tests/ci-timings.test.cjs",
+          "scripts/tests/ci-infrastructure.test.cjs",
+          "crates/xtask/src/main.rs",
+          "crates/xtask/src/routing_demo.rs",
+          "crates/xtask/src/matrix.rs",
+          "crates/xtask/src/timing.rs",
+          "scripts/ci-impact.cjs"
+        ],
+        "transitions": [
+          {
+            "acceptance": [],
+            "from": "UNRECORDED",
+            "reason": "Begin issue #109 with an observational B0 reporting implementation; preserve every existing CI check.",
+            "to": "EXPERIMENTAL"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "github-actions",
+            "reason": "The reporting workflow has not run on GitHub; local fixture tests cannot establish runner measurements.",
+            "state": "UNKNOWN"
+          }
+        ]
+      },
+      "id": "kolvrt.ci.performance",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Измеренный старый baseline, проверка целостности кэшей, параллельные проверки и полная агрегация четырёх QEMU shards.",
+          "tags": ["ci", "timing", "cache", "tooling"],
+          "title": "Интеграция supervisor и сопоставимость workload"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 12,
+          "path": "docs/ci/performance.md",
+          "sha256": "08f055a6359c3e0c9949d565b9a304955fddae0ecdbb1e1ab8f5f74fadbc6c36",
+          "start": 7
+        },
+        "ru": {
+          "end": 12,
+          "path": "translations/ru/docs/ci/performance.md",
+          "sha256": "49b24d3f8a661f86a84904dbff74a23bf54d025974fc02333852c086e3441158",
+          "start": 7
+        }
+      },
+      "path": "docs/ci/performance.md",
+      "summary": "Measured legacy baseline, integrity-checked caches, parallel checks and complete four-shard QEMU matrix aggregation.",
+      "tags": ["ci", "timing", "cache", "tooling"],
+      "title": "Supervisor integration and workload equivalence"
+    },
     "kolvrt.compatibility.manifests": {
       "anchor": "kolvrt-compatibility-manifests",
       "depends_on": [
@@ -6118,7 +6405,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 11575,
+      "estimated_bytes": 12037,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "feature": {
         "acceptance": ["research/results/issue94-dependency-hygiene.json"],
@@ -6187,15 +6474,15 @@
       },
       "locations": {
         "en": {
-          "end": 128,
+          "end": 130,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "016dc4b29754bdfdeece2e4caa618c0a5253b6ce3d6ef3144c4f04c010561a9a",
+          "sha256": "36724636e522c0ca216a6a0a2b00d2383c74ac7b1b97127285373b569055f73e",
           "start": 7
         },
         "ru": {
-          "end": 128,
+          "end": 130,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "a2e666a9a0aed6065cdb4fd590d3556ad3c5ada393063132c9e74e359b10ae31",
+          "sha256": "35712efc3e665353b58a6f88a179a486e3801e52b1aeaf75d9eb0e127fdfec0a",
           "start": 7
         }
       },
@@ -6558,7 +6845,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.cancel",
       "kind": "contract-section",
       "localized": {
@@ -6573,13 +6860,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 58
         }
       },
@@ -6593,7 +6880,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.cross-cpu",
       "kind": "contract-section",
       "localized": {
@@ -6608,13 +6895,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 66
         }
       },
@@ -6628,7 +6915,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.deadline",
       "kind": "contract-section",
       "localized": {
@@ -6643,13 +6930,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 58
         }
       },
@@ -6663,7 +6950,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1371,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.endpoint",
       "kind": "contract-section",
       "localized": {
@@ -6678,13 +6965,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 16
         }
       },
@@ -6698,7 +6985,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 2223,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.payload",
       "kind": "contract-section",
       "localized": {
@@ -6713,13 +7000,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 34
         }
       },
@@ -6768,7 +7055,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1150,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.queue",
       "kind": "contract-section",
       "localized": {
@@ -6783,13 +7070,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 26
         }
       },
@@ -6803,7 +7090,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.receive",
       "kind": "contract-section",
       "localized": {
@@ -6818,13 +7105,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 58
         }
       },
@@ -6838,7 +7125,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 2223,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.request",
       "kind": "contract-section",
       "localized": {
@@ -6853,13 +7140,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 34
         }
       },
@@ -6949,7 +7236,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 894,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.teardown",
       "kind": "contract-section",
       "localized": {
@@ -6964,13 +7251,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 76
         }
       },
@@ -6984,7 +7271,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.terminal",
       "kind": "contract-section",
       "localized": {
@@ -6999,13 +7286,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 58
         }
       },
@@ -7041,8 +7328,8 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "estimated_bytes": 22422,
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "feature": {
         "acceptance": [
           "research/results/ipc-phase35-acceptance.json",
@@ -7114,7 +7401,8 @@
           "crates/kernel/src/ipc_multi_workload.S",
           "crates/kernel/src/ipc_paths_benchmark.S",
           "crates/kernel/src/ipc_revoke_workload.S",
-          "crates/kernel/src/test_support/irq_wait.rs"
+          "crates/kernel/src/test_support/irq_wait.rs",
+          "crates/xtask/src/matrix.rs"
         ],
         "transitions": [
           {
@@ -7136,11 +7424,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Current-source 125 checks per DEV/PROD profile and 46 unchanged transport enforcement mutations pass; six separately scoped supervisor controls also pass. Historical Phase 3.5 acceptance remains immutable; proposed checkpoint architecture and human EN/RU acceptance are pending.",
+            "reason": "Merged CI runner/source changes invalidate the previous exact-source scope; immutable receipts are retained, and combined DEV/PROD verification is in progress.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "81274a301885a7de99e87696394caa52e1ba01fe3c9a3aedc52bc82e489124ab",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -7164,15 +7452,15 @@
       },
       "locations": {
         "en": {
-          "end": 337,
+          "end": 338,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 4
         },
         "ru": {
-          "end": 337,
+          "end": 338,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 4
         }
       },
@@ -7187,7 +7475,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.wait",
       "kind": "contract-section",
       "localized": {
@@ -7202,13 +7490,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 66
         }
       },
@@ -7222,7 +7510,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "kolvrt.ipc.wakeup",
       "kind": "contract-section",
       "localized": {
@@ -7237,13 +7525,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "9cc2246a5f3a6134e59a19ede87a90253ed48a1ecb11ca9cd07d4ad6128112cd",
+          "sha256": "9b2e1b3efe730a0c5e9fb5c07a256ab28f33ac2673f1a09ebfce7a03ae098c24",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "74a5f73cfae07c0d3830ab98014ee581fabc9845fb125d5ecfc2c82dffecc528",
+          "sha256": "ea288067a18718981ce379e6e910651b820f2cad43f17cd1b61991a168d779d9",
           "start": 66
         }
       },
@@ -9323,7 +9611,9 @@
           "crates/kernel/src/supervision_workload.rs",
           "crates/kernel/src/tests.rs",
           "crates/xtask/src/main.rs",
-          "crates/xtask/src/output.rs"
+          "crates/xtask/src/matrix.rs",
+          "crates/xtask/src/output.rs",
+          "crates/xtask/src/timing.rs"
         ],
         "transitions": [
           {
@@ -9336,11 +9626,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Exact-source 125 DEV/125 PROD checks, both non-test boots and 132 required rejection runs, including 52 IPC/supervision controls and six supervisor-specific controls; human architecture/semantic/EN-RU acceptance remains pending.",
+            "reason": "Merged CI runner/source changes invalidate the previous exact-source scope; immutable receipts are retained, and combined DEV/PROD verification is in progress.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "81274a301885a7de99e87696394caa52e1ba01fe3c9a3aedc52bc82e489124ab",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -9363,13 +9653,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "f3353b846c9fd417861852da4dade0649b654d71783edec69055c601949ee902",
+          "sha256": "b5fd7129ea861f3ba12e1734942ef279b0dd9456b3582e849ab44db2ecb5a023",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "1403e138cca0b24c2a7e817ed28a2c82d8a522abe33fb9a3724eba34c5831c5e",
+          "sha256": "c2ecd02b7869c8e6e92f6f9142354b65b8886289f8d2ccfe8d625e1235c58ba2",
           "start": 13
         }
       },

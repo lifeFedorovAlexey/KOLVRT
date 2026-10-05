@@ -1,0 +1,28 @@
+name: CI timing report
+on:
+  workflow_run:
+    workflows: [Kernel foundation, Dependency hygiene]
+    types: [completed]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  report:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version-file: ".nvmrc"
+      - name: Timing collector rejection controls
+        run: node --test scripts/tests/ci-timings.test.cjs
+      - name: Collect completed run timings
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TIMING_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: node scripts/ci-timings.cjs "$GITHUB_REPOSITORY" "$TIMING_RUN_ID" target/ci-timings research/measurements/ci-legacy-baseline.json
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: ci-timings-${{ github.event.workflow_run.id }}
+          path: target/ci-timings/
+          retention-days: 90
