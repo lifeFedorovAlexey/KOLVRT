@@ -709,6 +709,36 @@
       "title": "ioctl structure layouts that vary across caller ABIs"
     },
     {
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 15181,
+      "id": "doc.kolvrt.architecture.arena",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Arena design: replaceable components, passports and evidence-bound comparisons.",
+      "title": "KOLVRT Arena — Replaceable Component Arena / Performance & Reliability Passports"
+    },
+    {
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 9702,
+      "id": "doc.kolvrt.architecture.audit-2026-10-04",
+      "kind": "research",
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical da16d9f architecture audit with original c5c440c receipts and separate later reconciliation.",
+      "title": "Architecture audit — 2026-10-04"
+    },
+    {
+      "document": "doc.kolvrt.architecture.benchmarking",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 5722,
+      "id": "doc.kolvrt.architecture.benchmarking",
+      "kind": "policy",
+      "path": "docs/architecture/benchmarking.md",
+      "summary": "Benchmark methodology: statistics, comparison fairness, attribution and reproducibility.",
+      "title": "Migration benchmark methodology"
+    },
+    {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
       "estimated_bytes": 15485,
@@ -742,7 +772,7 @@
     {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 9471,
+      "estimated_bytes": 9506,
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "path": "docs/kernel/capabilities.md",
@@ -802,7 +832,7 @@
     {
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 15402,
+      "estimated_bytes": 17149,
       "id": "doc.kolvrt.security.threat-model",
       "kind": "security-analysis",
       "path": "docs/security/threat-model.md",
@@ -818,6 +848,178 @@
       "path": "research/linux/memory-allocation.md",
       "summary": "Pinned allocation-context and reclaim research; native service remains proposed.",
       "title": "Linux allocation context research"
+    },
+    {
+      "anchor": "kolvrt-arena-scope",
+      "depends_on": [
+        "kolvrt.arena.contract",
+        "kolvrt.arena.admission",
+        "kolvrt.arena.passports",
+        "kolvrt.arena.receipts",
+        "kolvrt.arena.comparison",
+        "kolvrt.arena.cost-l",
+        "kolvrt.arena.roadmap",
+        "adr.0006",
+        "doc.kolvrt.architecture.benchmarking"
+      ],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1237,
+      "gaps": [
+        "Arena runner, passport schemas and leaderboard are not implemented or measured."
+      ],
+      "id": "kolvrt.arena",
+      "implementation": "PLANNED",
+      "kind": "feature",
+      "path": "docs/architecture/component-arena.md",
+      "read_when": ["compare replaceable components Arena"],
+      "summary": "Planned replaceable-component Arena and its architecture boundary.",
+      "tags": ["arena", "passports", "components"],
+      "title": "Principle and architectural boundary"
+    },
+    {
+      "anchor": "kolvrt-arena-admission",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1057,
+      "id": "kolvrt.arena.admission",
+      "kind": "contract-section",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Shared correctness, security, reliability and tail-latency admission.",
+      "title": "Common test contract and admission"
+    },
+    {
+      "anchor": "kolvrt-arena-comparison",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1142,
+      "id": "kolvrt.arena.comparison",
+      "kind": "contract-section",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Multidimensional eligible comparisons without universal scoring.",
+      "title": "Comparison and leaderboard"
+    },
+    {
+      "anchor": "kolvrt-arena-contract",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1175,
+      "id": "kolvrt.arena.contract",
+      "kind": "contract-section",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Versioned inputs, outputs, authority, lifetime and failure contract.",
+      "title": "Replaceable component contract"
+    },
+    {
+      "anchor": "kolvrt-arena-cost-l",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1170,
+      "id": "kolvrt.arena.cost-l",
+      "kind": "contract-section",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Actual adapter/native COST-L attribution and migration evidence.",
+      "title": "COST-L migration evidence"
+    },
+    {
+      "anchor": "kolvrt-arena-passports",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 2181,
+      "id": "kolvrt.arena.passports",
+      "kind": "contract-section",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Performance, reliability and security passports with accounting scope.",
+      "title": "Implementation passports"
+    },
+    {
+      "anchor": "kolvrt-arena-receipts",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1080,
+      "id": "kolvrt.arena.receipts",
+      "kind": "contract-section",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Reproducible recipes, provenance, raw samples and platform cohorts.",
+      "title": "Reproducible receipts"
+    },
+    {
+      "anchor": "kolvrt-arena-roadmap",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 5987,
+      "id": "kolvrt.arena.roadmap",
+      "kind": "contract-section",
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Separate staged Arena acceptance gates.",
+      "title": "Roadmap direction and acceptance gates"
+    },
+    {
+      "anchor": "kolvrt-audit-2026-10-04-coverage",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 3606,
+      "id": "kolvrt.audit.2026-10-04.coverage",
+      "kind": "research",
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: coverage",
+      "title": "Coverage and disposition"
+    },
+    {
+      "anchor": "kolvrt-audit-2026-10-04-evidence",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 845,
+      "id": "kolvrt.audit.2026-10-04.evidence",
+      "kind": "research",
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: evidence",
+      "title": "Evidence and limits"
+    },
+    {
+      "anchor": "kolvrt-audit-2026-10-04-findings",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 1954,
+      "id": "kolvrt.audit.2026-10-04.findings",
+      "kind": "research",
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: findings",
+      "title": "Findings and actions"
+    },
+    {
+      "anchor": "kolvrt-audit-2026-10-04-reconciliation",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 2142,
+      "id": "kolvrt.audit.2026-10-04.reconciliation",
+      "kind": "research",
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: reconciliation",
+      "title": "Subsequent reconciliation — 2026-10-05"
+    },
+    {
+      "anchor": "kolvrt-audit-2026-10-04-scope",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 1103,
+      "id": "kolvrt.audit.2026-10-04.scope",
+      "kind": "research",
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: scope",
+      "title": "Scope and result"
     },
     {
       "anchor": "kolvrt-docs-navigation",
@@ -1248,7 +1450,8 @@
         "kolvrt.security.trust",
         "kolvrt.security.threats",
         "kolvrt.security.event-revocation",
-        "kolvrt.security.domains"
+        "kolvrt.security.domains",
+        "kolvrt.security.phase34"
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
@@ -1364,7 +1567,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 7778,
+      "estimated_bytes": 7813,
       "id": "kolvrt.security.event-revocation",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
@@ -1378,12 +1581,12 @@
       "depends_on": [],
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 3554,
+      "estimated_bytes": 876,
       "id": "kolvrt.security.handle-retention",
       "kind": "contract-section",
       "path": "docs/security/threat-model.md",
-      "summary": "Security requirement: handle-retention",
-      "title": "Current bounded handle authority and retention"
+      "summary": "Historical ADR-0020 authority and retention scope before Phase 3.4.",
+      "title": "Historical ADR-0020 authority and retention boundary"
     },
     {
       "anchor": "kolvrt-security-phase2",
@@ -1444,6 +1647,21 @@
       "path": "docs/security/threat-model.md",
       "summary": "Security requirement: phase33",
       "title": "Phase 3.3 bounded reference identity"
+    },
+    {
+      "anchor": "kolvrt-security-phase34",
+      "depends_on": [
+        "kolvrt.security.domains",
+        "kolvrt.security.event-revocation"
+      ],
+      "document": "doc.kolvrt.security.threat-model",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 4465,
+      "id": "kolvrt.security.phase34",
+      "kind": "contract-section",
+      "path": "docs/security/threat-model.md",
+      "summary": "Current bounded Phase 3.4 security boundary and separate future gates.",
+      "title": "Current bounded Phase 3.4 boundary"
     },
     {
       "anchor": "kolvrt-security-placement",
@@ -1794,8 +2012,6 @@
     "README.md",
     "crates/repository-checks/README.md",
     "docs/ai-retrieval.md",
-    "docs/architecture/architecture-audit-2026-10-04.md",
-    "docs/architecture/benchmarking.md",
     "docs/architecture/compatibility-debt.md",
     "docs/architecture/compatibility-model.md",
     "docs/architecture/diagnostics.md",

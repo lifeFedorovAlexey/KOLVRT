@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 44969,
-  "catalog_bytes": 55275,
-  "catalog_nodes": 139,
+  "approximate_tokens": 47100,
+  "catalog_bytes": 62161,
+  "catalog_nodes": 156,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "46688d6ceb61177a05287dd357becf1aa13f52270524b3ef90080679df0853d5",
+  "catalog_sha256": "9d1573e272d7e7d41a2988f6ea4faba8950f213c6003d6d60a3450b611e18b5b",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 179876,
+  "context_plus_catalog_bytes": 188399,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 87,
-    "utf8_bytes": 635601
+    "documents": 88,
+    "utf8_bytes": 656452
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -26,7 +26,8 @@
       "kolvrt.handles.local",
       "kolvrt.security.capability-revocation",
       "kolvrt.security.domains",
-      "kolvrt.security.event-revocation"
+      "kolvrt.security.event-revocation",
+      "kolvrt.security.phase34"
     ],
     "input": "kolvrt.handles.identity",
     "scope": "Declared documentation relationships; review canonical docs, locale pairs, summaries and evidence applicability. Not exhaustive code impact."
@@ -49,14 +50,14 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 124601,
+  "rendered_context_bytes": 126238,
   "russian_pilot": {
-    "approximate_tokens": 68835,
-    "catalog_bytes": 55275,
-    "context_plus_navigation_bytes": 275340,
+    "approximate_tokens": 72297,
+    "catalog_bytes": 62161,
+    "context_plus_navigation_bytes": 289186,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 29291,
+    "localized_navigation_bytes": 33649,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -68,7 +69,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 190774,
+    "rendered_context_bytes": 193376,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -105,6 +106,7 @@
       "kolvrt.security.domains.teardown",
       "kolvrt.security.event-revocation",
       "kolvrt.security.handle-retention",
+      "kolvrt.security.phase34",
       "kolvrt.security.revocation",
       "kolvrt.security.threats",
       "kolvrt.security.trust",
@@ -333,7 +335,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
+        "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
         "start": 7
       }
     },
@@ -385,19 +387,28 @@
     {
       "id": "kolvrt.security.event-revocation",
       "location": {
-        "end": 175,
+        "end": 176,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
+        "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
         "start": 17
       }
     },
     {
       "id": "kolvrt.security.handle-retention",
       "location": {
-        "end": 219,
+        "end": 125,
         "path": "docs/security/threat-model.md",
-        "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+        "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
         "start": 118
+      }
+    },
+    {
+      "id": "kolvrt.security.phase34",
+      "location": {
+        "end": 237,
+        "path": "docs/security/threat-model.md",
+        "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
+        "start": 124
       }
     },
     {
@@ -405,7 +416,7 @@
       "location": {
         "end": 77,
         "path": "docs/security/threat-model.md",
-        "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+        "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
         "start": 68
       }
     },
@@ -414,7 +425,7 @@
       "location": {
         "end": 44,
         "path": "docs/security/threat-model.md",
-        "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+        "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
         "start": 29
       }
     },
@@ -423,7 +434,7 @@
       "location": {
         "end": 30,
         "path": "docs/security/threat-model.md",
-        "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+        "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
         "start": 9
       }
     },
@@ -502,7 +513,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 186715
+    "utf8_bytes": 188497
   },
   "source_files": [
     {

@@ -62,7 +62,8 @@ Service-private grants cannot expand caller effects, including nested calls. Res
         "kolvrt.security.trust",
         "kolvrt.security.threats",
         "kolvrt.security.event-revocation",
-        "kolvrt.security.domains"
+        "kolvrt.security.domains",
+        "kolvrt.security.phase34"
       ],
       "gaps": [
         "General IPC, multi-process domains, trusted supervisor policy installation and immediate revoke/drain are separate future gates."

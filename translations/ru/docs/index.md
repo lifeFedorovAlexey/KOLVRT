@@ -14,10 +14,11 @@
 | Совместимость         | [Модель совместимости](architecture/compatibility-model.md), [routing](kernel/routing.md)                                                                                                                  |
 | Linux research        | [Шаблон механизма](../research/linux/mechanism-template.md), [allocation](../research/linux/memory-allocation.md), [фиксированные наблюдения драйверов](../research/compatibility/linux-driver-api-map.md) |
 | COST-L                | [Контракт реестра](architecture/compatibility-debt.md)                                                                                                                                                     |
+| Arena                 | [Проект и план Arena](architecture/component-arena.md); PLANNED, средство запуска и измеренные паспорта отсутствуют                                                                                        |
 | ADRs                  | [Индекс решений](architecture-decisions/README.md)                                                                                                                                                         |
 | Benchmarks и evidence | [Метод измерений](architecture/benchmarking.md), [история](../research/measurements/README.md)                                                                                                             |
 | Hardware research     | [Требования платформы](architecture/platform-contract.md), [вопросы](research/open-questions.md); аппаратная проверка не подразумевается                                                                   |
 | Миграция              | [Host advisor](architecture/migration-advisor.md); production integration проверяется отдельно                                                                                                             |
-| Historical evidence   | [Отчёт Phase 0](research/phase-0-1-report.md); сохраняет исходные границы этапа                                                                                                                            |
+| Historical evidence   | [Исторический аудит архитектуры](architecture/architecture-audit-2026-10-04.md), [Отчёт Phase 0](research/phase-0-1-report.md); сохраняет исходные границы этапа                                           |
 
 [Английский оригинал](../../../docs/index.md)

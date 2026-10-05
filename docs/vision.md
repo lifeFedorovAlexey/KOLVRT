@@ -37,4 +37,12 @@ or invented performance results. Normative requirements describe future implemen
 obligations; they do not claim that execution tests already pass. The [next research phase](research/phase-0-2.md)
 does not authorize starting Phase 1 automatically.
 
+## Observable architectural improvement
+
+**KOLVRT should make architectural improvement observable, reproducible and competitive.**
+The [KOLVRT Arena design and roadmap](architecture/component-arena.md) requires explicit
+contracts and common test obligations for replaceable components, performance, reliability
+and security passports, and reproducible multidimensional comparisons without a universal
+score. This is a design baseline, not an implemented runner or measured leaderboard.
+
 [Russian translation](../translations/ru/docs/vision.md)
