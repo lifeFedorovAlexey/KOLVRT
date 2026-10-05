@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "base_commit": "41ecd0656fd440585fbc1c4b2f5e969faa7ba815",
+  "base_commit": "6696afd70f8dafbef173d0aea47b43500c36dede",
   "files": [
     {
       "path": ".github/dependabot.yml",
@@ -49,14 +49,14 @@
       "before_sha256_lf": "fad0e7a7e220c1fc511acb672a0bc5db9fc8d9fc2964e744e9d6aac05e14bc9b",
       "after_sha256_lf": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
       "disposition": "no-feature-impact",
-      "reason": "Timer-test fixture finalizes with IRQs masked before the last delivery observation, closing poll-return-to-mask loss. Five deterministic host cases retain real-delivery/500ms failure semantics; production timer/IRQ handling is unchanged. Failure-only elapsed counter telemetry diagnoses any remaining genuine timeout."
+      "reason": "Timer-test fixture masks IRQs before the final delivery snapshot, closing poll-return-to-mask loss. Five deterministic host cases and full DEV/PROD QEMU matrix with negative controls passed; the 500ms budget and production IRQ/timer semantics remain unchanged."
     },
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "3fa2f4e5785bb3e1703b709811cc7012c34fdd83a73733f47f0535041affb91b",
       "after_sha256_lf": "41ee84dc04fa2c68fa7349693847dc3a222bbca8c9b5c4ebd12c774d29a8d82d",
       "disposition": "no-feature-impact",
-      "reason": "Timer-test fixture finalizes with IRQs masked before the last delivery observation, closing poll-return-to-mask loss. Five deterministic host cases retain real-delivery/500ms failure semantics; production timer/IRQ handling is unchanged. Failure-only elapsed counter telemetry diagnoses any remaining genuine timeout."
+      "reason": "Timer-test fixture masks IRQs before the final delivery snapshot, closing poll-return-to-mask loss. Five deterministic host cases and full DEV/PROD QEMU matrix with negative controls passed; the 500ms budget and production IRQ/timer semantics remain unchanged."
     },
     {
       "path": "crates/migration-workbench/Cargo.toml",

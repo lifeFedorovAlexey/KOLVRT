@@ -1,0 +1,57 @@
+{
+  "issue": 71,
+  "remaining": [
+    "crash-durable file and namespace commit",
+    "corrupt/incomplete recovery and bounded pruning",
+    "process-kill and power-loss validation",
+    "online policy revocation and retirement enforcement",
+    "authenticated progressing UTC provider"
+  ],
+  "scope": "Injected-current-clock and immutable single-session host verifier; synthetic Ed25519 fixtures only. No durable filesystem/crash recovery, live policy revocation, authenticated clock or kernel acceptance.",
+  "git_commit": "41ecd0656fd440585fbc1c4b2f5e969faa7ba815",
+  "schema_version": 1,
+  "worktree_dirty": true,
+  "claim": "Source-bound host verification; no production #14 or full #71 closure.",
+  "correctness": {
+    "clippy": "passed",
+    "new_temporal_tests": 9,
+    "failures": 0,
+    "clock_modes": [
+      "mutable injected fixture",
+      "scripted per-observation fixture",
+      "private static fixture only"
+    ],
+    "provisioned_tests": 15,
+    "advisor_suite": "passed"
+  },
+  "source_files": [
+    {
+      "sha256_lf": "c06e4b62474dd989d4b80dba8f661e179355601e1506695f16605060449f4511",
+      "path": "crates/migration-advisor/src/provenance.rs"
+    },
+    {
+      "sha256_lf": "0d717362dcd88c812c73759b62414a6959a6646cf5332272df6643ae573b40af",
+      "path": "crates/migration-advisor/src/main.rs"
+    },
+    {
+      "sha256_lf": "c16e74bc027150961cf714c064d854545c611cfb9d4e102e9c26ce9af32525c9",
+      "path": "crates/migration-advisor/tests/provisioned_provenance.rs"
+    },
+    {
+      "sha256_lf": "1035455910a6bdc85cb4d64350715f0c770641e75f0f4dc38e12405111848245",
+      "path": "crates/migration-advisor/tests/migration.rs"
+    },
+    {
+      "sha256_lf": "2f45888422385b193610a02f8be01021afaeafd652853af5b374d96339a02754",
+      "path": "crates/migration-advisor/Cargo.toml"
+    },
+    {
+      "sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+      "path": "Cargo.lock"
+    },
+    {
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+      "path": "rust-toolchain.toml"
+    }
+  ]
+}

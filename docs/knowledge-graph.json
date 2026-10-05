@@ -1034,6 +1034,76 @@
       "from": "kolvrt.security.phase34",
       "to": "kolvrt.security.event-revocation",
       "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "Cargo.lock",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "adr.0008",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "adr.0013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "crates/migration-advisor/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "crates/migration-advisor/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "crates/migration-advisor/src/provenance.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "crates/migration-advisor/tests/migration.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "crates/migration-advisor/tests/provisioned_provenance.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "law.009",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "law.013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "law.036",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "law.040",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "research/results/issue71-verifier-time.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.security.verifier-time",
+      "to": "rust-toolchain.toml",
+      "type": "implemented_by"
     }
   ],
   "inputs": {
@@ -1055,6 +1125,11 @@
     "crates/kernel/src/process.rs": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
+    "crates/migration-advisor/Cargo.toml": "2f45888422385b193610a02f8be01021afaeafd652853af5b374d96339a02754",
+    "crates/migration-advisor/src/main.rs": "0d717362dcd88c812c73759b62414a6959a6646cf5332272df6643ae573b40af",
+    "crates/migration-advisor/src/provenance.rs": "c06e4b62474dd989d4b80dba8f661e179355601e1506695f16605060449f4511",
+    "crates/migration-advisor/tests/migration.rs": "1035455910a6bdc85cb4d64350715f0c770641e75f0f4dc38e12405111848245",
+    "crates/migration-advisor/tests/provisioned_provenance.rs": "c16e74bc027150961cf714c064d854545c611cfb9d4e102e9c26ce9af32525c9",
     "crates/migration-workbench/Cargo.toml": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
     "crates/repository-checks/Cargo.toml": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
     "crates/repository-checks/src/arena.rs": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
@@ -1112,12 +1187,13 @@
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "e24cd6b14d97717fef40c0e3d096eb135077af5eeeeb2c7afd6e3ab4a32ad862",
-    "docs/knowledge-system.md": "f8dd3112b4ff21171cdce894df6fddad8326a131ace2349c0c94ab9a7d94db78",
+    "docs/knowledge-enrollment.json": "3ecbb075cff3f4f40cd71899e9c089f1b37aa9353113a8ae4127bccc2229b7c5",
+    "docs/knowledge-system.md": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
     "docs/research/cost-l-queries.md": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
+    "docs/security/verifier-time.md": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
     "package.json": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768",
     "research/arena/profiles/user-copy-range.json": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
     "research/arena/standards.json": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
@@ -1175,7 +1251,7 @@
     "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "49c261c693176ec27097fe16cbf0cc644a891232d74365689638ac938920267b",
+    "translations/manifest.json": "65977e179c5097b00603e86c6369b8d968c7a5561586fa3446ece50f1d6739ab",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -1212,11 +1288,12 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "924956a866ef946be2efe91d352f5afd9e1cda5f2a182933bd37e4daa1144b3f",
+    "translations/ru/docs/knowledge-system.md": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
     "translations/ru/docs/research/cost-l-queries.md": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
     "translations/ru/docs/research/host-survey.md": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
+    "translations/ru/docs/security/verifier-time.md": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
   },
   "nodes": {
@@ -3397,13 +3474,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "f8dd3112b4ff21171cdce894df6fddad8326a131ace2349c0c94ab9a7d94db78",
+          "sha256": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "924956a866ef946be2efe91d352f5afd9e1cda5f2a182933bd37e4daa1144b3f",
+          "sha256": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
           "start": 1
         }
       },
@@ -3786,6 +3863,40 @@
       "schema_version": 1,
       "summary": "Cross-subsystem security requirements and explicitly bounded observations.",
       "title": "Security threat model"
+    },
+    "doc.kolvrt.security.verifier-time": {
+      "document": "doc.kolvrt.security.verifier-time",
+      "document_status": "CURRENT",
+      "estimated_bytes": 8582,
+      "evidence_scope": "bounded host-side correction for #71; injected-clock regression evidence, not production clock authenticity, live revocation or crash-durable replay acceptance.",
+      "id": "doc.kolvrt.security.verifier-time",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Допуск host-verifier по текущим часам с необратимым отказом и неизменяемыми границами сеанса и политики.",
+          "tags": null,
+          "title": "Время и жизненный цикл сеанса verifier"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 112,
+          "path": "docs/security/verifier-time.md",
+          "sha256": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
+          "start": 1
+        },
+        "ru": {
+          "end": 112,
+          "path": "translations/ru/docs/security/verifier-time.md",
+          "sha256": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340",
+          "start": 1
+        }
+      },
+      "path": "docs/security/verifier-time.md",
+      "schema_version": 1,
+      "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
+      "title": "Provisioned verifier time and session lifetime"
     },
     "doc.linux.memory.allocation": {
       "document": "doc.linux.memory.allocation",
@@ -4577,7 +4688,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "d6aee67e20141cac60b3f0083bea997771997b49cbf0c3e60ba993b123a9deb8",
+            "receipt_sha256": "e2e0100d711cd863cc2f7e3f91af44c01fff35b83f1970018df2dceb6b302bd2",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4602,13 +4713,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "f8dd3112b4ff21171cdce894df6fddad8326a131ace2349c0c94ab9a7d94db78",
+          "sha256": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "924956a866ef946be2efe91d352f5afd9e1cda5f2a182933bd37e4daa1144b3f",
+          "sha256": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
           "start": 7
         }
       },
@@ -6823,6 +6934,94 @@
       "path": "docs/security/threat-model.md",
       "summary": "Security requirement: trust",
       "title": "Objectives and trust"
+    },
+    "kolvrt.security.verifier-time": {
+      "anchor": "kolvrt-verifier-time",
+      "depends_on": [
+        "law.009",
+        "law.013",
+        "law.036",
+        "law.040",
+        "adr.0013",
+        "adr.0008"
+      ],
+      "document": "doc.kolvrt.security.verifier-time",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1215,
+      "evidence_scope": "bounded host-side correction for #71; injected-clock regression evidence, not production clock authenticity, live revocation or crash-durable replay acceptance.",
+      "feature": {
+        "acceptance": ["research/results/issue71-verifier-time.json"],
+        "adrs": ["adr.0013", "adr.0008"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Current-time session/key admission and final-acceptance revalidation, sticky clock failure/rollback rejection and single active provisioned session per host verifier.",
+        "issues": [71, 14],
+        "limitations": [
+          "Immutable policy snapshot does not observe online revocation. Trusted provider authenticity/progress, storage-crash durability, recovery/pruning and production admission remain open; quantum/kernel execution is not involved."
+        ],
+        "next_gate": "Complete #71 durable replay, recovery and live policy/time integration without upgrading synthetic evidence into production trust.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Migration trust #71",
+        "sources": [
+          "crates/migration-advisor/src/provenance.rs",
+          "crates/migration-advisor/src/main.rs",
+          "crates/migration-advisor/tests/provisioned_provenance.rs",
+          "crates/migration-advisor/tests/migration.rs",
+          "crates/migration-advisor/Cargo.toml",
+          "Cargo.lock",
+          "rust-toolchain.toml"
+        ],
+        "transitions": [
+          {
+            "acceptance": ["research/results/issue71-verifier-time.json"],
+            "from": "UNRECORDED",
+            "reason": "First enrolled corrected temporal verifier scope with exact-source host evidence; durable replay and production trust gates remain open.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "host-process",
+            "reason": "Fifteen provisioned synthetic-key/clock regressions and existing advisor integration tests passed on these exact source bytes.",
+            "receipt": "research/results/issue71-verifier-time.json",
+            "receipt_sha256": "fd273b9171688235813dddb0b7e83492b6a63dbd2f405676588bbe7836c68e67",
+            "scope": "Host verification mechanism with injected fixture clocks; no production authenticated time, live revocation or storage crash guarantees.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "Host verifier mechanics do not establish physical KOLVRT execution or hardware clock trust.",
+            "state": "NOT_APPLICABLE"
+          }
+        ]
+      },
+      "id": "kolvrt.security.verifier-time",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Допуск host-verifier по текущим часам с необратимым отказом и неизменяемыми границами сеанса и политики.",
+          "tags": ["trust", "clock", "freshness", "session", "migration"],
+          "title": "Временная граница"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 16,
+          "path": "docs/security/verifier-time.md",
+          "sha256": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
+          "start": 7
+        },
+        "ru": {
+          "end": 16,
+          "path": "translations/ru/docs/security/verifier-time.md",
+          "sha256": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340",
+          "start": 7
+        }
+      },
+      "path": "docs/security/verifier-time.md",
+      "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
+      "tags": ["trust", "clock", "freshness", "session", "migration"],
+      "title": "Temporal boundary"
     },
     "law.001": {
       "aliases": ["LAW-001"],
