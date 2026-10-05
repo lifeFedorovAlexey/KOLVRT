@@ -95,8 +95,6 @@ function dagDuration(jobs) {
   }
   if (Object.keys(durations).length === 1 && "foundation" in durations)
     return durations.foundation;
-  if ("baseline" in durations && "foundation" in durations)
-    return criticalPath(durations, { foundation: ["baseline"] });
   const shards = Object.keys(durations).filter((id) => /^matrix-\d+$/.test(id));
   const parallel = [
     "host",
@@ -154,7 +152,11 @@ function compare(
       run.run_id !== current.run_id &&
       run.conclusion === "success" &&
       run.execution_span_seconds !== null &&
-      (signature(run) === signature(current) ||
+      ((signature(run) === signature(current) &&
+        (run.head_sha === current.head_sha ||
+          (run.check_inventory_id !== null &&
+            run.check_inventory_id !== undefined &&
+            run.check_inventory_id === current.check_inventory_id))) ||
         (mappedInventory &&
           run.workflow_id === current.workflow_id &&
           ["push", "pull_request", "workflow_dispatch"].includes(run.event) &&

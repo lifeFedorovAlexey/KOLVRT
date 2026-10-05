@@ -48,7 +48,7 @@ Serial and sharded kernel execution share one task inventory and the original re
 
 ## Execution and remaining gates
 
-Main pushes and PR runs use the optimized graph. A feature-branch push does not duplicate the open PR synchronize run; local checks and manual dispatch remain available before opening a PR. New PR commits automatically cancel obsolete runs of the same workflow/PR. Different workflows cannot cancel one another; an active main run is preserved. workflow_dispatch mode=baseline retains the uncached serial reference path, including its historical repeated exception subset. An explicit dispatch mode takes precedence. Reports and raw evidence are retained for ninety days; checked-in baselines are permanent.
+Main pushes, PRs and manual runs use the same partitioned graph. The legacy serial job, dispatch selector and workload runner are removed; the final gate always requires the partitioned workloads. Historical timing baselines remain immutable comparison evidence. A feature-branch push does not duplicate the open PR synchronize run; local checks and manual dispatch remain available before opening a PR. New PR commits automatically cancel obsolete runs of the same workflow/PR. Different workflows cannot cancel one another; an active main run is preserved. Reports and raw evidence are retained for ninety days; checked-in baselines are permanent.
 
 ```text
 npm run check

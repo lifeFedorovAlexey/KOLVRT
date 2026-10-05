@@ -48,7 +48,7 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
                 image: supervisor_image,
                 image_format: ImageFormat::RawFixture,
                 limits: Limits {
-                    endpoints: 0,
+                    endpoints: 2,
                     ..limits
                 },
                 context,

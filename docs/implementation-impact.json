@@ -1,118 +1,118 @@
 {
   "schema_version": 1,
-  "base_commit": "0ec75af8477423f89debc6c98b56ada98dad106b",
+  "base_commit": "096977f9a434398130b6d18ddbd6cbba20f2116f",
   "files": [
     {
       "path": "crates/kernel-core/src/process.rs",
       "before_sha256_lf": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73",
       "after_sha256_lf": "3e5495a849246cb904f39442429adfe04e26a40a39a9478bae6ffdaa4bd5e853",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel-core/tests/process_protocol.rs",
       "before_sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5",
       "after_sha256_lf": "11018fe4419e11fcd577aa555f9b684589f38f65aeaa45f64a395ad0d8ab3fb8",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/Cargo.toml",
       "before_sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50",
       "after_sha256_lf": "837d0028308d980a0ff915dc25b052ec0433288f31b3cafbf1d985bc382553dc",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/main.rs",
       "before_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
       "after_sha256_lf": "0b135621d47beaf5a63813c2217306b8e2bad89ce5389aca1fea7b6458a726f9",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/process.rs",
       "before_sha256_lf": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
-      "after_sha256_lf": "133ae8018948d6cef86a4d59fd3a9d0a9bb7f9705921d7e6fac527e236bde790",
+      "after_sha256_lf": "a3305a500a2ea07b301cf0fd2da14341e414fc933b3347075c9c4f2c6d87ba79",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
       "before_sha256_lf": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
       "after_sha256_lf": "d530ea58baef2e4019a972437df3b1f3c1ce9a20cb26e26acf8b8bf93a891742",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/scheduler/task.rs",
       "before_sha256_lf": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5",
       "after_sha256_lf": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/supervision.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "378dedb5a921a1b5b084eea4ce793f8655d8345a38e99d89ae5a9b937fce4a59",
+      "after_sha256_lf": "83edf8ec2c9db1e71b950a234b72eac5a4e4f92a97c7c4ca1fef4f463bffcfa8",
       "disposition": "new-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/supervision_workload.S",
       "before_sha256_lf": null,
-      "after_sha256_lf": "377efb6fbda0b908afb426169f015243ce36468a6a00ffb1dffbe3a5468dd404",
+      "after_sha256_lf": "5381ca8ef27242cd82aef33cf4d8aa2a990ec15b70af031b05a350fdfdb1721f",
       "disposition": "new-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/supervision_workload.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "3e0ece9b80b0c35f20771ed08d2686b1c68d2568134efa87e492ab01a0c33196",
+      "after_sha256_lf": "ea5320fbef9116e34d16bff94ef25ff0791cecb359c721e56b02b13b7ccc7a04",
       "disposition": "new-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
       "after_sha256_lf": "48b7f71740e54f3059d2fdda1e8ca4dab258992c92b86c43577ee5a631493e25",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/xtask/src/main.rs",
       "before_sha256_lf": "caa349117180e8ccd204747695933dc8a6e1a424ea78b891339be6ece403c885",
       "after_sha256_lf": "a991346219f95f224084828211ac7a869c883ad0401a8f6f8e43215644f5e86c",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/xtask/src/matrix.rs",
       "before_sha256_lf": "f74e946dbc3ed3de56d5155501f7fc35a0a812398076a3bc0803fb0e1c36e161",
       "after_sha256_lf": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "crates/xtask/src/output.rs",
       "before_sha256_lf": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff",
       "after_sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "scripts/ci-timings.cjs",
-      "before_sha256_lf": "d5ac2e3e6a4741b7827f8d0422af42cc031e9b80a4dbfa2795491c872e164def",
-      "after_sha256_lf": "a9e0d5a23a16f2536fdc4985690af70e0bd52cc423118cfa02089c33ebf55990",
+      "before_sha256_lf": "fe5a1d32bd128db3bd79fd5e77d60c66f9f8fd7658ede3a7fc6b50bc38a26d80",
+      "after_sha256_lf": "b6fc06968cd315ff55cd2fa08fbee8d5500028c429c6192ff04bb1ecb039ef5c",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     },
     {
       "path": "scripts/tests/ci-timings.test.cjs",
       "before_sha256_lf": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
-      "after_sha256_lf": "e65ce4c3ee75829dab5c9c2b614bac46e325661287afa37267417d4bffcf7308",
+      "after_sha256_lf": "17d3c365b1a3936750db4473650d6f2974f69794ddfa60948888796c7385cf88",
       "disposition": "existing-feature",
-      "reason": "Implement bounded isolated EL0 lifecycle over the merged CI infrastructure; preserve complete supervisor controls, exact failure witnesses and truthful source-bound workload comparison."
+      "reason": "Implement bounded EL0 supervision over current merged CI; bind shutdown commitment to exact-instance IPC acknowledgement and require confirmed workload inventory for cross-source timing comparison."
     }
   ],
   "features": [

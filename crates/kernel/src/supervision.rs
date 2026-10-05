@@ -50,6 +50,8 @@ struct Instance {
     id: ProcessId,
     endpoint: Reference,
     sender: Handle,
+    feedback: Reference,
+    feedback_receiver: Handle,
 }
 struct Entry {
     grant: Grant,
@@ -163,6 +165,11 @@ impl Scope {
                         Ok(()) | Err(kernel_core::handles::Error::Stale) => {}
                         Err(error) => panic!("exact old sender cleanup: {error:?}"),
                     }
+                    match registry.lifecycle_close(self.supervisor, old.feedback_receiver) {
+                        Ok(()) | Err(kernel_core::handles::Error::Stale) => {}
+                        Err(error) => panic!("exact old feedback cleanup: {error:?}"),
+                    }
+                    crate::ipc::discard(&old.feedback);
                     registry
                         .reclaim(physical, old.id)
                         .expect("detached old instance");
@@ -191,7 +198,7 @@ impl Scope {
                     return [12, 0, 0, 0, 0];
                 };
                 let bound = registry.lifecycle_bind(self.supervisor, id);
-                let Ok((endpoint, sender)) = bound else {
+                let Ok((endpoint, sender, feedback, feedback_receiver)) = bound else {
                     registry
                         .discard_prepared(physical, id)
                         .expect("unpublished creation rollback");
@@ -210,8 +217,16 @@ impl Scope {
                     id,
                     endpoint,
                     sender,
+                    feedback,
+                    feedback_receiver,
                 });
-                [0, fresh, sender.encode(), 0, id.generation()]
+                [
+                    0,
+                    fresh,
+                    sender.encode(),
+                    feedback_receiver.encode(),
+                    id.generation(),
+                ]
             }
             2 => {
                 if argument != 0 {
@@ -267,6 +282,7 @@ impl Scope {
                     "supervisor left a live service"
                 );
                 crate::ipc::discard(&instance.endpoint);
+                crate::ipc::discard(&instance.feedback);
                 registry
                     .reclaim(physical, instance.id)
                     .expect("final detached service");

@@ -73,13 +73,13 @@ jobs:
         run: node scripts/cache-integrity.cjs verify target/cache-integrity.json
       - name: QEMU archive cache
         id: qemu-cache
-        if: inputs.cached && contains(fromJSON('["baseline","matrix","routing","asid"]'), inputs.workload)
+        if: inputs.cached && contains(fromJSON('["matrix","routing","asid"]'), inputs.workload)
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5 (Node 24)
         with:
           path: .toolchains/qemu/setup.exe
           key: qemu-archive-v1-${{ runner.os }}-10.1.0-${{ hashFiles('scripts/setup-qemu.ps1') }}
       - name: Verified pinned emulator
-        if: contains(fromJSON('["baseline","matrix","routing","asid"]'), inputs.workload)
+        if: contains(fromJSON('["matrix","routing","asid"]'), inputs.workload)
         shell: pwsh
         run: ./scripts/run-timed.ps1 -Kind tool-setup -Label verified-qemu -Command ./scripts/setup-qemu.ps1
       - name: Install Node dependencies

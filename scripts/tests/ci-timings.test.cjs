@@ -59,14 +59,15 @@ test("three unique compatible successful runs required; failed and changed runs 
 
 test("explicit before/after comparison admits changed source and retains identities", () => {
   const current = fixture(4, "after");
-  const comparison = compare(current, [fixture(1), fixture(2), fixture(3)]);
+  const baselines = [fixture(1), fixture(2), fixture(3)];
+  current.check_inventory_id = "reviewed-test-inventory";
+  for (const baseline of baselines)
+    baseline.check_inventory_id = current.check_inventory_id;
+  const comparison = compare(current, baselines);
   assert.deepEqual(comparison.baseline_head_shas, ["abc"]);
   assert.equal(comparison.delta_seconds, 0);
   current.conclusion = "failure";
-  assert.equal(
-    compare(current, [fixture(1), fixture(2), fixture(3)]).state,
-    "CURRENT_FAILED",
-  );
+  assert.equal(compare(current, baselines).state, "CURRENT_FAILED");
 });
 
 test("summary escapes API-provided names", () => {
@@ -158,4 +159,16 @@ test("matching shard topology cannot certify historical workload equivalence", (
     compare(current, baselines, false, true).state,
     "INSUFFICIENT_BASELINE",
   );
+});
+
+test("identical graph across sources requires confirmed inventory", () => {
+  const current = fixture(4, "after");
+  const baselines = [fixture(1), fixture(2), fixture(3)];
+  assert.equal(compare(current, baselines).state, "INSUFFICIENT_BASELINE");
+  current.check_inventory_id = "kernel-136-v1";
+  for (const baseline of baselines)
+    baseline.check_inventory_id = "kernel-130-v1";
+  assert.equal(compare(current, baselines).state, "INSUFFICIENT_BASELINE");
+  current.head_sha = "abc";
+  assert.equal(compare(current, baselines, true).state, "COMPARABLE");
 });

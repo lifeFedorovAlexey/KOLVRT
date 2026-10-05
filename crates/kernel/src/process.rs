@@ -633,7 +633,12 @@ impl Registry {
         supervisor: ProcessId,
         child: ProcessId,
     ) -> Result<
-        (kernel_core::ipc::Reference, kernel_core::handles::Handle),
+        (
+            kernel_core::ipc::Reference,
+            kernel_core::handles::Handle,
+            kernel_core::ipc::Reference,
+            kernel_core::handles::Handle,
+        ),
         kernel_core::handles::Error,
     > {
         use kernel_core::handles::{CreationError, Error as H, Rights};
@@ -645,25 +650,80 @@ impl Registry {
             return Err(H::Denied);
         }
         let (endpoint, receiver) = self.bootstrap_endpoint(child, 1)?;
-        match self.handles[supervisor.slot()].create_endpoint_sender(
-            supervisor,
-            endpoint.try_clone().map_err(|_| H::ReferenceExhausted)?,
-            Rights::SEND,
-            |_| Ok::<_, ()>(()),
+        let feedback = match crate::ipc::create(
+            self.domain_reference(supervisor),
+            supervisor.slot() / OWNER_CAPACITY,
+            1,
         ) {
-            Ok(sender) => {
-                self.ipc_input(child, 0, receiver);
-                Ok((endpoint, sender))
+            Ok(value) => value,
+            Err(_) => {
+                crate::ipc::discard(&endpoint);
+                self.handles[child.slot()]
+                    .close(child, receiver)
+                    .expect("rollback receiver");
+                return Err(H::Budget);
             }
+        };
+        let mut installed = [None; 3];
+        let transaction = (|| {
+            let send = self.handles[supervisor.slot()]
+                .create_endpoint_sender(
+                    supervisor,
+                    endpoint.try_clone().map_err(|_| H::ReferenceExhausted)?,
+                    Rights::SEND,
+                    |_| Ok::<_, ()>(()),
+                )
+                .map_err(|e| match e {
+                    CreationError::Handle(e) => e,
+                    CreationError::Publication(()) => unreachable!(),
+                })?;
+            installed[0] = Some(send);
+            let receive = self.handles[supervisor.slot()]
+                .create_endpoint_receiver(
+                    supervisor,
+                    feedback.try_clone().map_err(|_| H::ReferenceExhausted)?,
+                    |_| Ok::<_, ()>(()),
+                )
+                .map_err(|e| match e {
+                    CreationError::Handle(e) => e,
+                    CreationError::Publication(()) => unreachable!(),
+                })?;
+            installed[1] = Some(receive);
+            let notify = self.handles[child.slot()]
+                .create_endpoint_sender(
+                    child,
+                    feedback.try_clone().map_err(|_| H::ReferenceExhausted)?,
+                    Rights::SEND,
+                    |_| Ok::<_, ()>(()),
+                )
+                .map_err(|e| match e {
+                    CreationError::Handle(e) => e,
+                    CreationError::Publication(()) => unreachable!(),
+                })?;
+            installed[2] = Some(notify);
+            self.ipc_input(child, 0, receiver);
+            self.ipc_control_input(child, notify);
+            Ok((send, receive))
+        })();
+        match transaction {
+            Ok((send, receive)) => Ok((endpoint, send, feedback, receive)),
             Err(error) => {
+                for handle in installed[..2].iter().flatten() {
+                    self.handles[supervisor.slot()]
+                        .close(supervisor, *handle)
+                        .expect("rollback supervisor handle");
+                }
+                if let Some(handle) = installed[2] {
+                    self.handles[child.slot()]
+                        .close(child, handle)
+                        .expect("rollback feedback sender");
+                }
                 self.handles[child.slot()]
                     .close(child, receiver)
                     .expect("rollback receiver");
                 crate::ipc::discard(&endpoint);
-                Err(match error {
-                    CreationError::Handle(error) => error,
-                    CreationError::Publication(()) => unreachable!(),
-                })
+                crate::ipc::discard(&feedback);
+                Err(error)
             }
         }
     }

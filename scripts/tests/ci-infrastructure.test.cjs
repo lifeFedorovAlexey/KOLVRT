@@ -45,8 +45,10 @@ test("mandatory graph gate rejects failed, cancelled, missing and skipped jobs",
     jobs.matrix = { result };
     assert.throws(() => requireSuccess(jobs, true), /matrix/);
   }
-  requireSuccess({ baseline: { result: "success" } }, false);
-  assert.throws(() => requireSuccess({}, false), /baseline/);
+  assert.throws(
+    () => requireSuccess({ baseline: { result: "success" } }),
+    /static/,
+  );
 });
 test("nested timing totals stay separate; unknown compiler time is not zero", () => {
   const report = summarize([
@@ -225,7 +227,7 @@ test("host-only final status requires static/host success and explicit skips for
       ].map((id) => [id, { result: "skipped" }]),
     ),
   };
-  requireSuccess(jobs, true, false);
+  requireSuccess(jobs, false);
   jobs.asid.result = "failure";
-  assert.throws(() => requireSuccess(jobs, true, false), /Unexpected/);
+  assert.throws(() => requireSuccess(jobs, false), /Unexpected/);
 });

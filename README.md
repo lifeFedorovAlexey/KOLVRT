@@ -77,9 +77,9 @@ cargo xtask debug
 cargo run --locked -p repository-checks -- cost-l list --json
 ```
 
-The kernel runner requires **97 checks per DEV/PROD profile**, both non-test boots and **82 negative controls**. Controls deliberately break enforcement and must fail with the expected evidence. Missing events, unexpected panics, emulator errors and timeouts fail the runner.
+The kernel runner requires **125 checks per DEV/PROD profile**, both non-test boots and **132 negative controls**. Controls deliberately break enforcement and must fail with the expected evidence. Missing events, unexpected panics, emulator errors and timeouts fail the runner.
 
-The retained [ELF-alignment run](research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) records those counts for its exact source hashes. It does not verify later revisions or physical hardware. Artifacts under `target/kernel/` retain ELF images, hashes, UART events, QEMU settings, size reports, unsafe inventory and measurement samples. See [testing and GDB instructions](docs/kernel/testing.md).
+The retained [ELF-alignment run](research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) records **97 checks per DEV/PROD profile and 82 negative controls** for its exact source hashes. It does not verify later revisions or physical hardware. Artifacts under `target/kernel/` retain ELF images, hashes, UART events, QEMU settings, size reports, unsafe inventory and measurement samples. See [testing and GDB instructions](docs/kernel/testing.md).
 
 ## Documentation and research
 

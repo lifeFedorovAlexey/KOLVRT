@@ -42,6 +42,7 @@ supervisor_image_start:
  cbnz x0,.Lsup_fail
  mov x27,x1
  mov x28,x2
+ str x3,[x19,#1024]
  mov x25,x28
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
@@ -188,10 +189,23 @@ supervisor_image_start:
  mov x0,#3
  bl .Lsup_submit
  cbnz x0,.Lsup_fail
- // Several bounded scheduling rendezvous allow the service to commit load.
- lifecycle 2,1,x27
+ // Receive a request from this exact service only after its load commit.
+ ldr x26,[x19,#1024]
+ sup_header 2,x26
+ sup_ipc
  cbnz x0,.Lsup_fail
- lifecycle 2,1,x27
+ ldr x29,[x19,#520]
+ ldr x0,[x19,#552]
+ mov x1,#0xc017
+ cmp x0,x1
+ b.ne .Lsup_fail
+ sup_header 3,x26
+ str x29,[x19,#16]
+ sup_ipc
+ cbnz x0,.Lsup_fail
+ sup_header 4,x26
+ str x29,[x19,#16]
+ sup_ipc
  cbnz x0,.Lsup_fail
  sup_header 7,x22
  sup_ipc
@@ -285,6 +299,7 @@ supervised_service_start:
  mov x19,#0x20000000
  add x19,x19,#4096
  mov x25,x21
+ mov x27,x22
  // A child cannot acquire lifecycle authority using the supervisor's selector.
  lifecycle 1
  cmp x0,#11
@@ -305,7 +320,7 @@ supervised_service_start:
  cmp x26,#2
  b.eq .Lservice_crash
  cmp x26,#3
- b.eq .Lservice_silent
+ b.eq .Lservice_committed_load
  sup_header 4
  str x22,[x19,#16]
  mov x0,#48
@@ -320,6 +335,29 @@ supervised_service_start:
  cmp x23,#2
  b.eq .Lservice_crash
  b .Lservice_receive
+.Lservice_committed_load:
+ sup_header 1,x27
+ mov x0,#48
+ str w0,[x19,#4]
+ mov x0,#8
+ str w0,[x19,#32]
+ mov x0,#0xc017
+ str x0,[x19,#40]
+ mov x0,#1
+ str x0,[x19,#16]
+ svc #0x53
+ add x0,x0,x1,lsr #3
+ str x0,[x19,#24]
+ sup_ipc 48
+ cbnz x0,.Lservice_fail
+ mov x28,x1
+ sup_header 5,x28
+ sup_ipc
+ cbnz x0,.Lservice_fail
+ sup_header 6,x28
+ sup_ipc
+ cbnz x0,.Lservice_fail
+ b .Lservice_silent
 .Lservice_silent:
  b .Lservice_silent
 .Lservice_crash:
