@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "issue": 93,
+  "base_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
+  "working_tree": "uncommitted; exact source_files identify the tested bytes",
+  "claim": "Experimental offline registry/profile/import admission validator and xtask facade only; no real Arena kernel benchmark, production acceptance, independent attestation, records or certification.",
+  "source_files": [
+    {
+      "path": "crates/repository-checks/src/arena.rs",
+      "sha256_lf": "dad31152b084d3188c2ad7902d3547d19af5208d4b83a5d90c03918c401dc823"
+    },
+    {
+      "path": "crates/repository-checks/tests/arena.rs",
+      "sha256_lf": "70ea4b7a292aeb1945dbbdb2bedd7d4a0ad5bc55abb099caca0c9cb4be8bee28"
+    },
+    {
+      "path": "schemas/arena-standards.schema.json",
+      "sha256_lf": "dbe8d79baae2db350b914f201d388353305d355a99c76e4cdc707a0c03c687fe"
+    },
+    {
+      "path": "schemas/arena-profile.schema.json",
+      "sha256_lf": "a05437b1b9619d601d5826e17bccafee2ab4b6129a0ce6eb4e2795ecca7b6d99"
+    },
+    {
+      "path": "schemas/arena-run.schema.json",
+      "sha256_lf": "7cc1dae715ba4d452319a0a5c20bf8374aafc7277edfb80887beb9249011ad1c"
+    },
+    {
+      "path": "research/arena/standards.json",
+      "sha256_lf": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351"
+    },
+    {
+      "path": "research/arena/profiles/user-copy-range.json",
+      "sha256_lf": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c"
+    },
+    {
+      "path": "crates/repository-checks/src/main.rs",
+      "sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5"
+    },
+    {
+      "path": "crates/repository-checks/src/lib.rs",
+      "sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "5a60863a2be2dd4fa37f754fcde8d05dfb67cad1e11b4e4b39035149fa07e0f6"
+    }
+  ],
+  "checks": [
+    {
+      "command": "cargo test --locked -p repository-checks --test arena",
+      "exit_code": 0,
+      "transcript": "\nrunning 17 tests\ntest published_standard_cannot_be_superseded_by_draft_or_cycles ... ok\ntest malformed_registry_and_fake_standard_classification_are_rejected ... ok\ntest prod_forbids_internal_attribution_even_for_shared_metric ... ok\ntest missing_observation_keeps_reason_and_never_becomes_zero ... ok\ntest same_version_labels_cannot_hide_methodology_change ... ok\ntest warmup_failure_and_whitespace_units_cannot_admit ... ok\ntest metrics_need_sources_units_and_explicit_custom_origin ... ok\ntest checked_registry_and_example_resolve_canonical_targets ... ok\ntest implementation_changes_do_not_freeze_class_but_require_fresh_artifacts ... ok\ntest overhead_is_matched_versioned_and_not_subtracted ... ok\ntest accepted_authorship_requires_links_and_fixture_never_becomes_kernel_evidence ... ok\ntest changed_current_registry_does_not_rewrite_old_snapshots ... ok\ntest evidence_corruption_escape_and_unlinked_assertions_are_rejected ... ok\ntest broken_oracle_or_missing_sar_cannot_admit_fastest_result ... ok\ntest dropped_unfinished_and_bad_sample_plan_remain_ineligible ... ok\ntest cli_enforces_nonzero_rejections_without_publishing_records ... ok\ntest semantic_environment_and_protocol_changes_never_share_class ... ok\n\ntest result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.34s\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.11s\n     Running tests\\arena.rs (target\\debug\\deps\\arena-4e70c4d63449b38b.exe)\n"
+    },
+    {
+      "command": "cargo xtask arena check",
+      "exit_code": 0,
+      "transcript": "{\n  \"scope\": \"Registry/profile validation only; no kernel run or certification\",\n  \"state\": \"PASS\"\n}\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running `target\\debug\\xtask.exe arena check`\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s\n     Running `target\\debug\\repository-checks.exe arena check`\n"
+    }
+  ],
+  "remaining": [
+    "#32 real kernel mechanism PERF/SEC run, DEV attribution and PROD external observations",
+    "#93 accepted independent admission, contribution linkage, record/co-holder history and canonical versioned architecture projection",
+    "#33-36 and #50 real pipelines and physical hardware evidence"
+  ]
+}

@@ -13,6 +13,7 @@ fn run() -> CheckResult<()> {
         }
     }
     match command {
+        "arena" => return repository_checks::arena::cli(&root, &args[1..]),
         "cost-l" => return repository_checks::cost_l_queries::cli(&root, &args[1..]),
         "docs" => return knowledge::cli(&root, &args[1..]),
         "check" | "validate" | "check-docs" | "check-translations" if args.len() <= 1 => {
@@ -20,7 +21,7 @@ fn run() -> CheckResult<()> {
             if matches!(command,"check" | "validate") { cost_l::validate(&root, &root.join("research/cost-l"))?; }
             if matches!(command,"check" | "check-docs") { documents::check_docs(&root)?; }
             if matches!(command,"check" | "check-translations") { documents::check_translations(&root)?; }
-            if command == "check" { report::report(&root, true)?; knowledge::generate(&root, true)?; knowledge::pilot(&root, true)?; }
+            if command == "check" { repository_checks::arena::check(&root)?; report::report(&root, true)?; knowledge::generate(&root, true)?; knowledge::pilot(&root, true)?; }
             println!("{command}: passed. Structural checks do not establish historical truth or kernel behavior.");
         }
         "check-cost-l" if args.len() == 1 || (args.len() == 3 && args[1] == "--directory") => {

@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "registry_version": "2026-10-05.1",
+  "entries": [
+    {
+      "id": "arena.standard.iso25010",
+      "version": "2023",
+      "title": "ISO/IEC 25010:2023",
+      "scope": ["Quality taxonomy"],
+      "source_kind": "INTERNATIONAL_STANDARD",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.iso.org/standard/78176.html",
+      "source_revision": "Edition 2, 2023",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.iso25023",
+      "version": "2016",
+      "title": "ISO/IEC 25023:2016",
+      "scope": ["Quantitative quality measures"],
+      "source_kind": "INTERNATIONAL_STANDARD",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.iso.org/standard/35747.html",
+      "source_revision": "Edition 1, 2016; confirmed 2022",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": "ISO/IEC DIS 25000-23.2 (draft, not a published successor)"
+    },
+    {
+      "id": "arena.standard.iso25040",
+      "version": "2024",
+      "title": "ISO/IEC 25040:2024",
+      "scope": ["Quality evaluation framework"],
+      "source_kind": "INTERNATIONAL_STANDARD",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.iso.org/standard/83467.html",
+      "source_revision": "Edition 2, 2024",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.spec-run-rules",
+      "version": "CPU2017-6644-2021-09-13",
+      "title": "SPEC CPU 2017 Run and Reporting Rules",
+      "scope": [
+        "Comparable conditions, reproducibility, validation, repeated runs and disclosure; no SPEC conformity claim"
+      ],
+      "source_kind": "CONSORTIUM_RULES",
+      "role": "MANDATORY",
+      "authoritative_source": "https://www.spec.org/cpu2017/Docs/runrules.html",
+      "source_revision": "runrules.html Id 6644, 2021-09-13",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.cc2022",
+      "version": "Release-1-errata-1.2",
+      "title": "CC:2022",
+      "scope": ["TOE, SPD, SFR and SAR; no certification claim"],
+      "source_kind": "CONSORTIUM_RULES",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.commoncriteriaportal.org/cc/index.cfm",
+      "source_revision": "CC:2022 Release 1 with CC2022CEM2022Errata_Interpretation v1.2",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.cem2022",
+      "version": "Release-1-errata-1.2",
+      "title": "CEM:2022",
+      "scope": [
+        "Vulnerability analysis and Attack Potential; not a security score"
+      ],
+      "source_kind": "CONSORTIUM_RULES",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.commoncriteriaportal.org/cc/index.cfm",
+      "source_revision": "CEM:2022 Release 1 with CC2022CEM2022Errata_Interpretation v1.2",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.iso15408-1",
+      "version": "2026",
+      "title": "ISO/IEC 15408-1:2026",
+      "scope": [
+        "Security evaluation general model; other family parts require separate entries"
+      ],
+      "source_kind": "INTERNATIONAL_STANDARD",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.iso.org/standard/15408-1",
+      "source_revision": "Edition 5, 2026-05",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.iso18045-2026",
+      "version": "2026",
+      "title": "ISO/IEC 18045:2026",
+      "scope": [
+        "IT security evaluation methodology; not interchangeable with CEM:2022 without review"
+      ],
+      "source_kind": "INTERNATIONAL_STANDARD",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.iso.org/standard/18045",
+      "source_revision": "Edition 4, 2026-05",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.nist800-55-vol1",
+      "version": "2024",
+      "title": "NIST SP 800-55 Vol.1",
+      "scope": ["Selection, validation and data quality of security measures"],
+      "source_kind": "GOVERNMENT_GUIDANCE",
+      "role": "REFERENCE",
+      "authoritative_source": "https://csrc.nist.gov/pubs/sp/800/55/v1/final",
+      "source_revision": "Final December 2024",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.standard.nist800-55-vol2",
+      "version": "2024",
+      "title": "NIST SP 800-55 Vol.2",
+      "scope": ["Security measurement program"],
+      "source_kind": "GOVERNMENT_GUIDANCE",
+      "role": "REFERENCE",
+      "authoritative_source": "https://csrc.nist.gov/pubs/sp/800/55/v2/final",
+      "source_revision": "Final December 2024",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.reference.linux-perf-bench",
+      "version": "v6.12",
+      "title": "Linux perf bench",
+      "scope": [
+        "Scheduler, IPC, syscall, memory and futex workload conventions"
+      ],
+      "source_kind": "DE_FACTO",
+      "role": "REFERENCE",
+      "authoritative_source": "https://github.com/torvalds/linux/blob/v6.12/tools/perf/builtin-bench.c",
+      "source_revision": "Linux v6.12 tag",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.reference.fio",
+      "version": "3.42",
+      "title": "fio",
+      "scope": ["Storage IOPS, bandwidth and latency distributions"],
+      "source_kind": "DE_FACTO",
+      "role": "REFERENCE",
+      "authoritative_source": "https://github.com/axboe/fio/blob/fio-3.42/HOWTO.rst",
+      "source_revision": "fio-3.42 tag",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.reference.ietf-benchmarking",
+      "version": "RFC2544-1999",
+      "title": "RFC 2544",
+      "scope": [
+        "Network interconnect benchmark methodology; isolated test environment"
+      ],
+      "source_kind": "CONSORTIUM_RULES",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.rfc-editor.org/rfc/rfc2544",
+      "source_revision": "RFC 2544, March 1999",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.reference.ietf-rfc6815",
+      "version": "RFC6815-2012",
+      "title": "RFC 6815",
+      "scope": ["Applicability restrictions for RFC 2544"],
+      "source_kind": "CONSORTIUM_RULES",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.rfc-editor.org/rfc/rfc6815",
+      "source_revision": "RFC 6815, November 2012",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.reference.ietf-rfc9004",
+      "version": "RFC9004-2021",
+      "title": "RFC 9004",
+      "scope": ["Update to RFC 2544 back-to-back benchmarking"],
+      "source_kind": "CONSORTIUM_RULES",
+      "role": "REFERENCE",
+      "authoritative_source": "https://www.rfc-editor.org/rfc/rfc9004",
+      "source_revision": "RFC 9004, May 2021",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    },
+    {
+      "id": "arena.methodology.kolvrt-profile",
+      "version": "1",
+      "title": "KOLVRT Arena Measurement Contract",
+      "scope": [
+        "Nearest-rank descriptive samples, scoped admission and explicit missing states"
+      ],
+      "source_kind": "KOLVRT_DEFINED",
+      "role": "MANDATORY",
+      "authoritative_source": "docs/architecture/arena-measurement-contract.md",
+      "source_revision": "Experimental schema and analysis version 1",
+      "last_checked": "2026-10-05",
+      "publication_state": "PUBLISHED",
+      "superseded_by": null,
+      "expected_replacement": null
+    }
+  ]
+}
