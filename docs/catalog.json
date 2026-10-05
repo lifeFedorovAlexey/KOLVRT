@@ -830,6 +830,16 @@
       "title": "Native model"
     },
     {
+      "document": "doc.kolvrt.research.cost-l-queries",
+      "document_status": "CURRENT",
+      "estimated_bytes": 8969,
+      "id": "doc.kolvrt.research.cost-l-queries",
+      "kind": "subsystem-contract",
+      "path": "docs/research/cost-l-queries.md",
+      "summary": "Bounded offline projections of COST-L declarations, independent dimensions and explicit production/runtime gaps.",
+      "title": "Offline COST-L queries"
+    },
+    {
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
       "estimated_bytes": 17149,
@@ -1020,6 +1030,19 @@
       "path": "docs/architecture/architecture-audit-2026-10-04.md",
       "summary": "Historical architecture audit: scope",
       "title": "Scope and result"
+    },
+    {
+      "anchor": "kolvrt-cost-l-offline-queries",
+      "depends_on": ["law.009", "law.036", "law.040", "adr.0007", "adr.0008"],
+      "document": "doc.kolvrt.research.cost-l-queries",
+      "document_status": "CURRENT",
+      "estimated_bytes": 2487,
+      "id": "kolvrt.cost-l.offline-queries",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/research/cost-l-queries.md",
+      "summary": "Read-only host COST-L show/consumers/deps/list/top with UNKNOWN, exact-scope sorting and pagination.",
+      "title": "Query contract"
     },
     {
       "anchor": "kolvrt-docs-navigation",

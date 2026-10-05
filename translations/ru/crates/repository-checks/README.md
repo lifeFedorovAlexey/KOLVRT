@@ -8,6 +8,7 @@
 cargo test --locked
 cargo run --locked -p repository-checks -- check
 cargo run --locked -p repository-checks -- validate
+cargo run --locked -p repository-checks -- cost-l list --json
 cargo run --locked -p repository-checks -- check-cost-l
 cargo run --locked -p repository-checks -- check-docs
 cargo run --locked -p repository-checks -- report --check
@@ -33,3 +34,5 @@ cargo run --locked -p repository-checks -- record-translation ru docs/research/c
 ## Команды знаний документации
 
 Подкоманда docs и фасад cargo xtask docs используют существующую библиотеку. См. [контракт знаний](../../docs/knowledge-system.md) и [контракт загрузки](../../docs/ai-retrieval.md). docs generate генерирует каталог/граф/README rows; --check проверяет их. docs pilot записывает настоящий детерминированный запрос Phase 3; docs pilot --check отклоняет устаревшие size/source/selection receipts. Основной check включает оба этапа. Необязательная docs check-issues обращается к GitHub и возвращает UNKNOWN при недоступности, не доказывая behavioral acceptance. CI docs check-change BASE обеспечивает сохранение включённых IDs/history и declared implementation impact.
+
+[Контракт offline queries](../../docs/research/cost-l-queries.md) описывает show/consumers/deps/list/top, bounded pages, UNKNOWN и отдельный remaining gate production manifests #47/#48.

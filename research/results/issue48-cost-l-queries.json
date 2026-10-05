@@ -1,0 +1,430 @@
+{
+  "schema_version": 1,
+  "source_files": [
+    {
+      "sha256_lf": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967",
+      "path": "crates/repository-checks/src/cost_l_queries.rs"
+    },
+    {
+      "sha256_lf": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
+      "path": "crates/repository-checks/src/cost_l.rs"
+    },
+    {
+      "sha256_lf": "200077845468ae7033d5f9b3ec28fefe48fc7ff432b6ef2ff5b4028d245d3d56",
+      "path": "crates/repository-checks/src/main.rs"
+    },
+    {
+      "sha256_lf": "b29b711566dd7bef0b5b9fc97bd7aa3251447aab82f12b7c59897783abe5a45e",
+      "path": "crates/repository-checks/src/lib.rs"
+    },
+    {
+      "sha256_lf": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
+      "path": "crates/repository-checks/tests/cost_l_queries.rs"
+    },
+    {
+      "sha256_lf": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
+      "path": "crates/repository-checks/Cargo.toml"
+    },
+    {
+      "sha256_lf": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712",
+      "path": "Cargo.lock"
+    },
+    {
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+      "path": "rust-toolchain.toml"
+    },
+    {
+      "sha256_lf": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
+      "path": "schemas/cost-l.schema.json"
+    },
+    {
+      "sha256_lf": "34a6bb442291351647c8826054fb582f89ec121c5abff19bf2bcc350b9d24254",
+      "path": "schemas/cost-l-registry.schema.json"
+    },
+    {
+      "sha256_lf": "6868df93c719a0d9efb11e628b608498e5649d1744acf24392b1b0bccbc10474",
+      "path": "research/cost-l/registry.json"
+    },
+    {
+      "sha256_lf": "9c2fb7bbbf28145be8b88433d22656f4123c12c16ab36f11010f5c71c2581291",
+      "path": "research/cost-l/COST-L-0001.json"
+    },
+    {
+      "sha256_lf": "4854fd2013ea76118e8b7e027fe61ef304f2b39f181c1982d3c1c76aba05af01",
+      "path": "research/cost-l/COST-L-0002.json"
+    },
+    {
+      "sha256_lf": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794",
+      "path": "research/cost-l/COST-L-0003.json"
+    }
+  ],
+  "worktree_dirty": true,
+  "scope": "Windows host executable queries over existing validated declarations. Synthetic relations/cost fixtures are not production support. #47 production manifests and full #48 acceptance remain open.",
+  "current_registry_query": {
+    "output": {
+      "command": "list",
+      "inventory": {
+        "authority": "NONE",
+        "coverage": "DECLARATIONS_ONLY; global consumer coverage UNKNOWN",
+        "production_manifest_integration": "UNAVAILABLE_PENDING_ISSUE_47",
+        "records": 3,
+        "runtime_inspection": "UNSUPPORTED",
+        "scope": "validated records in the explicitly selected registry directory"
+      },
+      "pagination": {
+        "limit": 20,
+        "matching_rows": 3,
+        "next_offset": null,
+        "offset": 0
+      },
+      "ranking": {
+        "denominator": null,
+        "dimension": "id",
+        "filters": [],
+        "meaning": "Descending declared reach or measured dimension value in the exact selected scope. Throughput is a rate, not a cost. No combined score, security/difficulty ranking, performance superiority or NATIVE inference.",
+        "measurement_scope": null
+      },
+      "rows": [
+        {
+          "affected_consumers": [],
+          "authority_implications": "NO_AUTHORITY_EXPANSION",
+          "category": "MEMORY",
+          "compat_modules": [],
+          "complexity_impact": "Requires context and reclaim-scope analysis rather than mapping a function name alone.",
+          "declared_reach": 0,
+          "global_reach": "UNKNOWN",
+          "hardware_classification": "HISTORICAL_CONSTRAINT",
+          "id": "COST-L-0001",
+          "native": {
+            "behavior": "Current IRQ paths neither allocate nor take heap/table locks. A future EL0 allocation contract must explicitly define reclaim and failure; no general allocation service is implemented.",
+            "references": [
+              "docs/kernel/interrupts.md",
+              "docs/architecture/kernel-laws.md"
+            ],
+            "status": "PROPOSED",
+            "why_differs": "A Linux-facing adapter cannot silently introduce reclaim work into native IRQ execution. Which EL0 semantics actually need translation remains unverified."
+          },
+          "runtime_cost": {
+            "allocations": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "context_switches": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "copies": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "cpu": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "ns",
+              "value": null
+            },
+            "latency": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "ns",
+              "value": null
+            },
+            "memory": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "bytes",
+              "value": null
+            },
+            "throughput": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "operations/s",
+              "value": null
+            }
+          },
+          "security_impact": "Reclaim/reserve mediation must retain caller quotas and avoid recursive wait dependencies; flags never issue grants.",
+          "software_state": "UNDETERMINED_NO_MODULE_DECLARATION",
+          "status": "CANDIDATE",
+          "subsystem": "allocation/reclaim",
+          "support": {
+            "migration_strategy": "Identify named consumers and the accepted native contract before proposing compatibility; native rewrite or deferral remain options.",
+            "migration_target": "Use an explicit bounded native allocation/reclaim contract once admitted; defer unsupported contexts.",
+            "owner": null,
+            "owner_unknown_reason": "No supported implementation/consumer owner has been assigned.",
+            "removal_condition": "No implementation currently exists. Any future implementation needs finite support, named consumers including offline/archival paths and proven quiescence; retain this historical record even if the candidate is rejected.",
+            "start": null,
+            "status": "RESEARCH_ONLY",
+            "until": null
+          },
+          "title": "Allocation-context and reclaim side effects"
+        },
+        {
+          "affected_consumers": [],
+          "authority_implications": "NO_AUTHORITY_EXPANSION",
+          "category": "ABI",
+          "compat_modules": [],
+          "complexity_impact": "Requires per-attribute version/lifecycle evidence, not a universal filesystem facade or synthetic support count.",
+          "declared_reach": 0,
+          "global_reach": "UNKNOWN",
+          "hardware_classification": "COMPATIBILITY_REQUIREMENT",
+          "id": "COST-L-0002",
+          "native": {
+            "behavior": "Native boundaries use explicit typed/versioned contracts. A native device-status service and a sysfs personality have not been admitted or implemented.",
+            "references": [
+              "docs/architecture/native-model.md",
+              "docs/architecture/native-abi.md"
+            ],
+            "status": "PROPOSED",
+            "why_differs": "If actual consumers need the Linux text ABI, conversion belongs in an EL0 compatibility service rather than defining native device semantics."
+          },
+          "runtime_cost": {
+            "allocations": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "context_switches": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "copies": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "cpu": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "ns",
+              "value": null
+            },
+            "latency": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "ns",
+              "value": null
+            },
+            "memory": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "bytes",
+              "value": null
+            },
+            "throughput": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "operations/s",
+              "value": null
+            }
+          },
+          "security_impact": "Text access must mediate only caller-authorized device effects; readable attributes are not ambient authority.",
+          "software_state": "UNDETERMINED_NO_MODULE_DECLARATION",
+          "status": "CANDIDATE",
+          "subsystem": "sysfs/device attributes",
+          "support": {
+            "migration_strategy": "Identify named consumers and the accepted native contract before proposing compatibility; native rewrite or deferral remain options.",
+            "migration_target": "Replace text/path-dependent consumption with the admitted native typed status contract; no replacement is implemented yet.",
+            "owner": null,
+            "owner_unknown_reason": "No supported implementation/consumer owner has been assigned.",
+            "removal_condition": "No implementation currently exists. Any future implementation needs finite support, named consumers including offline/archival paths and proven quiescence; retain this historical record even if the candidate is rejected.",
+            "start": null,
+            "status": "RESEARCH_ONLY",
+            "until": null
+          },
+          "title": "sysfs text attributes as a stable machine-consumed ABI"
+        },
+        {
+          "affected_consumers": [],
+          "authority_implications": "NO_AUTHORITY_EXPANSION",
+          "category": "IOCTL",
+          "compat_modules": [],
+          "complexity_impact": "Each actual ABI pair needs layout tests; command count is neither capability count nor driver coverage.",
+          "declared_reach": 0,
+          "global_reach": "UNKNOWN",
+          "hardware_classification": "COMPATIBILITY_REQUIREMENT",
+          "id": "COST-L-0003",
+          "native": {
+            "behavior": "Native messages declare widths, bounds, versions and initialization; new capability types require demonstrated authority differences. No generic native ioctl escape hatch is admitted.",
+            "references": [
+              "docs/architecture/native-model.md",
+              "docs/architecture/kernel-laws.md"
+            ],
+            "status": "PROPOSED",
+            "why_differs": "A compatibility decoder must identify the exact command/layout and call a narrow native operation without passing arbitrary opcodes or issuing extra authority."
+          },
+          "runtime_cost": {
+            "allocations": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "context_switches": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "copies": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "count",
+              "value": null
+            },
+            "cpu": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "ns",
+              "value": null
+            },
+            "latency": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "ns",
+              "value": null
+            },
+            "memory": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "bytes",
+              "value": null
+            },
+            "throughput": {
+              "coverage": "UNKNOWN",
+              "denominator": null,
+              "provenance": null,
+              "reason": "No comparable implemented workload or runtime observation exists.",
+              "scope": "Research-only candidate; no implemented adapter or executed Linux driver.",
+              "state": "UNKNOWN",
+              "unit": "operations/s",
+              "value": null
+            }
+          },
+          "security_impact": "Validate the same owned snapshot used for execution; distinguish scalars from pointers and preserve native caller/effect scope.",
+          "software_state": "UNDETERMINED_NO_MODULE_DECLARATION",
+          "status": "CANDIDATE",
+          "subsystem": "device userspace ABI",
+          "support": {
+            "migration_strategy": "Identify named consumers and the accepted native contract before proposing compatibility; native rewrite or deferral remain options.",
+            "migration_target": "Migrate named consumers to explicit versioned native operations; support only reviewed command/layout pairs while obligations remain.",
+            "owner": null,
+            "owner_unknown_reason": "No supported implementation/consumer owner has been assigned.",
+            "removal_condition": "No implementation currently exists. Any future implementation needs finite support, named consumers including offline/archival paths and proven quiescence; retain this historical record even if the candidate is rejected.",
+            "start": null,
+            "status": "RESEARCH_ONLY",
+            "until": null
+          },
+          "title": "ioctl structure layouts that vary across caller ABIs"
+        }
+      ],
+      "schema_version": 1,
+      "selector": null
+    },
+    "exit_code": 0,
+    "command": "repository-checks cost-l list --json"
+  },
+  "issue": 48,
+  "base_commit": "4045c7dcb7ffe87614efd48024de6bc0f717ccc8",
+  "checks": {
+    "exit_code": 0,
+    "command": "cargo test --locked --offline -p repository-checks --test cost_l_queries",
+    "transcript": "   Compiling repository-checks v0.1.0 (C:\\Users\\life\\.codex\\worktrees\\elf-entry-alignment\\KOLVRT\\crates\\repository-checks)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.36s\n     Running tests\\cost_l_queries.rs (target\\host-checks\\debug\\deps\\cost_l_queries-a1c6c6b5c1e5af0c.exe)\n\nrunning 5 tests\ntest measured_zero_is_ranked_without_converting_unknown_or_foreign_scope ... ok\ntest output_budget_rejects_the_whole_page_and_a_smaller_page_succeeds ... ok\ntest real_registry_reports_declared_zero_separately_from_global_unknown ... ok\ntest both_directions_preserve_transitive_offline_and_shared_module_relations ... ok\ntest malformed_queries_and_inconsistent_graph_fail_without_stdout ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.41s\n\n"
+  },
+  "acceptance": {
+    "remaining": "Production manifests, actual package closure paths and runtime inspection are not delivered. No issue closure or native/hardware guarantee follows.",
+    "dimensions": "Independent filters; scoped metric values remain distinct from UNKNOWN; measured zero, foreign scope and partial coverage exercised.",
+    "both_directions": "Real binary; DIRECT and declared TRANSITIVE, shared module/version/scope and OFFLINE_RECOVERY fixture.",
+    "failures": "Malformed/reserved/unknown identity, unsupported/duplicate flags, bad pages and whole-registry dangling/conflicting module/version relations fail nonzero with empty stdout.",
+    "bounds": "Deterministic pagination and real >1 MiB output rejection; smaller page succeeds."
+  }
+}
