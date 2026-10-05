@@ -119,6 +119,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | [kolvrt.security.capability-revocation](docs/kernel/capabilities.md#kolvrt-security-capability-revocation) | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                     | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                   |
 | [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                   |
+| [kolvrt.security.verifier-time](docs/security/verifier-time.md#kolvrt-verifier-time)                       | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                       |
 
 <!-- feature-summary:end -->
 

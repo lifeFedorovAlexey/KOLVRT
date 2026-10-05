@@ -41,6 +41,7 @@
     "docs/research/host-survey.md",
     "docs/research/phase-0-1-report.md",
     "docs/security/threat-model.md",
+    "docs/security/verifier-time.md",
     "research/linux/memory-allocation.md"
   ]
 }
