@@ -711,7 +711,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 17543,
+      "estimated_bytes": 17604,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -739,6 +739,16 @@
       "title": "Migration benchmark methodology"
     },
     {
+      "document": "doc.kolvrt.architecture.compatibility-manifests",
+      "document_status": "CURRENT",
+      "estimated_bytes": 12321,
+      "id": "doc.kolvrt.architecture.compatibility-manifests",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/compatibility-manifests.md",
+      "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority.",
+      "title": "Compatibility module declarations"
+    },
+    {
       "depends_on": [
         "adr.0006",
         "adr.0003",
@@ -761,7 +771,7 @@
     {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 11762,
+      "estimated_bytes": 11843,
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
       "path": "docs/architecture/dependency-hygiene.md",
@@ -862,7 +872,7 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 9110,
+      "estimated_bytes": 9169,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",
@@ -1083,6 +1093,37 @@
       "title": "Scope and result"
     },
     {
+      "anchor": "kolvrt-compatibility-manifests",
+      "depends_on": [
+        "law.008",
+        "law.009",
+        "law.013",
+        "law.018",
+        "law.035",
+        "law.040",
+        "adr.0007",
+        "adr.0013",
+        "adr.0015"
+      ],
+      "document": "doc.kolvrt.architecture.compatibility-manifests",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1261,
+      "id": "kolvrt.compatibility.manifests",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/architecture/compatibility-manifests.md",
+      "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority.",
+      "tags": [
+        "compatibility",
+        "debt",
+        "module",
+        "manifest",
+        "cargo",
+        "retirement"
+      ],
+      "title": "Architecture and authority"
+    },
+    {
       "anchor": "kolvrt-cost-l-offline-queries",
       "depends_on": ["law.009", "law.036", "law.040", "adr.0007", "adr.0008"],
       "document": "doc.kolvrt.research.cost-l-queries",
@@ -1099,7 +1140,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 11527,
+      "estimated_bytes": 11608,
       "id": "kolvrt.dependencies.hygiene",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",

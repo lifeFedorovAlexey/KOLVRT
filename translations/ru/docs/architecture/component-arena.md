@@ -168,8 +168,8 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
         "verification": [
           {
             "environment": "host-process",
-            "state": "VERIFIED",
-            "reason": "Executed 17 Arena and 3 launcher tests plus the actual launch script on these exact source bytes; offline host scope only.",
+            "state": "STALE",
+            "reason": "Historical receipt retained; shared repository-checks dispatcher/library/COST-L source bytes changed for #47. Revalidated exact-source evidence for this separate feature remains pending.",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be"

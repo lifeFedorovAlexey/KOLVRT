@@ -1,0 +1,125 @@
+{
+  "remaining": [
+    "reviewed actual production debt/module/consumer data",
+    "source/feature and semantic owner review",
+    "full query manifest integration under #48",
+    "runtime admission and retirement, archival and authority enforcement"
+  ],
+  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c",
+  "schema_version": 1,
+  "claim": "Exact-source host mechanism evidence, no full #47/#46/#48 closure or production readiness.",
+  "issue": 47,
+  "worktree_dirty": true,
+  "correctness": {
+    "native_roots": ["kolvrt-kernel", "kernel-core"],
+    "current_production_modules": 0,
+    "failures": 0,
+    "tests": 13,
+    "real_cargo_disabled_renamed_target_fixture": "passed",
+    "current_synthetic_modules": 3,
+    "current_cli": "passed"
+  },
+  "source_files": [
+    {
+      "sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+      "path": "Cargo.lock"
+    },
+    {
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
+      "path": "Cargo.toml"
+    },
+    {
+      "sha256_lf": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6",
+      "path": "crates/host-process-metrics/Cargo.toml"
+    },
+    {
+      "sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
+      "path": "crates/kernel-core/Cargo.toml"
+    },
+    {
+      "sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29",
+      "path": "crates/kernel/Cargo.toml"
+    },
+    {
+      "sha256_lf": "2f45888422385b193610a02f8be01021afaeafd652853af5b374d96339a02754",
+      "path": "crates/migration-advisor/Cargo.toml"
+    },
+    {
+      "sha256_lf": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
+      "path": "crates/migration-workbench/Cargo.toml"
+    },
+    {
+      "sha256_lf": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e",
+      "path": "crates/native-protocol-model/Cargo.toml"
+    },
+    {
+      "sha256_lf": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007",
+      "path": "crates/native-state-models/Cargo.toml"
+    },
+    {
+      "sha256_lf": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
+      "path": "crates/repository-checks/Cargo.toml"
+    },
+    {
+      "sha256_lf": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2",
+      "path": "crates/repository-checks/src/compat_modules.rs"
+    },
+    {
+      "sha256_lf": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83",
+      "path": "crates/repository-checks/src/cost_l.rs"
+    },
+    {
+      "sha256_lf": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad",
+      "path": "crates/repository-checks/src/lib.rs"
+    },
+    {
+      "sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d",
+      "path": "crates/repository-checks/src/main.rs"
+    },
+    {
+      "sha256_lf": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6",
+      "path": "crates/repository-checks/tests/compat_modules.rs"
+    },
+    {
+      "sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e",
+      "path": "crates/routing-demo/Cargo.toml"
+    },
+    {
+      "sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
+      "path": "crates/routing/Cargo.toml"
+    },
+    {
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55",
+      "path": "crates/window-compat/Cargo.toml"
+    },
+    {
+      "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
+      "path": "crates/window-compat/src/lib.rs"
+    },
+    {
+      "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
+      "path": "crates/window-compat/tests/protocols.rs"
+    },
+    {
+      "sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
+      "path": "crates/xtask/Cargo.toml"
+    },
+    {
+      "sha256_lf": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631",
+      "path": "policy/compatibility-modules.json"
+    },
+    {
+      "sha256_lf": "6405d8b34e84bf4317be1ba349cce4fae2078f82776733bb75af94933f24241c",
+      "path": "policy/exceptions.json"
+    },
+    {
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+      "path": "rust-toolchain.toml"
+    },
+    {
+      "sha256_lf": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e",
+      "path": "schemas/compatibility-modules.schema.json"
+    }
+  ],
+  "scope": "Bounded host declaration checker and synthetic module/graph fixtures only; no production module, loader, Linux driver, live consumer observation or retirement execution."
+}

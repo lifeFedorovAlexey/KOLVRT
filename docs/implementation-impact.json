@@ -1,158 +1,84 @@
 {
   "schema_version": 1,
-  "base_commit": "6696afd70f8dafbef173d0aea47b43500c36dede",
+  "features": [
+    {
+      "id": "kolvrt.compatibility.manifests",
+      "reason": "New EN/RU contract explicitly separates synthetic declarations, production debt/artifact reciprocity, native Cargo closure and remaining review/runtime gates.",
+      "disposition": "semantic-change"
+    },
+    {
+      "id": "kolvrt.arena",
+      "reason": "Shared checker source digest changes; historical Arena evidence retained and current host verification marked STALE.",
+      "disposition": "evidence-change"
+    },
+    {
+      "id": "kolvrt.cost-l.offline-queries",
+      "reason": "Shared COST-L helper/dispatcher/library source digests change; historical query evidence retained and current host verification marked STALE.",
+      "disposition": "evidence-change"
+    },
+    {
+      "reason": "window-compat Cargo metadata gains the compatibility marker; existing dependency graph/retention semantics remain unchanged. Historical receipt retained and host verification remains STALE with the additional source change recorded.",
+      "id": "kolvrt.dependencies.hygiene",
+      "disposition": "evidence-change"
+    }
+  ],
   "files": [
     {
-      "path": ".github/dependabot.yml",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b",
+      "path": "crates/repository-checks/src/compat_modules.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": ".github/workflows/dependencies.yml",
       "before_sha256_lf": null,
-      "after_sha256_lf": "2476207ec9c963652121e75d517f944c6b1181cd03a305e4820eb316d96eeab2",
+      "after_sha256_lf": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2"
+    },
+    {
+      "path": "crates/repository-checks/tests/compat_modules.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": ".github/workflows/kernel.yml",
-      "before_sha256_lf": "27b1d60162c3bd5cf2a8533404ba5ffde9ad0b3eb69a80cdd2174a3925ef3beb",
-      "after_sha256_lf": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
-      "disposition": "existing-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": ".nvmrc",
       "before_sha256_lf": null,
-      "after_sha256_lf": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
+      "after_sha256_lf": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6"
+    },
+    {
+      "path": "crates/repository-checks/src/cost_l.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
+      "before_sha256_lf": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
+      "after_sha256_lf": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83"
     },
     {
-      "path": "crates/kernel-core/Cargo.toml",
-      "before_sha256_lf": "a75f06d9abf31569f4c900fd9a00934ea2c0ced59c26f1d597155f38e5bf1855",
-      "after_sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
-      "disposition": "existing-feature",
-      "reason": "Mark existing unlicensed workspace package unpublished for external-only license checking without assigning a new license; no kernel source/runtime semantics changed."
+      "path": "crates/repository-checks/src/lib.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
+      "disposition": "new-feature",
+      "before_sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
+      "after_sha256_lf": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad"
     },
     {
-      "path": "crates/kernel/Cargo.toml",
-      "before_sha256_lf": "0d2fcaaf0df342d76e89dd79aa72adde59733f3d03f2642ffa21d1f2a9d1656a",
-      "after_sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29",
-      "disposition": "existing-feature",
-      "reason": "Mark existing unlicensed workspace package unpublished for external-only license checking without assigning a new license; no kernel source/runtime semantics changed."
+      "path": "crates/repository-checks/src/main.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
+      "disposition": "new-feature",
+      "before_sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
+      "after_sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d"
     },
     {
-      "path": "crates/kernel/src/test_support/irq_wait.rs",
-      "before_sha256_lf": "fad0e7a7e220c1fc511acb672a0bc5db9fc8d9fc2964e744e9d6aac05e14bc9b",
-      "after_sha256_lf": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
-      "disposition": "no-feature-impact",
-      "reason": "Timer-test fixture masks IRQs before the final delivery snapshot, closing poll-return-to-mask loss. Five deterministic host cases and full DEV/PROD QEMU matrix with negative controls passed; the 500ms budget and production IRQ/timer semantics remain unchanged."
+      "path": "schemas/compatibility-modules.schema.json",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
+      "disposition": "new-feature",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e"
     },
     {
-      "path": "crates/kernel/src/tests.rs",
-      "before_sha256_lf": "3fa2f4e5785bb3e1703b709811cc7012c34fdd83a73733f47f0535041affb91b",
-      "after_sha256_lf": "41ee84dc04fa2c68fa7349693847dc3a222bbca8c9b5c4ebd12c774d29a8d82d",
-      "disposition": "no-feature-impact",
-      "reason": "Timer-test fixture masks IRQs before the final delivery snapshot, closing poll-return-to-mask loss. Five deterministic host cases and full DEV/PROD QEMU matrix with negative controls passed; the 500ms budget and production IRQ/timer semantics remain unchanged."
-    },
-    {
-      "path": "crates/migration-workbench/Cargo.toml",
-      "before_sha256_lf": "e489b540d096ece69ebf3b03130118607e8c8114bd5cb5acba124c00e1288f23",
-      "after_sha256_lf": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
-      "disposition": "existing-feature",
-      "reason": "Disable unused quanta mock/flaky_tests while preserving calibrated production clock; workbench regression tests passed."
-    },
-    {
-      "path": "crates/routing-demo/Cargo.toml",
-      "before_sha256_lf": "593c770bfbec0501375e7ce0179c8fd2812c74f5289ff1c24cdec9ffe0935b67",
-      "after_sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e",
-      "disposition": "existing-feature",
-      "reason": "Mark existing unlicensed workspace package unpublished for external-only license checking without assigning a new license; no kernel source/runtime semantics changed."
-    },
-    {
-      "path": "crates/routing/Cargo.toml",
-      "before_sha256_lf": "9548e345350d519945be7a4c840f0ecf855056c484b0bf277d91501f60a62af8",
-      "after_sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
-      "disposition": "existing-feature",
-      "reason": "Mark existing unlicensed workspace package unpublished for external-only license checking without assigning a new license; no kernel source/runtime semantics changed."
+      "path": "policy/compatibility-modules.json",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
+      "disposition": "new-feature",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631"
     },
     {
       "path": "crates/window-compat/Cargo.toml",
-      "before_sha256_lf": "e2fdd65e579e9c390012950eba013c4f06cbe17077ed613d35ef9bfd98bc6465",
-      "after_sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
-      "disposition": "existing-feature",
-      "reason": "Mark existing unlicensed workspace package unpublished for external-only license checking without assigning a new license; no kernel source/runtime semantics changed."
-    },
-    {
-      "path": "crates/xtask/Cargo.toml",
-      "before_sha256_lf": "694f5ce95a7b52ffcb19172f724b7dbec7b58880d32322d838f146dff26afbe2",
-      "after_sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
-      "disposition": "existing-feature",
-      "reason": "Mark existing unlicensed workspace package unpublished for external-only license checking without assigning a new license; no kernel source/runtime semantics changed."
-    },
-    {
-      "path": "deny.toml",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": "dependencies/policy.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29",
-      "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": "package.json",
-      "before_sha256_lf": "0976fae10a6766c302bfba03e70555c9bb1893ee40822b1777a5204a23d2fc82",
-      "after_sha256_lf": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768",
-      "disposition": "existing-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": "scripts/audit-heavy-dependencies.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "84194ea6cd1b0b4ecbe3a33186cd5aefcf5d35666a5fc3bcad67db39d7d55eac",
-      "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": "scripts/dependency-audit.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee",
-      "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": "scripts/dependency-base.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "46e2343c13a4d6e1f9bcc3a6b54a2d8e1fdeb6508cdd00550de96b3377071f8f",
-      "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "path": "scripts/tests/dependency-audit.test.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
-      "disposition": "new-feature",
-      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
+      "before_sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
+      "after_sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
     }
   ],
-  "features": [
-    {
-      "id": "kolvrt.dependencies.hygiene",
-      "disposition": "semantic-change",
-      "reason": "New canonical dependency hygiene feature owns declared audit inputs, real source-bound checks and observed host graph without crate-count quotas."
-    },
-    {
-      "id": "kolvrt.research.host-survey",
-      "disposition": "evidence-change",
-      "reason": "package.json gains dependency audit integration; unchanged host-survey semantics, historical receipt retained and current verification explicitly STALE."
-    }
-  ]
+  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c"
 }

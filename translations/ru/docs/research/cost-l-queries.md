@@ -59,8 +59,8 @@ Metric sorting принимает cpu, latency, memory, copies, allocations, con
             "receipt_sha256": "bdc6a41c6c16ff647bbb83acabb48b74b530dbffc0259ccdc94c09bbde77010b",
             "receipt": "research/results/issue48-cost-l-arena-rebased.json",
             "scope": "Bounded host query semantics only; no production consumers or runtime costs.",
-            "reason": "Executed five existing COST-L CLI tests after main rebase and Arena dispatcher integration; exact-source host evidence only.",
-            "state": "VERIFIED",
+            "reason": "Historical receipt retained; shared repository-checks dispatcher/library/COST-L source bytes changed for #47. Revalidated exact-source evidence for this separate feature remains pending.",
+            "state": "STALE",
             "environment": "host-process"
           },
           {

@@ -176,6 +176,181 @@
       "type": "implemented_by"
     },
     {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "Cargo.lock",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "adr.0007",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "adr.0013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "adr.0015",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/host-process-metrics/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/kernel-core/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/kernel/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/migration-advisor/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/migration-workbench/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/native-protocol-model/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/native-state-models/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/repository-checks/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/repository-checks/src/compat_modules.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/repository-checks/src/cost_l.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/repository-checks/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/repository-checks/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/repository-checks/tests/compat_modules.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/routing-demo/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/routing/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/window-compat/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/window-compat/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/window-compat/tests/protocols.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "crates/xtask/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "law.008",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "law.009",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "law.013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "law.018",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "law.035",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "law.040",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "policy/compatibility-modules.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "policy/exceptions.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "research/results/issue47-compatibility-manifests.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "rust-toolchain.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.compatibility.manifests",
+      "to": "schemas/compatibility-modules.schema.json",
+      "type": "implemented_by"
+    },
+    {
       "from": "kolvrt.cost-l.offline-queries",
       "to": "Cargo.lock",
       "type": "implemented_by"
@@ -1112,6 +1287,8 @@
     ".github/workflows/kernel.yml": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
     ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
     "Cargo.lock": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+    "Cargo.toml": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
+    "crates/host-process-metrics/Cargo.toml": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6",
     "crates/kernel-core/Cargo.toml": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
     "crates/kernel-core/src/domain.rs": "17c2ca3dfc9f25510a1780ae6745737801d90fa575e7471977e31d945c5e37c5",
     "crates/kernel-core/src/domain/pool.rs": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05",
@@ -1131,22 +1308,28 @@
     "crates/migration-advisor/tests/migration.rs": "1035455910a6bdc85cb4d64350715f0c770641e75f0f4dc38e12405111848245",
     "crates/migration-advisor/tests/provisioned_provenance.rs": "c16e74bc027150961cf714c064d854545c611cfb9d4e102e9c26ce9af32525c9",
     "crates/migration-workbench/Cargo.toml": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
+    "crates/native-protocol-model/Cargo.toml": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e",
+    "crates/native-state-models/Cargo.toml": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007",
     "crates/repository-checks/Cargo.toml": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
     "crates/repository-checks/src/arena.rs": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
-    "crates/repository-checks/src/cost_l.rs": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
+    "crates/repository-checks/src/compat_modules.rs": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2",
+    "crates/repository-checks/src/cost_l.rs": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83",
     "crates/repository-checks/src/cost_l_queries.rs": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967",
     "crates/repository-checks/src/knowledge.rs": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
     "crates/repository-checks/src/knowledge/impact.rs": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
-    "crates/repository-checks/src/lib.rs": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
-    "crates/repository-checks/src/main.rs": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
+    "crates/repository-checks/src/lib.rs": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad",
+    "crates/repository-checks/src/main.rs": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d",
     "crates/repository-checks/tests/arena.rs": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
     "crates/repository-checks/tests/arena_launcher.rs": "e9c55f7bd1944557dea30761e98d3b78bec0da0370484f13643d263942c13c48",
+    "crates/repository-checks/tests/compat_modules.rs": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6",
     "crates/repository-checks/tests/cost_l_queries.rs": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
     "crates/repository-checks/tests/host_survey_schema.rs": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a",
     "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
     "crates/routing-demo/Cargo.toml": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e",
     "crates/routing/Cargo.toml": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
-    "crates/window-compat/Cargo.toml": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
+    "crates/window-compat/Cargo.toml": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55",
+    "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
+    "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
     "crates/xtask/src/main.rs": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e",
     "deny.toml": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
@@ -1178,8 +1361,9 @@
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
     "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
-    "docs/architecture/component-arena.md": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
-    "docs/architecture/dependency-hygiene.md": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
+    "docs/architecture/compatibility-manifests.md": "f9414e84663b3a966943e1158f4706c6c6ee0b14287c99c4bc3c94079fbffb93",
+    "docs/architecture/component-arena.md": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+    "docs/architecture/dependency-hygiene.md": "8a3c76008209642f50515facad62287f20efab10a54d8380e741d370498b8508",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/kernel/capabilities.md": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
@@ -1187,14 +1371,16 @@
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "3ecbb075cff3f4f40cd71899e9c089f1b37aa9353113a8ae4127bccc2229b7c5",
-    "docs/knowledge-system.md": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
-    "docs/research/cost-l-queries.md": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
+    "docs/knowledge-enrollment.json": "7d8a0f7075ff07ac4a32651ccb5c616b405f263d2d35c8b936cf6d939a69e965",
+    "docs/knowledge-system.md": "ee103bf18d5d2666bb2832115fbd2bbc35b69de5a0451ffeb0028616d47f9769",
+    "docs/research/cost-l-queries.md": "1cf9c3da1dfa5e78071820dc7b67163f7d1b934af62f236769fcd67b0213bdd8",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "docs/security/verifier-time.md": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
     "package.json": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768",
+    "policy/compatibility-modules.json": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631",
+    "policy/exceptions.json": "6405d8b34e84bf4317be1ba349cce4fae2078f82776733bb75af94933f24241c",
     "research/arena/profiles/user-copy-range.json": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
     "research/arena/standards.json": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -1238,6 +1424,7 @@
     "schemas/arena-profile.schema.json": "a05437b1b9619d601d5826e17bccafee2ab4b6129a0ce6eb4e2795ecca7b6d99",
     "schemas/arena-run.schema.json": "7cc1dae715ba4d452319a0a5c20bf8374aafc7277edfb80887beb9249011ad1c",
     "schemas/arena-standards.schema.json": "dbe8d79baae2db350b914f201d388353305d355a99c76e4cdc707a0c03c687fe",
+    "schemas/compatibility-modules.schema.json": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e",
     "schemas/cost-l-registry.schema.json": "34a6bb442291351647c8826054fb582f89ec121c5abff19bf2bcc350b9d24254",
     "schemas/cost-l.schema.json": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
     "schemas/host-survey.schema.json": "af897efaa4d052a8a10d36bda983544cd16884fa5a6500e1476239da20b65ae2",
@@ -1251,7 +1438,7 @@
     "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "65977e179c5097b00603e86c6369b8d968c7a5561586fa3446ece50f1d6739ab",
+    "translations/manifest.json": "cf609d1208c359c2c96619ae9d20906c01c2d029d3d7578828de416c593bb481",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -1279,8 +1466,9 @@
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
     "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
-    "translations/ru/docs/architecture/component-arena.md": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
-    "translations/ru/docs/architecture/dependency-hygiene.md": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772",
+    "translations/ru/docs/architecture/compatibility-manifests.md": "f4548a126263c55a4062a9f4fbed10693a4293b964216e7202222ce4ff345d18",
+    "translations/ru/docs/architecture/component-arena.md": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+    "translations/ru/docs/architecture/dependency-hygiene.md": "0509eea05e53834cfa25bd3e32891e058a46d36a6e02a7a2c95284e46d003b74",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/kernel/capabilities.md": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
@@ -1288,8 +1476,8 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
-    "translations/ru/docs/research/cost-l-queries.md": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
+    "translations/ru/docs/knowledge-system.md": "259f9969f9f1371506e7e8ca35971ae5e31c3e48d7c7240d0afaea9432f9c65a",
+    "translations/ru/docs/research/cost-l-queries.md": "81fdae2a7380ef0b6198f220ad6fc8ff705133ce4f9c167676da6643bedf8163",
     "translations/ru/docs/research/host-survey.md": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
@@ -3278,7 +3466,7 @@
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 17543,
+      "estimated_bytes": 17604,
       "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
@@ -3294,13 +3482,13 @@
         "en": {
           "end": 252,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 1
         },
         "ru": {
           "end": 252,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 1
         }
       },
@@ -3377,6 +3565,40 @@
       "summary": "Benchmark methodology: statistics, comparison fairness, attribution and reproducibility.",
       "title": "Migration benchmark methodology"
     },
+    "doc.kolvrt.architecture.compatibility-manifests": {
+      "document": "doc.kolvrt.architecture.compatibility-manifests",
+      "document_status": "CURRENT",
+      "estimated_bytes": 12321,
+      "evidence_scope": "bounded host/CI declarations and synthetic regression fixtures; no loader, Linux driver support or deployed module acceptance.",
+      "id": "doc.kolvrt.architecture.compatibility-manifests",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченные объявления compatibility-модулей и двусторонние проверки COST-L/Cargo без runtime-полномочий.",
+          "tags": null,
+          "title": "Объявления compatibility-модулей"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 151,
+          "path": "docs/architecture/compatibility-manifests.md",
+          "sha256": "f9414e84663b3a966943e1158f4706c6c6ee0b14287c99c4bc3c94079fbffb93",
+          "start": 1
+        },
+        "ru": {
+          "end": 151,
+          "path": "translations/ru/docs/architecture/compatibility-manifests.md",
+          "sha256": "f4548a126263c55a4062a9f4fbed10693a4293b964216e7202222ce4ff345d18",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/compatibility-manifests.md",
+      "schema_version": 1,
+      "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority.",
+      "title": "Compatibility module declarations"
+    },
     "doc.kolvrt.arena.measurement-contract": {
       "depends_on": [
         "adr.0006",
@@ -3424,7 +3646,7 @@
     "doc.kolvrt.dependencies.hygiene": {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 11762,
+      "estimated_bytes": 11843,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
@@ -3440,13 +3662,13 @@
         "en": {
           "end": 128,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
+          "sha256": "8a3c76008209642f50515facad62287f20efab10a54d8380e741d370498b8508",
           "start": 1
         },
         "ru": {
           "end": 128,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772",
+          "sha256": "0509eea05e53834cfa25bd3e32891e058a46d36a6e02a7a2c95284e46d003b74",
           "start": 1
         }
       },
@@ -3474,13 +3696,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
+          "sha256": "ee103bf18d5d2666bb2832115fbd2bbc35b69de5a0451ffeb0028616d47f9769",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
+          "sha256": "259f9969f9f1371506e7e8ca35971ae5e31c3e48d7c7240d0afaea9432f9c65a",
           "start": 1
         }
       },
@@ -3765,7 +3987,7 @@
     "doc.kolvrt.research.cost-l-queries": {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 9110,
+      "estimated_bytes": 9169,
       "evidence_scope": "bounded host queries over validated registry declarations; issue #48 remains open for production-manifest integration after #47.",
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
@@ -3781,13 +4003,13 @@
         "en": {
           "end": 119,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
+          "sha256": "1cf9c3da1dfa5e78071820dc7b67163f7d1b934af62f236769fcd67b0213bdd8",
           "start": 1
         },
         "ru": {
           "end": 119,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
+          "sha256": "81fdae2a7380ef0b6198f220ad6fc8ff705133ce4f9c167676da6643bedf8163",
           "start": 1
         }
       },
@@ -3997,11 +4219,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Executed 17 Arena and 3 launcher tests plus the actual launch script on these exact source bytes; offline host scope only.",
+            "reason": "Historical receipt retained; shared repository-checks dispatcher/library/COST-L source bytes changed for #47. Revalidated exact-source evidence for this separate feature remains pending.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -4027,13 +4249,13 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 7
         }
       },
@@ -4064,13 +4286,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 33
         }
       },
@@ -4099,13 +4321,13 @@
         "en": {
           "end": 80,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 63
         },
         "ru": {
           "end": 80,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 63
         }
       },
@@ -4134,13 +4356,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 19
         }
       },
@@ -4169,13 +4391,13 @@
         "en": {
           "end": 90,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 79
         },
         "ru": {
           "end": 90,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 79
         }
       },
@@ -4204,13 +4426,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 41
         }
       },
@@ -4239,13 +4461,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 55
         }
       },
@@ -4274,13 +4496,13 @@
         "en": {
           "end": 104,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
           "start": 89
         },
         "ru": {
           "end": 104,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
           "start": 89
         }
       },
@@ -4463,6 +4685,131 @@
       "summary": "Historical architecture audit: scope",
       "title": "Scope and result"
     },
+    "kolvrt.compatibility.manifests": {
+      "anchor": "kolvrt-compatibility-manifests",
+      "depends_on": [
+        "law.008",
+        "law.009",
+        "law.013",
+        "law.018",
+        "law.035",
+        "law.040",
+        "adr.0007",
+        "adr.0013",
+        "adr.0015"
+      ],
+      "document": "doc.kolvrt.architecture.compatibility-manifests",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1261,
+      "evidence_scope": "bounded host/CI declarations and synthetic regression fixtures; no loader, Linux driver support or deployed module acceptance.",
+      "feature": {
+        "acceptance": ["research/results/issue47-compatibility-manifests.json"],
+        "adrs": ["adr.0007", "adr.0013", "adr.0015"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Closed module inventory, reciprocal debt/consumer/version/scope checks, source/artifact/EXC/support identities and Cargo-parsed native declaration closure, with existing synthetic window contracts only.",
+        "issues": [47, 46, 48],
+        "limitations": [
+          "Unmarked adapters and auxiliary source completeness require review; no production module/driver data, loader, live consumers, admission or runtime retirement proof. Current Linux debts remain research-only."
+        ],
+        "next_gate": "Review real production declarations and source/feature completeness; integrate full #48 queries without promoting synthetic evidence.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "COST-L module/CI declarations #47",
+        "sources": [
+          "Cargo.lock",
+          "Cargo.toml",
+          "crates/host-process-metrics/Cargo.toml",
+          "crates/kernel-core/Cargo.toml",
+          "crates/kernel/Cargo.toml",
+          "crates/migration-advisor/Cargo.toml",
+          "crates/migration-workbench/Cargo.toml",
+          "crates/native-protocol-model/Cargo.toml",
+          "crates/native-state-models/Cargo.toml",
+          "crates/repository-checks/Cargo.toml",
+          "crates/repository-checks/src/compat_modules.rs",
+          "crates/repository-checks/src/cost_l.rs",
+          "crates/repository-checks/src/lib.rs",
+          "crates/repository-checks/src/main.rs",
+          "crates/repository-checks/tests/compat_modules.rs",
+          "crates/routing-demo/Cargo.toml",
+          "crates/routing/Cargo.toml",
+          "crates/window-compat/Cargo.toml",
+          "crates/window-compat/src/lib.rs",
+          "crates/window-compat/tests/protocols.rs",
+          "crates/xtask/Cargo.toml",
+          "policy/compatibility-modules.json",
+          "policy/exceptions.json",
+          "rust-toolchain.toml",
+          "schemas/compatibility-modules.schema.json"
+        ],
+        "transitions": [
+          {
+            "acceptance": [
+              "research/results/issue47-compatibility-manifests.json"
+            ],
+            "from": "UNRECORDED",
+            "reason": "First bounded manifest gate with synthetic current inventory and exact-source host controls; production/runtime gates remain open.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "host-process",
+            "reason": "Thirteen host regressions, actual CLI and real Cargo declaration fixture passed on these exact source bytes.",
+            "receipt": "research/results/issue47-compatibility-manifests.json",
+            "receipt_sha256": "95766b2a15e17e5d3324ff9692e3f4c7ec2725e6971c0af8b249e1cfc113decb",
+            "scope": "Host consistency and declaration boundary only; production-shaped artifacts are non-executable test bytes, not supported modules.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "Host declaration checking does not verify kernel, driver or physical execution.",
+            "state": "NOT_APPLICABLE"
+          }
+        ]
+      },
+      "id": "kolvrt.compatibility.manifests",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченные объявления compatibility-модулей и двусторонние проверки COST-L/Cargo без runtime-полномочий.",
+          "tags": [
+            "compatibility",
+            "debt",
+            "module",
+            "manifest",
+            "cargo",
+            "retirement"
+          ],
+          "title": "Архитектура и полномочия"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 14,
+          "path": "docs/architecture/compatibility-manifests.md",
+          "sha256": "f9414e84663b3a966943e1158f4706c6c6ee0b14287c99c4bc3c94079fbffb93",
+          "start": 7
+        },
+        "ru": {
+          "end": 14,
+          "path": "translations/ru/docs/architecture/compatibility-manifests.md",
+          "sha256": "f4548a126263c55a4062a9f4fbed10693a4293b964216e7202222ce4ff345d18",
+          "start": 7
+        }
+      },
+      "path": "docs/architecture/compatibility-manifests.md",
+      "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority.",
+      "tags": [
+        "compatibility",
+        "debt",
+        "module",
+        "manifest",
+        "cargo",
+        "retirement"
+      ],
+      "title": "Architecture and authority"
+    },
     "kolvrt.cost-l.offline-queries": {
       "anchor": "kolvrt-cost-l-offline-queries",
       "depends_on": ["law.009", "law.036", "law.040", "adr.0007", "adr.0008"],
@@ -4513,11 +4860,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Executed five existing COST-L CLI tests after main rebase and Arena dispatcher integration; exact-source host evidence only.",
+            "reason": "Historical receipt retained; shared repository-checks dispatcher/library/COST-L source bytes changed for #47. Revalidated exact-source evidence for this separate feature remains pending.",
             "receipt": "research/results/issue48-cost-l-arena-rebased.json",
             "receipt_sha256": "bdc6a41c6c16ff647bbb83acabb48b74b530dbffc0259ccdc94c09bbde77010b",
             "scope": "Bounded host query semantics only; no production consumers or runtime costs.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -4540,13 +4887,13 @@
         "en": {
           "end": 26,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
+          "sha256": "1cf9c3da1dfa5e78071820dc7b67163f7d1b934af62f236769fcd67b0213bdd8",
           "start": 7
         },
         "ru": {
           "end": 26,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
+          "sha256": "81fdae2a7380ef0b6198f220ad6fc8ff705133ce4f9c167676da6643bedf8163",
           "start": 7
         }
       },
@@ -4558,7 +4905,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 11527,
+      "estimated_bytes": 11608,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "feature": {
         "acceptance": ["research/results/issue94-dependency-hygiene.json"],
@@ -4602,7 +4949,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Historical dependency checks retain their original receipt. CI workflows and Node version changed; fresh hosted-runner evidence is pending.",
+            "reason": "Historical dependency receipt retained. CI/Node inputs changed, and #47 adds a compatibility marker to window-compat Cargo metadata; dependency graph semantics are unchanged, but fresh exact-source acceptance is pending.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
             "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
@@ -4629,13 +4976,13 @@
         "en": {
           "end": 128,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
+          "sha256": "8a3c76008209642f50515facad62287f20efab10a54d8380e741d370498b8508",
           "start": 7
         },
         "ru": {
           "end": 128,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772",
+          "sha256": "0509eea05e53834cfa25bd3e32891e058a46d36a6e02a7a2c95284e46d003b74",
           "start": 7
         }
       },
@@ -4688,7 +5035,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "e2e0100d711cd863cc2f7e3f91af44c01fff35b83f1970018df2dceb6b302bd2",
+            "receipt_sha256": "74e53f0e1030fa5498e4ec518bafc8c1a59137a1001a0c18544af2970805f51b",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4713,13 +5060,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
+          "sha256": "ee103bf18d5d2666bb2832115fbd2bbc35b69de5a0451ffeb0028616d47f9769",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
+          "sha256": "259f9969f9f1371506e7e8ca35971ae5e31c3e48d7c7240d0afaea9432f9c65a",
           "start": 7
         }
       },
