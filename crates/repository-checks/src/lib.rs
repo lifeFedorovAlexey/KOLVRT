@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 
 pub mod arena;
+pub mod compat_modules;
 pub mod cost_l;
 pub mod cost_l_queries;
 pub mod database;

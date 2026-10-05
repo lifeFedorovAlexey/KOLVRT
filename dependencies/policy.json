@@ -1,10 +1,7 @@
 {
   "schema_version": 1,
   "kernel_boundary": {
-    "members": [
-      "kolvrt-kernel",
-      "kernel-core"
-    ],
+    "members": ["kolvrt-kernel", "kernel-core"],
     "exceptions": [],
     "exception_process": "Separate accepted ADR reviewing need, small implementation alternative, closure/size, unsafe, maintenance, license, security history, TCB impact and removal. Then explicitly revise checker and rejection controls."
   },

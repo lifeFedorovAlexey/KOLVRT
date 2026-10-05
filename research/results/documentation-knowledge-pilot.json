@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 51046,
-  "catalog_bytes": 76155,
-  "catalog_nodes": 190,
+  "approximate_tokens": 51309,
+  "catalog_bytes": 77205,
+  "catalog_nodes": 192,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "40605431c356549381129d61aa4c844c69f5ce86518575903f4beb45d9090a39",
+  "catalog_sha256": "bd0a5d04929834ff71e9983b86c702faa858d5d42a1ee9f7659baf4b1b203693",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 204184,
+  "context_plus_catalog_bytes": 205234,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 97,
-    "utf8_bytes": 790854
+    "documents": 98,
+    "utf8_bytes": 803231
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -65,12 +65,12 @@
   "query": "review Phase 3.4 capability revocation",
   "rendered_context_bytes": 128029,
   "russian_pilot": {
-    "approximate_tokens": 78641,
-    "catalog_bytes": 76155,
-    "context_plus_navigation_bytes": 314562,
+    "approximate_tokens": 79075,
+    "catalog_bytes": 77205,
+    "context_plus_navigation_bytes": 316299,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 42821,
+    "localized_navigation_bytes": 43508,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -134,9 +134,7 @@
     ]
   },
   "schema_version": 1,
-  "seeds": [
-    "kolvrt.security.capability-revocation"
-  ],
+  "seeds": ["kolvrt.security.capability-revocation"],
   "selected": [
     {
       "id": "adr.0013",
@@ -215,7 +213,7 @@
       "location": {
         "end": 37,
         "path": "docs/kernel/handles.md",
-        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
+        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
         "start": 13
       }
     },
@@ -224,7 +222,7 @@
       "location": {
         "end": 69,
         "path": "docs/kernel/handles.md",
-        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
+        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
         "start": 36
       }
     },
@@ -233,7 +231,7 @@
       "location": {
         "end": 112,
         "path": "docs/kernel/handles.md",
-        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
+        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
         "start": 107
       }
     },
@@ -242,7 +240,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/handles.md",
-        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
+        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
         "start": 7
       }
     },
@@ -251,7 +249,7 @@
       "location": {
         "end": 86,
         "path": "docs/kernel/handles.md",
-        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
+        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
         "start": 68
       }
     },
@@ -332,7 +330,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "5764c546a91a96daa1ef51b082855bb6526f6460f1afb4ea0939309652f6227e",
+        "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
         "start": 13
       }
     },
@@ -341,7 +339,7 @@
       "location": {
         "end": 82,
         "path": "docs/kernel/processes.md",
-        "sha256": "5764c546a91a96daa1ef51b082855bb6526f6460f1afb4ea0939309652f6227e",
+        "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
         "start": 58
       }
     },
@@ -350,7 +348,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "b138fe273cdb191b5cd8c6b59505a47023ebea635d78c5ca6f8f9baa6f1ae130",
+        "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
         "start": 7
       }
     },
@@ -359,7 +357,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
         "start": 11
       }
     },
@@ -368,7 +366,7 @@
       "location": {
         "end": 38,
         "path": "docs/kernel/domains.md",
-        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
         "start": 29
       }
     },
@@ -377,7 +375,7 @@
       "location": {
         "end": 30,
         "path": "docs/kernel/domains.md",
-        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
         "start": 17
       }
     },
@@ -386,25 +384,25 @@
       "location": {
         "end": 58,
         "path": "docs/kernel/domains.md",
-        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
         "start": 37
       }
     },
     {
       "id": "kolvrt.security.domains.teardown",
       "location": {
-        "end": 190,
+        "end": 179,
         "path": "docs/kernel/domains.md",
-        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
         "start": 57
       }
     },
     {
       "id": "kolvrt.security.event-revocation",
       "location": {
-        "end": 202,
+        "end": 176,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "b138fe273cdb191b5cd8c6b59505a47023ebea635d78c5ca6f8f9baa6f1ae130",
+        "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
         "start": 17
       }
     },
@@ -528,7 +526,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 192643
+    "utf8_bytes": 192091
   },
   "source_files": [
     {

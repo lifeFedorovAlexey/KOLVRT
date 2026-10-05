@@ -47,10 +47,7 @@ Current reference: [Границы полномочий](../architecture-decisio
         "полномочий",
         "полномочия"
       ],
-      "read_when": [
-        "проверь отзыв полномочий",
-        "review capability revocation"
-      ],
+      "read_when": ["проверь отзыв полномочий", "review capability revocation"],
       "depends_on": [
         "kolvrt.handles.local",
         "kolvrt.handles.identity",
@@ -90,14 +87,8 @@ Current reference: [Границы полномочий](../architecture-decisio
         "acceptance": [
           "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
         ],
-        "issues": [
-          24
-        ],
-        "adrs": [
-          "adr.0013",
-          "adr.0022",
-          "adr.0023"
-        ],
+        "issues": [24],
+        "adrs": ["adr.0013", "adr.0022", "adr.0023"],
         "limitations": [
           "The full general IPC/supervisor production contract is not delivered; one-process fixed-affinity domains and single-cell Event notification remain bounded."
         ],
@@ -161,16 +152,9 @@ Current reference: [Границы полномочий](../architecture-decisio
           "crates/kernel/src/handles.rs",
           "crates/kernel/src/handles/testing.rs"
         ],
-        "acceptance": [
-          "research/results/event-revocation-ci.json"
-        ],
-        "issues": [
-          24,
-          72
-        ],
-        "adrs": [
-          "adr.0022"
-        ],
+        "acceptance": ["research/results/event-revocation-ci.json"],
+        "issues": [24, 72],
+        "adrs": ["adr.0022"],
         "limitations": [
           "Event-only synchronous publication; no issuer independence, general service/domain grants, async cancellation/drain or silicon acceptance."
         ],
@@ -197,16 +181,11 @@ Current reference: [Границы полномочий](../architecture-decisio
             "from": "UNRECORDED",
             "to": "BOUNDED_IMPLEMENTED",
             "reason": "Adopt already-merged PR #72 with its actual passing CI receipt; this documentation change implements no kernel behavior.",
-            "acceptance": [
-              "research/results/event-revocation-ci.json"
-            ]
+            "acceptance": ["research/results/event-revocation-ci.json"]
           }
         ]
       },
-      "read_when": [
-        "проверь отзыв полномочий",
-        "review capability revocation"
-      ]
+      "read_when": ["проверь отзыв полномочий", "review capability revocation"]
     }
   ]
 }

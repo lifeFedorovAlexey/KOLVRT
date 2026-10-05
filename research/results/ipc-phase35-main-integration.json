@@ -1,16 +1,20 @@
 {
   "schema_version": 1,
   "claim": "Current-source DEV/PROD positive QEMU integration after main refresh. Historical mutation/native-only/routing evidence remains explicitly separate; no mutation rerun or physical ARM claim.",
-  "reviewed_base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c",
+  "reviewed_base_commit": "ac63c75342fe9a2c2196c203e98b40bbb20edf64",
   "implementation_commit": "40441b30d38abbe2ce6f95ce5b8c0c5497c5cbca",
   "prior_evidence": {
     "path": "research/results/ipc-phase35-acceptance.json",
-    "sha256_lf": "960c88b3ee28978d02f73bdd0373d4fe193a66a65423f01df8deaabad65fc853",
+    "sha256_lf": "ca5109e28dcfcd79db02e2cb2949ddfa33047b592f2504c732b07b04c5b2fe70",
     "tests_per_profile": 124,
     "ipc_mutation_runs": 46
   },
   "integration_review": {
     "changed_sources": [
+      {
+        "path": "Cargo.lock",
+        "sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86"
+      },
       {
         "path": "crates/kernel/Cargo.toml",
         "sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50"
@@ -29,22 +33,30 @@
       },
       {
         "path": "crates/routing/Cargo.toml",
-        "sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e"
+        "sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558"
       },
       {
         "path": "crates/routing-demo/Cargo.toml",
-        "sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e"
+        "sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c"
       },
       {
         "path": "crates/window-compat/Cargo.toml",
-        "sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900"
+        "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
       },
       {
         "path": "crates/xtask/Cargo.toml",
-        "sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055"
+        "sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d"
+      },
+      {
+        "path": "crates/xtask/src/main.rs",
+        "sha256_lf": "efe182f94f493c3eb492b73451fea6e7873ff8e7cb4384b512bb1d3a69ced344"
+      },
+      {
+        "path": "crates/xtask/src/routing_demo.rs",
+        "sha256_lf": "87467ee740a420b8bfcbedc5d2c4e6fc2f5a91f81e0c4858ea57f16b822f94cd"
       }
     ],
-    "disposition": "Six package manifests only add publish=false; the two test-only changes finalize the IRQ-delivery observation after masking. IPC enforcement, core state, assembly, native continuations, wake/death paths and benchmark source are unchanged. Original mutation and stripped routing/benchmark observations retain their original source inventory."
+    "disposition": "Requested upgrades change host serialization/schema/signature/SHA-256 dependencies and digest encoding in xtask. IPC enforcement/core/assembly/native continuation/wake/death code is unchanged. Guest SHA-256 uses the upstream software backend to preserve immutable EL0 image storage; six routing configurations and three rejection controls passed in the separately retained upgraded routing receipt. Test-only IRQ finalization and package metadata are integrated. Positive QEMU observations use separately copied final ELF artifacts. Historical mutation/native-only/performance evidence retains its original scope."
   },
   "source_files": [
     {
@@ -53,7 +65,7 @@
     },
     {
       "path": "Cargo.lock",
-      "sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8"
+      "sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86"
     },
     {
       "path": "Cargo.toml",
@@ -385,7 +397,7 @@
     },
     {
       "path": "crates/routing/Cargo.toml",
-      "sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e"
+      "sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558"
     },
     {
       "path": "crates/routing/build.rs",
@@ -401,7 +413,7 @@
     },
     {
       "path": "crates/routing-demo/Cargo.toml",
-      "sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e"
+      "sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c"
     },
     {
       "path": "crates/routing-demo/build.rs",
@@ -417,7 +429,7 @@
     },
     {
       "path": "crates/window-compat/Cargo.toml",
-      "sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900"
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
     },
     {
       "path": "crates/window-compat/src/lib.rs",
@@ -429,11 +441,11 @@
     },
     {
       "path": "crates/xtask/Cargo.toml",
-      "sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055"
+      "sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d"
     },
     {
       "path": "crates/xtask/src/main.rs",
-      "sha256_lf": "095bb3f826c02c32c8471597d088cf8cd2a8346ec7d6ec71aaeab68e64428d1e"
+      "sha256_lf": "efe182f94f493c3eb492b73451fea6e7873ff8e7cb4384b512bb1d3a69ced344"
     },
     {
       "path": "crates/xtask/src/output.rs",
@@ -441,7 +453,7 @@
     },
     {
       "path": "crates/xtask/src/routing_demo.rs",
-      "sha256_lf": "427b0bb8048844b2a5e6e0db39f25df9e4d2dbad6f5108b273f5400050807c33"
+      "sha256_lf": "87467ee740a420b8bfcbedc5d2c4e6fc2f5a91f81e0c4858ea57f16b822f94cd"
     },
     {
       "path": "crates/xtask/tests/cli.rs",
@@ -477,7 +489,7 @@
     "positive_profiles": ["dev", "prod"],
     "ipc_mutation_runs_executed_this_receipt": 0,
     "matrix": "passed",
-    "matrix_scope": "Positive integration only; 46 historical IPC mutation runs are referenced separately."
+    "matrix_scope": "Final positive integration only; 46 original IPC mutation runs are historical and separately source-bound."
   },
   "profiles": {
     "dev": {
@@ -515,11 +527,11 @@
         "none",
         "-no-reboot",
         "-kernel",
-        "D:\\KOLVRT\\target\\phase35-finalize\\aarch64-unknown-none\\debug\\kolvrt-kernel"
+        "D:\\KOLVRT\\target\\phase35-finalize\\dev-positive-final.elf"
       ],
-      "exit_code": null,
-      "recovered_log": true,
-      "exit_code_scope": "Exit code not retained after the initial parser rejected the wire prefix; complete passing suite and orderly boot shutdown are retained in the saved machine log.",
+      "exit_code": 0,
+      "recovered_log": false,
+      "exit_code_scope": "Captured process exit code.",
       "tests": 124,
       "events": [
         {
@@ -648,11 +660,11 @@
           "p95": 150,
           "p99": 156,
           "samples": [
-            137, 137, 144, 144, 137, 156, 144, 138, 144, 143, 144, 144, 143,
-            138, 144, 144, 137, 144, 150, 137, 144, 138, 150, 144, 138, 150,
-            144, 138, 144, 137, 143, 144, 144, 144, 137, 137, 138, 144, 144,
-            143, 137, 144, 144, 143, 150, 144, 143, 137, 144, 138, 137, 143,
-            144, 144, 150, 144, 144, 144, 143, 144, 138, 144, 143, 144
+            144, 156, 150, 144, 144, 137, 144, 144, 143, 144, 144, 137, 137,
+            143, 137, 138, 150, 143, 137, 144, 144, 144, 143, 144, 150, 150,
+            138, 138, 138, 144, 143, 144, 138, 138, 143, 144, 144, 144, 143,
+            144, 144, 138, 144, 137, 143, 150, 144, 137, 137, 138, 144, 144,
+            143, 138, 138, 144, 137, 144, 144, 144, 143, 137, 150, 138
           ]
         },
         {
@@ -860,7 +872,7 @@
           "mode": "tagged",
           "hardware_asid_bits": 16,
           "reuse_invalidation": true,
-          "elapsed_ticks": 12665438,
+          "elapsed_ticks": 11731800,
           "same_va_isolation": [true, true],
           "distinct_backing": [true, true],
           "same_asid_reused": [true, true],
@@ -974,13 +986,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 2637,
-          "p95": 2738,
-          "p99": 4325,
+          "median": 2682,
+          "p95": 2706,
+          "p99": 2712,
           "samples": [
-            2638, 2662, 2644, 2631, 2637, 2675, 2644, 2637, 2644, 2631, 2625,
-            2632, 2738, 4325, 2662, 2687, 2687, 2631, 2644, 2637, 2638, 2632,
-            2632, 2631, 2637, 2631, 2637, 2631, 2625, 2637, 2631, 2631
+            2681, 2706, 2688, 2700, 2688, 2693, 2712, 2700, 2694, 2694, 2687,
+            2681, 2681, 2682, 2681, 2675, 2681, 2694, 2675, 2682, 2688, 2675,
+            2688, 2675, 2681, 2681, 2688, 2682, 2688, 2675, 2694, 2681
           ]
         },
         {
@@ -991,13 +1003,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 3231,
-          "p95": 3356,
-          "p99": 3525,
+          "median": 3275,
+          "p95": 3531,
+          "p99": 3537,
           "samples": [
-            3219, 3231, 3218, 3213, 3219, 3212, 3213, 3207, 3219, 3318, 3269,
-            3268, 3263, 3218, 3231, 3219, 3225, 3525, 3356, 3238, 3232, 3238,
-            3225, 3238, 3238, 3237, 3225, 3231, 3287, 3225, 3238, 3231
+            3263, 3263, 3269, 3262, 3262, 3262, 3256, 3262, 3256, 3531, 3269,
+            3275, 3275, 3281, 3275, 3438, 3275, 3275, 3275, 3275, 3288, 3282,
+            3275, 3269, 3282, 3269, 3268, 3537, 3288, 3288, 3288, 3281
           ]
         },
         {
@@ -1008,13 +1020,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 4481,
-          "p95": 4650,
-          "p99": 4656,
+          "median": 4544,
+          "p95": 4782,
+          "p99": 5019,
           "samples": [
-            4656, 4487, 4575, 4525, 4469, 4569, 4487, 4481, 4494, 4537, 4519,
-            4557, 4525, 4613, 4468, 4469, 4475, 4475, 4462, 4475, 4462, 4475,
-            4469, 4475, 4468, 4469, 4593, 4650, 4487, 4469, 4481, 4481
+            4618, 4513, 4519, 4500, 4500, 4507, 4782, 4625, 4550, 4531, 4525,
+            5019, 4506, 4531, 4519, 4532, 4538, 4543, 4525, 4781, 4550, 4550,
+            4544, 4544, 4544, 4550, 4550, 4544, 4544, 4550, 4544, 4544
           ]
         },
         {
@@ -1025,13 +1037,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 219,
-          "p95": 237,
-          "p99": 244,
+          "median": 238,
+          "p95": 281,
+          "p99": 406,
           "samples": [
-            219, 225, 218, 213, 219, 212, 219, 218, 213, 219, 219, 218, 219,
-            237, 225, 218, 213, 225, 219, 219, 212, 212, 219, 237, 244, 225,
-            219, 212, 213, 218, 213, 219
+            237, 244, 244, 231, 243, 237, 231, 238, 238, 244, 231, 269, 262,
+            244, 238, 406, 281, 237, 231, 237, 238, 269, 244, 238, 231, 243,
+            256, 238, 237, 231, 237, 237
           ]
         },
         {
@@ -1042,13 +1054,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 2688,
-          "p95": 2750,
-          "p99": 3006,
+          "median": 2663,
+          "p95": 2700,
+          "p99": 2700,
           "samples": [
-            2694, 2719, 2688, 2675, 2675, 2681, 2675, 2687, 2719, 2744, 2706,
-            2744, 2750, 2675, 3006, 2738, 2732, 2737, 2681, 2707, 2693, 2706,
-            2681, 2682, 2688, 2693, 2688, 2681, 2681, 2675, 2681, 2681
+            2694, 2700, 2675, 2675, 2657, 2669, 2681, 2700, 2669, 2656, 2669,
+            2662, 2657, 2675, 2663, 2657, 2662, 2662, 2663, 2656, 2662, 2663,
+            2657, 2663, 2656, 2656, 2675, 2668, 2663, 2663, 2675, 2675
           ]
         },
         {
@@ -1059,13 +1071,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 3281,
-          "p95": 3437,
-          "p99": 3512,
+          "median": 3257,
+          "p95": 3462,
+          "p99": 3507,
           "samples": [
-            3269, 3269, 3281, 3269, 3269, 3437, 3263, 3275, 3268, 3375, 3313,
-            3368, 3257, 3268, 3263, 3257, 3512, 3325, 3281, 3294, 3287, 3288,
-            3275, 3275, 3294, 3275, 3306, 3344, 3350, 3356, 3306, 3282
+            3238, 3250, 3237, 3244, 3406, 3244, 3250, 3257, 3250, 3507, 3257,
+            3250, 3262, 3256, 3263, 3257, 3257, 3256, 3281, 3250, 3256, 3275,
+            3256, 3250, 3262, 3269, 3262, 3462, 3287, 3269, 3269, 3275
           ]
         },
         {
@@ -1076,13 +1088,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 4557,
-          "p95": 4663,
-          "p99": 4700,
+          "median": 4531,
+          "p95": 4756,
+          "p99": 4825,
           "samples": [
-            4700, 4606, 4606, 4612, 4600, 4613, 4544, 4544, 4606, 4594, 4662,
-            4606, 4556, 4544, 4556, 4550, 4557, 4557, 4543, 4550, 4556, 4550,
-            4544, 4663, 4562, 4656, 4556, 4569, 4556, 4569, 4569, 4556
+            4613, 4500, 4544, 4719, 4525, 4518, 4756, 4519, 4519, 4519, 4518,
+            4519, 4825, 4531, 4519, 4518, 4525, 4519, 4525, 4512, 4750, 4538,
+            4531, 4531, 4538, 4531, 4531, 4556, 4537, 4588, 4681, 4538
           ]
         },
         {
@@ -1093,13 +1105,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 238,
-          "p95": 257,
-          "p99": 282,
+          "median": 256,
+          "p95": 287,
+          "p99": 463,
           "samples": [
-            250, 237, 257, 237, 244, 231, 244, 237, 282, 237, 256, 250, 238,
-            237, 238, 237, 238, 250, 244, 237, 238, 237, 238, 237, 231, 238,
-            237, 244, 237, 244, 238, 237
+            263, 262, 257, 287, 256, 250, 257, 256, 250, 256, 263, 243, 269,
+            256, 250, 463, 275, 244, 256, 256, 257, 268, 250, 256, 250, 250,
+            250, 257, 256, 250, 250, 250
           ]
         },
         {
@@ -1132,10 +1144,10 @@
           "iterations": 32,
           "median": 50,
           "p95": 56,
-          "p99": 62,
+          "p99": 56,
           "samples": [
-            44, 50, 50, 50, 56, 50, 50, 62, 50, 44, 44, 50, 50, 50, 50, 50, 44,
-            44, 44, 44, 50, 56, 44, 50, 50, 50, 50, 44, 50, 50, 50, 50
+            50, 56, 44, 56, 50, 50, 50, 50, 50, 44, 50, 50, 43, 50, 50, 56, 50,
+            50, 50, 50, 50, 50, 50, 50, 50, 50, 56, 50, 50, 50, 50, 50
           ]
         },
         {
@@ -1146,12 +1158,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 37,
-          "p95": 50,
+          "median": 38,
+          "p95": 62,
           "p99": 62,
           "samples": [
-            38, 44, 37, 37, 31, 37, 37, 37, 37, 62, 38, 38, 38, 38, 38, 38, 38,
-            44, 37, 37, 37, 37, 37, 37, 31, 37, 43, 50, 37, 37, 37, 37
+            38, 37, 37, 37, 38, 38, 50, 37, 62, 37, 56, 37, 37, 38, 38, 38, 37,
+            37, 43, 62, 38, 44, 38, 38, 37, 37, 38, 38, 38, 37, 37, 38
           ]
         },
         {
@@ -1166,9 +1178,9 @@
           "p95": 288,
           "p99": 294,
           "samples": [
-            281, 282, 288, 287, 281, 282, 281, 281, 281, 275, 281, 294, 287,
-            282, 281, 287, 287, 281, 282, 282, 275, 281, 281, 288, 282, 281,
-            281, 281, 281, 288, 281, 275
+            281, 287, 281, 281, 288, 275, 275, 281, 275, 275, 269, 275, 269,
+            281, 275, 275, 275, 281, 275, 281, 281, 275, 294, 288, 287, 281,
+            288, 287, 287, 288, 287, 288
           ]
         },
         {
@@ -1179,12 +1191,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 93,
-          "p95": 119,
-          "p99": 337,
+          "median": 88,
+          "p95": 100,
+          "p99": 112,
           "samples": [
-            87, 88, 100, 94, 93, 88, 94, 94, 93, 94, 93, 94, 87, 94, 94, 94, 94,
-            94, 87, 337, 107, 100, 88, 87, 88, 88, 81, 119, 88, 94, 87, 87
+            94, 112, 88, 94, 87, 100, 87, 88, 93, 94, 87, 94, 88, 87, 88, 87,
+            88, 93, 94, 94, 87, 88, 94, 87, 94, 87, 88, 88, 87, 88, 87, 94
           ]
         },
         {
@@ -1195,13 +1207,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 712,
-          "p95": 725,
-          "p99": 725,
+          "median": 732,
+          "p95": 769,
+          "p99": 769,
           "samples": [
-            725, 725, 713, 712, 719, 713, 712, 712, 713, 719, 725, 700, 688,
-            700, 694, 694, 713, 712, 712, 713, 713, 706, 694, 694, 700, 694,
-            700, 712, 719, 713, 712, 706
+            763, 769, 744, 750, 744, 725, 725, 719, 732, 731, 731, 725, 725,
+            731, 731, 725, 750, 750, 750, 757, 769, 756, 750, 750, 750, 750,
+            731, 731, 743, 731, 725, 731
           ]
         },
         {
@@ -1213,11 +1225,11 @@
           "warmup": 4,
           "iterations": 32,
           "median": 50,
-          "p95": 63,
-          "p99": 75,
+          "p95": 69,
+          "p99": 69,
           "samples": [
-            44, 56, 50, 50, 50, 44, 56, 44, 50, 44, 50, 50, 50, 44, 50, 50, 50,
-            44, 50, 50, 63, 50, 50, 44, 50, 50, 44, 75, 43, 44, 50, 50
+            44, 62, 50, 50, 50, 50, 56, 69, 50, 56, 50, 56, 69, 50, 50, 57, 50,
+            68, 57, 50, 50, 50, 50, 56, 50, 50, 50, 50, 56, 50, 50, 50
           ]
         },
         {
@@ -1228,12 +1240,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 38,
-          "p95": 50,
-          "p99": 57,
+          "median": 37,
+          "p95": 44,
+          "p99": 56,
           "samples": [
-            50, 43, 38, 43, 37, 44, 37, 37, 38, 44, 37, 38, 44, 38, 44, 37, 37,
-            38, 37, 38, 57, 37, 44, 44, 37, 44, 38, 37, 44, 38, 43, 38
+            31, 38, 38, 37, 37, 44, 38, 31, 37, 37, 56, 38, 38, 37, 37, 38, 38,
+            37, 37, 38, 38, 38, 37, 37, 31, 38, 38, 37, 37, 37, 38, 38
           ]
         },
         {
@@ -1244,13 +1256,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 275,
-          "p95": 282,
-          "p99": 282,
+          "median": 287,
+          "p95": 294,
+          "p99": 306,
           "samples": [
-            275, 282, 281, 282, 281, 263, 275, 275, 281, 275, 281, 275, 275,
-            275, 269, 275, 268, 268, 268, 269, 269, 275, 275, 275, 269, 269,
-            268, 275, 275, 275, 282, 269
+            288, 294, 294, 293, 287, 288, 287, 287, 288, 287, 293, 288, 287,
+            275, 281, 281, 282, 281, 275, 275, 275, 269, 281, 275, 275, 306,
+            294, 287, 288, 281, 287, 281
           ]
         },
         {
@@ -1261,12 +1273,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 94,
-          "p95": 137,
-          "p99": 456,
+          "median": 88,
+          "p95": 94,
+          "p99": 94,
           "samples": [
-            94, 94, 94, 87, 94, 87, 94, 94, 93, 94, 94, 94, 94, 94, 93, 94, 94,
-            93, 456, 87, 94, 93, 100, 93, 88, 94, 94, 94, 93, 94, 137, 94
+            88, 87, 81, 87, 87, 88, 88, 87, 88, 94, 87, 94, 88, 87, 87, 88, 88,
+            87, 88, 88, 87, 87, 88, 88, 87, 94, 87, 88, 88, 93, 94, 87
           ]
         },
         {
@@ -1277,13 +1289,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 725,
-          "p95": 756,
-          "p99": 794,
+          "median": 743,
+          "p95": 1144,
+          "p99": 1975,
           "samples": [
-            738, 737, 725, 725, 732, 719, 731, 712, 712, 725, 750, 750, 731,
-            756, 738, 725, 719, 718, 712, 725, 738, 744, 743, 738, 750, 731,
-            725, 719, 719, 719, 712, 794
+            763, 750, 756, 743, 744, 756, 750, 738, 737, 744, 737, 731, 732,
+            732, 732, 731, 744, 732, 744, 725, 731, 725, 750, 756, 743, 750,
+            744, 731, 725, 725, 1975, 1144
           ]
         },
         {
@@ -1485,7 +1497,7 @@
           "client_cpu": 0,
           "service_cpu": 1,
           "outcome": 6,
-          "all_blocked": 431,
+          "all_blocked": 398,
           "client_blocks": 2,
           "client_wakes": 2,
           "service_blocks": 1,
@@ -1499,7 +1511,7 @@
           "client_cpu": 1,
           "service_cpu": 0,
           "outcome": 6,
-          "all_blocked": 397,
+          "all_blocked": 392,
           "client_blocks": 1,
           "client_wakes": 1,
           "service_blocks": 2,
@@ -1518,7 +1530,7 @@
           "client_cpu": 0,
           "service_cpu": 1,
           "outcome": 5,
-          "all_blocked": 419,
+          "all_blocked": 387,
           "client_blocks": 2,
           "client_wakes": 2,
           "service_blocks": 1,
@@ -1532,9 +1544,9 @@
           "client_cpu": 1,
           "service_cpu": 0,
           "outcome": 5,
-          "all_blocked": 399,
-          "client_blocks": 1,
-          "client_wakes": 1,
+          "all_blocked": 388,
+          "client_blocks": 2,
+          "client_wakes": 2,
           "service_blocks": 2,
           "service_wakes": 2,
           "reclaimed": true
@@ -1564,8 +1576,8 @@
           "client_cpu": 1,
           "service_cpu": 0,
           "outcome": 4,
-          "client_blocks": 0,
-          "client_wakes": 0,
+          "client_blocks": 1,
+          "client_wakes": 1,
           "service_blocks": 1,
           "service_wakes": 1,
           "reclaimed": true
@@ -1608,63 +1620,6 @@
           "client_cpu": 0,
           "service_cpu": 1,
           "outcome": 4,
-          "client_blocks": 1,
-          "client_wakes": 1,
-          "service_blocks": 0,
-          "service_wakes": 0,
-          "reclaimed": true
-        },
-        {
-          "event": "ipc-lifetime",
-          "status": "pass",
-          "name": "ipc_service_death_delivered",
-          "client_cpu": 1,
-          "service_cpu": 0,
-          "outcome": 4,
-          "client_blocks": 1,
-          "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1,
-          "reclaimed": true
-        },
-        {
-          "event": "ipc-lifetime",
-          "status": "pass",
-          "name": "ipc_service_death_delivered",
-          "client_cpu": 0,
-          "service_cpu": 0,
-          "outcome": 4,
-          "client_blocks": 1,
-          "client_wakes": 1,
-          "service_blocks": 0,
-          "service_wakes": 0,
-          "reclaimed": true
-        },
-        {
-          "event": "ipc-lifetime",
-          "status": "pass",
-          "name": "ipc_service_death_delivered",
-          "client_cpu": 1,
-          "service_cpu": 1,
-          "outcome": 4,
-          "client_blocks": 1,
-          "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1,
-          "reclaimed": true
-        },
-        {
-          "event": "test",
-          "name": "ipc_service_death_delivered",
-          "status": "pass"
-        },
-        {
-          "event": "ipc-lifetime",
-          "status": "pass",
-          "name": "ipc_service_death_committed",
-          "client_cpu": 0,
-          "service_cpu": 1,
-          "outcome": 5,
           "client_blocks": 0,
           "client_wakes": 0,
           "service_blocks": 0,
@@ -1674,6 +1629,63 @@
         {
           "event": "ipc-lifetime",
           "status": "pass",
+          "name": "ipc_service_death_delivered",
+          "client_cpu": 1,
+          "service_cpu": 0,
+          "outcome": 4,
+          "client_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1,
+          "reclaimed": true
+        },
+        {
+          "event": "ipc-lifetime",
+          "status": "pass",
+          "name": "ipc_service_death_delivered",
+          "client_cpu": 0,
+          "service_cpu": 0,
+          "outcome": 4,
+          "client_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 0,
+          "service_wakes": 0,
+          "reclaimed": true
+        },
+        {
+          "event": "ipc-lifetime",
+          "status": "pass",
+          "name": "ipc_service_death_delivered",
+          "client_cpu": 1,
+          "service_cpu": 1,
+          "outcome": 4,
+          "client_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1,
+          "reclaimed": true
+        },
+        {
+          "event": "test",
+          "name": "ipc_service_death_delivered",
+          "status": "pass"
+        },
+        {
+          "event": "ipc-lifetime",
+          "status": "pass",
+          "name": "ipc_service_death_committed",
+          "client_cpu": 0,
+          "service_cpu": 1,
+          "outcome": 5,
+          "client_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 0,
+          "service_wakes": 0,
+          "reclaimed": true
+        },
+        {
+          "event": "ipc-lifetime",
+          "status": "pass",
           "name": "ipc_service_death_committed",
           "client_cpu": 1,
           "service_cpu": 0,
@@ -1750,8 +1762,8 @@
           "outcome": 0,
           "client_blocks": 1,
           "client_wakes": 1,
-          "service_blocks": 0,
-          "service_wakes": 0,
+          "service_blocks": 1,
+          "service_wakes": 1,
           "reclaimed": true
         },
         {
@@ -2308,9 +2320,9 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
-          "client_blocks": 2,
-          "client_terminal_blocks": 1,
-          "client_wakes": 2,
+          "client_blocks": 3,
+          "client_terminal_blocks": 2,
+          "client_wakes": 3,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -2324,9 +2336,9 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
-          "client_blocks": 2,
-          "client_terminal_blocks": 1,
-          "client_wakes": 2,
+          "client_blocks": 3,
+          "client_terminal_blocks": 2,
+          "client_wakes": 3,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -2372,6 +2384,150 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
+          "client_blocks": 1,
+          "client_terminal_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-queue",
+          "status": "pass",
+          "client_cpu": 1,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 4,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 1,
+          "client_terminal_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-queued-cancel",
+          "status": "pass",
+          "client_cpu": 1,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 2,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 1,
+          "client_terminal_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-both-death",
+          "status": "pass",
+          "client_cpu": 1,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 0,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 0,
+          "client_terminal_blocks": 0,
+          "client_wakes": 0,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-shutdown-load",
+          "status": "pass",
+          "client_cpu": 1,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 0,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 1,
+          "client_terminal_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-queue",
+          "status": "pass",
+          "client_cpu": 0,
+          "service_cpu": 0,
+          "capacity": 1,
+          "delivered": 1,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 2,
+          "client_terminal_blocks": 1,
+          "client_wakes": 2,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-queue",
+          "status": "pass",
+          "client_cpu": 0,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 4,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 2,
+          "client_terminal_blocks": 1,
+          "client_wakes": 2,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-queued-cancel",
+          "status": "pass",
+          "client_cpu": 0,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 2,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 1,
+          "client_terminal_blocks": 0,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-both-death",
+          "status": "pass",
+          "client_cpu": 0,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 0,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 1,
+          "client_terminal_blocks": 0,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-shutdown-load",
+          "status": "pass",
+          "client_cpu": 0,
+          "service_cpu": 0,
+          "capacity": 4,
+          "delivered": 0,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
           "client_blocks": 2,
           "client_terminal_blocks": 1,
           "client_wakes": 2,
@@ -2382,7 +2538,23 @@
           "event": "ipc-queue",
           "status": "pass",
           "client_cpu": 1,
-          "service_cpu": 0,
+          "service_cpu": 1,
+          "capacity": 1,
+          "delivered": 1,
+          "full_rejected": true,
+          "fifo": true,
+          "reclaimed": true,
+          "client_blocks": 1,
+          "client_terminal_blocks": 1,
+          "client_wakes": 1,
+          "service_blocks": 1,
+          "service_wakes": 1
+        },
+        {
+          "event": "ipc-queue",
+          "status": "pass",
+          "client_cpu": 1,
+          "service_cpu": 1,
           "capacity": 4,
           "delivered": 4,
           "full_rejected": true,
@@ -2391,166 +2563,6 @@
           "client_blocks": 2,
           "client_terminal_blocks": 2,
           "client_wakes": 2,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-queued-cancel",
-          "status": "pass",
-          "client_cpu": 1,
-          "service_cpu": 0,
-          "capacity": 4,
-          "delivered": 2,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 1,
-          "client_terminal_blocks": 1,
-          "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-both-death",
-          "status": "pass",
-          "client_cpu": 1,
-          "service_cpu": 0,
-          "capacity": 4,
-          "delivered": 0,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 1,
-          "client_terminal_blocks": 0,
-          "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-shutdown-load",
-          "status": "pass",
-          "client_cpu": 1,
-          "service_cpu": 0,
-          "capacity": 4,
-          "delivered": 0,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 1,
-          "client_terminal_blocks": 1,
-          "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-queue",
-          "status": "pass",
-          "client_cpu": 0,
-          "service_cpu": 0,
-          "capacity": 1,
-          "delivered": 1,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 2,
-          "client_terminal_blocks": 1,
-          "client_wakes": 2,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-queue",
-          "status": "pass",
-          "client_cpu": 0,
-          "service_cpu": 0,
-          "capacity": 4,
-          "delivered": 4,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 4,
-          "client_terminal_blocks": 3,
-          "client_wakes": 4,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-queued-cancel",
-          "status": "pass",
-          "client_cpu": 0,
-          "service_cpu": 0,
-          "capacity": 4,
-          "delivered": 2,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 2,
-          "client_terminal_blocks": 1,
-          "client_wakes": 2,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-both-death",
-          "status": "pass",
-          "client_cpu": 0,
-          "service_cpu": 0,
-          "capacity": 4,
-          "delivered": 0,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 1,
-          "client_terminal_blocks": 0,
-          "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-shutdown-load",
-          "status": "pass",
-          "client_cpu": 0,
-          "service_cpu": 0,
-          "capacity": 4,
-          "delivered": 0,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 2,
-          "client_terminal_blocks": 1,
-          "client_wakes": 2,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-queue",
-          "status": "pass",
-          "client_cpu": 1,
-          "service_cpu": 1,
-          "capacity": 1,
-          "delivered": 1,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 1,
-          "client_terminal_blocks": 1,
-          "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1
-        },
-        {
-          "event": "ipc-queue",
-          "status": "pass",
-          "client_cpu": 1,
-          "service_cpu": 1,
-          "capacity": 4,
-          "delivered": 4,
-          "full_rejected": true,
-          "fifo": true,
-          "reclaimed": true,
-          "client_blocks": 3,
-          "client_terminal_blocks": 3,
-          "client_wakes": 3,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -2773,7 +2785,7 @@
           "none",
           "-no-reboot",
           "-kernel",
-          "D:\\KOLVRT\\target\\phase35-finalize\\aarch64-unknown-none\\debug\\kolvrt-kernel"
+          "D:\\KOLVRT\\target\\phase35-finalize\\dev-positive-final.elf"
         ]
       }
     },
@@ -2813,7 +2825,7 @@
         "none",
         "-no-reboot",
         "-kernel",
-        "D:\\KOLVRT\\target\\phase35-finalize\\aarch64-unknown-none\\release\\kolvrt-kernel"
+        "D:\\KOLVRT\\target\\phase35-finalize\\prod-positive-final.elf"
       ],
       "exit_code": 0,
       "recovered_log": false,
@@ -2942,14 +2954,14 @@
           "frequency": 62500000,
           "warmup": 8,
           "iterations": 64,
-          "median": 7,
+          "median": 6,
           "p95": 13,
           "p99": 13,
           "samples": [
-            6, 7, 12, 13, 12, 13, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-            6, 6, 12, 13, 12, 13, 12, 13, 12, 13, 12, 13, 6, 7, 6, 7, 6, 7, 6,
-            7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 12, 13, 12, 13, 12, 13, 12, 13, 12,
-            6, 6, 6, 6
+            7, 13, 6, 7, 6, 13, 12, 13, 12, 13, 12, 13, 12, 13, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 13, 12, 13, 12, 13, 12, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6,
+            7
           ]
         },
         {
@@ -3157,7 +3169,7 @@
           "mode": "tagged",
           "hardware_asid_bits": 16,
           "reuse_invalidation": true,
-          "elapsed_ticks": 4554425,
+          "elapsed_ticks": 4871688,
           "same_va_isolation": [true, true],
           "distinct_backing": [true, true],
           "same_asid_reused": [true, true],
@@ -3271,13 +3283,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 3113,
-          "p95": 4050,
-          "p99": 6418,
+          "median": 3169,
+          "p95": 3650,
+          "p99": 4975,
           "samples": [
-            3669, 3113, 3100, 3113, 3100, 3100, 3106, 3100, 3106, 3100, 3106,
-            3100, 3106, 3100, 6418, 4050, 3188, 3119, 3119, 3113, 3113, 3113,
-            3131, 3125, 3118, 3118, 3118, 3118, 3112, 3112, 3112, 3125
+            3650, 3175, 3169, 3169, 3169, 3162, 3175, 3162, 3168, 3168, 3175,
+            3175, 3169, 3169, 3162, 3162, 3168, 3168, 3168, 4975, 3175, 3169,
+            3169, 3163, 3163, 3169, 3431, 3175, 3188, 3181, 3175, 3175
           ]
         },
         {
@@ -3288,13 +3300,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 3682,
-          "p95": 3825,
-          "p99": 3825,
+          "median": 3768,
+          "p95": 3769,
+          "p99": 3950,
           "samples": [
-            3706, 3700, 3718, 3706, 3706, 3706, 3719, 3706, 3700, 3825, 3682,
-            3681, 3682, 3825, 3681, 3687, 3681, 3681, 3675, 3682, 3681, 3682,
-            3681, 3682, 3800, 3682, 3681, 3682, 3681, 3682, 3787, 3687
+            3769, 3762, 3769, 3762, 3768, 3762, 3769, 3768, 3768, 3768, 3768,
+            3762, 3762, 3763, 3763, 3769, 3763, 3950, 3769, 3769, 3768, 3768,
+            3762, 3762, 3769, 3763, 3769, 3769, 3762, 3762, 3768, 3768
           ]
         },
         {
@@ -3305,13 +3317,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 4906,
-          "p95": 6269,
-          "p99": 7269,
+          "median": 4987,
+          "p95": 5113,
+          "p99": 5237,
           "samples": [
-            4894, 4875, 4875, 4875, 4875, 4869, 4882, 5194, 4894, 4881, 4882,
-            4887, 4881, 5163, 4906, 4906, 4913, 5319, 4912, 4906, 6269, 4969,
-            4906, 5069, 4937, 5212, 4963, 4963, 4963, 4975, 5719, 7269
+            4969, 4962, 4969, 4969, 4962, 4962, 4962, 5113, 4975, 4963, 4969,
+            5006, 4968, 4962, 5237, 4988, 4994, 4988, 4994, 4988, 4981, 4987,
+            4987, 4982, 4981, 5000, 4987, 4994, 5106, 4987, 5000, 4987
           ]
         },
         {
@@ -3323,11 +3335,11 @@
           "warmup": 4,
           "iterations": 32,
           "median": 25,
-          "p95": 38,
-          "p99": 431,
+          "p95": 87,
+          "p99": 194,
           "samples": [
-            431, 38, 31, 32, 25, 25, 31, 31, 25, 31, 25, 25, 32, 25, 31, 31, 25,
-            25, 31, 25, 25, 31, 25, 25, 25, 31, 25, 25, 31, 25, 25, 32
+            38, 87, 194, 57, 56, 50, 37, 31, 32, 50, 25, 25, 25, 25, 25, 25, 25,
+            25, 25, 25, 31, 25, 31, 25, 31, 25, 25, 25, 31, 25, 25, 25
           ]
         },
         {
@@ -3338,13 +3350,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 3112,
-          "p95": 5538,
-          "p99": 8169,
+          "median": 3100,
+          "p95": 3644,
+          "p99": 3688,
           "samples": [
-            3625, 3106, 3106, 3107, 3100, 3094, 3100, 3093, 3100, 3100, 3100,
-            3094, 3100, 3100, 4313, 8169, 5538, 4663, 4638, 4144, 3113, 3113,
-            3112, 3112, 3112, 3113, 3113, 3125, 3113, 3113, 3100, 3107
+            3688, 3106, 3100, 3093, 3094, 3100, 3100, 3094, 3093, 3094, 3100,
+            3100, 3093, 3093, 3094, 3094, 3094, 3094, 3094, 3644, 3112, 3107,
+            3100, 3100, 3100, 3106, 3356, 3119, 3113, 3113, 3113, 3119
           ]
         },
         {
@@ -3355,13 +3367,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 3694,
-          "p95": 5162,
-          "p99": 5731,
+          "median": 3737,
+          "p95": 3775,
+          "p99": 3919,
           "samples": [
-            3700, 3825, 3700, 3700, 3700, 3712, 3700, 5731, 5162, 3694, 3687,
-            4868, 4663, 3694, 3687, 3687, 3693, 3681, 3682, 3688, 3681, 3694,
-            3681, 3687, 3693, 3706, 4688, 3719, 3681, 3687, 3682, 3681
+            3706, 3706, 3713, 3706, 3706, 3706, 3706, 3718, 3706, 3707, 3712,
+            3706, 3707, 3706, 3919, 3750, 3737, 3743, 3743, 3743, 3743, 3775,
+            3744, 3744, 3744, 3744, 3737, 3743, 3737, 3743, 3737, 3744
           ]
         },
         {
@@ -3372,13 +3384,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 4950,
-          "p95": 7294,
-          "p99": 7975,
+          "median": 4956,
+          "p95": 5119,
+          "p99": 5194,
           "samples": [
-            4913, 4913, 4919, 4906, 5506, 4913, 4894, 4919, 4919, 5175, 4937,
-            4932, 4931, 6307, 7975, 6863, 4938, 4950, 4925, 4944, 5200, 5200,
-            4962, 4963, 5819, 4969, 4957, 4962, 4956, 7294, 4943, 5000
+            4968, 4987, 4975, 4962, 4975, 4981, 4963, 5119, 4925, 4944, 4931,
+            4932, 4919, 4937, 4925, 5194, 4950, 4937, 4956, 4950, 4950, 4956,
+            4957, 4956, 4956, 4938, 4957, 4950, 4963, 5113, 4931, 5081
           ]
         },
         {
@@ -3389,12 +3401,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 32,
-          "p95": 556,
-          "p99": 831,
+          "median": 31,
+          "p95": 75,
+          "p99": 413,
           "samples": [
-            69, 556, 88, 100, 37, 31, 32, 25, 37, 269, 32, 31, 413, 50, 25, 38,
-            94, 31, 31, 31, 32, 31, 25, 56, 75, 87, 38, 831, 31, 25, 31, 31
+            413, 37, 25, 25, 25, 31, 31, 25, 25, 31, 32, 25, 25, 31, 31, 25, 25,
+            31, 32, 25, 25, 31, 62, 37, 31, 31, 31, 75, 31, 57, 25, 50
           ]
         },
         {
@@ -3429,8 +3441,8 @@
           "p95": 7,
           "p99": 7,
           "samples": [
-            0, 6, 6, 6, 6, 7, 6, 6, 7, 6, 6, 6, 0, 7, 0, 6, 0, 6, 7, 6, 6, 7, 6,
-            6, 6, 6, 7, 0, 6, 0, 6, 0
+            6, 7, 0, 6, 6, 0, 7, 6, 6, 6, 0, 7, 6, 6, 6, 0, 7, 0, 6, 6, 6, 7, 0,
+            6, 6, 6, 7, 0, 6, 0, 6, 7
           ]
         },
         {
@@ -3445,8 +3457,8 @@
           "p95": 7,
           "p99": 7,
           "samples": [
-            6, 6, 0, 7, 0, 6, 0, 6, 0, 6, 0, 7, 0, 6, 0, 6, 0, 6, 0, 7, 0, 6, 0,
-            6, 0, 6, 0, 7, 0, 6, 0, 6
+            6, 6, 0, 7, 6, 6, 6, 0, 7, 0, 6, 0, 6, 7, 6, 6, 0, 6, 0, 6, 6, 7, 6,
+            6, 6, 0, 7, 0, 6, 6, 6, 7
           ]
         },
         {
@@ -3457,12 +3469,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 44,
-          "p95": 50,
-          "p99": 57,
+          "median": 50,
+          "p95": 94,
+          "p99": 100,
           "samples": [
-            50, 43, 44, 50, 50, 50, 43, 44, 44, 50, 50, 44, 44, 43, 44, 50, 44,
-            44, 50, 44, 44, 57, 44, 44, 43, 50, 50, 43, 44, 50, 50, 50
+            75, 56, 69, 50, 87, 50, 50, 100, 94, 50, 50, 50, 50, 44, 50, 50, 44,
+            44, 50, 50, 63, 50, 50, 50, 43, 50, 50, 50, 44, 44, 50, 50
           ]
         },
         {
@@ -3474,11 +3486,11 @@
           "warmup": 4,
           "iterations": 32,
           "median": 12,
-          "p95": 19,
-          "p99": 57,
+          "p95": 13,
+          "p99": 19,
           "samples": [
-            12, 6, 13, 12, 13, 12, 6, 12, 13, 12, 12, 13, 12, 7, 12, 13, 13, 12,
-            7, 12, 12, 13, 13, 18, 57, 18, 13, 12, 13, 19, 12, 19
+            12, 13, 12, 13, 12, 13, 13, 12, 12, 13, 6, 6, 13, 12, 12, 13, 12,
+            12, 13, 12, 13, 13, 12, 12, 13, 12, 12, 13, 12, 19, 13, 12
           ]
         },
         {
@@ -3489,13 +3501,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 119,
-          "p95": 144,
-          "p99": 168,
+          "median": 125,
+          "p95": 131,
+          "p99": 137,
           "samples": [
-            119, 168, 143, 125, 119, 113, 119, 119, 119, 112, 125, 118, 143,
-            125, 119, 119, 125, 125, 119, 119, 119, 119, 119, 125, 119, 144,
-            119, 131, 118, 137, 119, 125
+            125, 125, 118, 125, 119, 125, 119, 137, 125, 118, 119, 125, 119,
+            119, 119, 119, 125, 118, 125, 125, 125, 118, 119, 125, 125, 125,
+            118, 131, 119, 125, 118, 125
           ]
         },
         {
@@ -3507,11 +3519,11 @@
           "warmup": 4,
           "iterations": 32,
           "median": 6,
-          "p95": 13,
-          "p99": 19,
+          "p95": 25,
+          "p99": 32,
           "samples": [
-            19, 6, 6, 13, 6, 6, 6, 6, 12, 13, 13, 13, 6, 12, 6, 7, 12, 6, 7, 6,
-            6, 13, 6, 6, 6, 6, 6, 13, 6, 12, 7, 6
+            7, 6, 32, 0, 6, 25, 0, 6, 6, 6, 0, 6, 6, 7, 25, 6, 0, 6, 7, 6, 25,
+            6, 0, 7, 6, 7, 0, 6, 7, 6, 6, 6
           ]
         },
         {
@@ -3522,12 +3534,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 7,
-          "p95": 31,
-          "p99": 37,
+          "median": 6,
+          "p95": 18,
+          "p99": 25,
           "samples": [
-            6, 7, 12, 13, 6, 6, 7, 6, 12, 7, 6, 12, 7, 12, 6, 7, 6, 31, 6, 13,
-            6, 7, 6, 37, 13, 6, 12, 7, 12, 6, 13, 7
+            7, 6, 7, 6, 0, 7, 6, 6, 25, 6, 6, 6, 6, 7, 7, 6, 6, 6, 13, 0, 6, 18,
+            6, 6, 7, 6, 7, 6, 0, 6, 0, 7
           ]
         },
         {
@@ -3538,12 +3550,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 69,
-          "p95": 75,
-          "p99": 75,
+          "median": 50,
+          "p95": 69,
+          "p99": 69,
           "samples": [
-            68, 69, 69, 68, 75, 69, 69, 75, 69, 75, 75, 75, 63, 75, 69, 75, 69,
-            68, 75, 69, 68, 69, 69, 62, 69, 69, 69, 75, 75, 69, 69, 75
+            50, 50, 56, 50, 50, 50, 50, 50, 50, 44, 44, 50, 50, 44, 50, 50, 44,
+            50, 69, 69, 50, 50, 50, 50, 50, 44, 43, 44, 50, 50, 44, 50
           ]
         },
         {
@@ -3554,12 +3566,12 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 18,
-          "p95": 81,
-          "p99": 112,
+          "median": 13,
+          "p95": 19,
+          "p99": 19,
           "samples": [
-            19, 13, 112, 19, 13, 19, 19, 19, 19, 19, 19, 19, 13, 13, 18, 19, 18,
-            13, 81, 18, 19, 12, 13, 12, 69, 13, 18, 19, 18, 12, 13, 18
+            12, 12, 13, 19, 12, 13, 12, 12, 13, 12, 6, 13, 12, 13, 12, 12, 13,
+            18, 13, 19, 13, 13, 12, 13, 12, 13, 12, 13, 13, 12, 13, 13
           ]
         },
         {
@@ -3570,13 +3582,13 @@
           "frequency": 62500000,
           "warmup": 4,
           "iterations": 32,
-          "median": 163,
-          "p95": 175,
-          "p99": 175,
+          "median": 119,
+          "p95": 125,
+          "p99": 131,
           "samples": [
-            169, 169, 175, 169, 169, 156, 163, 157, 163, 156, 162, 162, 156,
-            163, 157, 156, 175, 169, 163, 169, 162, 169, 169, 175, 168, 162,
-            162, 163, 169, 163, 163, 163
+            131, 118, 125, 119, 119, 112, 119, 119, 119, 119, 119, 119, 125,
+            125, 125, 125, 125, 125, 119, 118, 125, 125, 119, 119, 125, 118,
+            118, 112, 113, 113, 112, 112
           ]
         },
         {
@@ -3778,7 +3790,7 @@
           "client_cpu": 0,
           "service_cpu": 1,
           "outcome": 6,
-          "all_blocked": 442,
+          "all_blocked": 454,
           "client_blocks": 2,
           "client_wakes": 2,
           "service_blocks": 1,
@@ -3792,7 +3804,7 @@
           "client_cpu": 1,
           "service_cpu": 0,
           "outcome": 6,
-          "all_blocked": 472,
+          "all_blocked": 443,
           "client_blocks": 2,
           "client_wakes": 2,
           "service_blocks": 2,
@@ -3811,11 +3823,11 @@
           "client_cpu": 0,
           "service_cpu": 1,
           "outcome": 5,
-          "all_blocked": 436,
+          "all_blocked": 451,
           "client_blocks": 2,
           "client_wakes": 2,
-          "service_blocks": 1,
-          "service_wakes": 1,
+          "service_blocks": 2,
+          "service_wakes": 2,
           "reclaimed": true
         },
         {
@@ -3825,7 +3837,7 @@
           "client_cpu": 1,
           "service_cpu": 0,
           "outcome": 5,
-          "all_blocked": 445,
+          "all_blocked": 460,
           "client_blocks": 2,
           "client_wakes": 2,
           "service_blocks": 2,
@@ -3846,8 +3858,8 @@
           "outcome": 4,
           "client_blocks": 1,
           "client_wakes": 1,
-          "service_blocks": 0,
-          "service_wakes": 0,
+          "service_blocks": 1,
+          "service_wakes": 1,
           "reclaimed": true
         },
         {
@@ -3960,8 +3972,8 @@
           "outcome": 5,
           "client_blocks": 1,
           "client_wakes": 1,
-          "service_blocks": 0,
-          "service_wakes": 0,
+          "service_blocks": 1,
+          "service_wakes": 1,
           "reclaimed": true
         },
         {
@@ -4131,8 +4143,8 @@
           "outcome": 4,
           "client_blocks": 1,
           "client_wakes": 1,
-          "service_blocks": 1,
-          "service_wakes": 1,
+          "service_blocks": 2,
+          "service_wakes": 2,
           "reclaimed": true
         },
         {
@@ -4585,9 +4597,9 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
-          "client_blocks": 2,
+          "client_blocks": 1,
           "client_terminal_blocks": 1,
-          "client_wakes": 2,
+          "client_wakes": 1,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -4601,9 +4613,9 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
-          "client_blocks": 2,
-          "client_terminal_blocks": 1,
-          "client_wakes": 2,
+          "client_blocks": 3,
+          "client_terminal_blocks": 2,
+          "client_wakes": 3,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -4681,9 +4693,9 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
-          "client_blocks": 2,
-          "client_terminal_blocks": 2,
-          "client_wakes": 2,
+          "client_blocks": 1,
+          "client_terminal_blocks": 1,
+          "client_wakes": 1,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -4841,9 +4853,9 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
-          "client_blocks": 5,
-          "client_terminal_blocks": 4,
-          "client_wakes": 5,
+          "client_blocks": 1,
+          "client_terminal_blocks": 1,
+          "client_wakes": 1,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -4857,9 +4869,9 @@
           "full_rejected": true,
           "fifo": true,
           "reclaimed": true,
-          "client_blocks": 1,
-          "client_terminal_blocks": 1,
-          "client_wakes": 1,
+          "client_blocks": 2,
+          "client_terminal_blocks": 2,
+          "client_wakes": 2,
           "service_blocks": 1,
           "service_wakes": 1
         },
@@ -4989,7 +5001,7 @@
           "service_cpu": 0,
           "attempts_per_client": 16,
           "issuer_post_revoke_denials": 14,
-          "accepted_completed": 2,
+          "accepted_completed": 4,
           "reclaimed": true
         },
         {
@@ -5066,9 +5078,11 @@
           "none",
           "-no-reboot",
           "-kernel",
-          "D:\\KOLVRT\\target\\phase35-finalize\\aarch64-unknown-none\\release\\kolvrt-kernel"
+          "D:\\KOLVRT\\target\\phase35-finalize\\prod-positive-final.elf"
         ]
       }
     }
-  }
+  },
+  "worktree_dirty": true,
+  "timestamp_unix_ms": 1791210663425
 }

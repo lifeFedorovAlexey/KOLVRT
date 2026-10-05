@@ -24,9 +24,10 @@ jobs:
       - name: Boundary rejection controls
         run: node --test scripts/tests/dependency-audit.test.cjs
       - name: Inventory and supply chain
+        id: inventory
         run: node scripts/dependency-audit.cjs check --supply-chain
       - name: Compare actual PR base
-        if: ${{ always() && github.event_name == 'pull_request' }}
+        if: ${{ always() && github.event_name == 'pull_request' && steps.inventory.outcome == 'success' }}
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |

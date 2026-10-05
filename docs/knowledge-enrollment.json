@@ -29,6 +29,7 @@
     "docs/architecture/architecture-audit-2026-10-04.md",
     "docs/architecture/arena-measurement-contract.md",
     "docs/architecture/benchmarking.md",
+    "docs/architecture/compatibility-manifests.md",
     "docs/architecture/component-arena.md",
     "docs/architecture/first-native-slice.md",
     "docs/architecture/ipc-phase35-review.md",

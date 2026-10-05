@@ -151,15 +151,8 @@ Handle generation остаётся identity, а SEND/TRANSFER отдельно �
         "acceptance": [
           "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
         ],
-        "issues": [
-          23
-        ],
-        "adrs": [
-          "adr.0019",
-          "adr.0020",
-          "adr.0022",
-          "adr.0023"
-        ],
+        "issues": [23],
+        "adrs": ["adr.0019", "adr.0020", "adr.0022", "adr.0023"],
         "limitations": [
           "Close does not revoke retained work; no general grants, domains or IPC."
         ],

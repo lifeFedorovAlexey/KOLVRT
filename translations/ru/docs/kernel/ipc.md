@@ -6,7 +6,7 @@
 # Ограниченный IPC между нативными EL0-процессами
 
 Document status: CURRENT
-Evidence scope: техническая реализация Phase 3.5 сохранена; после integration с main 658cd22 прошли 124 DEV и 124 PROD checks. Окончательное acceptance review остаётся открытым; physical ARM не проверен.
+Evidence scope: техническая реализация Phase 3.5 сохранена; после integration с main ac63c75 прошли 124 DEV и 124 PROD checks. Окончательное acceptance review остаётся открытым; physical ARM не проверен.
 Current reference: [Повторное выведение архитектуры](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -192,7 +192,9 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           "research/results/routing-phase35-regression.json",
           "research/measurements/ipc-phase35-baseline.json",
           "research/results/kernel-phase35-unsafe-audit.json",
-          "research/results/ipc-phase35-main-integration.json"
+          "research/results/ipc-phase35-main-integration.json",
+          "research/results/routing-phase35-upgrades.json",
+          "research/results/phase35-dependency-upgrades.json"
         ],
         "issues": [26],
         "adrs": ["adr.0025"],
@@ -207,10 +209,10 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "124 named checks pass in DEV and PROD after integration with main 658cd22. The 46 historical mutation runs are retained separately; IPC enforcement sources are unchanged.",
+            "reason": "124 named checks pass in DEV and PROD on main ac63c75 with the requested dependency upgrades. The 46 original IPC mutation runs retain their original source snapshot; enforcement code is unchanged.",
             "receipt": "research/results/ipc-phase35-main-integration.json",
-            "receipt_sha256": "9b199a5dc0e23d65c1396001d337d768270cdbac2411a9c69c93fe2044edab9b",
-            "scope": "Current source inventory for two positive QEMU runs. Historical mutation, native-only and routing receipts retain their original snapshots; they are not represented as reruns."
+            "receipt_sha256": "23ae23c695ce5528b931769dbca7a0f1af6067fbd965f29c497d7056a22bb863",
+            "scope": "Current-source positive QEMU integration with separately retained ELF artifacts; no new mutation/native-only/performance or physical ARM claim. Six upgraded routing configurations and three rejection controls are recorded separately."
           },
           {
             "environment": "physical-arm64",

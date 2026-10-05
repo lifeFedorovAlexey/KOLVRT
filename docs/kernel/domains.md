@@ -84,12 +84,7 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
       "kind": "feature",
       "anchor": "kolvrt-domains-scope",
       "summary": "Bounded domains, budgets and retained notification outcomes.",
-      "tags": [
-        "domain",
-        "security",
-        "grant",
-        "notification"
-      ],
+      "tags": ["domain", "security", "grant", "notification"],
       "depends_on": [
         "kolvrt.security.domains.identity",
         "kolvrt.security.domains.grants",
@@ -120,14 +115,8 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
         "acceptance": [
           "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
         ],
-        "issues": [
-          24,
-          25,
-          75
-        ],
-        "adrs": [
-          "adr.0023"
-        ],
+        "issues": [24, 25, 75],
+        "adrs": ["adr.0023"],
         "limitations": [
           "One process/domain and fixed-affinity single-cell notification; no general IPC, supervisor installation policy, multi-process domains, immediate revoke/drain, migration or silicon verification."
         ],

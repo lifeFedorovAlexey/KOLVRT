@@ -13,12 +13,16 @@ fn run() -> CheckResult<()> {
         }
     }
     match command {
+        "check-compatibility" if args.len() == 1 => {
+            repository_checks::compat_modules::check(&root)?;
+            println!("Compatibility declarations and native dependency boundary passed; no runtime admission or support proven.");
+        }
         "arena" => return repository_checks::arena::cli(&root, &args[1..]),
         "cost-l" => return repository_checks::cost_l_queries::cli(&root, &args[1..]),
         "docs" => return knowledge::cli(&root, &args[1..]),
         "check" | "validate" | "check-docs" | "check-translations" if args.len() <= 1 => {
             if matches!(command,"check" | "validate") { database::validate(&root, &root.join("research/cases"), repository_checks::MINIMUM_RESEARCH_CASES)?; }
-            if matches!(command,"check" | "validate") { cost_l::validate(&root, &root.join("research/cost-l"))?; }
+            if matches!(command,"check" | "validate") { repository_checks::compat_modules::check(&root)?; }
             if matches!(command,"check" | "check-docs") { documents::check_docs(&root)?; }
             if matches!(command,"check" | "check-translations") { documents::check_translations(&root)?; }
             if command == "check" { repository_checks::arena::check(&root)?; report::report(&root, true)?; knowledge::generate(&root, true)?; knowledge::pilot(&root, true)?; }
@@ -41,7 +45,7 @@ fn run() -> CheckResult<()> {
             documents::record_translation(&root, &args[1], &args[2])?;
             println!("Recorded reviewed pair: {}/{}. Meaning must be reviewed by a person.", args[1], args[2]);
         }
-        _ => return Err("usage: repository-checks [cost-l COMMAND [OPTIONS] | check | validate [--directory PATH] | check-cost-l [--directory PATH] | check-docs | check-translations | report [--check] | record-translation LOCALE PATH]".into())
+        _ => return Err("usage: repository-checks [cost-l COMMAND [OPTIONS] | check | validate [--directory PATH] | check-cost-l [--directory PATH] | check-compatibility | check-docs | check-translations | report [--check] | record-translation LOCALE PATH]".into())
     }
     Ok(())
 }

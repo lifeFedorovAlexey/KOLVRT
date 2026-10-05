@@ -12,3 +12,6 @@ default = []
 v1 = []
 v2 = []
 bug = []
+
+[package.metadata.kolvrt]
+compatibility_modules = ["window.inclusive/1.0.0", "window.counted/2.0.0", "bug.window.empty-first/1.0.0"]

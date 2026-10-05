@@ -102,7 +102,7 @@ Both CI workflows use Node 24.21.0 from `.nvmrc`; locally, install/use that vers
           {
             "environment": "host-process",
             "state": "STALE",
-            "reason": "Historical dependency checks retain their original receipt. CI workflows and Node version changed; fresh hosted-runner evidence is pending.",
+            "reason": "Historical dependency receipt retained. CI/Node inputs changed, and #47 adds a compatibility marker to window-compat Cargo metadata; dependency graph semantics are unchanged, but fresh exact-source acceptance is pending.",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
             "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f"

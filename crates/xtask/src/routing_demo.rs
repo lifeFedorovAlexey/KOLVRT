@@ -202,6 +202,30 @@ fn extract(bytes: &[u8]) -> Result<Vec<u8>> {
     Ok(image)
 }
 fn guest(features: &[&str], evidence: bool) -> Result<Value> {
+    // sha2 0.11 runtime CPU detection uses writable globals. This immutable
+    // freestanding EL0 image requires the upstream stateless software backend.
+    // Preserve caller flags, then retain the pinned target checks and record
+    // the exact guest-only flags; native kernel builds are unaffected.
+    let mut guest_flags = env::var("CARGO_ENCODED_RUSTFLAGS").unwrap_or_else(|_| {
+        env::var("RUSTFLAGS")
+            .unwrap_or_default()
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .join("\u{1f}")
+    });
+    for flag in [
+        "-C",
+        "force-frame-pointers=yes",
+        "-D",
+        "warnings",
+        "--cfg",
+        "sha2_backend=\"soft\"",
+    ] {
+        if !guest_flags.is_empty() {
+            guest_flags.push('\u{1f}');
+        }
+        guest_flags.push_str(flag);
+    }
     let cargo = env::var("CARGO").unwrap_or_else(|_| "cargo".into());
     let selected = std::iter::once("guest")
         .chain(evidence.then_some("evidence"))
@@ -235,6 +259,7 @@ fn guest(features: &[&str], evidence: bool) -> Result<Value> {
         .collect::<String>();
     fs::write("target/kernel/routing-profile.bin", profile)?;
     if !Command::new(&cargo)
+        .env("CARGO_ENCODED_RUSTFLAGS", &guest_flags)
         .env(
             "KOLVRT_ROUTING_PROFILE",
             fs::canonicalize("target/kernel/routing-profile.bin")?,
@@ -283,7 +308,7 @@ fn guest(features: &[&str], evidence: bool) -> Result<Value> {
         return Err("native-only user depends on adapter".into());
     }
     Ok(
-        json!({"elf_sha256":(Sha256::digest(&elf)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"image_sha256":(Sha256::digest(&image)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"image_bytes":image.len(),"elf_bytes":elf.len(),"features":features,"evidence":evidence,"profile_sha256":digest,"profile_bytes":profile.to_vec(),"dependencies":dependencies}),
+        json!({"guest_rustflags":guest_flags.split('\u{1f}').collect::<Vec<_>>(),"sha2_backend":"soft","elf_sha256":(Sha256::digest(&elf)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"image_sha256":(Sha256::digest(&image)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"image_bytes":image.len(),"elf_bytes":elf.len(),"features":features,"evidence":evidence,"profile_sha256":digest,"profile_bytes":profile.to_vec(),"dependencies":dependencies}),
     )
 }
 fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
@@ -601,9 +626,12 @@ pub fn run(args: &[String]) -> Result<()> {
             .encode();
         fs::write(path, bytes)?;
         println!(
-            "Profile: {path}; schema={}; trusted expected digest={:x}; source identities are not executable signatures",
+            "Profile: {path}; schema={}; trusted expected digest={}; source identities are not executable signatures",
             routing::PROFILE_SCHEMA,
             Sha256::digest(&bytes[..bytes.len() - SHA256_BYTES])
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>()
         );
         return Ok(());
     }

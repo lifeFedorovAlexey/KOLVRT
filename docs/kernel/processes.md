@@ -157,15 +157,9 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
           "crates/kernel/src/process.rs",
           "crates/kernel-core/src/process.rs"
         ],
-        "acceptance": [
-          "research/results/kernel-phase31.json"
-        ],
-        "issues": [
-          20
-        ],
-        "adrs": [
-          "adr.0017"
-        ],
+        "acceptance": ["research/results/kernel-phase31.json"],
+        "issues": [20],
+        "adrs": ["adr.0017"],
         "limitations": [
           "No public EL0 create API, migration or asynchronous retirement."
         ],
@@ -192,9 +186,7 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
             "from": "UNRECORDED",
             "to": "BOUNDED_IMPLEMENTED",
             "reason": "Initial reviewed catalog adoption of existing scoped contract; not a new implementation transition.",
-            "acceptance": [
-              "research/results/kernel-phase31.json"
-            ]
+            "acceptance": ["research/results/kernel-phase31.json"]
           }
         ]
       }
@@ -204,10 +196,7 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
       "anchor": "kolvrt-process-identity",
       "kind": "contract-section",
       "summary": "Process lifecycle: identity",
-      "depends_on": [
-        "adr.0017",
-        "adr.0021"
-      ]
+      "depends_on": ["adr.0017", "adr.0021"]
     },
     {
       "id": "kolvrt.process.state",
@@ -228,10 +217,7 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
       "anchor": "kolvrt-process-reclamation",
       "kind": "contract-section",
       "summary": "Process lifecycle: reclamation",
-      "depends_on": [
-        "adr.0017",
-        "adr.0021"
-      ]
+      "depends_on": ["adr.0017", "adr.0021"]
     },
     {
       "id": "kolvrt.process.evidence",

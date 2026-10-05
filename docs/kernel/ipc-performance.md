@@ -1,5 +1,6 @@
 <!-- markdownlint-disable MD041 -->
 <!-- The stable knowledge anchor precedes the visible document heading. -->
+
 <a name="measurement-method"></a>
 
 # Phase 3.5 IPC performance passport

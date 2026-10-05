@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "modules": [
+    {
+      "id": "window.inclusive",
+      "semantic_version": "1.0.0",
+      "scope": "Synthetic KOLVRT versioned-window conformance; no Linux driver support",
+      "package": "window-compat",
+      "package_version": "0.1.0",
+      "feature": "v1",
+      "classification": "SYNTHETIC",
+      "status": "DECLARED",
+      "owner": "KOLVRT routing maintainers",
+      "support_until": "2027-04-01",
+      "artifact": null,
+      "sources": [
+        {
+          "path": "crates/window-compat/Cargo.toml",
+          "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+        },
+        {
+          "path": "crates/window-compat/src/lib.rs",
+          "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+        },
+        {
+          "path": "crates/window-compat/tests/protocols.rs",
+          "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+        }
+      ],
+      "debt_ids": [],
+      "debt_unassigned_reason": "Synthetic window protocol fixture; no demonstrated Linux/Legacy incompatibility or production artifact is asserted.",
+      "exception_ids": [],
+      "consumers": [
+        {
+          "id": "synthetic versioned-window conformance workload",
+          "kind": "FIXTURE",
+          "dependency": "DIRECT",
+          "scope": "Synthetic KOLVRT versioned-window conformance; no Linux driver support",
+          "support_until": "2027-04-01"
+        }
+      ]
+    },
+    {
+      "id": "window.counted",
+      "semantic_version": "2.0.0",
+      "scope": "Synthetic KOLVRT versioned-window conformance; no Linux driver support",
+      "package": "window-compat",
+      "package_version": "0.1.0",
+      "feature": "v2",
+      "classification": "SYNTHETIC",
+      "status": "DECLARED",
+      "owner": "KOLVRT routing maintainers",
+      "support_until": "2027-04-01",
+      "artifact": null,
+      "sources": [
+        {
+          "path": "crates/window-compat/Cargo.toml",
+          "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+        },
+        {
+          "path": "crates/window-compat/src/lib.rs",
+          "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+        },
+        {
+          "path": "crates/window-compat/tests/protocols.rs",
+          "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+        }
+      ],
+      "debt_ids": [],
+      "debt_unassigned_reason": "Synthetic window protocol fixture; no demonstrated Linux/Legacy incompatibility or production artifact is asserted.",
+      "exception_ids": [],
+      "consumers": [
+        {
+          "id": "synthetic versioned-window conformance workload",
+          "kind": "FIXTURE",
+          "dependency": "DIRECT",
+          "scope": "Synthetic KOLVRT versioned-window conformance; no Linux driver support",
+          "support_until": "2027-04-01"
+        }
+      ]
+    },
+    {
+      "id": "bug.window.empty-first",
+      "semantic_version": "1.0.0",
+      "scope": "Synthetic KOLVRT versioned-window conformance; no Linux driver support",
+      "package": "window-compat",
+      "package_version": "0.1.0",
+      "feature": "bug",
+      "classification": "SYNTHETIC",
+      "status": "DECLARED",
+      "owner": "KOLVRT routing maintainers",
+      "support_until": "2027-04-01",
+      "artifact": null,
+      "sources": [
+        {
+          "path": "crates/window-compat/Cargo.toml",
+          "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+        },
+        {
+          "path": "crates/window-compat/src/lib.rs",
+          "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+        },
+        {
+          "path": "crates/window-compat/tests/protocols.rs",
+          "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+        }
+      ],
+      "debt_ids": [],
+      "debt_unassigned_reason": "Synthetic window protocol fixture; no demonstrated Linux/Legacy incompatibility or production artifact is asserted.",
+      "exception_ids": ["EXC-0001"],
+      "consumers": [
+        {
+          "id": "synthetic versioned-window conformance workload",
+          "kind": "FIXTURE",
+          "dependency": "DIRECT",
+          "scope": "Synthetic KOLVRT versioned-window conformance; no Linux driver support",
+          "support_until": "2027-04-01"
+        }
+      ]
+    }
+  ]
+}

@@ -38,15 +38,8 @@ Service-private grants cannot expand caller effects, including nested calls. Res
       "anchor": "kolvrt-security-capability-revocation",
       "kind": "feature",
       "summary": "Current bounded Phase 3.4 capability revocation with explicit remaining gates.",
-      "tags": [
-        "capability",
-        "revocation",
-        "phase",
-        "3.4"
-      ],
-      "read_when": [
-        "review Phase 3.4 capability revocation"
-      ],
+      "tags": ["capability", "revocation", "phase", "3.4"],
+      "read_when": ["review Phase 3.4 capability revocation"],
       "depends_on": [
         "kolvrt.handles.local",
         "kolvrt.handles.identity",
@@ -86,14 +79,8 @@ Service-private grants cannot expand caller effects, including nested calls. Res
         "acceptance": [
           "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
         ],
-        "issues": [
-          24
-        ],
-        "adrs": [
-          "adr.0013",
-          "adr.0022",
-          "adr.0023"
-        ],
+        "issues": [24],
+        "adrs": ["adr.0013", "adr.0022", "adr.0023"],
         "limitations": [
           "The full general IPC/supervisor production contract is not delivered; one-process fixed-affinity domains and single-cell Event notification remain bounded."
         ],
@@ -132,11 +119,7 @@ Service-private grants cannot expand caller effects, including nested calls. Res
       "anchor": "kolvrt-security-event-revocation",
       "kind": "feature",
       "summary": "Synchronous Event grants and target-wide admission revocation.",
-      "tags": [
-        "event",
-        "revocation",
-        "grant"
-      ],
+      "tags": ["event", "revocation", "grant"],
       "depends_on": [
         "kolvrt.handles.identity",
         "kolvrt.handles.lifetime",
@@ -154,16 +137,9 @@ Service-private grants cannot expand caller effects, including nested calls. Res
           "crates/kernel/src/handles.rs",
           "crates/kernel/src/handles/testing.rs"
         ],
-        "acceptance": [
-          "research/results/event-revocation-ci.json"
-        ],
-        "issues": [
-          24,
-          72
-        ],
-        "adrs": [
-          "adr.0022"
-        ],
+        "acceptance": ["research/results/event-revocation-ci.json"],
+        "issues": [24, 72],
+        "adrs": ["adr.0022"],
         "limitations": [
           "Event-only synchronous publication; no issuer independence, general service/domain grants, async cancellation/drain or silicon acceptance."
         ],
@@ -190,9 +166,7 @@ Service-private grants cannot expand caller effects, including nested calls. Res
             "from": "UNRECORDED",
             "to": "BOUNDED_IMPLEMENTED",
             "reason": "Adopt already-merged PR #72 with its actual passing CI receipt; this documentation change implements no kernel behavior.",
-            "acceptance": [
-              "research/results/event-revocation-ci.json"
-            ]
+            "acceptance": ["research/results/event-revocation-ci.json"]
           }
         ]
       }
