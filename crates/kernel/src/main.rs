@@ -146,6 +146,9 @@ pub extern "C" fn kernel_main() -> ! {
             ),
         );
         process_workload::exercise(&mut physical, &mut processes, |name, passed| {
+            if !passed {
+                event!("{{\"event\":\"test\",\"name\":\"{name}\",\"status\":\"fail\"}}");
+            }
             assert!(passed, "process workload check failed: {name}");
         });
         ipc_workload::exercise(&mut physical, &mut processes, |name, passed| {

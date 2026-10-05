@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "39d695522509c8922e5b3e15119a91fa9e81dd2eabb36cd9373c2c8c46d957ab",
-        "translation_sha256": "21ace62dc98ed4e19e47d37626fca136d3919dae0da999cc8e383e214fc7b947"
+        "source_sha256": "dbb2fb4a826c1b84ea1181bb234fd91b54de6ed6f7951b5b13b371c3a5c3b850",
+        "translation_sha256": "007e71fab1a2435c79d74151c745ae2df7dff102ec97ccf19710bc574c3685da"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -154,8 +154,8 @@
         "translation_sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6"
       },
       "docs/architecture/dependency-hygiene.md": {
-        "source_sha256": "8a3c76008209642f50515facad62287f20efab10a54d8380e741d370498b8508",
-        "translation_sha256": "0509eea05e53834cfa25bd3e32891e058a46d36a6e02a7a2c95284e46d003b74"
+        "source_sha256": "8079201658b2d4deb3200b5e0a54bf89a1cc6dbceb7fcde3f89312bf776deec5",
+        "translation_sha256": "1752fca39044e323e10120900a4b643c08ce7846207d1565c2fd403f3218e441"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -241,13 +241,17 @@
         "source_sha256": "0cb535cc6baae84d279135a55ea062474cbeb0d448f79cd6aec9b66b4c8241bc",
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
+      "docs/ci/performance.md": {
+        "source_sha256": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
+        "translation_sha256": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac"
+      },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
         "translation_sha256": "f0f8060a4a50345ab33676736c79dc955637f5a383cb36c50b55027107eefb24"
       },
       "docs/index.md": {
-        "source_sha256": "0a7e9cbedfe0b91dfa14af39d0693dca7d71a53b5ed0f8be89e26ac5d7928ded",
-        "translation_sha256": "6ab4c000edf71c88b9f2fc6cbe829a64ff19f29862989fb7607f6e7c0280bafb"
+        "source_sha256": "908624e2456ee40147b98e1a4056f02aad81724fcd3a36d3605a91c9011eebfe",
+        "translation_sha256": "19dcbf9e7b69a9140cfced0a89ef2eb1e5d51d9aaa4f1cd83d6877efb91c4ad9"
       },
       "docs/kernel/boot.md": {
         "source_sha256": "954bdb7cf092fab4af77f592981da339db2e14dc901ca3735864a6e29169112f",
@@ -282,8 +286,8 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "513d86be0a97c2ea854a24ee62cd3bb0b915f0c12f7be47321fda6822ffa6d98",
-        "translation_sha256": "75d8ded512a515895316428b597d5599006ad617a6e8369da22e7fab482471ee"
+        "source_sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+        "translation_sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",

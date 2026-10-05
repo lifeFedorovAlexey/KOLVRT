@@ -6,7 +6,7 @@
 # Bounded native EL0 IPC
 
 Document status: CURRENT
-Evidence scope: accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.
+Evidence scope: accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.
 Current reference: [Architecture re-derivation](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -83,13 +83,13 @@ Independent admission, migration, mutable user mappings, supervisor/service poli
 
 ## Accepted Phase 3.5 evidence
 
-The measurement method, copy-count scope and raw observations are described in the [performance passport](ipc-performance.md). The final source set is verified in 144 groups per profile, including hot/blocked receive, blocked requester and queue-full rejection.
+The measurement method, copy-count scope and raw observations are described in the [performance passport](ipc-performance.md). The retained final Phase 3.5 source snapshot was verified in 144 groups per profile, including hot/blocked receive, blocked requester and queue-full rejection.
 
 Current real EL0 fixtures cover both cross-CPU directions and each same-CPU placement, capacity 1/4, initialized payload boundaries, mutation after submit/reply, duplicate IDs before collection, failed receive/collect copy-out, blocked expiry before/after commitment, service/requester death, cancellation via an independent IPC handshake, authorized denial, revoke/close retention, FIFO/full rejection and zero charges/frames after quiescence. Payload stress executes 24 requests per CPU/capacity configuration, including four passes over sizes 0/1/8/64/255/256.
 
 Twenty-three focused mutation controls cover authority, queue bounds/FIFO, client-ID and internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wrong-process wake, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, missing and duplicate charge release, endpoint teardown, copy transactions and service death. All 46 DEV/PROD runs were rejected by their exact expected event or named failing test; an arbitrary panic is insufficient. A CPU1 kernel failure retains its exact cause in a bounded atomic record for CPU0, which stops the continuous session without authorizing reclamation.
 
-Current source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records current-source positive checks and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. The [acceptance review](../architecture/ipc-phase35-acceptance-review.md) records code/EN-RU semantic correspondence and the scoped readiness decision. Fresh current-source controls and readiness receipts supplement the historical records. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
+Retained source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records positive checks of its named source snapshot and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. The [acceptance review](../architecture/ipc-phase35-acceptance-review.md) records code/EN-RU semantic correspondence and the scoped readiness decision. Controls and readiness receipts supplement the historical records at their named snapshots. Issue #109 changes only the host execution/verification inventory: current runner-source verification is STALE pending a fresh scoped receipt and semantic review. Native IPC implementation and its prior bounded readiness acceptance remain unchanged; historical receipts do not verify the new runner. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
 
 Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](../../crates/kernel-core/src/ipc/identity.rs), [wire](../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../crates/kernel/src/ipc/native.rs), [storage](../../crates/kernel/src/ipc/storage.rs), [deferred work](../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../crates/kernel/src/ipc_workload.rs), [runner](../../crates/xtask/src/main.rs).
 
@@ -183,7 +183,8 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           "crates/kernel/src/ipc_multi_workload.S",
           "crates/kernel/src/ipc_paths_benchmark.S",
           "crates/kernel/src/ipc_revoke_workload.S",
-          "crates/kernel/src/test_support/irq_wait.rs"
+          "crates/kernel/src/test_support/irq_wait.rs",
+          "crates/xtask/src/matrix.rs"
         ],
         "acceptance": [
           "research/results/ipc-phase35-acceptance.json",
@@ -209,8 +210,8 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Source-matched 124 DEV and 124 PROD checks plus all 46 fresh focused IPC mutations (23 per profile) on main 9b4687a; exact required failure events and unchanged source inventory are retained.",
+            "state": "STALE",
+            "reason": "Issue #109 changes the host matrix runner and shared serial/sharded inventory, and makes failed non-test process checks emit their exact name in PROD machine evidence. Failure predicates and native IPC behavior remain unchanged; historical receipts remain immutable, but current-source runner verification and semantic review are pending.",
             "receipt": "research/results/ipc-phase35-readiness.json",
             "receipt_sha256": "f3a34e38f84c8f9f776b23e8b513b21ae8f1b59df04958657cecbef82f4f77e9",
             "scope": "Two fixed-affinity QEMU CPUs, current bounded IPC mechanism, fresh enforcement controls and explicit semantic EN/RU review. No physical ARM or stable ABI claim."

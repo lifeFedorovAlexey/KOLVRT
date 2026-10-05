@@ -52,6 +52,8 @@ Rejection controls включают реальные Cargo metadata для optio
 
 Оба workflow берут Node 24.21.0 из `.nvmrc`. Локально эту версию устанавливают и включают через nvm: `nvm install 24.21.0`, затем `nvm use 24.21.0`. Checkout 7.0.1, setup-node 7.0.0 и upload-artifact 7.0.1 используют встроенную среду Node 24. Аудит закреплён за `ubuntu-24.04`: будущая смена `ubuntu-latest` не изменит окружение без правки workflow. Ядро проверяется на `windows-2022`. Локальные проверки под Node 24 не подтверждают работу на hosted runner; для восстановления статуса VERIFIED нужны новые доказательства CI на текущих исходниках.
 
+Issue #109 добавляет кэш закреплённого cargo-deny 0.19.9 с проверкой целостности и обязательную проверку версии в Ubuntu. Workflow ядра разделяет static/host checks и выполняет полный matrix из четырёх shards с exact-source агрегацией; npm run check сохраняет все уникальные host validations. Кэши скачиваний и compiled artifacts никогда не разрешают пропускать supply-chain или kernel checks. Поведение кэшей на hosted runners не проверено; исторические dependency receipts остаются STALE.
+
 <!-- knowledge -->
 
 ```json
