@@ -46,8 +46,13 @@ pub const CREATION_STEPS: [CreationStep; 5] = [
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Reason {
     Exited(u64),
-    Faulted { class: u64, address: usize },
+    Faulted {
+        class: u64,
+        address: usize,
+    },
     BudgetExpired,
+    /// Explicit authorized termination, distinct from timer/budget expiration.
+    Terminated,
     CreationFailed(CreationStep),
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

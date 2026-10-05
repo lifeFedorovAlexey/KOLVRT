@@ -114,6 +114,12 @@ fn check_ipc_failure() {
 }
 static IPC_IPI: [AtomicBool; platform_config::ACTIVE_CPUS] =
     [const { AtomicBool::new(false) }; platform_config::ACTIVE_CPUS];
+static LIFECYCLE_STOP: [AtomicU64; config::TOTAL_TASKS] =
+    [const { AtomicU64::new(0) }; config::TOTAL_TASKS];
+pub(crate) fn lifecycle_stop(id: kernel_core::process::ProcessId) {
+    assert!(detached(id));
+    LIFECYCLE_STOP[id.slot()].store(id.generation(), Ordering::Release);
+}
 static CURSOR: [AtomicUsize; platform_config::ACTIVE_CPUS] =
     [const { AtomicUsize::new(NO_TASK) }; platform_config::ACTIVE_CPUS];
 const WAIT_OWN_EVENT: u16 = 0x55;
@@ -151,6 +157,11 @@ pub(crate) fn dispatch_ipc(
 ) -> Completed {
     dispatch_inner(tasks, timeout, false, true)
 }
+/// Bounded rendezvous for authorized lifecycle work. IPC ownership survives
+/// the barrier; roots detach before the coordinator may change membership.
+pub(crate) fn checkpoint(tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
+    dispatch_inner(tasks, None, true, true)
+}
 fn dispatch_inner(
     tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
@@ -182,14 +193,15 @@ fn dispatch_inner(
         // by-value State would put multiple report/namespace arrays on DEV stacks.
         local.prepare(generation, |state| {
             assert!(
-                state.ipc_pending.iter().all(Option::is_none),
+                (step && continuous) || state.ipc_pending.iter().all(Option::is_none),
                 "IPC continuation survived session retirement"
             );
-            state.current = if step {
-                CURSOR[owner].load(Ordering::Acquire)
-            } else {
-                NO_TASK
-            };
+            let cursor = CURSOR[owner].load(Ordering::Acquire);
+            state.current = if step && cursor < TASKS
+                && tasks[owner * TASKS + cursor].as_ref().is_some_and(|admitted|
+                    state.tasks[cursor].process_generation() == admitted.identity.generation()) {
+                cursor
+            } else { NO_TASK };
             state.switches = 0;
             state.deadline = timeout.map(time::deadline_after);
             for (index, task) in state.tasks.iter_mut().enumerate() {
@@ -216,6 +228,11 @@ fn dispatch_inner(
                     } else {
                         None
                     };
+                    let retained = (step
+                        && continuous
+                        && task.id() == id
+                        && task.process_generation() == admitted.identity.generation())
+                    .then_some(*task);
                     *task = Task::new(
                         id,
                         admitted.identity.generation(),
@@ -224,13 +241,32 @@ fn dispatch_inner(
                         admitted.context,
                         admitted.slice_budget,
                     );
+                    if let Some(saved) = retained {
+                        task.ipc_wait = if cfg!(feature = "supervision-wait-negative") {
+                            None
+                        } else {
+                            saved.ipc_wait
+                        };
+                        task.ipc_blocks = saved.ipc_blocks;
+                        task.ipc_terminal_blocks = saved.ipc_terminal_blocks;
+                        task.ipc_wakes = saved.ipc_wakes;
+                    }
                     state.handles[index] = core::mem::take(admitted.handles);
                     task.bind_queue(generation);
                     task.slices = admitted.slices;
                     task.el0_residency_ticks = admitted.el0_residency_ticks;
                     task.native_window_service_ticks = admitted.native_window_service_ticks;
                     task.observations = admitted.observations;
-                    if admitted.blocked {
+                    if LIFECYCLE_STOP[id].swap(0, Ordering::AcqRel)
+                        == admitted.identity.generation()
+                    {
+                        task.state = CONTEXT_TERMINATED;
+                        task.ipc_wait = None;
+                    } else if admitted.blocked {
+                        if continuous && task.ipc_wait.is_none() {
+                            crate::event!("{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"WaitIdentityLost\"}}");
+                            panic!("checkpoint lost retained IPC wait identity");
+                        }
                         assert!(step, "blocked processes require step driver");
                         task.state = task::CONTEXT_BLOCKED;
                     }
@@ -310,7 +346,7 @@ pub(crate) fn unlink(completed: &Completed) {
         local.quiescent(local.generation(), |state| {
             state.current = NO_TASK;
             for task in &mut state.tasks {
-                if CONTINUOUS.load(Ordering::Acquire) {
+                if CONTINUOUS.load(Ordering::Acquire) && !STEP.load(Ordering::Acquire) {
                     task.unlink_ipc();
                 } else {
                     task.unlink();
@@ -428,6 +464,17 @@ fn run_local() {
     if percpu::id() == percpu::BOOT_CPU {
         local.controls(generation);
     }
+    if CONTINUOUS.load(Ordering::Acquire) {
+        local.with(generation, |state| {
+            for (index, task) in state.tasks.iter_mut().enumerate() {
+                if task.state == CONTEXT_TERMINATED {
+                    state.handles[index].begin_teardown();
+                    crate::asid::retire(task.lease());
+                }
+            }
+        });
+        deferred_local(local, generation);
+    }
     let first = local.with(generation, |state| {
         let index = choose(state, generation)?;
         Some((
@@ -472,7 +519,19 @@ fn run_local() {
     }
     assert_eq!(cpu::el(), cpu::CURRENT_EL1);
     if CONTINUOUS.load(Ordering::Acquire) {
-        continuous_local(local, generation);
+        if STEP.load(Ordering::Acquire) {
+            // Finish owned copy reservations before namespaces return to Registry.
+            loop {
+                deferred_local(local, generation);
+                if local.with(generation, |state| {
+                    state.ipc_pending.iter().all(Option::is_none)
+                }) {
+                    break;
+                }
+            }
+        } else {
+            continuous_local(local, generation);
+        }
     }
     memory::USER_EXECUTION_ACTIVE.fetch_sub(1, Ordering::AcqRel);
     let quiescent = cpu::active_root() == NATIVE_ROOT.load(Ordering::Acquire)
@@ -660,7 +719,10 @@ fn trap_owned(
     if matches!(kind, Trap::Irq) {
         let timer = local.preempt.swap(false, Ordering::AcqRel);
         let ipc = IPC_IPI[percpu::id()].swap(false, Ordering::AcqRel);
-        if !timer && !ipc {
+        // An SGI arriving before the first EL0 instruction cannot consume a
+        // checkpoint quantum. Preserve the armed timer and execution progress;
+        // exact wake/death work has already drained outside scheduler storage.
+        if !timer && (!ipc || STEP.load(Ordering::Acquire)) {
             task.entered_at = cpu::ticks();
             return 0;
         }
@@ -689,7 +751,16 @@ fn trap_owned(
         else {
             unreachable!()
         };
-        if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire) {
+        if class == ESR_SVC64 && operation == crate::supervision::CONTROL {
+            if STEP.load(Ordering::Acquire) && CONTINUOUS.load(Ordering::Acquire) {
+                crate::supervision::capture(task, frame);
+            } else {
+                frame.gpr[0] = 11;
+            }
+            task.context = *frame;
+            task.state = CONTEXT_READY;
+        } else if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire)
+        {
             frame.gpr[0] = abi::OK;
             task.context = *frame;
             if !event(task.id()).register() {
@@ -749,7 +820,7 @@ fn reschedule(
     for (index, task) in state.tasks.iter().enumerate() {
         if matches!(
             task.state,
-            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT | CONTEXT_TERMINATED
         ) {
             state.handles[index].begin_teardown();
             // A dying service publishes cancellation before releasing accepted charges.
@@ -761,7 +832,7 @@ fn reschedule(
     for task in &state.tasks {
         if matches!(
             task.state,
-            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT | CONTEXT_TERMINATED
         ) {
             crate::asid::retire(task.lease());
         }
@@ -982,7 +1053,7 @@ fn deferred_local(local: &Local, generation: u64) -> crate::ipc::deferred::Poll 
         core::array::from_fn::<_, TASKS, _>(|index| {
             matches!(
                 state.tasks[index].state,
-                CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+                CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT | CONTEXT_TERMINATED
             )
             .then(|| state.handles[index].owner())
             .flatten()

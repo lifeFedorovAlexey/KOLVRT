@@ -41,6 +41,10 @@ Current reference: [Владение планировщиком и Phase 3.0](..
 
 [Английский оригинал](../../../../docs/architecture/first-native-slice.md)
 
+## Экспериментальная интеграция supervision
+
+[Supervisor Phase 3.6](../kernel/supervision.md) предоставляет экспериментальную реальную isolated EL0 service policy и bounded lifecycle mechanism. Весь native slice ещё не завершён: proposed architecture и complete EN/RU human review остаются открытыми, persistent integration принадлежит #28, production bootstrap trust — #38. Current-source receipts отделены от принятого historical evidence Phase 3.5.
+
 <!-- knowledge -->
 
 ```json

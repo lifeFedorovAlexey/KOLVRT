@@ -1,27 +1,139 @@
 {
   "schema_version": 1,
-  "base_commit": "2ff6e14cd5eb1c665816d7ba74479f4644424370",
+  "base_commit": "4e713a2194742fa2d5c75fd58d2dd7608e7617be",
   "files": [
     {
-      "path": "crates/repository-checks/src/cost_l_queries.rs",
-      "before_sha256_lf": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967",
-      "after_sha256_lf": "567932099224415c21466ca823cb46666679beff1de961b9d37ac491bfb0195e",
+      "path": "crates/kernel-core/src/process.rs",
+      "before_sha256_lf": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73",
+      "after_sha256_lf": "3e5495a849246cb904f39442429adfe04e26a40a39a9478bae6ffdaa4bd5e853",
       "disposition": "existing-feature",
-      "reason": "Extend canonical offline COST-L queries with reciprocal manifest validation, exact module projection and real positive/negative CLI tests; no runtime authority or kernel changes."
+      "reason": "Separate explicit authorized termination from timer/budget expiry and verify exact terminal identity/lifetime without conflating causes."
     },
     {
-      "path": "crates/repository-checks/tests/cost_l_queries.rs",
-      "before_sha256_lf": "e03177398b210f49680268545eef9820acf6be7e8cf30548f4b9e3de0ebdba32",
-      "after_sha256_lf": "1b601783787af14365fbfa4a1b280dc2b59303f9727b87145c1c468046876f87",
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "before_sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5",
+      "after_sha256_lf": "11018fe4419e11fcd577aa555f9b684589f38f65aeaa45f64a395ad0d8ab3fb8",
       "disposition": "existing-feature",
-      "reason": "Extend canonical offline COST-L queries with reciprocal manifest validation, exact module projection and real positive/negative CLI tests; no runtime authority or kernel changes."
+      "reason": "Separate explicit authorized termination from timer/budget expiry and verify exact terminal identity/lifetime without conflating causes."
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "before_sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50",
+      "after_sha256_lf": "837d0028308d980a0ff915dc25b052ec0433288f31b3cafbf1d985bc382553dc",
+      "disposition": "existing-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "before_sha256_lf": "e10e49c1e19ef505689fa075e795ae6e0b74130a5b613d4272e09dc8fbca84fa",
+      "after_sha256_lf": "8da6a007667900ba4978a480f99da74f33535a4b95101bf31e97e0013f851786",
+      "disposition": "existing-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "before_sha256_lf": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
+      "after_sha256_lf": "133ae8018948d6cef86a4d59fd3a9d0a9bb7f9705921d7e6fac527e236bde790",
+      "disposition": "existing-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "before_sha256_lf": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
+      "after_sha256_lf": "d530ea58baef2e4019a972437df3b1f3c1ce9a20cb26e26acf8b8bf93a891742",
+      "disposition": "existing-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "before_sha256_lf": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5",
+      "after_sha256_lf": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
+      "disposition": "existing-feature",
+      "reason": "Separate explicit authorized termination from timer/budget expiry and verify exact terminal identity/lifetime without conflating causes."
+    },
+    {
+      "path": "crates/kernel/src/supervision.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "378dedb5a921a1b5b084eea4ce793f8655d8345a38e99d89ae5a9b937fce4a59",
+      "disposition": "new-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "377efb6fbda0b908afb426169f015243ce36468a6a00ffb1dffbe3a5468dd404",
+      "disposition": "new-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "3e0ece9b80b0c35f20771ed08d2686b1c68d2568134efa87e492ab01a0c33196",
+      "disposition": "new-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "before_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
+      "after_sha256_lf": "48b7f71740e54f3059d2fdda1e8ca4dab258992c92b86c43577ee5a631493e25",
+      "disposition": "existing-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "before_sha256_lf": "efe182f94f493c3eb492b73451fea6e7873ff8e7cb4384b512bb1d3a69ced344",
+      "after_sha256_lf": "0bf6c3e01fca8d62740b8138160ef804fcbeeb7439d3a4d1b36e9ba4b835ba60",
+      "disposition": "existing-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "before_sha256_lf": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff",
+      "after_sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
+      "disposition": "existing-feature",
+      "reason": "Implement or verify the bounded isolated EL0 supervisor lifecycle, finite bootstrap authority and acquired two-CPU checkpoint; preserve existing native transport obligations."
     }
   ],
   "features": [
     {
+      "id": "kolvrt.arena",
+      "disposition": "evidence-change",
+      "reason": "Changed shared build/runner inputs invalidate the retained current-source verification claim; explicitly record STALE without rewriting historical receipts."
+    },
+    {
+      "id": "kolvrt.compatibility.manifests",
+      "disposition": "evidence-change",
+      "reason": "Changed shared build/runner inputs invalidate the retained current-source verification claim; explicitly record STALE without rewriting historical receipts."
+    },
+    {
       "id": "kolvrt.cost-l.offline-queries",
+      "disposition": "evidence-change",
+      "reason": "Changed shared build/runner inputs invalidate the retained current-source verification claim; explicitly record STALE without rewriting historical receipts."
+    },
+    {
+      "id": "kolvrt.dependencies.hygiene",
+      "disposition": "evidence-change",
+      "reason": "Changed shared build/runner inputs invalidate the retained current-source verification claim; explicitly record STALE without rewriting historical receipts."
+    },
+    {
+      "id": "kolvrt.ipc.transport",
       "disposition": "semantic-change",
-      "reason": "Default repository queries now join validated module declarations; explicit custom joins, machine output v2, limitations and exact-source host evidence are documented in the EN/RU canonical unit."
+      "reason": "Document the Phase 3.6 lifecycle extension and preserve scoped historical acceptance; semantic architecture/EN-RU human review remains pending."
+    },
+    {
+      "id": "kolvrt.process.lifecycle",
+      "disposition": "semantic-change",
+      "reason": "Document the Phase 3.6 lifecycle extension and preserve scoped historical acceptance; semantic architecture/EN-RU human review remains pending."
+    },
+    {
+      "id": "kolvrt.security.domains",
+      "disposition": "evidence-change",
+      "reason": "Changed shared build/runner inputs invalidate the retained current-source verification claim; explicitly record STALE without rewriting historical receipts."
+    },
+    {
+      "id": "kolvrt.services.supervision",
+      "disposition": "semantic-change",
+      "reason": "Document the Phase 3.6 lifecycle extension and preserve scoped historical acceptance; semantic architecture/EN-RU human review remains pending."
     }
   ]
 }

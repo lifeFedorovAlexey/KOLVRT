@@ -5,6 +5,7 @@ pub(super) const CONTEXT_RUNNING: usize = 1;
 pub(crate) const CONTEXT_EXITED: usize = 2;
 pub(crate) const CONTEXT_FAULTED: usize = 3;
 pub(crate) const CONTEXT_TIMED_OUT: usize = 4;
+pub(crate) const CONTEXT_TERMINATED: usize = 7;
 pub(crate) const CONTEXT_BLOCKED: usize = 6;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum IpcWait {
@@ -144,7 +145,11 @@ impl Task {
     pub(super) fn unlink_ipc(&mut self) {
         if !matches!(
             self.state,
-            CONTEXT_VACANT | CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+            CONTEXT_VACANT
+                | CONTEXT_EXITED
+                | CONTEXT_FAULTED
+                | CONTEXT_TIMED_OUT
+                | CONTEXT_TERMINATED
         ) || self.ipc_wait.is_some()
         {
             reject_ipc("BlockedTaskReclaim");

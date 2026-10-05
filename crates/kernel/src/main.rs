@@ -24,6 +24,8 @@ mod process_workload;
 mod scheduler;
 mod security;
 mod smp;
+mod supervision;
+mod supervision_workload;
 mod sync;
 #[cfg(feature = "kernel-tests")]
 mod tests;
@@ -122,6 +124,10 @@ pub extern "C" fn kernel_main() -> ! {
     tests::run(&d, &mut physical, &mut processes);
     #[cfg(not(feature = "kernel-tests"))]
     {
+        assert!(supervision_workload::exercise(
+            &mut physical,
+            &mut processes
+        ));
         let users = boot_workload::exercise(&mut physical, &mut processes);
         event!(
             "{{\"event\":\"el0\",\"status\":\"pass\",\"processes\":{},\"workers\":{},\"faults\":{},\"switches\":{},\"reclaimed\":{}}}",

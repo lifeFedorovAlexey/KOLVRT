@@ -40,3 +40,5 @@ Records distinguish Phase 0 design requirements from the implemented kernel foun
 [Russian translation](../../translations/ru/docs/architecture-decisions/README.md)
 
 - [ADR-0024 — Documentation knowledge navigation and feature freshness](0024-documentation-knowledge.md) — Accepted for offline navigation.
+
+- [ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous](0026-el0-supervision.md) — Proposed; human acceptance pending.

@@ -5,7 +5,9 @@ static REGISTRY_CREATED: AtomicBool = AtomicBool::new(false);
 use cpu::context::Context;
 use kernel_core::process::Table;
 pub(crate) use kernel_core::process::{Completion, CreationStep, Error, ProcessId, Reason, State};
-use scheduler::task::{Admission, CONTEXT_EXITED, CONTEXT_FAULTED, CONTEXT_TIMED_OUT};
+use scheduler::task::{
+    Admission, CONTEXT_EXITED, CONTEXT_FAULTED, CONTEXT_TERMINATED, CONTEXT_TIMED_OUT,
+};
 pub(crate) const CAPACITY: usize = scheduler::CAPACITY;
 const OWNER_CAPACITY: usize = scheduler::TASKS;
 #[derive(Clone, Copy)]
@@ -624,6 +626,114 @@ impl Registry {
     pub fn step(&mut self) -> scheduler::Completed {
         self.dispatch_inner(None, true, false)
     }
+    /// Privileged mechanism called only by the exact authorized lifecycle owner
+    /// after the two-CPU native-root barrier. No manifest policy is interpreted here.
+    pub fn lifecycle_bind(
+        &mut self,
+        supervisor: ProcessId,
+        child: ProcessId,
+    ) -> Result<
+        (kernel_core::ipc::Reference, kernel_core::handles::Handle),
+        kernel_core::handles::Error,
+    > {
+        use kernel_core::handles::{CreationError, Error as H, Rights};
+        context_contract().map_err(|_| H::Denied)?;
+        if memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0
+            || self.table.state(supervisor).ok() != Some(State::Admitted)
+            || self.table.state(child).ok() != Some(State::Prepared)
+        {
+            return Err(H::Denied);
+        }
+        let (endpoint, receiver) = self.bootstrap_endpoint(child, 1)?;
+        match self.handles[supervisor.slot()].create_endpoint_sender(
+            supervisor,
+            endpoint.try_clone().map_err(|_| H::ReferenceExhausted)?,
+            Rights::SEND,
+            |_| Ok::<_, ()>(()),
+        ) {
+            Ok(sender) => {
+                self.ipc_input(child, 0, receiver);
+                Ok((endpoint, sender))
+            }
+            Err(error) => {
+                self.handles[child.slot()]
+                    .close(child, receiver)
+                    .expect("rollback receiver");
+                crate::ipc::discard(&endpoint);
+                Err(match error {
+                    CreationError::Handle(error) => error,
+                    CreationError::Publication(()) => unreachable!(),
+                })
+            }
+        }
+    }
+    pub fn lifecycle_close(
+        &mut self,
+        owner: ProcessId,
+        handle: kernel_core::handles::Handle,
+    ) -> Result<(), kernel_core::handles::Error> {
+        context_contract().map_err(|_| kernel_core::handles::Error::Denied)?;
+        if memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0 {
+            return Err(kernel_core::handles::Error::Denied);
+        }
+        self.handles[owner.slot()].close(owner, handle)
+    }
+    pub fn lifecycle_stop(&mut self, id: ProcessId) -> Result<(), Error> {
+        context_contract()?;
+        if memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0
+            || self.table.state(id)? != State::Admitted
+            || !scheduler::detached(id)
+        {
+            return Err(Error::NotQuiescent);
+        }
+        // Termination becomes an owner-local terminal transition at the next
+        // checkpoint. Its exact saved root remains owned until ASID retirement.
+        self.objects[id.slot()].as_mut().unwrap().blocked = false;
+        scheduler::lifecycle_stop(id);
+        Ok(())
+    }
+    pub fn discard_prepared(
+        &mut self,
+        physical: &mut memory::Physical,
+        id: ProcessId,
+    ) -> Result<(), Error> {
+        context_contract()?;
+        if self.table.state(id)? != State::Prepared || !scheduler::detached(id) {
+            return Err(Error::NotQuiescent);
+        }
+        self.handles[id.slot()]
+            .retire(id)
+            .map_err(|_| Error::Transition)?;
+        self.table.start(id)?;
+        self.table
+            .complete(id, Reason::CreationFailed(CreationStep::Commit), true)?;
+        self.table.reclaim(id, true)?;
+        let object = self.objects[id.slot()].take().ok_or(Error::Stale)?;
+        #[cfg(not(feature = "process-rollback-negative"))]
+        object.space.rollback(physical);
+        #[cfg(feature = "process-rollback-negative")]
+        {
+            let _ = physical;
+            core::mem::forget(object);
+        }
+        self.table.released(id)
+    }
+    pub fn checkpoint(&mut self) -> scheduler::Completed {
+        self.dispatch_inner(None, true, true)
+    }
+    pub fn management_reply(&mut self, id: ProcessId, values: [u64; 5]) -> Result<(), Error> {
+        context_contract()?;
+        if self.table.state(id)? != State::Admitted {
+            return Err(Error::Transition);
+        }
+        self.objects[id.slot()]
+            .as_mut()
+            .ok_or(Error::Stale)?
+            .context
+            .gpr[..5]
+            .copy_from_slice(&values);
+        Ok(())
+    }
     pub fn dispatch_ipc(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {
         self.dispatch_inner(timeout, false, true)
     }
@@ -681,7 +791,9 @@ impl Registry {
                 blocked: object.blocked,
             });
         }
-        let completed = if step {
+        let completed = if step && continuous {
+            scheduler::checkpoint(&mut tasks)
+        } else if step {
             scheduler::step(&mut tasks)
         } else if continuous {
             scheduler::dispatch_ipc(&mut tasks, timeout)
@@ -703,7 +815,7 @@ impl Registry {
             object.native_window_service_ticks = result.native_window_service_ticks;
             object.observations = result.observations;
             object.blocked = result.state == scheduler::task::CONTEXT_BLOCKED;
-            if object.blocked && scheduler::event(object.id.slot()).consume() {
+            if !continuous && object.blocked && scheduler::event(object.id.slot()).consume() {
                 object.blocked = false;
             }
             if step && result.state == scheduler::task::CONTEXT_BLOCKED {
@@ -752,6 +864,7 @@ impl Registry {
                     address: result.fault_far,
                 },
                 CONTEXT_TIMED_OUT => Reason::BudgetExpired,
+                CONTEXT_TERMINATED => Reason::Terminated,
                 _ => panic!("nonterminal process completion"),
             };
             let detached = scheduler::detached(object.id);

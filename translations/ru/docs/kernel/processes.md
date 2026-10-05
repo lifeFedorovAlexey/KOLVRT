@@ -126,6 +126,12 @@ Phase 3.1 не добавила IPC, безопасное копирование
 
 [Handle namespaces](handles.md) линейно перемещаются через admission и scheduling steps, сохраняя поколения при ProcessId reuse. После quiescence exit/fault namespace возвращается; все записи retired, owner unbound. Reclamation отклоняет оставшиеся entries или доступный namespace. Handle borrows не переживают completion или освобождение frames.
 
+## Расширение lifecycle Phase 3.6
+
+Явное authorized termination теперь имеет собственный `Reason::Terminated`; `BudgetExpired` сохраняет смысл фактического timer/budget expiration. Native lifecycle observation различает эти outcomes. Реальный EL0 shutdown проверяет, что requested stop даёт Terminated, а не выдуманный budget expiry.
+
+Экспериментальный [supervisor](supervision.md) запрашивает свежие процессы через конечные exact-image/placement/quota grants, связанные с его исполняемой identity. Lifecycle work следует после приобретения native-root checkpoints обоих CPU; blocked peers сохраняют IPC ownership и private frames. Replacement требует current service token и фактического завершения прежнего процесса, сохраняет quotas и отвергает stale bindings. Failed publication откатывает unpublished resources. Ранний bootstrap-only milestone остаётся historical; новый API и [ADR-0026](../architecture-decisions/0026-el0-supervision.md) требуют отдельной semantic/EN-RU acceptance.
+
 <!-- knowledge -->
 
 ```json
@@ -168,7 +174,7 @@ Phase 3.1 не добавила IPC, безопасное копирование
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"

@@ -126,6 +126,12 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
 
 [Handle namespaces](handles.md) move linearly through admission and scheduling steps, preserving generations across ProcessId reuse. Exit/fault quiescence returns each namespace before all entries are retired and its owner unbound; reclamation rejects remaining entries or an accessible namespace. No handle borrows survive completion or frame release.
 
+## Phase 3.6 lifecycle extension
+
+Explicit authorized termination now has its own `Reason::Terminated`; `BudgetExpired` retains actual timer/budget meaning. Native lifecycle observation distinguishes these outcomes. The real EL0 shutdown checks that a requested stop produces Terminated rather than an invented budget expiry.
+
+The experimental [supervisor](supervision.md) requests fresh processes through finite exact-image/placement/quota grants bound to its executing identity. Lifecycle work follows acquired native-root checkpoints on both CPUs; blocked peers retain IPC ownership and private frames. Replacement requires the current service token and actual old completion, preserving quotas and rejecting stale bindings. Failed publication rolls back unpublished resources. The earlier bootstrap-only milestone remains historical; the new API and [ADR-0026](../architecture-decisions/0026-el0-supervision.md) require separate semantic/EN-RU acceptance.
+
 <!-- knowledge -->
 
 ```json
@@ -168,7 +174,7 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"

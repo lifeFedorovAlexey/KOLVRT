@@ -110,6 +110,10 @@ Phase 3.1 завершает ограниченный внутренний жи�
 
 [Владение handles](handles.md) использует existing publication/mutation/quiescent permits. Admission исключительно заимствует Registry namespace; move помещает его в indexed CPU state, а acquired completion двух CPU возвращает ровно один раз. Namespace остаётся линейным в nonterminal steps. Global lock и unsafe storage не добавлены; retained resource borrows заканчиваются внутри masked current-task callback.
 
+## Lifecycle checkpoint Phase 3.6
+
+Экспериментальный [supervisor](supervision.md) использует отдельно scoped checkpoint двух CPU. Exact IPC waits, retry reasons и counters удерживаются; pending copy continuations завершаются до namespace transfer. Каждый CPU восстанавливает native root и освобождает running ownership до изменения membership CPU0. SGI-only traps не расходуют checkpoint timer quantum до исполнения EL0. Saved cursor продолжается только для соответствующей живой process generation. Root detachment blocked peer не разрешает reclaim. Назначение continuous IPC dispatch сохраняется; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) имеет статус proposed, semantic/EN-RU acceptance ещё не завершена.
+
 <!-- knowledge -->
 
 ```json

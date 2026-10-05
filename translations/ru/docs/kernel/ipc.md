@@ -95,6 +95,10 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
 
 [English source](../../../../docs/kernel/ipc.md)
 
+## Расширение checkpoint Phase 3.6
+
+Экспериментальный [supervisor](supervision.md) добавляет отдельный lifecycle checkpoint поверх native.request/1. Точные IPC wait identities и source/mailbox ownership сохраняются после acquired root detachment двух CPU. Исходный continuous transport и scoped acceptance Phase 3.5 остаются отдельными; proposed [ADR-0026](../architecture-decisions/0026-el0-supervision.md) требует human architecture/EN-RU acceptance. Текущее exact-source regression evidence отделено от historical receipts.
+
 <!-- knowledge -->
 
 ```json
@@ -210,10 +214,10 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "Source-matched 124 DEV and 124 PROD checks plus all 46 fresh focused IPC mutations (23 per profile) on main 9b4687a; exact required failure events and unchanged source inventory are retained.",
-            "receipt": "research/results/ipc-phase35-readiness.json",
-            "receipt_sha256": "f3a34e38f84c8f9f776b23e8b513b21ae8f1b59df04958657cecbef82f4f77e9",
-            "scope": "Two fixed-affinity QEMU CPUs, current bounded IPC mechanism, fresh enforcement controls and explicit semantic EN/RU review. No physical ARM or stable ABI claim."
+            "reason": "Current-source 125 checks per DEV/PROD profile and 46 unchanged transport enforcement mutations pass; six separately scoped supervisor controls also pass. Historical Phase 3.5 acceptance remains immutable; proposed checkpoint architecture and human EN/RU acceptance are pending.",
+            "receipt": "research/results/supervision-phase36.json",
+            "receipt_sha256": "81274a301885a7de99e87696394caa52e1ba01fe3c9a3aedc52bc82e489124ab",
+            "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64."
           },
           {
             "environment": "physical-arm64",
@@ -221,7 +225,7 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
             "reason": "No physical ARM64 receipt exists."
           }
         ],
-        "readiness": "READY",
+        "readiness": "NOT_READY",
         "transitions": [
           {
             "from": "UNRECORDED",

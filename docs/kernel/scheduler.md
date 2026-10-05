@@ -110,6 +110,10 @@ The [dynamic lifecycle](processes.md) extends this foundation with vacant slots 
 
 [Handle ownership](handles.md) uses existing publication/mutation/quiescent permits. Admission exclusively borrows each Registry namespace; a move places it into the indexed CPU state and acquired two-CPU completion returns it exactly once. The namespace remains linear across nonterminal steps. No new global lock or unsafe storage is introduced; retained resource borrows end inside the masked current-task callback.
 
+## Phase 3.6 lifecycle checkpoint
+
+The experimental [supervisor](supervision.md) uses a separately scoped two-CPU checkpoint. Exact IPC waits, retry reasons and counters remain retained; pending copy continuations finish before namespace transfer. Each CPU restores its native root and releases running ownership before CPU0 changes membership. SGI-only traps cannot spend the checkpoint timer quantum before EL0 executes. A saved cursor continues only for its matching live process generation. Root detachment of a blocked peer does not authorize reclaim. The purpose of continuous IPC dispatch is preserved; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) is proposed with semantic/EN-RU acceptance pending.
+
 <!-- knowledge -->
 
 ```json

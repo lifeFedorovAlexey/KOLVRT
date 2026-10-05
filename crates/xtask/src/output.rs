@@ -560,6 +560,15 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
                     }
                 }
             }
+            Some("supervision") => {
+                if event["status"] != "pass"
+                    || event["coverage"] != 255
+                    || event["reclaimed"] != true
+                    || event["owners_released"] != true
+                {
+                    return Err("invalid supervision evidence".into());
+                }
+            }
             Some("ipc") => {
                 let (client, service) = match event["name"].as_str() {
                     Some("ipc_el0_cpu0_to_cpu1") => (0, 1),

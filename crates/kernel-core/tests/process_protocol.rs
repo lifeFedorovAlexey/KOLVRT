@@ -66,6 +66,7 @@ fn completion_reason_validation_and_reclamation_follow_terminal_state() {
             address: usize::MAX,
         },
         Reason::BudgetExpired,
+        Reason::Terminated,
     ];
 
     for reason in reasons {
