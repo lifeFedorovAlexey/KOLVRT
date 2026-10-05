@@ -119,7 +119,7 @@ Do not close an infrastructure issue while its own required semantic or locale r
             "state": "VERIFIED",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "06a047eae8c4f512f048b31954b645950b592a4903663702ab3900b1ad324ae6",
+            "receipt_sha256": "8553d81ef4955535457095774a5de1190c41891a0cb89ca4fae643308484829c",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim."
           },
           {

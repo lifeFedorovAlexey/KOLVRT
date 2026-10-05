@@ -761,7 +761,7 @@
     {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 11158,
+      "estimated_bytes": 11762,
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
       "path": "docs/architecture/dependency-hygiene.md",
@@ -1089,7 +1089,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 10923,
+      "estimated_bytes": 11527,
       "id": "kolvrt.dependencies.hygiene",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",

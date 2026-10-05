@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "e875ee7aa7e9a52a9d7b659f2539a838544d49b4bfc00e7b5d261cb36102bb7a",
-        "translation_sha256": "a00455720cee13370f01b6f2cb14a678aef000a2182d61bacbc794b65eab1e74"
+        "source_sha256": "9f799bb2d87bc8c5659da4cef71ba0c17d899b87e7fe68e1e04f6a3c1eb2f362",
+        "translation_sha256": "bbc88f070e0457ab8ef20fb4dfe4baa6f9a0aee4a3b611e83263cf6c1762c001"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -146,8 +146,8 @@
         "translation_sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0"
       },
       "docs/architecture/dependency-hygiene.md": {
-        "source_sha256": "db770bc4017c863a28c309153567980cff699f94142c3a35926f10446c29fdfb",
-        "translation_sha256": "3a416c9bbf85f881f7f5e1bdf98a7b7d4ebe0b9ef53ca1bb6e76d2fa9e7788d2"
+        "source_sha256": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
+        "translation_sha256": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -302,8 +302,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "724bcc439d84cde970c525e9face32ff2bdd0387dd29138567f3e1e3948a3aa2",
-        "translation_sha256": "915389d84d33402e9fc979ee4c7ed14ecc36d51a19a3a014340b7d42e1079604"
+        "source_sha256": "dfb90dca65a29e05b74f2b8809bb540fc6e948e3558cb9003edbab5cef20f99c",
+        "translation_sha256": "8d89426407e06528e19d313e7419aabd7695612e6566b7f2f209565118138fc3"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",

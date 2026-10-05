@@ -12,7 +12,7 @@
     {
       "path": ".github/workflows/dependencies.yml",
       "before_sha256_lf": null,
-      "after_sha256_lf": "d3dcd244800a3ab89cd75a6f60dcae50c84392099daff90983a5ce05fa3958e1",
+      "after_sha256_lf": "2476207ec9c963652121e75d517f944c6b1181cd03a305e4820eb316d96eeab2",
       "disposition": "new-feature",
       "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
     },
@@ -113,6 +113,20 @@
       "after_sha256_lf": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
       "disposition": "new-feature",
       "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
+    },
+    {
+      "after_sha256_lf": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
+      "path": ".github/workflows/kernel.yml",
+      "before_sha256_lf": "27b1d60162c3bd5cf2a8533404ba5ffde9ad0b3eb69a80cdd2174a3925ef3beb",
+      "reason": "Dependency/CI environment maintenance: pinned shared Node 24 LTS and explicit Node 24 action releases. No kernel source or execution contract change; hosted-runner acceptance pending.",
+      "disposition": "existing-feature"
+    },
+    {
+      "after_sha256_lf": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
+      "path": ".nvmrc",
+      "before_sha256_lf": null,
+      "reason": "Dependency/CI environment maintenance: pinned shared Node 24 LTS and explicit Node 24 action releases. No kernel source or execution contract change; hosted-runner acceptance pending.",
+      "disposition": "existing-feature"
     }
   ],
   "features": [

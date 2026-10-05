@@ -50,6 +50,8 @@ Baseline root source sizes составляют соответственно 671
 
 Rejection controls включают реальные Cargo metadata для optional/target-specific, build и dev dependencies, подменённых путей, host reachability, отсутствующих TCB members, graph cycles/diamonds, замен с одинаковым счётчиком, feature changes, retention changes и незавершённого supply-chain output. Workbench/advisor/schema-validator regression tests проверяют сокращение quanta features. CI обеспечивает live advisory/license/source enforcement и хранит результаты отдельно от kernel behavior evidence.
 
+Оба workflow берут Node 24.21.0 из `.nvmrc`. Локально эту версию устанавливают и включают через nvm: `nvm install 24.21.0`, затем `nvm use 24.21.0`. Checkout 7.0.1, setup-node 7.0.0 и upload-artifact 7.0.1 используют встроенную среду Node 24. Аудит закреплён за `ubuntu-24.04`: будущая смена `ubuntu-latest` не изменит окружение без правки workflow. Ядро проверяется на `windows-2022`. Локальные проверки под Node 24 не подтверждают работу на hosted runner; для восстановления статуса VERIFIED нужны новые доказательства CI на текущих исходниках.
+
 <!-- knowledge -->
 
 ```json
@@ -84,21 +86,23 @@ Rejection controls включают реальные Cargo metadata для optio
           "crates/window-compat/Cargo.toml",
           "crates/xtask/Cargo.toml",
           "crates/migration-workbench/Cargo.toml",
-          ".github/dependabot.yml"
+          ".github/dependabot.yml",
+          ".github/workflows/kernel.yml",
+          ".nvmrc"
         ],
         "acceptance": ["research/results/issue94-dependency-hygiene.json"],
         "issues": [94],
         "adrs": ["adr.0013"],
         "readiness": "NOT_READY",
-        "next_gate": "Review EN/RU policy, live CI evidence and PR-base delta before integration.",
+        "next_gate": "Review EN/RU policy, rerun Node 24 CI on Windows 2022 and Ubuntu 24.04, and review PR-base delta before integration.",
         "limitations": [
           "Workspace-unified all-target closures are conservative, not compiled size or isolated consumer counts. Artifact history expires after 90 days without external archival. No kernel execution claim."
         ],
         "verification": [
           {
             "environment": "host-process",
-            "state": "VERIFIED",
-            "reason": "Eight rejection tests including real Cargo metadata, completed cargo-deny checks, live negative supply controls, PR-base comparison and repository checks passed on declared exact-source bytes.",
+            "state": "STALE",
+            "reason": "Historical dependency checks retain their original receipt. CI workflows and Node version changed; fresh hosted-runner evidence is pending.",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
             "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f"
