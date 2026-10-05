@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 51434,
-  "catalog_bytes": 77705,
-  "catalog_nodes": 193,
+  "approximate_tokens": 51317,
+  "catalog_bytes": 77239,
+  "catalog_nodes": 192,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "4b8f828c0d2842b59bce354e7e208b832ebab5b88e70098d86a7e9d398bf8741",
+  "catalog_sha256": "8fb4678e31096f3bafe901e06a29d121893d52edf9269ed1efe79e6134dc0337",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 205734,
+  "context_plus_catalog_bytes": 205268,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,15 +14,14 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 99,
-    "utf8_bytes": 819282
+    "documents": 98,
+    "utf8_bytes": 806329
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
   "external_issue_body_bytes_loaded": 0,
   "impact": {
     "affected": [
-      "doc.kolvrt.ipc.acceptance-review",
       "kolvrt.handles.identity",
       "kolvrt.handles.local",
       "kolvrt.ipc.cancel",
@@ -66,12 +65,12 @@
   "query": "review Phase 3.4 capability revocation",
   "rendered_context_bytes": 128029,
   "russian_pilot": {
-    "approximate_tokens": 79252,
-    "catalog_bytes": 77705,
-    "context_plus_navigation_bytes": 317006,
+    "approximate_tokens": 79084,
+    "catalog_bytes": 77239,
+    "context_plus_navigation_bytes": 316333,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 43715,
+    "localized_navigation_bytes": 43508,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",

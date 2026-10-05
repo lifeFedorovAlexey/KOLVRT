@@ -1,5 +1,5 @@
 //! Read-only projections of validated COST-L declarations, never runtime authority.
-use crate::{CheckResult, cost_l};
+use crate::{CheckResult, compat_modules, cost_l};
 use serde_json::{Value, json};
 use std::{
     cmp::Ordering,
@@ -18,12 +18,13 @@ const METRICS: &[&str] = &[
     "context_switches",
     "throughput",
 ];
-const USAGE: &str = "cost-l show ID | consumers ID | deps CONSUMER | list | top [--directory PATH] [--json] [--limit 1..64] [--offset N] [--sort id|reach|METRIC] [--measurement-scope EXACT --denominator EXACT] [--status STATE] [--category TEXT] [--security TEXT] [--maintenance TEXT] [--migration TEXT]";
+const USAGE: &str = "cost-l show ID | consumers ID | deps CONSUMER | list | top [--directory PATH] [--manifests PATH] [--json] [--limit 1..64] [--offset N] [--sort id|reach|METRIC] [--measurement-scope EXACT --denominator EXACT] [--status STATE] [--category TEXT] [--security TEXT] [--maintenance TEXT] [--migration TEXT]";
 
 struct Options {
     command: String,
     selector: Option<String>,
     directory: PathBuf,
+    manifests: Option<PathBuf>,
     json: bool,
     limit: usize,
     offset: usize,
@@ -60,6 +61,7 @@ fn options(root: &Path, args: &[String]) -> CheckResult<Options> {
         command,
         selector,
         directory: root.join("research/cost-l"),
+        manifests: None,
         json: false,
         limit: 20,
         offset: 0,
@@ -89,6 +91,7 @@ fn options(root: &Path, args: &[String]) -> CheckResult<Options> {
         }
         match flag {
             "--directory" => out.directory = PathBuf::from(value),
+            "--manifests" => out.manifests = Some(PathBuf::from(value)),
             "--limit" => out.limit = value.parse().map_err(|_| "invalid limit")?,
             "--offset" => out.offset = value.parse().map_err(|_| "invalid offset")?,
             "--sort" => out.sort = value.clone(),
@@ -121,6 +124,10 @@ fn options(root: &Path, args: &[String]) -> CheckResult<Options> {
         }
     } else if out.measurement_scope.is_some() || out.denominator.is_some() {
         return Err("measurement scope requires metric ranking".into());
+    }
+    // A custom registry remains an independent inventory unless explicitly joined.
+    if !seen.contains("--directory") && out.manifests.is_none() {
+        out.manifests = Some(root.join("policy/compatibility-modules.json"));
     }
     Ok(out)
 }
@@ -163,6 +170,18 @@ fn matches_filters(record: &Value, filters: &[(String, String)]) -> bool {
 pub fn query(root: &Path, args: &[String]) -> CheckResult<(Value, bool)> {
     let opts = options(root, args)?;
     let records = cost_l::validate(root, &opts.directory)?;
+    let manifests = if let Some(path) = &opts.manifests {
+        let inventory = cost_l::bounded_json(path)?;
+        compat_modules::validate(
+            root,
+            &inventory,
+            &records,
+            &compat_modules::cargo_metadata(root)?,
+        )?;
+        Some(inventory)
+    } else {
+        None
+    };
     let mut rows: Vec<Value> = match opts.command.as_str() {
         "show" | "consumers" => {
             let selector = opts.selector.as_ref().unwrap();
@@ -201,6 +220,40 @@ pub fn query(root: &Path, args: &[String]) -> CheckResult<(Value, bool)> {
             .collect(),
         _ => unreachable!(),
     };
+    if let Some(inventory) = &manifests {
+        for row in &mut rows {
+            let debt = row["id"].as_str().or(row["debt_id"].as_str()).unwrap();
+            let consumer_refs = row["consumer"]["module_refs"].as_array();
+            let mut declarations: Vec<Value> = inventory["modules"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|m| {
+                    m["debt_ids"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .any(|id| id == debt)
+                        && consumer_refs.is_none_or(|refs| {
+                            refs.iter().any(|r| {
+                                ["id", "semantic_version", "scope"]
+                                    .iter()
+                                    .all(|field| r[field] == m[field])
+                            })
+                        })
+                })
+                .cloned()
+                .collect();
+            declarations.sort_by_key(|m| {
+                (
+                    m["id"].as_str().unwrap().to_owned(),
+                    m["semantic_version"].as_str().unwrap().to_owned(),
+                    m["scope"].as_str().unwrap().to_owned(),
+                )
+            });
+            row["module_declarations"] = json!(declarations);
+        }
+    }
     if METRICS.contains(&opts.sort.as_str()) {
         let mut units = BTreeSet::new();
         for row in &mut rows {
@@ -254,7 +307,7 @@ pub fn query(root: &Path, args: &[String]) -> CheckResult<(Value, bool)> {
         return Err("offset exceeds matching rows".into());
     }
     let end = opts.offset.saturating_add(opts.limit).min(total);
-    let output = json!({"schema_version":1,"command":opts.command,"selector":opts.selector,"inventory":{"scope":"validated records in the explicitly selected registry directory","coverage":"DECLARATIONS_ONLY; global consumer coverage UNKNOWN","records":records.len(),"production_manifest_integration":"UNAVAILABLE_PENDING_ISSUE_47","runtime_inspection":"UNSUPPORTED","authority":"NONE"},"ranking":{"dimension":opts.sort,"filters":opts.filters,"measurement_scope":opts.measurement_scope,"denominator":opts.denominator,"meaning":"Descending declared reach or measured dimension value in the exact selected scope. Throughput is a rate, not a cost. No combined score, security/difficulty ranking, performance superiority or NATIVE inference."},"pagination":{"offset":opts.offset,"limit":opts.limit,"matching_rows":total,"next_offset":if end<total{Some(end)}else{None}},"rows":rows[opts.offset..end]});
+    let output = json!({"schema_version":2,"command":opts.command,"selector":opts.selector,"inventory":{"scope":"validated records in the explicitly selected registry directory","coverage":"DECLARATIONS_ONLY; global consumer coverage UNKNOWN","records":records.len(),"production_manifest_integration":if manifests.is_some(){"VALIDATED_RECIPROCAL_DECLARATIONS"}else{"NOT_SELECTED_CUSTOM_REGISTRY"},"manifest_modules":manifests.as_ref().map(|i|i["modules"].as_array().unwrap().len()),"runtime_inspection":"UNSUPPORTED","authority":"NONE"},"ranking":{"dimension":opts.sort,"filters":opts.filters,"measurement_scope":opts.measurement_scope,"denominator":opts.denominator,"meaning":"Descending declared reach or measured dimension value in the exact selected scope. Throughput is a rate, not a cost. No combined score, security/difficulty ranking, performance superiority or NATIVE inference."},"pagination":{"offset":opts.offset,"limit":opts.limit,"matching_rows":total,"next_offset":if end<total{Some(end)}else{None}},"rows":rows[opts.offset..end]});
     Ok((output, opts.json))
 }
 
@@ -263,7 +316,12 @@ pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
     let text = if machine {
         serde_json::to_string_pretty(&output).map_err(|e| e.to_string())?
     } else {
-        let mut text = "COST-L offline declarations; global coverage UNKNOWN. Runtime inspection and production-manifest integration unavailable.\n".to_owned();
+        let mut text = format!(
+            "COST-L offline declarations; global coverage UNKNOWN. Runtime inspection unsupported. Manifest integration: {}.\n",
+            output["inventory"]["production_manifest_integration"]
+                .as_str()
+                .unwrap()
+        );
         for row in output["rows"].as_array().unwrap() {
             if let Some(id) = row["id"].as_str() {
                 text.push_str(&format!(
@@ -298,6 +356,11 @@ pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
                     c["scope"].as_str().unwrap(),
                     c["module_refs"]
                 ));
+            }
+            if let Some(modules) = row["module_declarations"].as_array() {
+                for module in modules {
+                    text.push_str(&format!("  Declared module: {}@{} | {} | {} | package: {}@{} | scope: {} | support until: {}\n",module["id"].as_str().unwrap(),module["semantic_version"].as_str().unwrap(),module["classification"].as_str().unwrap(),module["status"].as_str().unwrap(),module["package"].as_str().unwrap(),module["package_version"].as_str().unwrap(),module["scope"].as_str().unwrap(),module["support_until"].as_str().unwrap()));
+                }
             }
         }
         text.push_str(&format!(

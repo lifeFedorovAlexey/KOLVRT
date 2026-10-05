@@ -39,7 +39,7 @@ cargo run --locked -p repository-checks -- check-compatibility
 cargo test --locked -p repository-checks --test compat_modules
 ```
 
-Normal `check` and `validate` commands run the gate, so existing repository CI includes it. Custom COST-L query directories remain independent synthetic/research inputs; manifests are not silently joined into query output. Production manifest integration with queries remains a separate #48 acceptance step.
+Normal `check` and `validate` commands run the gate, so existing repository CI includes it. Default COST-L queries now validate and join this inventory before stdout; custom `--directory` inventories remain independent unless `--manifests PATH` explicitly selects the join. See the [query contract](../research/cost-l-queries.md) for machine schema version 2 and exact-source host evidence. Production data/completeness and human acceptance remain separate #47/#48 gates.
 
 Thirteen tests cover current synthetic inventory and the real CLI; isolated production-shaped and retirement fixtures; many-to-many edges; missing justification, dangling relations, artifact/source/version/scope mismatches; offline consumers/deadlines; schema bounds; EXC expiry; Cargo markers/features; native optional/renamed/target/build/dev rejection. A temporary real Cargo workspace tests parsed disabled renamed target declarations. Production-shaped fixture artifacts are deliberately non-executable bytes; passing is no evidence of a supported driver or executable module. [Exact-source evidence](../../research/results/issue47-compatibility-manifests.json) records this host scope.
 
@@ -127,7 +127,7 @@ Remaining #47 gates include reviewed production module/debt/consumer data when a
           }
         ],
         "acceptance": ["research/results/issue47-compatibility-manifests.json"],
-        "next_gate": "Review real production declarations and source/feature completeness; integrate full #48 queries without promoting synthetic evidence.",
+        "next_gate": "Review real production declarations and source/feature completeness; obtain #48 semantic/EN-RU acceptance without promoting synthetic evidence.",
         "issues": [47, 46, 48],
         "implementation_scope": "Closed module inventory, reciprocal debt/consumer/version/scope checks, source/artifact/EXC/support identities and Cargo-parsed native declaration closure, with existing synthetic window contracts only.",
         "transitions": [

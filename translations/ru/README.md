@@ -49,7 +49,7 @@ DEV предназначен для исследования, просмотра
 
 [Советник миграции](docs/architecture/migration-advisor.md) проверяет результаты и контракты, сравнивает измерения и предлагает план отката. Он работает только на чтение: подписанное разрешение не устанавливает пакеты и не меняет пути вызовов. Интеграция с рабочей ОС, телеметрия, выполнение решений, безопасное хранение ключей, проверка статистики и испытания на физическом ARM64 остаются задачами [#14](https://github.com/lifeFedorovAlexey/KOLVRT/issues/14).
 
-[Утилита COST-L](docs/research/cost-l-queries.md) предоставляет команды `show`, `consumers`, `deps`, `list` и `top`, JSON, фильтры и ограниченный вывод. Она читает проверенные записи реестра, а не состояние работающей системы. Интеграция с манифестами реальных компонентов остаётся открытой в [#47](https://github.com/lifeFedorovAlexey/KOLVRT/issues/47) и [#48](https://github.com/lifeFedorovAlexey/KOLVRT/issues/48).
+[Утилита COST-L](docs/research/cost-l-queries.md) предоставляет команды `show`, `consumers`, `deps`, `list` и `top`, JSON, фильтры и ограниченный вывод. Она читает проверенные записи реестра, а не состояние работающей системы. Стандартные запросы проверяют взаимные ссылки манифестов модулей; `--manifests PATH` явно объединяет пользовательские перечни. Production-данные/полнота и принятие человеком остаются открытыми в [#47](https://github.com/lifeFedorovAlexey/KOLVRT/issues/47) и [#48](https://github.com/lifeFedorovAlexey/KOLVRT/issues/48).
 
 ## Сборка и проверки
 
@@ -111,7 +111,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | ------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
 | [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                       | EXPERIMENTAL        | host-process: STALE; physical-arm64: UNKNOWN                              |
 | [kolvrt.compatibility.manifests](docs/architecture/compatibility-manifests.md#kolvrt-compatibility-manifests) | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
-| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)                | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
+| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)                | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)              | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                     | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |

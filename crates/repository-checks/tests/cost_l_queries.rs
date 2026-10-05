@@ -80,10 +80,165 @@ impl Drop for Registry {
     }
 }
 
+// Real Cargo declarations, deliberately non-executable retained artifact bytes.
+// No production support is created by this fixture.
+fn joined_registry() -> (Registry, PathBuf) {
+    use sha2::{Digest, Sha256};
+    let registry = Registry::new();
+    let mut inventory = read_json(&root().join("policy/compatibility-modules.json")).unwrap();
+    let digest = Sha256::digest(fs::read(root().join("policy/exceptions.json")).unwrap())
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+    for module in inventory["modules"]
+        .as_array_mut()
+        .unwrap()
+        .iter_mut()
+        .take(2)
+    {
+        module["classification"] = json!("PRODUCTION");
+        module["debt_ids"] = json!(["COST-L-0001", "COST-L-0002"]);
+        module["debt_unassigned_reason"] = Value::Null;
+        module["artifact"] = json!({"path":"policy/exceptions.json", "sha256":digest});
+        module["consumers"][0]["kind"] = json!("OFFLINE_RECOVERY");
+        module["consumers"][0]["dependency"] = json!("TRANSITIVE");
+    }
+    let modules = &inventory["modules"].as_array().unwrap()[..2];
+    for id in ["COST-L-0001", "COST-L-0002"] {
+        registry.edit(id, |record| {
+            record["support"]["until"] = json!("2027-04-01");
+            record["compat_modules"] = json!(modules.iter().map(|m| json!({"id":m["id"], "semantic_version":m["semantic_version"], "scope":m["scope"], "artifact_sha256":digest})).collect::<Vec<_>>());
+            let mut consumer = modules[0]["consumers"][0].clone();
+            consumer["module_refs"] = json!(modules.iter().map(|m| json!({"id":m["id"], "semantic_version":m["semantic_version"], "scope":m["scope"]})).collect::<Vec<_>>());
+            record["affected_consumers"] = json!([consumer]);
+        });
+    }
+    let path = registry.0.join("modules.manifest");
+    write_json(&path, &inventory).unwrap();
+    (registry, path)
+}
+
+#[test]
+fn joined_manifests_are_bidirectional_versioned_and_deterministic() {
+    let (registry, path) = joined_registry();
+    let manifest = path.to_str().unwrap();
+    let consumer = "synthetic versioned-window conformance workload";
+    let deps = registry.query(&["deps", consumer, "--manifests", manifest]);
+    assert_eq!(
+        deps["inventory"]["production_manifest_integration"],
+        "VALIDATED_RECIPROCAL_DECLARATIONS"
+    );
+    assert_eq!(deps["rows"].as_array().unwrap().len(), 2);
+    for row in deps["rows"].as_array().unwrap() {
+        let reverse = registry.query(&[
+            "consumers",
+            row["debt_id"].as_str().unwrap(),
+            "--manifests",
+            manifest,
+        ]);
+        assert_eq!(
+            row["module_declarations"],
+            reverse["rows"][0]["module_declarations"]
+        );
+        let declarations = row["module_declarations"].as_array().unwrap();
+        assert_eq!(declarations.len(), 2);
+        assert_eq!(declarations[0]["id"], "window.counted");
+        assert_eq!(declarations[0]["semantic_version"], "2.0.0");
+        assert_eq!(declarations[0]["package"], "window-compat");
+        assert_eq!(declarations[0]["support_until"], "2027-04-01");
+        assert_eq!(row["transitive_path"], "NOT_RECORDED");
+        assert_eq!(row["consumer"]["kind"], "OFFLINE_RECOVERY");
+        assert_eq!(row["consumer"]["dependency"], "TRANSITIVE");
+    }
+    for cmd in ["show", "list", "top"] {
+        let mut args = vec![cmd];
+        if cmd == "show" {
+            args.push("COST-L-0001");
+        }
+        args.extend(["--manifests", manifest]);
+        let output = registry.query(&args);
+        assert_eq!(
+            output["rows"][0]["module_declarations"]
+                .as_array()
+                .unwrap()
+                .len(),
+            2
+        );
+    }
+    let first = registry.query(&["top", "--manifests", manifest, "--limit", "1"]);
+    assert_eq!(first["pagination"]["next_offset"], 1);
+    let mut inventory = read_json(&path).unwrap();
+    inventory["modules"].as_array_mut().unwrap().reverse();
+    write_json(&path, &inventory).unwrap();
+    assert_eq!(
+        deps,
+        registry.query(&["deps", consumer, "--manifests", manifest])
+    );
+    let human = command(&[
+        "deps",
+        consumer,
+        "--directory",
+        registry.0.to_str().unwrap(),
+        "--manifests",
+        manifest,
+    ]);
+    assert!(human.status.success());
+    assert!(
+        String::from_utf8(human.stdout)
+            .unwrap()
+            .contains("window.counted@2.0.0")
+    );
+}
+
+#[test]
+fn joined_manifest_failures_reject_before_any_query_stdout() {
+    for mutation in 0..6 {
+        let (registry, path) = joined_registry();
+        let mut inventory = read_json(&path).unwrap();
+        match mutation {
+            0 => inventory["modules"][0]["semantic_version"] = json!("9.0.0"),
+            1 => inventory["modules"][0]["scope"] = json!("unrelated scope"),
+            2 => inventory["modules"][0]["artifact"]["sha256"] = json!("0".repeat(64)),
+            3 => inventory["modules"][0]["consumers"][0]["support_until"] = json!("2028-04-01"),
+            4 => inventory["modules"][0]["status"] = json!("RETIRED"),
+            _ => {
+                inventory["modules"].as_array_mut().unwrap().remove(0);
+            }
+        }
+        write_json(&path, &inventory).unwrap();
+        let output = command(&[
+            "show",
+            "COST-L-0002",
+            "--directory",
+            registry.0.to_str().unwrap(),
+            "--manifests",
+            path.to_str().unwrap(),
+            "--json",
+        ]);
+        assert!(!output.status.success(), "mutation {mutation}");
+        assert!(output.stdout.is_empty(), "mutation {mutation}");
+    }
+    let (registry, path) = joined_registry();
+    fs::write(
+        &path,
+        "{\"schema_version\":1,\"schema_version\":1,\"modules\":[]}",
+    )
+    .unwrap();
+    let output = command(&[
+        "list",
+        "--directory",
+        registry.0.to_str().unwrap(),
+        "--manifests",
+        path.to_str().unwrap(),
+    ]);
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
+}
+
 #[test]
 fn real_registry_reports_declared_zero_separately_from_global_unknown() {
     let list = result(&["list", "--json"]);
-    assert_eq!(list["schema_version"], 1);
+    assert_eq!(list["schema_version"], 2);
     assert_eq!(list["rows"].as_array().unwrap().len(), 3);
     for row in list["rows"].as_array().unwrap() {
         assert_eq!(row["declared_reach"], 0);
@@ -95,7 +250,14 @@ fn real_registry_reports_declared_zero_separately_from_global_unknown() {
     assert_eq!(list["inventory"]["runtime_inspection"], "UNSUPPORTED");
     assert_eq!(
         list["inventory"]["production_manifest_integration"],
-        "UNAVAILABLE_PENDING_ISSUE_47"
+        "VALIDATED_RECIPROCAL_DECLARATIONS"
+    );
+    assert_eq!(list["inventory"]["manifest_modules"], 3);
+    assert!(
+        list["rows"][0]["module_declarations"]
+            .as_array()
+            .unwrap()
+            .is_empty()
     );
     let consumers = result(&["consumers", "COST-L-0001", "--json"]);
     assert!(consumers["rows"].as_array().unwrap().is_empty());
@@ -112,6 +274,10 @@ fn real_registry_reports_declared_zero_separately_from_global_unknown() {
 fn both_directions_preserve_transitive_offline_and_shared_module_relations() {
     let registry = Registry::new();
     let deps = registry.query(&["deps", "fixture-consumer"]);
+    assert_eq!(
+        deps["inventory"]["production_manifest_integration"],
+        "NOT_SELECTED_CUSTOM_REGISTRY"
+    );
     assert_eq!(deps["rows"].as_array().unwrap().len(), 2);
     assert_eq!(deps["rows"][0]["consumer"]["dependency"], "DIRECT");
     assert_eq!(deps["rows"][1]["consumer"]["dependency"], "TRANSITIVE");

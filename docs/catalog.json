@@ -754,7 +754,7 @@
     {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12735,
+      "estimated_bytes": 12909,
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
       "path": "docs/architecture/compatibility-manifests.md",
@@ -824,7 +824,7 @@
     {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
-      "estimated_bytes": 15534,
+      "estimated_bytes": 15572,
       "id": "doc.kolvrt.docs.knowledge",
       "kind": "policy",
       "path": "docs/knowledge-system.md",
@@ -982,7 +982,7 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 9169,
+      "estimated_bytes": 12066,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",
@@ -1235,10 +1235,17 @@
     },
     {
       "anchor": "kolvrt-cost-l-offline-queries",
-      "depends_on": ["law.009", "law.036", "law.040", "adr.0007", "adr.0008"],
+      "depends_on": [
+        "law.009",
+        "law.036",
+        "law.040",
+        "adr.0007",
+        "adr.0008",
+        "kolvrt.compatibility.manifests"
+      ],
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 2487,
+      "estimated_bytes": 3682,
       "id": "kolvrt.cost-l.offline-queries",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",

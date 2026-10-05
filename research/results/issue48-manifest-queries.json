@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "base_commit": "555e4d7d69bed27668fe3c54baa23a435331f43d",
+  "claim": "Seven real CLI query tests and thirteen manifest tests on exact-source host declarations; no production module, runtime, kernel or hardware acceptance.",
+  "source_files": [
+    {
+      "path": "crates/repository-checks/src/cost_l_queries.rs",
+      "sha256_lf": "567932099224415c21466ca823cb46666679beff1de961b9d37ac491bfb0195e"
+    },
+    {
+      "path": "crates/repository-checks/src/cost_l.rs",
+      "sha256_lf": "045971103a1bfe03e5c414d3cbc5824ce0727faf5da9b44fdb00a443c7f6a98e"
+    },
+    {
+      "path": "crates/repository-checks/src/main.rs",
+      "sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d"
+    },
+    {
+      "path": "crates/repository-checks/src/lib.rs",
+      "sha256_lf": "321bf155abcd7bf03ebfbd586722f7bc9c32d56d55fa37b62f338c57d4ec804d"
+    },
+    {
+      "path": "crates/repository-checks/tests/cost_l_queries.rs",
+      "sha256_lf": "1b601783787af14365fbfa4a1b280dc2b59303f9727b87145c1c468046876f87"
+    },
+    {
+      "path": "crates/repository-checks/Cargo.toml",
+      "sha256_lf": "90c543bdaed3980edabb0c9d661f3a31a608888b8b2227f94e919b388b4f35b8"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    },
+    {
+      "path": "schemas/cost-l.schema.json",
+      "sha256_lf": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c"
+    },
+    {
+      "path": "schemas/cost-l-registry.schema.json",
+      "sha256_lf": "34a6bb442291351647c8826054fb582f89ec121c5abff19bf2bcc350b9d24254"
+    },
+    {
+      "path": "research/cost-l/registry.json",
+      "sha256_lf": "6868df93c719a0d9efb11e628b608498e5649d1744acf24392b1b0bccbc10474"
+    },
+    {
+      "path": "research/cost-l/COST-L-0001.json",
+      "sha256_lf": "9c2fb7bbbf28145be8b88433d22656f4123c12c16ab36f11010f5c71c2581291"
+    },
+    {
+      "path": "research/cost-l/COST-L-0002.json",
+      "sha256_lf": "4854fd2013ea76118e8b7e027fe61ef304f2b39f181c1982d3c1c76aba05af01"
+    },
+    {
+      "path": "research/cost-l/COST-L-0003.json",
+      "sha256_lf": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da"
+    },
+    {
+      "path": "crates/host-process-metrics/Cargo.toml",
+      "sha256_lf": "36380556d3cea0e454abdd5ae11ccc646ba505e4576e81326d433122a411518f"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "92332d431593d27f87b094500d28614b79f39567cf8d948b6feea168be270e86"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50"
+    },
+    {
+      "path": "crates/migration-advisor/Cargo.toml",
+      "sha256_lf": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968"
+    },
+    {
+      "path": "crates/migration-workbench/Cargo.toml",
+      "sha256_lf": "71c6a5caa4afbf4ea7da2fea7f5b2586c7d1c470a9ba31c35cccce5d22ce900a"
+    },
+    {
+      "path": "crates/native-protocol-model/Cargo.toml",
+      "sha256_lf": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e"
+    },
+    {
+      "path": "crates/native-state-models/Cargo.toml",
+      "sha256_lf": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007"
+    },
+    {
+      "path": "crates/repository-checks/src/compat_modules.rs",
+      "sha256_lf": "8a053ff7e6285e11d8bef8e5c8ea8c88ddbb13929092e8cf77bf051430761c76"
+    },
+    {
+      "path": "crates/repository-checks/tests/compat_modules.rs",
+      "sha256_lf": "1d0cb757806db8f0dbce2825bed411b89212cf29da0360a71fc20b650ae73b18"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+    },
+    {
+      "path": "crates/window-compat/src/lib.rs",
+      "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+    },
+    {
+      "path": "crates/window-compat/tests/protocols.rs",
+      "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d"
+    },
+    {
+      "path": "policy/compatibility-modules.json",
+      "sha256_lf": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631"
+    },
+    {
+      "path": "policy/exceptions.json",
+      "sha256_lf": "6405d8b34e84bf4317be1ba349cce4fae2078f82776733bb75af94933f24241c"
+    },
+    {
+      "path": "schemas/compatibility-modules.schema.json",
+      "sha256_lf": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e"
+    }
+  ],
+  "checks": [
+    {
+      "command": "cargo test --locked -p repository-checks --test cost_l_queries --test compat_modules",
+      "exit_code": 0,
+      "transcript": "   Compiling repository-checks v0.1.0 (D:\\KOLVRT\\crates\\repository-checks)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.21s\n     Running tests\\compat_modules.rs (target\\debug\\deps\\compat_modules-ff9a42e5dea1d74b.exe)\n\nrunning 13 tests\ntest fixture_exception_cannot_extend_software_support ... ok\ntest many_module_and_debt_edges_do_not_require_matching_owners ... ok\ntest valid_production_relations_are_explicitly_test_fixtures ... ok\ntest cargo_marker_and_feature_cannot_be_omitted_or_reused ... ok\ntest dangling_debts_exceptions_and_missing_reverse_manifests_reject ... ok\ntest missing_justification_and_synthetic_promotion_reject ... ok\ntest native_closure_rejects_optional_renamed_target_build_and_dev_edges ... ok\ntest consumers_are_bidirectional_and_deadlines_are_not_erased ... ok\ntest closed_schema_bounds_versions_dates_and_identity_duplicates_reject ... ok\ntest artifact_source_scope_and_versions_must_match ... ok\ntest retired_and_research_only_debt_cannot_back_current_production ... ok\ntest real_cargo_parses_disabled_renamed_target_dependencies_before_rejection ... ok\ntest current_inventory_is_synthetic_and_actual_cli_passes ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s\n\n     Running tests\\cost_l_queries.rs (target\\debug\\deps\\cost_l_queries-e7652a559830fd6a.exe)\n\nrunning 7 tests\ntest measured_zero_is_ranked_without_converting_unknown_or_foreign_scope ... ok\ntest real_registry_reports_declared_zero_separately_from_global_unknown ... ok\ntest both_directions_preserve_transitive_offline_and_shared_module_relations ... ok\ntest output_budget_rejects_the_whole_page_and_a_smaller_page_succeeds ... ok\ntest joined_manifest_failures_reject_before_any_query_stdout ... ok\ntest malformed_queries_and_inconsistent_graph_fail_without_stdout ... ok\ntest joined_manifests_are_bidirectional_versioned_and_deterministic ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s\n\n"
+    }
+  ]
+}
