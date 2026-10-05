@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "8a2b0dd06d214947d3a79eea00f0e9f11533f1fa8a937e54b425b0bd9e837890",
-        "translation_sha256": "b0d978df5ef2a12f0c4ff71821d0e60c6112885fc6410cc5f7ac2cfc7c91eef9"
+        "source_sha256": "e760abe829b7e145af883ef95ae92e14d1dcfa14036146459275a81f7e7e79d2",
+        "translation_sha256": "f14c3381f833c0bbc7d2ed4e8511859c7451144b7c99fea19801c8e8f1532d57"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -258,8 +258,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
-        "translation_sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d"
+        "source_sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+        "translation_sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
@@ -294,8 +294,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "d5694d79acdd9b9083fad0ffd10e1b2bf104545da2d4368c0e18ce7165fe92fc",
-        "translation_sha256": "8b43ba2bf9c386c41f70ce5a7532fb44f4b7b389e8982ee25a275bf9d6640cba"
+        "source_sha256": "91f02798c3cd7cc8fd707df77c0480e08884999d248cf882fa77665519b5ff86",
+        "translation_sha256": "8693ba3a98d2ed8f5fb2ab6d55dcce92a6bf6d849e4329c40bc608e60bd31db9"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -317,9 +317,13 @@
         "source_sha256": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
         "translation_sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032"
       },
+      "docs/research/host-survey.md": {
+        "source_sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
+        "translation_sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14"
+      },
       "docs/research/issue-submissions.md": {
-        "source_sha256": "897b58b97d587425b7470e88e0cda2a17d2523109d1bfd0102127289d82f0631",
-        "translation_sha256": "36d34f895aab847724a35ca3d9c92952769ee94e8f8b0874c26c093aea9ef954"
+        "source_sha256": "a41fefd0cf19757b3029cab46b3bcb2060f8130c229c8a3956b3f5ad5f1b78a8",
+        "translation_sha256": "da301b36ec1f034b11dc78faa286c2cc04ad4a7a30e4078eec93722e3af7b9f2"
       },
       "docs/research/open-questions.md": {
         "source_sha256": "59ffbbc3913fc08fa17c859f21174c37944885f4bedb7def1ce3cad955078799",

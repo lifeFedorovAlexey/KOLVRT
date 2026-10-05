@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "base_commit": "7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca",
+  "base_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
   "files": [
     {
       "path": "Cargo.lock",
@@ -14,98 +14,98 @@
       "before_sha256_lf": "dc530a9f895d3bb399894012d2bca430632bccdcafbaf1523956e368054d46f2",
       "after_sha256_lf": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6",
       "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
     },
     {
       "path": "crates/host-process-metrics/src/lib.rs",
       "before_sha256_lf": "07545360dff084fb941a05f283deece282420e7df2358e7ecec77b90bf294a9e",
       "after_sha256_lf": "ee1d24ab87e9c15328f3a07a629f5734ec58aacb41eac61d295baeddd6ff96d4",
       "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/migration-advisor/src/advisor.rs",
-      "before_sha256_lf": "40a93f93bf7e998a2d583c920f2b66025b153ed2ea00a26a27eb6d8f7f6ace58",
-      "after_sha256_lf": "243db38f10af82f4eadb6733894a5be86d1778e0fc6da961c64661dc1400b51f",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/migration-advisor/src/statistics.rs",
-      "before_sha256_lf": "d807602091c9858da837a4d88f1845aa486145ff21eece705a14ad1f06c0467a",
-      "after_sha256_lf": "0ce91e28eb36bf95b3f906b0644b6809cfbc4cd3f83dc2e26e9e9b13560ac656",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/migration-advisor/tests/migration.rs",
-      "before_sha256_lf": "ad4f814b9a9f2c6015fb1952fe64ea90f00923614290a018d3ace1c84fcbf73e",
-      "after_sha256_lf": "cbfde512183c620d55d84524b4682f3e9d8ee65c11b281802025e8d7c8aeff0e",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/migration-workbench/src/lib.rs",
-      "before_sha256_lf": "51e8b41928b5534e9d7a2b08d70bae3ca5462e893e1a0d55cc4b7a8fd416e6bc",
-      "after_sha256_lf": "6b7c994a73433d599b908f2cbc5e78bab1a7d0b1366a03dd4e50477a9e6d0857",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/migration-workbench/src/main.rs",
-      "before_sha256_lf": "516973dd03334f3752516b88d4c6a9081322eef6af5fa160e81e9533cd95d2a8",
-      "after_sha256_lf": "68c8de14c3f26868a676d457245b442f37c1f4e01bdc92c677e2bc75e2a622b3",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/migration-workbench/tests/workload.rs",
-      "before_sha256_lf": "8b73270a4f61c7455e1fcaaf5a9ee71d6cd013edac46e5875381ad7fc0f58de9",
-      "after_sha256_lf": "198c6c09f52f819b99618ce728324988f189fee2734ef56f1b12b29dacf3c75e",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/xtask/Cargo.toml",
-      "before_sha256_lf": "d1d1139b4384ecb73499f9c4ef01bd87ad611aa4c297f823278bb6ca668ac661",
-      "after_sha256_lf": "694f5ce95a7b52ffcb19172f724b7dbec7b58880d32322d838f146dff26afbe2",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/xtask/src/routing_demo.rs",
-      "before_sha256_lf": "ce31d83e4ef6d5d54501b137e8f0e6a85f411d43e62fc8f50e37b0284f8ec302",
-      "after_sha256_lf": "427b0bb8048844b2a5e6e0db39f25df9e4d2dbad6f5108b273f5400050807c33",
-      "disposition": "no-feature-impact",
-      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
-    },
-    {
-      "path": "crates/kernel/src/tests.rs",
-      "before_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
-      "after_sha256_lf": "ac3e8db067c6bcc89ebfd7ef340a74bf28cd71b2a08dfe96f7a6364eeabf4036",
-      "disposition": "no-feature-impact",
-      "reason": "Fix the bounded kernel verification fixture polling order so an IRQ delivery published at the deadline boundary is observed before failure. The 500 ms bound and requirement for actual delivery remain; deterministic host tests exercise the same helper and reject expired waits without delivery. Native timer, IRQ handling and process-reclaim semantics do not change."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
     },
     {
       "path": "crates/kernel/src/test_support/irq_wait.rs",
       "before_sha256_lf": null,
       "after_sha256_lf": "fad0e7a7e220c1fc511acb672a0bc5db9fc8d9fc2964e744e9d6aac05e14bc9b",
       "disposition": "no-feature-impact",
-      "reason": "Fix the bounded kernel verification fixture polling order so an IRQ delivery published at the deadline boundary is observed before failure. The 500 ms bound and requirement for actual delivery remain; deterministic host tests exercise the same helper and reject expired waits without delivery. Native timer, IRQ handling and process-reclaim semantics do not change."
+      "reason": "Fix bounded verification fixture polling order: observe actual IRQ delivery before timeout and take a final observation at expiration. The 500 ms bound remains and missing delivery fails; native IRQ handling and process lifetime semantics do not change."
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "before_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
+      "after_sha256_lf": "ac3e8db067c6bcc89ebfd7ef340a74bf28cd71b2a08dfe96f7a6364eeabf4036",
+      "disposition": "no-feature-impact",
+      "reason": "Fix bounded verification fixture polling order: observe actual IRQ delivery before timeout and take a final observation at expiration. The 500 ms bound remains and missing delivery fails; native IRQ handling and process lifetime semantics do not change."
+    },
+    {
+      "path": "crates/migration-advisor/src/advisor.rs",
+      "before_sha256_lf": "40a93f93bf7e998a2d583c920f2b66025b153ed2ea00a26a27eb6d8f7f6ace58",
+      "after_sha256_lf": "243db38f10af82f4eadb6733894a5be86d1778e0fc6da961c64661dc1400b51f",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-advisor/src/statistics.rs",
+      "before_sha256_lf": "d807602091c9858da837a4d88f1845aa486145ff21eece705a14ad1f06c0467a",
+      "after_sha256_lf": "0ce91e28eb36bf95b3f906b0644b6809cfbc4cd3f83dc2e26e9e9b13560ac656",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-advisor/tests/migration.rs",
+      "before_sha256_lf": "ad4f814b9a9f2c6015fb1952fe64ea90f00923614290a018d3ace1c84fcbf73e",
+      "after_sha256_lf": "cbfde512183c620d55d84524b4682f3e9d8ee65c11b281802025e8d7c8aeff0e",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-workbench/src/lib.rs",
+      "before_sha256_lf": "51e8b41928b5534e9d7a2b08d70bae3ca5462e893e1a0d55cc4b7a8fd416e6bc",
+      "after_sha256_lf": "6b7c994a73433d599b908f2cbc5e78bab1a7d0b1366a03dd4e50477a9e6d0857",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-workbench/src/main.rs",
+      "before_sha256_lf": "516973dd03334f3752516b88d4c6a9081322eef6af5fa160e81e9533cd95d2a8",
+      "after_sha256_lf": "68c8de14c3f26868a676d457245b442f37c1f4e01bdc92c677e2bc75e2a622b3",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/migration-workbench/tests/workload.rs",
+      "before_sha256_lf": "8b73270a4f61c7455e1fcaaf5a9ee71d6cd013edac46e5875381ad7fc0f58de9",
+      "after_sha256_lf": "198c6c09f52f819b99618ce728324988f189fee2734ef56f1b12b29dacf3c75e",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "before_sha256_lf": "d1d1139b4384ecb73499f9c4ef01bd87ad611aa4c297f823278bb6ca668ac661",
+      "after_sha256_lf": "694f5ce95a7b52ffcb19172f724b7dbec7b58880d32322d838f146dff26afbe2",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "before_sha256_lf": "ce31d83e4ef6d5d54501b137e8f0e6a85f411d43e62fc8f50e37b0284f8ec302",
+      "after_sha256_lf": "427b0bb8048844b2a5e6e0db39f25df9e4d2dbad6f5108b273f5400050807c33",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. Updated benchmarking, advisor and workbench contracts describe the behavior; no enrolled native kernel feature source changes."
     },
     {
       "path": "crates/xtask/tests/timer_wait.rs",
       "before_sha256_lf": null,
       "after_sha256_lf": "439b2b70df1d62d70d4ae63bc8f03ea8699cc91d26c863fe30907d943a6a5791",
       "disposition": "no-feature-impact",
-      "reason": "Fix the bounded kernel verification fixture polling order so an IRQ delivery published at the deadline boundary is observed before failure. The 500 ms bound and requirement for actual delivery remain; deterministic host tests exercise the same helper and reject expired waits without delivery. Native timer, IRQ handling and process-reclaim semantics do not change."
+      "reason": "Fix bounded verification fixture polling order: observe actual IRQ delivery before timeout and take a final observation at expiration. The 500 ms bound remains and missing delivery fails; native IRQ handling and process lifetime semantics do not change."
     }
   ],
   "features": [
     {
       "id": "kolvrt.cost-l.offline-queries",
       "disposition": "evidence-change",
-      "reason": "The declared Cargo.lock source digest changed due to the existing pinned serde dependency added to host metric serialization. Historical host receipts remain immutable and current exact-source verification is explicitly STALE; COST-L query semantics and implementation status do not change."
+      "reason": "The declared Cargo.lock source digest changed due to the already pinned serde dependency added to host metric serialization. Historical receipts remain immutable; current exact-source verification is explicitly STALE without changing COST-L query semantics."
     }
   ]
 }

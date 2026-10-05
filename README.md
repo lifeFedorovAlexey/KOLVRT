@@ -53,6 +53,8 @@ The [COST-L CLI](docs/research/cost-l-queries.md) provides `show`, `consumers`, 
 
 ## Build and checks
 
+The [local host-survey framework](docs/research/host-survey.md) produces allowlisted research reports with explicit gaps and local review. These observations do not establish KOLVRT hardware support.
+
 Run commands from the repository root. Requirements: Rust **1.99.0** with `rustfmt`, `clippy` and `aarch64-unknown-none`; Node.js **18+**; QEMU **10.1.0**. Automated Windows setup also needs 7-Zip.
 
 ```powershell
@@ -105,17 +107,18 @@ This generated registry summary separates implementation from verification. `BOU
 
 <!-- feature-summary:start -->
 
-| Canonical feature                                                                                          | Implementation      | Evidence limit                                         |
-| ---------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------ |
-| [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                    | PLANNED             | host-process: UNKNOWN; physical-arm64: UNKNOWN         |
-| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)             | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE    |
-| [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                  | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE |
-| [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
-| [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
-| [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                              | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
-| [kolvrt.security.capability-revocation](docs/kernel/capabilities.md#kolvrt-security-capability-revocation) | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
-| [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                     | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
-| [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
+| Canonical feature                                                                                          | Implementation      | Evidence limit                                                               |
+| ---------------------------------------------------------------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------- |
+| [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                    | PLANNED             | host-process: UNKNOWN; physical-arm64: UNKNOWN                               |
+| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)             | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                          |
+| [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                  | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                       |
+| [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                   |
+| [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                                |
+| [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                              | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                   |
+| [kolvrt.research.host-survey](docs/research/host-survey.md#kolvrt-host-survey)                             | BOUNDED_IMPLEMENTED | host-process: VERIFIED; windows-cim: UNKNOWN; physical-arm64: NOT_APPLICABLE |
+| [kolvrt.security.capability-revocation](docs/kernel/capabilities.md#kolvrt-security-capability-revocation) | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                                |
+| [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                     | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                   |
+| [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                   |
 
 <!-- feature-summary:end -->
 

@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 47349,
-  "catalog_bytes": 63012,
-  "catalog_nodes": 158,
+  "approximate_tokens": 47582,
+  "catalog_bytes": 63942,
+  "catalog_nodes": 160,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "e980b70c95a820107b9b9b600761365d27a3b10e894adfc4e48a977c36e51993",
+  "catalog_sha256": "fadfde95c6dc1329f4d16a5fdec5afbfb9467473a3a029bd0bcd150716411e43",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 189396,
+  "context_plus_catalog_bytes": 190326,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 89,
-    "utf8_bytes": 669297
+    "documents": 90,
+    "utf8_bytes": 683229
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -52,12 +52,12 @@
   "query": "review Phase 3.4 capability revocation",
   "rendered_context_bytes": 126384,
   "russian_pilot": {
-    "approximate_tokens": 72661,
-    "catalog_bytes": 63012,
-    "context_plus_navigation_bytes": 290641,
+    "approximate_tokens": 73107,
+    "catalog_bytes": 63942,
+    "context_plus_navigation_bytes": 292427,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 34107,
+    "localized_navigation_bytes": 34963,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -317,7 +317,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
         "start": 13
       }
     },
@@ -326,7 +326,7 @@
       "location": {
         "end": 82,
         "path": "docs/kernel/processes.md",
-        "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
         "start": 58
       }
     },
@@ -513,7 +513,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 188643
+    "utf8_bytes": 189998
   },
   "source_files": [
     {

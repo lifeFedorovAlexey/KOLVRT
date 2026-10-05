@@ -20,6 +20,8 @@ These are illustrative scopes, not submitted results. An upstream driver name or
 
 ## Review the exact public content
 
+The [local host-survey framework](host-survey.md) provides allowlisted collection and synthetic validation for #53. Its default command prints help, and explicit collection never publishes. A research-host report is not a boot-target or physical KOLVRT result.
+
 Public model names and bus vendor/device IDs can describe a device without identifying a machine. Do not submit raw inventories, unrestricted logs or dumps. Remove secrets, serials, MAC/IP/SSID, usernames, hostnames and private paths from every field and attachment locally. Review the exact sanitized text before submission. Screenshots and attachments need the same review. The required acknowledgement records the submitter's review; it does not automatically sanitize data or authorize additional collection/publication. UNKNOWN plus a reason is preferable to a guess.
 
 ## Review COST-L references and decisions
