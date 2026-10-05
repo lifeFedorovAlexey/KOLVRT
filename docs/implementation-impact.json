@@ -17,6 +17,20 @@
       "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
     },
     {
+      "path": ".github/workflows/kernel.yml",
+      "before_sha256_lf": "27b1d60162c3bd5cf2a8533404ba5ffde9ad0b3eb69a80cdd2174a3925ef3beb",
+      "after_sha256_lf": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
+      "disposition": "existing-feature",
+      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
+    },
+    {
+      "path": ".nvmrc",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
+      "disposition": "new-feature",
+      "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
+    },
+    {
       "path": "crates/kernel-core/Cargo.toml",
       "before_sha256_lf": "a75f06d9abf31569f4c900fd9a00934ea2c0ced59c26f1d597155f38e5bf1855",
       "after_sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
@@ -29,6 +43,20 @@
       "after_sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29",
       "disposition": "existing-feature",
       "reason": "Mark existing unlicensed workspace package unpublished for external-only license checking without assigning a new license; no kernel source/runtime semantics changed."
+    },
+    {
+      "path": "crates/kernel/src/test_support/irq_wait.rs",
+      "before_sha256_lf": "fad0e7a7e220c1fc511acb672a0bc5db9fc8d9fc2964e744e9d6aac05e14bc9b",
+      "after_sha256_lf": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
+      "disposition": "no-feature-impact",
+      "reason": "Timer-test fixture finalizes with IRQs masked before the last delivery observation, closing poll-return-to-mask loss. Five deterministic host cases retain real-delivery/500ms failure semantics; production timer/IRQ handling is unchanged. Failure-only elapsed counter telemetry diagnoses any remaining genuine timeout."
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "before_sha256_lf": "3fa2f4e5785bb3e1703b709811cc7012c34fdd83a73733f47f0535041affb91b",
+      "after_sha256_lf": "41ee84dc04fa2c68fa7349693847dc3a222bbca8c9b5c4ebd12c774d29a8d82d",
+      "disposition": "no-feature-impact",
+      "reason": "Timer-test fixture finalizes with IRQs masked before the last delivery observation, closing poll-return-to-mask loss. Five deterministic host cases retain real-delivery/500ms failure semantics; production timer/IRQ handling is unchanged. Failure-only elapsed counter telemetry diagnoses any remaining genuine timeout."
     },
     {
       "path": "crates/migration-workbench/Cargo.toml",
@@ -113,20 +141,6 @@
       "after_sha256_lf": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
       "disposition": "new-feature",
       "reason": "Host dependency hygiene policy, graph evidence/rejection controls, Dependabot and read-only CI integration; no extra kernel or host Rust dependency."
-    },
-    {
-      "after_sha256_lf": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
-      "path": ".github/workflows/kernel.yml",
-      "before_sha256_lf": "27b1d60162c3bd5cf2a8533404ba5ffde9ad0b3eb69a80cdd2174a3925ef3beb",
-      "reason": "Dependency/CI environment maintenance: pinned shared Node 24 LTS and explicit Node 24 action releases. No kernel source or execution contract change; hosted-runner acceptance pending.",
-      "disposition": "existing-feature"
-    },
-    {
-      "after_sha256_lf": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
-      "path": ".nvmrc",
-      "before_sha256_lf": null,
-      "reason": "Dependency/CI environment maintenance: pinned shared Node 24 LTS and explicit Node 24 action releases. No kernel source or execution contract change; hosted-runner acceptance pending.",
-      "disposition": "existing-feature"
     }
   ],
   "features": [
