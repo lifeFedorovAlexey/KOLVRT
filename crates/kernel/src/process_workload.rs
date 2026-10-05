@@ -459,15 +459,42 @@ fn exercise_elf(
 
     let pages_before = p.available();
     let live_before = registry.live();
+    let mut entry_alignment = true;
+    for delta in [1usize, 2, 3, 15] {
+        let mut damaged = alloc::vec::Vec::from(MINIMAL_ELF);
+        let entry = config::USER_PAYLOAD_BASE + delta;
+        damaged[24..32].copy_from_slice(&(entry as u64).to_le_bytes());
+        entry_alignment &= kernel_core::elf::parse(
+            &damaged,
+            config::USER_PAYLOAD_BASE,
+            config::USER_PAYLOAD_BYTES,
+            config::PAGE_BYTES,
+        )
+        .is_err_and(|error| error == "AArch64 ELF entry is not instruction-aligned");
+    }
+    report("elf_entry_alignment", entry_alignment);
     let mut rejected = true;
     for (offset, value) in [
         (68usize, 7u64),
         (80, (config::USER_PAYLOAD_BASE - config::PAGE_BYTES) as u64),
         (24, (config::USER_PAYLOAD_BASE + config::PAGE_BYTES) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 1) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 2) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 3) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 4) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 15) as u64),
         (96, u64::MAX),
     ] {
         let mut damaged = alloc::vec::Vec::from(MINIMAL_ELF);
         damaged[offset..offset + 8].copy_from_slice(&value.to_le_bytes());
+        // Match e_entry in Spec so a mismatch cannot mask profile rejection.
+        let requested_entry = if offset == 24 {
+            value as usize
+        } else {
+            image.entry
+        };
+        let mut requested_context = context;
+        requested_context.pc = requested_entry as u64;
         let result = registry.create(
             p,
             Origin::Bootstrap,
@@ -475,9 +502,9 @@ fn exercise_elf(
                 image: &damaged,
                 image_format: process::ImageFormat::Elf64Aarch64,
                 limits: limits(),
-                context,
+                context: requested_context,
                 owner: 0,
-                entry: config::USER_PAYLOAD_BASE,
+                entry: requested_entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
             None,

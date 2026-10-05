@@ -1,41 +1,49 @@
 {
   "schema_version": 1,
-  "base_commit": "c0d319e09da03600ffad0942e4770238d1fd9ca4",
   "files": [
     {
-      "path": "crates/repository-checks/src/knowledge.rs",
-      "before_sha256_lf": "cc1e7ec389b4c769d76658c4e22ebb1c2fd627b3b7d3729811f721a412378b0a",
-      "after_sha256_lf": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
-      "disposition": "existing-feature",
-      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+      "disposition": "no-feature-impact",
+      "before_sha256_lf": "bb97368963875fcb8d21a5c7243e64db8cc771c5d20bf77f1566345e06e810d6",
+      "after_sha256_lf": "a75f06d9abf31569f4c900fd9a00934ea2c0ced59c26f1d597155f38e5bf1855",
+      "path": "crates/kernel-core/Cargo.toml",
+      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
     },
     {
-      "path": "crates/repository-checks/src/knowledge/impact.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
-      "disposition": "existing-feature",
-      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+      "disposition": "no-feature-impact",
+      "before_sha256_lf": "eace2f23808a826184076b133e768f7707ba1ac98f894da2f9b07c4cf3f268c8",
+      "after_sha256_lf": "875e7ca516a5358688a4b6234d023b5c6ebd91fc36dc2c316bb8cb0b87e06d3e",
+      "path": "crates/kernel-core/src/elf.rs",
+      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
     },
     {
-      "path": "crates/repository-checks/tests/knowledge.rs",
-      "before_sha256_lf": "090fe869bf22dade4f57ef80576cd7eb72ce583a4718257499a42f280c0217df",
-      "after_sha256_lf": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
-      "disposition": "existing-feature",
-      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+      "disposition": "no-feature-impact",
+      "before_sha256_lf": "eddb775cbf56e75096ce963af30cba702e7edf01ee5420b8bb7ea6540edbaa9a",
+      "after_sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5",
+      "path": "crates/kernel-core/tests/elf_contract.rs",
+      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
     },
     {
-      "path": "schemas/implementation-impact.schema.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
-      "disposition": "existing-feature",
-      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+      "disposition": "no-feature-impact",
+      "before_sha256_lf": "d2465af730d14cfb731e40fbe6b20f4a50db09d86e271140902c85e5fe69961b",
+      "after_sha256_lf": "0d2fcaaf0df342d76e89dd79aa72adde59733f3d03f2642ffa21d1f2a9d1656a",
+      "path": "crates/kernel/Cargo.toml",
+      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
+    },
+    {
+      "disposition": "no-feature-impact",
+      "before_sha256_lf": "dd298bd197b1378e3581ac49be5157ef3c9a5637c802296e31419981ed653760",
+      "after_sha256_lf": "d6cfc72822c74fd030d51a735ded89aa7f38f40fc0f1bfccb8e0888c690ca05a",
+      "path": "crates/kernel/src/process_workload.rs",
+      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
+    },
+    {
+      "disposition": "no-feature-impact",
+      "before_sha256_lf": "022aead0dab931213901c17e7e9fcf3bb0b0ea7d8b10c2e3cf506c25f585d74e",
+      "after_sha256_lf": "c8c061917a18e871c039b7a4de4d0c664f44b23140e95468a650b831fc9d5878",
+      "path": "crates/xtask/src/main.rs",
+      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
     }
   ],
-  "features": [
-    {
-      "id": "kolvrt.docs.navigation",
-      "disposition": "semantic-change",
-      "reason": "Canonical EN/RU navigation contract now defines exact-source VERIFIED freshness, Unicode retrieval and review-visible declarations, including limits on automatic semantic proof."
-    }
-  ]
+  "features": [],
+  "base_commit": "89b8a36b9ce6327d7a2470a42235a07ad14c07bf"
 }

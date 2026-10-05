@@ -12,6 +12,8 @@ const PROGRAM_HEADER_BYTES: usize = 56;
 const PT_NULL: u32 = 0;
 const PT_LOAD: u32 = 1;
 const PT_GNU_STACK: u32 = 0x6474_e551;
+#[cfg(not(feature = "elf-entry-alignment-negative"))]
+const AARCH64_INSTRUCTION_ALIGNMENT: usize = 4;
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub struct LoadSegment {
@@ -93,6 +95,10 @@ pub fn parse(
         .ok_or("user image bounds overflow")?;
     let entry = usize::try_from(u64_at(bytes, 24).ok_or("truncated ELF entry")?)
         .map_err(|_| "ELF entry does not fit address space")?;
+    #[cfg(not(feature = "elf-entry-alignment-negative"))]
+    if !entry.is_multiple_of(AARCH64_INSTRUCTION_ALIGNMENT) {
+        return Err("AArch64 ELF entry is not instruction-aligned");
+    }
     let phoff = usize::try_from(u64_at(bytes, 32).ok_or("truncated program-header offset")?)
         .map_err(|_| "program-header offset does not fit address space")?;
     let phnum = usize::from(u16_at(bytes, 56).ok_or("truncated program-header count")?);
