@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "issue": 53,
+  "git_commit": "7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca",
+  "worktree_dirty": true,
+  "scope": "Windows host framework with synthetic inputs and shadowed CIM providers only. No actual inventory collection or publication; no kernel, driver, physical ARM64 or IOMMU acceptance.",
+  "environment": {
+    "powershell_version": "7.6.6",
+    "platform": "Windows host process",
+    "node_version": "v18.20.8"
+  },
+  "source_files": [
+    {
+      "path": "scripts/host-survey.cjs",
+      "sha256_lf": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab"
+    },
+    {
+      "path": "scripts/collect-host-survey.ps1",
+      "sha256_lf": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9"
+    },
+    {
+      "path": "scripts/tests/host-survey.test.cjs",
+      "sha256_lf": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a"
+    },
+    {
+      "path": "crates/repository-checks/tests/host_survey_schema.rs",
+      "sha256_lf": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a"
+    },
+    {
+      "path": "schemas/host-survey.schema.json",
+      "sha256_lf": "af897efaa4d052a8a10d36bda983544cd16884fa5a6500e1476239da20b65ae2"
+    },
+    {
+      "path": "research/hardware/fixtures/synthetic-survey-input.json",
+      "sha256_lf": "b0f825985be7d3cde2a8c04f729ac7a78beee9633721847ffebc30d649771971"
+    },
+    {
+      "path": "research/hardware/fixtures/synthetic-survey-report.json",
+      "sha256_lf": "d14121245afe12b622eade249c4030e8961f6d1f721cf77c89330d6f66684e76"
+    },
+    {
+      "path": "package.json",
+      "sha256_lf": "0976fae10a6766c302bfba03e70555c9bb1893ee40822b1777a5204a23d2fc82"
+    }
+  ],
+  "correctness": {
+    "provider_calls": "Deterministic shadowed Get-CimInstance; test processes cannot query actual providers.",
+    "golden_report": "synthetic-survey-report.json",
+    "node_tests": 13,
+    "node_skipped": 0,
+    "schema_failures": 0,
+    "node_failures": 0,
+    "publication": "NOT_RUN",
+    "actual_cim_collection": "NOT_RUN",
+    "schema_tests": 1
+  },
+  "rejection_scopes": [
+    "closed nested/private fields",
+    "raw paths, network IDs and exception messages",
+    "unknown/unsupported scopes and versions",
+    "missing/denied providers and unknown facts",
+    "malformed paired IDs and fake IOMMU guarantees",
+    "duplicate JSON keys and invalid UTF-8/depth/node budgets",
+    "private-instance deduplication and ambiguous driver joins",
+    "public-ID duplicates preserve separate report-local aliases",
+    "actual input/output/device/provider exhaustion before publication"
+  ],
+  "limits": {
+    "output_bytes": 131072,
+    "input_bytes": 1048576,
+    "depth": 16,
+    "driver_records": 512,
+    "pnp_records": 256,
+    "nodes": 32768,
+    "cpu_records": 64
+  },
+  "claim": "Exact-source synthetic host evidence, not a sanitized inventory of any real machine or proof that a hostile producer cannot disguise a secret as permitted public model text."
+}

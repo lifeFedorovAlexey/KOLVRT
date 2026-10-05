@@ -421,6 +421,91 @@
       "type": "depends_on"
     },
     {
+      "from": "kolvrt.research.host-survey",
+      "to": "adr.0008",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "adr.0013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "crates/repository-checks/tests/host_survey_schema.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "law.001",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "law.009",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "law.013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "law.031",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "law.036",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "law.040",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "package.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "research/hardware/fixtures/synthetic-survey-input.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "research/hardware/fixtures/synthetic-survey-report.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "research/results/issue53-host-survey.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "schemas/host-survey.schema.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "scripts/collect-host-survey.ps1",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "scripts/host-survey.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.research.host-survey",
+      "to": "scripts/tests/host-survey.test.cjs",
+      "type": "implemented_by"
+    },
+    {
       "from": "kolvrt.security.capability-revocation",
       "to": "adr.0013",
       "type": "depends_on"
@@ -752,6 +837,7 @@
     "crates/repository-checks/src/lib.rs": "b29b711566dd7bef0b5b9fc97bd7aa3251447aab82f12b7c59897783abe5a45e",
     "crates/repository-checks/src/main.rs": "200077845468ae7033d5f9b3ec28fefe48fc7ff432b6ef2ff5b4028d245d3d56",
     "crates/repository-checks/tests/cost_l_queries.rs": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
+    "crates/repository-checks/tests/host_survey_schema.rs": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a",
     "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
@@ -787,11 +873,13 @@
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "ad8610e934ec2aef4feff2d63bc218ac2d3a4ac94ed6e3dff7e26537bdf762ad",
-    "docs/knowledge-system.md": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
+    "docs/knowledge-enrollment.json": "5d7ea35578423fa0c70ac7235c6cd5e13d6eeaa12c2afeeff47bedce560b7ec5",
+    "docs/knowledge-system.md": "a3fb339779602fa7eed5e48660f1e5da7e9c80011644780db8b8b4e6ab166b42",
     "docs/research/cost-l-queries.md": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
+    "docs/research/host-survey.md": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
+    "package.json": "0976fae10a6766c302bfba03e70555c9bb1893ee40822b1777a5204a23d2fc82",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
     "research/cases/KOL-PATH-0002.json": "db1c5219328b188bd049731fcfe7a8c78bd171b0ae0d6abc2ee8702f9c836675",
     "research/cases/KOL-PATH-0003.json": "9df75d09e6da02f5fb5525b202c6bc04be96433100820967bcaae9d9415c730f",
@@ -826,13 +914,19 @@
     "research/cost-l/COST-L-0002.json": "4854fd2013ea76118e8b7e027fe61ef304f2b39f181c1982d3c1c76aba05af01",
     "research/cost-l/COST-L-0003.json": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794",
     "research/cost-l/registry.json": "6868df93c719a0d9efb11e628b608498e5649d1744acf24392b1b0bccbc10474",
+    "research/hardware/fixtures/synthetic-survey-input.json": "b0f825985be7d3cde2a8c04f729ac7a78beee9633721847ffebc30d649771971",
+    "research/hardware/fixtures/synthetic-survey-report.json": "d14121245afe12b622eade249c4030e8961f6d1f721cf77c89330d6f66684e76",
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
     "schemas/cost-l-registry.schema.json": "34a6bb442291351647c8826054fb582f89ec121c5abff19bf2bcc350b9d24254",
     "schemas/cost-l.schema.json": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
+    "schemas/host-survey.schema.json": "af897efaa4d052a8a10d36bda983544cd16884fa5a6500e1476239da20b65ae2",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "d898c54fe9371c3c4291123b9c93ce150c6824e2489959866e3690df61803467",
+    "scripts/collect-host-survey.ps1": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
+    "scripts/host-survey.cjs": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
+    "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
+    "translations/manifest.json": "5b8a8fa977500955dcbf8d74b9d06e8d1c801b6c81e148909f579467a67c2ff6",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -867,8 +961,9 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e",
+    "translations/ru/docs/knowledge-system.md": "d0351a22afc1b8f09a48f7471b71925a42fe18cda5297a8b530c03357fffd38e",
     "translations/ru/docs/research/cost-l-queries.md": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
+    "translations/ru/docs/research/host-survey.md": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
@@ -2973,13 +3068,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
+          "sha256": "a3fb339779602fa7eed5e48660f1e5da7e9c80011644780db8b8b4e6ab166b42",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e",
+          "sha256": "d0351a22afc1b8f09a48f7471b71925a42fe18cda5297a8b530c03357fffd38e",
           "start": 1
         }
       },
@@ -3294,6 +3389,40 @@
       "schema_version": 1,
       "summary": "Bounded offline projections of COST-L declarations, independent dimensions and explicit production/runtime gaps.",
       "title": "Offline COST-L queries"
+    },
+    "doc.kolvrt.research.host-survey": {
+      "document": "doc.kolvrt.research.host-survey",
+      "document_status": "CURRENT",
+      "estimated_bytes": 12315,
+      "evidence_scope": "versioned Windows host-tool framework, synthetic provider experiments and schema/CLI checks; no actual host inventory collected or published.",
+      "id": "doc.kolvrt.research.host-survey",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Локальные наблюдения об исследовательской машине из разрешённых полей: синтетическая проверка без публикации и полномочий на устройства.",
+          "tags": null,
+          "title": "Локальный сбор сведений для исследований"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 148,
+          "path": "docs/research/host-survey.md",
+          "sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
+          "start": 1
+        },
+        "ru": {
+          "end": 148,
+          "path": "translations/ru/docs/research/host-survey.md",
+          "sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
+          "start": 1
+        }
+      },
+      "path": "docs/research/host-survey.md",
+      "schema_version": 1,
+      "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
+      "title": "Local research-host surveys"
     },
     "doc.kolvrt.security.threat-model": {
       "document": "doc.kolvrt.security.threat-model",
@@ -3998,7 +4127,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "121a3c281e05e9e0c28c8b39e47625b2939d62732dc32416718e974d616e16f9",
+            "receipt_sha256": "a79b421de0376a65fb49792dbf068332c31b63a15df2e5f3f80725c97c2008b3",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4023,13 +4152,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
+          "sha256": "a3fb339779602fa7eed5e48660f1e5da7e9c80011644780db8b8b4e6ab166b42",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e",
+          "sha256": "d0351a22afc1b8f09a48f7471b71925a42fe18cda5297a8b530c03357fffd38e",
           "start": 7
         }
       },
@@ -5240,6 +5369,102 @@
       "path": "docs/kernel/processes.md",
       "summary": "Process lifecycle: state",
       "title": "State machine"
+    },
+    "kolvrt.research.host-survey": {
+      "anchor": "kolvrt-host-survey",
+      "depends_on": [
+        "law.001",
+        "law.009",
+        "law.013",
+        "law.031",
+        "law.036",
+        "law.040",
+        "adr.0008",
+        "adr.0013"
+      ],
+      "document": "doc.kolvrt.research.host-survey",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1574,
+      "evidence_scope": "versioned Windows host-tool framework, synthetic provider experiments and schema/CLI checks; no actual host inventory collected or published.",
+      "feature": {
+        "acceptance": ["research/results/issue53-host-survey.json"],
+        "adrs": ["adr.0008", "adr.0013"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Versioned local Windows research-host collection with a closed allowlist, Node projection/validation, explicit gaps, bounded output and synthetic integration evidence.",
+        "issues": [53],
+        "limitations": [
+          "Actual Windows-provider collection and real ARM64 inventory have not run. Reports are unauthenticated research observations, not boot_target/driver/DMA guarantees or publication consent. #54 driver mapping and #58 physical first-machine review remain separate."
+        ],
+        "next_gate": "Review the exact local report and separately authorize publication before #58 first-machine research; rederive device/binding authority independently before runtime use.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "COST-L host survey #53",
+        "sources": [
+          "scripts/host-survey.cjs",
+          "scripts/collect-host-survey.ps1",
+          "scripts/tests/host-survey.test.cjs",
+          "crates/repository-checks/tests/host_survey_schema.rs",
+          "schemas/host-survey.schema.json",
+          "research/hardware/fixtures/synthetic-survey-input.json",
+          "research/hardware/fixtures/synthetic-survey-report.json",
+          "package.json"
+        ],
+        "transitions": [
+          {
+            "acceptance": ["research/results/issue53-host-survey.json"],
+            "from": "UNRECORDED",
+            "reason": "First local allowlisted framework with exact-source synthetic host acceptance; physical collection and publication remain separate decisions.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "host-process",
+            "reason": "Thirteen real CLI/PowerShell synthetic tests and one independent JSON-schema/golden-report test passed on these declared source bytes.",
+            "receipt": "research/results/issue53-host-survey.json",
+            "receipt_sha256": "cc07b61d771e202ca0ffc7025fd3070a3c27d179c40704618b3dccb51b896beb",
+            "scope": "Synthetic fixtures and shadowed CIM providers only; no actual hardware collection or kernel execution.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "windows-cim",
+            "reason": "No real provider collection has been run; deterministic provider shadows do not establish production hardware observations.",
+            "state": "UNKNOWN"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "This host research framework cannot establish physical KOLVRT kernel/device support.",
+            "state": "NOT_APPLICABLE"
+          }
+        ]
+      },
+      "id": "kolvrt.research.host-survey",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Локальные наблюдения об исследовательской машине из разрешённых полей: синтетическая проверка без публикации и полномочий на устройства.",
+          "tags": ["hardware", "survey", "privacy", "research_host"],
+          "title": "Область применения и команды"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 29,
+          "path": "docs/research/host-survey.md",
+          "sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
+          "start": 7
+        },
+        "ru": {
+          "end": 29,
+          "path": "translations/ru/docs/research/host-survey.md",
+          "sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
+          "start": 7
+        }
+      },
+      "path": "docs/research/host-survey.md",
+      "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
+      "tags": ["hardware", "survey", "privacy", "research_host"],
+      "title": "Scope and commands"
     },
     "kolvrt.security.capability-revocation": {
       "anchor": "kolvrt-security-capability-revocation",

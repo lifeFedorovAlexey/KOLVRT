@@ -1,74 +1,69 @@
 {
+  "base_commit": "7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca",
   "schema_version": 1,
-  "base_commit": "80ae125a5ba9cf8f9b09dc45f96de81687377323",
   "files": [
     {
-      "path": ".cargo/config.toml",
-      "before_sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6",
-      "after_sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41",
-      "disposition": "no-feature-impact",
-      "reason": "Require warning-free AArch64 compilation in every Cargo build, including machine-event and negative-control configurations. This changes build acceptance only, not kernel runtime or architectural authority."
+      "path": "scripts/host-survey.cjs",
+      "after_sha256_lf": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
+      "before_sha256_lf": null,
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     },
     {
-      "path": "crates/kernel/src/memory/mod.rs",
-      "before_sha256_lf": "2d60ccb3555a412e0d70a6a4deb1968bf0883248c095af5806f316263cd9d7b0",
-      "after_sha256_lf": "138a815965a33980c33f3f0923c62ce914b02f0b087abffab1236d6e8ada7248",
-      "disposition": "no-feature-impact",
-      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. No mappings, accounting, ownership, allocations or runtime observations change in supported payload builds."
+      "path": "scripts/collect-host-survey.ps1",
+      "after_sha256_lf": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
+      "before_sha256_lf": null,
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     },
     {
-      "path": "crates/kernel/src/process.rs",
-      "before_sha256_lf": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
-      "after_sha256_lf": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
-      "disposition": "existing-feature",
-      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. Process identity, state, charges, lifetime and the existing payload observation remain unchanged; domain source verification is explicitly STALE."
+      "path": "scripts/tests/host-survey.test.cjs",
+      "after_sha256_lf": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
+      "before_sha256_lf": null,
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     },
     {
-      "path": "crates/kernel/src/main.rs",
-      "before_sha256_lf": "1ebc12733c073213f0ea00f03fe957630e516b2a20acc1950ae8a19fd6a34ee8",
-      "after_sha256_lf": "1362087d5ec4701aa54ba017866ced514017b1a3028bc2edd5a29e4c0d3087cd",
-      "disposition": "no-feature-impact",
-      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+      "path": "crates/repository-checks/tests/host_survey_schema.rs",
+      "after_sha256_lf": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a",
+      "before_sha256_lf": null,
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     },
     {
-      "path": "crates/kernel/src/tests.rs",
-      "before_sha256_lf": "2232acbc22694d35e0726ed42a458d07fbe6c548a61609727732c66b192cf656",
-      "after_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
-      "disposition": "no-feature-impact",
-      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+      "path": "schemas/host-survey.schema.json",
+      "after_sha256_lf": "af897efaa4d052a8a10d36bda983544cd16884fa5a6500e1476239da20b65ae2",
+      "before_sha256_lf": null,
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     },
     {
-      "path": "crates/kernel/src/boot_workload.rs",
-      "before_sha256_lf": "fd41700102fc9819ae2069092fb5708cfd0746a57b3afe8276a0f54b3d378de1",
-      "after_sha256_lf": "6b74202e42c957ab2963f1f106be81c24333b94bf932e767b7b2cdf8dff393a9",
-      "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "path": "research/hardware/fixtures/synthetic-survey-input.json",
+      "after_sha256_lf": "b0f825985be7d3cde2a8c04f729ac7a78beee9633721847ffebc30d649771971",
+      "before_sha256_lf": null,
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     },
     {
-      "path": "crates/kernel/src/scheduler/local.rs",
-      "before_sha256_lf": "be0cf3b0d5750e0cf3f571026d782d0df42454369cdc55e2e1be61c4a9eba037",
-      "after_sha256_lf": "86f071a62cd3736062741424e43f0183bb6b1bf7e95448aa65be453e2cb41e11",
-      "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "path": "research/hardware/fixtures/synthetic-survey-report.json",
+      "after_sha256_lf": "d14121245afe12b622eade249c4030e8961f6d1f721cf77c89330d6f66684e76",
+      "before_sha256_lf": null,
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     },
     {
-      "path": "crates/kernel/src/scheduler/mod.rs",
-      "before_sha256_lf": "932b14a5442b365f6a23257f8eb70c260af543e6d7719007fdcd84c86882027f",
-      "after_sha256_lf": "025ed1e0f69dc3b1729d5f050b123c6c95c022b257f16b0d2b9150a27517bedd",
-      "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "path": "package.json",
+      "after_sha256_lf": "0976fae10a6766c302bfba03e70555c9bb1893ee40822b1777a5204a23d2fc82",
+      "before_sha256_lf": "0d6ae16dfed9be27b639a4ee02230f50a21064793e55cd72981dfdb9920db684",
+      "reason": "New scoped host-survey framework and its closed export, synthetic inputs, semantic/privacy tests and existing npm test integration. All owned source bytes are enrolled in the new canonical feature; no kernel/runtime authority changes.",
+      "disposition": "new-feature"
     }
   ],
   "features": [
     {
-      "id": "kolvrt.process.lifecycle",
-      "disposition": "no-impact",
-      "reason": "The optional observation helper is unavailable when there is no boot-payload caller. Lifecycle semantics and historical STALE verification remain unchanged."
-    },
-    {
-      "id": "kolvrt.security.domains",
-      "disposition": "evidence-change",
-      "reason": "The compile-time caller gate changes the declared process.rs digest, so historical exact-source QEMU verification is explicitly marked STALE without rewriting its receipt."
+      "id": "kolvrt.research.host-survey",
+      "reason": "New complete EN/RU contract records privacy field minimization, provider limits, explicit UNKNOWN, research_host versus boot_target, synthetic evidence and separate physical/publication gates.",
+      "disposition": "semantic-change"
     }
   ]
 }

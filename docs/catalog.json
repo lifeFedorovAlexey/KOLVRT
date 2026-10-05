@@ -840,6 +840,16 @@
       "title": "Offline COST-L queries"
     },
     {
+      "document": "doc.kolvrt.research.host-survey",
+      "document_status": "CURRENT",
+      "estimated_bytes": 12315,
+      "id": "doc.kolvrt.research.host-survey",
+      "kind": "subsystem-contract",
+      "path": "docs/research/host-survey.md",
+      "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
+      "title": "Local research-host surveys"
+    },
+    {
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
       "estimated_bytes": 17149,
@@ -1448,6 +1458,29 @@
       "path": "docs/kernel/processes.md",
       "summary": "Process lifecycle: state",
       "title": "State machine"
+    },
+    {
+      "anchor": "kolvrt-host-survey",
+      "depends_on": [
+        "law.001",
+        "law.009",
+        "law.013",
+        "law.031",
+        "law.036",
+        "law.040",
+        "adr.0008",
+        "adr.0013"
+      ],
+      "document": "doc.kolvrt.research.host-survey",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1574,
+      "id": "kolvrt.research.host-survey",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/research/host-survey.md",
+      "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
+      "tags": ["hardware", "survey", "privacy", "research_host"],
+      "title": "Scope and commands"
     },
     {
       "anchor": "kolvrt-security-capability-revocation",
