@@ -25,7 +25,7 @@ The kernel boots on QEMU `virt` and runs isolated EL0 processes on two CPUs. It 
 | Host tools                    | Migration planner, documentation queries and offline COST-L registry queries                                |
 | Build quality                 | AArch64 builds reject warnings in DEV, PROD and negative-control configurations                             |
 
-The bounded Phase 3.4 notification mechanism is implemented. General IPC, cancellation, supervision policy and persistent services remain next-stage work; the full native service foundation is incomplete.
+Bounded Phase 3.5 IPC is implemented and ready for its declared contract: isolated EL0 request/response, blocking/wakeup, cancellation, deadlines, death/shutdown arbitration and retained ownership. Supervision policy (#27) and persistent isolated services (#28) remain the next gates; physical ARM and stable ABI are separate scopes.
 
 An earlier implementation does not settle later architecture. Before extending it, derive the design from current invariants and accepted decisions; refactor or remove code that constrains them.
 
@@ -115,7 +115,7 @@ This generated registry summary separates implementation from verification. `BOU
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)              | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                     | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
-| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | EXPERIMENTAL        | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
+| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                   | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                                 | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.research.host-survey](docs/research/host-survey.md#kolvrt-host-survey)                                | BOUNDED_IMPLEMENTED | host-process: STALE; windows-cim: UNKNOWN; physical-arm64: NOT_APPLICABLE |

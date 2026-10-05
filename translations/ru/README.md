@@ -25,7 +25,7 @@ KOLVRT — экспериментальное ядро операционной 
 | Инструменты разработки       | Планировщик миграции, поиск по документации и запросы к реестру COST-L без сети                                                           |
 | Чистота сборки               | Предупреждения запрещены в сборках AArch64 для DEV, PROD и отрицательных контролей                                                        |
 
-На этапе 3.4 реализован ограниченный механизм уведомлений. Полноценное межпроцессное взаимодействие (IPC), отмена запросов, правила надзора за службами и постоянно работающие службы — следующие задачи. Полная основа для служб ещё не готова.
+Bounded IPC Phase 3.5 реализован и готов для объявленного контракта: изолированные EL0 request/response, blocking/wakeup, отмена, deadlines, death/shutdown arbitration и retained ownership. Supervision policy (#27) и persistent isolated services (#28) — следующие gates; physical ARM и stable ABI имеют отдельный scope.
 
 Ранний код не определяет архитектуру следующих этапов. Перед расширением решение выводится из действующих инвариантов и принятых решений; мешающий им код перерабатывается или удаляется.
 
@@ -115,7 +115,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)              | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                     | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
-| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | EXPERIMENTAL        | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
+| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                   | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                                 | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.research.host-survey](docs/research/host-survey.md#kolvrt-host-survey)                                | BOUNDED_IMPLEMENTED | host-process: STALE; windows-cim: UNKNOWN; physical-arm64: NOT_APPLICABLE |

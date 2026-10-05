@@ -8,9 +8,9 @@ Current reference: [Текущий контракт scheduler](../kernel/schedul
 
 После архитектурного review пользователь поручил продолжать до полной реализации Phase 3.5, тестов, документации и PR. Реализация использует execution option E1 и synchronization option A. ADR-0025 фиксирует выбранные invariants; это review сохраняет сравнение вариантов и не закрывает #26.
 
-Сохранённая реализация включает endpoint/request arbiter, initialized copied frames, scoped grants, transactional receive/collect, wake/ack mailboxes и continuous idle/resume. Исходный технический receipt содержит 124 проверки каждого DEV/PROD профиля и 46 IPC mutation runs с точным expected event. После integration с main ac63c75 оба положительных профиля снова прошли все 124 проверки; отдельный receipt различает текущие наблюдения и исторические свидетельства неизменённого enforcement. Сохранён performance baseline из 144 групп каждого профиля. Итоговое acceptance review остаётся открытым.
+Сохранённая реализация включает endpoint/request arbiter, initialized copied frames, scoped grants, transactional receive/collect, wake/ack mailboxes и continuous idle/resume. Исходный технический receipt содержит 124 проверки каждого DEV/PROD профиля и 46 IPC mutation runs с точным expected event. После integration с main ac63c75 оба положительных профиля снова прошли все 124 проверки; отдельный receipt различает текущие наблюдения и исторические свидетельства неизменённого enforcement. Сохранён performance baseline из 144 групп каждого профиля. Bounded acceptance завершено; отдельное приёмочное review фиксирует свежие mutation и EN/RU correspondence evidence.
 
-Периодически обновляемые origin/main и work branch начинаются с `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`. Исходный checkout оставлен без изменений; его локальная документация исключена из review. GitHub issue [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) остаётся открытым; [#75](https://github.com/lifeFedorovAlexey/KOLVRT/pull/75) и [#76](https://github.com/lifeFedorovAlexey/KOLVRT/pull/76) merged. [#27](https://github.com/lifeFedorovAlexey/KOLVRT/issues/27) и [#28](https://github.com/lifeFedorovAlexey/KOLVRT/issues/28) остаются последующими service gates.
+Периодически обновляемые origin/main и work branch начинаются с `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`. Исходный checkout оставлен без изменений; его локальная документация исключена из review. GitHub issue [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) tracks this bounded acceptance; [#75](https://github.com/lifeFedorovAlexey/KOLVRT/pull/75) и [#76](https://github.com/lifeFedorovAlexey/KOLVRT/pull/76) merged. [#27](https://github.com/lifeFedorovAlexey/KOLVRT/issues/27) и [#28](https://github.com/lifeFedorovAlexey/KOLVRT/issues/28) остаются последующими service gates.
 
 Решение для execution architecture принято: IPC добавляет continuous owner-local idle/resume и сохраняет retirement всей session. Непрерывный idle owner не считается quiescent только из-за отсутствия READY процесса. Kernel сохраняет fixed affinity, exclusive scheduler access и immutable mappings; independent CPU sessions, migration и retirement отдельных процессов остаются вне milestone.
 
@@ -114,7 +114,7 @@ Reuse только generation-safe process/handle/domain identities, current Acc
 
 Реализация покрывает payload, authority, queues, waits, SMP, cancellation/deadline, death, accounting и reclamation реальными EL0 fixtures. Итоговая acceptance проверяется по исходному заданию; physical ARM остаётся UNKNOWN и не выдаётся за QEMU evidence. Новый IPC storage содержит проверяемый Cell Sync и HRTB unsafe access; отдельные unsafe диапазоны относятся к immutable linked EL0 images и контекстам исполнения. Inventory не является safety proof.
 
-EN/RU contracts, ADR-0025, unsafe inventory, stable IPC section IDs, enrollment/catalog/graph и generated README summaries уже обновлены. IPC остаётся EXPERIMENTAL до закрытия оставшихся acceptance gates. #26 остаётся открытым; следующий supervisor gate — #27, затем persistent-service gate #28.
+Bounded IPC mechanism имеет BOUNDED_IMPLEMENTED и READY для Phase 3.5; native.request/1 остаётся EXPERIMENTAL и unfrozen. [Приёмочное review](ipc-phase35-acceptance-review.md) фиксирует свежие 46 mutations и EN/RU semantic correspondence. Следующий gate — supervisor #27, затем persistent service #28.
 
 [Английский оригинал](../../../../docs/architecture/ipc-phase35-review.md)
 
@@ -125,7 +125,7 @@ EN/RU contracts, ADR-0025, unsafe inventory, stable IPC section IDs, enrollment/
   "schema_version": 1,
   "id": "doc.kolvrt.ipc.review",
   "kind": "security-analysis",
-  "summary": "Повторное выведение архитектуры IPC Phase 3.5; решения E1/A реализованы, acceptance milestone остаётся открытым.",
+  "summary": "Повторное выведение архитектуры IPC Phase 3.5; решения E1/A реализованы, bounded acceptance milestone завершён.",
   "units": [
     {
       "id": "kolvrt.ipc.review.synchronization",

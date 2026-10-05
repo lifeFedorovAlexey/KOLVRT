@@ -6,7 +6,7 @@
 # Phase 3.5 IPC performance passport
 
 Document status: CURRENT
-Evidence scope: reproducible QEMU regression baseline for the experimental bounded IPC implementation; not a hardware performance claim.
+Evidence scope: reproducible QEMU regression baseline for the accepted bounded Phase 3.5 IPC implementation; not a hardware performance claim.
 Current reference: [Native IPC contract](ipc.md)
 
 ## Measurement method

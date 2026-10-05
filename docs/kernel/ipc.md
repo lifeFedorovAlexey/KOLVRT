@@ -6,7 +6,7 @@
 # Bounded native EL0 IPC
 
 Document status: CURRENT
-Evidence scope: retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.
+Evidence scope: accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 fresh focused mutations. READY is limited to this milestone; physical ARM is unverified.
 Current reference: [Architecture re-derivation](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -81,7 +81,7 @@ Death/closing stops new admission and resolves or retains accepted work accordin
 
 Independent admission, migration, mutable user mappings, supervisor/service policy, generic wait-any, generic invoke and zero-copy are excluded. Later #27/#28 must rederive their architecture rather than treating this implementation order as authority.
 
-## Evidence and remaining acceptance
+## Accepted Phase 3.5 evidence
 
 The measurement method, copy-count scope and raw observations are described in the [performance passport](ipc-performance.md). The final source set is verified in 144 groups per profile, including hot/blocked receive, blocked requester and queue-full rejection.
 
@@ -89,7 +89,7 @@ Current real EL0 fixtures cover both cross-CPU directions and each same-CPU plac
 
 Twenty-three focused mutation controls cover authority, queue bounds/FIFO, client-ID and internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wrong-process wake, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, missing and duplicate charge release, endpoint teardown, copy transactions and service death. All 46 DEV/PROD runs were rejected by their exact expected event or named failing test; an arbitrary panic is insufficient. A CPU1 kernel failure retains its exact cause in a bounded atomic record for CPU0, which stops the continuous session without authorizing reclamation.
 
-Current source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records current-source positive checks and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. Human semantic and complete EN/RU review are required before closing #26 and promoting the feature to BOUNDED_IMPLEMENTED. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
+Current source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records current-source positive checks and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. The [acceptance review](../architecture/ipc-phase35-acceptance-review.md) records code/EN-RU semantic correspondence and the scoped readiness decision. Fresh current-source controls and readiness receipts supplement the historical records. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
 
 Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](../../crates/kernel-core/src/ipc/identity.rs), [wire](../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../crates/kernel/src/ipc/native.rs), [storage](../../crates/kernel/src/ipc/storage.rs), [deferred work](../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../crates/kernel/src/ipc_workload.rs), [runner](../../crates/xtask/src/main.rs).
 
@@ -102,7 +102,7 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
   "schema_version": 1,
   "id": "doc.kolvrt.kernel.ipc",
   "kind": "subsystem-contract",
-  "summary": "Experimental bounded native EL0 IPC contract and current Phase 3.5 evidence.",
+  "summary": "Accepted bounded native EL0 IPC mechanism and source-grounded Phase 3.5 readiness.",
   "units": [
     {
       "id": "kolvrt.ipc.transport",
@@ -134,12 +134,11 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
         "doc.kolvrt.kernel.wait"
       ],
       "gaps": [
-        "Human semantic and complete EN/RU review remain pending before milestone acceptance/promotion.",
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
       "feature": {
-        "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Complete bounded native.request/1 mechanism with verified EL0 DEV/PROD execution; final human semantic/EN/RU review remains pending.",
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Complete bounded native.request/1 IPC mechanism, READY for Phase 3.5 and the #27 reader under fixed affinity, immutable mappings and whole-session retirement; not overall production/platform readiness.",
         "sources": [
           "crates/kernel-core/Cargo.toml",
           "crates/kernel-core/src/domain.rs",
@@ -194,7 +193,9 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           "research/results/kernel-phase35-unsafe-audit.json",
           "research/results/ipc-phase35-main-integration.json",
           "research/results/routing-phase35-upgrades.json",
-          "research/results/phase35-dependency-upgrades.json"
+          "research/results/phase35-dependency-upgrades.json",
+          "research/results/ipc-phase35-controls-current.json",
+          "research/results/ipc-phase35-readiness.json"
         ],
         "issues": [26],
         "adrs": ["adr.0025"],
@@ -202,17 +203,17 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           "ABI remains experimental and unfrozen.",
           "Fixed affinity, immutable mappings and conservative whole-session retirement; no supervisor, service discovery, migration, zero-copy or universal wait/invoke.",
           "Physical ARM and production bootstrap trust are unverified.",
-          "Human semantic/EN/RU review is still pending."
+          "READY is scoped only to bounded Phase 3.5; no physical-platform, production bootstrap or stable-ABI acceptance."
         ],
-        "next_gate": "Obtain human semantic/EN/RU review for #26 acceptance, then Phase 3.6/#27 EL0 supervision; rederive its architecture from current laws and accepted decisions.",
+        "next_gate": "Phase 3.6/#27 isolated EL0 supervisor; rederive its policy, admission and retirement from current accepted invariants. Phase 3.7/#28 follows separately.",
         "verification": [
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "124 named checks pass in DEV and PROD on main ac63c75 with the requested dependency upgrades. The 46 original IPC mutation runs retain their original source snapshot; enforcement code is unchanged.",
-            "receipt": "research/results/ipc-phase35-main-integration.json",
-            "receipt_sha256": "23ae23c695ce5528b931769dbca7a0f1af6067fbd965f29c497d7056a22bb863",
-            "scope": "Current-source positive QEMU integration with separately retained ELF artifacts; no new mutation/native-only/performance or physical ARM claim. Six upgraded routing configurations and three rejection controls are recorded separately."
+            "reason": "Source-matched 124 DEV and 124 PROD checks plus all 46 fresh focused IPC mutations (23 per profile) on main 9b4687a; exact required failure events and unchanged source inventory are retained.",
+            "receipt": "research/results/ipc-phase35-readiness.json",
+            "receipt_sha256": "f3a34e38f84c8f9f776b23e8b513b21ae8f1b59df04958657cecbef82f4f77e9",
+            "scope": "Two fixed-affinity QEMU CPUs, current bounded IPC mechanism, fresh enforcement controls and explicit semantic EN/RU review. No physical ARM or stable ABI claim."
           },
           {
             "environment": "physical-arm64",
@@ -220,16 +221,26 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
             "reason": "No physical ARM64 receipt exists."
           }
         ],
-        "readiness": "NOT_READY",
+        "readiness": "READY",
         "transitions": [
           {
             "from": "UNRECORDED",
             "to": "EXPERIMENTAL",
             "reason": "Record the implemented bounded IPC contract while Issue #26 acceptance remains incomplete.",
             "acceptance": []
+          },
+          {
+            "from": "EXPERIMENTAL",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Fresh 23 DEV/23 PROD exact-source enforcement mutations, source-matched 124 checks per profile and explicit code/EN-RU semantic review complete the requested bounded Phase 3.5 acceptance; no ABI freeze or physical ARM claim.",
+            "acceptance": [
+              "research/results/ipc-phase35-controls-current.json",
+              "research/results/ipc-phase35-readiness.json"
+            ]
           }
         ],
-        "roadmap_gate": "Phase 3.5"
+        "roadmap_gate": "Phase 3.5",
+        "readiness_acceptance": ["research/results/ipc-phase35-readiness.json"]
       },
       "aliases": ["kolvrt.ipc"]
     },

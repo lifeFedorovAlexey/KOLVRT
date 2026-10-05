@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "c326e10d964068008c417bc3f5d96a717c4ce726d288f150322fe78f4447ece6",
-        "translation_sha256": "d88a12f88687d7abcd2f2b91d43fb6ebceed5d2eb291392867a83cc7f25f90ba"
+        "source_sha256": "b1a12d9e4d0ae8601a098042bcc3346eafddefa85c743ab9d4e0b093136f8e27",
+        "translation_sha256": "9e795da1287e7aa7211cbbf91140a88c8243283f665d00d66c281973340c1e4b"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -118,8 +118,8 @@
         "translation_sha256": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b"
       },
       "docs/architecture-decisions/0025-bounded-native-ipc.md": {
-        "source_sha256": "6cf9d700b97ce1721042fa5699fc7f1e32e7b13cb5a5b693839bba0cdd5c98cc",
-        "translation_sha256": "48aaf34f636cdb55f9e9bac11ab563178b54145f90d51f5e733f3d578c762103"
+        "source_sha256": "1d49df8c7b779bfc0cddb787a858178fd34afffe49698eacced38cf804df4dfd",
+        "translation_sha256": "bf0baae8acb076f4ccccbd3c9dfb8b0488a32b3dfead3d0a83be3803935ee76a"
       },
       "docs/architecture-decisions/README.md": {
         "source_sha256": "196421bf46f807d667ca9adf3fe26ee6f5c5184b5bea57e8896def9b6542f935",
@@ -173,9 +173,13 @@
         "source_sha256": "8d32aebeab5d55f6143945c0b4c949c5439c20c7d6fa01f8524cf651f0d5e367",
         "translation_sha256": "929b9c03a3e2ed5325543cca9658b35cf5a3b58926cab149f4b86b76c810f690"
       },
+      "docs/architecture/ipc-phase35-acceptance-review.md": {
+        "source_sha256": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
+        "translation_sha256": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9"
+      },
       "docs/architecture/ipc-phase35-review.md": {
-        "source_sha256": "a81d2e610c07e9a5851d11ab93dcb01c00b139c935a0c84c6965a130de993356",
-        "translation_sha256": "84b0330347aed418187ae9183c17842ed3f3d87cf7b67b095bccb634f559c23c"
+        "source_sha256": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
+        "translation_sha256": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074"
       },
       "docs/architecture/kernel-admission-policy.md": {
         "source_sha256": "51c5aa686a7335d18a1033b94e2d6531c284cd126bad235db81536884b748d28",
@@ -274,12 +278,12 @@
         "translation_sha256": "4ed4607ca4c2d2aa5f1ad485f539fc736fac13916750c88bb67bd35b7ac66c99"
       },
       "docs/kernel/ipc-performance.md": {
-        "source_sha256": "8837996edeee0855b5ba7ae908702c66e9836efa335227f3451c73adf6d494d1",
+        "source_sha256": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
-        "translation_sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106"
+        "source_sha256": "513d86be0a97c2ea854a24ee62cd3bb0b915f0c12f7be47321fda6822ffa6d98",
+        "translation_sha256": "75d8ded512a515895316428b597d5599006ad617a6e8369da22e7fab482471ee"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
@@ -322,8 +326,8 @@
         "translation_sha256": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "9b79c1fbfa689e6495038edd6518fb797b2cd366febb383a4f380a0f91917416",
-        "translation_sha256": "24676cba95e582f8c91468e34955e276d949f7469364a7e2b5d2d9cdec9bd96f"
+        "source_sha256": "2721c072fbd34cb1ea464eadddd0e44cb244ba0e11b45e9619131785c098625d",
+        "translation_sha256": "91fd1e3c575dd4f5353368325c7062ee82d5133357e9a8666115ede5d1362131"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",

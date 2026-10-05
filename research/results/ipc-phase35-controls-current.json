@@ -1,0 +1,3290 @@
+{
+  "schema_version": 1,
+  "scope": "Complete focused IPC enforcement mutation matrix on main 9b4687a48a9d702261898ee4f20434c6bf7046ec; two QEMU CPUs; no physical ARM claim.",
+  "source_commit": "9b4687a48a9d702261898ee4f20434c6bf7046ec",
+  "command": "cargo xtask ipc-controls",
+  "command_exit_code": 0,
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50"
+    },
+    {
+      "path": "crates/kernel/assets/minimal-exit.elf",
+      "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "sha256_lf": "349a01fc447f71ef7540728d5782c3667cd5a92a47bf497feb307a99e1c87c89"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "9409ad577dc86cfb3c0581897415e56c99fcbefa6f7d64d97c9c908829ccabce"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+    },
+    {
+      "path": "crates/kernel/src/asid.rs",
+      "sha256_lf": "8ef1f80e78c8a3b95fa429c84484071f51651c8b1b89db02d2ce45f8a7be1003"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.S",
+      "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "sha256_lf": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+    },
+    {
+      "path": "crates/kernel/src/execution.rs",
+      "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "sha256_lf": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed"
+    },
+    {
+      "path": "crates/kernel/src/handles.rs",
+      "sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+    },
+    {
+      "path": "crates/kernel/src/ipc/deferred.rs",
+      "sha256_lf": "5205ed2effd778b45a220e295e3961952af1790ac3f54d857a2b25da304b5cb7"
+    },
+    {
+      "path": "crates/kernel/src/ipc/native.rs",
+      "sha256_lf": "171f940df42bb216af8636b504586dc555b8999833900101e328e57ffd8dd01e"
+    },
+    {
+      "path": "crates/kernel/src/ipc/storage.rs",
+      "sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991"
+    },
+    {
+      "path": "crates/kernel/src/ipc.rs",
+      "sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933"
+    },
+    {
+      "path": "crates/kernel/src/ipc_authority_workload.S",
+      "sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.S",
+      "sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.rs",
+      "sha256_lf": "558fded93ba926105bcb14e03719d52e66dc62ac20148ec6fdbd616eab8710d1"
+    },
+    {
+      "path": "crates/kernel/src/ipc_death_workload.S",
+      "sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3"
+    },
+    {
+      "path": "crates/kernel/src/ipc_multi_workload.S",
+      "sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1"
+    },
+    {
+      "path": "crates/kernel/src/ipc_paths_benchmark.S",
+      "sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606"
+    },
+    {
+      "path": "crates/kernel/src/ipc_payload_workload.S",
+      "sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec"
+    },
+    {
+      "path": "crates/kernel/src/ipc_queue_workload.S",
+      "sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370"
+    },
+    {
+      "path": "crates/kernel/src/ipc_revoke_workload.S",
+      "sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.S",
+      "sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.rs",
+      "sha256_lf": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "e10e49c1e19ef505689fa075e795ae6e0b74130a5b613d4272e09dc8fbca84fa"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "138a815965a33980c33f3f0923c62ce914b02f0b087abffab1236d6e8ada7248"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "0cbe90f9941116bd7dace00ff5a419e783bbfd57eed249ea9d24e4e319b30991"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "sha256_lf": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/config.rs",
+      "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "sha256_lf": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "sha256_lf": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "sha256_lf": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.S",
+      "sha256_lf": "d0414f46eadf9bb2b5329aaa06dd6f233c5e070f82ca7d489b12c55f510065c1"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.rs",
+      "sha256_lf": "8153b6402505f0254132a17c2aa91279f4e35562390961519075e0d3d5243fe3"
+    },
+    {
+      "path": "crates/kernel/src/security.rs",
+      "sha256_lf": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "08b9a851296995e4db04efea39189d603f1e6fda3e4cc45d3be4a5e96a528628"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "179fc0234b9f93150b24dc9457bdcd783a0bdaf67dc9c4cf3c0dd2c9b152681d"
+    },
+    {
+      "path": "crates/kernel/src/test_support/irq_wait.rs",
+      "sha256_lf": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "sha256_lf": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy.rs",
+      "sha256_lf": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "92332d431593d27f87b094500d28614b79f39567cf8d948b6feea168be270e86"
+    },
+    {
+      "path": "crates/kernel-core/src/domain/pool.rs",
+      "sha256_lf": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05"
+    },
+    {
+      "path": "crates/kernel-core/src/domain.rs",
+      "sha256_lf": "58625f331d38ae932646be0594c50cac9b6efe42aed1bc8b4fa3c20622ca3125"
+    },
+    {
+      "path": "crates/kernel-core/src/elf.rs",
+      "sha256_lf": "875e7ca516a5358688a4b6234d023b5c6ebd91fc36dc2c316bb8cb0b87e06d3e"
+    },
+    {
+      "path": "crates/kernel-core/src/execution.rs",
+      "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "sha256_lf": "7313263daa42cd5709a653fa36d71d595569877d062801de64e201da1b74f9cc"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/identity.rs",
+      "sha256_lf": "2595d0ce4cdf6804a59509651acbd80265a62f88fa5b90af681160860ec3ea6e"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/mailbox.rs",
+      "sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/tests.rs",
+      "sha256_lf": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/wire.rs",
+      "sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc.rs",
+      "sha256_lf": "7eb4a735aafaee2418988d846c221f8c2d3dede409ae1befcdb196e9126e733b"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "3ff7fe9052e7ceab49b0cc14d19cc92b8d50b0d61454f065dfb179c839e612de"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "sha256_lf": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling/ownership.rs",
+      "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling.rs",
+      "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/user_copy.rs",
+      "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+    },
+    {
+      "path": "crates/kernel-core/src/wait.rs",
+      "sha256_lf": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+    },
+    {
+      "path": "crates/kernel-core/tests/elf_contract.rs",
+      "sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5"
+    },
+    {
+      "path": "crates/kernel-core/tests/event_revocation.rs",
+      "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+    },
+    {
+      "path": "crates/kernel-core/tests/handle_contract.rs",
+      "sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c"
+    },
+    {
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5"
+    },
+    {
+      "path": "crates/kernel-core/tests/wait.rs",
+      "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558"
+    },
+    {
+      "path": "crates/routing/build.rs",
+      "sha256_lf": "89c475575801c9877959b4f6856837d52fd51e5290681504b37b521ce0241fc3"
+    },
+    {
+      "path": "crates/routing/src/conformance.rs",
+      "sha256_lf": "44a17a56a4112f570ac6e5932b0a84a827d7332e12fe7acc9fc8577576b5bfa4"
+    },
+    {
+      "path": "crates/routing/src/lib.rs",
+      "sha256_lf": "d4c8e1c0d5b2968f32fcbd6c41de552108ff7ea2232c76d75018db00f2de2322"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c"
+    },
+    {
+      "path": "crates/routing-demo/build.rs",
+      "sha256_lf": "14b3b0b7dc7c3c087fa1b5c630894018dfbb29a0ff2f231edd6775bfe6cf7e18"
+    },
+    {
+      "path": "crates/routing-demo/linker.ld",
+      "sha256_lf": "ac7202177d96d09a00d2a1ac6176d78723ba901d5c11601cda5ff4e07aa27a6f"
+    },
+    {
+      "path": "crates/routing-demo/src/main.rs",
+      "sha256_lf": "f7241ab5b6147051b5439b27162f117b250e368e13e3848f8251b8be01a87a93"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+    },
+    {
+      "path": "crates/window-compat/src/lib.rs",
+      "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+    },
+    {
+      "path": "crates/window-compat/tests/protocols.rs",
+      "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "efe182f94f493c3eb492b73451fea6e7873ff8e7cb4384b512bb1d3a69ced344"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff"
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "sha256_lf": "87467ee740a420b8bfcbedc5d2c4e6fc2f5a91f81e0c4858ea57f16b822f94cd"
+    },
+    {
+      "path": "crates/xtask/tests/cli.rs",
+      "sha256_lf": "bf0e6aa8bc4eda83006c7babd29ce8d1d157a7510d664b01063a0859f2e41509"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "crates/xtask/tests/native_boundary.rs",
+      "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+    },
+    {
+      "path": "crates/xtask/tests/output_writer.rs",
+      "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+    },
+    {
+      "path": "crates/xtask/tests/scheduler_boundary.rs",
+      "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+    },
+    {
+      "path": "crates/xtask/tests/timer_wait.rs",
+      "sha256_lf": "439b2b70df1d62d70d4ae63bc8f03ea8699cc91d26c863fe30907d943a6a5791"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    }
+  ],
+  "correctness": {
+    "matrix": "passed",
+    "ipc_negative_controls": 46,
+    "controls_per_profile": 23,
+    "profiles": ["dev", "prod"],
+    "source_unchanged_during_run": true,
+    "unrelated_failure_cannot_satisfy_control": true
+  },
+  "controls": [
+    {
+      "flag": "--ipc-request-generation-control",
+      "feature": "ipc-request-generation-negative",
+      "expected": "ipc_payload_snapshot_result_id_and_stress",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-request-generation-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247624,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-request-generation-negative"
+        ],
+        "load_bytes": 1056363,
+        "memory_bytes": 2158187,
+        "sha256": "4ede28bff0f19a313dd65de82c9e674f16f056bcaa63be7b8911673c9c51fbf1",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-request-generation-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "4ede28bff0f19a313dd65de82c9e674f16f056bcaa63be7b8911673c9c51fbf1",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_payload_snapshot_result_id_and_stress",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "cc11146a086cb154f54a7da45dd1ff5920d6a296993dca4dc8d7fa1bf36cd8f5",
+      "console_log_sha256_lf": "6940def94c49bda2d929685fe09ab89c8ef3f4b05c0a37f90bcc827eb0a06c2d"
+    },
+    {
+      "flag": "--ipc-double-charge-release-control",
+      "feature": "ipc-double-charge-release-negative",
+      "expected": "reject:ChargeAlreadyReleased",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-double-charge-release-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6248960,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-double-charge-release-negative"
+        ],
+        "load_bytes": 1056587,
+        "memory_bytes": 2158419,
+        "sha256": "df57b440dd3c0ab8a7bbee13e8f7c2f963deed9814cded506f1adbb1ec50cb81",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-double-charge-release-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "df57b440dd3c0ab8a7bbee13e8f7c2f963deed9814cded506f1adbb1ec50cb81",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "ChargeAlreadyReleased",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "8f8bee69585c9bcdd6fc0ab82219436f2d735b747fe33e9527387f158d32199a",
+      "console_log_sha256_lf": "9bbc81d522d1ee95a5746d8960d72b6c34702f5449672c1504c893f00499e5fc"
+    },
+    {
+      "flag": "--ipc-storage-scope-control",
+      "feature": "ipc-storage-scope-negative",
+      "expected": "reject:StorageInsideScheduler",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-storage-scope-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6248480,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-storage-scope-negative"
+        ],
+        "load_bytes": 1056507,
+        "memory_bytes": 2158331,
+        "sha256": "04fa3b180a9829a9ff375b867a7503ccc84aa1415c748721ec5932333aff0ddc",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-storage-scope-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "04fa3b180a9829a9ff375b867a7503ccc84aa1415c748721ec5932333aff0ddc",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "StorageInsideScheduler",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "c9de831794bf70afaeef9c539f8d89058680a5c27c4b51e0e56aa2f861dda203",
+      "console_log_sha256_lf": "64022784e876ee888042ec2a70990bebad3adba5b90082b176eec3ed8dae086a"
+    },
+    {
+      "flag": "--ipc-duplicate-ready-control",
+      "feature": "ipc-duplicate-ready-negative",
+      "expected": "reject:DuplicateReady",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-duplicate-ready-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247696,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-duplicate-ready-negative"
+        ],
+        "load_bytes": 1056527,
+        "memory_bytes": 2154263,
+        "sha256": "42b8ecc6c86be9697fd89e6d19716b6c0249de0e837139d19fc1aeba6e83a737",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-duplicate-ready-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "42b8ecc6c86be9697fd89e6d19716b6c0249de0e837139d19fc1aeba6e83a737",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "DuplicateReady",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "aaeee093ffd5852ac233c11e47fbbd4f83d519cd1c3f9fbe357d64ff852fa04e",
+      "console_log_sha256_lf": "aba89622c1286b115a5a527376bfb4a0f9e3ca071e185661fcfcea1b428c2368"
+    },
+    {
+      "flag": "--ipc-wrong-process-wake-control",
+      "feature": "ipc-wrong-process-wake-negative",
+      "expected": "reject:WrongProcessWake",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-wrong-process-wake-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247728,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-wrong-process-wake-negative"
+        ],
+        "load_bytes": 1056467,
+        "memory_bytes": 2158299,
+        "sha256": "8216610ee6147fdd62d71dbff0d2a43c1f2a4528e02e61e4b0c9d2b89bc15969",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-wrong-process-wake-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "8216610ee6147fdd62d71dbff0d2a43c1f2a4528e02e61e4b0c9d2b89bc15969",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WrongProcessWake",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "26abbc8248fe0c9f0dc8532779aacca8fdc71353eabb781530c3946966f97a41",
+      "console_log_sha256_lf": "a31996a1d450eb4e4424ad3259ecbf84eec0d46849b94603b17444fa8988605d"
+    },
+    {
+      "flag": "--ipc-blocked-reclaim-control",
+      "feature": "ipc-blocked-reclaim-negative",
+      "expected": "reject:BlockedTaskReclaim",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-blocked-reclaim-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247632,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-blocked-reclaim-negative"
+        ],
+        "load_bytes": 1056391,
+        "memory_bytes": 2158223,
+        "sha256": "b5cc9a9ed672267c94efa6134f110432c94c87cf76d8625c2ab8f0638066fe4f",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-blocked-reclaim-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "b5cc9a9ed672267c94efa6134f110432c94c87cf76d8625c2ab8f0638066fe4f",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "BlockedTaskReclaim",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "7d9aee0da8a6213ff565c0138a74981204cfc691b42cd3046273cd574ae420f4",
+      "console_log_sha256_lf": "fe16173ac4369ac928d3df74c6d7ddf32bf9445a44c1765e2dba9de58603033f"
+    },
+    {
+      "flag": "--ipc-wake-generation-control",
+      "feature": "ipc-wake-generation-negative",
+      "expected": "reject:WakeGenerationAccepted",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-wake-generation-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6248744,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-wake-generation-negative"
+        ],
+        "load_bytes": 1056807,
+        "memory_bytes": 2154543,
+        "sha256": "dcd8f69d79b6e73bc6b8202d5a1b70841a078b0391251a2ac484327e5b9007b8",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-wake-generation-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "dcd8f69d79b6e73bc6b8202d5a1b70841a078b0391251a2ac484327e5b9007b8",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WakeGenerationAccepted",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "b220e9b8a2b5417c5ea3f3fd901bb445c264e8f78c6c68145b61782db9030a8f",
+      "console_log_sha256_lf": "c4a3be5e8b22ee09debeedb4de1dec7b96de03543cf500daa7502cdcf26989e6"
+    },
+    {
+      "flag": "--ipc-wait-recheck-control",
+      "feature": "ipc-wait-recheck-negative",
+      "expected": "reject:WaitRegistrationLost",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-wait-recheck-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6228592,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-wait-recheck-negative"
+        ],
+        "load_bytes": 1054031,
+        "memory_bytes": 2155855,
+        "sha256": "0e6f535630a7793d9d24cfba5ed7426a4bea310d818e23053097795d9b2728e7",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-wait-recheck-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "0e6f535630a7793d9d24cfba5ed7426a4bea310d818e23053097795d9b2728e7",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WaitRegistrationLost",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "09b3c703edb93d9930ca2897fd21232461bf1107856c950ca200f28f7dcdd51a",
+      "console_log_sha256_lf": "85ec6bac92fc2f654ac4d5f3c90b169676372b901be4c9aa8126ab8208983e86"
+    },
+    {
+      "flag": "--ipc-wake-publication-control",
+      "feature": "ipc-wake-publication-negative",
+      "expected": "reject:WakePublicationLost",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-wake-publication-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6248776,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-wake-publication-negative"
+        ],
+        "load_bytes": 1056667,
+        "memory_bytes": 2158499,
+        "sha256": "c6cf0aed2109a350363b827f869c2da006095cb731084ebc126a7853461e1a4d",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-wake-publication-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "c6cf0aed2109a350363b827f869c2da006095cb731084ebc126a7853461e1a4d",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WakePublicationLost",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "948b7933db1de35ef263355ae2a4f0a7a1c2a00be707d037b010c26fa7b9ef56",
+      "console_log_sha256_lf": "3a6e6a948730ec278e37069c910c23f97db43dfe5cfc7be0a34035a91278201c"
+    },
+    {
+      "flag": "--ipc-service-token-control",
+      "feature": "ipc-service-token-negative",
+      "expected": "ipc_el0_cpu0_to_cpu1",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-service-token-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247792,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-service-token-negative"
+        ],
+        "load_bytes": 1056415,
+        "memory_bytes": 2158247,
+        "sha256": "aa45eb0d37ac3afaa60db67a4b687f31d1506961281711a1dbdcf389ebcd07f4",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-service-token-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "aa45eb0d37ac3afaa60db67a4b687f31d1506961281711a1dbdcf389ebcd07f4",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_el0_cpu0_to_cpu1",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "2d123116fe6a5a3e9d4a86252d35fc32f00d44b4c825123f2f13dce17b549830",
+      "console_log_sha256_lf": "066bd1bd8f9802f9e1c67e1a101df59eb8b996965a6785387ff9ca630dbfe825"
+    },
+    {
+      "flag": "--ipc-charge-release-control",
+      "feature": "ipc-charge-release-negative",
+      "expected": "ipc_deadline_before_effect",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-charge-release-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6249832,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-charge-release-negative"
+        ],
+        "load_bytes": 1056919,
+        "memory_bytes": 2158743,
+        "sha256": "d22f9654d4ba05a075db57c2072e9b2bc7160a1eee7735baff9d46e6db21cf0a",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-charge-release-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "d22f9654d4ba05a075db57c2072e9b2bc7160a1eee7735baff9d46e6db21cf0a",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_deadline_before_effect",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "181d9440aaaf930d514485d283c5f0c1335750e11b5fce83c69a3c1461f7d07c",
+      "console_log_sha256_lf": "826df1745b18c03920daa72133f1465777c6333c49e990e25915b1ce96a393db"
+    },
+    {
+      "flag": "--ipc-teardown-control",
+      "feature": "ipc-teardown-negative",
+      "expected": "reject:EndpointNotQuiescent",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-teardown-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247664,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-teardown-negative"
+        ],
+        "load_bytes": 1056439,
+        "memory_bytes": 2154167,
+        "sha256": "391536e53e0139cf9da5fec088462ca86fa3f1a066d968590e14d926d682fc5d",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-teardown-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "391536e53e0139cf9da5fec088462ca86fa3f1a066d968590e14d926d682fc5d",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "EndpointNotQuiescent",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "eca58d22a52799355bf8fff18e11a5223de2665878d12aff799c7c4780b14394",
+      "console_log_sha256_lf": "2c43c5ab6c68661ad2057362cfc8302ee5db80775b9cafccaa06993e8ce78bd4"
+    },
+    {
+      "flag": "--ipc-cancel-control",
+      "feature": "ipc-cancel-negative",
+      "expected": "ipc_cancel_before_commit",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-cancel-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247624,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-cancel-negative"
+        ],
+        "load_bytes": 1056387,
+        "memory_bytes": 2158219,
+        "sha256": "e5b65922f8bace6db8e206763b003e4198147910410342bede4e3c7719b23958",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-cancel-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "e5b65922f8bace6db8e206763b003e4198147910410342bede4e3c7719b23958",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_cancel_before_commit",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "beb24a886c1c03887a3f19d0a48936a6a619a93c5bca4da82b64fc78fecd55c4",
+      "console_log_sha256_lf": "4cd6606052ace11bf2906af3f1d8ea9217780d018c9d86324e16a2766bfb9c11"
+    },
+    {
+      "flag": "--ipc-service-death-control",
+      "feature": "ipc-service-death-negative",
+      "expected": "ipc_service_death_queued",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-service-death-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247624,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-service-death-negative"
+        ],
+        "load_bytes": 1056331,
+        "memory_bytes": 2154067,
+        "sha256": "3a724b3074403d34b587fb2498d8872e8446bd094dc2f65dc0834a6d0a95593e",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-service-death-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "3a724b3074403d34b587fb2498d8872e8446bd094dc2f65dc0834a6d0a95593e",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_service_death_queued",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "c93141b6a39d916979fa2cdc0cf02859d5dbd7097d74e8c8fac98f63aec3f14b",
+      "console_log_sha256_lf": "f68d2f5539165cf687ae67a40b58f661c5af56c8105c383f6650feb1f5d13d7a"
+    },
+    {
+      "flag": "--ipc-double-terminal-control",
+      "feature": "ipc-double-terminal-negative",
+      "expected": "ipc_payload_snapshot_result_id_and_stress",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-double-terminal-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247616,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-double-terminal-negative"
+        ],
+        "load_bytes": 1056271,
+        "memory_bytes": 2158095,
+        "sha256": "e143abc53d8a8950dffd51d0a662074eaddbea6192f4bfcd4cb709247b7f9053",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-double-terminal-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "e143abc53d8a8950dffd51d0a662074eaddbea6192f4bfcd4cb709247b7f9053",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_payload_snapshot_result_id_and_stress",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "677be43bedef5009ff8c6d458cb57824afdb9201aeee4557892c54b6c197af9a",
+      "console_log_sha256_lf": "ba91c97695b5a5bae7122d18011bb2de1f454516c27af5cf3c97fb15a8f7b469"
+    },
+    {
+      "flag": "--ipc-capacity-control",
+      "feature": "ipc-capacity-negative",
+      "expected": "ipc_queue_full_fifo_and_reclamation",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-capacity-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6242784,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-capacity-negative"
+        ],
+        "load_bytes": 1056407,
+        "memory_bytes": 2158231,
+        "sha256": "2431c664b21961328e4963170cd4dadd9f3a25a86e97742bbe447a2581fb11b1",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-capacity-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "2431c664b21961328e4963170cd4dadd9f3a25a86e97742bbe447a2581fb11b1",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_queue_full_fifo_and_reclamation",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "a6d94cc43ec159c478691a5fa1688d33da7ff60b71c7cd7fb1fc1c4a17d11065",
+      "console_log_sha256_lf": "da22caf3ebc8bfedc1b2b3501a78ae7b1b2c593617e9e1311fcc09f2fae8ad70"
+    },
+    {
+      "flag": "--ipc-fifo-control",
+      "feature": "ipc-fifo-negative",
+      "expected": "ipc_queue_full_fifo_and_reclamation",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-fifo-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6240632,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-fifo-negative"
+        ],
+        "load_bytes": 1056551,
+        "memory_bytes": 2158375,
+        "sha256": "337b6fd1cd4186eb2520100f4e3de3e270359861cbee1f6f3127a503b3217417",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-fifo-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "337b6fd1cd4186eb2520100f4e3de3e270359861cbee1f6f3127a503b3217417",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_queue_full_fifo_and_reclamation",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "48d770693ef98a29e4003702e9163f180962af6c19abdc71da4114303c2deef0",
+      "console_log_sha256_lf": "cd268f74985ca3f30271793f1ddd7588c8d71072e506a8edd8806d32e47e5b16"
+    },
+    {
+      "flag": "--ipc-id-reuse-control",
+      "feature": "ipc-id-reuse-negative",
+      "expected": "ipc_payload_snapshot_result_id_and_stress",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-id-reuse-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6237200,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-id-reuse-negative"
+        ],
+        "load_bytes": 1055531,
+        "memory_bytes": 2157363,
+        "sha256": "5e674aa20632a134cb92b8cf208aa42ba93a9af1883dd78e4a474814199c7850",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-id-reuse-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "5e674aa20632a134cb92b8cf208aa42ba93a9af1883dd78e4a474814199c7850",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_payload_snapshot_result_id_and_stress",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "62ae5c31968676906f856fd5b48101fd7b78daf7deb88e3ff1f5a3ff17baa3e8",
+      "console_log_sha256_lf": "1a95fca1ffe0c72df4e7e9ddb3c1ed5be814d020b669e9ca6e9dcbf919992cfa"
+    },
+    {
+      "flag": "--ipc-receive-copy-control",
+      "feature": "ipc-receive-copy-negative",
+      "expected": "ipc_receive_copy_failure_retains_queue",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-receive-copy-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247696,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-receive-copy-negative"
+        ],
+        "load_bytes": 1056367,
+        "memory_bytes": 2158199,
+        "sha256": "164e715d95fe72f878b0c6b9b66bb6011425a03ac492896ce869c92335cb802b",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-receive-copy-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "164e715d95fe72f878b0c6b9b66bb6011425a03ac492896ce869c92335cb802b",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_receive_copy_failure_retains_queue",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "943f80a727b478615809242b4fdf83d9836817152b36433ceba89e6ea1167eb0",
+      "console_log_sha256_lf": "9905e5aaf5011f6ab48e6c8d59718c8544ac43f26e68b7096540cb006e4217dd"
+    },
+    {
+      "flag": "--ipc-collect-copy-control",
+      "feature": "ipc-collect-copy-negative",
+      "expected": "ipc_collect_copy_failure_retains_result",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-collect-copy-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247624,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-collect-copy-negative"
+        ],
+        "load_bytes": 1056323,
+        "memory_bytes": 2154051,
+        "sha256": "9981e6a896dbb7e32cdb31fba9c57dcea6e1155807df96b48e38cd5f7442609a",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-collect-copy-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "9981e6a896dbb7e32cdb31fba9c57dcea6e1155807df96b48e38cd5f7442609a",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_collect_copy_failure_retains_result",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "8579ffacf13295ffff9810df3c54fb1be7ba5858c8ad8c2771152f896121c5d4",
+      "console_log_sha256_lf": "b6f2541bb3ad3b525c57d0aca5b5b19045b1f4f71bcaa823fafd97531d469e26"
+    },
+    {
+      "flag": "--ipc-send-rights-control",
+      "feature": "ipc-send-rights-negative",
+      "expected": "ipc_authority_denial_revoke_and_retention",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-send-rights-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247592,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-send-rights-negative"
+        ],
+        "load_bytes": 1056299,
+        "memory_bytes": 2158131,
+        "sha256": "7e1bd39da1390cb7b9c3ee6dae3ecddc85804e8144daa89c0ecbd5a0e1fce908",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-send-rights-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "7e1bd39da1390cb7b9c3ee6dae3ecddc85804e8144daa89c0ecbd5a0e1fce908",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_authority_denial_revoke_and_retention",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "9725efaab2e96f8250237fd7f20d32431905fd45b92c19c563fc933615db351e",
+      "console_log_sha256_lf": "7f606db97466fa9c87c1c5da597457241d676cafb354dc8a040c3bcbf32546cd"
+    },
+    {
+      "flag": "--ipc-revoke-control",
+      "feature": "ipc-revoke-negative",
+      "expected": "ipc_authority_denial_revoke_and_retention",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-revoke-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6247616,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-revoke-negative"
+        ],
+        "load_bytes": 1056323,
+        "memory_bytes": 2158155,
+        "sha256": "e0ea3c1fb07e8e84f59f4533b6aad86d3733e4c4d0950473f44382a4909256d8",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-revoke-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "e0ea3c1fb07e8e84f59f4533b6aad86d3733e4c4d0950473f44382a4909256d8",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_authority_denial_revoke_and_retention",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "ca408b098f8508107d904d2182cd707ab285a6e5e9f51a9577066ffe0cf95d7a",
+      "console_log_sha256_lf": "587775ee25d020ed33552af819080d0d3f629b1362d30a15c2c753090ee2e4e9"
+    },
+    {
+      "flag": "--ipc-deadline-control",
+      "feature": "ipc-deadline-negative",
+      "expected": "ipc_deadline_before_effect",
+      "profile": "dev",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/dev-ipc-deadline-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6239096,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "ipc-deadline-negative"
+        ],
+        "load_bytes": 1056035,
+        "memory_bytes": 2157867,
+        "sha256": "6273d67c3dd8af6fc61577f212e735237dd396d136c530471606112ae3fee2d7",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-ipc-deadline-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "6273d67c3dd8af6fc61577f212e735237dd396d136c530471606112ae3fee2d7",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_deadline_before_effect",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "63ebab1912d01ade59a7e7bbe33fdf5ec5e29a62183e05b230881e1b4b04d12a",
+      "console_log_sha256_lf": "d0ccad7f1f31efe2debb30be63d0f038b496b38ac7b5848f391b336dadded570"
+    },
+    {
+      "flag": "--ipc-request-generation-control",
+      "feature": "ipc-request-generation-negative",
+      "expected": "ipc_payload_snapshot_result_id_and_stress",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-request-generation-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2498952,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-request-generation-negative"
+        ],
+        "load_bytes": 665812,
+        "memory_bytes": 1763548,
+        "sha256": "0812d115023ba7789020c37907d4057ed4417fbcf13934d6a87d351993414ecc",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-request-generation-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "0812d115023ba7789020c37907d4057ed4417fbcf13934d6a87d351993414ecc",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_payload_snapshot_result_id_and_stress",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "a6e9bec78482f583e1ca2efd547b428821981c23c4b2d7770c4c33c2a7e91e92",
+      "console_log_sha256_lf": "f209e35e198dee0fe471a7f17e02da7e18e5ec6bd8a5e97ca42c7a8f09b5b542"
+    },
+    {
+      "flag": "--ipc-double-charge-release-control",
+      "feature": "ipc-double-charge-release-negative",
+      "expected": "reject:ChargeAlreadyReleased",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-double-charge-release-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2498416,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-double-charge-release-negative"
+        ],
+        "load_bytes": 666236,
+        "memory_bytes": 1763972,
+        "sha256": "5dfead8a3ffd3c8a06fd37dbd98aadfda023460ee167e50649ef198be7a12e07",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-double-charge-release-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "5dfead8a3ffd3c8a06fd37dbd98aadfda023460ee167e50649ef198be7a12e07",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "ChargeAlreadyReleased",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "3f0b5f07db6eccac7a95c9f5fb05b522285bdae6df33d08fc8b3cb6c70964b98",
+      "console_log_sha256_lf": "d24494dee522ced8ae9e1fef27a465599d0c6c3b60e9845013bdc93c647b30f3"
+    },
+    {
+      "flag": "--ipc-storage-scope-control",
+      "feature": "ipc-storage-scope-negative",
+      "expected": "reject:StorageInsideScheduler",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-storage-scope-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2496512,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-storage-scope-negative"
+        ],
+        "load_bytes": 665761,
+        "memory_bytes": 1763497,
+        "sha256": "37578d4d32e335dddc6d0e7604ac9bce039b91fdb7522e13182d66a4e62fa612",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-storage-scope-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "37578d4d32e335dddc6d0e7604ac9bce039b91fdb7522e13182d66a4e62fa612",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "StorageInsideScheduler",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "d8ca7380db0808f448104febbfc3b1dcf1d2646d0c18120f48ce8ce736877b28",
+      "console_log_sha256_lf": "c63060b8e581a640a8ccd3abd03e1b3eb733844b173913db5384a063b4fe2815"
+    },
+    {
+      "flag": "--ipc-duplicate-ready-control",
+      "feature": "ipc-duplicate-ready-negative",
+      "expected": "reject:DuplicateReady",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-duplicate-ready-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497160,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-duplicate-ready-negative"
+        ],
+        "load_bytes": 666000,
+        "memory_bytes": 1763736,
+        "sha256": "1f9a48ae62e6a92d5461dea2a937fbda918e364787c85c42b83f3afb613c4f30",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-duplicate-ready-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "1f9a48ae62e6a92d5461dea2a937fbda918e364787c85c42b83f3afb613c4f30",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "DuplicateReady",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "3a18eb1af69cd9babed755161aa2e3c4d3f2fcf5b523a5a3cd9e098730483396",
+      "console_log_sha256_lf": "2295e7f655781cafb7be6aaf0ee5411bd108bfa4c326742d4410640ed8483397"
+    },
+    {
+      "flag": "--ipc-wrong-process-wake-control",
+      "feature": "ipc-wrong-process-wake-negative",
+      "expected": "reject:WrongProcessWake",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-wrong-process-wake-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2494888,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-wrong-process-wake-negative"
+        ],
+        "load_bytes": 665252,
+        "memory_bytes": 1762988,
+        "sha256": "8e3809513e0a7e9bdc2756b5de93ee6d9b0081c175739f8d212a8dbe138f75f1",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-wrong-process-wake-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "8e3809513e0a7e9bdc2756b5de93ee6d9b0081c175739f8d212a8dbe138f75f1",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WrongProcessWake",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "e0e01b29adaf368c81366b7e542c3ab94e2977e4d8b0bc4cafc6c7761dd5ac6a",
+      "console_log_sha256_lf": "6782cb6a97dfac87a96c57672a6b263889401190b77c1e57494f9b7b3b508fba"
+    },
+    {
+      "flag": "--ipc-blocked-reclaim-control",
+      "feature": "ipc-blocked-reclaim-negative",
+      "expected": "reject:BlockedTaskReclaim",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-blocked-reclaim-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2496056,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-blocked-reclaim-negative"
+        ],
+        "load_bytes": 665836,
+        "memory_bytes": 1763572,
+        "sha256": "f78f10e761f680df2a305663be28c38ba7fa4d232b83370e0414190b42ce01a6",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-blocked-reclaim-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "f78f10e761f680df2a305663be28c38ba7fa4d232b83370e0414190b42ce01a6",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "BlockedTaskReclaim",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "70d2f59661925ffd9e91d8b39ffb9e3ffc50baf6fd1c93359860c815448cf18e",
+      "console_log_sha256_lf": "6d70a600a368b0146cf064d8c829bdcc0191ec04196cf7c802192221ff0f3ecd"
+    },
+    {
+      "flag": "--ipc-wake-generation-control",
+      "feature": "ipc-wake-generation-negative",
+      "expected": "reject:WakeGenerationAccepted",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-wake-generation-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497488,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-wake-generation-negative"
+        ],
+        "load_bytes": 666088,
+        "memory_bytes": 1763824,
+        "sha256": "59c29234b090e9feb5d3241130e2b7a42a495581f607e01dac0e33e048dc5dbf",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-wake-generation-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "59c29234b090e9feb5d3241130e2b7a42a495581f607e01dac0e33e048dc5dbf",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WakeGenerationAccepted",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "f11813e4edbbea7854d8bca663ab87386ec626ef717f593c26bdeff8be2f5668",
+      "console_log_sha256_lf": "04edd47b1c21e6c124c5005e5c516600a2c83c5f96ce0bc03ce9ee2b424a302c"
+    },
+    {
+      "flag": "--ipc-wait-recheck-control",
+      "feature": "ipc-wait-recheck-negative",
+      "expected": "reject:WaitRegistrationLost",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-wait-recheck-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2485424,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-wait-recheck-negative"
+        ],
+        "load_bytes": 664724,
+        "memory_bytes": 1762460,
+        "sha256": "034794e83e8be7c5642941598311ebcf0faf3890ae360796bedc4c886a7297ed",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-wait-recheck-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "034794e83e8be7c5642941598311ebcf0faf3890ae360796bedc4c886a7297ed",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WaitRegistrationLost",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "1b0a6c74c789dd2807e45fdc87ad5ebf35a274f3498c75359d72a60c3dc602e4",
+      "console_log_sha256_lf": "9242f42a9b1c2cac4584b1e79cb8b5c6501a55a9b2fb46c4cb4d58fa0a15662a"
+    },
+    {
+      "flag": "--ipc-wake-publication-control",
+      "feature": "ipc-wake-publication-negative",
+      "expected": "reject:WakePublicationLost",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-wake-publication-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2495672,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-wake-publication-negative"
+        ],
+        "load_bytes": 666024,
+        "memory_bytes": 1763760,
+        "sha256": "f1fb64e046a5ffc113e2fcb81737060191b1b3e0824b90dcee1f57e552da0406",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-wake-publication-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "f1fb64e046a5ffc113e2fcb81737060191b1b3e0824b90dcee1f57e552da0406",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "WakePublicationLost",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "e6d4e05a326fffe5edf3059460d57aa4a26abf8b6b4053e4bea7b0950c6e0b40",
+      "console_log_sha256_lf": "6c92b5c65ffbd5e339813cdb86901d6ff9b80806d72f5d24a788884d0295d757"
+    },
+    {
+      "flag": "--ipc-service-token-control",
+      "feature": "ipc-service-token-negative",
+      "expected": "ipc_el0_cpu0_to_cpu1",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-service-token-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497704,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-service-token-negative"
+        ],
+        "load_bytes": 666092,
+        "memory_bytes": 1763828,
+        "sha256": "4ea664b8670db2c53f4648d96a3ec170d9c12d48ed468ec29e57ed7bad1c92ae",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-service-token-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "4ea664b8670db2c53f4648d96a3ec170d9c12d48ed468ec29e57ed7bad1c92ae",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_el0_cpu0_to_cpu1",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "f3486438933b634df5006d8badde76c5fcc60bfe42928e43ee9104d2d3f62054",
+      "console_log_sha256_lf": "fc16befb00714bfffe04695c7d0f81c2d276996000a8676d2756303706d4a2e4"
+    },
+    {
+      "flag": "--ipc-charge-release-control",
+      "feature": "ipc-charge-release-negative",
+      "expected": "ipc_deadline_before_effect",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-charge-release-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497904,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-charge-release-negative"
+        ],
+        "load_bytes": 666024,
+        "memory_bytes": 1763760,
+        "sha256": "441d84aa2ce9e18ed11b3229208c677cb94160862dd076caddb2914af4475629",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-charge-release-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "441d84aa2ce9e18ed11b3229208c677cb94160862dd076caddb2914af4475629",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_deadline_before_effect",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "a70ed3c2e39d1a2ac60f6f613777e31a96ed8ca31032446a53a87975b9a47308",
+      "console_log_sha256_lf": "abbe2083112a34fec63840b84f4cfd23db8aac5ae6148985d42c498ce12e6f76"
+    },
+    {
+      "flag": "--ipc-teardown-control",
+      "feature": "ipc-teardown-negative",
+      "expected": "reject:EndpointNotQuiescent",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-teardown-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497536,
+        "features": ["machine-events", "kernel-tests", "ipc-teardown-negative"],
+        "load_bytes": 666088,
+        "memory_bytes": 1763824,
+        "sha256": "e8eab29655c3ba6b8ae8db29af3ea86a07a73ad8ce86096f6c9fb2b73fef0073",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-teardown-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "e8eab29655c3ba6b8ae8db29af3ea86a07a73ad8ce86096f6c9fb2b73fef0073",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "error": "EndpointNotQuiescent",
+          "event": "ipc-reject",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "757fc590f6fae3905129ab0068fc2e7b23e02a657c7cfa35d9bffa9d7fffc94c",
+      "console_log_sha256_lf": "3e8989c1c80f6b6c4d45dffe929e50e576d1314829c791f12be5148502f1c74d"
+    },
+    {
+      "flag": "--ipc-cancel-control",
+      "feature": "ipc-cancel-negative",
+      "expected": "ipc_cancel_before_commit",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-cancel-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497144,
+        "features": ["machine-events", "kernel-tests", "ipc-cancel-negative"],
+        "load_bytes": 666020,
+        "memory_bytes": 1763756,
+        "sha256": "f2c9420239151684636945a9f0927431d20fc2e31c624f29e07beea3c97640c7",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-cancel-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "f2c9420239151684636945a9f0927431d20fc2e31c624f29e07beea3c97640c7",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_cancel_before_commit",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "75330cdbde168c3737cf5e786b8d370205917afde6380f96a335a100b0b95940",
+      "console_log_sha256_lf": "c93cda2f571deb1a9826c0db57ea4970f6673f31b072d32a4eac1de86ac02e99"
+    },
+    {
+      "flag": "--ipc-service-death-control",
+      "feature": "ipc-service-death-negative",
+      "expected": "ipc_service_death_queued",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-service-death-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497128,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-service-death-negative"
+        ],
+        "load_bytes": 666020,
+        "memory_bytes": 1763756,
+        "sha256": "3aa215522a7074e60fbd62b09f09d50d0de34b616f2183fda78c74333a41b53b",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-service-death-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "3aa215522a7074e60fbd62b09f09d50d0de34b616f2183fda78c74333a41b53b",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_service_death_queued",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "02cda73355f7f0545eb611f297faefc7d81b4c2f31158c63e9816b294c8d987d",
+      "console_log_sha256_lf": "f4bf09537f1adbc43a421b387db6eac465c4d7248c0d68ee503f80061a46f99a"
+    },
+    {
+      "flag": "--ipc-double-terminal-control",
+      "feature": "ipc-double-terminal-negative",
+      "expected": "ipc_payload_snapshot_result_id_and_stress",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-double-terminal-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497184,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-double-terminal-negative"
+        ],
+        "load_bytes": 665988,
+        "memory_bytes": 1763724,
+        "sha256": "a5623d5467b96bae2f35feaa46d566d82522d6b9b935325cced8871ee5bec4ef",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-double-terminal-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "a5623d5467b96bae2f35feaa46d566d82522d6b9b935325cced8871ee5bec4ef",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_payload_snapshot_result_id_and_stress",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "b94880260860aeadf49e5b7202416ea316e2dcc9a768675fdd68613d86c42f6a",
+      "console_log_sha256_lf": "5445846ef089a2afd4d22bb510fc3faea12bf9f7461d520a07e03107b730f57f"
+    },
+    {
+      "flag": "--ipc-capacity-control",
+      "feature": "ipc-capacity-negative",
+      "expected": "ipc_queue_full_fifo_and_reclamation",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-capacity-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497128,
+        "features": ["machine-events", "kernel-tests", "ipc-capacity-negative"],
+        "load_bytes": 666008,
+        "memory_bytes": 1763744,
+        "sha256": "bd8a2a18f02eff6605fed1934bc1b96e3a6bc9a89d4c035a1b5e8965f2c80dce",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-capacity-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "bd8a2a18f02eff6605fed1934bc1b96e3a6bc9a89d4c035a1b5e8965f2c80dce",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_queue_full_fifo_and_reclamation",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "d10ca1e33e713fffc721ae115b73519599a1b818359e1d5b1cb905cd60556e92",
+      "console_log_sha256_lf": "845fde9fa64493947fcc3cdef5bd80f7dda14b3b676916f0d2d353854ef70ef6"
+    },
+    {
+      "flag": "--ipc-fifo-control",
+      "feature": "ipc-fifo-negative",
+      "expected": "ipc_queue_full_fifo_and_reclamation",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-fifo-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497256,
+        "features": ["machine-events", "kernel-tests", "ipc-fifo-negative"],
+        "load_bytes": 666064,
+        "memory_bytes": 1763800,
+        "sha256": "897fc9c41743d2360386d304a4ccdf27268dfc713640fa6c8cd4b13f00a49327",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-fifo-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "897fc9c41743d2360386d304a4ccdf27268dfc713640fa6c8cd4b13f00a49327",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_queue_full_fifo_and_reclamation",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "079bf864d9eaed9047f57e508e496b2b2133754f2cfac30bd4a1da56c18ee6fc",
+      "console_log_sha256_lf": "f271100c2fcef5e33fc1c8364eeb65008da9488308e93d98fce4f348bdd1e0f2"
+    },
+    {
+      "flag": "--ipc-id-reuse-control",
+      "feature": "ipc-id-reuse-negative",
+      "expected": "ipc_payload_snapshot_result_id_and_stress",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-id-reuse-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2492424,
+        "features": ["machine-events", "kernel-tests", "ipc-id-reuse-negative"],
+        "load_bytes": 665532,
+        "memory_bytes": 1763268,
+        "sha256": "2d363490e060d60c2e4269848f7d040d103a8cc2bfcac76874211b66da1aefc3",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-id-reuse-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "2d363490e060d60c2e4269848f7d040d103a8cc2bfcac76874211b66da1aefc3",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_payload_snapshot_result_id_and_stress",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "4a4248938692fb9522ee5871acf5f751cd8aca62b384409a20d3c09d63af752e",
+      "console_log_sha256_lf": "092977f769f042f162ad1cc56c2bafbad7731bb18f217314e3689eb75b4e934e"
+    },
+    {
+      "flag": "--ipc-receive-copy-control",
+      "feature": "ipc-receive-copy-negative",
+      "expected": "ipc_receive_copy_failure_retains_queue",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-receive-copy-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497152,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-receive-copy-negative"
+        ],
+        "load_bytes": 665972,
+        "memory_bytes": 1763708,
+        "sha256": "adb9d6a722a50c0df52e7db8446255b766fe9f7d00d4bcdd8d370f363d3a46a1",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-receive-copy-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "adb9d6a722a50c0df52e7db8446255b766fe9f7d00d4bcdd8d370f363d3a46a1",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_receive_copy_failure_retains_queue",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "dc97b9d0331b7c9189f8090b9c5dd621f6127e5ef8df8549296964218769c59d",
+      "console_log_sha256_lf": "b6062df7e126df2071d8b945d06e11bb1a204e9bd42c7b6439dea33909e24e90"
+    },
+    {
+      "flag": "--ipc-collect-copy-control",
+      "feature": "ipc-collect-copy-negative",
+      "expected": "ipc_collect_copy_failure_retains_result",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-collect-copy-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497128,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-collect-copy-negative"
+        ],
+        "load_bytes": 665992,
+        "memory_bytes": 1763728,
+        "sha256": "506641fde1c53ff0aa5de2ab6052d5dc7636e732f49a3baf62f4ffa5cc58cf7e",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-collect-copy-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "506641fde1c53ff0aa5de2ab6052d5dc7636e732f49a3baf62f4ffa5cc58cf7e",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_collect_copy_failure_retains_result",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "6cc8f61c34f31f639de515d4a3bb818a55484beb422aae5c865e96666f657d0a",
+      "console_log_sha256_lf": "89a4e475920ae88187c0033d583eb384262f2cd2dea03d0b630bce9a59f2d0ac"
+    },
+    {
+      "flag": "--ipc-send-rights-control",
+      "feature": "ipc-send-rights-negative",
+      "expected": "ipc_authority_denial_revoke_and_retention",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-send-rights-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2497032,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "ipc-send-rights-negative"
+        ],
+        "load_bytes": 665980,
+        "memory_bytes": 1763716,
+        "sha256": "50d17c29ae746ca290677c94072034b9ebafabdf42f85a4edb15bb953433863b",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-send-rights-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "50d17c29ae746ca290677c94072034b9ebafabdf42f85a4edb15bb953433863b",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_authority_denial_revoke_and_retention",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "8ed9d3be5c27dee908c5c563e8a976c4365eb4307fdeb8580fe8920a87731191",
+      "console_log_sha256_lf": "cc3db62481097e3bdd9172415b036fef783707f159569e36779261392b0c37ef"
+    },
+    {
+      "flag": "--ipc-revoke-control",
+      "feature": "ipc-revoke-negative",
+      "expected": "ipc_authority_denial_revoke_and_retention",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-revoke-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2496792,
+        "features": ["machine-events", "kernel-tests", "ipc-revoke-negative"],
+        "load_bytes": 665852,
+        "memory_bytes": 1763588,
+        "sha256": "5f3cbe62793c506f5b051d713041a36e54740f1d821d9de9a1a3f6d4883e1a78",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-revoke-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "5f3cbe62793c506f5b051d713041a36e54740f1d821d9de9a1a3f6d4883e1a78",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_authority_denial_revoke_and_retention",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "52754fd1b455fae2a7227747e8c81b764a0e3872bfef0f8527ff31feac4dcf51",
+      "console_log_sha256_lf": "451d779e68644f2b454e98bc55925d1f948020bf790f9314624af7819a78bf11"
+    },
+    {
+      "flag": "--ipc-deadline-control",
+      "feature": "ipc-deadline-negative",
+      "expected": "ipc_deadline_before_effect",
+      "profile": "prod",
+      "host_failure": "nonzero exit verified by production ipc-controls runner",
+      "build": {
+        "artifact": "target/kernel/prod-ipc-deadline-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2488960,
+        "features": ["machine-events", "kernel-tests", "ipc-deadline-negative"],
+        "load_bytes": 664868,
+        "memory_bytes": 1762604,
+        "sha256": "8a08d967bf96203f7a0cf1482f0390ac7ecc7c781b50de9b9227b2bd4983592b",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-ipc-deadline-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "8a08d967bf96203f7a0cf1482f0390ac7ecc7c781b50de9b9227b2bd4983592b",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "exact_rejections": [
+        {
+          "event": "test",
+          "name": "ipc_deadline_before_effect",
+          "status": "fail"
+        }
+      ],
+      "events_sha256_lf": "5f286508f3ffdb8f4917c1af8102765e957b63b7148a4aa7f71081b58112152c",
+      "console_log_sha256_lf": "41cf5ca1cd43df04bbc6f01f694a40029721cdc6842b3f23016b1b62008340d2"
+    }
+  ]
+}

@@ -384,7 +384,7 @@
       "aliases": ["ADR-0025"],
       "document": "adr.0025",
       "document_status": "CURRENT",
-      "estimated_bytes": 8522,
+      "estimated_bytes": 8708,
       "id": "adr.0025",
       "kind": "adr",
       "path": "docs/architecture-decisions/0025-bounded-native-ipc.md",
@@ -843,13 +843,30 @@
       "title": "Phase 0.1 results and limits"
     },
     {
+      "document": "doc.kolvrt.ipc.acceptance-review",
+      "document_status": "CURRENT",
+      "estimated_bytes": 11821,
+      "id": "doc.kolvrt.ipc.acceptance-review",
+      "kind": "security-analysis",
+      "path": "docs/architecture/ipc-phase35-acceptance-review.md",
+      "relationships": [
+        {
+          "scope": "Evidence and scoped readiness review; no physical ARM or stable ABI acceptance.",
+          "to": "kolvrt.ipc.transport",
+          "type": "related_to"
+        }
+      ],
+      "summary": "Explicit source-grounded Phase 3.5 acceptance and EN/RU semantic review, scoped to the bounded IPC mechanism.",
+      "title": "Phase 3.5 acceptance review"
+    },
+    {
       "document": "doc.kolvrt.ipc.review",
       "document_status": "CURRENT",
-      "estimated_bytes": 32484,
+      "estimated_bytes": 32605,
       "id": "doc.kolvrt.ipc.review",
       "kind": "security-analysis",
       "path": "docs/architecture/ipc-phase35-review.md",
-      "summary": "Phase 3.5 IPC architecture re-derivation; E1/A decisions are implemented while milestone acceptance remains open.",
+      "summary": "Phase 3.5 IPC architecture re-derivation; E1/A decisions are implemented and bounded milestone acceptance is complete.",
       "title": "Phase 3.5 IPC architecture re-derivation"
     },
     {
@@ -895,17 +912,17 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 20773,
+      "estimated_bytes": 21554,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
-      "summary": "Experimental bounded native EL0 IPC contract and current Phase 3.5 evidence.",
+      "summary": "Accepted bounded native EL0 IPC mechanism and source-grounded Phase 3.5 readiness.",
       "title": "Bounded native EL0 IPC"
     },
     {
       "document": "doc.kolvrt.kernel.ipc-performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 4750,
+      "estimated_bytes": 4756,
       "id": "doc.kolvrt.kernel.ipc-performance",
       "kind": "benchmark-evidence",
       "path": "docs/kernel/ipc-performance.md",
@@ -1403,7 +1420,7 @@
       "depends_on": ["kolvrt.ipc"],
       "document": "doc.kolvrt.kernel.ipc-performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 4637,
+      "estimated_bytes": 4643,
       "id": "kolvrt.ipc.performance",
       "kind": "contract-section",
       "path": "docs/kernel/ipc-performance.md",
@@ -1528,13 +1545,12 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 20660,
+      "estimated_bytes": 21441,
       "gaps": [
-        "Human semantic and complete EN/RU review remain pending before milestone acceptance/promotion.",
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
       "id": "kolvrt.ipc.transport",
-      "implementation": "EXPERIMENTAL",
+      "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
       "path": "docs/kernel/ipc.md",
       "summary": "Bounded endpoint IPC with copied requests, blocking waits and exact terminal outcomes.",

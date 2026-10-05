@@ -1,9 +1,9 @@
 # ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution
 
-Status: **Accepted for the bounded Phase 3.5 mechanism; final acceptance review pending**. Date: 2026-10-05.
+Status: **Accepted for the bounded Phase 3.5 mechanism; bounded Phase 3.5 acceptance complete**. Date: 2026-10-05.
 
 Document status: CURRENT
-Evidence scope: accepted architecture and implemented mechanism; technical DEV/PROD, mutation and performance receipts are retained. Final acceptance review is open; physical ARM is unverified.
+Evidence scope: accepted architecture and implemented mechanism; technical DEV/PROD, mutation and performance receipts are retained. Bounded acceptance is complete with fresh source-matched controls and explicit EN/RU semantic review; physical ARM is unverified.
 Current reference: [IPC contract](../kernel/ipc.md)
 
 ## Context
@@ -68,7 +68,7 @@ The selected mechanism introduces private fixed endpoint storage and audited syn
 
 ## Verification and next gates
 
-The original technical receipt retains 124 checks per DEV/PROD profile and 46 exact-event IPC mutation runs; current-main positive integration checks pass in both profiles. Controlled performance paths, unsafe inventory and source-bound receipts are retained. Final acceptance review remains open. QEMU is a regression platform, not silicon evidence.
+The original technical receipt retains 124 checks per DEV/PROD profile and 46 exact-event IPC mutation runs; current-main positive integration checks pass in both profiles. Controlled performance paths, unsafe inventory and source-bound receipts are retained. Bounded acceptance is complete; see the explicit [acceptance review](../architecture/ipc-phase35-acceptance-review.md) and fresh 46-control receipt. QEMU is a regression platform, not silicon evidence.
 
 Issue #27 is the next supervisor scope; #28 follows with an isolated persistent service. They must rederive execution, admission and retirement from their accepted invariants. Existing E1 code, effort or tests cannot force their architecture. Mutable mappings, zero-copy, wait-any, device/network/storage policy and independent service supervision remain excluded here.
 
