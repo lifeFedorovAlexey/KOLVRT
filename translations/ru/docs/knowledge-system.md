@@ -119,7 +119,7 @@ VERIFIED требует, чтобы каждый объявленный исхо
             "state": "VERIFIED",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "6e9b3323270b97ebb5e23f6c2af790bdc6c84e879eeca3eff9232431afe62bfa",
+            "receipt_sha256": "c73d71e2db409c9618bd0a0403ba9cbc920a9c00bcec43ee252c06bbbf466041",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim."
           },
           {

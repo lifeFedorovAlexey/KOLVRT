@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KOLVRT compatibility module declarations v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "semantic_version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+            "maxLength": 64
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "package": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "package_version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+            "maxLength": 64
+          },
+          "feature": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "classification": {
+            "enum": ["SYNTHETIC", "PRODUCTION"]
+          },
+          "status": {
+            "enum": ["DECLARED", "RETIRED"]
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f]+$"
+          },
+          "support_until": {
+            "type": "string",
+            "format": "date"
+          },
+          "artifact": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256,
+                    "pattern": "^[^\\u0000-\\u001f]+$"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": ["path", "sha256"]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "pattern": "^[^\\u0000-\\u001f]+$"
+                },
+                "sha256_lf": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": ["path", "sha256_lf"]
+            },
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": true
+          },
+          "debt_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^COST-L-[0-9]{4}$"
+            },
+            "minItems": 0,
+            "maxItems": 32,
+            "uniqueItems": true
+          },
+          "debt_unassigned_reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256,
+                "pattern": "^[^\\u0000-\\u001f]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "exception_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^EXC-[0-9]{4}$"
+            },
+            "minItems": 0,
+            "maxItems": 32,
+            "uniqueItems": true
+          },
+          "consumers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "pattern": "^[^\\u0000-\\u001f]+$"
+                },
+                "kind": {
+                  "enum": [
+                    "DRIVER",
+                    "PACKAGE",
+                    "FIXTURE",
+                    "OFFLINE_RECOVERY",
+                    "ARCHIVAL"
+                  ]
+                },
+                "dependency": {
+                  "enum": ["DIRECT", "TRANSITIVE"]
+                },
+                "scope": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "pattern": "^[^\\u0000-\\u001f]+$"
+                },
+                "support_until": {
+                  "type": "string",
+                  "format": "date"
+                }
+              },
+              "required": ["id", "kind", "dependency", "scope", "support_until"]
+            },
+            "minItems": 1,
+            "maxItems": 128,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "id",
+          "semantic_version",
+          "scope",
+          "package",
+          "package_version",
+          "feature",
+          "classification",
+          "status",
+          "owner",
+          "support_until",
+          "artifact",
+          "sources",
+          "debt_ids",
+          "debt_unassigned_reason",
+          "exception_ids",
+          "consumers"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    }
+  },
+  "required": ["schema_version", "modules"]
+}

@@ -1,41 +1,79 @@
 {
-  "base_commit": "41ecd0656fd440585fbc1c4b2f5e969faa7ba815",
-  "files": [
-    {
-      "before_sha256_lf": "3d354bbbc13c0fc220483d67bfa9fd4ec3527095584440664ad5a3ce6256cb04",
-      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
-      "after_sha256_lf": "c06e4b62474dd989d4b80dba8f661e179355601e1506695f16605060449f4511",
-      "disposition": "new-feature",
-      "path": "crates/migration-advisor/src/provenance.rs"
-    },
-    {
-      "before_sha256_lf": "0feec818a0fefd124932568005cb814376f8fcbf7bb85119f6b9c2968187f542",
-      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
-      "after_sha256_lf": "0d717362dcd88c812c73759b62414a6959a6646cf5332272df6643ae573b40af",
-      "disposition": "new-feature",
-      "path": "crates/migration-advisor/src/main.rs"
-    },
-    {
-      "before_sha256_lf": "ab272f7bba27811f754f335d89ee32814c884cc620c7fab96b7d10c88bfc2b46",
-      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
-      "after_sha256_lf": "c16e74bc027150961cf714c064d854545c611cfb9d4e102e9c26ce9af32525c9",
-      "disposition": "new-feature",
-      "path": "crates/migration-advisor/tests/provisioned_provenance.rs"
-    },
-    {
-      "before_sha256_lf": "cbfde512183c620d55d84524b4682f3e9d8ee65c11b281802025e8d7c8aeff0e",
-      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
-      "after_sha256_lf": "1035455910a6bdc85cb4d64350715f0c770641e75f0f4dc38e12405111848245",
-      "disposition": "new-feature",
-      "path": "crates/migration-advisor/tests/migration.rs"
-    }
-  ],
   "features": [
     {
-      "reason": "Complete EN/RU contract defines constructor API correction, current/final-time checks, sticky clock failure, issuer/key intervals, policy snapshot and explicit remaining durable replay/production gates.",
-      "id": "kolvrt.security.verifier-time",
-      "disposition": "semantic-change"
+      "reason": "New EN/RU contract explicitly separates synthetic declarations, production debt/artifact reciprocity, native Cargo closure and remaining review/runtime gates.",
+      "disposition": "semantic-change",
+      "id": "kolvrt.compatibility.manifests"
+    },
+    {
+      "reason": "Shared checker source digest changes; historical Arena evidence retained and current host verification marked STALE.",
+      "disposition": "evidence-change",
+      "id": "kolvrt.arena"
+    },
+    {
+      "reason": "Shared COST-L helper/dispatcher/library source digests change; historical query evidence retained and current host verification marked STALE.",
+      "disposition": "evidence-change",
+      "id": "kolvrt.cost-l.offline-queries"
     }
   ],
-  "schema_version": 1
+  "schema_version": 1,
+  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c",
+  "files": [
+    {
+      "before_sha256_lf": null,
+      "path": "crates/repository-checks/src/compat_modules.rs",
+      "disposition": "new-feature",
+      "after_sha256_lf": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    },
+    {
+      "before_sha256_lf": null,
+      "path": "crates/repository-checks/tests/compat_modules.rs",
+      "disposition": "new-feature",
+      "after_sha256_lf": "32897939bef7f43161eebdd99f7fd3065860e89910f992b27a1896257aeabd53",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    },
+    {
+      "before_sha256_lf": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
+      "path": "crates/repository-checks/src/cost_l.rs",
+      "disposition": "new-feature",
+      "after_sha256_lf": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    },
+    {
+      "before_sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
+      "path": "crates/repository-checks/src/lib.rs",
+      "disposition": "new-feature",
+      "after_sha256_lf": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    },
+    {
+      "before_sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
+      "path": "crates/repository-checks/src/main.rs",
+      "disposition": "new-feature",
+      "after_sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    },
+    {
+      "before_sha256_lf": null,
+      "path": "schemas/compatibility-modules.schema.json",
+      "disposition": "new-feature",
+      "after_sha256_lf": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    },
+    {
+      "before_sha256_lf": null,
+      "path": "policy/compatibility-modules.json",
+      "disposition": "new-feature",
+      "after_sha256_lf": "7a0c2866298342b9fa43f4dbfe626397c907be715a659530f2b1f5ab7dd9665d",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    },
+    {
+      "before_sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
+      "path": "crates/window-compat/Cargo.toml",
+      "disposition": "new-feature",
+      "after_sha256_lf": "988fb4a314a1246fa0289441f22dd161af84c2bc4d7d313fc84e9c895b86bc71",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+    }
+  ]
 }

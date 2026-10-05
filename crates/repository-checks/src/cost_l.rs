@@ -16,7 +16,7 @@ pub fn schema(root: &Path) -> CheckResult<jsonschema::Validator> {
     schema_file(root, "schemas/cost-l.schema.json")
 }
 
-fn schema_file(root: &Path, name: &str) -> CheckResult<jsonschema::Validator> {
+pub(crate) fn schema_file(root: &Path, name: &str) -> CheckResult<jsonschema::Validator> {
     let value = read_json(&root.join(name))?;
     jsonschema::meta::validate(&value).map_err(|e| e.to_string())?;
     jsonschema::draft202012::options()
@@ -25,7 +25,7 @@ fn schema_file(root: &Path, name: &str) -> CheckResult<jsonschema::Validator> {
         .map_err(|e| e.to_string())
 }
 
-fn bounded_json(path: &Path) -> CheckResult<Value> {
+pub(crate) fn bounded_json(path: &Path) -> CheckResult<Value> {
     let metadata = fs::symlink_metadata(path).map_err(|e| e.to_string())?;
     if !metadata.is_file() || metadata.len() > MAX_RECORD_BYTES {
         return Err(format!(
@@ -46,7 +46,7 @@ fn bounded_json(path: &Path) -> CheckResult<Value> {
     parse_json(text).map_err(|e| format!("{}: {e}", path.display()))
 }
 
-fn local_file(root: &Path, name: &str) -> CheckResult<std::path::PathBuf> {
+pub(crate) fn local_file(root: &Path, name: &str) -> CheckResult<std::path::PathBuf> {
     let relative = Path::new(name);
     if relative
         .components()
