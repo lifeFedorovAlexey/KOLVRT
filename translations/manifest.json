@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "afdf53476cb86ce18f97a5d12534530b2ebd1ba980ac21c9dbfb7f61be7ce57b",
-        "translation_sha256": "7d08c049372b49bd3b4fc31f0644c69cd4273b825b82da3afa49617c30bb4442"
+        "source_sha256": "35272a8c89ad0050b05dcb565fda1575169e74b6d1f8ee03403f944fc8b39d82",
+        "translation_sha256": "453cdffc533efcda45c2593f8089160aea28c27e453040bf915704b51b72025c"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",

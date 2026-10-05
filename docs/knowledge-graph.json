@@ -832,7 +832,7 @@
     "schemas/cost-l.schema.json": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "db618637fb6807a81af630d4b4024bf74a098cc0d4a408ada8dd3e56224ff1cd",
+    "translations/manifest.json": "d898c54fe9371c3c4291123b9c93ce150c6824e2489959866e3690df61803467",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
