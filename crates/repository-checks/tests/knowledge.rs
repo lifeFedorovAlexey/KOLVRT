@@ -474,6 +474,10 @@ fn stale_outputs_and_machine_locale_drift_are_rejected() {
         .unwrap();
     }
     knowledge::generate(&f.0, false).unwrap();
+    let russian_summary = fs::read_to_string(f.0.join("translations/ru/README.md")).unwrap();
+    assert!(russian_summary.contains("Каноническая функция"));
+    assert!(russian_summary.contains("Реализация"));
+    assert!(russian_summary.contains("Граница доказательств"));
     knowledge::generate(&f.0, true).unwrap();
     fs::write(f.0.join("docs/catalog.json"), "{}").unwrap();
     assert!(knowledge::generate(&f.0, true).is_err());

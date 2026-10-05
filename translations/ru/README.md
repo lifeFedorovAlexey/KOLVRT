@@ -576,14 +576,14 @@ Stable userspace ABI пока отсутствует.
 
 <!-- feature-summary:start -->
 
-| РљР°РЅРѕРЅРёС‡РµСЃРєР°СЏ С„СѓРЅРєС†РёСЏ                                                                    | Р РµР°Р»РёР·Р°С†РёСЏ | Р“СЂР°РЅРёС†Р° РґРѕРєР°Р·Р°С‚РµР»СЊСЃС‚РІ              |
-| ---------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------------ |
-| [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                  | BOUNDED_IMPLEMENTED  | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE |
-| [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                        | BOUNDED_IMPLEMENTED  | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
-| [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                | BOUNDED_IMPLEMENTED  | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
-| [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                              | BOUNDED_IMPLEMENTED  | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
-| [kolvrt.security.capability-revocation](docs/kernel/capabilities.md#kolvrt-security-capability-revocation) | BOUNDED_IMPLEMENTED  | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
-| [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                     | BOUNDED_IMPLEMENTED  | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
-| [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)           | BOUNDED_IMPLEMENTED  | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
+| Каноническая функция                                                                                       | Реализация          | Граница доказательств                                  |
+| ---------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------ |
+| [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                  | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE |
+| [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
+| [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                              | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
+| [kolvrt.security.capability-revocation](docs/kernel/capabilities.md#kolvrt-security-capability-revocation) | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                     | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |
+| [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
 
 <!-- feature-summary:end -->

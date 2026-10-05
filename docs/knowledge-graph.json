@@ -583,9 +583,9 @@
     "crates/kernel/src/process.rs": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
-    "crates/repository-checks/src/knowledge.rs": "179bec6335406d5ce1d19f6ac08e74afdf6d01d5f7c6494181d84aacfed88325",
+    "crates/repository-checks/src/knowledge.rs": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
     "crates/repository-checks/src/knowledge/impact.rs": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
-    "crates/repository-checks/tests/knowledge.rs": "41507c072313bad1c1d118e0f315c1c5c42aa07cab0cab1fbf5af4a9e9d43ff3",
+    "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
     "docs/architecture-decisions/0003-profiles.md": "e468a33090c9ab7ae112cf41f222edfd7faf459907a1117106dbfc19c64e3280",
@@ -618,7 +618,7 @@
     "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "eb86acfa5b712ae63ab096afb1d1edc7491afc33689f8f1a8eb0074d4d9bb2bf",
-    "docs/knowledge-system.md": "99d22a1232294bb44b5a93c5ba1ccba61133bfd4079ca6f1b31b5e04d6cbc4b0",
+    "docs/knowledge-system.md": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -657,7 +657,7 @@
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "0c5713ad98ee8bebed0fe00934b7733dd040261bed7209a253e0027212ec84fc",
+    "translations/manifest.json": "cd10b05b7b52b510bc8a2c3df7068f6c81c44427700210a81cafca0d6beb46c6",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -689,7 +689,7 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "2d73df945cc986f1ff9257d8983883e5720dd3a9749e2b0455641606107f66e7",
+    "translations/ru/docs/knowledge-system.md": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
@@ -2692,13 +2692,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "99d22a1232294bb44b5a93c5ba1ccba61133bfd4079ca6f1b31b5e04d6cbc4b0",
+          "sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "2d73df945cc986f1ff9257d8983883e5720dd3a9749e2b0455641606107f66e7",
+          "sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
           "start": 1
         }
       },
@@ -3092,7 +3092,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "bec29c068ced5ef3eb010c5232578d7227cb706895e1b8f7b8adb702a4359935",
+            "receipt_sha256": "446d14a28d1b5eca3d227f4cd35c1da959cf8e548211fe795449fcb07de64658",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -3117,13 +3117,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "99d22a1232294bb44b5a93c5ba1ccba61133bfd4079ca6f1b31b5e04d6cbc4b0",
+          "sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "2d73df945cc986f1ff9257d8983883e5720dd3a9749e2b0455641606107f66e7",
+          "sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
           "start": 7
         }
       },

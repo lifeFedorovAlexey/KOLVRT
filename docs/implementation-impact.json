@@ -5,7 +5,7 @@
     {
       "path": "crates/repository-checks/src/knowledge.rs",
       "before_sha256_lf": "cc1e7ec389b4c769d76658c4e22ebb1c2fd627b3b7d3729811f721a412378b0a",
-      "after_sha256_lf": "179bec6335406d5ce1d19f6ac08e74afdf6d01d5f7c6494181d84aacfed88325",
+      "after_sha256_lf": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
       "disposition": "existing-feature",
       "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
     },
@@ -19,7 +19,7 @@
     {
       "path": "crates/repository-checks/tests/knowledge.rs",
       "before_sha256_lf": "090fe869bf22dade4f57ef80576cd7eb72ce583a4718257499a42f280c0217df",
-      "after_sha256_lf": "41507c072313bad1c1d118e0f315c1c5c42aa07cab0cab1fbf5af4a9e9d43ff3",
+      "after_sha256_lf": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
       "disposition": "existing-feature",
       "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
     },

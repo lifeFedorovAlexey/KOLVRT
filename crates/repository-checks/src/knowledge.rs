@@ -1098,7 +1098,7 @@ fn summaries(root: &Path, knowledge: &Knowledge, check: bool) -> CheckResult<()>
             "\n\n| Canonical feature | Implementation | Evidence limit |\n| --- | --- | --- |\n"
                 .to_owned()
         } else {
-            "\n\n| РљР°РЅРѕРЅРёС‡РµСЃРєР°СЏ С„СѓРЅРєС†РёСЏ | Р РµР°Р»РёР·Р°С†РёСЏ | Р“СЂР°РЅРёС†Р° РґРѕРєР°Р·Р°С‚РµР»СЊСЃС‚РІ |\n| --- | --- | --- |\n".to_owned()
+            "\n\n| Каноническая функция | Реализация | Граница доказательств |\n| --- | --- | --- |\n".to_owned()
         };
         for (id, node) in knowledge.graph["nodes"].as_object().unwrap() {
             if node.get("feature").is_none() {

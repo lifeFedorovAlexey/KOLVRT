@@ -11,7 +11,7 @@
       },
       "README.md": {
         "source_sha256": "0ae77a4df849e8b75a97afe6bc45fd63c97a6884cc7b785e70538e1f8eb95498",
-        "translation_sha256": "dc69187d0d034343d1be5089bf2a57b7dd8d68993be71ccbdffed7d5bd1991c7"
+        "translation_sha256": "f171beb0880d1bee041735e3bf1228cfe52dff09efee9769c9ce6bf79e8c8f26"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "81fbacc6d3c1ba7ac517afa1214fa059fba894913e81b36299efda95cefe35d6",
@@ -290,8 +290,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "99d22a1232294bb44b5a93c5ba1ccba61133bfd4079ca6f1b31b5e04d6cbc4b0",
-        "translation_sha256": "2d73df945cc986f1ff9257d8983883e5720dd3a9749e2b0455641606107f66e7"
+        "source_sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
+        "translation_sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
