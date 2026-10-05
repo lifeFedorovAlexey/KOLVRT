@@ -13,6 +13,7 @@ fn run() -> CheckResult<()> {
         }
     }
     match command {
+        "cost-l" => return repository_checks::cost_l_queries::cli(&root, &args[1..]),
         "docs" => return knowledge::cli(&root, &args[1..]),
         "check" | "validate" | "check-docs" | "check-translations" if args.len() <= 1 => {
             if matches!(command,"check" | "validate") { database::validate(&root, &root.join("research/cases"), repository_checks::MINIMUM_RESEARCH_CASES)?; }
@@ -39,7 +40,7 @@ fn run() -> CheckResult<()> {
             documents::record_translation(&root, &args[1], &args[2])?;
             println!("Recorded reviewed pair: {}/{}. Meaning must be reviewed by a person.", args[1], args[2]);
         }
-        _ => return Err("usage: repository-checks [check | validate [--directory PATH] | check-cost-l [--directory PATH] | check-docs | check-translations | report [--check] | record-translation LOCALE PATH]".into())
+        _ => return Err("usage: repository-checks [cost-l COMMAND [OPTIONS] | check | validate [--directory PATH] | check-cost-l [--directory PATH] | check-docs | check-translations | report [--check] | record-translation LOCALE PATH]".into())
     }
     Ok(())
 }

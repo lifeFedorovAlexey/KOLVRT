@@ -36,6 +36,7 @@
     "docs/kernel/processes.md",
     "docs/kernel/user-copy.md",
     "docs/knowledge-system.md",
+    "docs/research/cost-l-queries.md",
     "docs/research/phase-0-1-report.md",
     "docs/security/threat-model.md",
     "research/linux/memory-allocation.md"

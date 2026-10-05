@@ -583,6 +583,7 @@ This derived pilot summary reports implementation scope independently of roadmap
 | Canonical feature                                                                                          | Implementation      | Evidence limit                                         |
 | ---------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------ |
 | [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                    | PLANNED             | host-process: UNKNOWN; physical-arm64: UNKNOWN         |
+| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)             | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                  | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
 | [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN          |

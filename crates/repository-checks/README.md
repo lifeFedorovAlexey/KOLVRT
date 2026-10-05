@@ -8,6 +8,7 @@ Run these commands from the repository root:
 cargo test --locked
 cargo run --locked -p repository-checks -- check
 cargo run --locked -p repository-checks -- validate
+cargo run --locked -p repository-checks -- cost-l list --json
 cargo run --locked -p repository-checks -- check-cost-l
 cargo run --locked -p repository-checks -- check-docs
 cargo run --locked -p repository-checks -- report --check
@@ -33,3 +34,5 @@ The first build downloads dependencies. Subsequent checks can run with Cargo's `
 ## Documentation knowledge commands
 
 The docs subcommand and cargo xtask docs facade share the existing library. See the [knowledge contract](../../docs/knowledge-system.md) and [retrieval contract](../../docs/ai-retrieval.md). Generate catalog/graph/README rows with docs generate; verify with --check. Run docs pilot to record the real deterministic Phase 3 query, and docs pilot --check to reject stale size/source/selection receipts. Normal check includes both gates. Optional docs check-issues queries GitHub and reports UNKNOWN when unavailable; it does not establish behavioral acceptance. CI docs check-change BASE enforces enrolled identity/history and declared implementation impact.
+
+The [offline query contract](../../docs/research/cost-l-queries.md) documents show/consumers/deps/list/top, bounded pages, UNKNOWN and the separate production-manifest gate under #47/#48.

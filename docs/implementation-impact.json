@@ -1,49 +1,48 @@
 {
   "schema_version": 1,
+  "base_commit": "4045c7dcb7ffe87614efd48024de6bc0f717ccc8",
   "files": [
     {
-      "disposition": "no-feature-impact",
-      "before_sha256_lf": "bb97368963875fcb8d21a5c7243e64db8cc771c5d20bf77f1566345e06e810d6",
-      "after_sha256_lf": "a75f06d9abf31569f4c900fd9a00934ea2c0ced59c26f1d597155f38e5bf1855",
-      "path": "crates/kernel-core/Cargo.toml",
-      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
+      "disposition": "new-feature",
+      "reason": "Newly enrolled bounded offline CLI over the existing COST-L validator. This preserves declaration/runtime and authority boundaries; #47 production manifests and full #48 acceptance remain open.",
+      "path": "crates/repository-checks/src/lib.rs",
+      "after_sha256_lf": "b29b711566dd7bef0b5b9fc97bd7aa3251447aab82f12b7c59897783abe5a45e",
+      "before_sha256_lf": "81b35470087a955f4c785ed0ab578e221271366b45aeaa75c618ff3f324ad874"
     },
     {
-      "disposition": "no-feature-impact",
-      "before_sha256_lf": "eace2f23808a826184076b133e768f7707ba1ac98f894da2f9b07c4cf3f268c8",
-      "after_sha256_lf": "875e7ca516a5358688a4b6234d023b5c6ebd91fc36dc2c316bb8cb0b87e06d3e",
-      "path": "crates/kernel-core/src/elf.rs",
-      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
+      "disposition": "new-feature",
+      "reason": "Newly enrolled bounded offline CLI over the existing COST-L validator. This preserves declaration/runtime and authority boundaries; #47 production manifests and full #48 acceptance remain open.",
+      "path": "crates/repository-checks/src/main.rs",
+      "after_sha256_lf": "200077845468ae7033d5f9b3ec28fefe48fc7ff432b6ef2ff5b4028d245d3d56",
+      "before_sha256_lf": "6a37e49a384198d3a9d7967fd9ca5b914ea5628746a6372887b2b511a9b7d70a"
     },
     {
-      "disposition": "no-feature-impact",
-      "before_sha256_lf": "eddb775cbf56e75096ce963af30cba702e7edf01ee5420b8bb7ea6540edbaa9a",
-      "after_sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5",
-      "path": "crates/kernel-core/tests/elf_contract.rs",
-      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
+      "disposition": "new-feature",
+      "reason": "Newly enrolled bounded offline CLI over the existing COST-L validator. This preserves declaration/runtime and authority boundaries; #47 production manifests and full #48 acceptance remain open.",
+      "path": "crates/repository-checks/src/cost_l_queries.rs",
+      "after_sha256_lf": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967",
+      "before_sha256_lf": null
     },
     {
-      "disposition": "no-feature-impact",
-      "before_sha256_lf": "d2465af730d14cfb731e40fbe6b20f4a50db09d86e271140902c85e5fe69961b",
-      "after_sha256_lf": "0d2fcaaf0df342d76e89dd79aa72adde59733f3d03f2642ffa21d1f2a9d1656a",
-      "path": "crates/kernel/Cargo.toml",
-      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
+      "disposition": "new-feature",
+      "reason": "Newly enrolled bounded offline CLI over the existing COST-L validator. This preserves declaration/runtime and authority boundaries; #47 production manifests and full #48 acceptance remain open.",
+      "path": "crates/repository-checks/tests/cost_l_queries.rs",
+      "after_sha256_lf": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
+      "before_sha256_lf": null
     },
     {
-      "disposition": "no-feature-impact",
-      "before_sha256_lf": "dd298bd197b1378e3581ac49be5157ef3c9a5637c802296e31419981ed653760",
-      "after_sha256_lf": "d6cfc72822c74fd030d51a735ded89aa7f38f40fc0f1bfccb8e0888c690ca05a",
-      "path": "crates/kernel/src/process_workload.rs",
-      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
-    },
-    {
-      "disposition": "no-feature-impact",
-      "before_sha256_lf": "022aead0dab931213901c17e7e9fcf3bb0b0ea7d8b10c2e3cf506c25f585d74e",
-      "after_sha256_lf": "c8c061917a18e871c039b7a4de4d0c664f44b23140e95468a650b831fc9d5878",
-      "path": "crates/xtask/src/main.rs",
-      "reason": "No enrolled canonical feature owns this source. This change corrects the existing bounded ELF alignment contract and its host/QEMU rejection checks, documented and reviewed in EN/RU docs/kernel/el0.md; it introduces no new execution authority or IPC semantics. The unenrolled ELF coverage remains explicit."
+      "before_sha256_lf": "81fbacc6d3c1ba7ac517afa1214fa059fba894913e81b36299efda95cefe35d6",
+      "path": "crates/repository-checks/README.md",
+      "after_sha256_lf": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
+      "reason": "Documentation-only command discoverability in the crate README; the substantive new feature contract is separately enrolled and reviewed in docs/research/cost-l-queries.md.",
+      "disposition": "no-feature-impact"
     }
   ],
-  "features": [],
-  "base_commit": "89b8a36b9ce6327d7a2470a42235a07ad14c07bf"
+  "features": [
+    {
+      "disposition": "semantic-change",
+      "reason": "New canonical EN/RU bounded CLI contract owns these sources and states pagination, UNKNOWN, independent dimensions and the remaining production-manifest gate.",
+      "id": "kolvrt.cost-l.offline-queries"
+    }
+  ]
 }

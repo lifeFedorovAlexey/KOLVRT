@@ -66,6 +66,106 @@
       "type": "depends_on"
     },
     {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "Cargo.lock",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "adr.0007",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "adr.0008",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "crates/repository-checks/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "crates/repository-checks/src/cost_l.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "crates/repository-checks/src/cost_l_queries.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "crates/repository-checks/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "crates/repository-checks/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "crates/repository-checks/tests/cost_l_queries.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "law.009",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "law.036",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "law.040",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "research/cost-l/COST-L-0001.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "research/cost-l/COST-L-0002.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "research/cost-l/COST-L-0003.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "research/cost-l/registry.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "research/results/issue48-cost-l-queries.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "rust-toolchain.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "schemas/cost-l-registry.schema.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "schemas/cost-l.schema.json",
+      "type": "implemented_by"
+    },
+    {
       "from": "kolvrt.docs.navigation",
       "to": "adr.0024",
       "type": "depends_on"
@@ -632,6 +732,7 @@
     }
   ],
   "inputs": {
+    "Cargo.lock": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712",
     "crates/kernel-core/src/domain.rs": "17c2ca3dfc9f25510a1780ae6745737801d90fa575e7471977e31d945c5e37c5",
     "crates/kernel-core/src/domain/pool.rs": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05",
     "crates/kernel-core/src/handles.rs": "4d7c64d95bfa34377065728b51242e63c8c6a4822989587c500c818de130fedb",
@@ -643,8 +744,14 @@
     "crates/kernel/src/process.rs": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
+    "crates/repository-checks/Cargo.toml": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
+    "crates/repository-checks/src/cost_l.rs": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
+    "crates/repository-checks/src/cost_l_queries.rs": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967",
     "crates/repository-checks/src/knowledge.rs": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
     "crates/repository-checks/src/knowledge/impact.rs": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
+    "crates/repository-checks/src/lib.rs": "b29b711566dd7bef0b5b9fc97bd7aa3251447aab82f12b7c59897783abe5a45e",
+    "crates/repository-checks/src/main.rs": "200077845468ae7033d5f9b3ec28fefe48fc7ff432b6ef2ff5b4028d245d3d56",
+    "crates/repository-checks/tests/cost_l_queries.rs": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
     "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
@@ -680,8 +787,9 @@
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "f7ba698e801f9d951018a8b0536a00769dabc10c95c62c726a3d121afcfca1de",
-    "docs/knowledge-system.md": "7efcfd84167c24c533c83ba9fec17caf56616dd5ff6cb7a0244a5f94ffd25c4b",
+    "docs/knowledge-enrollment.json": "ad8610e934ec2aef4feff2d63bc218ac2d3a4ac94ed6e3dff7e26537bdf762ad",
+    "docs/knowledge-system.md": "24ef088d4e0ae437ebe21f1aae30672a974e1ec7f0e3823be045c1e4bc3ef598",
+    "docs/research/cost-l-queries.md": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -717,10 +825,14 @@
     "research/cost-l/COST-L-0001.json": "9c2fb7bbbf28145be8b88433d22656f4123c12c16ab36f11010f5c71c2581291",
     "research/cost-l/COST-L-0002.json": "4854fd2013ea76118e8b7e027fe61ef304f2b39f181c1982d3c1c76aba05af01",
     "research/cost-l/COST-L-0003.json": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794",
+    "research/cost-l/registry.json": "6868df93c719a0d9efb11e628b608498e5649d1744acf24392b1b0bccbc10474",
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
+    "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+    "schemas/cost-l-registry.schema.json": "34a6bb442291351647c8826054fb582f89ec121c5abff19bf2bcc350b9d24254",
+    "schemas/cost-l.schema.json": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "e09cde531b8b3866bba442ca2050a73b804cdfba159fe74d95c13efc26148a20",
+    "translations/manifest.json": "93ff227f36b6601908f7b45ed33cd251ae06e97f4db70a9d20b61863540312f5",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -755,7 +867,8 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "cc4ab891f8135cefadae47351e68ad466c49a834d9675da0fc83c8f928a683a1",
+    "translations/ru/docs/knowledge-system.md": "ef11e7c1d1d1e0d7e872f784558b58caed62fd5cf08f114d0871dc1ea0dff4c7",
+    "translations/ru/docs/research/cost-l-queries.md": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
@@ -2860,13 +2973,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "7efcfd84167c24c533c83ba9fec17caf56616dd5ff6cb7a0244a5f94ffd25c4b",
+          "sha256": "24ef088d4e0ae437ebe21f1aae30672a974e1ec7f0e3823be045c1e4bc3ef598",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "cc4ab891f8135cefadae47351e68ad466c49a834d9675da0fc83c8f928a683a1",
+          "sha256": "ef11e7c1d1d1e0d7e872f784558b58caed62fd5cf08f114d0871dc1ea0dff4c7",
           "start": 1
         }
       },
@@ -3147,6 +3260,40 @@
       "schema_version": 1,
       "summary": "Native intended authority, capability-type admission and explicit deferral.",
       "title": "Native model"
+    },
+    "doc.kolvrt.research.cost-l-queries": {
+      "document": "doc.kolvrt.research.cost-l-queries",
+      "document_status": "CURRENT",
+      "estimated_bytes": 8969,
+      "evidence_scope": "bounded host queries over validated registry declarations; issue #48 remains open for production-manifest integration after #47.",
+      "id": "doc.kolvrt.research.cost-l-queries",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Bounded offline projections of COST-L declarations, independent dimensions and explicit production/runtime gaps.",
+          "tags": null,
+          "title": "Офлайн-запросы COST-L"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 115,
+          "path": "docs/research/cost-l-queries.md",
+          "sha256": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
+          "start": 1
+        },
+        "ru": {
+          "end": 115,
+          "path": "translations/ru/docs/research/cost-l-queries.md",
+          "sha256": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
+          "start": 1
+        }
+      },
+      "path": "docs/research/cost-l-queries.md",
+      "schema_version": 1,
+      "summary": "Bounded offline projections of COST-L declarations, independent dimensions and explicit production/runtime gaps.",
+      "title": "Offline COST-L queries"
     },
     "doc.kolvrt.security.threat-model": {
       "document": "doc.kolvrt.security.threat-model",
@@ -3720,6 +3867,93 @@
       "summary": "Historical architecture audit: scope",
       "title": "Scope and result"
     },
+    "kolvrt.cost-l.offline-queries": {
+      "anchor": "kolvrt-cost-l-offline-queries",
+      "depends_on": ["law.009", "law.036", "law.040", "adr.0007", "adr.0008"],
+      "document": "doc.kolvrt.research.cost-l-queries",
+      "document_status": "CURRENT",
+      "estimated_bytes": 2487,
+      "evidence_scope": "bounded host queries over validated registry declarations; issue #48 remains open for production-manifest integration after #47.",
+      "feature": {
+        "acceptance": ["research/results/issue48-cost-l-queries.json"],
+        "adrs": ["adr.0007", "adr.0008"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Host queries over the existing validated registry declarations; no production-manifest or runtime integration.",
+        "issues": [48],
+        "limitations": [
+          "Direct/transitive relations are declarations without reconstructed package paths; current global coverage is UNKNOWN. #47 production-manifest integration and full #48 acceptance remain open."
+        ],
+        "next_gate": "Review and integrate #47 production manifests with bidirectional completeness/version/scope/retirement validation before closing #48.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "COST-L host tooling #48",
+        "sources": [
+          "crates/repository-checks/src/cost_l_queries.rs",
+          "crates/repository-checks/src/cost_l.rs",
+          "crates/repository-checks/src/main.rs",
+          "crates/repository-checks/src/lib.rs",
+          "crates/repository-checks/tests/cost_l_queries.rs",
+          "crates/repository-checks/Cargo.toml",
+          "Cargo.lock",
+          "rust-toolchain.toml",
+          "schemas/cost-l.schema.json",
+          "schemas/cost-l-registry.schema.json",
+          "research/cost-l/registry.json",
+          "research/cost-l/COST-L-0001.json",
+          "research/cost-l/COST-L-0002.json",
+          "research/cost-l/COST-L-0003.json"
+        ],
+        "transitions": [
+          {
+            "acceptance": ["research/results/issue48-cost-l-queries.json"],
+            "from": "UNRECORDED",
+            "reason": "First scoped CLI implementation with exact-source host acceptance; production integration remains gated by #47.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "host-process",
+            "reason": "Five real-binary end-to-end tests and current-registry query passed against these exact declared source digests.",
+            "receipt": "research/results/issue48-cost-l-queries.json",
+            "receipt_sha256": "beeeca5564e1abf20147531a1bd19b25b34063f70a11c9162c5503359cb13fbb",
+            "scope": "Windows host only; synthetic fixtures do not establish production consumers or observed runtime costs.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "This is read-only offline host tooling; no physical kernel behavior is claimed.",
+            "state": "NOT_APPLICABLE"
+          }
+        ]
+      },
+      "id": "kolvrt.cost-l.offline-queries",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Read-only host COST-L show/consumers/deps/list/top with UNKNOWN, exact-scope sorting and pagination.",
+          "tags": null,
+          "title": "Контракт запросов"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 26,
+          "path": "docs/research/cost-l-queries.md",
+          "sha256": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
+          "start": 7
+        },
+        "ru": {
+          "end": 26,
+          "path": "translations/ru/docs/research/cost-l-queries.md",
+          "sha256": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
+          "start": 7
+        }
+      },
+      "path": "docs/research/cost-l-queries.md",
+      "summary": "Read-only host COST-L show/consumers/deps/list/top with UNKNOWN, exact-scope sorting and pagination.",
+      "title": "Query contract"
+    },
     "kolvrt.docs.navigation": {
       "anchor": "kolvrt-docs-navigation",
       "document": "doc.kolvrt.docs.knowledge",
@@ -3764,7 +3998,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "1a93dd4ecb8dc7f4b6d699bfd5941e73f6dc300440b6b1243837a12ecaa220d0",
+            "receipt_sha256": "c0ee29d1280fd18636329347d251a9297d754fa78ce2e08c305280bc5acaee9c",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -3789,13 +4023,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "7efcfd84167c24c533c83ba9fec17caf56616dd5ff6cb7a0244a5f94ffd25c4b",
+          "sha256": "24ef088d4e0ae437ebe21f1aae30672a974e1ec7f0e3823be045c1e4bc3ef598",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "cc4ab891f8135cefadae47351e68ad466c49a834d9675da0fc83c8f928a683a1",
+          "sha256": "ef11e7c1d1d1e0d7e872f784558b58caed62fd5cf08f114d0871dc1ea0dff4c7",
           "start": 7
         }
       },

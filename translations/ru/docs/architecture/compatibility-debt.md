@@ -62,6 +62,6 @@ cargo test --locked -p repository-checks --test cost_l
 
 Три записи с источниками находятся в CANDIDATE: [allocation context](../../../../research/cost-l/COST-L-0001.json), [sysfs text ABI](../../../../research/cost-l/COST-L-0002.json) и [ioctl layout](../../../../research/cost-l/COST-L-0003.json). Каждая закрепляет документацию Linux v6.12, оставляет исходное introduction и actual consumers/cost неизвестными и не заявляет implemented module. [Seed review](../../research/compatibility/taxonomy.md) также фиксирует deferred/non-debt cases вместо принудительного превращения каждого API в запись.
 
-Foundation реализован локально для issue #46; окончательное подтверждение несовместимости требует evidence #45 и native decisions. Production module manifests/CI, offline queries, runtime accounting, benchmarks, migration и authorized inspection остаются issues #47–#52. Здесь нет Linux Driver Host, hardware survey или публикации личного inventory.
+Foundation реализован локально для issue #46; окончательное подтверждение несовместимости требует evidence #45 и native decisions. [Bounded offline queries](../research/cost-l-queries.md) реализованы над проверенными declarations. Production module manifests/CI (#47), полная manifest integration #48, runtime accounting, benchmarks, migration и authorized inspection (#49–#52) остаются открытыми. Здесь нет Linux Driver Host, hardware survey или публикации личного inventory.
 
 [Английский оригинал](../../../../docs/architecture/compatibility-debt.md)
