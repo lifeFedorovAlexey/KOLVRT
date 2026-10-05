@@ -12,6 +12,9 @@ const derived = new Set([
   "research/results/documentation-knowledge-pilot.json",
   "docs/implementation-impact.json",
 ]);
+/**
+ * Recognize declared host verification without QEMU or applicable physical ARM scope.
+ */
 function isHostOnly(node) {
   const environments =
     node.feature?.verification?.map((v) => v.environment) || [];
@@ -28,6 +31,15 @@ function isHostOnly(node) {
     )
   );
 }
+/**
+ * Compute a conservative waiver from exact source equality and declared ownership.
+ * The graph includes both base/current nodes and prerequisite edges; unknown impact requires the matrix.
+ * @param {string[]} changed Repository-relative changed paths.
+ * @param {object} plan Current kernel/build/runner source inventory.
+ * @param {object} graph Validated combined knowledge graph.
+ * @param {boolean} baseSourcesMatch Whether every plan input matches the reviewed base.
+ * @returns {object} Kernel requirement and inspectable reason; no execution evidence is inferred.
+ */
 function decision(changed, plan, graph, baseSourcesMatch) {
   if (!baseSourcesMatch)
     return {
@@ -98,6 +110,10 @@ function decision(changed, plan, graph, baseSourcesMatch) {
     source_inventory: plan.source_files,
   };
 }
+/**
+ * Compare the real Git base and validated graph, then publish the scheduling decision.
+ * Unavailable base data conservatively requests the full matrix.
+ */
 function main() {
   const [base, planFile, destination] = process.argv.slice(2);
   const plan = JSON.parse(fs.readFileSync(planFile, "utf8"));

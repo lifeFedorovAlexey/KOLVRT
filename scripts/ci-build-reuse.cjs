@@ -6,6 +6,9 @@ const directory = path.resolve("target/ci-build-reuse");
 if (!directory.startsWith(path.resolve("target") + path.sep))
   throw new Error("Build proof boundary mismatch");
 const observations = [];
+/**
+ * Run one real Cargo command and measure invocation wall time; any child failure rejects the experiment.
+ */
 function run(args) {
   const start = process.hrtime.bigint();
   const result = spawnSync(process.env.CARGO || "cargo", args, {
@@ -14,9 +17,19 @@ function run(args) {
   if (result.status !== 0) throw new Error("Build reuse proof command failed");
   return Number(process.hrtime.bigint() - start) / 1e9;
 }
+/**
+ * Clean only the previously boundary-checked dedicated experiment target directory.
+ */
 function clean() {
   run(["clean", "--target-dir", directory]);
 }
+/**
+ * Compile the named positive/negative configuration and retain its actual ELF digest.
+ * @param {string} label Experiment observation label.
+ * @param {boolean} prod Select release PROD instead of diagnostic DEV.
+ * @param {boolean} negative Add the explicit negative-test feature.
+ * @returns {string} SHA-256 of the produced ELF in this same target path.
+ */
 function build(label, prod, negative = false) {
   const features = [
     "kernel-tests",

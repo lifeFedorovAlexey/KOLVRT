@@ -1,14 +1,27 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
+/**
+ * Convert valid ordered API timestamps to wall seconds; unavailable/reversed data stays null.
+ */
 function seconds(start, end) {
   const value = (Date.parse(end) - Date.parse(start)) / 1000;
   return Number.isFinite(value) && value >= 0 ? value : null;
 }
 
+/**
+ * Sum job durations along the longest declared dependency path, excluding runner queues.
+ * @param {Object<string, number>} durations Nonnegative duration by job ID.
+ * @param {Object<string, string[]>} dependencies Required predecessors by job ID.
+ * @returns {number} Longest declared path duration.
+ * @throws {Error} Missing durations or dependency cycles.
+ */
 function criticalPath(durations, dependencies) {
   const memo = new Map(),
     active = new Set();
+  /**
+   * Memoize one dependency-path duration while detecting cycles in the active traversal.
+   */
   function visit(id) {
     if (memo.has(id)) return memo.get(id);
     if (active.has(id)) throw new Error("CI dependency cycle");
@@ -24,6 +37,10 @@ function criticalPath(durations, dependencies) {
   return Math.max(0, ...Object.keys(durations).map(visit));
 }
 
+/**
+ * Retain completed-run identities, step outcomes and available wall times.
+ * Nested Cargo/QEMU attribution cannot be recovered from API timestamps alone.
+ */
 function snapshot(run, jobs) {
   if (run.status !== "completed") throw new Error("Run must be completed");
   const steps = jobs.flatMap((job) =>
@@ -62,6 +79,9 @@ function snapshot(run, jobs) {
   };
 }
 
+/**
+ * Interpret only the known serial/sharded foundation graphs; unfamiliar shapes stay null.
+ */
 function dagDuration(jobs) {
   const completed = jobs.filter((job) => job.conclusion !== "skipped");
   const durations = {};
@@ -103,6 +123,9 @@ function dagDuration(jobs) {
   return criticalPath(durations, dependencies);
 }
 
+/**
+ * Recognize the authored full kernel-130-v1 comparison mapping; host-only/unknown graphs stay unclassified.
+ */
 function kernelInventory(run, jobs) {
   if (run.name !== "Kernel foundation") return null;
   const names = jobs.flatMap((job) =>
@@ -146,6 +169,9 @@ function kernelInventory(run, jobs) {
   return null;
 }
 
+/**
+ * Describe the exact workflow/event and ordered job-step/runner graph for repeat comparison.
+ */
 function signature(run) {
   return JSON.stringify([
     run.workflow_id,
@@ -154,6 +180,15 @@ function signature(run) {
   ]);
 }
 
+/**
+ * Compare against at least three distinct successful compatible baseline runs.
+ * Mapped graph comparison is descriptive and explicitly scoped; it is not paired speed inference.
+ * @param {object} current Completed current-run snapshot.
+ * @param {object[]} baselines Retained baseline snapshots.
+ * @param {boolean} sameSource Require identical source SHA for repeat runs.
+ * @param {boolean} mappedInventory Allow the authored full-inventory graph mapping.
+ * @returns {object} Comparison state, baseline identities and median/delta when available.
+ */
 function compare(
   current,
   baselines,
@@ -204,6 +239,9 @@ function compare(
   };
 }
 
+/**
+ * Render the top five wall-time steps and attribution limits, escaping API-provided labels.
+ */
 function markdown(report) {
   const escape = (text) => String(text).replace(/[|\r\n`<>]/g, " ");
   const rows = [...report.current.steps]
@@ -231,10 +269,22 @@ function markdown(report) {
   ].join("\n");
 }
 
+/**
+ * Fetch completed-run steps and successful same-SHA candidates from GitHub Actions.
+ * @param {string} repository Validated OWNER/REPO identity.
+ * @param {string|number} runId Numeric run ID.
+ * @param {string} token Read-only Actions token, never included in reports.
+ * @param {Function} request Injectable fetch-compatible transport.
+ * @returns {Promise<object>} Retained current/baseline observations and comparison.
+ * @throws {Error} Invalid identities, incomplete runs or failed API requests.
+ */
 async function collect(repository, runId, token, request = fetch) {
   if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository))
     throw new Error("Invalid repository");
   if (!/^\d+$/.test(String(runId))) throw new Error("Invalid run ID");
+  /**
+   * Fetch one validated-repository API endpoint; HTTP failures remain visible and reject collection.
+   */
   async function get(endpoint) {
     const response = await request(
       `https://api.github.com/repos/${repository}/${endpoint}`,
@@ -250,6 +300,9 @@ async function collect(repository, runId, token, request = fetch) {
       throw new Error(`GitHub timing API failed: ${response.status}`);
     return response.json();
   }
+  /**
+   * Fetch every page of jobs for the recorded run attempt before producing a snapshot.
+   */
   async function load(run) {
     const jobs = [];
     for (let page = 1; ; page++) {
@@ -279,6 +332,9 @@ async function collect(repository, runId, token, request = fetch) {
   };
 }
 
+/**
+ * Collect reports and optionally compare the retained baseline; write JSON/Markdown and the check summary.
+ */
 async function main() {
   const [repository, runId, destination, baselineFile] = process.argv.slice(2);
   if (!repository || !runId || !destination || !process.env.GITHUB_TOKEN)

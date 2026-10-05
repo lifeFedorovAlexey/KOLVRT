@@ -8,8 +8,17 @@ const roots = [
   "target/ci-tools/cargo-deny/bin",
 ];
 
+/**
+ * Hash every regular file under the closed compiled-cache roots.
+ * Missing roots are allowed; symlinks and paths escaping the workspace fail.
+ * @param {string} workspace Absolute checkout root.
+ * @returns {Object<string, string>} Relative path to SHA-256 mapping.
+ */
 function inventory(workspace) {
   const entries = {};
+  /**
+   * Visit one cache path without following symlinks or leaving the checkout.
+   */
   function walk(relative) {
     const absolute = path.resolve(workspace, relative);
     const boundary = path.resolve(workspace) + path.sep;
@@ -32,6 +41,12 @@ function inventory(workspace) {
   return entries;
 }
 
+/**
+ * Reject malformed manifests, missing/extra files or changed bytes.
+ * The manifest checks consistency within the cache trust boundary, not origin authentication.
+ * @param {object} expected Recorded schema-v1 manifest.
+ * @param {Object<string, string>} actual Fresh file inventory.
+ */
 function verify(expected, actual) {
   if (
     expected.schema_version !== 1 ||
@@ -50,6 +65,9 @@ function verify(expected, actual) {
     );
 }
 
+/**
+ * Record or verify the compiled inventory selected by the CLI; failures exit nonzero.
+ */
 function main() {
   const [mode, manifest] = process.argv.slice(2);
   if (!["record", "verify"].includes(mode) || !manifest)

@@ -2,6 +2,15 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 
+/**
+ * Merge only a complete, disjoint partition of the independently generated plan.
+ * Every observation must match its profile/features, ELF hash and pinned QEMU arguments.
+ * @param {object} expected Current exact-source task/configuration plan.
+ * @param {object[]} receipts Actual shard receipts from this workflow run.
+ * @param {number} count Required number of distinct shards.
+ * @returns {object} Complete ordered execution receipt.
+ * @throws {Error} Missing, duplicated, failed or incompatible evidence.
+ */
 function aggregate(expected, receipts, count = 4) {
   if (
     receipts.length !== count ||
@@ -74,6 +83,9 @@ function aggregate(expected, receipts, count = 4) {
   };
 }
 
+/**
+ * Locate shard JSON files recursively in the downloaded current-run artifact tree.
+ */
 function findReceipts(directory) {
   const files = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -83,9 +95,15 @@ function findReceipts(directory) {
   }
   return files;
 }
+/**
+ * Read UTF-8 JSON; I/O and JSON syntax errors propagate to the failing CLI.
+ */
 function read(file) {
   return JSON.parse(fs.readFileSync(file, "utf8"));
 }
+/**
+ * Verify current source digests, aggregate all shards and write a complete receipt.
+ */
 function main() {
   const [planFile, directory, destination] = process.argv.slice(2);
   const expected = read(planFile);

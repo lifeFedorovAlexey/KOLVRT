@@ -68,49 +68,49 @@
     {
       "path": "scripts/cache-integrity.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "abe5ebfe0d70487c266602baadd5910cc7bd2c22a2323e646c908d233dc6430a",
+      "after_sha256_lf": "f42cb71b34c3859e05db7c58f18908841b22a0a6b9493959967191a530dba365",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": "scripts/ci-build-reuse.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "32baf0f2124bdd91ab36efe522df3cd586883309cf3c089765b33d867f8615a9",
+      "after_sha256_lf": "c8d9f3e7da672a71f04a1ca6f4dc68a9ec7d32914bccf63b32cab602512b2767",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": "scripts/ci-evidence.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "0ea6820ec21d4619d634dc3a2ffcde9533cb3940d5cb25d76f2d08fd8eeb2fba",
+      "after_sha256_lf": "a74e61a7bfd4c6736a46ebd2b4f15cc7182944ceacd2add41ed9eb0c2e3d9b97",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": "scripts/ci-gate.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "e4992575fcc481449f60d060362961be1a656c73f2b71fbb7533a2e6a9686805",
+      "after_sha256_lf": "d561264643eb2052f30d2225722860d656c5cd291cc67ed0255d06bc30b415fc",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": "scripts/ci-impact.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "59ecc5b23d1548ea4d2c249bdeeca0bb2f129f13318c9a46b974f03035d3879b",
+      "after_sha256_lf": "76df8cacf98947a359352930d67b50a61c456eb0442b08482e3f89933cb577a5",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": "scripts/ci-observations.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "62d470bee8c194e07d0b13e3fd4780c37e87ad51cd69fc44cbd5349655bf11d3",
+      "after_sha256_lf": "83175acd9e5b11910e2a4d7d38fbd12f5df14b5d68fbc528e62a2f81ec9d37fb",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": "scripts/ci-timings.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "a313deefe9ab489175f2fb9a6ebe4b6dbe4d8ee48df238810a8df928be9fb6a2",
+      "after_sha256_lf": "d5ac2e3e6a4741b7827f8d0422af42cc031e9b80a4dbfa2795491c872e164def",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
