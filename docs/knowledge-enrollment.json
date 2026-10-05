@@ -27,6 +27,7 @@
     "docs/architecture-decisions/0024-documentation-knowledge.md",
     "docs/architecture-decisions/0025-bounded-native-ipc.md",
     "docs/architecture/architecture-audit-2026-10-04.md",
+    "docs/architecture/arena-measurement-contract.md",
     "docs/architecture/benchmarking.md",
     "docs/architecture/component-arena.md",
     "docs/architecture/first-native-slice.md",
@@ -46,6 +47,7 @@
     "docs/kernel/wait.md",
     "docs/knowledge-system.md",
     "docs/research/cost-l-queries.md",
+    "docs/research/host-survey.md",
     "docs/research/phase-0-1-report.md",
     "docs/security/threat-model.md",
     "research/linux/memory-allocation.md"

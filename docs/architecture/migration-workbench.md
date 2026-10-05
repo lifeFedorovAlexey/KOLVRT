@@ -4,6 +4,13 @@ The [workbench](../../crates/migration-workbench/src/main.rs) executes a contain
 
 ## Workload and execution
 
+Current workload receipts use protocol `physical-host-process-library-v11` and encode
+peak memory as a typed available/unavailable result. Contract-only execution records
+`not_evaluated`; a platform without a collector records `unsupported_platform`; OS
+measurement failures remain errors. A measured pair requires available peak-memory
+measurements on both paths and rejects their absence. Historical receipts retain their
+original encoding and do not establish execution of this protocol revision.
+
 Two immutable, separately hashed fixture executables implement the same [window workload](../../crates/migration-workbench/src/lib.rs). Both reduce identical windows over an immutable 256-word dataset and check every sum and word count. The old client sends LE16 inclusive endpoints through the real versioned adapter; the candidate sends a native half-open Span through the real routing library. No artificial delays or different safety/resource rules favor either route.
 
 Both executables run the routing conformance suite and the workload's empty/result checks. Measurements start after contract checks and warmup. Each warmup batch has 5000 operations; retain 3..20 batches and declare stabilization when the last three durations differ by no more than 20% of the minimum. Failed stabilization remains in the evidence and invalidates recommendation; it is never silently set to true. Each retained sample is one 50000-operation batch. The primary metric is whole-batch wall latency excluding process launch, contracts and warmup, including the same consumer/oracle work on both paths.

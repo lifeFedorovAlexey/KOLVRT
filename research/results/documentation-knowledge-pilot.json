@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 49670,
-  "catalog_bytes": 72217,
-  "catalog_nodes": 183,
+  "approximate_tokens": 47748,
+  "catalog_bytes": 64608,
+  "catalog_nodes": 161,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "d3aa039a59f7f999b3aca2b1e1b9b71ef0287779299943862d6968984b01500b",
+  "catalog_sha256": "3e8526583929ab8560a9d9857ec261e113c610f4317bdeeec48666d5196df2e8",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 198680,
+  "context_plus_catalog_bytes": 190992,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 93,
-    "utf8_bytes": 736008
+    "documents": 91,
+    "utf8_bytes": 696061
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -24,7 +24,6 @@
     "affected": [
       "kolvrt.handles.identity",
       "kolvrt.handles.local",
-      "kolvrt.ipc.transport",
       "kolvrt.security.capability-revocation",
       "kolvrt.security.domains",
       "kolvrt.security.event-revocation",
@@ -51,14 +50,14 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 126463,
+  "rendered_context_bytes": 126384,
   "russian_pilot": {
-    "approximate_tokens": 76505,
-    "catalog_bytes": 72217,
-    "context_plus_navigation_bytes": 306019,
+    "approximate_tokens": 73398,
+    "catalog_bytes": 64608,
+    "context_plus_navigation_bytes": 293591,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 40201,
+    "localized_navigation_bytes": 35461,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -70,7 +69,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 193601,
+    "rendered_context_bytes": 193522,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -122,9 +121,7 @@
     ]
   },
   "schema_version": 1,
-  "seeds": [
-    "kolvrt.security.capability-revocation"
-  ],
+  "seeds": ["kolvrt.security.capability-revocation"],
   "selected": [
     {
       "id": "adr.0013",
@@ -320,7 +317,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "e6ae12f8f561ea8c6fe6f5688c9ae950ad2c6d37c6ab1dc2b950199c9a12da0a",
+        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
         "start": 13
       }
     },
@@ -329,7 +326,7 @@
       "location": {
         "end": 82,
         "path": "docs/kernel/processes.md",
-        "sha256": "e6ae12f8f561ea8c6fe6f5688c9ae950ad2c6d37c6ab1dc2b950199c9a12da0a",
+        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
         "start": 58
       }
     },
@@ -338,7 +335,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "f9d2da4363e92db3589f717100d159b4a48ddc61c87a86173d787f8fea2afbac",
+        "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
         "start": 7
       }
     },
@@ -392,7 +389,7 @@
       "location": {
         "end": 176,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "f9d2da4363e92db3589f717100d159b4a48ddc61c87a86173d787f8fea2afbac",
+        "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
         "start": 17
       }
     },
@@ -516,7 +513,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 189125
+    "utf8_bytes": 189998
   },
   "source_files": [
     {

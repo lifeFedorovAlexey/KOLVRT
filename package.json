@@ -8,7 +8,7 @@
     "format": "prettier --write . && taplo format && cargo fmt --all",
     "format:check": "prettier --check . && taplo format --check && cargo fmt --all -- --check",
     "lint": "markdownlint-cli2 && taplo lint --no-schema && cargo clippy --locked --all-targets -- -D warnings",
-    "test:research": "node --test scripts/tests/linux-driver-apis.test.cjs",
+    "test:research": "node --test scripts/tests/linux-driver-apis.test.cjs scripts/tests/host-survey.test.cjs",
     "check": "npm run format:check && npm run lint && npm run test:research && cargo test --locked && cargo run --locked -p native-state-models -- --check && cargo run --locked -p repository-checks -- check"
   },
   "devDependencies": {

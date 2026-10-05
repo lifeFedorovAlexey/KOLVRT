@@ -252,20 +252,38 @@ pub fn exercise(
         )
         .err()
         .is_some_and(|f| f.error == Error::InvalidImage);
-    let denied_process = create(registry, p, spec(0, MODE_DENIED_CREATE, EXIT_CODE));
+    let mut denied_spec = spec(0, MODE_DENIED_CREATE, EXIT_CODE);
+    // Retain an in-kernel bound on this trusted probe's timer admissions.
+    // Exhaustion is still a failed probe, never an accepted authority result.
+    denied_spec.slice_limit = Some(SPIN_BUDGET);
+    let denied_process = create(registry, p, denied_spec);
     registry.start(denied_process).unwrap();
-    registry.dispatch(Some(VERIFY_TIMEOUT));
-    report(
-        "process_authority_boundary",
-        denied
-            && invalid
-            && registry.completion(denied_process).unwrap().reason
-                == Reason::Faulted {
-                    class: ESR_SVC64,
-                    address: 0,
-                }
-            && registry.live() == 1,
-    );
+    // This finite probe must reach the unsupported SVC. Expiring a verifier
+    // deadline first tests elapsed host/QEMU time rather than authority. The
+    // external QEMU runner still bounds a hung probe; scheduling deadlines and
+    // workload slice budgets retain their own independent enforcement.
+    registry.dispatch(None);
+    let denied_reason = registry.completion(denied_process).unwrap().reason;
+    let live = registry.live();
+    let authority_passed = denied
+        && invalid
+        && denied_reason
+            == Reason::Faulted {
+                class: ESR_SVC64,
+                address: 0,
+            }
+        && live == 1;
+    #[cfg(feature = "diagnostics")]
+    if !authority_passed {
+        crate::diagnostics::status(
+            "DEBUG",
+            "process-authority",
+            format_args!(
+                "origin_denied={denied} invalid_image_rejected={invalid} completion={denied_reason:?} live={live}"
+            ),
+        );
+    }
+    report("process_authority_boundary", authority_passed);
     registry.reclaim(p, denied_process).unwrap();
     // Secondary-only work proves empty CPU0 queues and fixed owner execution.
     let sparse = create(

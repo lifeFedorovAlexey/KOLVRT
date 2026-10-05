@@ -1,7 +1,7 @@
 # KOLVRT Arena — Replaceable Component Arena / Performance & Reliability Passports
 
-Document status: DESIGN BASELINE
-Evidence scope: architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.
+Document status: CURRENT
+Evidence scope: experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.
 Current reference: [Benchmark methodology](benchmarking.md); [ADR-0006](../architecture-decisions/0006-metrics.md)
 
 <a name="kolvrt-arena-scope"></a>
@@ -42,7 +42,7 @@ Predeclare workload-specific correctness, security, soak and tail-latency gates 
 
 ## Implementation passports
 
-Passports describe one implementation in a particular contract, suite, workload, profile and platform cohort. Every metric carries units, scope, collection method and evidence references. Publish all three passports together.
+Passports describe one implementation in a particular contract, suite, workload, profile and platform cohort. Every metric carries units, scope, collection method and evidence references. Publish all PERF/SEC/REL/RES dimensions together.
 
 | Passport             | Required dimensions                                                                                                                                                                                                                      |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -90,17 +90,21 @@ Arena evidence supports a migration decision; it does not authorize deployment o
 
 ## Roadmap direction and acceptance gates
 
-Track **Replaceable Component Arena / Performance & Reliability Passports** as a distinct roadmap direction alongside the measurement and reliability work identified as #32–#36. This document does not assign a new issue number or claim those issues are complete. Sequence follows current architectural decisions, not whichever prototype was built first.
+Track **Replaceable Component Arena / Performance & Reliability Passports** as a distinct roadmap direction alongside the measurement and reliability work identified as #32–#36. The shared contract is tracked by #93; #32–#36 own real pipelines and remain open. Sequence follows current architectural decisions, not whichever prototype was built first.
 
 1. Define contract and suite ownership/versioning for the first real component family. Review inputs, outputs, authority, lifetime and failures; provide shared correctness and negative controls before admitting candidates.
 2. Design versioned passport and receipt schemas with explicit unknown/status handling. Validate evidence links, units, cohort compatibility and rejected/missing measurements; retain raw artifacts and reproducible recipes.
-3. Build a bounded runner and paired comparison only when two real comparable implementations exist, as required by the benchmark methodology. Demonstrate a rerun and rejection of weakened checks, failed soak and incompatible cohorts.
+3. Build standalone useful mechanism measurement with an oracle; add paired comparison only when two real comparable implementations exist, as required by the benchmark methodology. Demonstrate a rerun and rejection of weakened checks, failed soak and incompatible cohorts.
 4. Publish a multidimensional report and scoped leaderboard. Keep failures visible, reject universal scoring, show uncertainty and test that a good median cannot bypass admission gates.
 5. Connect actual adapter/native comparisons to COST-L records with attribution and preserved semantics. Expand to other component families and physical ARM64 only with their own reviewed contracts and evidence.
 
 Initial delivery is host tooling and reviewed build-time substitution. Production switching, a public plugin ABI and an online ranking service require separate architectural decisions and evidence. Current kernel tests and measurement receipts remain scoped to their original milestones; they do not become Arena passports automatically.
 
 [Russian translation](../../translations/ru/docs/architecture/component-arena.md)
+
+## Measurement contract foundation
+
+Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the standards-based Arena model A0–A5. The [measurement contract](arena-measurement-contract.md) now implements closed registry/profile/import schemas and offline comparison/admission through cargo xtask arena. This is experimental host tooling, not an executed kernel passport or record service. PERF/SEC/REL/RES remain separate dimensions; SEC uses TOE/SPD/SFR/SAR, not a security score. #32–#36 and #50 own their real pipelines.
 
 <!-- knowledge -->
 
@@ -115,7 +119,7 @@ Initial delivery is host tooling and reviewed build-time substitution. Productio
       "id": "kolvrt.arena",
       "anchor": "kolvrt-arena-scope",
       "kind": "feature",
-      "summary": "Planned replaceable-component Arena and its architecture boundary.",
+      "summary": "Experimental offline Arena contract validation; real measurement and record gates remain open.",
       "depends_on": [
         "kolvrt.arena.contract",
         "kolvrt.arena.admission",
@@ -125,29 +129,50 @@ Initial delivery is host tooling and reviewed build-time substitution. Productio
         "kolvrt.arena.cost-l",
         "kolvrt.arena.roadmap",
         "adr.0006",
-        "doc.kolvrt.architecture.benchmarking"
+        "doc.kolvrt.architecture.benchmarking",
+        "doc.kolvrt.arena.measurement-contract"
       ],
       "tags": ["arena", "passports", "components"],
       "read_when": ["compare replaceable components Arena"],
       "gaps": [
-        "Arena runner, passport schemas and leaderboard are not implemented or measured."
+        "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
       ],
       "feature": {
-        "implementation": "PLANNED",
-        "implementation_scope": "Design baseline for replaceable component contracts, passports and reproducible comparisons; no Arena runtime tooling exists.",
-        "sources": [],
-        "acceptance": [],
-        "issues": [],
-        "adrs": ["adr.0006"],
-        "limitations": [
-          "No implemented runner, versioned passport schema, eligible leaderboard, measured Arena comparisons or physical ARM64 acceptance."
+        "implementation": "EXPERIMENTAL",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates; no kernel benchmark runner or records publication.",
+        "sources": [
+          "crates/repository-checks/src/arena.rs",
+          "crates/repository-checks/tests/arena.rs",
+          "schemas/arena-standards.schema.json",
+          "schemas/arena-profile.schema.json",
+          "schemas/arena-run.schema.json",
+          "research/arena/standards.json",
+          "research/arena/profiles/user-copy-range.json",
+          "crates/repository-checks/src/main.rs",
+          "crates/repository-checks/src/lib.rs",
+          "crates/xtask/src/main.rs",
+          "scripts/run-arena.ps1",
+          "crates/repository-checks/tests/arena_launcher.rs"
         ],
-        "next_gate": "Review contract and common suite ownership/versioning for the first real component family before designing schemas and a bounded runner.",
+        "acceptance": [
+          "research/results/arena-foundation-host.json",
+          "research/results/arena-foundation-host-final.json",
+          "research/results/arena-launcher-host.json"
+        ],
+        "issues": [93, 32, 33, 34, 35, 36, 50],
+        "adrs": ["adr.0006", "adr.0003", "adr.0024"],
+        "limitations": [
+          "Producer assertions are not attestation; record_eligible is always false. The proposed range profile and synthetic tests do not establish kernel PERF/SEC acceptance, DEV attribution, PROD external outcomes or physical ARM64 performance."
+        ],
+        "next_gate": "Review source mappings and implement the first real kernel mechanism pipeline in #32; independently verify execution/applicability before records.",
         "verification": [
           {
             "environment": "host-process",
-            "state": "UNKNOWN",
-            "reason": "No Arena implementation or execution receipt exists."
+            "state": "VERIFIED",
+            "reason": "Executed 17 Arena and 3 launcher tests plus the actual launch script on these exact source bytes; offline host scope only.",
+            "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
+            "receipt": "research/results/arena-launcher-host.json",
+            "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be"
           },
           {
             "environment": "physical-arm64",
@@ -161,6 +186,12 @@ Initial delivery is host tooling and reviewed build-time substitution. Productio
             "from": "UNRECORDED",
             "to": "PLANNED",
             "reason": "Enroll the existing Arena design baseline without claiming implementation or execution.",
+            "acceptance": []
+          },
+          {
+            "from": "PLANNED",
+            "to": "EXPERIMENTAL",
+            "reason": "Introduce the offline standards/profile/import contract foundation for #93; complete Arena runtime and records acceptance remains open.",
             "acceptance": []
           }
         ],

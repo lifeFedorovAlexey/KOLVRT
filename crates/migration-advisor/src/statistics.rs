@@ -112,6 +112,57 @@ pub struct ResourceComparison {
     pub baseline: ResourceDistribution,
     pub candidate: ResourceDistribution,
 }
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(tag = "state", rename_all = "snake_case")]
+pub enum Measurement<T> {
+    Available { value: T },
+    Unavailable { reason: MeasurementUnavailable },
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(tag = "cause", rename_all = "snake_case")]
+pub enum MeasurementUnavailable {
+    NoObservations,
+    MissingObservations { baseline: usize, candidate: usize },
+}
+
+impl<T> Measurement<T> {
+    pub fn available(&self) -> Option<&T> {
+        match self {
+            Self::Available { value } => Some(value),
+            Self::Unavailable { .. } => None,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+#[serde(tag = "state", rename_all = "snake_case")]
+pub enum BudgetAssessment {
+    Passed,
+    Failed,
+    NotEvaluated { reason: BudgetNotEvaluated },
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum BudgetNotEvaluated {
+    BudgetNotConfigured,
+    MeasurementUnavailable,
+    InsufficientTailSamples,
+}
+
+impl BudgetAssessment {
+    fn required_evidence_missing(self) -> bool {
+        matches!(
+            self,
+            Self::NotEvaluated {
+                reason: BudgetNotEvaluated::MeasurementUnavailable
+                    | BudgetNotEvaluated::InsufficientTailSamples
+            }
+        )
+    }
+}
 #[derive(Clone, Debug, Serialize)]
 pub struct Statistics {
     pub paired_runs: usize,
@@ -126,10 +177,15 @@ pub struct Statistics {
     pub candidate: Distribution,
     /// Descriptive quantiles over retained request samples; no request-level independence
     /// or confidence interval is inferred from these observations.
-    pub request_latency: Option<RequestLatencyComparison>,
-    pub memory_bytes: Option<ResourceComparison>,
-    pub copied_bytes: Option<ResourceComparison>,
-    pub energy_uj: Option<ResourceComparison>,
+    pub request_latency: Measurement<RequestLatencyComparison>,
+    pub memory_bytes: Measurement<ResourceComparison>,
+    pub copied_bytes: Measurement<ResourceComparison>,
+    pub energy_uj: Measurement<ResourceComparison>,
+    pub p95_within_budget: BudgetAssessment,
+    pub p99_within_budget: BudgetAssessment,
+    pub memory_within_budget: BudgetAssessment,
+    pub copied_bytes_within_budget: BudgetAssessment,
+    pub energy_within_budget: BudgetAssessment,
     pub consumer_resources: Vec<ConsumerResourceAssessment>,
     pub mean_gain_ns: f64,
     pub mean_gain_fraction: f64,
@@ -152,12 +208,12 @@ pub struct RequestLatencyComparison {
 #[derive(Clone, Debug, Serialize)]
 pub struct ConsumerResourceAssessment {
     pub consumer_id: String,
-    pub memory_bytes: Option<ResourceComparison>,
-    pub copied_bytes: Option<ResourceComparison>,
-    pub energy_uj: Option<ResourceComparison>,
-    pub memory_within_budget: Option<bool>,
-    pub copied_bytes_within_budget: Option<bool>,
-    pub energy_within_budget: Option<bool>,
+    pub memory_bytes: Measurement<ResourceComparison>,
+    pub copied_bytes: Measurement<ResourceComparison>,
+    pub energy_uj: Measurement<ResourceComparison>,
+    pub memory_within_budget: BudgetAssessment,
+    pub copied_bytes_within_budget: BudgetAssessment,
+    pub energy_within_budget: BudgetAssessment,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -253,13 +309,17 @@ fn request_latency_distribution(mut values: Vec<u64>) -> Distribution {
     }
 }
 
-fn request_latency_comparison(pairs: &[Pair]) -> Result<Option<RequestLatencyComparison>, String> {
+fn request_latency_comparison(
+    pairs: &[Pair],
+) -> Result<Measurement<RequestLatencyComparison>, String> {
     let present = pairs
         .iter()
         .filter(|pair| pair.request_latency.is_some())
         .count();
     if present == 0 {
-        return Ok(None);
+        return Ok(Measurement::Unavailable {
+            reason: MeasurementUnavailable::NoObservations,
+        });
     }
     if present != pairs.len() {
         return Err("request latency samples are incomplete across paired runs".into());
@@ -291,13 +351,15 @@ fn request_latency_comparison(pairs: &[Pair]) -> Result<Option<RequestLatencyCom
         baseline.extend_from_slice(&sample.baseline_ns);
         candidate.extend_from_slice(&sample.candidate_ns);
     }
-    Ok(Some(RequestLatencyComparison {
-        sample_stride: stride,
-        sample_width: width,
-        sampled_groups_per_path: baseline.len(),
-        baseline: request_latency_distribution(baseline),
-        candidate: request_latency_distribution(candidate),
-    }))
+    Ok(Measurement::Available {
+        value: RequestLatencyComparison {
+            sample_stride: stride,
+            sample_width: width,
+            sampled_groups_per_path: baseline.len(),
+            baseline: request_latency_distribution(baseline),
+            candidate: request_latency_distribution(candidate),
+        },
+    })
 }
 
 fn resource_distribution(mut values: Vec<u64>, effective_units: usize) -> ResourceDistribution {
@@ -315,34 +377,120 @@ fn resource_comparison(
     baseline: impl Fn(&Pair) -> Option<u64>,
     candidate: impl Fn(&Pair) -> Option<u64>,
     effective_units: usize,
-) -> Option<ResourceComparison> {
-    let baseline_values: Option<Vec<_>> = pairs.iter().map(baseline).collect();
-    let candidate_values: Option<Vec<_>> = pairs.iter().map(candidate).collect();
-    Some(ResourceComparison {
-        baseline: resource_distribution(baseline_values?, effective_units),
-        candidate: resource_distribution(candidate_values?, effective_units),
-    })
+) -> Measurement<ResourceComparison> {
+    if pairs.is_empty() {
+        return Measurement::Unavailable {
+            reason: MeasurementUnavailable::NoObservations,
+        };
+    }
+    let baseline_missing = pairs.iter().filter(|pair| baseline(pair).is_none()).count();
+    let candidate_missing = pairs
+        .iter()
+        .filter(|pair| candidate(pair).is_none())
+        .count();
+    if baseline_missing > 0 || candidate_missing > 0 {
+        return Measurement::Unavailable {
+            reason: MeasurementUnavailable::MissingObservations {
+                baseline: baseline_missing,
+                candidate: candidate_missing,
+            },
+        };
+    }
+    Measurement::Available {
+        value: ResourceComparison {
+            baseline: resource_distribution(
+                pairs.iter().map(|pair| baseline(pair).unwrap()).collect(),
+                effective_units,
+            ),
+            candidate: resource_distribution(
+                pairs.iter().map(|pair| candidate(pair).unwrap()).collect(),
+                effective_units,
+            ),
+        },
+    }
+}
+
+fn require_resource_measurements<'a>(
+    pairs: impl IntoIterator<Item = &'a Pair>,
+    budgets: [Option<u64>; 3],
+    scope: &str,
+) -> Result<(), String> {
+    for pair in pairs {
+        for (name, budget, baseline, candidate) in [
+            (
+                "memory",
+                budgets[0],
+                pair.baseline_memory_bytes,
+                pair.candidate_memory_bytes,
+            ),
+            (
+                "copied bytes",
+                budgets[1],
+                pair.baseline_copied_bytes,
+                pair.candidate_copied_bytes,
+            ),
+            (
+                "energy",
+                budgets[2],
+                pair.baseline_energy_uj,
+                pair.candidate_energy_uj,
+            ),
+        ] {
+            if budget.is_some() && (baseline.is_none() || candidate.is_none()) {
+                return Err(format!("missing required {name} measurement for {scope}"));
+            }
+        }
+    }
+    Ok(())
 }
 
 fn within_budget(
     comparison: Option<&ResourceComparison>,
     budget: Option<u64>,
     effective_units: usize,
-) -> Option<bool> {
+) -> BudgetAssessment {
     let Some(budget) = budget else {
-        return Some(true);
+        return BudgetAssessment::NotEvaluated {
+            reason: BudgetNotEvaluated::BudgetNotConfigured,
+        };
     };
-    let comparison = comparison?;
+    let Some(comparison) = comparison else {
+        return BudgetAssessment::NotEvaluated {
+            reason: BudgetNotEvaluated::MeasurementUnavailable,
+        };
+    };
     if effective_units < P95_TAIL_MINIMUM {
-        return None;
+        return BudgetAssessment::NotEvaluated {
+            reason: BudgetNotEvaluated::InsufficientTailSamples,
+        };
     }
-    Some(
-        comparison
-            .candidate
-            .p95?
-            .saturating_sub(comparison.baseline.p95?)
-            <= budget,
+    assess_tail(
+        comparison.baseline.p95,
+        comparison.candidate.p95,
+        Some(budget),
     )
+}
+
+fn assess_tail(
+    baseline: Option<u64>,
+    candidate: Option<u64>,
+    budget: Option<u64>,
+) -> BudgetAssessment {
+    let Some(budget) = budget else {
+        return BudgetAssessment::NotEvaluated {
+            reason: BudgetNotEvaluated::BudgetNotConfigured,
+        };
+    };
+    let Some((baseline, candidate)) = baseline.zip(candidate) else {
+        return BudgetAssessment::NotEvaluated {
+            reason: BudgetNotEvaluated::InsufficientTailSamples,
+        };
+    };
+    if candidate.saturating_sub(baseline) <= budget {
+        BudgetAssessment::Passed
+    } else {
+        BudgetAssessment::Failed
+    }
 }
 
 // SplitMix64 provides reproducible resampling, not security entropy. Rejection avoids modulo bias.
@@ -386,6 +534,15 @@ pub fn analyze_family(
     {
         return Err("insufficient resampling blocks or excessive/invalid paired runs".into());
     }
+    require_resource_measurements(
+        pairs,
+        [
+            policy.p95_memory_regression_budget_bytes,
+            policy.p95_copied_bytes_regression_budget,
+            policy.p95_energy_regression_budget_uj,
+        ],
+        "configured budget",
+    )?;
     let request_latency = request_latency_comparison(pairs)?;
     let gains: Vec<_> = pairs
         .iter()
@@ -430,17 +587,16 @@ pub fn analyze_family(
         pairs.iter().map(|p| p.candidate_ns).collect(),
         resampling_blocks,
     );
-    let p95_ok = baseline
-        .p95_ns
-        .zip(candidate.p95_ns)
-        .map(|(a, b)| b.saturating_sub(a) <= policy.p95_regression_budget_ns);
-    let p99_ok = match policy.p99_regression_budget_ns {
-        None => Some(true),
-        Some(budget) => baseline
-            .p99_ns
-            .zip(candidate.p99_ns)
-            .map(|(a, b)| b.saturating_sub(a) <= budget),
-    };
+    let p95_ok = assess_tail(
+        baseline.p95_ns,
+        candidate.p95_ns,
+        Some(policy.p95_regression_budget_ns),
+    );
+    let p99_ok = assess_tail(
+        baseline.p99_ns,
+        candidate.p99_ns,
+        policy.p99_regression_budget_ns,
+    );
     let memory_bytes = resource_comparison(
         pairs,
         |p| p.baseline_memory_bytes,
@@ -460,17 +616,17 @@ pub fn analyze_family(
         resampling_blocks,
     );
     let memory_ok = within_budget(
-        memory_bytes.as_ref(),
+        memory_bytes.available(),
         policy.p95_memory_regression_budget_bytes,
         resampling_blocks,
     );
     let copied_bytes_ok = within_budget(
-        copied_bytes.as_ref(),
+        copied_bytes.available(),
         policy.p95_copied_bytes_regression_budget,
         resampling_blocks,
     );
     let energy_ok = within_budget(
-        energy_uj.as_ref(),
+        energy_uj.available(),
         policy.p95_energy_regression_budget_uj,
         resampling_blocks,
     );
@@ -505,6 +661,30 @@ pub fn analyze_family(
                 whole_block_has_one_listed_consumer && consumer_is_contiguous
             })
     };
+    if !consumer_identity_complete {
+        return Err("missing or invalid required consumer identity/block layout".into());
+    }
+    for budget in &policy.consumer_resource_budgets {
+        let observations: Vec<_> = pairs
+            .iter()
+            .filter(|p| p.consumer_id.as_deref() == Some(&budget.consumer_id))
+            .collect();
+        if observations.is_empty() {
+            return Err(format!(
+                "missing required observations for consumer {}",
+                budget.consumer_id
+            ));
+        }
+        require_resource_measurements(
+            observations.iter().copied(),
+            [
+                budget.p95_memory_regression_budget_bytes,
+                budget.p95_copied_bytes_regression_budget,
+                budget.p95_energy_regression_budget_uj,
+            ],
+            &format!("consumer {}", budget.consumer_id),
+        )?;
+    }
     let consumer_resources: Vec<_> = policy
         .consumer_resource_budgets
         .iter()
@@ -514,16 +694,11 @@ pub fn analyze_family(
                 .filter(|pair| pair.consumer_id.as_deref() == Some(&budget.consumer_id))
                 .cloned()
                 .collect();
-            let complete_blocks = consumer_pairs
-                .len()
-                .is_multiple_of(policy.resampling_block_length);
-            let consumer_blocks = consumer_pairs.len() / policy.resampling_block_length;
-            let effective_units = if complete_blocks { consumer_blocks } else { 0 };
+            // The required identity/block validation above establishes complete blocks.
+            let effective_units = consumer_pairs.len() / policy.resampling_block_length;
             let resource = |baseline: fn(&Pair) -> Option<u64>,
                             candidate: fn(&Pair) -> Option<u64>| {
-                (complete_blocks && !consumer_pairs.is_empty()).then(|| {
-                    resource_comparison(&consumer_pairs, baseline, candidate, effective_units)
-                })?
+                resource_comparison(&consumer_pairs, baseline, candidate, effective_units)
             };
             let memory_bytes = resource(
                 |pair| pair.baseline_memory_bytes,
@@ -540,17 +715,17 @@ pub fn analyze_family(
             ConsumerResourceAssessment {
                 consumer_id: budget.consumer_id.clone(),
                 memory_within_budget: within_budget(
-                    memory_bytes.as_ref(),
+                    memory_bytes.available(),
                     budget.p95_memory_regression_budget_bytes,
                     effective_units,
                 ),
                 copied_bytes_within_budget: within_budget(
-                    copied_bytes.as_ref(),
+                    copied_bytes.available(),
                     budget.p95_copied_bytes_regression_budget,
                     effective_units,
                 ),
                 energy_within_budget: within_budget(
-                    energy_uj.as_ref(),
+                    energy_uj.available(),
                     budget.p95_energy_regression_budget_uj,
                     effective_units,
                 ),
@@ -562,30 +737,32 @@ pub fn analyze_family(
         .collect();
     let consumer_budget_missing = !consumer_identity_complete
         || consumer_resources.iter().any(|assessment| {
-            assessment.memory_within_budget.is_none()
-                || assessment.copied_bytes_within_budget.is_none()
-                || assessment.energy_within_budget.is_none()
+            assessment.memory_within_budget.required_evidence_missing()
+                || assessment
+                    .copied_bytes_within_budget
+                    .required_evidence_missing()
+                || assessment.energy_within_budget.required_evidence_missing()
         });
     let consumer_budget_regression = consumer_resources.iter().any(|assessment| {
-        assessment.memory_within_budget == Some(false)
-            || assessment.copied_bytes_within_budget == Some(false)
-            || assessment.energy_within_budget == Some(false)
+        assessment.memory_within_budget == BudgetAssessment::Failed
+            || assessment.copied_bytes_within_budget == BudgetAssessment::Failed
+            || assessment.energy_within_budget == BudgetAssessment::Failed
     });
     let decision = if comparison_tail_resamples < MIN_COMPARISON_TAIL_RESAMPLES {
         "inadequate_comparison_resolution"
-    } else if p95_ok.is_none() || p99_ok.is_none() {
+    } else if p95_ok.required_evidence_missing() || p99_ok.required_evidence_missing() {
         "insufficient_tail_evidence"
-    } else if memory_ok.is_none()
-        || copied_bytes_ok.is_none()
-        || energy_ok.is_none()
+    } else if memory_ok.required_evidence_missing()
+        || copied_bytes_ok.required_evidence_missing()
+        || energy_ok.required_evidence_missing()
         || consumer_budget_missing
     {
         "insufficient_resource_evidence"
-    } else if p95_ok == Some(false) || p99_ok == Some(false) {
+    } else if p95_ok == BudgetAssessment::Failed || p99_ok == BudgetAssessment::Failed {
         "tail_regression"
-    } else if memory_ok == Some(false)
-        || copied_bytes_ok == Some(false)
-        || energy_ok == Some(false)
+    } else if memory_ok == BudgetAssessment::Failed
+        || copied_bytes_ok == BudgetAssessment::Failed
+        || energy_ok == BudgetAssessment::Failed
         || consumer_budget_regression
     {
         "resource_regression"
@@ -610,6 +787,11 @@ pub fn analyze_family(
         copied_bytes,
         energy_uj,
         consumer_resources,
+        p95_within_budget: p95_ok,
+        p99_within_budget: p99_ok,
+        memory_within_budget: memory_ok,
+        copied_bytes_within_budget: copied_bytes_ok,
+        energy_within_budget: energy_ok,
         mean_gain_ns: mean,
         mean_gain_fraction: mean / baseline_mean,
         gain_interval_ns: interval,

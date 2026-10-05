@@ -1,74 +1,102 @@
 {
   "schema_version": 1,
-  "base_commit": "80ae125a5ba9cf8f9b09dc45f96de81687377323",
+  "base_commit": "0a3a3d69ff2381b6ec922682af03c1fd13e41a23",
   "files": [
     {
-      "path": ".cargo/config.toml",
-      "before_sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6",
-      "after_sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41",
-      "disposition": "no-feature-impact",
-      "reason": "Require warning-free AArch64 compilation in every Cargo build, including machine-event and negative-control configurations. This changes build acceptance only, not kernel runtime or architectural authority."
-    },
-    {
-      "path": "crates/kernel/src/memory/mod.rs",
-      "before_sha256_lf": "2d60ccb3555a412e0d70a6a4deb1968bf0883248c095af5806f316263cd9d7b0",
-      "after_sha256_lf": "138a815965a33980c33f3f0923c62ce914b02f0b087abffab1236d6e8ada7248",
-      "disposition": "no-feature-impact",
-      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. No mappings, accounting, ownership, allocations or runtime observations change in supported payload builds."
-    },
-    {
-      "path": "crates/kernel/src/process.rs",
-      "before_sha256_lf": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
-      "after_sha256_lf": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
+      "path": "crates/repository-checks/src/arena.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
       "disposition": "existing-feature",
-      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. Process identity, state, charges, lifetime and the existing payload observation remain unchanged; domain source verification is explicitly STALE."
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
     },
     {
-      "path": "crates/kernel/src/main.rs",
-      "before_sha256_lf": "1ebc12733c073213f0ea00f03fe957630e516b2a20acc1950ae8a19fd6a34ee8",
-      "after_sha256_lf": "1362087d5ec4701aa54ba017866ced514017b1a3028bc2edd5a29e4c0d3087cd",
-      "disposition": "no-feature-impact",
-      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+      "path": "crates/repository-checks/src/lib.rs",
+      "before_sha256_lf": "b29b711566dd7bef0b5b9fc97bd7aa3251447aab82f12b7c59897783abe5a45e",
+      "after_sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
     },
     {
-      "path": "crates/kernel/src/tests.rs",
-      "before_sha256_lf": "2232acbc22694d35e0726ed42a458d07fbe6c548a61609727732c66b192cf656",
-      "after_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
-      "disposition": "no-feature-impact",
-      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+      "path": "crates/repository-checks/src/main.rs",
+      "before_sha256_lf": "200077845468ae7033d5f9b3ec28fefe48fc7ff432b6ef2ff5b4028d245d3d56",
+      "after_sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
     },
     {
-      "path": "crates/kernel/src/boot_workload.rs",
-      "before_sha256_lf": "fd41700102fc9819ae2069092fb5708cfd0746a57b3afe8276a0f54b3d378de1",
-      "after_sha256_lf": "6b74202e42c957ab2963f1f106be81c24333b94bf932e767b7b2cdf8dff393a9",
-      "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "path": "crates/repository-checks/tests/arena.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
     },
     {
-      "path": "crates/kernel/src/scheduler/local.rs",
-      "before_sha256_lf": "be0cf3b0d5750e0cf3f571026d782d0df42454369cdc55e2e1be61c4a9eba037",
-      "after_sha256_lf": "86f071a62cd3736062741424e43f0183bb6b1bf7e95448aa65be453e2cb41e11",
-      "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "path": "crates/repository-checks/tests/arena_launcher.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "e9c55f7bd1944557dea30761e98d3b78bec0da0370484f13643d263942c13c48",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
     },
     {
-      "path": "crates/kernel/src/scheduler/mod.rs",
-      "before_sha256_lf": "932b14a5442b365f6a23257f8eb70c260af543e6d7719007fdcd84c86882027f",
-      "after_sha256_lf": "025ed1e0f69dc3b1729d5f050b123c6c95c022b257f16b0d2b9150a27517bedd",
-      "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "path": "crates/xtask/src/main.rs",
+      "before_sha256_lf": "e100795dffd676c18feceec446da2546a96037f9e504c0724b04e05e89c016c0",
+      "after_sha256_lf": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+    },
+    {
+      "path": "research/arena/profiles/user-copy-range.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+    },
+    {
+      "path": "research/arena/standards.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+    },
+    {
+      "path": "schemas/arena-profile.schema.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a05437b1b9619d601d5826e17bccafee2ab4b6129a0ce6eb4e2795ecca7b6d99",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+    },
+    {
+      "path": "schemas/arena-run.schema.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "7cc1dae715ba4d452319a0a5c20bf8374aafc7277edfb80887beb9249011ad1c",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+    },
+    {
+      "path": "schemas/arena-standards.schema.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "dbe8d79baae2db350b914f201d388353305d355a99c76e4cdc707a0c03c687fe",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+    },
+    {
+      "path": "scripts/run-arena.ps1",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
+      "disposition": "existing-feature",
+      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
     }
   ],
   "features": [
     {
-      "id": "kolvrt.process.lifecycle",
-      "disposition": "no-impact",
-      "reason": "The optional observation helper is unavailable when there is no boot-payload caller. Lifecycle semantics and historical STALE verification remain unchanged."
+      "id": "kolvrt.arena",
+      "disposition": "semantic-change",
+      "reason": "Advance the existing Arena feature from PLANNED to EXPERIMENTAL for scoped offline contract validation; complete EN/RU contract, limitations, open gates and exact-source host tests are retained."
     },
     {
-      "id": "kolvrt.security.domains",
+      "id": "kolvrt.cost-l.offline-queries",
       "disposition": "evidence-change",
-      "reason": "The compile-time caller gate changes the declared process.rs digest, so historical exact-source QEMU verification is explicitly marked STALE without rewriting its receipt."
+      "reason": "Shared library/CLI dispatcher bytes changed to add Arena commands. Existing COST-L semantics are unchanged; five end-to-end tests and current-registry query produce a fresh exact-source receipt while preserving earlier evidence."
     }
   ]
 }

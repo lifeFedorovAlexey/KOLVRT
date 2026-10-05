@@ -15,6 +15,13 @@ CPU1: secondary_entry -> masked EL1h -> private stack -> FP setup -> native root
 
 CPU1 never clears BSS or initializes shared resources. Cleaning the linked RAM, including tables and boot publication, establishes visibility for its MMU-off entry; coherent atomics apply after native MMU activation. The 64-byte cache line is part of the Cortex-A57 platform pin. CPU_ON and initial-state contracts follow [PSCI DEN0022D](https://documentation-service.arm.com/static/5f905c71f86e16515cdc1fd0?token=), sections 5.6 and 6.4.
 
+Kernel-test builds retain a separate completed-TLBI generation, published only after
+the secondary returns from `DSB; TLBI; DSB; ISB`, before its acknowledgement. The
+`smp_remote_ack` check requires that execution witness for the acknowledged generation.
+The omission control therefore fails even if the old translation disappears for another
+reason; a translation fault alone is not evidence that the maintenance sequence ran.
+This witness is absent from non-test builds and does not replace the hardware fault probe.
+
 ## Ownership and synchronization
 
 | Resource                        | Owner and synchronization                                | Lifetime                                  |

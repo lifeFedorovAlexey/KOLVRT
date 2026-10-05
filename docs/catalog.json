@@ -24,7 +24,6 @@
     "ADR-0022": "adr.0022",
     "ADR-0023": "adr.0023",
     "ADR-0024": "adr.0024",
-    "ADR-0025": "adr.0025",
     "COST-L-0001": "cost-l.0001",
     "COST-L-0002": "cost-l.0002",
     "COST-L-0003": "cost-l.0003",
@@ -77,14 +76,11 @@
     "LAW-040": "law.040",
     "LAW-041": "law.041",
     "LAW-042": "law.042",
-    "LAW-043": "law.043",
-    "kolvrt.ipc": "kolvrt.ipc.transport"
+    "LAW-043": "law.043"
   },
   "entries": [
     {
-      "aliases": [
-        "ADR-0001"
-      ],
+      "aliases": ["ADR-0001"],
       "document": "adr.0001",
       "document_status": "CURRENT",
       "estimated_bytes": 2724,
@@ -92,16 +88,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0001-native-authority.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0001 — Native authority and legacy isolation"
     },
     {
-      "aliases": [
-        "ADR-0002"
-      ],
+      "aliases": ["ADR-0002"],
       "document": "adr.0002",
       "document_status": "CURRENT",
       "estimated_bytes": 3819,
@@ -109,16 +100,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0002-stateful-routing.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0002 — Routing by state domain"
     },
     {
-      "aliases": [
-        "ADR-0003"
-      ],
+      "aliases": ["ADR-0003"],
       "document": "adr.0003",
       "document_status": "CURRENT",
       "estimated_bytes": 1801,
@@ -126,16 +112,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0003-profiles.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0003 — One architecture across execution profiles"
     },
     {
-      "aliases": [
-        "ADR-0004"
-      ],
+      "aliases": ["ADR-0004"],
       "document": "adr.0004",
       "document_status": "CURRENT",
       "estimated_bytes": 1999,
@@ -143,16 +124,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0004-unsafe.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0004 — Safe Rust and audited boundaries"
     },
     {
-      "aliases": [
-        "ADR-0005"
-      ],
+      "aliases": ["ADR-0005"],
       "document": "adr.0005",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 2065,
@@ -160,16 +136,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0005-platform.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0005 — ARM64-first platform contracts"
     },
     {
-      "aliases": [
-        "ADR-0006"
-      ],
+      "aliases": ["ADR-0006"],
       "document": "adr.0006",
       "document_status": "CURRENT",
       "estimated_bytes": 1897,
@@ -177,16 +148,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0006-metrics.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0006 — Dependency measurements and fair comparisons"
     },
     {
-      "aliases": [
-        "ADR-0007"
-      ],
+      "aliases": ["ADR-0007"],
       "document": "adr.0007",
       "document_status": "CURRENT",
       "estimated_bytes": 5710,
@@ -194,16 +160,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0007-bug-compat.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0007 — Bug compatibility and module retirement"
     },
     {
-      "aliases": [
-        "ADR-0008"
-      ],
+      "aliases": ["ADR-0008"],
       "document": "adr.0008",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 4287,
@@ -211,16 +172,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0008-placement.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0008 — Service protection domains"
     },
     {
-      "aliases": [
-        "ADR-0009"
-      ],
+      "aliases": ["ADR-0009"],
       "document": "adr.0009",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 2685,
@@ -228,16 +184,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0009-native-slice-baseline.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0009 — Native slice design baseline"
     },
     {
-      "aliases": [
-        "ADR-0010"
-      ],
+      "aliases": ["ADR-0010"],
       "document": "adr.0010",
       "document_status": "HISTORICAL",
       "estimated_bytes": 3958,
@@ -245,16 +196,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0010-kernel-foundation.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0010 — Native EL1 foundation"
     },
     {
-      "aliases": [
-        "ADR-0011"
-      ],
+      "aliases": ["ADR-0011"],
       "document": "adr.0011",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 2777,
@@ -262,16 +208,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0011-method-review.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0011 — Performance and reliability method review"
     },
     {
-      "aliases": [
-        "ADR-0012"
-      ],
+      "aliases": ["ADR-0012"],
       "document": "adr.0012",
       "document_status": "CURRENT",
       "estimated_bytes": 4047,
@@ -279,16 +220,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0012-multicore-retirement.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0012 — Multicore ownership and acknowledged retirement"
     },
     {
-      "aliases": [
-        "ADR-0013"
-      ],
+      "aliases": ["ADR-0013"],
       "document": "adr.0013",
       "document_status": "CURRENT",
       "estimated_bytes": 5278,
@@ -296,16 +232,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0013-security-boundaries.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0013 — Effective authority and privileged necessity"
     },
     {
-      "aliases": [
-        "ADR-0014"
-      ],
+      "aliases": ["ADR-0014"],
       "document": "adr.0014",
       "document_status": "CURRENT",
       "estimated_bytes": 5035,
@@ -313,16 +244,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0014-el0-foundation.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0014 — Fixed-affinity EL0 execution foundation"
     },
     {
-      "aliases": [
-        "ADR-0015"
-      ],
+      "aliases": ["ADR-0015"],
       "document": "adr.0015",
       "document_status": "CURRENT",
       "estimated_bytes": 15600,
@@ -330,16 +256,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0015-el0-versioned-routing.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0015 — Versioned routing in isolated EL0 consumers"
     },
     {
-      "aliases": [
-        "ADR-0016"
-      ],
+      "aliases": ["ADR-0016"],
       "document": "adr.0016",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 6185,
@@ -347,16 +268,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0016-scheduler-ownership.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0016 — Scheduler responsibilities and enforced per-CPU ownership"
     },
     {
-      "aliases": [
-        "ADR-0017"
-      ],
+      "aliases": ["ADR-0017"],
       "document": "adr.0017",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 7153,
@@ -364,16 +280,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0017-process-lifecycle.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0017 — Generation-safe native process lifecycle"
     },
     {
-      "aliases": [
-        "ADR-0018"
-      ],
+      "aliases": ["ADR-0018"],
       "document": "adr.0018",
       "document_status": "CURRENT",
       "estimated_bytes": 4916,
@@ -381,16 +292,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0018-safe-user-copy.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0018 — Bounded synchronous safe user copy"
     },
     {
-      "aliases": [
-        "ADR-0019"
-      ],
+      "aliases": ["ADR-0019"],
       "document": "adr.0019",
       "document_status": "HISTORICAL",
       "estimated_bytes": 4948,
@@ -398,16 +304,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0019-process-local-handles.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0019 — Linear process-local handle namespaces"
     },
     {
-      "aliases": [
-        "ADR-0020"
-      ],
+      "aliases": ["ADR-0020"],
       "document": "adr.0020",
       "document_status": "CURRENT",
       "estimated_bytes": 6196,
@@ -415,16 +316,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0020-handle-transfer-and-retention.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0020 — Attenuated handle transfer and retained targets"
     },
     {
-      "aliases": [
-        "ADR-0021"
-      ],
+      "aliases": ["ADR-0021"],
       "document": "adr.0021",
       "document_status": "CURRENT",
       "estimated_bytes": 7208,
@@ -432,16 +328,11 @@
       "kind": "adr",
       "path": "docs/architecture-decisions/0021-asid-lifecycle.md",
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0021 — Fixed-affinity AArch64 ASID lifecycle"
     },
     {
-      "aliases": [
-        "ADR-0022"
-      ],
+      "aliases": ["ADR-0022"],
       "document": "adr.0022",
       "document_status": "CURRENT",
       "estimated_bytes": 7084,
@@ -459,9 +350,7 @@
       "title": "ADR-0022 — Bounded native Event grants and revocation"
     },
     {
-      "aliases": [
-        "ADR-0023"
-      ],
+      "aliases": ["ADR-0023"],
       "document": "adr.0023",
       "document_status": "CURRENT",
       "estimated_bytes": 6955,
@@ -479,9 +368,7 @@
       "title": "ADR-0023 — One-process domains and scoped Event grants"
     },
     {
-      "aliases": [
-        "ADR-0024"
-      ],
+      "aliases": ["ADR-0024"],
       "document": "adr.0024",
       "document_status": "CURRENT",
       "estimated_bytes": 3643,
@@ -492,22 +379,7 @@
       "title": "ADR-0024 — Documentation knowledge navigation and feature freshness"
     },
     {
-      "aliases": [
-        "ADR-0025"
-      ],
-      "document": "adr.0025",
-      "document_status": "CURRENT",
-      "estimated_bytes": 8491,
-      "id": "adr.0025",
-      "kind": "adr",
-      "path": "docs/architecture-decisions/0025-bounded-native-ipc.md",
-      "summary": "Bounded native endpoint IPC and retained continuous fixed-affinity execution.",
-      "title": "ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution"
-    },
-    {
-      "aliases": [
-        "KOL-PATH-0001"
-      ],
+      "aliases": ["KOL-PATH-0001"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0001",
       "kind": "research-case",
@@ -517,9 +389,7 @@
       "title": "close(): ошибка после освобождения fd"
     },
     {
-      "aliases": [
-        "KOL-PATH-0002"
-      ],
+      "aliases": ["KOL-PATH-0002"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0002",
       "kind": "research-case",
@@ -529,9 +399,7 @@
       "title": "POSIX locks: любой close снимает блокировки процесса"
     },
     {
-      "aliases": [
-        "KOL-PATH-0003"
-      ],
+      "aliases": ["KOL-PATH-0003"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0003",
       "kind": "research-case",
@@ -541,9 +409,7 @@
       "title": "epoll: dup и lifetime open file description"
     },
     {
-      "aliases": [
-        "KOL-PATH-0004"
-      ],
+      "aliases": ["KOL-PATH-0004"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0004",
       "kind": "research-case",
@@ -553,9 +419,7 @@
       "title": "select: предел fd_set находится в libc"
     },
     {
-      "aliases": [
-        "KOL-PATH-0005"
-      ],
+      "aliases": ["KOL-PATH-0005"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0005",
       "kind": "research-case",
@@ -565,9 +429,7 @@
       "title": "ioctl time32: переход времени через 2038"
     },
     {
-      "aliases": [
-        "KOL-PATH-0006"
-      ],
+      "aliases": ["KOL-PATH-0006"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0006",
       "kind": "research-case",
@@ -577,9 +439,7 @@
       "title": "ioctl: padding, pointers и compat layout"
     },
     {
-      "aliases": [
-        "KOL-PATH-0007"
-      ],
+      "aliases": ["KOL-PATH-0007"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0007",
       "kind": "research-case",
@@ -589,9 +449,7 @@
       "title": "Dirty COW: откат исправления из-за s390"
     },
     {
-      "aliases": [
-        "KOL-PATH-0008"
-      ],
+      "aliases": ["KOL-PATH-0008"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0008",
       "kind": "research-case",
@@ -601,9 +459,7 @@
       "title": "Dirty Pipe: неинициализированные flags буфера"
     },
     {
-      "aliases": [
-        "KOL-PATH-0009"
-      ],
+      "aliases": ["KOL-PATH-0009"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0009",
       "kind": "research-case",
@@ -613,9 +469,7 @@
       "title": "GUP pinning: ссылка не равна DMA lease"
     },
     {
-      "aliases": [
-        "KOL-PATH-0010"
-      ],
+      "aliases": ["KOL-PATH-0010"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0010",
       "kind": "research-case",
@@ -625,9 +479,7 @@
       "title": "Coherent DMA всё равно требует barriers"
     },
     {
-      "aliases": [
-        "KOL-PATH-0011"
-      ],
+      "aliases": ["KOL-PATH-0011"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0011",
       "kind": "research-case",
@@ -637,9 +489,7 @@
       "title": "Cortex-A53 843419: linker workaround"
     },
     {
-      "aliases": [
-        "KOL-PATH-0012"
-      ],
+      "aliases": ["KOL-PATH-0012"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0012",
       "kind": "research-case",
@@ -649,9 +499,7 @@
       "title": "Device Tree bindings — внешний ABI"
     },
     {
-      "aliases": [
-        "KOL-PATH-0013"
-      ],
+      "aliases": ["KOL-PATH-0013"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0013",
       "kind": "research-case",
@@ -661,9 +509,7 @@
       "title": "ACPI _OSI: идентичность ОС вместо capability"
     },
     {
-      "aliases": [
-        "KOL-PATH-0014"
-      ],
+      "aliases": ["KOL-PATH-0014"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0014",
       "kind": "research-case",
@@ -673,9 +519,7 @@
       "title": "USB persist: descriptors не доказывают идентичность"
     },
     {
-      "aliases": [
-        "KOL-PATH-0015"
-      ],
+      "aliases": ["KOL-PATH-0015"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0015",
       "kind": "research-case",
@@ -685,9 +529,7 @@
       "title": "blk-mq: масштабирование очередей не гарантирует ordering"
     },
     {
-      "aliases": [
-        "KOL-PATH-0016"
-      ],
+      "aliases": ["KOL-PATH-0016"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0016",
       "kind": "research-case",
@@ -697,9 +539,7 @@
       "title": "cgroup v1: несовместимые иерархии controllers"
     },
     {
-      "aliases": [
-        "KOL-PATH-0017"
-      ],
+      "aliases": ["KOL-PATH-0017"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0017",
       "kind": "research-case",
@@ -709,9 +549,7 @@
       "title": "User namespaces: dropping groups расширяло доступ"
     },
     {
-      "aliases": [
-        "KOL-PATH-0018"
-      ],
+      "aliases": ["KOL-PATH-0018"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0018",
       "kind": "research-case",
@@ -721,9 +559,7 @@
       "title": "Seccomp notification: TOCTOU mutable pointers"
     },
     {
-      "aliases": [
-        "KOL-PATH-0019"
-      ],
+      "aliases": ["KOL-PATH-0019"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0019",
       "kind": "research-case",
@@ -733,9 +569,7 @@
       "title": "PID reuse: pidfd и атомарное создание"
     },
     {
-      "aliases": [
-        "KOL-PATH-0020"
-      ],
+      "aliases": ["KOL-PATH-0020"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0020",
       "kind": "research-case",
@@ -745,9 +579,7 @@
       "title": "clone3: размерная структура вместо перегрузки аргументов"
     },
     {
-      "aliases": [
-        "KOL-PATH-0021"
-      ],
+      "aliases": ["KOL-PATH-0021"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0021",
       "kind": "research-case",
@@ -757,9 +589,7 @@
       "title": "Autogroup: nice действует внутри task group"
     },
     {
-      "aliases": [
-        "KOL-PATH-0022"
-      ],
+      "aliases": ["KOL-PATH-0022"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0022",
       "kind": "research-case",
@@ -769,9 +599,7 @@
       "title": "RCU: удаление ссылки не разрешает free"
     },
     {
-      "aliases": [
-        "KOL-PATH-0023"
-      ],
+      "aliases": ["KOL-PATH-0023"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0023",
       "kind": "research-case",
@@ -781,9 +609,7 @@
       "title": "Удаление числового _sysctl ABI"
     },
     {
-      "aliases": [
-        "KOL-PATH-0024"
-      ],
+      "aliases": ["KOL-PATH-0024"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0024",
       "kind": "research-case",
@@ -793,9 +619,7 @@
       "title": "SO_REUSEPORT: shared port требует общей authority"
     },
     {
-      "aliases": [
-        "KOL-PATH-0025"
-      ],
+      "aliases": ["KOL-PATH-0025"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0025",
       "kind": "research-case",
@@ -805,9 +629,7 @@
       "title": "Robust futex: cleanup по списку вместо всех VMA"
     },
     {
-      "aliases": [
-        "KOL-PATH-0026"
-      ],
+      "aliases": ["KOL-PATH-0026"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0026",
       "kind": "research-case",
@@ -817,9 +639,7 @@
       "title": "futex_waitv: ожидание нескольких адресов"
     },
     {
-      "aliases": [
-        "KOL-PATH-0027"
-      ],
+      "aliases": ["KOL-PATH-0027"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0027",
       "kind": "research-case",
@@ -829,9 +649,7 @@
       "title": "PCI MSI: неисправный bridge требует scoped fallback"
     },
     {
-      "aliases": [
-        "KOL-PATH-0028"
-      ],
+      "aliases": ["KOL-PATH-0028"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0028",
       "kind": "research-case",
@@ -841,9 +659,7 @@
       "title": "USB internal API redesign без вечного driver ABI"
     },
     {
-      "aliases": [
-        "KOL-PATH-0029"
-      ],
+      "aliases": ["KOL-PATH-0029"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0029",
       "kind": "research-case",
@@ -853,9 +669,7 @@
       "title": "Удалённая mandatory file locking"
     },
     {
-      "aliases": [
-        "KOL-PATH-0030"
-      ],
+      "aliases": ["KOL-PATH-0030"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0030",
       "kind": "research-case",
@@ -865,9 +679,7 @@
       "title": "epoll fix regression: нельзя воскресить dying file"
     },
     {
-      "aliases": [
-        "COST-L-0001"
-      ],
+      "aliases": ["COST-L-0001"],
       "entity_status": "CANDIDATE",
       "id": "cost-l.0001",
       "kind": "cost-l",
@@ -877,9 +689,7 @@
       "title": "Allocation-context and reclaim side effects"
     },
     {
-      "aliases": [
-        "COST-L-0002"
-      ],
+      "aliases": ["COST-L-0002"],
       "entity_status": "CANDIDATE",
       "id": "cost-l.0002",
       "kind": "cost-l",
@@ -889,9 +699,7 @@
       "title": "sysfs text attributes as a stable machine-consumed ABI"
     },
     {
-      "aliases": [
-        "COST-L-0003"
-      ],
+      "aliases": ["COST-L-0003"],
       "entity_status": "CANDIDATE",
       "id": "cost-l.0003",
       "kind": "cost-l",
@@ -902,8 +710,8 @@
     },
     {
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 15181,
+      "document_status": "CURRENT",
+      "estimated_bytes": 17543,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -923,7 +731,7 @@
     {
       "document": "doc.kolvrt.architecture.benchmarking",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5722,
+      "estimated_bytes": 6677,
       "id": "doc.kolvrt.architecture.benchmarking",
       "kind": "policy",
       "path": "docs/architecture/benchmarking.md",
@@ -931,34 +739,24 @@
       "title": "Migration benchmark methodology"
     },
     {
-      "document": "doc.kolvrt.architecture.first-native-slice",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5989,
-      "id": "doc.kolvrt.architecture.first-native-slice",
-      "kind": "navigation",
-      "path": "docs/architecture/first-native-slice.md",
-      "summary": "Broader isolated-task workload design, scoped separately from experimental bounded Phase 3.5 IPC.",
-      "title": "First native slice"
-    },
-    {
-      "document": "doc.kolvrt.architecture.native-abi",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 12219,
-      "id": "doc.kolvrt.architecture.native-abi",
-      "kind": "api-contract",
-      "path": "docs/architecture/native-abi.md",
-      "summary": "Historical native.request/0 candidate lifecycle and current experimental request/1 reference.",
-      "title": "Native request ABI candidate v0"
-    },
-    {
-      "document": "doc.kolvrt.architecture.production-scheduler",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 11625,
-      "id": "doc.kolvrt.architecture.production-scheduler",
-      "kind": "navigation",
-      "path": "docs/architecture/production-scheduler.md",
-      "summary": "Historical scheduler milestone order with current bounded IPC implementation status and later supervisor gates.",
-      "title": "Production scheduling and request lifecycle: next implementation order"
+      "depends_on": [
+        "adr.0006",
+        "adr.0003",
+        "adr.0024",
+        "kolvrt.memory.user-copy.api"
+      ],
+      "document": "doc.kolvrt.arena.measurement-contract",
+      "document_status": "CURRENT",
+      "estimated_bytes": 9662,
+      "id": "doc.kolvrt.arena.measurement-contract",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/arena-measurement-contract.md",
+      "read_when": [
+        "Arena Measurement Profile comparison class SFR SAR admission"
+      ],
+      "summary": "Experimental standards registry, frozen measurement profiles and offline import admission; no kernel records.",
+      "tags": ["arena", "standards", "measurement", "security"],
+      "title": "Arena measurement contract"
     },
     {
       "document": "doc.kolvrt.docs.knowledge",
@@ -978,21 +776,8 @@
       "kind": "research",
       "path": "docs/research/phase-0-1-report.md",
       "summary": "Historical Phase 0.1 snapshot; original counts and no-kernel statement are not current status.",
-      "tags": [
-        "historical",
-        "phase-0"
-      ],
+      "tags": ["historical", "phase-0"],
       "title": "Phase 0.1 results and limits"
-    },
-    {
-      "document": "doc.kolvrt.ipc.review",
-      "document_status": "CURRENT",
-      "estimated_bytes": 32695,
-      "id": "doc.kolvrt.ipc.review",
-      "kind": "security-analysis",
-      "path": "docs/architecture/ipc-phase35-review.md",
-      "summary": "Phase 3.5 IPC architecture re-derivation; E1/A decisions are implemented while milestone acceptance remains open.",
-      "title": "Phase 3.5 IPC architecture re-derivation"
     },
     {
       "document": "doc.kolvrt.kernel-laws",
@@ -1007,7 +792,7 @@
     {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 9585,
+      "estimated_bytes": 9506,
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "path": "docs/kernel/capabilities.md",
@@ -1035,44 +820,14 @@
       "title": "Process-local handles"
     },
     {
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 18126,
-      "id": "doc.kolvrt.kernel.ipc",
-      "kind": "subsystem-contract",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Experimental bounded native EL0 IPC contract and current Phase 3.5 evidence.",
-      "title": "Bounded native EL0 IPC"
-    },
-    {
-      "document": "doc.kolvrt.kernel.ipc-performance",
-      "document_status": "CURRENT",
-      "estimated_bytes": 4616,
-      "id": "doc.kolvrt.kernel.ipc-performance",
-      "kind": "benchmark-evidence",
-      "path": "docs/kernel/ipc-performance.md",
-      "summary": "QEMU performance measurement method, copy count and limits for bounded native IPC.",
-      "title": "Phase 3.5 IPC performance passport"
-    },
-    {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 19951,
+      "estimated_bytes": 20903,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
       "summary": "Current bounded process lifecycle and historical evidence.",
       "title": "Dynamic process lifecycle"
-    },
-    {
-      "document": "doc.kolvrt.kernel.scheduler",
-      "document_status": "CURRENT",
-      "estimated_bytes": 15200,
-      "id": "doc.kolvrt.kernel.scheduler",
-      "kind": "subsystem-contract",
-      "path": "docs/kernel/scheduler.md",
-      "summary": "Fixed-affinity scheduler ownership, historical Phase 3 boundaries and experimental continuous IPC execution.",
-      "title": "Scheduler ownership foundation"
     },
     {
       "document": "doc.kolvrt.kernel.user-copy",
@@ -1083,16 +838,6 @@
       "path": "docs/kernel/user-copy.md",
       "summary": "Bounded synchronous initialized snapshot copies across EL0 boundary.",
       "title": "Safe user copy"
-    },
-    {
-      "document": "doc.kolvrt.kernel.wait",
-      "document_status": "CURRENT",
-      "estimated_bytes": 3252,
-      "id": "doc.kolvrt.kernel.wait",
-      "kind": "subsystem-contract",
-      "path": "docs/kernel/wait.md",
-      "summary": "Trusted bootstrap 0x55 event latch scoped separately from the native IPC wait source.",
-      "title": "Wait and wake foundation"
     },
     {
       "document": "doc.kolvrt.native-model",
@@ -1107,12 +852,22 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 8969,
+      "estimated_bytes": 9110,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",
       "summary": "Bounded offline projections of COST-L declarations, independent dimensions and explicit production/runtime gaps.",
       "title": "Offline COST-L queries"
+    },
+    {
+      "document": "doc.kolvrt.research.host-survey",
+      "document_status": "CURRENT",
+      "estimated_bytes": 12315,
+      "id": "doc.kolvrt.research.host-survey",
+      "kind": "subsystem-contract",
+      "path": "docs/research/host-survey.md",
+      "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
+      "title": "Local research-host surveys"
     },
     {
       "document": "doc.kolvrt.security.threat-model",
@@ -1145,34 +900,29 @@
         "kolvrt.arena.cost-l",
         "kolvrt.arena.roadmap",
         "adr.0006",
-        "doc.kolvrt.architecture.benchmarking"
+        "doc.kolvrt.architecture.benchmarking",
+        "doc.kolvrt.arena.measurement-contract"
       ],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1237,
       "gaps": [
-        "Arena runner, passport schemas and leaderboard are not implemented or measured."
+        "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
       ],
       "id": "kolvrt.arena",
-      "implementation": "PLANNED",
+      "implementation": "EXPERIMENTAL",
       "kind": "feature",
       "path": "docs/architecture/component-arena.md",
-      "read_when": [
-        "compare replaceable components Arena"
-      ],
-      "summary": "Planned replaceable-component Arena and its architecture boundary.",
-      "tags": [
-        "arena",
-        "passports",
-        "components"
-      ],
+      "read_when": ["compare replaceable components Arena"],
+      "summary": "Experimental offline Arena contract validation; real measurement and record gates remain open.",
+      "tags": ["arena", "passports", "components"],
       "title": "Principle and architectural boundary"
     },
     {
       "anchor": "kolvrt-arena-admission",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1057,
       "id": "kolvrt.arena.admission",
       "kind": "contract-section",
@@ -1184,7 +934,7 @@
       "anchor": "kolvrt-arena-comparison",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1142,
       "id": "kolvrt.arena.comparison",
       "kind": "contract-section",
@@ -1196,7 +946,7 @@
       "anchor": "kolvrt-arena-contract",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1175,
       "id": "kolvrt.arena.contract",
       "kind": "contract-section",
@@ -1208,7 +958,7 @@
       "anchor": "kolvrt-arena-cost-l",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1170,
       "id": "kolvrt.arena.cost-l",
       "kind": "contract-section",
@@ -1220,8 +970,8 @@
       "anchor": "kolvrt-arena-passports",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 2181,
+      "document_status": "CURRENT",
+      "estimated_bytes": 2193,
       "id": "kolvrt.arena.passports",
       "kind": "contract-section",
       "path": "docs/architecture/component-arena.md",
@@ -1232,7 +982,7 @@
       "anchor": "kolvrt-arena-receipts",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1080,
       "id": "kolvrt.arena.receipts",
       "kind": "contract-section",
@@ -1244,8 +994,8 @@
       "anchor": "kolvrt-arena-roadmap",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5987,
+      "document_status": "CURRENT",
+      "estimated_bytes": 1978,
       "id": "kolvrt.arena.roadmap",
       "kind": "contract-section",
       "path": "docs/architecture/component-arena.md",
@@ -1314,13 +1064,7 @@
     },
     {
       "anchor": "kolvrt-cost-l-offline-queries",
-      "depends_on": [
-        "law.009",
-        "law.036",
-        "law.040",
-        "adr.0007",
-        "adr.0008"
-      ],
+      "depends_on": ["law.009", "law.036", "law.040", "adr.0007", "adr.0008"],
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
       "estimated_bytes": 2487,
@@ -1341,11 +1085,7 @@
       "kind": "feature",
       "path": "docs/knowledge-system.md",
       "summary": "Offline stable-ID discovery, scoped extraction and graph validation.",
-      "tags": [
-        "documentation",
-        "catalog",
-        "navigation"
-      ],
+      "tags": ["documentation", "catalog", "navigation"],
       "title": "Navigation feature"
     },
     {
@@ -1430,231 +1170,6 @@
       "path": "docs/kernel/handles.md",
       "summary": "Handle contract: publication",
       "title": "Generation and transactional publication"
-    },
-    {
-      "anchor": "copy-transactions-and-terminal-arbitration",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1084,
-      "id": "kolvrt.ipc.cancel",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Cancellation before and after service effect commitment.",
-      "title": "Copy transactions and terminal arbitration"
-    },
-    {
-      "anchor": "blocking-cross-cpu-wake-and-idle",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1441,
-      "id": "kolvrt.ipc.cross-cpu",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Fixed-affinity cross-CPU signaling and retained wake drainage.",
-      "title": "Blocking, cross-CPU wake and idle"
-    },
-    {
-      "anchor": "copy-transactions-and-terminal-arbitration",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1084,
-      "id": "kolvrt.ipc.deadline",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Absolute monotonic request deadline and terminal arbitration.",
-      "title": "Copy transactions and terminal arbitration"
-    },
-    {
-      "anchor": "authority-and-identities",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1369,
-      "id": "kolvrt.ipc.endpoint",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Concrete endpoint, service binding and scoped SEND authority.",
-      "title": "Authority and identities"
-    },
-    {
-      "anchor": "copied-transport",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 2221,
-      "id": "kolvrt.ipc.payload",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Initialized bounded payload snapshots and response bytes.",
-      "title": "Copied transport"
-    },
-    {
-      "anchor": "measurement-method",
-      "depends_on": [
-        "kolvrt.ipc"
-      ],
-      "document": "doc.kolvrt.kernel.ipc-performance",
-      "document_status": "CURRENT",
-      "estimated_bytes": 4616,
-      "id": "kolvrt.ipc.performance",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc-performance.md",
-      "summary": "Raw baseline with verified hot, blocked and full-queue paths and explicit interpretation boundaries.",
-      "title": "Phase 3.5 IPC performance passport"
-    },
-    {
-      "anchor": "bounded-storage-and-accounting",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1148,
-      "id": "kolvrt.ipc.queue",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Bounded queue, result slots and domain charges.",
-      "title": "Bounded storage and accounting"
-    },
-    {
-      "anchor": "copy-transactions-and-terminal-arbitration",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1084,
-      "id": "kolvrt.ipc.receive",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Transactional receive delivery and retained queue state.",
-      "title": "Copy transactions and terminal arbitration"
-    },
-    {
-      "anchor": "copied-transport",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 2221,
-      "id": "kolvrt.ipc.request",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Copied native.request/1 request framing and operations.",
-      "title": "Copied transport"
-    },
-    {
-      "anchor": "kolvrt-ipc-review-execution",
-      "depends_on": [
-        "adr.0016",
-        "adr.0017",
-        "adr.0018",
-        "adr.0021"
-      ],
-      "document": "doc.kolvrt.ipc.review",
-      "document_status": "CURRENT",
-      "estimated_bytes": 6277,
-      "id": "kolvrt.ipc.review.execution",
-      "kind": "contract-section",
-      "path": "docs/architecture/ipc-phase35-review.md",
-      "summary": "Selected continuous owner-local idle with whole-session retirement; independent sessions remain out of scope.",
-      "title": "Execution architecture decision"
-    },
-    {
-      "anchor": "kolvrt-ipc-review-synchronization",
-      "depends_on": [
-        "adr.0013",
-        "adr.0016",
-        "adr.0018",
-        "adr.0020",
-        "adr.0023"
-      ],
-      "document": "doc.kolvrt.ipc.review",
-      "document_status": "CURRENT",
-      "estimated_bytes": 8262,
-      "id": "kolvrt.ipc.review.synchronization",
-      "kind": "contract-section",
-      "path": "docs/architecture/ipc-phase35-review.md",
-      "summary": "Compare split syscall synchronization, bounded atomics and endpoint-owner mailboxes.",
-      "title": "Synchronization alternatives"
-    },
-    {
-      "anchor": "teardown-and-reclamation",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 893,
-      "id": "kolvrt.ipc.teardown",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Death, shutdown, retained authority and endpoint reclamation.",
-      "title": "Teardown and reclamation"
-    },
-    {
-      "anchor": "copy-transactions-and-terminal-arbitration",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1084,
-      "id": "kolvrt.ipc.terminal",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Exactly one retained terminal result and commitment boundary.",
-      "title": "Copy transactions and terminal arbitration"
-    },
-    {
-      "aliases": [
-        "kolvrt.ipc"
-      ],
-      "anchor": "bounded-native-ipc",
-      "depends_on": [
-        "kolvrt.process.identity",
-        "kolvrt.handles.local",
-        "kolvrt.handles.lifetime",
-        "kolvrt.security.domains",
-        "kolvrt.memory.user-copy",
-        "law.009",
-        "law.013",
-        "law.025",
-        "adr.0016",
-        "adr.0017",
-        "adr.0018",
-        "adr.0019",
-        "adr.0020",
-        "adr.0021",
-        "adr.0022",
-        "adr.0023",
-        "adr.0025"
-      ],
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 18126,
-      "gaps": [
-        "Final exact-source acceptance, remaining death/shutdown coverage and EN/RU review are pending.",
-        "QEMU does not establish physical ARM behavior."
-      ],
-      "id": "kolvrt.ipc.transport",
-      "implementation": "EXPERIMENTAL",
-      "kind": "feature",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Bounded endpoint IPC with copied requests, blocking waits and exact terminal outcomes.",
-      "tags": [
-        "ipc",
-        "endpoint",
-        "native",
-        "el0"
-      ],
-      "title": "Bounded native EL0 IPC"
-    },
-    {
-      "anchor": "blocking-cross-cpu-wake-and-idle",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1441,
-      "id": "kolvrt.ipc.wait",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Blocking readable and terminal conditions with register and recheck.",
-      "title": "Blocking, cross-CPU wake and idle"
-    },
-    {
-      "anchor": "blocking-cross-cpu-wake-and-idle",
-      "document": "doc.kolvrt.kernel.ipc",
-      "document_status": "CURRENT",
-      "estimated_bytes": 1441,
-      "id": "kolvrt.ipc.wakeup",
-      "kind": "contract-section",
-      "path": "docs/kernel/ipc.md",
-      "summary": "Exact owner wake identity, mailbox acknowledgement and idle progress.",
-      "title": "Blocking, cross-CPU wake and idle"
     },
     {
       "anchor": "kolvrt-memory-user-copy",
@@ -1876,7 +1391,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1794,
+      "estimated_bytes": 3149,
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -1897,10 +1412,7 @@
     },
     {
       "anchor": "kolvrt-process-identity",
-      "depends_on": [
-        "adr.0017",
-        "adr.0021"
-      ],
+      "depends_on": ["adr.0017", "adr.0021"],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
       "estimated_bytes": 1696,
@@ -1946,10 +1458,7 @@
     },
     {
       "anchor": "kolvrt-process-reclamation",
-      "depends_on": [
-        "adr.0017",
-        "adr.0021"
-      ],
+      "depends_on": ["adr.0017", "adr.0021"],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
       "estimated_bytes": 3413,
@@ -1970,6 +1479,29 @@
       "path": "docs/kernel/processes.md",
       "summary": "Process lifecycle: state",
       "title": "State machine"
+    },
+    {
+      "anchor": "kolvrt-host-survey",
+      "depends_on": [
+        "law.001",
+        "law.009",
+        "law.013",
+        "law.031",
+        "law.036",
+        "law.040",
+        "adr.0008",
+        "adr.0013"
+      ],
+      "document": "doc.kolvrt.research.host-survey",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1574,
+      "id": "kolvrt.research.host-survey",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/research/host-survey.md",
+      "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
+      "tags": ["hardware", "survey", "privacy", "research_host"],
+      "title": "Scope and commands"
     },
     {
       "anchor": "kolvrt-security-capability-revocation",
@@ -2008,16 +1540,9 @@
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
       "path": "docs/kernel/capabilities.md",
-      "read_when": [
-        "review Phase 3.4 capability revocation"
-      ],
+      "read_when": ["review Phase 3.4 capability revocation"],
       "summary": "Current bounded Phase 3.4 capability revocation with explicit remaining gates.",
-      "tags": [
-        "capability",
-        "revocation",
-        "phase",
-        "3.4"
-      ],
+      "tags": ["capability", "revocation", "phase", "3.4"],
       "title": "Bounded current feature contract"
     },
     {
@@ -2060,12 +1585,7 @@
       "kind": "feature",
       "path": "docs/kernel/domains.md",
       "summary": "Bounded domains, budgets and retained notification outcomes.",
-      "tags": [
-        "domain",
-        "security",
-        "grant",
-        "notification"
-      ],
+      "tags": ["domain", "security", "grant", "notification"],
       "title": "Implemented feature scope"
     },
     {
@@ -2124,17 +1644,13 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 7892,
+      "estimated_bytes": 7813,
       "id": "kolvrt.security.event-revocation",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
       "path": "docs/kernel/capabilities.md",
       "summary": "Synchronous Event grants and target-wide admission revocation.",
-      "tags": [
-        "event",
-        "revocation",
-        "grant"
-      ],
+      "tags": ["event", "revocation", "grant"],
       "title": "Bounded synchronous Event slice"
     },
     {
@@ -2285,9 +1801,7 @@
       "title": "Objectives and trust"
     },
     {
-      "aliases": [
-        "LAW-001"
-      ],
+      "aliases": ["LAW-001"],
       "anchor": "law-001",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2300,9 +1814,7 @@
       "title": "LAW-001 — Native authority and dependency isolation"
     },
     {
-      "aliases": [
-        "LAW-003"
-      ],
+      "aliases": ["LAW-003"],
       "anchor": "law-003",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2315,9 +1827,7 @@
       "title": "LAW-003 — Concurrent native and compatibility routes"
     },
     {
-      "aliases": [
-        "LAW-004"
-      ],
+      "aliases": ["LAW-004"],
       "anchor": "law-004",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2330,9 +1840,7 @@
       "title": "LAW-004 — Explicit semantic binding"
     },
     {
-      "aliases": [
-        "LAW-005"
-      ],
+      "aliases": ["LAW-005"],
       "anchor": "law-005",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2345,9 +1853,7 @@
       "title": "LAW-005 — Shared-state consistency"
     },
     {
-      "aliases": [
-        "LAW-008"
-      ],
+      "aliases": ["LAW-008"],
       "anchor": "law-008",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2360,9 +1866,7 @@
       "title": "LAW-008 — Controlled evolution and retirement"
     },
     {
-      "aliases": [
-        "LAW-009"
-      ],
+      "aliases": ["LAW-009"],
       "anchor": "law-009",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2375,9 +1879,7 @@
       "title": "LAW-009 — Translation cannot expand effective authority"
     },
     {
-      "aliases": [
-        "LAW-013"
-      ],
+      "aliases": ["LAW-013"],
       "anchor": "law-013",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2390,9 +1892,7 @@
       "title": "LAW-013 — Explicit identity and lifetime ownership"
     },
     {
-      "aliases": [
-        "LAW-018"
-      ],
+      "aliases": ["LAW-018"],
       "anchor": "law-018",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2405,9 +1905,7 @@
       "title": "LAW-018 — Validated boundary data"
     },
     {
-      "aliases": [
-        "LAW-020"
-      ],
+      "aliases": ["LAW-020"],
       "anchor": "law-020",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2420,9 +1918,7 @@
       "title": "LAW-020 — Device memory ownership and ordering"
     },
     {
-      "aliases": [
-        "LAW-025"
-      ],
+      "aliases": ["LAW-025"],
       "anchor": "law-025",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2435,9 +1931,7 @@
       "title": "LAW-025 — Single resource authority and accounting"
     },
     {
-      "aliases": [
-        "LAW-026"
-      ],
+      "aliases": ["LAW-026"],
       "anchor": "law-026",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2450,9 +1944,7 @@
       "title": "LAW-026 — Observable outcomes are explicit"
     },
     {
-      "aliases": [
-        "LAW-027"
-      ],
+      "aliases": ["LAW-027"],
       "anchor": "law-027",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2465,9 +1957,7 @@
       "title": "LAW-027 — Visible scheduling scope"
     },
     {
-      "aliases": [
-        "LAW-030"
-      ],
+      "aliases": ["LAW-030"],
       "anchor": "law-030",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2480,9 +1970,7 @@
       "title": "LAW-030 — Atomic waiting and rollback of preparation"
     },
     {
-      "aliases": [
-        "LAW-031"
-      ],
+      "aliases": ["LAW-031"],
       "anchor": "law-031",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2495,9 +1983,7 @@
       "title": "LAW-031 — Scoped platform adaptation"
     },
     {
-      "aliases": [
-        "LAW-035"
-      ],
+      "aliases": ["LAW-035"],
       "anchor": "law-035",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2510,9 +1996,7 @@
       "title": "LAW-035 — Profiles preserve correctness"
     },
     {
-      "aliases": [
-        "LAW-036"
-      ],
+      "aliases": ["LAW-036"],
       "anchor": "law-036",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2525,9 +2009,7 @@
       "title": "LAW-036 — Honest observations and comparisons"
     },
     {
-      "aliases": [
-        "LAW-040"
-      ],
+      "aliases": ["LAW-040"],
       "anchor": "law-040",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2540,9 +2022,7 @@
       "title": "LAW-040 — Evidence and reviewable architectural change"
     },
     {
-      "aliases": [
-        "LAW-041"
-      ],
+      "aliases": ["LAW-041"],
       "anchor": "law-041",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2555,9 +2035,7 @@
       "title": "LAW-041 — Progress has explicit dependencies and bounds"
     },
     {
-      "aliases": [
-        "LAW-042"
-      ],
+      "aliases": ["LAW-042"],
       "anchor": "law-042",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2570,9 +2048,7 @@
       "title": "LAW-042 — Failure containment and recovery are explicit"
     },
     {
-      "aliases": [
-        "LAW-043"
-      ],
+      "aliases": ["LAW-043"],
       "anchor": "law-043",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -2595,21 +2071,14 @@
       "relationships": [
         {
           "confidence": "HYPOTHESIS",
-          "evidence": [
-            "research/cost-l/COST-L-0001.json"
-          ],
+          "evidence": ["research/cost-l/COST-L-0001.json"],
           "scope": "Research candidate, not confirmed driver dependency.",
           "to": "cost-l.0001",
           "type": "motivates"
         }
       ],
       "summary": "Linux v6.12 allocation context; no configured driver or native service execution.",
-      "tags": [
-        "linux",
-        "memory",
-        "allocation",
-        "reclaim"
-      ],
+      "tags": ["linux", "memory", "allocation", "reclaim"],
       "title": "Allocation context and reclaim"
     }
   ],
@@ -2624,14 +2093,17 @@
     "docs/architecture/compatibility-model.md",
     "docs/architecture/diagnostics.md",
     "docs/architecture/execution-profiles.md",
+    "docs/architecture/first-native-slice.md",
     "docs/architecture/implementation-review.md",
     "docs/architecture/kernel-admission-policy.md",
     "docs/architecture/law-audit.md",
     "docs/architecture/law-review.md",
     "docs/architecture/migration-advisor.md",
     "docs/architecture/migration-workbench.md",
+    "docs/architecture/native-abi.md",
     "docs/architecture/output-policy.md",
     "docs/architecture/platform-contract.md",
+    "docs/architecture/production-scheduler.md",
     "docs/architecture/routing-model.md",
     "docs/architecture/security-reference-comparison.md",
     "docs/architecture/threat-model.md",
@@ -2645,10 +2117,12 @@
     "docs/kernel/interrupts.md",
     "docs/kernel/memory.md",
     "docs/kernel/routing.md",
+    "docs/kernel/scheduler.md",
     "docs/kernel/smp.md",
     "docs/kernel/testing.md",
     "docs/kernel/time.md",
     "docs/kernel/unsafe.md",
+    "docs/kernel/wait.md",
     "docs/project-structure.md",
     "docs/research/case-database.md",
     "docs/research/case-index.md",

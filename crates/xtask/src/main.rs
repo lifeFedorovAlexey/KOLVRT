@@ -36,7 +36,10 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
     ("--secondary-panic-control", "secondary CPU failure"),
     ("--retirement-control", "retiring frame release"),
     ("--shootdown-control", "remote TLB acknowledgement timeout"),
-    ("--remote-tlbi-control", "secondary CPU failure"),
+    (
+        "--remote-tlbi-control",
+        "kernel test failed: smp_remote_ack",
+    ),
     ("--user-context-control", "user register context lost"),
     ("--user-root-control", "user address-space alias leaked"),
     (
@@ -477,11 +480,11 @@ fn run() -> Result<()> {
     fs::create_dir_all("target/kernel")?;
     let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {
-        Some("docs") => {
+        Some("docs" | "arena") => {
             let status = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()))
-                .args(["run", "--locked", "-p", "repository-checks", "--", "docs"])
+                .args(["run", "--locked", "-p", "repository-checks", "--", &args[0]])
                 .args(&args[1..]).status()?;
-            if status.success() { Ok(()) } else { Err("documentation command failed".into()) }
+            if status.success() { Ok(()) } else { Err("repository tooling command failed".into()) }
         }
         Some("audit") => audit(),
         Some("ipc-controls") if args.len() == 1 => ipc_controls(),

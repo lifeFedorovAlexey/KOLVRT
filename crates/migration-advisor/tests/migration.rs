@@ -1,3 +1,6 @@
+use migration_advisor::statistics::{
+    BudgetAssessment, BudgetNotEvaluated, Measurement, MeasurementUnavailable,
+};
 use migration_advisor::{
     Capability, Package, Requirement, Requirements, SemanticVersion, advisor::*, plan_digest,
     solver::*,
@@ -880,7 +883,7 @@ fn request_latency_quantiles_are_descriptive_and_not_run_independence_units() {
         });
     }
     let statistics = analyze_family(&r.benchmarks[0].pairs, &policy(), 1).unwrap();
-    let requests = statistics.request_latency.as_ref().unwrap();
+    let requests = statistics.request_latency.available().unwrap();
     assert_eq!(statistics.paired_runs, 100);
     assert_eq!(statistics.resampling_blocks, 100);
     assert_eq!(requests.sample_stride, 241);
@@ -971,8 +974,8 @@ fn configured_multidimensional_budgets_require_evidence_and_reject_regressions()
     };
 
     let missing =
-        analyze_family(&make_pairs(Some(1000), Some(16), None), &resource_policy, 1).unwrap();
-    assert_eq!(missing.decision, "insufficient_resource_evidence");
+        analyze_family(&make_pairs(Some(1000), Some(16), None), &resource_policy, 1).unwrap_err();
+    assert!(missing.contains("missing required energy"));
 
     let within = analyze_family(
         &make_pairs(Some(1024), Some(16), Some(100)),
@@ -981,7 +984,10 @@ fn configured_multidimensional_budgets_require_evidence_and_reject_regressions()
     )
     .unwrap();
     assert_eq!(within.decision, "supported_latency_gain");
-    assert_eq!(within.memory_bytes.unwrap().candidate.p95, Some(1024));
+    assert_eq!(
+        within.memory_bytes.available().unwrap().candidate.p95,
+        Some(1024)
+    );
 
     let regression = analyze_family(
         &make_pairs(Some(1024), Some(25), Some(100)),
@@ -1055,24 +1061,29 @@ fn consumer_specific_resource_budgets_fail_closed_and_report_each_consumer() {
     assert_eq!(assessment.consumer_resources.len(), 2);
     assert_eq!(assessment.consumer_resources[0].consumer_id, "client-a");
     assert_eq!(
+        assessment.consumer_resources[0].energy_within_budget,
+        BudgetAssessment::NotEvaluated {
+            reason: BudgetNotEvaluated::BudgetNotConfigured
+        }
+    );
+    assert_eq!(
         assessment.consumer_resources[0].memory_within_budget,
-        Some(true)
+        BudgetAssessment::Passed
     );
     assert_eq!(assessment.consumer_resources[1].consumer_id, "client-b");
     assert_eq!(
         assessment.consumer_resources[1].memory_within_budget,
-        Some(false)
+        BudgetAssessment::Failed
     );
 
     let mut split_block_policy = policy.clone();
     split_block_policy.resampling_block_length = 2;
     let mut split_block = pairs.clone();
     split_block[1].consumer_id = Some("client-b".into());
-    assert_eq!(
+    assert!(
         analyze_family(&split_block, &split_block_policy, 1)
-            .unwrap()
-            .decision,
-        "insufficient_resource_evidence"
+            .unwrap_err()
+            .contains("consumer identity/block")
     );
 
     let mut duplicate_budget = policy.clone();
@@ -1083,11 +1094,10 @@ fn consumer_specific_resource_budgets_fail_closed_and_report_each_consumer() {
 
     let mut missing_identity = pairs;
     missing_identity[0].consumer_id = None;
-    assert_eq!(
+    assert!(
         analyze_family(&missing_identity, &policy, 1)
-            .unwrap()
-            .decision,
-        "insufficient_resource_evidence"
+            .unwrap_err()
+            .contains("consumer identity/block")
     );
 }
 
@@ -1121,7 +1131,7 @@ fn authenticated_consumer_resource_regression_rejects_the_candidate() {
             .unwrap()
             .consumer_resources[0]
             .memory_within_budget,
-        Some(false)
+        BudgetAssessment::Failed
     );
 }
 
@@ -1763,4 +1773,100 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
     assert!(!report.candidates[0].assurance.trust.evidence_chain_complete);
     assert!(report.preferred_observed.is_none());
     std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn unconfigured_budgets_and_absent_optional_measurements_never_report_pass() {
+    use migration_advisor::statistics::analyze_family;
+    let request = request();
+    let mut pairs = request.benchmarks[0].pairs.clone();
+    for pair in &mut pairs {
+        pair.baseline_memory_bytes = None;
+        pair.candidate_memory_bytes = None;
+        pair.baseline_energy_uj = None;
+        pair.candidate_energy_uj = None;
+    }
+    let result = analyze_family(&pairs, &policy(), 1).unwrap();
+    let not_evaluated = BudgetAssessment::NotEvaluated {
+        reason: BudgetNotEvaluated::BudgetNotConfigured,
+    };
+    assert_eq!(result.p99_within_budget, not_evaluated);
+    assert_eq!(result.memory_within_budget, not_evaluated);
+    assert_eq!(result.copied_bytes_within_budget, not_evaluated);
+    assert_eq!(result.energy_within_budget, not_evaluated);
+    assert!(matches!(result.memory_bytes, Measurement::Unavailable {
+        reason: MeasurementUnavailable::MissingObservations { baseline, candidate }
+    } if baseline == pairs.len() && candidate == pairs.len()));
+    assert!(matches!(
+        result.request_latency,
+        Measurement::Unavailable {
+            reason: MeasurementUnavailable::NoObservations
+        }
+    ));
+    let json = serde_json::to_value(&result).unwrap();
+    assert_eq!(json["memory_within_budget"]["state"], "not_evaluated");
+    assert_eq!(
+        json["memory_within_budget"]["reason"],
+        "budget_not_configured"
+    );
+    assert_eq!(json["memory_bytes"]["state"], "unavailable");
+
+    pairs[0].baseline_memory_bytes = Some(0);
+    pairs[0].candidate_memory_bytes = Some(0);
+    let partial = analyze_family(&pairs, &policy(), 1).unwrap();
+    assert!(matches!(partial.memory_bytes, Measurement::Unavailable {
+        reason: MeasurementUnavailable::MissingObservations { baseline, candidate }
+    } if baseline == pairs.len()-1 && candidate == pairs.len()-1));
+}
+
+#[test]
+fn required_measurements_reject_missing_baseline_candidate_and_consumer_data() {
+    use migration_advisor::statistics::{ConsumerResourceBudget, analyze_family};
+    for baseline_missing in [true, false] {
+        let mut request = request();
+        request.statistics.p95_memory_regression_budget_bytes = Some(0);
+        request.benchmarks[0].statistics = request.statistics.clone();
+        for pair in &mut request.benchmarks[0].pairs {
+            pair.baseline_memory_bytes = Some(0);
+            pair.candidate_memory_bytes = Some(0);
+        }
+        if baseline_missing {
+            request.benchmarks[0].pairs[0].baseline_memory_bytes = None;
+        } else {
+            request.benchmarks[0].pairs[0].candidate_memory_bytes = None;
+        }
+        assert!(
+            analyze_family(&request.benchmarks[0].pairs, &request.statistics, 1)
+                .unwrap_err()
+                .contains("missing required memory")
+        );
+        let report = trusted_fixture(&request, &solver()).unwrap();
+        assert_eq!(
+            report.candidates[0].status,
+            CandidateStatus::RejectedCandidate
+        );
+        assert!(!report.candidates[0].assurance.statistical_gain_supported);
+    }
+    let request = request();
+    let mut policy = policy();
+    policy.consumer_resource_budgets = vec![ConsumerResourceBudget {
+        consumer_id: "client".into(),
+        p95_memory_regression_budget_bytes: Some(0),
+        p95_copied_bytes_regression_budget: None,
+        p95_energy_regression_budget_uj: None,
+    }];
+    let mut pairs = request.benchmarks[0].pairs.clone();
+    for pair in &mut pairs {
+        pair.consumer_id = Some("client".into());
+    }
+    pairs[0].candidate_memory_bytes = None;
+    assert!(
+        analyze_family(&pairs, &policy, 1)
+            .unwrap_err()
+            .contains("missing required memory measurement for consumer client")
+    );
+    for pair in &mut pairs {
+        pair.consumer_id = Some("other".into());
+    }
+    assert!(analyze_family(&pairs, &policy, 1).is_err());
 }
