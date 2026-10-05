@@ -60,7 +60,7 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
 
 ## Граница исходников при интеграции CI
 
-Ветка интегрирует reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, включая общий serial/four-shard CI task inventory. Все шесть supervisor controls обязательны, поэтому plan содержит 136 задач. Matrix runner распознаёт точные supervision: failure events, а не любой panic. Предыдущие execution receipts сохраняют свои source scopes и имеют статус STALE для изменённых shared runner inputs до записи нового combined-source receipt. Human architecture/EN-RU acceptance остаётся открытой.
+Ветка интегрирует reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, включая общий serial/four-shard CI task inventory. Все шесть supervisor controls обязательны, поэтому plan содержит 136 задач. Matrix runner распознаёт точные supervision: failure events, а не любой panic. Предыдущие execution receipts сохраняют свои source scopes. Новый exact-source receipt проверяет combined QEMU max matrix и исправление commit acknowledgement; GitHub ASID receipt с совпадающими source hashes фиксирует восемь успешных 16-bit pairs. Human architecture/EN-RU acceptance остаётся открытой.
 
 <!-- knowledge -->
 
@@ -118,10 +118,10 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "Merged CI runner/source changes invalidate the previous exact-source scope; immutable receipts are retained, and combined DEV/PROD verification is in progress.",
+            "state": "VERIFIED",
+            "reason": "Full exact-source QEMU max DEV/PROD matrix passed; CI eight-pair 16-bit ASID receipt matches every source digest. Human architecture/EN-RU acceptance remains pending.",
             "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "81274a301885a7de99e87696394caa52e1ba01fe3c9a3aedc52bc82e489124ab",
+            "receipt_sha256": "ca1e2ff9472fac6273bb18d2fc5eb217592bd4d210cbc2fe93183b9b07a216e3",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."
           },
           {

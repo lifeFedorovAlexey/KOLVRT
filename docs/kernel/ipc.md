@@ -6,7 +6,7 @@
 # Bounded native EL0 IPC
 
 Document status: CURRENT
-Evidence scope: accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.
+Evidence scope: accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. A combined QEMU max receipt re-verifies current source and host runner; READY is limited to this milestone; physical ARM is unverified.
 Current reference: [Architecture re-derivation](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -89,7 +89,7 @@ Current real EL0 fixtures cover both cross-CPU directions and each same-CPU plac
 
 Twenty-three focused mutation controls cover authority, queue bounds/FIFO, client-ID and internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wrong-process wake, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, missing and duplicate charge release, endpoint teardown, copy transactions and service death. All 46 DEV/PROD runs were rejected by their exact expected event or named failing test; an arbitrary panic is insufficient. A CPU1 kernel failure retains its exact cause in a bounded atomic record for CPU0, which stops the continuous session without authorizing reclamation.
 
-Retained source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records positive checks of its named source snapshot and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. The [acceptance review](../architecture/ipc-phase35-acceptance-review.md) records code/EN-RU semantic correspondence and the scoped readiness decision. Controls and readiness receipts supplement the historical records at their named snapshots. Issue #109 changes only the host execution/verification inventory: current runner-source verification is STALE pending a fresh scoped receipt and semantic review. Native IPC implementation and its prior bounded readiness acceptance remain unchanged; historical receipts do not verify the new runner. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
+Retained source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records positive checks of its named source snapshot and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. The [acceptance review](../architecture/ipc-phase35-acceptance-review.md) records code/EN-RU semantic correspondence and the scoped readiness decision. Controls and readiness receipts supplement the historical records at their named snapshots. Issue #109 changes only the host execution/verification inventory: current combined source is verified by a fresh QEMU max receipt with 125 checks per DEV/PROD profile and 52 IPC/supervision controls. Supervision architecture and EN/RU acceptance remain open. Native IPC implementation and its prior bounded readiness acceptance remain unchanged; historical receipts do not verify the new runner. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
 
 Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](../../crates/kernel-core/src/ipc/identity.rs), [wire](../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../crates/kernel/src/ipc/native.rs), [storage](../../crates/kernel/src/ipc/storage.rs), [deferred work](../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../crates/kernel/src/ipc_workload.rs), [runner](../../crates/xtask/src/main.rs).
 
@@ -214,10 +214,10 @@ The experimental [supervisor](supervision.md) adds a distinct lifecycle checkpoi
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "Merged CI runner/source changes invalidate the previous exact-source scope; immutable receipts are retained, and combined DEV/PROD verification is in progress.",
+            "state": "VERIFIED",
+            "reason": "Current combined source passed 125 checks per DEV/PROD profile and all 52 IPC/supervision controls on QEMU max; prior bounded IPC acceptance and supervision human acceptance remain separate.",
             "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "81274a301885a7de99e87696394caa52e1ba01fe3c9a3aedc52bc82e489124ab",
+            "receipt_sha256": "ca1e2ff9472fac6273bb18d2fc5eb217592bd4d210cbc2fe93183b9b07a216e3",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64."
           },
           {
