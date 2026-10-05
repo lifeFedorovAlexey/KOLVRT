@@ -6,6 +6,8 @@
 
 ## Команды
 
+Все сборки Cargo для `aarch64-unknown-none` запрещают предупреждения через целевые rustflags в `.cargo/config.toml`. Это включает загрузки DEV/PROD, сборки с машинными событиями, тестовые контроли, routing payloads и сравнения ASID. Необязательные вспомогательные методы наблюдения компилируются только вместе со своими фактическими вызывающими функциями; предупреждения исправляются, а не подавляются.
+
 ```powershell
 rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
 rustup target add aarch64-unknown-none --toolchain 1.99.0
@@ -58,5 +60,9 @@ aarch64-none-elf-gdb target/kernel/dev-boot.elf
 ## Общая проверка ELF и ASID
 
 [Текущий отчёт объединённого среза](../../../../research/measurements/runs/1791123211326-docs-main-c5c440c-final-fd10fb19115e.json) фиксирует 84 проверки в каждом профиле DEV/PROD, обе загрузки без тестового режима и 70 отрицательных контролей на хосте для `c5c440c`. Он включает ограниченное ожидание/блокировку/пробуждение по собственному событию, безопасное копирование пользовательских данных, передачу дескрипторов с удержанием ресурсов, проверку и откат ELF и освобождение/повторное использование ASID с фиксированной привязкой. [Отдельная регрессия маршрутизации](../../../../research/results/routing-main-c5c440c-regression.json) также прошла для этого среза. Исторические количества выше остаются привязаны к исходным отчётам. Свидетельства охватывают записанные хеши исходников, артефакты, двухпроцессорный QEMU и профили; физическое оборудование, общий IPC, публичные разрешения доступа и постоянные службы в эту проверку не входят.
+
+## Phase 3.4 security enforcement
+
+[Domain fixtures](../../../../crates/kernel/src/security/testing.rs) выполняют production copied boundary на обоих EL0 CPUs: scoped denial, attenuation, revoke/admission races, sender/receiver budgets, fault isolation, reclaimed sender retention и наблюдаемую service-fault cancellation. Пять negative features отключают реальные budget, identity, teardown, revocation либо scope checks; каждая обязана дать ожидаемый failed machine test и nonzero host result в DEV и PROD. Текущая kernel matrix содержит 96 checks на профиль и 80 negative controls.
 
 [Английский оригинал](../../../../docs/kernel/testing.md)

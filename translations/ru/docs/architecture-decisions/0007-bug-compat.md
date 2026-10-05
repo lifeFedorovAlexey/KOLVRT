@@ -1,5 +1,9 @@
 # ADR-0007 — Совместимость с ошибками и вывод модулей из эксплуатации
 
+Document status: CURRENT
+Evidence scope: Принятые требования; реализация и проверка имеют отдельные границы доказательств.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Статус: **Принято**. Дата: 2026-10-02.
 
 ## Контекст
@@ -83,3 +87,16 @@ CI лишь требует решения о проверке/удалении. 
 [Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0007-bug-compat.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0007",
+  "kind": "adr",
+  "aliases": ["ADR-0007"],
+  "summary": "Навигация по документу: ADR-0007 — Совместимость с ошибками и вывод модулей из эксплуатации. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

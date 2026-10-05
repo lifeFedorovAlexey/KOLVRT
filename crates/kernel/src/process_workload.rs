@@ -45,6 +45,7 @@ fn spec(owner: usize, mode: u64, code: u64) -> Spec<'static> {
     Spec {
         image: image(),
         image_format: process::ImageFormat::RawFixture,
+        limits: limits(),
         context,
         owner,
         entry: memory::USER_CODE,
@@ -251,20 +252,38 @@ pub fn exercise(
         )
         .err()
         .is_some_and(|f| f.error == Error::InvalidImage);
-    let denied_process = create(registry, p, spec(0, MODE_DENIED_CREATE, EXIT_CODE));
+    let mut denied_spec = spec(0, MODE_DENIED_CREATE, EXIT_CODE);
+    // Retain an in-kernel bound on this trusted probe's timer admissions.
+    // Exhaustion is still a failed probe, never an accepted authority result.
+    denied_spec.slice_limit = Some(SPIN_BUDGET);
+    let denied_process = create(registry, p, denied_spec);
     registry.start(denied_process).unwrap();
-    registry.dispatch(Some(VERIFY_TIMEOUT));
-    report(
-        "process_authority_boundary",
-        denied
-            && invalid
-            && registry.completion(denied_process).unwrap().reason
-                == Reason::Faulted {
-                    class: ESR_SVC64,
-                    address: 0,
-                }
-            && registry.live() == 1,
-    );
+    // This finite probe must reach the unsupported SVC. Expiring a verifier
+    // deadline first tests elapsed host/QEMU time rather than authority. The
+    // external QEMU runner still bounds a hung probe; scheduling deadlines and
+    // workload slice budgets retain their own independent enforcement.
+    registry.dispatch(None);
+    let denied_reason = registry.completion(denied_process).unwrap().reason;
+    let live = registry.live();
+    let authority_passed = denied
+        && invalid
+        && denied_reason
+            == Reason::Faulted {
+                class: ESR_SVC64,
+                address: 0,
+            }
+        && live == 1;
+    #[cfg(feature = "diagnostics")]
+    if !authority_passed {
+        crate::diagnostics::status(
+            "DEBUG",
+            "process-authority",
+            format_args!(
+                "origin_denied={denied} invalid_image_rejected={invalid} completion={denied_reason:?} live={live}"
+            ),
+        );
+    }
+    report("process_authority_boundary", authority_passed);
     registry.reclaim(p, denied_process).unwrap();
     // Secondary-only work proves empty CPU0 queues and fixed owner execution.
     let sparse = create(
@@ -458,24 +477,52 @@ fn exercise_elf(
 
     let pages_before = p.available();
     let live_before = registry.live();
+    let mut entry_alignment = true;
+    for delta in [1usize, 2, 3, 15] {
+        let mut damaged = alloc::vec::Vec::from(MINIMAL_ELF);
+        let entry = config::USER_PAYLOAD_BASE + delta;
+        damaged[24..32].copy_from_slice(&(entry as u64).to_le_bytes());
+        entry_alignment &= kernel_core::elf::parse(
+            &damaged,
+            config::USER_PAYLOAD_BASE,
+            config::USER_PAYLOAD_BYTES,
+            config::PAGE_BYTES,
+        )
+        .is_err_and(|error| error == "AArch64 ELF entry is not instruction-aligned");
+    }
+    report("elf_entry_alignment", entry_alignment);
     let mut rejected = true;
     for (offset, value) in [
         (68usize, 7u64),
         (80, (config::USER_PAYLOAD_BASE - config::PAGE_BYTES) as u64),
         (24, (config::USER_PAYLOAD_BASE + config::PAGE_BYTES) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 1) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 2) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 3) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 4) as u64),
+        (24, (config::USER_PAYLOAD_BASE + 15) as u64),
         (96, u64::MAX),
     ] {
         let mut damaged = alloc::vec::Vec::from(MINIMAL_ELF);
         damaged[offset..offset + 8].copy_from_slice(&value.to_le_bytes());
+        // Match e_entry in Spec so a mismatch cannot mask profile rejection.
+        let requested_entry = if offset == 24 {
+            value as usize
+        } else {
+            image.entry
+        };
+        let mut requested_context = context;
+        requested_context.pc = requested_entry as u64;
         let result = registry.create(
             p,
             Origin::Bootstrap,
             Spec {
                 image: &damaged,
                 image_format: process::ImageFormat::Elf64Aarch64,
-                context,
+                limits: limits(),
+                context: requested_context,
                 owner: 0,
-                entry: config::USER_PAYLOAD_BASE,
+                entry: requested_entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
             None,
@@ -497,6 +544,7 @@ fn exercise_elf(
             Spec {
                 image: MINIMAL_ELF,
                 image_format: process::ImageFormat::Elf64Aarch64,
+                limits: limits(),
                 context,
                 owner: 0,
                 entry: image.entry,
@@ -522,6 +570,7 @@ fn exercise_elf(
             Spec {
                 image: MINIMAL_ELF,
                 image_format: process::ImageFormat::Elf64Aarch64,
+                limits: limits(),
                 context,
                 owner: percpu::BOOT_CPU,
                 entry: image.entry,
@@ -537,6 +586,7 @@ fn exercise_elf(
             Spec {
                 image: MINIMAL_ELF,
                 image_format: process::ImageFormat::Elf64Aarch64,
+                limits: limits(),
                 context,
                 owner: percpu::SECONDARY_CPU,
                 entry: image.entry,
@@ -795,4 +845,14 @@ fn blocking_progress(
 // reserving one debug-build stack temporary for every call site in the scenario.
 fn advance(registry: &mut Registry) {
     registry.step();
+}
+
+fn limits() -> kernel_core::domain::Limits {
+    kernel_core::domain::Limits {
+        memory_pages: crate::memory::USER_SPACE_PAGES
+            + crate::platform::config::USER_PAYLOAD_BYTES / crate::platform::config::PAGE_BYTES,
+        handles: crate::handles::CAPACITY as u16,
+        queue: 1,
+        requests: 1,
+    }
 }

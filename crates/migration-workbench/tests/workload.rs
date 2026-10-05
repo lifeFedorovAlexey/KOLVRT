@@ -74,3 +74,22 @@ fn lifecycle_worker_migrates_persistent_state_and_restores_snapshot() {
     assert!(!invalid.join("state-v2.json").exists());
     fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn contract_only_receipts_explicitly_mark_memory_as_not_evaluated() {
+    use host_process_metrics::{PeakMemoryMeasurement, PeakMemoryUnavailable};
+    let receipt = execute(true, false).unwrap();
+    assert_eq!(
+        receipt.peak_memory_bytes,
+        PeakMemoryMeasurement::Unavailable {
+            reason: PeakMemoryUnavailable::NotEvaluated
+        }
+    );
+    let json = serde_json::to_value(&receipt).unwrap();
+    assert_eq!(json["peak_memory_bytes"]["state"], "unavailable");
+    assert_eq!(json["peak_memory_bytes"]["reason"], "not_evaluated");
+    assert!(serde_json::from_value::<Receipt>(serde_json::json!({"passed":true})).is_err());
+    let mut missing = json;
+    missing.as_object_mut().unwrap().remove("peak_memory_bytes");
+    assert!(serde_json::from_value::<Receipt>(missing).is_err());
+}

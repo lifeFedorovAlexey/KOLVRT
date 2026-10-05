@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "base_commit", "files", "features"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "base_commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "files": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "before_sha256_lf",
+          "after_sha256_lf",
+          "disposition",
+          "reason"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^[^\\\\:]+$",
+            "maxLength": 4096
+          },
+          "before_sha256_lf": { "$ref": "#/$defs/digest" },
+          "after_sha256_lf": { "$ref": "#/$defs/digest" },
+          "disposition": {
+            "enum": ["new-feature", "existing-feature", "no-feature-impact"]
+          },
+          "reason": { "$ref": "#/$defs/reason" }
+        }
+      }
+    },
+    "features": {
+      "type": "array",
+      "maxItems": 8192,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "disposition", "reason"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]+$" },
+          "disposition": {
+            "enum": ["semantic-change", "evidence-change", "no-impact"]
+          },
+          "reason": { "$ref": "#/$defs/reason" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 4096,
+      "pattern": "\\S.*\\S"
+    }
+  }
+}

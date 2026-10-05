@@ -1,5 +1,9 @@
 # ADR-0013 — Effective authority and privileged necessity
 
+Document status: CURRENT
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Status: **Accepted for boundary rules only**. Date: 2026-10-02.
 
 ## Context
@@ -63,3 +67,16 @@ Clarify LAW-009 without removing memory, quota or delegation guarantees. Prevent
 Mechanisms remain revisable; any replacement preserves effective authority and demonstrates privileged necessity. No new policy engine, capability taxonomy, universal object model or frozen ABI is accepted.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0013-security-boundaries.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0013",
+  "kind": "adr",
+  "aliases": ["ADR-0013"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

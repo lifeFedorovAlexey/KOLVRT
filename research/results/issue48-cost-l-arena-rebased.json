@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "base_commit": "0a3a3d69ff2381b6ec922682af03c1fd13e41a23",
+  "working_tree": "Exact source_files identify the final PR bytes including launcher and rebase integration",
+  "claim": "Five actual bounded COST-L end-to-end tests on updated main/dispatcher bytes; no production or runtime acceptance.",
+  "source_files": [
+    {
+      "path": "crates/repository-checks/src/cost_l_queries.rs",
+      "sha256_lf": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967"
+    },
+    {
+      "path": "crates/repository-checks/src/cost_l.rs",
+      "sha256_lf": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4"
+    },
+    {
+      "path": "crates/repository-checks/src/main.rs",
+      "sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5"
+    },
+    {
+      "path": "crates/repository-checks/src/lib.rs",
+      "sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489"
+    },
+    {
+      "path": "crates/repository-checks/tests/cost_l_queries.rs",
+      "sha256_lf": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f"
+    },
+    {
+      "path": "crates/repository-checks/Cargo.toml",
+      "sha256_lf": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    },
+    {
+      "path": "schemas/cost-l.schema.json",
+      "sha256_lf": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c"
+    },
+    {
+      "path": "schemas/cost-l-registry.schema.json",
+      "sha256_lf": "34a6bb442291351647c8826054fb582f89ec121c5abff19bf2bcc350b9d24254"
+    },
+    {
+      "path": "research/cost-l/registry.json",
+      "sha256_lf": "6868df93c719a0d9efb11e628b608498e5649d1744acf24392b1b0bccbc10474"
+    },
+    {
+      "path": "research/cost-l/COST-L-0001.json",
+      "sha256_lf": "9c2fb7bbbf28145be8b88433d22656f4123c12c16ab36f11010f5c71c2581291"
+    },
+    {
+      "path": "research/cost-l/COST-L-0002.json",
+      "sha256_lf": "4854fd2013ea76118e8b7e027fe61ef304f2b39f181c1982d3c1c76aba05af01"
+    },
+    {
+      "path": "research/cost-l/COST-L-0003.json",
+      "sha256_lf": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794"
+    }
+  ],
+  "checks": [
+    {
+      "command": "cargo test --locked -p repository-checks --test cost_l_queries",
+      "exit_code": 0,
+      "transcript": "\nrunning 5 tests\ntest measured_zero_is_ranked_without_converting_unknown_or_foreign_scope ... ok\ntest output_budget_rejects_the_whole_page_and_a_smaller_page_succeeds ... ok\ntest real_registry_reports_declared_zero_separately_from_global_unknown ... ok\ntest both_directions_preserve_transitive_offline_and_shared_module_relations ... ok\ntest malformed_queries_and_inconsistent_graph_fail_without_stdout ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.32s\n\n   Compiling repository-checks v0.1.0 (C:\\Users\\life\\.codex\\worktrees\\arena-foundation\\KOLVRT\\crates\\repository-checks)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.98s\n     Running tests\\cost_l_queries.rs (target\\debug\\deps\\cost_l_queries-a1c6c6b5c1e5af0c.exe)\n"
+    }
+  ]
+}

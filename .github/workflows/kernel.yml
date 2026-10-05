@@ -6,10 +6,12 @@ jobs:
   foundation:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
         with:
-          node-version: "20"
+          fetch-depth: 0
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version-file: ".nvmrc"
       - name: Pinned compiler
         shell: pwsh
         run: |
@@ -22,6 +24,12 @@ jobs:
         run: ./scripts/setup-qemu.ps1
       - run: npm ci --ignore-scripts
       - run: npm run check
+      - name: Canonical feature impact and transition history
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        env:
+          KNOWLEDGE_BASE: ${{ github.event.pull_request.base.sha }}
+        run: cargo run --locked -p repository-checks -- docs check-change "$env:KNOWLEDGE_BASE"
       - name: Exception registry rejection fixtures
         run: cargo test --locked -p repository-checks exceptions::tests
       - name: Routing model contracts
@@ -49,7 +57,7 @@ jobs:
               throw 'Expected actual 16-bit ASID hardware profile'
             }
           }
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: kernel-evidence

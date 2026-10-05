@@ -58,3 +58,16 @@ EL0 cannot choose a source process or provide an object pointer. Rights checks g
 Changing the wire frame, rights bits, quotas, supported primitive set, affinity or retention guarantee requires a reviewed contract revision. New authority policy, revocation, IPC admission and domain budgets remain separate decisions.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0020-handle-transfer-and-retention.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0020",
+  "kind": "adr",
+  "aliases": ["ADR-0020"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

@@ -197,6 +197,7 @@ pub(crate) fn exercise(
                 Origin::Bootstrap,
                 Spec {
                     image_format: crate::process::ImageFormat::RawFixture,
+                    limits: limits(),
                     image,
                     context,
                     owner,
@@ -273,5 +274,15 @@ pub(crate) fn exercise(
                 raw
             );
         }
+    }
+}
+
+fn limits() -> kernel_core::domain::Limits {
+    kernel_core::domain::Limits {
+        memory_pages: crate::memory::USER_SPACE_PAGES
+            + crate::platform::config::USER_PAYLOAD_BYTES / crate::platform::config::PAGE_BYTES,
+        handles: crate::handles::CAPACITY as u16,
+        queue: 1,
+        requests: 1,
     }
 }

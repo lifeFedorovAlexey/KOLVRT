@@ -1,5 +1,9 @@
 # ADR-0013 — Effective authority и необходимость привилегий
 
+Document status: CURRENT
+Evidence scope: Принятые требования; реализация и проверка имеют отдельные границы доказательств.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Status: **Accepted for boundary rules only**. Date: 2026-10-02.
 
 ## Context
@@ -64,3 +68,16 @@ LAW-009 уточняется без отмены защиты памяти, кв
 Механизмы пересматриваются при сохранении effective authority и доказательстве необходимости привилегий. Новый policy engine, taxonomy capabilities, универсальная модель объектов или frozen ABI не принимаются.
 
 [Английский оригинал](../../../../docs/architecture-decisions/0013-security-boundaries.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0013",
+  "kind": "adr",
+  "aliases": ["ADR-0013"],
+  "summary": "Навигация по документу: ADR-0013 — Effective authority и необходимость привилегий. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

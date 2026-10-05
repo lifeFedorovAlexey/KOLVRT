@@ -53,3 +53,16 @@ Wrappers may be replaced; public safety guarantees cannot be silently weakened.
 [Cases and sources](../research/case-index.md); [other systems](../research/reference-systems.md).
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0004-unsafe.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0004",
+  "kind": "adr",
+  "aliases": ["ADR-0004"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

@@ -1,5 +1,9 @@
 # Phase 0.1 results and limits
 
+Document status: HISTORICAL MILESTONE
+Evidence scope: Historical Phase 0.1 documentary foundation, 2026-10-02; no kernel existed at that milestone.
+Current reference: [Current documentary review](phase-0-review.md)
+
 Historical snapshot of Phase 0.1. Current decisions and completion evidence are in the [Phase 0 review](phase-0-review.md); proposed statuses below describe the earlier snapshot.
 
 Date: 2026-10-02. The foundation contains 30 Linux cases, a JSON Schema, offline Rust checks, kernel laws, eight architecture decisions, architecture models and a comparison of seven operating-system approaches. **No kernel is implemented; Phase 1 has not started.** The [original request](../../research/requests/phase-0-request.txt) is historical context; subsequent user corrections supersede its law-count quota and documentation-language choices.
@@ -38,3 +42,15 @@ Many introducing commits are unknown. Some live documentation lacks immutable pi
 See [open questions](open-questions.md) and the [Phase 0.2 backlog](phase-0-2.md). This report does not authorize automatically starting that work or kernel implementation.
 
 [Russian translation](../../translations/ru/docs/research/phase-0-1-report.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.history.phase-0-1",
+  "kind": "research",
+  "summary": "Historical Phase 0.1 snapshot; original counts and no-kernel statement are not current status.",
+  "tags": ["historical", "phase-0"]
+}
+```

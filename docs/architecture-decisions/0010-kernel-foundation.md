@@ -52,3 +52,16 @@ cargo xtask test runs both profiles, actual boot images, 23 in-kernel tests per 
 ## Reversibility
 
 Replace a mechanism only with a new reviewed contract, invariant analysis and real negative tests; no temporary second implementation. Before SMP, establish remote-reader retirement and per-CPU state. Hardware and a second platform remain unverified.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0010",
+  "kind": "adr",
+  "aliases": ["ADR-0010"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

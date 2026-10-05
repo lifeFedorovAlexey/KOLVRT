@@ -1,0 +1,443 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KOLVRT bounded local research-host survey v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scope",
+    "provenance",
+    "system",
+    "devices",
+    "coverage",
+    "kolvrt_execution",
+    "publication"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "scope": {
+      "const": "research_host"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collector", "version", "input_kind", "providers"],
+      "properties": {
+        "collector": {
+          "const": "kolvrt.windows-cim-survey"
+        },
+        "version": {
+          "const": 1
+        },
+        "input_kind": {
+          "enum": ["WINDOWS_CIM", "SYNTHETIC_FIXTURE", "UNSUPPORTED_PLATFORM"]
+        },
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "outcome"],
+            "properties": {
+              "name": {
+                "enum": [
+                  "Win32_Processor",
+                  "Win32_ComputerSystem",
+                  "Win32_PnPEntity",
+                  "Win32_PnPSignedDriver"
+                ]
+              },
+              "outcome": {
+                "enum": [
+                  "OBSERVED",
+                  "not_reported",
+                  "provider_unavailable",
+                  "permission_denied",
+                  "unsupported_platform",
+                  "unsupported_provider",
+                  "malformed_value",
+                  "budget_exceeded"
+                ]
+              }
+            }
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "uniqueItems": true
+        }
+      }
+    },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "architecture",
+        "cpus",
+        "ram_bytes",
+        "hypervisor_present",
+        "iommu"
+      ],
+      "properties": {
+        "architecture": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/unknown"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "value"],
+              "properties": {
+                "status": {
+                  "const": "OBSERVED"
+                },
+                "value": {
+                  "enum": ["x86_64", "x86", "aarch64", "aarch32"]
+                }
+              }
+            }
+          ]
+        },
+        "cpus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "model",
+              "cores",
+              "logical_processors",
+              "firmware_virtualization"
+            ],
+            "properties": {
+              "model": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/unknown"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["status", "value"],
+                    "properties": {
+                      "status": {
+                        "const": "OBSERVED"
+                      },
+                      "value": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "pattern": "^[A-Za-z0-9 ()@.,+_-]+$"
+                      }
+                    }
+                  }
+                ]
+              },
+              "cores": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/unknown"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["status", "value"],
+                    "properties": {
+                      "status": {
+                        "const": "OBSERVED"
+                      },
+                      "value": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 4096
+                      }
+                    }
+                  }
+                ]
+              },
+              "logical_processors": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/unknown"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["status", "value"],
+                    "properties": {
+                      "status": {
+                        "const": "OBSERVED"
+                      },
+                      "value": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 8192
+                      }
+                    }
+                  }
+                ]
+              },
+              "firmware_virtualization": {
+                "$ref": "#/$defs/boolean"
+              }
+            }
+          },
+          "maxItems": 64
+        },
+        "ram_bytes": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/unknown"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "value"],
+              "properties": {
+                "status": {
+                  "const": "OBSERVED"
+                },
+                "value": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1125899906842624
+                }
+              }
+            }
+          ]
+        },
+        "hypervisor_present": {
+          "$ref": "#/$defs/boolean"
+        },
+        "iommu": {
+          "$ref": "#/$defs/unknown"
+        }
+      }
+    },
+    "devices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["alias", "bus", "category", "ids", "driver"],
+        "properties": {
+          "alias": {
+            "type": "string",
+            "pattern": "^device-[0-9]{4}$"
+          },
+          "bus": {
+            "enum": ["PCI", "USB", "OTHER"]
+          },
+          "category": {
+            "enum": [
+              "storage",
+              "network",
+              "gpu",
+              "audio",
+              "bluetooth",
+              "hid",
+              "other"
+            ]
+          },
+          "ids": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "vendor_id",
+              "device_id",
+              "subsystem_vendor_id",
+              "subsystem_device_id",
+              "class_id"
+            ],
+            "properties": {
+              "vendor_id": {
+                "$ref": "#/$defs/hex4"
+              },
+              "device_id": {
+                "$ref": "#/$defs/hex4"
+              },
+              "subsystem_vendor_id": {
+                "$ref": "#/$defs/hex4"
+              },
+              "subsystem_device_id": {
+                "$ref": "#/$defs/hex4"
+              },
+              "class_id": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/unknown"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["status", "value"],
+                    "properties": {
+                      "status": {
+                        "const": "OBSERVED"
+                      },
+                      "value": {
+                        "type": "string",
+                        "pattern": "^([0-9A-F]{2}|[0-9A-F]{6})$"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "driver": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["inf_name", "version"],
+            "properties": {
+              "inf_name": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/unknown"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["status", "value"],
+                    "properties": {
+                      "status": {
+                        "const": "OBSERVED"
+                      },
+                      "value": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,59}\\.inf$"
+                      }
+                    }
+                  }
+                ]
+              },
+              "version": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/unknown"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["status", "value"],
+                    "properties": {
+                      "status": {
+                        "const": "OBSERVED"
+                      },
+                      "value": {
+                        "type": "string",
+                        "pattern": "^[0-9]{1,8}(\\.[0-9]{1,8}){0,3}$"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "maxItems": 256
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inventory", "reason", "unobserved_classes"],
+      "properties": {
+        "inventory": {
+          "const": "PARTIAL"
+        },
+        "reason": {
+          "const": "pnp_observation_is_not_exhaustive"
+        },
+        "unobserved_classes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "storage",
+              "network",
+              "gpu",
+              "audio",
+              "bluetooth",
+              "hid",
+              "other"
+            ]
+          },
+          "maxItems": 7,
+          "uniqueItems": true
+        }
+      }
+    },
+    "kolvrt_execution": {
+      "const": "NOT_RUN"
+    },
+    "publication": {
+      "const": "LOCAL_REVIEW_REQUIRED"
+    }
+  },
+  "$defs": {
+    "unknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason"],
+      "properties": {
+        "status": {
+          "const": "UNKNOWN"
+        },
+        "reason": {
+          "enum": [
+            "not_reported",
+            "provider_unavailable",
+            "permission_denied",
+            "unsupported_platform",
+            "unsupported_provider",
+            "malformed_value",
+            "budget_exceeded"
+          ]
+        }
+      }
+    },
+    "boolean": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/unknown"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "value"],
+          "properties": {
+            "status": {
+              "const": "OBSERVED"
+            },
+            "value": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "hex4": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/unknown"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "value"],
+          "properties": {
+            "status": {
+              "const": "OBSERVED"
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[0-9A-F]{4}$"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

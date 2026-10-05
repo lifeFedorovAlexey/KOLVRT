@@ -1,3 +1,5 @@
+#[path = "test_support/irq_wait.rs"]
+mod irq_wait;
 use crate::time::Duration;
 use crate::{cpu, event, interrupt, memory, percpu, platform, smp, sync};
 use alloc::{boxed::Box, vec::Vec};
@@ -56,13 +58,22 @@ fn expected(pc: usize) {
         .store(pc as u64, Ordering::Release);
 }
 fn wait_irq() -> bool {
+    let start = cpu::ticks();
     let end = crate::time::deadline_after(TEST_IRQ_TIMEOUT);
-    while cpu::ticks() < end {
-        if interrupt::delivered().load(Ordering::Acquire) > 0 {
-            return true;
-        }
+    let delivered = irq_wait::wait_for_delivery(
+        || interrupt::delivered().load(Ordering::Acquire) > 0,
+        || cpu::ticks() >= end,
+        cpu::mask,
+    );
+    if !delivered {
+        event!(
+            "{{\"event\":\"timer-wait\",\"status\":\"fail\",\"elapsed_ticks\":{},\"counter_hz\":{},\"deliveries\":{}}}",
+            cpu::ticks() - start,
+            cpu::frequency(),
+            interrupt::delivered().load(Ordering::Acquire)
+        );
     }
-    false
+    delivered
 }
 pub fn remote_fault(address: usize) {
     expected(&raw const probe_read_pc as usize);
@@ -74,6 +85,20 @@ pub fn remote_fault(address: usize) {
         percpu::current().fault_far.load(Ordering::Acquire),
         address as u64
     );
+}
+#[cfg(feature = "secondary-panic-test")]
+fn secondary_panic_control() {
+    use smp::experiment as remote;
+    // SAFETY: INV-REMOTE-READER: control carries no pointer; PANIC is the
+    // registered secondary failure probe and completion must reject its failure.
+    unsafe { remote::submit(remote::PANIC, 0) };
+    remote::complete(remote::PANIC);
+    panic!("secondary panic not detected");
+}
+#[cfg(feature = "retirement-negative")]
+fn retirement_control(p: &mut memory::Physical, frame: memory::Frame) {
+    p.release(frame);
+    panic!("premature retirement release accepted");
 }
 fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     use percpu::{BOOT_CPU, SECONDARY_CPU};
@@ -156,6 +181,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
             && pair.1 == pair.0 ^ remote::PUBLICATION_XOR,
     );
     let a = p.allocate(1, 1).unwrap();
+    #[cfg(not(feature = "retirement-negative"))]
     let address = a.address();
     let mut mapping = memory::map(&a, memory::DYNAMIC_BASE, true, false).unwrap();
     mapping.write_word(SMP_WORD_PATTERN).unwrap();
@@ -186,8 +212,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
     #[cfg(feature = "retirement-negative")]
     {
         core::mem::forget(retirement);
-        p.release(a);
-        panic!("premature retirement release accepted");
+        retirement_control(p, a);
     }
     #[cfg(not(feature = "retirement-negative"))]
     {
@@ -199,7 +224,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
         drop(retirement);
         report(
             "smp_remote_ack",
-            p.reclaimable(&a) && second.tlb_ack.load(Ordering::Acquire) > 0,
+            p.reclaimable(&a) && smp::remote_tlbi_completed(second.tlb_ack.load(Ordering::Acquire)),
         );
         // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.
         unsafe {
@@ -244,14 +269,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
             && second.fault_far.load(Ordering::Acquire) == memory::DYNAMIC_BASE as u64,
     );
     #[cfg(feature = "secondary-panic-test")]
-    {
-        // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.
-        unsafe {
-            remote::submit(remote::PANIC, 0);
-        }
-        remote::complete(remote::PANIC);
-        panic!("secondary panic not detected");
-    }
+    secondary_panic_control();
     let users = crate::boot_workload::exercise(p, processes);
     let repeated_users = crate::boot_workload::exercise(p, processes);
     report(
@@ -315,6 +333,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
     crate::process_workload::exercise(p, processes, report);
     crate::user_copy::testing::exercise(p, processes, report);
     crate::handles::testing::exercise(p, processes, report);
+    crate::security::testing::exercise(p, processes, report);
     // SAFETY: INV-REMOTE-READER: bounded control work has no borrowed pointer; shutdown drains it before CPU_OFF.
     unsafe {
         remote::submit(remote::LOCK, 0);
@@ -477,13 +496,11 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
     );
     cpu::unmask();
     let delivered = wait_irq();
-    cpu::mask();
     report("interrupt_delivery", delivered);
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));
     cpu::unmask();
     let delivered = wait_irq();
-    cpu::mask();
     report("timer_rearm", delivered);
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));

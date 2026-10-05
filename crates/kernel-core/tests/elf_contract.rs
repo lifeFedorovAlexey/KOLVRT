@@ -85,12 +85,36 @@ fn accepted_image_preserves_every_load_field_payload_and_page_rounding() {
             &[0x31 + index as u8; 16]
         );
     }
-    // Entry in the last file-backed byte is valid, even with a large BSS tail.
-    put(&mut bytes, 24, (BASE + 15) as u64, 8);
+    // The last aligned entry is valid, even with a large BSS tail.
+    put(&mut bytes, 24, (BASE + 12) as u64, 8);
     assert_eq!(
         elf::parse(&bytes, BASE, WINDOW, PAGE).unwrap().entry,
-        BASE + 15
+        BASE + 12
     );
+}
+
+#[test]
+fn entry_requires_aarch64_instruction_alignment() {
+    for offset in [1, 2, 3, 15] {
+        let mut bad = image(1);
+        put(&mut bad, 24, (BASE + offset) as u64, 8);
+        assert_eq!(
+            elf::parse(&bad, BASE, WINDOW, PAGE).unwrap_err(),
+            "AArch64 ELF entry is not instruction-aligned",
+            "entry offset {offset}"
+        );
+    }
+}
+
+#[test]
+fn aligned_entry_checks_file_geometry_without_decoding_an_instruction() {
+    // Preserve the format contract: only the entry byte must be file-backed.
+    // Full initial instruction backing/validity is not an execution guarantee.
+    for file_size in [1, 2, 3] {
+        let mut bytes = image(1);
+        put(&mut bytes, 64 + 32, file_size, 8);
+        assert_eq!(elf::parse(&bytes, BASE, WINDOW, PAGE).unwrap().entry, BASE);
+    }
 }
 
 #[test]
@@ -239,7 +263,7 @@ fn segment_sizes_alignment_permissions_and_checked_arithmetic_fail_independently
 fn entry_requires_executable_file_bytes_and_overlap_is_order_independent() {
     let good = image(2);
     elf::parse(&good, BASE, WINDOW, PAGE).unwrap();
-    for entry in [BASE - 1, BASE + 16, BASE + PAGE, BASE + WINDOW] {
+    for entry in [BASE - 4, BASE + 16, BASE + PAGE, BASE + WINDOW] {
         let mut bad = good.clone();
         put(&mut bad, 24, entry as u64, 8);
         assert_eq!(

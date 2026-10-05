@@ -45,3 +45,16 @@ Authority, initialization, alias lifetime, memory ordering и failure containmen
 ## Reversibility
 
 Пересматривать выбор при изменении нагрузки или платформы; сохранять свидетельства и сравнивать замену. Не расширять автоматически scheduler, userspace и compatibility.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0011",
+  "kind": "adr",
+  "aliases": ["ADR-0011"],
+  "summary": "Навигация по документу: ADR-0011 — Ревью методов по производительности и надёжности. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

@@ -24,3 +24,5 @@ pub fn quantiles(samples: &mut [u64]) -> Option<[u64; 3]> {
     Some([rank(50), rank(95), rank(99)])
 }
 pub mod handles;
+
+pub mod domain;

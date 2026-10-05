@@ -55,3 +55,16 @@ DEV/PROD matrix проверяет same-VA isolation, exhaustion на обоих
 Allocator и switch contract приватны для ограниченного kernel process runtime. До увеличения числа CPU, совместного использования roots, мутации process mappings или migration следует пересмотреть residency и remote shootdown. ASID-zero baseline остаётся доступным для сравнения и fallback.
 
 [Английский оригинал](../../../../docs/architecture-decisions/0021-asid-lifecycle.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0021",
+  "kind": "adr",
+  "aliases": ["ADR-0021"],
+  "summary": "Навигация по документу: ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

@@ -1,5 +1,9 @@
 # ADR-0003 — Единая архитектура для профилей исполнения
 
+Document status: CURRENT
+Evidence scope: Принятые требования; реализация и проверка имеют отдельные границы доказательств.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Статус: **Принято**. Дата: 2026-10-02.
 
 ## Контекст
@@ -47,3 +51,16 @@ PROD исключает внедрение сбоев и эксперимент�
 [Случаи и источники](../research/case-index.md); [другие системы](../research/reference-systems.md).
 
 [Английский оригинал](../../../../docs/architecture-decisions/0003-profiles.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0003",
+  "kind": "adr",
+  "aliases": ["ADR-0003"],
+  "summary": "Навигация по документу: ADR-0003 — Единая архитектура для профилей исполнения. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

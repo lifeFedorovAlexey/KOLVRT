@@ -1,7 +1,7 @@
-//! Process-local references to two existing native primitives. No authority.
+//! Process-local references and explicit scoped grants to two native primitives.
 use crate::{
     process::{Completion, ProcessId},
-    wait::SharedEvent,
+    wait::{SharedEvent, SignalError},
 };
 pub const MAX_GENERATION: u64 = u64::MAX >> 8;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -25,8 +25,10 @@ impl Rights {
     pub const NONE: Self = Self(0);
     pub const SEND: Self = Self(1);
     pub const TRANSFER: Self = Self(2);
-    pub const KNOWN: Self = Self(Self::SEND.0 | Self::TRANSFER.0);
+    pub const REVOKE: Self = Self(4);
+    pub const KNOWN: Self = Self(Self::SEND.0 | Self::TRANSFER.0 | Self::REVOKE.0);
     pub const ALL: Self = Self::KNOWN;
+    pub const ISSUER: Self = Self::KNOWN;
     pub const fn from_bits(bits: u8) -> Option<Self> {
         if bits & !Self::KNOWN.0 == 0 {
             Some(Self(bits))
@@ -52,6 +54,9 @@ pub enum Error {
     GenerationExhausted,
     Rights,
     ReferenceExhausted,
+    Denied,
+    Budget,
+    Revoked,
 }
 #[derive(Debug, PartialEq, Eq)]
 pub enum CreationError<E> {
@@ -74,8 +79,16 @@ struct Resource {
     identity: TargetId,
     rights: Rights,
     value: Primitive,
+    service: Option<ProcessId>,
+    _charge: Option<crate::domain::Charge>,
 }
 impl Resource {
+    fn value_revoked(&self) -> bool {
+        match &self.value {
+            Primitive::Event(e) => e.revoked(),
+            Primitive::Completion(_) => false,
+        }
+    }
     fn kind(&self) -> Kind {
         match self.value {
             Primitive::Event(_) => Kind::Event,
@@ -93,6 +106,8 @@ impl Resource {
             identity: self.identity,
             rights,
             value,
+            service: self.service,
+            _charge: None,
         })
     }
 }
@@ -110,6 +125,7 @@ impl Slot {
 pub struct Namespace<const N: usize, const LIMIT: u64 = MAX_GENERATION> {
     owner: Option<ProcessId>,
     slots: [Slot; N],
+    domain: Option<crate::domain::Reference>,
 }
 /// Synchronous accepted borrow keeps the concrete resource alive. Close/retire
 /// require an exclusive namespace borrow and cannot race this retained reference.
@@ -143,6 +159,32 @@ impl Retained<'_> {
         match &self.resource.value {
             Primitive::Completion(c) => Some(*c),
             _ => None,
+        }
+    }
+    /// Revoke future admissions for a shared Event target. Existing accepted
+    /// references and already-pending notification remain valid.
+    pub fn revoke(&self) -> Result<bool, Error> {
+        if !self.resource.rights.contains(Rights::REVOKE) {
+            return Err(Error::Rights);
+        }
+        match &self.resource.value {
+            Primitive::Event(event) => Ok(event.revoke()),
+            Primitive::Completion(_) => Err(Error::WrongType),
+        }
+    }
+    pub fn signal(&self) -> Result<bool, Error> {
+        // Deferred service effects require admission with consumer/service charges.
+        if self.resource.service.is_some() {
+            return Err(Error::Denied);
+        }
+        if !self.resource.rights.contains(Rights::SEND) {
+            return Err(Error::Rights);
+        }
+        match &self.resource.value {
+            Primitive::Event(event) => event
+                .admit_signal()
+                .map_err(|SignalError::Revoked| Error::Revoked),
+            Primitive::Completion(_) => Err(Error::WrongType),
         }
     }
     pub fn rights(&self) -> Rights {
@@ -185,6 +227,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         Self {
             owner: None,
             slots: [const { Slot::EMPTY }; N],
+            domain: None,
         }
     }
     pub fn bind(&mut self, owner: ProcessId) -> Result<(), Error> {
@@ -193,6 +236,38 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         }
         self.owner = Some(owner);
         Ok(())
+    }
+    pub fn bind_domain(
+        &mut self,
+        owner: ProcessId,
+        domain: crate::domain::Reference,
+    ) -> Result<(), Error> {
+        domain.validate(owner).map_err(|_| Error::Denied)?;
+        self.bind(owner)?;
+        self.domain = Some(domain);
+        Ok(())
+    }
+    pub fn domain(&self) -> Result<&crate::domain::Reference, Error> {
+        self.domain.as_ref().ok_or(Error::Denied)
+    }
+    pub fn begin_teardown(&self) {
+        if let Some(domain) = &self.domain {
+            domain.close();
+        }
+    }
+    fn handle_charge(&self) -> Result<Option<crate::domain::Charge>, Error> {
+        self.domain
+            .as_ref()
+            .map(|d| {
+                d.charge(crate::domain::ChargeKind::Handle).map_err(|e| {
+                    if e == crate::domain::Error::Exhausted {
+                        Error::Budget
+                    } else {
+                        Error::Denied
+                    }
+                })
+            })
+            .transpose()
     }
     pub fn owner(&self) -> Option<ProcessId> {
         self.owner
@@ -297,7 +372,27 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
             .checked_add(1)
             .filter(|next| *next <= OTHER_LIMIT)
             .ok_or(Error::GenerationExhausted)?;
-        let delegated = source.delegated(requested)?;
+        if source.service.is_some() {
+            if source.kind() != Kind::Event || source.value_revoked() {
+                return Err(Error::Denied);
+            }
+            if let Some(d) = &self.domain {
+                d.validate(caller).map_err(|_| Error::Denied)?;
+            }
+        }
+        // Transfer is admitted against the same revocation gate as effects. A
+        // pre-revoke transfer may publish a revoked alias; no later effect can enter.
+        let _transfer_admission = if source.service.is_some() {
+            match &source.value {
+                Primitive::Event(event) => Some(event.admit().ok_or(Error::Denied)?),
+                Primitive::Completion(_) => return Err(Error::Denied),
+            }
+        } else {
+            None
+        };
+        let charge = receiver.handle_charge()?;
+        let mut delegated = source.delegated(requested)?;
+        delegated._charge = charge;
         receiver.slots[target].generation = generation;
         receiver.slots[target].resource = Some(delegated);
         Ok(Handle((generation << 8) | target as u64))
@@ -308,6 +403,15 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         self.slots[index].resource = None;
         Ok(())
     }
+    /// Revoke an Event for every delegated alias. Admission races with this
+    /// operation are linearized in the target's atomic state; close stays local.
+    pub fn revoke(&self, caller: ProcessId, handle: Handle) -> Result<bool, Error> {
+        if let Some(domain) = &self.domain {
+            domain.validate(caller).map_err(|_| Error::Denied)?;
+        }
+        self.lookup_with_rights(caller, handle, Kind::Event, Rights::REVOKE)?
+            .revoke()
+    }
     pub fn retire(&mut self, caller: ProcessId) -> Result<usize, Error> {
         self.context(caller)?;
         let count = self.live();
@@ -315,6 +419,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
             slot.resource = None;
         }
         self.owner = None;
+        self.domain = None;
         Ok(count)
     }
     fn create<E>(
@@ -322,9 +427,13 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         caller: ProcessId,
         value: Primitive,
         rights: Rights,
+        service: Option<ProcessId>,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
         self.context(caller).map_err(CreationError::Handle)?;
+        if matches!(&value, Primitive::Completion(_)) && rights.contains(Rights::REVOKE) {
+            return Err(CreationError::Handle(Error::Rights));
+        }
         let index = self
             .slots
             .iter()
@@ -336,6 +445,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
                     Error::Capacity
                 })
             })?;
+        let charge = self.handle_charge().map_err(CreationError::Handle)?;
         let slot = &mut self.slots[index];
         // Reserve/burn identity before publication. Failure never resurrects it.
         if !cfg!(feature = "handle-reuse-negative") || slot.generation == 0 {
@@ -354,6 +464,8 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
             },
             rights,
             value,
+            service,
+            _charge: charge,
         };
         // Resource remains owned by this stack value until infallible commit.
         // Error or unwinding drops it; the slot stays vacant with a burned generation.
@@ -367,7 +479,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         event: SharedEvent,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create_event_with_rights(caller, event, Rights::ALL, publish)
+        self.create_event_with_rights(caller, event, Rights::SEND, publish)
     }
     pub fn create_event_with_rights<E>(
         &mut self,
@@ -376,7 +488,35 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         rights: Rights,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create(caller, Primitive::Event(event), rights, publish)
+        self.create(caller, Primitive::Event(event), rights, None, publish)
+    }
+    /// Trusted bootstrap only: publish authority for one Event and one service identity.
+    pub fn create_granted_event<E>(
+        &mut self,
+        caller: ProcessId,
+        service: ProcessId,
+        event: SharedEvent,
+        rights: Rights,
+        publish: impl FnOnce(Handle) -> Result<(), E>,
+    ) -> Result<Handle, CreationError<E>> {
+        self.create(
+            caller,
+            Primitive::Event(event),
+            rights,
+            Some(service),
+            publish,
+        )
+    }
+    pub fn admit_signal(
+        &self,
+        caller: ProcessId,
+        handle: Handle,
+    ) -> Result<(ProcessId, crate::wait::AcceptedSignal), Error> {
+        self.domain()?.validate(caller).map_err(|_| Error::Denied)?;
+        let r = self.lookup_with_rights(caller, handle, Kind::Event, Rights::SEND)?;
+        let service = r.resource.service.ok_or(Error::Denied)?;
+        let event = r.event().ok_or(Error::WrongType)?;
+        Ok((service, event.admit().ok_or(Error::Denied)?))
     }
     pub fn create_completion<E>(
         &mut self,
@@ -384,7 +524,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         completion: Completion,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create_completion_with_rights(caller, completion, Rights::ALL, publish)
+        self.create_completion_with_rights(caller, completion, Rights::NONE, publish)
     }
     pub fn create_completion_with_rights<E>(
         &mut self,
@@ -393,7 +533,13 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         rights: Rights,
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
-        self.create(caller, Primitive::Completion(completion), rights, publish)
+        self.create(
+            caller,
+            Primitive::Completion(completion),
+            rights,
+            None,
+            publish,
+        )
     }
 }
 
@@ -576,6 +722,78 @@ mod tests {
             receiver.transfer(b, delegated, &mut sender, a, Rights::ALL),
             Err(Error::Stale)
         );
+    }
+
+    #[test]
+    fn event_revocation_serializes_with_admission_and_survives_aliases() {
+        let (a, b) = ids();
+        let mut source = Namespace::<2>::new();
+        source.bind(a).unwrap();
+        let event = SharedEvent::try_new().unwrap();
+        let handle = source
+            .create_event_with_rights(a, event, Rights::ALL, |_| Ok::<_, ()>(()))
+            .unwrap();
+        let mut receiver = Namespace::<1>::new();
+        receiver.bind(b).unwrap();
+        let delegated = source
+            .transfer(a, handle, &mut receiver, b, Rights::SEND)
+            .unwrap();
+        assert_eq!(source.revoke(a, handle), Ok(true));
+        assert_eq!(source.revoke(a, handle), Ok(false));
+        assert_eq!(
+            receiver
+                .lookup(b, delegated, Kind::Event)
+                .unwrap()
+                .event()
+                .unwrap()
+                .admit_signal(),
+            Err(crate::wait::SignalError::Revoked)
+        );
+        assert_eq!(source.close(a, handle), Ok(()));
+        assert_eq!(
+            receiver
+                .lookup(b, delegated, Kind::Event)
+                .unwrap()
+                .event()
+                .unwrap()
+                .admit_signal(),
+            Err(crate::wait::SignalError::Revoked)
+        );
+    }
+
+    #[test]
+    fn revoke_requires_explicit_right_and_does_not_alias_close() {
+        let (a, _) = ids();
+        let mut source = Namespace::<2>::new();
+        source.bind(a).unwrap();
+        let handle = source
+            .create_event(a, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
+            .unwrap();
+        assert_eq!(source.revoke(a, handle), Err(Error::Rights));
+        {
+            let event = source.lookup(a, handle, Kind::Event).unwrap();
+            assert_eq!(event.signal(), Ok(true));
+        }
+        source.close(a, handle).unwrap();
+    }
+
+    #[test]
+    fn event_revocation_right_cannot_be_granted_on_completion() {
+        let (owner, _) = ids();
+        let mut namespace = Namespace::<1>::new();
+        namespace.bind(owner).unwrap();
+        let result = namespace.create_completion_with_rights(
+            owner,
+            Completion {
+                id: owner,
+                reason: crate::process::Reason::Exited(1),
+            },
+            Rights::REVOKE,
+            |_| Ok::<_, ()>(()),
+        );
+        assert_eq!(result, Err(CreationError::Handle(Error::Rights)));
+        assert_eq!(namespace.live(), 0);
+        assert_eq!(namespace.slot_state(0), Some((0, None)));
     }
     #[test]
     fn process_local_equal_values_and_stress() {

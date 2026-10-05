@@ -62,6 +62,6 @@ The normal check/validate commands include this registry. [Behavioral tests](../
 
 Three source-backed records are CANDIDATE: [allocation context](../../research/cost-l/COST-L-0001.json), [sysfs text ABI](../../research/cost-l/COST-L-0002.json) and [ioctl layout](../../research/cost-l/COST-L-0003.json). Each pins Linux v6.12 documentation, leaves original introduction and actual consumers/cost unknown, and claims no implemented module. The [seed review](../../research/compatibility/taxonomy.md) also records deferred/non-debt cases instead of forcing every API into a record.
 
-Foundation is implemented locally for issue #46; final incompatibility confirmation still needs #45 evidence and native decisions. Production module manifests/CI, offline queries, runtime accounting, benchmarks, migration and authorized inspection remain issues #47–#52. No Linux Driver Host, hardware survey or publication of personal inventory occurs here.
+Foundation is implemented locally for issue #46; final incompatibility confirmation still needs #45 evidence and native decisions. [Bounded offline queries](../research/cost-l-queries.md) now operate over validated declarations. Production module manifests/CI (#47), full manifest integration for #48, runtime accounting, benchmarks, migration and authorized inspection (#49–#52) remain open. No Linux Driver Host, hardware survey or publication of personal inventory occurs here.
 
 [Russian translation](../../translations/ru/docs/architecture/compatibility-debt.md)

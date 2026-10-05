@@ -195,6 +195,7 @@ impl TaskResult {
 pub(super) struct State {
     pub tasks: [Task; TASKS],
     pub handles: [crate::handles::Namespace; TASKS],
+    pub requests: crate::security::Queue,
     pub current: usize,
     pub switches: usize,
     pub deadline: Option<u64>,
@@ -203,6 +204,7 @@ impl State {
     pub const ZERO: Self = Self {
         tasks: [Task::ZERO; TASKS],
         handles: [const { crate::handles::Namespace::new() }; TASKS],
+        requests: crate::security::Queue::EMPTY,
         current: NO_TASK,
         switches: 0,
         deadline: None,

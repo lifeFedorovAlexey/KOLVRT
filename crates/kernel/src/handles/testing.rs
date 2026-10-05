@@ -45,10 +45,7 @@ pub(super) fn call(
             Kind::Event,
             Rights::SEND,
         ) {
-            Ok(reference) => {
-                reference.event().unwrap().signal();
-                0
-            }
+            Ok(reference) => reference.signal().map(|_| 0).unwrap_or_else(status),
             Err(error) => status(error),
         };
         return true;
@@ -60,9 +57,12 @@ pub(super) fn call(
     let access = Access::current(task).expect("current caller");
     let address = frame.gpr[1] as usize;
     if operation == 0x82 {
-        let a = table.create_event(caller, SharedEvent::try_new().unwrap(), |h| {
-            access.copy_to_user(address + 64, &h.encode().to_le_bytes())
-        });
+        let a = table.create_event_with_rights(
+            caller,
+            SharedEvent::try_new().unwrap(),
+            Rights::ALL,
+            |h| access.copy_to_user(address + 64, &h.encode().to_le_bytes()),
+        );
         let b = table.create_completion(
             caller,
             Completion {
@@ -207,7 +207,7 @@ pub(super) fn call(
         stress &= table.lookup(caller, h, Kind::Event).is_err();
     }
     let h = table
-        .create_event(caller, SharedEvent::try_new().unwrap(), |h| {
+        .create_event_with_rights(caller, SharedEvent::try_new().unwrap(), Rights::ALL, |h| {
             access.copy_to_user(address + 64, &h.encode().to_le_bytes())
         })
         .unwrap();
@@ -340,6 +340,7 @@ pub(crate) fn exercise(
                 Origin::Bootstrap,
                 Spec {
                     image_format: crate::process::ImageFormat::RawFixture,
+                    limits: limits(),
                     image: foreign_image,
                     context,
                     owner,
@@ -385,6 +386,7 @@ pub(crate) fn exercise(
             Origin::Bootstrap,
             Spec {
                 image_format: crate::process::ImageFormat::RawFixture,
+                limits: limits(),
                 image,
                 context: Context {
                     pc: memory::USER_CODE as u64,
@@ -404,6 +406,7 @@ pub(crate) fn exercise(
             Origin::Bootstrap,
             Spec {
                 image_format: crate::process::ImageFormat::RawFixture,
+                limits: limits(),
                 image: foreign_image,
                 context: Context {
                     pc: memory::USER_CODE as u64,
@@ -467,6 +470,7 @@ pub(crate) fn exercise(
                     Origin::Bootstrap,
                     Spec {
                         image_format: crate::process::ImageFormat::RawFixture,
+                        limits: limits(),
                         image,
                         context,
                         owner,
@@ -528,5 +532,15 @@ pub(crate) fn exercise(
                 raw
             );
         }
+    }
+}
+
+fn limits() -> kernel_core::domain::Limits {
+    kernel_core::domain::Limits {
+        memory_pages: crate::memory::USER_SPACE_PAGES
+            + crate::platform::config::USER_PAYLOAD_BYTES / crate::platform::config::PAGE_BYTES,
+        handles: crate::handles::CAPACITY as u16,
+        queue: 1,
+        requests: 1,
     }
 }

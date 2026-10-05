@@ -58,3 +58,16 @@ EL0 не выбирает source process и не передаёт object pointer
 Изменение wire frame, rights bits, квот, набора primitives, affinity или retention guarantee требует review контракта. Новые authority policy, revocation, IPC admission и domain budgets требуют отдельных решений.
 
 [Английский оригинал](../../../../docs/architecture-decisions/0020-handle-transfer-and-retention.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0020",
+  "kind": "adr",
+  "aliases": ["ADR-0020"],
+  "summary": "Навигация по документу: ADR-0020 — Передача дескрипторов с ограничением прав и удержание targets. Доказательства имеют указанные границы.",
+  "tags": ["architecture", "decision"]
+}
+```

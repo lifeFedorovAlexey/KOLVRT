@@ -4,6 +4,14 @@ Document status: CURRENT
 Evidence scope: Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.
 Current reference: [ADR-0018](../architecture-decisions/0018-safe-user-copy.md)
 
+<a name="kolvrt-memory-user-copy"></a>
+
+## Feature scope
+
+The canonical feature record describes the bounded implementation. Evidence is scoped to the receipt inputs; hardware and production readiness remain separate gates.
+
+<a name="kolvrt-memory-user-copy-api"></a>
+
 ## API and limits
 
 [Access and Snapshot](../../crates/kernel/src/user_copy.rs) form the native memory boundary. Scheduler-owned current task attribution constructs a non-Send/non-Sync Access borrowing the executing task. No user pointer becomes a Rust reference. The [safe range model](../../crates/kernel-core/src/user_copy.rs) uses checked arithmetic.
@@ -19,6 +27,8 @@ The implementation limit is 12,288 bytes per call. Snapshot capacity is explicit
 All ranges must lie inside the current 2 MiB user aperture starting at USER_BASE; null, kernel addresses and checked-add overflow fail. Nonempty spans require every covered page to have current EL0 read/write permission. A byte copy accepts unaligned addresses. Empty copies still validate identity and a non-null address inside the aperture but access no page; an unmapped in-aperture address is allowed for an empty copy. Capacity/size failure precedes range failure, which precedes page checks. A stale executing context is rejected before memory access.
 
 Strings are length-delimited bytes with the same bound; no unbounded NUL scan or implicit string conversion exists. Consumers explicitly validate UTF-8 or another required encoding after copying. Requests are decoded from bytes; internal Rust structs, enums, padding and pointer-sized fields are never converted to wire bytes by this API. Any future wire representation requires explicit widths, byte order, versions and initialized reserved bytes under LAW-018.
+
+<a name="kolvrt-memory-user-copy-faults"></a>
 
 ## Fault and partial-copy model
 
@@ -36,6 +46,8 @@ Input failure discards private initialized scratch and publishes no snapshot, in
 
 [AArch64 copy loops](../../crates/kernel/src/arch/aarch64/entry.S) use LDTRB/STTRB for user bytes, enforcing EL0 permissions even in EL1. Kernel-side loads/stores remain ordinary instructions with fatal invariant failure. [AT S1E0R/W preflight](../../crates/kernel/src/arch/aarch64/mod.rs) checks each page without dereferencing it. The synchronous vector recovers only translation/access/permission data aborts at the two exact user instruction PCs, with an active per-CPU copy guard, valid FAR inside the requested range, and matching read/write syndrome. Instruction aborts, external aborts, invalid FAR, wrong PC and all unrelated current-EL faults remain fatal. No generic exception-table or arbitrary kernel-fault recovery is introduced.
 
+<a name="kolvrt-memory-user-copy-snapshot"></a>
+
 ## Snapshot and admission
 
 ```text
@@ -49,6 +61,8 @@ mutable EL0 bytes
 ```
 
 Success establishes memory validity, not capability authority. Consumers must retain the same snapshot for parse, validation and authorization; rereading mutable EL0 fields after admission would reintroduce TOCTOU. The EL0 fixture submits LE64 value 42, returns to EL0 and replaces it with 43, then verifies the admitted kernel value is still 42. A deliberately enabled live-reread control must fail. No handles, capabilities, domains, IPC or admission effects are implemented here.
+
+<a name="kolvrt-memory-user-copy-lifetime"></a>
 
 ## Lifetime, SMP and mapping publication
 
@@ -68,6 +82,8 @@ flowchart TD
 Current-space validation checks the retained charge, exact process generation, current TTBR, indexed running owner, queue generation, linked Running state, masked IRQ and active exclusive scheduler scope. Space generations publish after initialized private mapping construction and before release queue admission. Registry remains mutably borrowed by synchronous dispatch, owns non-Send/non-Sync frames, and cannot reclaim or admit another round during execution. The copy token cannot escape a borrowed scheduler task or cross CPUs. All copy scopes end before return to EL0, completion waiting, exit or root switching. No allocation, ordinary lock, UART logging or yield occurs inside the copy operation.
 
 There is one executing owner per private process; another CPU runs another private space. User page mutation/unmap, shared user mappings, process migration and asynchronous exit are not exposed. These races are mechanically excluded by current ownership and immutable mappings, rather than inferred from a one-time permission check. A future mutable/shared mapping API must introduce retained mapping exclusion or pinning before relaxing this contract. Hardware preflight alone would not establish that guarantee. ASID zero and full completed local TLBI remain unchanged. Fixed-affinity copying on two CPUs is tested; arbitrary CPU counts, silicon weak-memory behavior, DMA interference and side channels are unverified.
+
+<a name="kolvrt-memory-user-copy-evidence"></a>
 
 ## Verification and measurements
 
@@ -90,6 +106,8 @@ Recorded timer ticks (62.5 MHz), 32 observations per cell:
 
 The [physical native-only matrix](../../research/results/native-compat-removal-phase32.json) repeats 69/57 with all three compatibility packages absent and 56 unchanged native/harness files compared. The [Phase 2 routing regression](../../research/results/routing-phase32-regression.json) retains its six EL0 configurations, stripped boot and three rejection controls.
 
+<a name="kolvrt-memory-user-copy-limits"></a>
+
 ## Unsafe and remaining gate
 
 [INV-USER-COPY](unsafe.md) records ownership, necessity, failure and test obligations. The lexical inventory rises from 98 locations at the base commit to 106: four production sites (permission query, extern declarations and two calls), plus four test-only sites (fixture declaration/slice and two deliberate fault calls). There is no new unsafe process storage or Sync implementation. INV-USER-COPY-TEST adds only deliberate bounded fault injection. A lexical inventory is not a proof.
@@ -97,3 +115,115 @@ The [physical native-only matrix](../../research/results/native-compat-removal-p
 The separately accepted [handle contract](handles.md) uses completed bounded immutable request bytes, initialized output, explicit partial-write failure and generation-retained memory lifetime. It supplies its own identity/type/rights/close/transfer rules; general revocation and authority issuance remain separate gates. Successful copying supplies no authority and does not authorize later phases.
 
 [Russian translation](../../translations/ru/docs/kernel/user-copy.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.kernel.user-copy",
+  "kind": "subsystem-contract",
+  "summary": "Bounded synchronous initialized snapshot copies across EL0 boundary.",
+  "units": [
+    {
+      "id": "kolvrt.memory.user-copy",
+      "anchor": "kolvrt-memory-user-copy",
+      "kind": "feature",
+      "summary": "Bounded synchronous initialized snapshot copies across EL0 boundary.",
+      "depends_on": [
+        "kolvrt.memory.user-copy.api",
+        "kolvrt.memory.user-copy.faults",
+        "kolvrt.memory.user-copy.snapshot",
+        "kolvrt.memory.user-copy.lifetime",
+        "kolvrt.memory.user-copy.limits",
+        "kolvrt.process.identity",
+        "kolvrt.process.reclamation",
+        "law.018",
+        "law.013"
+      ],
+      "feature": {
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Synchronous current-process copies over immutable mappings.",
+        "sources": [
+          "crates/kernel/src/user_copy.rs",
+          "crates/kernel-core/src/user_copy.rs"
+        ],
+        "acceptance": ["research/results/kernel-phase32.json"],
+        "issues": [22],
+        "adrs": ["adr.0018"],
+        "limitations": [
+          "No asynchronous copy, shared mutable mappings or public pointer ABI."
+        ],
+        "next_gate": "Re-derive lifetime/exclusion before mutable mappings or asynchronous use.",
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "state": "VERIFIED",
+            "reason": "Passing historical receipt; does not establish later-source applicability.",
+            "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
+            "receipt": "research/results/kernel-phase32.json",
+            "receipt_sha256": "6cb605f9ebde34d2af4d0608014911bbcd310336e4540cd829b2d219862a723e"
+          },
+          {
+            "environment": "physical-arm64",
+            "state": "UNKNOWN",
+            "reason": "No physical ARM64 acceptance is established."
+          }
+        ],
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Phase 3.2",
+        "transitions": [
+          {
+            "from": "UNRECORDED",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Initial reviewed catalog adoption of existing scoped contract; not a new implementation transition.",
+            "acceptance": ["research/results/kernel-phase32.json"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kolvrt.memory.user-copy.api",
+      "anchor": "kolvrt-memory-user-copy-api",
+      "kind": "contract-section",
+      "summary": "User-copy contract: api",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.memory.user-copy.faults",
+      "anchor": "kolvrt-memory-user-copy-faults",
+      "kind": "contract-section",
+      "summary": "User-copy contract: faults",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.memory.user-copy.snapshot",
+      "anchor": "kolvrt-memory-user-copy-snapshot",
+      "kind": "contract-section",
+      "summary": "User-copy contract: snapshot",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.memory.user-copy.lifetime",
+      "anchor": "kolvrt-memory-user-copy-lifetime",
+      "kind": "contract-section",
+      "summary": "User-copy contract: lifetime",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.memory.user-copy.evidence",
+      "anchor": "kolvrt-memory-user-copy-evidence",
+      "kind": "contract-section",
+      "summary": "User-copy contract: evidence",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.memory.user-copy.limits",
+      "anchor": "kolvrt-memory-user-copy-limits",
+      "kind": "contract-section",
+      "summary": "User-copy contract: limits",
+      "depends_on": []
+    }
+  ]
+}
+```

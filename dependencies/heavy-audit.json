@@ -1,0 +1,714 @@
+{
+  "schema_version": 1,
+  "baseline_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
+  "evaluated_commit": "fec38f73a53fff2fcae63883fbd0ba18663cd1c0",
+  "evaluated_source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da"
+    },
+    {
+      "path": "crates/host-process-metrics/Cargo.toml",
+      "sha256_lf": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29"
+    },
+    {
+      "path": "crates/migration-advisor/Cargo.toml",
+      "sha256_lf": "2f45888422385b193610a02f8be01021afaeafd652853af5b374d96339a02754"
+    },
+    {
+      "path": "crates/migration-workbench/Cargo.toml",
+      "sha256_lf": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044"
+    },
+    {
+      "path": "crates/native-protocol-model/Cargo.toml",
+      "sha256_lf": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e"
+    },
+    {
+      "path": "crates/native-state-models/Cargo.toml",
+      "sha256_lf": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007"
+    },
+    {
+      "path": "crates/repository-checks/Cargo.toml",
+      "sha256_lf": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055"
+    },
+    {
+      "path": "deny.toml",
+      "sha256_lf": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3"
+    },
+    {
+      "path": "dependencies/policy.json",
+      "sha256_lf": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    },
+    {
+      "path": "scripts/dependency-audit.cjs",
+      "sha256_lf": "c2c180fb97d4d62a3ec6050b9c6a9913909736c8446734c52dcb2534db6001d8"
+    }
+  ],
+  "cargo_lock_sha256": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+  "audit_date": "2026-10-05",
+  "scope": "Pinned source review with measured workspace-unified all-target closure; changed quanta features evaluated in implementation worktree",
+  "audits": [
+    {
+      "crate": "jsonschema",
+      "version": "0.33.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/Stranger6667/jsonschema",
+      "rust_version": "1.71.1",
+      "decision": "KEEP",
+      "reason": "Draft 2020-12 reference resolution and schema validation semantics are not a safe small custom implementation. Default HTTP/file retrieval features were already disabled on main; no reqwest in the resolved graph. Keep validating repository/security schema contracts.",
+      "removal": "Requires replacement validator proving current positive/negative schema fixtures and Draft 2020-12 behavior; do not replace based on count.",
+      "maintenance": "Pinned 0.33.0; no assertion of latest version. Run RustSec on every PR and weekly. Upgrade needs schema compatibility tests.",
+      "features_before": [],
+      "features_after": [],
+      "transitive_count_before": 98,
+      "transitive_count_after": 98,
+      "consumers": ["repository-checks"],
+      "reachability": "outside production kernel EL1/TCB; host-only",
+      "source_files": [
+        {
+          "path": "src/compiler.rs",
+          "bytes": 16980,
+          "sha256": "7f892da722f94949d08e13cebe236404bb06b81c6df75952c8283af4f614c18f",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/content_encoding.rs",
+          "bytes": 1077,
+          "sha256": "985613240b1bbac2f94a6e2c24b854d312a61e2d06aacfdf088669f55010431b",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/content_media_type.rs",
+          "bytes": 539,
+          "sha256": "9b6d68b1bae53071075a70279cb43d0fb91e0c61b1b6849fe1caa45404268567",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/ecma.rs",
+          "bytes": 8193,
+          "sha256": "ed036a6bb5ab54f30ad00ee40c7c2cb90147eceb75d6375a2338a482c3509ab1",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/error.rs",
+          "bytes": 50153,
+          "sha256": "c9780f791a502b81414e3ac2225a87981e9ff6583bc8f2dd91641f1cb9238d7e",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/ext/cmp.rs",
+          "bytes": 2572,
+          "sha256": "94a61b0db36c2964abf0c030805dae2aa667970db554e28275d9792370fa5817",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/ext/mod.rs",
+          "bytes": 37,
+          "sha256": "4c766721558eef806b289d47192e3b12d5ae63fbe016b84b8835d5809ebb5021",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/ext/numeric.rs",
+          "bytes": 1999,
+          "sha256": "c214e4d0b5f921107fdef6397797a72e4d1879f984832d09368d7e85088e64a2",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/additional_items.rs",
+          "bytes": 5605,
+          "sha256": "2a6aa6e2e045f703e640b3632787e38ceb5981edaec824b29ebf3a1c94aea1f3",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/additional_properties.rs",
+          "bytes": 70071,
+          "sha256": "253e25d93b98f042dbbd11b33c0b9e7c5322897765289a23cd914554ae9a82ff",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/all_of.rs",
+          "bytes": 4166,
+          "sha256": "d3f575c9ff20d7b15d9c973891064882dac3fa9f2cc466877c2939b4374d99c2",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/any_of.rs",
+          "bytes": 3753,
+          "sha256": "a969becafa87860bb1341a8dcdda67684a8067ebbf884b903cc92bc05fede8ee",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/boolean.rs",
+          "bytes": 971,
+          "sha256": "517ea9e77c3f34ebdd25d3eedce84f27f8049a6386d0225702a9d13eb0f8be90",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/const_.rs",
+          "bytes": 7671,
+          "sha256": "e625eb647dc3c3a63dd90851b89305fab4818511ecd4c38ee4e6c9411f8e7780",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/contains.rs",
+          "bytes": 11539,
+          "sha256": "f0e8a90e1ff246d528f9a926e7ec11c4e268d4e03557198fd518fd62845880f2",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/content.rs",
+          "bytes": 8871,
+          "sha256": "7d7c1255fe60391767997e764211fb4c1f39c922f78456407bdb61ce2b7eced9",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/custom.rs",
+          "bytes": 2038,
+          "sha256": "6e75a226a68ab8d1a60f757cd107c87a1e901f2ec7395fe878648f4fbd9d8318",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/dependencies.rs",
+          "bytes": 10073,
+          "sha256": "8fae029e44cee0e4503a8abf4b126ff8e5cb97e44a43bd249722f1ee6f4aabbe",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/enum_.rs",
+          "bytes": 3968,
+          "sha256": "daac4e940aeaf7524e3fc696c96f6f12629b3c2c0eb07985bfcf5001e5f9bc03",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/format.rs",
+          "bytes": 37307,
+          "sha256": "84f8c0048025246185ff45e12445d1d355ca7f81e1599a1abc98c008a8be8cec",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/helpers.rs",
+          "bytes": 1510,
+          "sha256": "762bf962bdc426cacb86b9536ad7cd1decc15f365b61e7b78e6c66ce36526ed2",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/if_.rs",
+          "bytes": 8012,
+          "sha256": "a424ac1bbe8374c7621452d0d0af797660b224881bc62437e086212a97068f3e",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/items.rs",
+          "bytes": 8992,
+          "sha256": "ef6d521c6170d12c3ee1e2db7edfdce3da960fe458c75277cef96703b3c01c9b",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/legacy/maximum_draft_4.rs",
+          "bytes": 473,
+          "sha256": "02775f9fd64c3f59fb93039b4363179b2b79bd92e41e4ddd49cfedbbf387ada9",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/legacy/minimum_draft_4.rs",
+          "bytes": 473,
+          "sha256": "646196c23bc6457e4acae293d13bda64d36793adff80c173fe51d3cd520ff21a",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/legacy/mod.rs",
+          "bytes": 93,
+          "sha256": "b749a000eb719ef7817f3c9640e30738ce5dc5b715b195464695d923a2e2f709",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/legacy/type_draft_4.rs",
+          "bytes": 5237,
+          "sha256": "843554969faa0b07764e6e337fb34f299beb35e7edd2f43e7bccfeb93df70441",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/max_items.rs",
+          "bytes": 2448,
+          "sha256": "464529be66363f5e395da0dd50182f0b7a9fc44ce7fd6f3688362b2de1e2c599",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/max_length.rs",
+          "bytes": 2511,
+          "sha256": "4aa5470d16e84462b1820d5b160746064e78230d0e86584ba1178c3255f24213",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/max_properties.rs",
+          "bytes": 2556,
+          "sha256": "6985f05b1345a323148e6de7b2e7440ff25c63eb2358cd88fe692391e769dd9a",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/min_items.rs",
+          "bytes": 2447,
+          "sha256": "e4ac22d262ce8998c70a45114dd56bfddbe8cdd50592b2a6631e4c609a92b0cb",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/min_length.rs",
+          "bytes": 2509,
+          "sha256": "e831eb641e2ba129050401db70aaf4011d4e1ece648906e3c647cab4835899f9",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/min_properties.rs",
+          "bytes": 2548,
+          "sha256": "6eac5dcc9235ae9aad13128934986e34798fc7a8cea8fe6f5a98c2a4f0f7422a",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/minmax.rs",
+          "bytes": 7211,
+          "sha256": "c30c87f86d2f48b36e3edd01a7e49a07ea1efd906b5c439360aee5b142944215",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/mod.rs",
+          "bytes": 23526,
+          "sha256": "6af29943dd3f29ae8b463bf3c07f40ec935938ec22a39e5f7efa068f0d71067e",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/multiple_of.rs",
+          "bytes": 4717,
+          "sha256": "4a68dc6e0af52b5a8bdec6c729c6f0c5cd52ebcafe3fd0a40c1d64df7ef572e5",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/not.rs",
+          "bytes": 1683,
+          "sha256": "d39ac237a9e58d07593f2afb10fc88fb7802b18eef2869699cf9b7557be0f130",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/one_of.rs",
+          "bytes": 5017,
+          "sha256": "4a9b40d900c149088639a0f4c1f8489c32efc99de14b1016a072f494e1856b81",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/pattern.rs",
+          "bytes": 5480,
+          "sha256": "dc5cc75de0c1abacb3c882d532605a1fad73f106509cbe79baa34f1543ec1808",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/pattern_properties.rs",
+          "bytes": 12834,
+          "sha256": "8d21a5a4e318bacb95e8d47627c5701a17675d5d457a448562ee9a92f4336d09",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/prefix_items.rs",
+          "bytes": 8524,
+          "sha256": "cf6635cd07fda0f077f459ef1ea68af9fe8477c518ff418da511dbd6b000ccd6",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/properties.rs",
+          "bytes": 4521,
+          "sha256": "78e5e6b85b327fa6f012887dd4a92c2122760cc906ed95c96d30474368de990d",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/property_names.rs",
+          "bytes": 5179,
+          "sha256": "c1792c2d99d462007566b4a66ae7e294401255185c161d2e2a2d4c9b524aa53a",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/ref_.rs",
+          "bytes": 22685,
+          "sha256": "1a122a18a6ce5441e08b21bb8c7d78f2863583358bc4cc7aaf0f2de2177ed465",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/required.rs",
+          "bytes": 5630,
+          "sha256": "e1d72afdc49c7a65064d41e328edc1e806b50c57c7ca2de4602b61c9b8e78a62",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/type_.rs",
+          "bytes": 10890,
+          "sha256": "2cf4b7361fe4c9415f7b1ed7e2763829d004dcbf686aa6965399c6bd6962c9c6",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/unevaluated_items.rs",
+          "bytes": 19298,
+          "sha256": "48f536ae0914120f8747cbf8ab3744a513493161e5d8826e8cca704f0af98ec6",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/unevaluated_properties.rs",
+          "bytes": 30095,
+          "sha256": "821e5cbbe3f14547d15e69f19c6ad97f46f0cb110e1788f5aaac2e134a988db1",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/keywords/unique_items.rs",
+          "bytes": 7238,
+          "sha256": "3b47994ba4b419e56aeab57a88af7e487ad5fcca5b799f15987bdb2c61e2b861",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/lib.rs",
+          "bytes": 79300,
+          "sha256": "9d850275785342abbf2ca29eedbaa280b73dda8878b548e9012dd762152c66ab",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/node.rs",
+          "bytes": 15530,
+          "sha256": "11b2cbd9a54c5acd033f94871f41cbd9d780d6ba7210e2ca1f36c50c2cac4a3b",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/options.rs",
+          "bytes": 29720,
+          "sha256": "5ff21579c6bc9db1fcb7a24cf8a723d0408187a4a252b9e551d21c59238e4d52",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/output.rs",
+          "bytes": 13406,
+          "sha256": "5a0c08becb086aa9a17444ef1939b58e4f440180fabecabd35e45572061086df",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/paths.rs",
+          "bytes": 13363,
+          "sha256": "2ddc85a9283a92a36fc5146792075046c109316aeddccdffe110d17836e11551",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/properties.rs",
+          "bytes": 6356,
+          "sha256": "65e35aa1e197786a7e36825e38dccc530c680d5b4d98156e8fe1bcb15d376e9a",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/regex.rs",
+          "bytes": 2053,
+          "sha256": "c55ea9a914f434f1cc62857c95ded913fcdebc4089b11e5b7593dfb613066164",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/retriever.rs",
+          "bytes": 13858,
+          "sha256": "e3ea7d41df8aa9c09d741ab0e0b206f11b9b660076b7fa5854ee71e789c7fb44",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/types.rs",
+          "bytes": 11066,
+          "sha256": "749713a725824547ace494b32f249bffa2edc973aebc410911150b23cf58ebef",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/validator.rs",
+          "bytes": 24892,
+          "sha256": "c8f84d096114e857d31b593c71fbe91a4e96150e19318b678a2633d414613a67",
+          "unsafe_token_occurrences": 0
+        }
+      ],
+      "source_bytes": 671464,
+      "unsafe_token_occurrences": 0,
+      "unsafe_review": "Lexical occurrences include comments/tests/cfg-disabled code; not executed unsafe count or compiled size. Review includes transitives in machine inventory; zero-token root does not mean zero unsafe in closure.",
+      "security_history": [],
+      "security_snapshot": {
+        "status": "passed",
+        "advisory_count": 0,
+        "advisory_database_commits": [
+          {
+            "database": "advisory-db-3157b0e258782691",
+            "commit": "ef6173cbc5c50ec8166f9a5b28f07834144373ee"
+          }
+        ]
+      },
+      "tcb_impact": "No third-party code in production kernel; dependency declarations remain confined to host consumers."
+    },
+    {
+      "crate": "ed25519-dalek",
+      "version": "2.2.0",
+      "license": "BSD-3-Clause",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/dalek-cryptography/curve25519-dalek/tree/main/ed25519-dalek",
+      "rust_version": "1.81",
+      "decision": "KEEP",
+      "reason": "Strict Ed25519 verification authenticates provenance; fixture signing requires rand_core. Retain zeroize and fast precomputed tables: removing them needs secret-lifetime and timing evidence, not a crate count argument. No custom cryptography.",
+      "removal": "Requires interoperable signature vectors, strict rejection semantics, key/entropy/zeroization review and provenance rejection tests.",
+      "maintenance": "Pinned 2.2.0; current RustSec snapshot has no matching advisory. Historical vulnerability review is below, not proof of absence.",
+      "features_before": [
+        "alloc",
+        "default",
+        "fast",
+        "rand_core",
+        "std",
+        "zeroize"
+      ],
+      "features_after": [
+        "alloc",
+        "default",
+        "fast",
+        "rand_core",
+        "std",
+        "zeroize"
+      ],
+      "transitive_count_before": 34,
+      "transitive_count_after": 34,
+      "consumers": ["migration-advisor", "migration-workbench"],
+      "reachability": "outside production kernel EL1/TCB; host-only",
+      "source_files": [
+        {
+          "path": "src/batch.rs",
+          "bytes": 8916,
+          "sha256": "37f1335ebf129abe704fb019be549a05612ceb58013885420c0014694c284fcd",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/constants.rs",
+          "bytes": 1160,
+          "sha256": "95ae51f859483bf58654338e13b9c9bff90cce51ca0375657ff167be5935b19e",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/context.rs",
+          "bytes": 3697,
+          "sha256": "8df67feb4368b2b649ad2b654d6cb86f2eae9457f8e247e1edd5f023b281866a",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/errors.rs",
+          "bytes": 4039,
+          "sha256": "761f62273cbb2e58df922fc44eec988d532cde0bf28beb60ecc57bc2a0b35136",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/hazmat.rs",
+          "bytes": 12893,
+          "sha256": "9f1fe8f5d1e0f949d49e50a3202f699b6a425685341584fc61459a4c955f4847",
+          "unsafe_token_occurrences": 3
+        },
+        {
+          "path": "src/lib.rs",
+          "bytes": 11167,
+          "sha256": "a419b059459147b7ba6a9e52aec77cac0eac6c3a667c6e92c15751ebac70bc5f",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/signature.rs",
+          "bytes": 6364,
+          "sha256": "1058f5119312e3521594a560ac1be6fb5d8016b9b010e4f281cefc304716d56c",
+          "unsafe_token_occurrences": 1
+        },
+        {
+          "path": "src/signing.rs",
+          "bytes": 35136,
+          "sha256": "dcf83ccfaf98d9ab144ec7a6ec4576499ccdfe8308c0714b4e890a1aa7a22b82",
+          "unsafe_token_occurrences": 1
+        },
+        {
+          "path": "src/verifying.rs",
+          "bytes": 26310,
+          "sha256": "baaf05c1503a2cd66785ca01c215e26781d09dd6db9545ebbb0f2c4242117848",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/verifying/stream.rs",
+          "bytes": 1332,
+          "sha256": "2a275173366251aaaa007af1f45b7e81bec3702a1cad17f6dd3165b0fb4c2b5a",
+          "unsafe_token_occurrences": 0
+        }
+      ],
+      "source_bytes": 111014,
+      "unsafe_token_occurrences": 5,
+      "unsafe_review": "Lexical occurrences include comments/tests/cfg-disabled code; not executed unsafe count or compiled size. Review includes transitives in machine inventory; zero-token root does not mean zero unsafe in closure.",
+      "security_history": [
+        {
+          "id": "RUSTSEC-2022-0093",
+          "patched": ">=2",
+          "pinned_version": "2.2.0",
+          "source": "https://rustsec.org/advisories/RUSTSEC-2022-0093.html",
+          "review": "Historical signing oracle vulnerability; pinned v2 API and SigningKey avoid decoupled keypair input. hazmat feature remains disabled."
+        },
+        {
+          "id": "RUSTSEC-2024-0344",
+          "crate": "curve25519-dalek",
+          "pinned_version": "4.1.3",
+          "source": "https://rustsec.org/advisories/RUSTSEC-2024-0344.html",
+          "review": "Transitive scalar timing history; applicability checked by retained RustSec snapshot."
+        }
+      ],
+      "security_snapshot": {
+        "status": "passed",
+        "advisory_count": 0,
+        "advisory_database_commits": [
+          {
+            "database": "advisory-db-3157b0e258782691",
+            "commit": "ef6173cbc5c50ec8166f9a5b28f07834144373ee"
+          }
+        ]
+      },
+      "tcb_impact": "No third-party code in production kernel; dependency declarations remain confined to host consumers."
+    },
+    {
+      "crate": "quanta",
+      "version": "0.13.0",
+      "license": "MIT",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "repository": "https://github.com/metrics-rs/quanta",
+      "rust_version": "1.87",
+      "decision": "REDUCE FEATURES",
+      "reason": "Only Clock::new/now/delta are used for calibrated host timing. mock and flaky_tests APIs are not used by KOLVRT and are now disabled with default-features=false. Dependency closure remains 28: no artificial count reduction claim.",
+      "removal": "Switching to std::time::Instant requires a new measurement mechanism/profile and overhead/resolution comparison; existing timing evidence is bound to quanta semantics.",
+      "maintenance": "Pinned 0.13.0; keep production clock implementation and test actual workbench behavior without default features.",
+      "features_before": ["default", "flaky_tests", "mock"],
+      "features_after": [],
+      "transitive_count_before": 28,
+      "transitive_count_after": 28,
+      "consumers": ["migration-workbench"],
+      "reachability": "outside production kernel EL1/TCB; host-only",
+      "source_files": [
+        {
+          "path": "src/clocks/counter.rs",
+          "bytes": 695,
+          "sha256": "9175266687dc1b97bd5b54d35d8354ebddfe42954d60bba1ebd71e96e949d6e2",
+          "unsafe_token_occurrences": 2
+        },
+        {
+          "path": "src/clocks/mod.rs",
+          "bytes": 97,
+          "sha256": "6da94f7b5187caca77dfc0c1e11636a1ec80729be36bd9f0be399a2ba0b07d81",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/clocks/monotonic/mod.rs",
+          "bytes": 651,
+          "sha256": "d70f863861b306aca1ea0b353675ba8dd5723cfeb61244e7a0453790b64151de",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/clocks/monotonic/unix.rs",
+          "bytes": 1694,
+          "sha256": "7b00f944f4fcb15068db38ce7d0568487efc415c771f1cb4a6f58a6ab0c43cae",
+          "unsafe_token_occurrences": 1
+        },
+        {
+          "path": "src/clocks/monotonic/wasm_browser.rs",
+          "bytes": 1162,
+          "sha256": "21ebd344644d98eed305cd9465c66f894736acafc5767666128b62b88c2d9756",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/clocks/monotonic/wasm_wasi.rs",
+          "bytes": 426,
+          "sha256": "58088e304ffae87b906afc85b511cdbd44a330536d6d00af04203212d33de61c",
+          "unsafe_token_occurrences": 1
+        },
+        {
+          "path": "src/clocks/monotonic/windows.rs",
+          "bytes": 1174,
+          "sha256": "49c41f16d69a93ef863edc3e589ce6817abf0d1594c362c9632d838e65c16ea8",
+          "unsafe_token_occurrences": 2
+        },
+        {
+          "path": "src/detection.rs",
+          "bytes": 1010,
+          "sha256": "fd8ef661a0fd35f73fcceed5cb6debb4e5026fbd0294e04453c6481f91a126fa",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/instant.rs",
+          "bytes": 13512,
+          "sha256": "5c3dbee86d1dc90c83c48f62b2bfbf33e407d78ad29ac027f22b3d5e24fffdca",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/lib.rs",
+          "bytes": 31307,
+          "sha256": "ec39ffc2f1a2ec6a1609f9e57a6307bd13a410691d6a2543bd652117bfb33e9e",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/mock.rs",
+          "bytes": 2228,
+          "sha256": "35d2a041198428ecbc3292dcae5e6f5e6e16f7de870624e6299c255f40dd9c03",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/stats.rs",
+          "bytes": 2003,
+          "sha256": "591971ca567e3192049e028a45460c77a4b34a0bc1d0cec7ac6730bf6811e7db",
+          "unsafe_token_occurrences": 0
+        },
+        {
+          "path": "src/upkeep.rs",
+          "bytes": 7314,
+          "sha256": "51c84f8fe390470dde647a9ba7e623ea0421139d8936c5bceb935bdc06b79441",
+          "unsafe_token_occurrences": 0
+        }
+      ],
+      "source_bytes": 63273,
+      "unsafe_token_occurrences": 6,
+      "unsafe_review": "Lexical occurrences include comments/tests/cfg-disabled code; not executed unsafe count or compiled size. Review includes transitives in machine inventory; zero-token root does not mean zero unsafe in closure.",
+      "security_history": [],
+      "security_snapshot": {
+        "status": "passed",
+        "advisory_count": 0,
+        "advisory_database_commits": [
+          {
+            "database": "advisory-db-3157b0e258782691",
+            "commit": "ef6173cbc5c50ec8166f9a5b28f07834144373ee"
+          }
+        ]
+      },
+      "tcb_impact": "No third-party code in production kernel; dependency declarations remain confined to host consumers."
+    }
+  ]
+}

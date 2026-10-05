@@ -219,6 +219,7 @@ fn dispatch_inner(
 }
 /// Unlink scheduler references before publishing process completion. Reports and
 /// copied frame evidence remain diagnostic data; roots can no longer be dispatched.
+#[cfg(not(feature = "process-unlink-negative"))]
 pub(crate) fn unlink(completed: &Completed) {
     assert!(completed.owners_released);
     for local in &LOCALS {
@@ -486,7 +487,15 @@ fn trap_owned(
                 task.state = CONTEXT_READY;
             }
         } else if class == ESR_SVC64
-            && native_call_measured(task, &mut state.handles, current, frame, operation, reports)
+            && native_call_measured(
+                task,
+                &mut state.handles,
+                &mut state.requests,
+                current,
+                frame,
+                operation,
+                reports,
+            )
         {
             task.context = *frame;
             // Bounded synchronous native request: no locks, allocation or retained user
@@ -507,6 +516,17 @@ fn trap_owned(
             if task.state == CONTEXT_READY || task.state == CONTEXT_RUNNING {
                 task.state = CONTEXT_TIMED_OUT;
             }
+        }
+    }
+    for (index, task) in state.tasks.iter().enumerate() {
+        if matches!(
+            task.state,
+            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+        ) {
+            state.handles[index].begin_teardown();
+            // A dying service publishes cancellation before releasing accepted charges.
+            state.requests.close_service(index);
+            state.requests.close_consumer(index);
         }
     }
     release_process(state.tasks[current].id());
@@ -551,11 +571,15 @@ fn trap_owned(
 fn native_call(
     task: &mut Task,
     handles: &mut [crate::handles::Namespace; TASKS],
+    requests: &mut crate::security::Queue,
     current: usize,
     frame: &mut Context,
     operation: u16,
     #[allow(unused_variables)] reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
 ) -> bool {
+    if crate::security::call(task, handles, requests, current, frame, operation) {
+        return true;
+    }
     if crate::handles::call(task, handles, current, frame, operation) {
         return true;
     }
@@ -592,16 +616,17 @@ fn native_call(
 fn native_call_measured(
     task: &mut Task,
     handles: &mut [crate::handles::Namespace; TASKS],
+    requests: &mut crate::security::Queue,
     current: usize,
     frame: &mut Context,
     operation: u16,
     reports: Option<&mut [[u64; abi::REPORT_WORDS]; TASKS]>,
 ) -> bool {
     if operation != abi::READ_WINDOW {
-        return native_call(task, handles, current, frame, operation, reports);
+        return native_call(task, handles, requests, current, frame, operation, reports);
     }
     let start = cpu::ticks();
-    let handled = native_call(task, handles, current, frame, operation, reports);
+    let handled = native_call(task, handles, requests, current, frame, operation, reports);
     if handled {
         task.native_window_service_ticks = task
             .native_window_service_ticks

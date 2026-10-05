@@ -33,5 +33,10 @@
 - [ADR-0020 — Передача дескрипторов с ограничением прав и удержание targets](0020-handle-transfer-and-retention.md) — Принято для ограниченной реализации issue #23.
 
 - [ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU](0021-asid-lifecycle.md) — Принято для ограниченного набора process roots; migration не поддерживается.
+- [ADR-0022 — Ограниченные grants и отзыв прав для собственного Event](0022-native-event-grants-and-revocation.md) — Принято для минимального среза authority Event.
+
+- [ADR-0023 — One-process domains and scoped Event grants](0023-domains-and-scoped-grants.md) — Accepted for bounded Phase 3.4; full IPC remains separate.
 
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)
+
+- [ADR-0024 — Навигация знаний документации и актуальность функций](0024-documentation-knowledge.md) — Принят для автономной навигации.

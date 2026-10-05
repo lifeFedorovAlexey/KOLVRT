@@ -47,3 +47,16 @@ Host tests cover wrong role, unmasked access, re-entry/concurrent exclusion, sta
 Next #20 extends this owned boundary with per-process identities, vacant/admitted/terminal transitions, fallible rollback, persistent admission and acknowledged reclamation. It must preserve permit lifetimes and prove new callers/phases rather than export storage. CPU0 is the current bounded allocator/coordinator, not a permanent restriction on future admission architecture. Migration, IRQ nesting, ASID reuse and new privileged responsibilities require separate decisions. #20, user-copy and IPC are not started by completing this milestone.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0016-scheduler-ownership.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0016",
+  "kind": "adr",
+  "aliases": ["ADR-0016"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

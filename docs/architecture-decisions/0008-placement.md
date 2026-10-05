@@ -62,3 +62,16 @@ Both paths return identical bytes; a child crash is observed, the supervisor sur
 Moving a service into a privileged domain requires a new decision that revises the threat model and proves preservation of authority and outcome contracts.
 
 [Russian translation](../../translations/ru/docs/architecture-decisions/0008-placement.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "adr.0008",
+  "kind": "adr",
+  "aliases": ["ADR-0008"],
+  "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
+  "tags": ["architecture", "decision"]
+}
+```

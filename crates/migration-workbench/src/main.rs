@@ -141,8 +141,8 @@ fn measure_pair(
         || candidate.native_admissions != ITERATIONS
         || baseline.copied_bytes != ITERATIONS * 4
         || candidate.copied_bytes != 0
-        || baseline.peak_memory_bytes.is_none()
-        || candidate.peak_memory_bytes.is_none()
+        || baseline.peak_memory_bytes.bytes().is_none()
+        || candidate.peak_memory_bytes.bytes().is_none()
     {
         return Err("fixture route or resource accounting mismatch".into());
     }
@@ -316,8 +316,8 @@ fn run() -> Result<PathBuf, String> {
                 baseline_ns: baseline.request_latency_samples_ns.clone(),
                 candidate_ns: candidate.request_latency_samples_ns.clone(),
             }),
-            baseline_memory_bytes: baseline.peak_memory_bytes,
-            candidate_memory_bytes: candidate.peak_memory_bytes,
+            baseline_memory_bytes: baseline.peak_memory_bytes.bytes(),
+            candidate_memory_bytes: candidate.peak_memory_bytes.bytes(),
             baseline_copied_bytes: Some(baseline.copied_bytes),
             candidate_copied_bytes: Some(candidate.copied_bytes),
             baseline_energy_uj: None,

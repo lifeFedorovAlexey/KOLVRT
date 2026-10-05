@@ -1,13 +1,37 @@
 //! Small platform boundary for process metrics used by host experiments.
 #![deny(unsafe_op_in_unsafe_fn)]
 
+use serde::{Deserialize, Serialize};
 use std::io;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(tag = "state", rename_all = "snake_case", deny_unknown_fields)]
+pub enum PeakMemoryMeasurement {
+    Available { bytes: u64 },
+    Unavailable { reason: PeakMemoryUnavailable },
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum PeakMemoryUnavailable {
+    UnsupportedPlatform,
+    NotEvaluated,
+}
+
+impl PeakMemoryMeasurement {
+    pub fn bytes(self) -> Option<u64> {
+        match self {
+            Self::Available { bytes } => Some(bytes),
+            Self::Unavailable { .. } => None,
+        }
+    }
+}
 
 /// Returns the current process' peak resident working set in bytes.
 ///
-/// Windows reports the process peak accumulated since launch. Other targets return `None`;
-/// callers must preserve that as unknown rather than treating it as zero.
-pub fn peak_working_set_bytes() -> io::Result<Option<u64>> {
+/// Windows reports the process peak accumulated since launch. Other targets explicitly
+/// report an unsupported platform. OS acquisition errors remain errors.
+pub fn peak_working_set_bytes() -> io::Result<PeakMemoryMeasurement> {
     #[cfg(windows)]
     {
         let mut counters = ProcessMemoryCountersEx {
@@ -21,11 +45,15 @@ pub fn peak_working_set_bytes() -> io::Result<Option<u64>> {
         if succeeded == 0 {
             return Err(io::Error::last_os_error());
         }
-        Ok(Some(counters.peak_working_set_size as u64))
+        Ok(PeakMemoryMeasurement::Available {
+            bytes: counters.peak_working_set_size as u64,
+        })
     }
     #[cfg(not(windows))]
     {
-        Ok(None)
+        Ok(PeakMemoryMeasurement::Unavailable {
+            reason: PeakMemoryUnavailable::UnsupportedPlatform,
+        })
     }
 }
 
@@ -70,12 +98,19 @@ mod tests {
     #[cfg(windows)]
     #[test]
     fn windows_returns_a_positive_peak_for_the_live_test_process() {
-        assert!(peak_working_set_bytes().unwrap().unwrap() > 0);
+        assert!(
+            matches!(peak_working_set_bytes().unwrap(), super::PeakMemoryMeasurement::Available { bytes } if bytes > 0)
+        );
     }
 
     #[cfg(not(windows))]
     #[test]
-    fn unsupported_targets_report_unknown() {
-        assert_eq!(peak_working_set_bytes().unwrap(), None);
+    fn unsupported_targets_report_the_specific_cause() {
+        assert_eq!(
+            peak_working_set_bytes().unwrap(),
+            super::PeakMemoryMeasurement::Unavailable {
+                reason: super::PeakMemoryUnavailable::UnsupportedPlatform
+            }
+        );
     }
 }

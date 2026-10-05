@@ -1,6 +1,12 @@
 # Security threat model
 
+Document status: DESIGN BASELINE
+Evidence scope: Accepted intended obligations; implementation and verification remain separately scoped.
+Current reference: [Documentation policy](../documentation-policy.md)
+
 Status: cross-subsystem design requirements, 2026-10-02. Canonical security scope beyond the first native slice. The [first-slice model](../architecture/threat-model.md) retains its narrower acceptance contract. SMP evidence alone does not establish service or DMA isolation. The bounded EL0 foundation and routing observations below establish only their recorded task/adapter scope. [Research scope](../../research/other-systems/kasperskyos/overview.md).
+
+<a name="kolvrt-security-trust"></a>
 
 ## Objectives and trust
 
@@ -20,6 +26,8 @@ Protect kernel integrity, native-authorized resource/effect scope, identity/life
 
 TCB is per property and includes relevant safe/generated code, services and hardware. [TCB analysis](../../research/other-systems/kasperskyos/tcb.md).
 
+<a name="kolvrt-security-threats"></a>
+
 ## Threats and validation gates
 
 | Threat                              | Enforcement and future negative case                                                                                |
@@ -31,6 +39,8 @@ TCB is per property and includes relevant safe/generated code, services and hard
 | Logic bugs/races/stale capabilities | Required live predicates serialized with admission/revocation; old generations fail                                 |
 | Compromised driver/malicious DMA    | Scoped MMIO/IRQ/DMA, hardware restriction, reset and leases; unrestricted DMA is not contained                      |
 | Replay/unknown effects              | One terminal arbiter, no automatic replay when absence of effects is unknown                                        |
+
+<a name="kolvrt-security-placement"></a>
 
 ## Privileged placement and failure review
 
@@ -49,9 +59,13 @@ general mapping-grant admission and hostile DMA remain unverified. Failure of tr
 privileged enforcement is fatal to its kernel domain. A faster path cannot replace that
 failure boundary without an explicit ADR, updated threat model and preserved guarantees.
 
+<a name="kolvrt-security-compat-authority"></a>
+
 ## Compatibility invariant
 
 EffectiveAuthority_via_compat(C, O) is a subset of NativeAuthorizedAuthority(C, O) at the native contract's authorization point. Include effects induced through services, not just C's handles. A service can use independent grants only for caller-authorized effects. Missing authority yields DENIED/AUTHORITY_REQUIRED; additional consumer rights require separate native authorization before admission. No compatibility waiver. Nested/split operations, restart/rebind and PROD routing preserve this invariant. [Decision](../architecture-decisions/0013-security-boundaries.md).
+
+<a name="kolvrt-security-revocation"></a>
 
 ## Revocation and recovery
 
@@ -59,19 +73,27 @@ Specify future-admission denial versus accepted-work semantics. Closing one hand
 
 Recovery: stop admission, invalidate future authority, finish/fail accepted work truthfully, quiesce callbacks/IRQ/DMA, establish reset when necessary, release leases, then create a fresh generation and separately authorize restored grants/routes. Timeout does not establish quiescence; quarantine or halt. Privileged invariant failure is not a restartable service fault. Unknown effects cannot be treated as absent.
 
+<a name="kolvrt-security-profiles"></a>
+
 ## Profiles, diagnostics and exclusions
 
 DEV supports bounded traces, grant inspection and explicit fault injection. PROD retains all authorization, handle checks, isolation, ownership, quotas, barriers and outcomes. Optional logging cannot implement enforcement. Inspector access requires authentication/redaction; omit payloads, raw addresses/usable handles and secrets. [Inspection model](inspection-model.md).
 
 Physical attacks, hostile boot/host administration and microarchitectural side channels are outside current assurance. General-purpose availability, hostile firmware, actual IOMMU/reset containment and persistent recovery are unverified. A trusted-device assumption does not cover hostile hardware. Future tests require separately authorized scheduler/EL0/user-copy and a named device contract.
 
+<a name="kolvrt-security-phase2"></a>
+
 ## Phase 2 observation boundary
 
 The bounded [EL0 routing slice](../kernel/routing.md) has an explicit [per-responsibility admission review](../architecture-decisions/0015-el0-versioned-routing.md). Bootstrap admission grants only current-task timer observations; no caller-selected owner, pointer, delegation or general capability service exists. Native register reads repeat width/bounds checks and initialize outputs; common arithmetic and all legacy policy execute in EL0. Task state and roots survive until both CPUs restore native roots and finish TLBI. A faulty adapter cannot widen scope and is contained to its task; privileged enforcement compromise remains fatal. Evidence reporting is bounded instrumentation, removed from stripped PROD, not an authenticated deployment inspector. Trusted boot/compiler, static grants, fixed affinity, absent DMA and unverified silicon/availability are explicit limits. Reconsider capture publication, grants/revocation and inspection placement with native IPC services.
 
+<a name="kolvrt-security-phase30"></a>
+
 ## Phase 3.0 scheduler boundary
 
 [ADR-0016](../architecture-decisions/0016-scheduler-ownership.md) narrows existing enforcement: foreign CPU/IRQ re-entry, stale state/task, duplicate running ownership, live reset/read and both lock directions are rejected before unsafe storage access or execution. Generations cannot wrap, completed snapshots cannot borrow live state, and retained roots survive native-root/TLBI completion. Both profiles use the same mechanism; privilege violations are fatal. No new authority issuer, dynamic process API, routing policy or IPC admission is added. Queue-session generations do not substitute for future per-process identities and lifecycle rollback.
+
+<a name="kolvrt-security-phase31"></a>
 
 ## Phase 3.1 process boundary
 
@@ -79,10 +101,137 @@ The [process lifecycle](../kernel/processes.md) separates retained address-space
 
 [Russian translation](../../translations/ru/docs/security/threat-model.md)
 
+<a name="kolvrt-security-phase32"></a>
+
 ## Phase 3.2 memory boundary
 
 [Safe user-copy](../kernel/user-copy.md) admits no operation authority. It checks the exact executing process/root, bounds and hardware EL0 permissions, retains immutable mappings/lifetime, and publishes only completed initialized input snapshots. Precise copy faults return errors while unrelated EL1 invariant failures remain fatal. Output partial writes report their prefix; no internal Rust layout/padding is exported. Parsing, authority and effects must use the same snapshot in that order. Mutable/shared mappings, asynchronous exit and DMA remain unsupported; [ADR-0018](../architecture-decisions/0018-safe-user-copy.md) defines the privileged necessity and review gate in both profiles.
 
+<a name="kolvrt-security-phase33"></a>
+
 ## Phase 3.3 bounded reference identity
 
+Historical milestone scope: the paragraph below describes ADR-0019 before the accepted ADR-0020 extension.
+
 [Handle namespaces](../kernel/handles.md) reject stale/forged/foreign/wrong-kind references without selecting another process table or dereferencing user object pointers. Protected concrete wait/completion storage remains kernel-owned; lookup returns a synchronous retained borrow, and exit/fault cleanup precedes frame reclaim. Eight slots and generation quarantine bound resource use and prevent stale aliasing. These guarantees confer no authority; rights, delegation, asynchronous retained work and revocation remain separate gates. No general object dispatch is added.
+
+<a name="kolvrt-security-handle-retention"></a>
+
+## Historical ADR-0020 authority and retention boundary
+
+[ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) adds SEND/TRANSFER checks, subset attenuation, receiver-local handles and bounded owned Event references. The executing scheduler task supplies the caller identity; EL0 cannot select a source principal. Transfer through EL0 is restricted to a live receiver on the same fixed-affinity CPU. Closing one entry leaves other retained references valid and does not revoke descendants. This paragraph retains the ADR-0020 scope before Phase 3.4: general grant issuance, security domains and revocation were then separate gates. Shared Event retention alone does not establish a multi-waiter IPC contract. The current bounded implementation is described below.
+
+<a name="kolvrt-security-phase34"></a>
+
+## Current bounded Phase 3.4 boundary
+
+[ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) and [ADR-0023](../architecture-decisions/0023-domains-and-scoped-grants.md) add explicit Event grants and generation-aware domains. The [domain contract](../kernel/domains.md) bounds this to one process per domain, two fixed-affinity CPUs and one Event-notification queue cell. Caller identity comes only from the executing process and its bound domain; an immutable SafeCopy snapshot cannot select a principal, scope or service-private target. Rights and budgets are checked before publication; denial rolls back temporary references and charges.
+
+Admission and revocation serialize on one atomic state: already-admitted work retains its target and domain charges while later effect admissions through every delegated alias fail. Close is not revoke. Service teardown publishes cancelled-before-effect before release; restart does not refresh old-generation grants. Bounded #24/#25 are complete, but general IPC, multi-process domains, cross-CPU queues, trusted supervisor policy installation and immediate drain/reset remain separate gates. [Source-bound Phase 3.4 evidence](../kernel/domains.md#kolvrt-domains-teardown) describes QEMU DEV/PROD; physical ARM64, DMA and general service isolation are not established.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.security.threat-model",
+  "kind": "security-analysis",
+  "summary": "Cross-subsystem security requirements and explicitly bounded observations.",
+  "units": [
+    {
+      "id": "kolvrt.security.trust",
+      "anchor": "kolvrt-security-trust",
+      "kind": "contract-section",
+      "summary": "Security requirement: trust",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.threats",
+      "anchor": "kolvrt-security-threats",
+      "kind": "contract-section",
+      "summary": "Security requirement: threats",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.placement",
+      "anchor": "kolvrt-security-placement",
+      "kind": "contract-section",
+      "summary": "Security requirement: placement",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.compat-authority",
+      "anchor": "kolvrt-security-compat-authority",
+      "kind": "contract-section",
+      "summary": "Security requirement: compat-authority",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.revocation",
+      "anchor": "kolvrt-security-revocation",
+      "kind": "contract-section",
+      "summary": "Security requirement: revocation",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.profiles",
+      "anchor": "kolvrt-security-profiles",
+      "kind": "contract-section",
+      "summary": "Security requirement: profiles",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.phase2",
+      "anchor": "kolvrt-security-phase2",
+      "kind": "contract-section",
+      "summary": "Security requirement: phase2",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.phase30",
+      "anchor": "kolvrt-security-phase30",
+      "kind": "contract-section",
+      "summary": "Security requirement: phase30",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.phase31",
+      "anchor": "kolvrt-security-phase31",
+      "kind": "contract-section",
+      "summary": "Security requirement: phase31",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.phase32",
+      "anchor": "kolvrt-security-phase32",
+      "kind": "contract-section",
+      "summary": "Security requirement: phase32",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.phase33",
+      "anchor": "kolvrt-security-phase33",
+      "kind": "contract-section",
+      "summary": "Security requirement: phase33",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.handle-retention",
+      "anchor": "kolvrt-security-handle-retention",
+      "kind": "contract-section",
+      "summary": "Historical ADR-0020 authority and retention scope before Phase 3.4.",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.phase34",
+      "anchor": "kolvrt-security-phase34",
+      "kind": "contract-section",
+      "summary": "Current bounded Phase 3.4 security boundary and separate future gates.",
+      "depends_on": [
+        "kolvrt.security.domains",
+        "kolvrt.security.event-revocation"
+      ]
+    }
+  ]
+}
+```

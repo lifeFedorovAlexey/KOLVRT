@@ -2,11 +2,18 @@
 name = "kernel-core"
 version = "0.1.0"
 edition = "2024"
+publish = false
 
 
 [features]
+elf-entry-alignment-negative = []
 handle-generation-negative = []
 handle-owner-negative = []
 handle-type-negative = []
 handle-reuse-negative = []
 handle-transfer-rights-negative = []
+domain-budget-negative = []
+domain-identity-negative = []
+domain-teardown-negative = []
+capability-revoke-negative = []
+capability-scope-negative = []

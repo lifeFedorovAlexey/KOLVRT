@@ -1,8 +1,16 @@
 # Process-local handles
 
 Document status: CURRENT
-Evidence scope: bounded generation-safe caller-local handles with SEND/TRANSFER attenuation and retained shared targets; two fixed-affinity CPUs.
-Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md)
+Evidence scope: bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.
+Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) for handle identity/transfer/lifetime, supplemented by [ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) for the minimal Event grant/revocation slice.
+
+<a name="kolvrt-handles-local"></a>
+
+## Feature scope
+
+The canonical feature record describes the bounded implementation. Evidence is scoped to the receipt inputs; hardware and production readiness remain separate gates.
+
+<a name="kolvrt-handles-identity"></a>
 
 ## Representation and caller context
 
@@ -11,14 +19,21 @@ Current reference: [ADR-0020](../architecture-decisions/0020-handle-transfer-and
 Each process slot retains one linear namespace across ProcessId reuse. Binding records the exact ProcessId; lookup checks caller, bounds, generation, live entry, requested kind and required rights. Equal numbers in different namespaces can refer to different resources. A wire handle never selects another process table. [Native request handling](../../crates/kernel/src/handles.rs) derives caller context from the scheduler-owned task and bound namespace, verifies the executing context, and copies a 48-byte request into an immutable snapshot before touching namespace entries.
 
 ```text
-LE64[6] version=1, operation=(1 lookup | 2 close | 3 transfer)
+LE64[6] version=1, operation=(1 lookup | 2 close | 3 transfer | 4 revoke)
 lookup/close: handle, kind, required_rights, reserved=0
 transfer:     handle, receiver_process_slot, receiver_generation, requested_rights
+revoke:       handle, reserved=0, reserved=0, reserved=0
 safe copy -> decode snapshot -> current caller table -> generation/type/rights check
            -> receiver-local handle with the same target binding
 ```
 
-Lookup, close and transfer are exposed. Rights are `SEND=1` and `TRANSFER=2`; unknown bits fail. Transfer requires TRANSFER and a subset of the held rights. The receiver is identified by a live ProcessId already bound to a namespace on the caller's CPU; other-CPU requests fail with ForeignProcess. Status words are native bounded outcomes: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure, 9 rights denied, 10 retained-reference quota exhausted. Unknown version/opcode/kind fails. Close validates kind and generation. No pointer, physical address, global object ID, internal enum layout or compatibility errno crosses EL0. Creation remains trusted bootstrap work, not an unprivileged object-creation authority API.
+Lookup, close, transfer and shared-Event revoke are exposed. Rights are `SEND=1`, `TRANSFER=2` and `REVOKE=4`; unknown bits fail. Bootstrap defaults grant SEND to Events and no rights to Completion records; broader rights require an explicit trusted `create_*_with_rights` grant. REVOKE is valid only for Events; Completion rejects that grant before reserving a generation or publishing. Transfer requires TRANSFER and a subset of held rights. Revoke requires REVOKE and atomically prevents later Event signal admissions through every alias. A signal racing revoke is ordered by the target state CAS; work admitted earlier and already-pending notification remain valid. Close drops only one local reference and is not revoke. The receiver is identified by a live ProcessId already bound to a namespace on the caller's CPU; other-CPU requests fail with ForeignProcess. Status words are native bounded outcomes: 0 success, 1 invalid encoding/request, 2 stale, 3 wrong type, 4 foreign context, 5 inactive, 6 capacity, 7 generation exhaustion, 8 copy failure, 9 rights denied, 10 retained-reference quota exhausted. Unknown version/opcode/kind fails. Close validates kind and generation. No pointer, physical address, global object ID, internal enum layout or compatibility errno crosses EL0. Creation remains trusted bootstrap work, not an unprivileged object-creation authority API.
+
+The real EL0 fixture submits the revoke operation through its copied 48-byte request and verifies that a subsequent SEND admission returns `Revoked`. Host controls verify that a delegated alias stays revoked after source close. These controls cover the Event slice; they do not establish the full grant, service-lifecycle or security-domain acceptance for issue #24.
+
+The revoked admission result is wire status 11; existing status values retain their prior meanings.
+
+<a name="kolvrt-handles-lifetime"></a>
 
 ## Ownership and target lifetime
 
@@ -26,7 +41,7 @@ Each owned target carries an immutable kernel-only TargetId (creating ProcessId,
 
 The two concrete targets are the existing coalescing wait Event and an owned immutable process Completion record. The completion retains its value, not a live process or address space. Closing it cannot terminate a process. Delegated Event handles share one atomic latch in a fixed 512-slot kernel pool. Each slot carries a nonwrapping generation and allows at most 1,024 live references. The per-process namespace remains eight entries; exhausted pool or reference quotas fail explicitly. This narrow sum is not a universal KernelObject hierarchy or generic invocation interface.
 
-A namespace owns one reference per entry. Lookup returns a Retained borrow; its `.retain()` operation creates an owned reference for accepted work. A used borrow excludes mutable close/retire at compile time. Transfer validates both tables before publishing a fresh receiver-local generation, attenuates rights, and preserves TargetId. Closing removes one entry and blocks future lookup through that token, while delegated entries and owned retained work keep the object alive. Double close is Stale. Resource-specific methods remain kernel-only; handle rights gate admission but do not add an EL0 object pointer or general invoke interface.
+A namespace owns one reference per entry. Lookup returns a Retained borrow; its `.retain()` operation creates an owned reference for accepted work. A used borrow excludes mutable close/retire at compile time. Transfer validates both tables before publishing a fresh receiver-local generation, attenuates rights, and preserves TargetId. Revoking an Event is target-wide across aliases, while close removes one entry and blocks future lookup through that token; delegated entries and owned retained work keep the target alive. Double close is Stale. Resource-specific methods remain kernel-only; handle rights gate admission but do not add an EL0 object pointer or general invoke interface.
 
 ```mermaid
 flowchart TD
@@ -48,6 +63,8 @@ DEV reports process slot/generation, capacity, active count, live slot generatio
 
 Runqueue preparation initializes existing storage under its exclusive preparing permit. It avoids by-value State copies on the fixed DEV stack. The acceptance audit reproduced BSS corruption from oversized stack temporaries in the previous implementation; in-place preparation removes those copies while preserving report continuity and namespace ownership.
 
+<a name="kolvrt-handles-publication"></a>
+
 ## Generation and transactional publication
 
 ```text
@@ -62,6 +79,8 @@ next ProcessId generation -> rebind same namespace -> old handle stays stale
 Generation advances at reservation, including failed publication. Close removes live state immediately; the next allocation advances generation. At 2^56-1 the vacant slot is permanently exhausted. There is no wrap, truncation or automatic namespace reset. Other available slots remain usable; errors distinguish Capacity from GenerationExhausted. A one-slot/two-generation instantiation exercises the identical exhaustion algorithm in host and actual EL0 fixture execution. The limit is not claimed practically impossible.
 
 Creation owns the prepared target on the kernel stack until publication succeeds. Failure drops it and leaves a vacant slot with a burned generation. The callback cannot access the exclusively borrowed namespace. In the current private fixed-affinity process, EL0 cannot execute/read its partially published bytes during the synchronous callback; commit completes before return. Partial copy failure can leave stale bytes in user RAM, but never a live entry. A future shared mapping changes this publication argument and requires redesign.
+
+<a name="kolvrt-handles-evidence"></a>
 
 ## Verification and performance gate
 
@@ -83,8 +102,123 @@ Recorded timer ticks at 62.5 MHz, 32 samples per cell. Single-operation PROD obs
 
 [Issue #23 exact-source receipt](../../research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) records 73 DEV/PROD checks and 69 negative controls. The [original Phase 3.3 baseline](../../research/results/kernel-phase33.json), [native-only receipt](../../research/results/native-compat-removal-phase33.json), [routing regression](../../research/results/routing-phase33-regression.json) and [unsafe inventory](../../research/results/kernel-phase33-unsafe-audit.json) retain their separate scopes. Native-only compares 59 unchanged native/harness files; production unsafe delta is zero and three linked-fixture sites are test-only.
 
+<a name="kolvrt-handles-limits"></a>
+
 ## Scope before capabilities
 
-Identity/type/lifetime checks produce a resource reference; they do not authorize effects. Issue #23 adds SEND/TRANSFER admission, attenuation and bounded owned Event retention. A future phase can add an authority issuer, revocation and broader asynchronous work contracts without changing handle identity. Linux fd/Windows HANDLE semantics, general IPC, unrestricted duplication, security domains, capability bits, magic current/root handles and a universal object model are excluded.
+Identity/type/lifetime checks produce a resource reference; they do not authorize effects. Issue #23 adds SEND/TRANSFER admission, attenuation and bounded owned Event retention. Phase 3.4 adds protected bootstrap issuance and revocation; the historical baseline above remains scoped to Phase 3.3. Linux fd/Windows HANDLE semantics, general IPC, unrestricted duplication, magic current/root handles and a universal object model are excluded.
+
+## Phase 3.4 current security boundary
+
+[Security domains](domains.md) now bind each process generation to caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The bounded same-CPU notification pilot reports terminal outcomes to EL0; general IPC, automatic wakeups, supervisor policy and persistent services remain later milestones. Its storage and encoding must be rederived from the requirements of #26/#27 before extension.
 
 [Russian translation](../../translations/ru/docs/kernel/handles.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.kernel.handles",
+  "kind": "subsystem-contract",
+  "summary": "Caller-local generation-safe references, SEND/TRANSFER attenuation and retained Event targets.",
+  "units": [
+    {
+      "id": "kolvrt.handles.local",
+      "anchor": "kolvrt-handles-local",
+      "kind": "feature",
+      "summary": "Caller-local generation-safe references, SEND/TRANSFER attenuation and retained Event targets.",
+      "depends_on": [
+        "kolvrt.handles.identity",
+        "kolvrt.handles.lifetime",
+        "kolvrt.handles.publication",
+        "kolvrt.handles.limits",
+        "kolvrt.memory.user-copy",
+        "kolvrt.process.identity",
+        "kolvrt.process.reclamation",
+        "law.009",
+        "law.013"
+      ],
+      "feature": {
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Bounded caller-local namespaces and receiver-local transfer on fixed-affinity CPUs.",
+        "sources": [
+          "crates/kernel/src/handles.rs",
+          "crates/kernel-core/src/handles.rs"
+        ],
+        "acceptance": [
+          "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
+        ],
+        "issues": [23],
+        "adrs": ["adr.0019", "adr.0020", "adr.0022", "adr.0023"],
+        "limitations": [
+          "Close does not revoke retained work; no general grants, domains or IPC."
+        ],
+        "next_gate": "General IPC and supervisor policy installation require independently derived contracts; bounded Phase 3.4 scoped grants/domains are separately documented.",
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "state": "STALE",
+            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/handles.rs, crates/kernel-core/src/handles.rs. New exact-source evidence is required for VERIFIED.",
+            "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
+            "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
+            "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8"
+          },
+          {
+            "environment": "physical-arm64",
+            "state": "UNKNOWN",
+            "reason": "No physical ARM64 acceptance is established."
+          }
+        ],
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Phase 3.3",
+        "transitions": [
+          {
+            "from": "UNRECORDED",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Initial reviewed catalog adoption of existing scoped contract; not a new implementation transition.",
+            "acceptance": [
+              "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kolvrt.handles.identity",
+      "anchor": "kolvrt-handles-identity",
+      "kind": "contract-section",
+      "summary": "Handle contract: identity",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.handles.lifetime",
+      "anchor": "kolvrt-handles-lifetime",
+      "kind": "contract-section",
+      "summary": "Handle contract: lifetime",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.handles.publication",
+      "anchor": "kolvrt-handles-publication",
+      "kind": "contract-section",
+      "summary": "Handle contract: publication",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.handles.evidence",
+      "anchor": "kolvrt-handles-evidence",
+      "kind": "contract-section",
+      "summary": "Handle contract: evidence",
+      "depends_on": []
+    },
+    {
+      "id": "kolvrt.handles.limits",
+      "anchor": "kolvrt-handles-limits",
+      "kind": "contract-section",
+      "summary": "Handle contract: limits",
+      "depends_on": []
+    }
+  ]
+}
+```

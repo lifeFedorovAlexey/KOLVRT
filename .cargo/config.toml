@@ -2,4 +2,4 @@
 xtask = "run -p xtask --"
 
 [target.aarch64-unknown-none]
-rustflags = ["-C", "force-frame-pointers=yes"]
+rustflags = ["-C", "force-frame-pointers=yes", "-D", "warnings"]

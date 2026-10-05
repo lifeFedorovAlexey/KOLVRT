@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "id": "arena.profile.user-copy-range",
+  "version": "1",
+  "review_state": "PROPOSED",
+  "target": {
+    "block_id": "kolvrt.memory.user-copy",
+    "contract_id": "kolvrt.memory.user-copy.api",
+    "functional_version": "bounded-phase3.2-proposed-arena1",
+    "contract_sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563"
+  },
+  "workload": {
+    "id": "arena.workload.user-copy-range",
+    "version": "1",
+    "semantics_sha256": "f4add84da129e39994a835d1b4bca7d6849377476bf3faba3361b9a8a3c5401c",
+    "input_sha256": "362fb21c0ec786cb6e9375229af99e5ee27216327e39735e86aceedd400fae44",
+    "seed": "deterministic-v1",
+    "useful_operation": "Validate current kernel-core byte-range inputs; no memory copy or kernel execution claim",
+    "oracle": {
+      "id": "arena.oracle.user-copy-range",
+      "version": "1",
+      "sha256": "e86edf8842670a9c91a072780d79b462870cf9a4dea7b0dad3402638d0143cf9"
+    }
+  },
+  "environment": {
+    "architecture": "X86_64",
+    "platform_kind": "HOST_FIXTURE",
+    "hardware_profile": {
+      "id": "arena.hardware.synthetic",
+      "version": "1"
+    },
+    "configuration_sha256": "ef9e56ed805a287b470f897a6d5e8841fbd7cdad872c21ef589d691fca3fa7b6",
+    "execution_profile": "DEV",
+    "toolchain": {
+      "compiler": "rustc",
+      "version": "1.99.0",
+      "flags": []
+    },
+    "measurement": {
+      "id": "arena.mechanism.host-range",
+      "version": "1",
+      "clock": "synthetic-nanoseconds",
+      "resolution_units": "ns",
+      "instrumentation": "EXTERNAL"
+    },
+    "resource_policy_sha256": "f850c6d849b793ecff0ae8d190cf8f82385d7da6e94447f766c8c759f39056a6"
+  },
+  "sampling": {
+    "version": "1",
+    "warmup_samples": 2,
+    "samples": 100,
+    "repeats": 3,
+    "stopping_rule": "Fixed 100 synthetic observations after 2 warmups; no statistical superiority",
+    "quantile_estimator": "NEAREST_RANK",
+    "analysis_version": "1"
+  },
+  "overhead": {
+    "id": "arena.overhead.host-range",
+    "version": "1",
+    "matched_workload_sha256": "a2f20cf8711c91fdd79db46b771d61fe9220f183e5e37b094afbaa6423b667a9",
+    "collection_method": "Retain separate matched on/off observations; never subtract an exact correction"
+  },
+  "metrics": [
+    {
+      "id": "arena.metric.range-median",
+      "dimension": "PERF",
+      "definition": "Nearest-rank median of raw range-validation observations; descriptive only",
+      "units": "ns",
+      "denominator": "validated-range",
+      "origin": "KOLVRT_DEFINED",
+      "methodologies": [
+        {
+          "id": "arena.methodology.kolvrt-profile",
+          "version": "1",
+          "section": "Descriptive sampling"
+        },
+        {
+          "id": "arena.standard.spec-run-rules",
+          "version": "CPU2017-6644-2021-09-13",
+          "section": "1.2 and 1.3: validation, disclosure and reproducibility principles"
+        }
+      ],
+      "visibility": "SHARED",
+      "statistic": "MEDIAN",
+      "direction": "MIN",
+      "minimum_samples": 100
+    }
+  ],
+  "security": {
+    "id": "arena.security.user-copy-range",
+    "version": "1",
+    "definition_origin": "KOLVRT_DEFINED",
+    "methodologies": [
+      {
+        "id": "arena.standard.cc2022",
+        "version": "Release-1-errata-1.2",
+        "section": "TOE/SPD/SFR/SAR conceptual model; no normative component mapping"
+      },
+      {
+        "id": "arena.standard.nist800-55-vol1",
+        "version": "2024",
+        "section": "Data quality and validation of measures"
+      }
+    ],
+    "toe": "kernel-core::user_copy::range; host validation only",
+    "spd": {
+      "attacker_model": "Caller supplies arbitrary address and length integers to the host range validator",
+      "threats": ["Overflow or out-of-range input incorrectly admitted"],
+      "assumptions": [
+        "This helper does not enforce mapping permissions or dereference pointers"
+      ],
+      "policies": ["Range validation cannot grant copy authority"],
+      "boundaries": [
+        "No EL0/EL1 execution, SMP race, SafeCopy, PMU or physical hardware evaluation"
+      ]
+    },
+    "sfr": [
+      {
+        "id": "arena.sfr.range-bounds",
+        "claim": "Oversized, overflowing, null and out-of-aperture ranges are rejected",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.range-deterministic",
+          "arena.sar.range-negative"
+        ]
+      }
+    ],
+    "sar": [
+      {
+        "id": "arena.sar.range-deterministic",
+        "method": "DETERMINISTIC",
+        "scope": "Named accepted and rejected integer ranges with exact expected errors"
+      },
+      {
+        "id": "arena.sar.range-negative",
+        "method": "NEGATIVE_CONTROL",
+        "scope": "Deliberately skipped validation cannot pass the correctness oracle"
+      }
+    ],
+    "ava_van_scope": "Not evaluated; range fixture does not establish a vulnerability analysis",
+    "attack_potential_scope": "Not evaluated; no AP level asserted"
+  }
+}

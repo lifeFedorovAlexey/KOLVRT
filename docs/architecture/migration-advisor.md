@@ -38,7 +38,7 @@ Results have explicit assurance dimensions and missing checks, not a fabricated 
 
 - `VERIFIED_CANDIDATE`: dependency solution, provider/consumer contract tests, authenticated evidence, complete loss-free OS compat observation, supported statistical gain and documented rollback satisfy this profile's gates.
 - `PARTIAL_EVIDENCE_CANDIDATE`: a dependency solution exists, but some checks are absent, insufficient, unsigned or incomplete. Show available tests, measurements, rollback and precise gaps. Lost telemetry prevents a strong preference, not discovery or presentation.
-- `REJECTED_CANDIDATE`: a supplied contract/oracle/experimental validity check failed, or a measured tail regression exceeded budget. Missing evidence is not a failed test.
+- `REJECTED_CANDIDATE`: a supplied contract/oracle/experimental validity check failed, or a measured tail regression exceeded budget. Absent optional evidence is not a failed test. Missing measurements required by a configured budget, invalid required consumer identity/block layout, or another rejected statistical input invalidate the supplied benchmark and reject the candidate. Unconfigured budgets are explicitly not evaluated and never pass.
 - `BLOCKED`: solving is invalid, unsatisfiable or exceeds its budget; report the distinct reason.
 
 Every solved candidate includes a proposal with `candidate`, `expected_gain`, `required_changes`, `rollback_strategy`, `rollback_execution_receipt`, `rollback_preconditions` and `irreversible_changes`. Unprovided fields are explicitly null, not assumed safe. Migration-plan metadata binds the candidate plan and experiment context and needs its own trusted signature for verified status. Gain and confidence interval are computed from authenticated samples rather than accepted as asserted summaries.
@@ -72,6 +72,8 @@ The advisor also checks alternating A/B order, stable useful-unit counts, succes
 `preferred_observed` selects the lowest observed median among verified candidates with equal useful units; tied medians or unequal work produce no preference. It is an observed ordering, not proof of statistical superiority between all candidates. Automatic block-length selection, bootstrap-calibrated power analysis, combined resource tradeoff analysis and benchmarks of every alternative closure remain future work.
 
 ## Provenance and trust boundary
+
+The [verifier time/lifetime contract](../security/verifier-time.md) fixes #71's construction-time snapshot defect: schema-2 stores use an injected current clock at admission and final acceptance, reject expiry and invalidate on clock failure/rollback. An instance cannot replace its active session. Key policy is still a snapshot; live revocation and host/storage crash-durable replay admission remain open, so this is not full #71 or production #14 acceptance.
 
 The [provenance module](../../crates/migration-advisor/src/provenance.rs) implements Ed25519 verification using pinned `ed25519-dalek` and its [strict verification API](https://docs.rs/ed25519-dalek/2.2.0/ed25519_dalek/struct.VerifyingKey.html#method.verify_strict). Provisioned trust policy, artifact root and replay ledger are supplied separately from the request. Input cannot install its own trusted key or assert `verified: true`. The CLI grants verified status only with schema-2 provisioned trust; its schema-1 signer remains an internal fixture mode and is not accepted by the CLI.
 

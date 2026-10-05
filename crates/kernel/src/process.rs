@@ -17,6 +17,7 @@ pub(crate) enum Origin {
 pub(crate) struct Spec<'a> {
     pub image: &'a [u8],
     pub image_format: ImageFormat,
+    pub limits: kernel_core::domain::Limits,
     pub context: Context,
     pub owner: usize,
     pub entry: usize,
@@ -43,6 +44,8 @@ struct Object {
     native_window_service_ticks: u64,
     observations: crate::execution::Observations,
     blocked: bool,
+    domain: kernel_core::domain::Owner,
+    _memory_charge: kernel_core::domain::Memory,
 }
 /// Mutable CPU0-owned value, not global shared storage. Owned frames make it
 /// non-Send/non-Sync. Callers retain it independently of dispatch/workload lifetime.
@@ -99,7 +102,17 @@ impl Registry {
         spec: Spec<'_>,
         fail_at: Option<CreationStep>,
     ) -> Result<ProcessId, CreationFailure> {
-        self.create_inner(physical, origin, spec, fail_at)
+        self.create_bounded(physical, origin, spec, fail_at, spec.limits)
+    }
+    pub fn create_bounded(
+        &mut self,
+        physical: &mut memory::Physical,
+        origin: Origin,
+        spec: Spec<'_>,
+        fail_at: Option<CreationStep>,
+        limits: kernel_core::domain::Limits,
+    ) -> Result<ProcessId, CreationFailure> {
+        self.create_inner(physical, origin, spec, fail_at, limits)
             .map_err(|(error, completion)| CreationFailure { error, completion })
     }
     fn create_inner(
@@ -108,6 +121,7 @@ impl Registry {
         origin: Origin,
         spec: Spec<'_>,
         fail_at: Option<CreationStep>,
+        limits: kernel_core::domain::Limits,
     ) -> Result<ProcessId, (Error, Option<Completion>)> {
         context_contract().map_err(|e| (e, None))?;
         if !matches!(origin, Origin::Bootstrap) {
@@ -176,10 +190,20 @@ impl Registry {
         trace(id, State::Creating, None);
         let mut frame = None;
         let mut space = None;
+        let mut domain = None;
+        let mut memory_charge = None;
         let transaction = (|| {
             if fail_at == Some(CreationStep::Slot) {
                 return Err((Error::Allocation, CreationStep::Slot));
             }
+            let (owner, charge) = kernel_core::domain::Owner::new(
+                id,
+                limits,
+                memory::USER_SPACE_PAGES + if payload { image_pages } else { 0 },
+            )
+            .map_err(|_| (Error::Allocation, CreationStep::Frames))?;
+            domain = Some(owner);
+            memory_charge = Some(charge);
             frame = Some(
                 physical
                     .allocate(
@@ -218,9 +242,14 @@ impl Registry {
                 native_window_service_ticks: 0,
                 observations: crate::execution::Observations::ZERO,
                 blocked: false,
+                domain: domain.take().unwrap(),
+                _memory_charge: memory_charge.take().unwrap(),
             });
             self.handles[id.slot()]
-                .bind(id)
+                .bind_domain(
+                    id,
+                    self.objects[id.slot()].as_ref().unwrap().domain.reference(),
+                )
                 .expect("fresh process namespace");
             scheduler::reset_event(id);
             self.table.prepared(id).expect("transaction state");
@@ -246,6 +275,43 @@ impl Registry {
         trace(id, State::Prepared, None);
         Ok(id)
     }
+    #[cfg_attr(
+        not(feature = "kernel-tests"),
+        expect(
+            dead_code,
+            reason = "Protected bootstrap API; current boot validation has no persistent service consumer"
+        )
+    )]
+    pub fn bootstrap_grant(
+        &mut self,
+        id: ProcessId,
+        service: ProcessId,
+        event: kernel_core::wait::SharedEvent,
+        rights: kernel_core::handles::Rights,
+    ) -> Result<kernel_core::handles::Handle, kernel_core::handles::Error> {
+        context_contract().map_err(|_| kernel_core::handles::Error::Denied)?;
+        if self.table.state(id).ok() != Some(State::Prepared)
+            || self.table.state(service).ok() != Some(State::Prepared)
+        {
+            return Err(kernel_core::handles::Error::Denied);
+        }
+        self.handles[id.slot()]
+            .create_granted_event(id, service, event, rights, |_| Ok::<_, ()>(()))
+            .map_err(|e| match e {
+                kernel_core::handles::CreationError::Handle(e) => e,
+                kernel_core::handles::CreationError::Publication(()) => unreachable!(),
+            })
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn domain_reference(&self, id: ProcessId) -> kernel_core::domain::Reference {
+        self.objects[id.slot()].as_ref().unwrap().domain.reference()
+    }
+    #[cfg(feature = "kernel-tests")]
+    pub fn security_input(&mut self, id: ProcessId, values: [u64; 7]) {
+        context_contract().unwrap();
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.objects[id.slot()].as_mut().unwrap().context.gpr[20..27].copy_from_slice(&values);
+    }
     pub fn start(&mut self, id: ProcessId) -> Result<(), Error> {
         context_contract()?;
         self.table.start(id)?;
@@ -262,17 +328,19 @@ impl Registry {
         assert_eq!(self.table.state(id), Ok(State::Prepared));
         for _ in 0..CAPACITY - 1 {
             self.handles[id.slot()]
-                .create_event(
+                .create_event_with_rights(
                     id,
                     kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                    kernel_core::handles::Rights::ALL,
                     |_| Ok::<_, ()>(()),
                 )
                 .unwrap();
         }
         self.handles[id.slot()]
-            .create_event(
+            .create_event_with_rights(
                 id,
                 kernel_core::wait::SharedEvent::try_new().expect("shared handle event quota"),
+                kernel_core::handles::Rights::ALL,
                 |_| Ok::<_, ()>(()),
             )
             .unwrap()
@@ -386,7 +454,7 @@ impl Registry {
     }
     /// Kernel-owned resident frame charge for an exact live process identity.
     /// This remains valid after terminal completion and before explicit reclaim.
-    #[cfg(feature = "machine-events")]
+    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
     pub fn resident_pages(&self, id: ProcessId) -> Result<usize, Error> {
         context_contract()?;
         self.table.state(id)?;
@@ -514,6 +582,7 @@ impl Registry {
                     }
                 }
             }
+            object.domain.close();
             if !cfg!(feature = "handle-retirement-negative") || self.handles[result.id].live() == 0
             {
                 self.handles[result.id]

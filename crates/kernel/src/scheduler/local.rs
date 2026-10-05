@@ -176,6 +176,9 @@ impl Local {
     }
     #[cfg(feature = "scheduler-contract-negative")]
     pub fn controls(&self, generation: u64) {
+        // The parent feature and owner-only probe have no generation-dependent
+        // local mutation; the other selected probes use this exact argument.
+        let _ = generation;
         #[cfg(feature = "scheduler-context-negative")]
         self.with(generation, |state| {
             crate::cpu::context::corrupt_mode(&mut state.tasks[0].context)
