@@ -158,8 +158,8 @@ Identity/type/lifetime checks produce a resource reference; they do not authoriz
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Passing historical receipt; does not establish later-source applicability.",
+            "state": "STALE",
+            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/handles.rs, crates/kernel-core/src/handles.rs. New exact-source evidence is required for VERIFIED.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
             "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8"

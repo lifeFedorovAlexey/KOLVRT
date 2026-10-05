@@ -30,7 +30,7 @@ Implementation states are PLANNED, RESEARCH, EXPERIMENTAL, BOUNDED_IMPLEMENTED, 
 
 The initial UNRECORDED transition adopts previously reviewed reality without pretending this catalog delivered the feature. Later transitions are append-only, continuous and validated against the CI base. Events moving to implemented states carry actual acceptance paths. Code merged without acceptance stays EXPERIMENTAL. Removed sources need not exist, but their history and ID remain retained.
 
-Verification is per environment: UNKNOWN, VERIFIED, FAILED, STALE or NOT_APPLICABLE with reasons. VERIFIED carries an exact receipt digest and source/revision/profile/platform scope. The pilot's QEMU rows mean the historical receipt's source, not all later code. Unknown hardware remains unknown. Relevant input changes require applicability review and STALE/new evidence as appropriate; unrelated documentation changes do not manufacture a behavioral regression. Readiness UNKNOWN/NOT_READY/READY is independent; READY requires separate acceptance. Roadmap phase orders guarantees, not status.
+Verification is per environment: UNKNOWN, VERIFIED, FAILED, STALE or NOT_APPLICABLE with reasons. VERIFIED carries an exact receipt digest and source/revision/profile/platform scope. Historical receipts retain their original scope; current VERIFIED additionally requires matching declared source digests. Unknown hardware remains unknown. Relevant input changes require applicability review and STALE/new evidence as appropriate; unrelated documentation changes do not manufacture a behavioral regression. Readiness UNKNOWN/NOT_READY/READY is independent; READY requires separate acceptance. Roadmap phase orders guarantees, not status.
 
 Every feature-affecting reviewed change MUST update the canonical status, scope, acceptance/evidence applicability, limitations and next gate in that same change, regenerate catalog/graph and affected public summaries, review affected complete EN/RU pairs and pass checks. Addition, partial/experimental delivery, bounds, removal, supersession, hardware verification and readiness all follow this contract. A feature PR is incomplete while public status is knowingly false. Issue closure requires scoped acceptance or an explicitly research-only disposition.
 
@@ -47,6 +47,7 @@ Discovery catalog contains compact navigation entries, aliases and unenrolled in
 ## Commands and validation
 
 ```text
+cargo xtask docs context "TASK_IN_RUSSIAN" --locale ru --budget-bytes 262144
 cargo xtask docs generate
 cargo xtask docs generate --check
 cargo xtask docs find dma
@@ -61,7 +62,7 @@ cargo xtask docs check-change origin/main
 
 The xtask facade calls the existing repository-checks binary, sharing its library. Context ranks exact IDs/tags/read conditions/title/summary deterministically, selects up to three candidates with at least 60% of the top score, then includes their entire mandatory closure. Output explains selection and gaps, bytes and ceil(bytes/4) approximate token units. A budget violation is explicit and fails the command; no required dependency is silently dropped. Narrow the request instead. Related edges expand only when the task requires them. Impact follows declared reverse edges; it is documentation impact, not exhaustive code impact.
 
-The normal repository check rejects schema/IDs/aliases/edges/cycles, missing enrolled metadata, stale outputs, broken sources/anchors, false feature transitions, receipt digest drift and incompatible EN/RU machine metadata. The CI base check additionally rejects rewritten feature history and changed declared sources without canonical impact updates. A meaningful no-behavior-change canonical disposition is allowed; reviewers still evaluate truth. External issue existence can be checked with authenticated GitHub tools; offline tooling only records IDs and makes no existence/closure inference. Network failures remain UNKNOWN.
+The normal repository check rejects schema/IDs/aliases/edges/cycles, missing enrolled metadata, stale outputs, broken sources/anchors, false feature transitions, receipt digest drift, outdated VERIFIED sources and incompatible EN/RU machine metadata. The CI base check additionally rejects rewritten feature history and implementation/build changes without digest-bound impact declarations. Explicit no-impact explanations can permit an unchanged canonical contract; reviewers still evaluate truth. External issue existence can be checked with authenticated GitHub tools; offline tooling only records IDs and makes no existence/closure inference. Network failures remain UNKNOWN.
 
 ## Migration and evidence limits
 
@@ -70,6 +71,16 @@ Stage A establishes schema/policy/checks; B migrates processes/user-copy/handles
 Linux research uses the [mechanism template](../research/linux/mechanism-template.md); primary sources pin version/commit/path/configuration and review date. COST-L debt lifecycle, native decision, driver observations, compatibility modules and KOLVRT feature states remain distinct. Hardware research does not collect or publish personal inventory under this tooling. Reuse existing research issues and provenance gates.
 
 [Russian translation](../translations/ru/docs/knowledge-system.md)
+
+### Exact-source verification and implementation impact
+
+VERIFIED requires every declared feature source to occur exactly once in the receipt's `source_files`, with matching LF-normalized `sha256_lf`. Duplicate/malformed digests, missing coverage or changed sources fail CI. Record STALE with a reason or supply new matching evidence before merging. Retained receipts remain immutable and digest checked in STALE; implementation scope and historical acceptance are independent of current verification. README summaries cannot publish an outdated VERIFIED after a successful check.
+
+For each PR changing implementation or build inputs, author [the impact declaration](implementation-impact.json) against the exact reviewed base commit. Its [closed schema](../schemas/implementation-impact.schema.json) binds every changed file to before/after LF hashes (null for creation/deletion). The mandatory boundary includes all files under crates, scripts, .cargo and .github/workflows, root Cargo/package manifests and locks, build.rs/rust-toolchain.toml, plus every declared feature source. Newly added and deleted files count, including untracked files in local checks. Other implementation roots remain a human enrollment obligation; the checker cannot recognize arbitrary new functionality semantically.
+
+Classify each file as new-feature, existing-feature or no-feature-impact with an explanation. New-feature requires a newly enrolled canonical feature owning that source. Changes to owned sources also require one feature disposition: semantic-change, evidence-change or no-impact. Semantic-change requires a substantive canonical update; whitespace touches do not qualify. Evidence-change requires changed evidence metadata. No-impact permits a source edit without a contract edit when its explanation is reviewed, but never bypasses exact-source verification. It is a review claim, not an automatic equivalence proof. Publish dispositions in the PR description and CI output; reviewers judge their reasons and EN/RU meaning. Rebase, source edits or base advancement invalidate the declaration and require renewed review. This file is a per-change review record, preserved by Git history, not a second feature registry.
+
+Do not close an infrastructure issue while its own required semantic or locale review remains pending. Passing checks establishes mechanical consistency, not review completion.
 
 <!-- knowledge -->
 
@@ -88,26 +99,28 @@ Linux research uses the [mechanism template](../research/linux/mechanism-templat
       "tags": ["documentation", "catalog", "navigation"],
       "feature": {
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Offline metadata validation, ID/locale extraction, prerequisite closure, impact and deterministic candidate ranking.",
+        "implementation_scope": "Offline metadata validation, Unicode EN/RU context, exact-source verification freshness, prerequisite closure and review-visible per-change implementation impact declarations.",
         "sources": [
           "crates/repository-checks/src/knowledge.rs",
-          "crates/repository-checks/tests/knowledge.rs"
+          "crates/repository-checks/src/knowledge/impact.rs",
+          "crates/repository-checks/tests/knowledge.rs",
+          "schemas/implementation-impact.schema.json"
         ],
         "acceptance": ["research/results/documentation-knowledge-pilot.json"],
         "issues": [74],
         "adrs": ["adr.0024"],
         "limitations": [
-          "No automatic semantic-completeness proof, LLM search or all-doc migration."
+          "No automatic semantic-completeness proof, no-impact truth proof, LLM search or all-doc migration; arbitrary implementation roots outside the declared CI boundary still require human enrollment review."
         ],
         "next_gate": "Review coverage on additional tasks before enrolling further domains or adding semantic search.",
         "verification": [
           {
             "environment": "host-process",
             "state": "VERIFIED",
-            "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
+            "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "75244623262d0564348b55704e9e49c0b77afbe6ea9767d605497b500950b932",
-            "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance."
+            "receipt_sha256": "446d14a28d1b5eca3d227f4cd35c1da959cf8e548211fe795449fcb07de64658",
+            "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim."
           },
           {
             "environment": "physical-arm64",

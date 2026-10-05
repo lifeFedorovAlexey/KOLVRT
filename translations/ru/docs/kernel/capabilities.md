@@ -38,8 +38,16 @@ Current reference: [Границы полномочий](../architecture-decisio
       "anchor": "kolvrt-security-capability-revocation",
       "kind": "feature",
       "summary": "Текущие ограниченные Phase 3.4 grants и отзыв с явными оставшимися этапами.",
-      "tags": ["capability", "revocation", "phase", "3.4"],
-      "read_when": ["review Phase 3.4 capability revocation"],
+      "tags": [
+        "capability",
+        "revocation",
+        "phase",
+        "3.4",
+        "отзыв",
+        "полномочий",
+        "полномочия"
+      ],
+      "read_when": ["проверь отзыв полномочий", "review capability revocation"],
       "depends_on": [
         "kolvrt.handles.local",
         "kolvrt.handles.identity",
@@ -118,7 +126,14 @@ Current reference: [Границы полномочий](../architecture-decisio
       "anchor": "kolvrt-security-event-revocation",
       "kind": "feature",
       "summary": "Синхронные Event grants и отзыв допуска для всех aliases.",
-      "tags": ["event", "revocation", "grant"],
+      "tags": [
+        "event",
+        "revocation",
+        "grant",
+        "отзыв",
+        "полномочий",
+        "полномочия"
+      ],
       "depends_on": [
         "kolvrt.handles.identity",
         "kolvrt.handles.lifetime",
@@ -146,8 +161,8 @@ Current reference: [Границы полномочий](../architecture-decisio
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Original merged PR #72 CI profiles imported with source and ELF digests; not a rerun by this documentation change.",
+            "state": "STALE",
+            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel-core/src/handles.rs, crates/kernel-core/src/wait.rs, crates/kernel/src/handles.rs, crates/kernel/src/handles/testing.rs. New exact-source evidence is required for VERIFIED.",
             "receipt": "research/results/event-revocation-ci.json",
             "receipt_sha256": "b403eab6ca342921cff86c1d48c07395ebe5c2a18d4f4f1a6a331c17cbb8d8bf",
             "scope": "Only synchronous Event SEND/TRANSFER/REVOKE and retained positive DEV/PROD CI profiles at 4313feb82ea345e15d4a309889a3986b3558848a. Actual max/TCG/QEMU configuration is recorded; no issuer/service/domain, async drain, current-host-tool or silicon verification."
@@ -168,7 +183,8 @@ Current reference: [Границы полномочий](../architecture-decisio
             "acceptance": ["research/results/event-revocation-ci.json"]
           }
         ]
-      }
+      },
+      "read_when": ["проверь отзыв полномочий", "review capability revocation"]
     }
   ]
 }

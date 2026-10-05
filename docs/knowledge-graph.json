@@ -32,6 +32,11 @@
     },
     {
       "from": "kolvrt.docs.navigation",
+      "to": "crates/repository-checks/src/knowledge/impact.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.docs.navigation",
       "to": "crates/repository-checks/tests/knowledge.rs",
       "type": "implemented_by"
     },
@@ -39,6 +44,11 @@
       "from": "kolvrt.docs.navigation",
       "to": "research/results/documentation-knowledge-pilot.json",
       "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.docs.navigation",
+      "to": "schemas/implementation-impact.schema.json",
+      "type": "implemented_by"
     },
     {
       "from": "kolvrt.handles.local",
@@ -573,8 +583,9 @@
     "crates/kernel/src/process.rs": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
-    "crates/repository-checks/src/knowledge.rs": "cc1e7ec389b4c769d76658c4e22ebb1c2fd627b3b7d3729811f721a412378b0a",
-    "crates/repository-checks/tests/knowledge.rs": "090fe869bf22dade4f57ef80576cd7eb72ce583a4718257499a42f280c0217df",
+    "crates/repository-checks/src/knowledge.rs": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
+    "crates/repository-checks/src/knowledge/impact.rs": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
+    "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
     "docs/architecture-decisions/0003-profiles.md": "e468a33090c9ab7ae112cf41f222edfd7faf459907a1117106dbfc19c64e3280",
@@ -601,13 +612,13 @@
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
-    "docs/kernel/capabilities.md": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
+    "docs/kernel/capabilities.md": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
     "docs/kernel/domains.md": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
-    "docs/kernel/handles.md": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
-    "docs/kernel/processes.md": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+    "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+    "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "eb86acfa5b712ae63ab096afb1d1edc7491afc33689f8f1a8eb0074d4d9bb2bf",
-    "docs/knowledge-system.md": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
+    "docs/knowledge-system.md": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -644,8 +655,9 @@
     "research/cost-l/COST-L-0002.json": "4854fd2013ea76118e8b7e027fe61ef304f2b39f181c1982d3c1c76aba05af01",
     "research/cost-l/COST-L-0003.json": "bc8f2115542ad738a1c306971356a71837e15a6103b2a45980d11469f7aa1794",
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
+    "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "85835a69a00053162b3b7e0e1be3b498cc3f746a277124663ca70c4b1d552a4f",
+    "translations/manifest.json": "cd10b05b7b52b510bc8a2c3df7068f6c81c44427700210a81cafca0d6beb46c6",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -672,12 +684,12 @@
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
-    "translations/ru/docs/kernel/capabilities.md": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
+    "translations/ru/docs/kernel/capabilities.md": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
     "translations/ru/docs/kernel/domains.md": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
-    "translations/ru/docs/kernel/handles.md": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
-    "translations/ru/docs/kernel/processes.md": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+    "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
+    "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7",
+    "translations/ru/docs/knowledge-system.md": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
@@ -691,6 +703,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0001",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0001 — Приоритет собственной модели и изоляция наследуемого поведения. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0001 — Приоритет собственной модели и изоляция наследуемого поведения"
+        }
+      },
       "locations": {
         "en": {
           "end": 73,
@@ -719,6 +739,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0002",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0002 — Маршрутизация по областям состояния. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0002 — Маршрутизация по областям состояния"
+        }
+      },
       "locations": {
         "en": {
           "end": 78,
@@ -747,6 +775,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0003",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0003 — Единая архитектура для профилей исполнения. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0003 — Единая архитектура для профилей исполнения"
+        }
+      },
       "locations": {
         "en": {
           "end": 66,
@@ -775,6 +811,14 @@
       "evidence_scope": "unsafe-boundary obligations; the original test-status claim applies only to Phase 0.",
       "id": "adr.0004",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0004 — Безопасный Rust и проверяемые границы. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0004 — Безопасный Rust и проверяемые границы"
+        }
+      },
       "locations": {
         "en": {
           "end": 68,
@@ -803,6 +847,14 @@
       "evidence_scope": "initial ARM64 platform decision; Phase 0.1 and 0.2 statements describe that planning snapshot.",
       "id": "adr.0005",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0005 — Контракты платформы с приоритетом ARM64. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0005 — Контракты платформы с приоритетом ARM64"
+        }
+      },
       "locations": {
         "en": {
           "end": 66,
@@ -831,6 +883,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0006",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0006 — Измерение зависимостей и честное сравнение. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0006 — Измерение зависимостей и честное сравнение"
+        }
+      },
       "locations": {
         "en": {
           "end": 66,
@@ -859,6 +919,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0007",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0007 — Совместимость с ошибками и вывод модулей из эксплуатации. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0007 — Совместимость с ошибками и вывод модулей из эксплуатации"
+        }
+      },
       "locations": {
         "en": {
           "end": 102,
@@ -887,6 +955,14 @@
       "evidence_scope": "Phase 0 design experiment; the statement below that combined kernel execution had not occurred describes the experiment's state at decision time.",
       "id": "adr.0008",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0008 — Области защиты служб. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0008 — Области защиты служб"
+        }
+      },
       "locations": {
         "en": {
           "end": 77,
@@ -915,6 +991,14 @@
       "evidence_scope": "Phase 0 design baseline; the Phase 1 authorization statement records the decision state at acceptance.",
       "id": "adr.0009",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0009 — Проектная основа собственного сценария. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0009 — Проектная основа собственного сценария"
+        }
+      },
       "locations": {
         "en": {
           "end": 62,
@@ -943,6 +1027,14 @@
       "evidence_scope": "original Phase 1 CPU0-only milestone; accepted isolation and ownership obligations remain applicable.",
       "id": "adr.0010",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0010 — Самостоятельный фундамент EL1. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0010 — Самостоятельный фундамент EL1"
+        }
+      },
       "locations": {
         "en": {
           "end": 67,
@@ -971,6 +1063,14 @@
       "evidence_scope": "compatibility-route creation state at ADR acceptance; compatibility routing is later accepted in Phase 2.",
       "id": "adr.0011",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0011 — Ревью методов по производительности и надёжности. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0011 — Ревью методов по производительности и надёжности"
+        }
+      },
       "locations": {
         "en": {
           "end": 60,
@@ -999,6 +1099,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0012",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0012 — Владение на нескольких CPU и подтверждённое освобождение ресурсов. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0012 — Владение на нескольких CPU и подтверждённое освобождение ресурсов"
+        }
+      },
       "locations": {
         "en": {
           "end": 62,
@@ -1027,6 +1135,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0013",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0013 — Effective authority и необходимость привилегий. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0013 — Effective authority и необходимость привилегий"
+        }
+      },
       "locations": {
         "en": {
           "end": 82,
@@ -1055,6 +1171,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0014",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0014 — Основа исполнения в EL0 с фиксированным закреплением за CPU. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0014 — Основа исполнения в EL0 с фиксированным закреплением за CPU"
+        }
+      },
       "locations": {
         "en": {
           "end": 64,
@@ -1083,6 +1207,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "adr.0015",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0015 — Версионированная маршрутизация в изолированных потребителях EL0. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0015 — Версионированная маршрутизация в изолированных потребителях EL0"
+        }
+      },
       "locations": {
         "en": {
           "end": 93,
@@ -1111,6 +1243,14 @@
       "evidence_scope": "accepted Phase 3.0 scheduler-ownership milestone; issue #20 process lifecycle was future work at decision time.",
       "id": "adr.0016",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0016 — Обязанности scheduler и enforced per-CPU ownership. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0016 — Обязанности scheduler и enforced per-CPU ownership"
+        }
+      },
       "locations": {
         "en": {
           "end": 62,
@@ -1139,6 +1279,14 @@
       "evidence_scope": "accepted bounded Phase 3.1 process lifecycle for trusted bootstrap workloads on two CPUs; no public EL0 lifecycle API.",
       "id": "adr.0017",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0017 — Жизненный цикл собственных процессов с защитой от устаревших поколений. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0017 — Жизненный цикл собственных процессов с защитой от устаревших поколений"
+        }
+      },
       "locations": {
         "en": {
           "end": 81,
@@ -1167,6 +1315,14 @@
       "evidence_scope": "current-process memory boundary on two fixed-affinity CPUs; no public pointer ABI.",
       "id": "adr.0018",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0018 — Ограниченное синхронное копирование пользовательских данных. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0018 — Ограниченное синхронное копирование пользовательских данных"
+        }
+      },
       "locations": {
         "en": {
           "end": 62,
@@ -1195,6 +1351,14 @@
       "evidence_scope": "process-local identity/type/lifetime; transfer and retained-target guarantees are extended by [ADR-0020](0020-handle-transfer-and-retention.md).",
       "id": "adr.0019",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0019 — Линейные namespace дескрипторов процессов. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0019 — Линейные namespace дескрипторов процессов"
+        }
+      },
       "locations": {
         "en": {
           "end": 64,
@@ -1223,6 +1387,14 @@
       "evidence_scope": "real kernel-local lookup, close, transfer and shared Event retention; two-CPU QEMU DEV/PROD.",
       "id": "adr.0020",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0020 — Передача дескрипторов с ограничением прав и удержание targets. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0020 — Передача дескрипторов с ограничением прав и удержание targets"
+        }
+      },
       "locations": {
         "en": {
           "end": 73,
@@ -1251,6 +1423,14 @@
       "evidence_scope": "two fixed-affinity CPUs, private immutable process roots, AArch64 QEMU and the declared ASID-zero fallback; no migration or shared-root execution.",
       "id": "adr.0021",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU. Доказательства имеют указанные границы.",
+          "tags": ["architecture", "decision"],
+          "title": "ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU"
+        }
+      },
       "locations": {
         "en": {
           "end": 70,
@@ -1279,6 +1459,14 @@
       "evidence_scope": "accepted minimal Event-slice obligations; separate CI receipt binds QEMU sources, not general grants/domains.",
       "id": "adr.0022",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Минимальные Event grants и аннулирование admission.",
+          "tags": null,
+          "title": "ADR-0022 — Ограниченные grants и отзыв прав для собственного Event"
+        }
+      },
       "locations": {
         "en": {
           "end": 138,
@@ -1313,6 +1501,14 @@
       "evidence_scope": "generation-aware one-process domains, fixed-affinity notification services and retained terminal outcomes on two QEMU CPUs.",
       "id": "adr.0023",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченные домены и scoped Event grants Phase 3.4.",
+          "tags": null,
+          "title": "ADR-0023 — One-process domains и scoped Event grants"
+        }
+      },
       "locations": {
         "en": {
           "end": 76,
@@ -1347,6 +1543,14 @@
       "evidence_scope": "host navigation contracts only; no kernel feature acceptance.",
       "id": "adr.0024",
       "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Контракт общей навигации документации и актуальности функций.",
+          "tags": null,
+          "title": "ADR-0024 — Навигация знаний документации и актуальность функций"
+        }
+      },
       "locations": {
         "en": {
           "end": 61,
@@ -2472,21 +2676,29 @@
     "doc.kolvrt.docs.knowledge": {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
-      "estimated_bytes": 12540,
+      "estimated_bytes": 15485,
       "evidence_scope": "deterministic offline navigation and the enrolled Phase 3 pilot; no kernel or hardware acceptance is inferred.",
       "id": "doc.kolvrt.docs.knowledge",
       "kind": "policy",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Контракт общих авторских метаданных и детерминированной навигации.",
+          "tags": null,
+          "title": "Система знаний документации"
+        }
+      },
       "locations": {
         "en": {
-          "end": 139,
+          "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
+          "sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
           "start": 1
         },
         "ru": {
-          "end": 139,
+          "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7",
+          "sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
           "start": 1
         }
       },
@@ -2502,6 +2714,14 @@
       "evidence_scope": "Historical Phase 0.1 documentary foundation, 2026-10-02; no kernel existed at that milestone.",
       "id": "doc.kolvrt.history.phase-0-1",
       "kind": "research",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Историческая Phase 0.1; исходные числа и отсутствие ядра не являются текущим статусом.",
+          "tags": ["historical", "phase-0"],
+          "title": "Результаты и ограничения этапа 0.1"
+        }
+      },
       "locations": {
         "en": {
           "end": 56,
@@ -2529,6 +2749,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "doc.kolvrt.kernel-laws",
       "kind": "policy",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: Законы ядра. Доказательства имеют указанные границы.",
+          "tags": null,
+          "title": "Законы ядра"
+        }
+      },
       "locations": {
         "en": {
           "end": 544,
@@ -2551,21 +2779,29 @@
     "doc.kolvrt.kernel.capabilities": {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 9333,
+      "estimated_bytes": 9471,
       "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченные grants, domains и revocation Phase 3.4; общие IPC и supervisor policy остаются отдельными этапами.",
+          "tags": null,
+          "title": "Границы нативных полномочий и отзыв"
+        }
+      },
       "locations": {
         "en": {
           "end": 175,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
+          "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
           "start": 1
         },
         "ru": {
-          "end": 175,
+          "end": 191,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
+          "sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
           "start": 1
         }
       },
@@ -2581,6 +2817,14 @@
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Текущие домены и grants Phase 3.4.",
+          "tags": null,
+          "title": "Native domains и scoped grants"
+        }
+      },
       "locations": {
         "en": {
           "end": 177,
@@ -2603,21 +2847,29 @@
     "doc.kolvrt.kernel.handles": {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 18557,
+      "estimated_bytes": 18665,
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: Локальные дескрипторы процессов. Доказательства имеют указанные границы.",
+          "tags": null,
+          "title": "Локальные дескрипторы процессов"
+        }
+      },
       "locations": {
         "en": {
           "end": 224,
           "path": "docs/kernel/handles.md",
-          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
           "start": 1
         },
         "ru": {
           "end": 224,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
           "start": 1
         }
       },
@@ -2629,21 +2881,29 @@
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 19475,
+      "estimated_bytes": 19548,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: Жизненный цикл динамических процессов. Доказательства имеют указанные границы.",
+          "tags": null,
+          "title": "Жизненный цикл динамических процессов"
+        }
+      },
       "locations": {
         "en": {
           "end": 251,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 1
         },
         "ru": {
           "end": 251,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 1
         }
       },
@@ -2659,6 +2919,14 @@
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "id": "doc.kolvrt.kernel.user-copy",
       "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: Безопасное копирование данных пользователя. Доказательства имеют указанные границы.",
+          "tags": null,
+          "title": "Безопасное копирование данных пользователя"
+        }
+      },
       "locations": {
         "en": {
           "end": 229,
@@ -2685,6 +2953,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "doc.kolvrt.native-model",
       "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: Модель собственных интерфейсов. Доказательства имеют указанные границы.",
+          "tags": null,
+          "title": "Модель собственных интерфейсов"
+        }
+      },
       "locations": {
         "en": {
           "end": 249,
@@ -2711,6 +2987,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "doc.kolvrt.security.threat-model",
       "kind": "security-analysis",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: Модель угроз безопасности. Доказательства имеют указанные границы.",
+          "tags": null,
+          "title": "Модель угроз безопасности"
+        }
+      },
       "locations": {
         "en": {
           "end": 219,
@@ -2737,6 +3021,14 @@
       "evidence_scope": "documentation review of Linux v6.12 pinned at adc218676eef25575469234709c2d87185ca223a; no reproduced driver execution, first-origin history or KOLVRT allocation service.",
       "id": "doc.linux.memory.allocation",
       "kind": "linux-mechanism",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Навигация по документу: Исследование контекста выделения памяти Linux. Доказательства имеют указанные границы.",
+          "tags": null,
+          "title": "Исследование контекста выделения памяти Linux"
+        }
+      },
       "locations": {
         "en": {
           "end": 48,
@@ -2766,16 +3058,18 @@
         "acceptance": ["research/results/documentation-knowledge-pilot.json"],
         "adrs": ["adr.0024"],
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Offline metadata validation, ID/locale extraction, prerequisite closure, impact and deterministic candidate ranking.",
+        "implementation_scope": "Offline metadata validation, Unicode EN/RU context, exact-source verification freshness, prerequisite closure and review-visible per-change implementation impact declarations.",
         "issues": [74],
         "limitations": [
-          "No automatic semantic-completeness proof, LLM search or all-doc migration."
+          "No automatic semantic-completeness proof, no-impact truth proof, LLM search or all-doc migration; arbitrary implementation roots outside the declared CI boundary still require human enrollment review."
         ],
         "next_gate": "Review coverage on additional tasks before enrolling further domains or adding semantic search.",
         "readiness": "NOT_READY",
         "sources": [
           "crates/repository-checks/src/knowledge.rs",
-          "crates/repository-checks/tests/knowledge.rs"
+          "crates/repository-checks/src/knowledge/impact.rs",
+          "crates/repository-checks/tests/knowledge.rs",
+          "schemas/implementation-impact.schema.json"
         ],
         "transitions": [
           {
@@ -2796,10 +3090,10 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
+            "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "75244623262d0564348b55704e9e49c0b77afbe6ea9767d605497b500950b932",
-            "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance.",
+            "receipt_sha256": "446d14a28d1b5eca3d227f4cd35c1da959cf8e548211fe795449fcb07de64658",
+            "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
           {
@@ -2811,17 +3105,25 @@
       },
       "id": "kolvrt.docs.navigation",
       "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Автономный поиск по stable ID, извлечение в границах и проверка графа.",
+          "tags": ["documentation", "catalog", "navigation"],
+          "title": "Функция навигации"
+        }
+      },
       "locations": {
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
+          "sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7",
+          "sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
           "start": 7
         }
       },
@@ -2839,17 +3141,25 @@
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.evidence",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Verification и performance gate.",
+          "tags": null,
+          "title": "Verification и performance gate"
+        }
+      },
       "locations": {
         "en": {
           "end": 106,
           "path": "docs/kernel/handles.md",
-          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
           "start": 83
         },
         "ru": {
           "end": 106,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
           "start": 81
         }
       },
@@ -2866,17 +3176,25 @@
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.identity",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Представление и caller context.",
+          "tags": null,
+          "title": "Представление и caller context"
+        }
+      },
       "locations": {
         "en": {
           "end": 37,
           "path": "docs/kernel/handles.md",
-          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
           "start": 13
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
           "start": 13
         }
       },
@@ -2893,17 +3211,25 @@
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.lifetime",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Владение и target lifetime.",
+          "tags": null,
+          "title": "Владение и target lifetime"
+        }
+      },
       "locations": {
         "en": {
           "end": 67,
           "path": "docs/kernel/handles.md",
-          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
           "start": 36
         },
         "ru": {
           "end": 65,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
           "start": 34
         }
       },
@@ -2920,17 +3246,25 @@
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.limits",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Пределы authority и координации.",
+          "tags": null,
+          "title": "Пределы authority и координации"
+        }
+      },
       "locations": {
         "en": {
           "end": 110,
           "path": "docs/kernel/handles.md",
-          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
           "start": 105
         },
         "ru": {
           "end": 110,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
           "start": 105
         }
       },
@@ -2986,11 +3320,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Passing historical receipt; does not establish later-source applicability.",
+            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/handles.rs, crates/kernel-core/src/handles.rs. New exact-source evidence is required for VERIFIED.",
             "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
             "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -3001,17 +3335,25 @@
       },
       "id": "kolvrt.handles.local",
       "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Границы функции.",
+          "tags": null,
+          "title": "Границы функции"
+        }
+      },
       "locations": {
         "en": {
           "end": 14,
           "path": "docs/kernel/handles.md",
-          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
           "start": 7
         }
       },
@@ -3028,17 +3370,25 @@
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.publication",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Generation и transactional publication.",
+          "tags": null,
+          "title": "Generation и transactional publication"
+        }
+      },
       "locations": {
         "en": {
           "end": 84,
           "path": "docs/kernel/handles.md",
-          "sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
+          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
           "start": 66
         },
         "ru": {
           "end": 82,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b",
+          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
           "start": 64
         }
       },
@@ -3105,6 +3455,14 @@
       },
       "id": "kolvrt.memory.user-copy",
       "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Границы функции.",
+          "tags": null,
+          "title": "Границы функции"
+        }
+      },
       "locations": {
         "en": {
           "end": 14,
@@ -3132,6 +3490,14 @@
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "id": "kolvrt.memory.user-copy.api",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: API и ограничения.",
+          "tags": null,
+          "title": "API и ограничения"
+        }
+      },
       "locations": {
         "en": {
           "end": 32,
@@ -3159,6 +3525,14 @@
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "id": "kolvrt.memory.user-copy.evidence",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Проверки и измерения.",
+          "tags": null,
+          "title": "Проверки и измерения"
+        }
+      },
       "locations": {
         "en": {
           "end": 110,
@@ -3186,6 +3560,14 @@
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "id": "kolvrt.memory.user-copy.faults",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Отказы и частичное копирование.",
+          "tags": null,
+          "title": "Отказы и частичное копирование"
+        }
+      },
       "locations": {
         "en": {
           "end": 50,
@@ -3213,6 +3595,14 @@
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "id": "kolvrt.memory.user-copy.lifetime",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Время жизни, SMP и публикация отображений.",
+          "tags": null,
+          "title": "Время жизни, SMP и публикация отображений"
+        }
+      },
       "locations": {
         "en": {
           "end": 87,
@@ -3240,6 +3630,14 @@
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "id": "kolvrt.memory.user-copy.limits",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Небезопасный код и дальнейшие этапы.",
+          "tags": null,
+          "title": "Небезопасный код и дальнейшие этапы"
+        }
+      },
       "locations": {
         "en": {
           "end": 229,
@@ -3267,6 +3665,14 @@
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "id": "kolvrt.memory.user-copy.snapshot",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Снимок и допуск операции.",
+          "tags": null,
+          "title": "Снимок и допуск операции"
+        }
+      },
       "locations": {
         "en": {
           "end": 66,
@@ -3294,6 +3700,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.native.authority",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Объекты и полномочия.",
+          "tags": null,
+          "title": "Объекты и полномочия"
+        }
+      },
       "locations": {
         "en": {
           "end": 48,
@@ -3321,6 +3735,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.native.boundaries",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Границы.",
+          "tags": null,
+          "title": "Границы"
+        }
+      },
       "locations": {
         "en": {
           "end": 29,
@@ -3348,6 +3770,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.native.capability-admission",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Допуск типов полномочий.",
+          "tags": null,
+          "title": "Допуск типов полномочий"
+        }
+      },
       "locations": {
         "en": {
           "end": 99,
@@ -3375,6 +3805,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.native.errors",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Время и ошибки.",
+          "tags": null,
+          "title": "Время и ошибки"
+        }
+      },
       "locations": {
         "en": {
           "end": 172,
@@ -3402,6 +3840,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.native.memory-io",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Память и ввод-вывод.",
+          "tags": null,
+          "title": "Память и ввод-вывод"
+        }
+      },
       "locations": {
         "en": {
           "end": 160,
@@ -3429,6 +3875,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.native.object-admission",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Допуск общей модели объектов и отсрочка.",
+          "tags": null,
+          "title": "Допуск общей модели объектов и отсрочка"
+        }
+      },
       "locations": {
         "en": {
           "end": 144,
@@ -3456,6 +3910,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.native.platform",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Платформенный контракт.",
+          "tags": null,
+          "title": "Платформенный контракт"
+        }
+      },
       "locations": {
         "en": {
           "end": 249,
@@ -3483,17 +3945,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.asid",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Обновление ASID lifecycle (#18).",
+          "tags": null,
+          "title": "Обновление ASID lifecycle (#18)"
+        }
+      },
       "locations": {
         "en": {
           "end": 96,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 89
         },
         "ru": {
           "end": 96,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 89
         }
       },
@@ -3510,17 +3980,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.copy-boundary",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Текущая copy boundary Phase 3.2.",
+          "tags": null,
+          "title": "Текущая copy boundary Phase 3.2"
+        }
+      },
       "locations": {
         "en": {
           "end": 116,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 109
         },
         "ru": {
           "end": 116,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 109
         }
       },
@@ -3537,17 +4015,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.creation",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Транзакция создания.",
+          "tags": null,
+          "title": "Транзакция создания"
+        }
+      },
       "locations": {
         "en": {
           "end": 59,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 42
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 42
         }
       },
@@ -3564,17 +4050,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Данные проверок и границы профилей.",
+          "tags": null,
+          "title": "Данные проверок и границы профилей"
+        }
+      },
       "locations": {
         "en": {
           "end": 90,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 81
         },
         "ru": {
           "end": 90,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 81
         }
       },
@@ -3587,21 +4081,29 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 4757,
+      "estimated_bytes": 4830,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.handle-boundary",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Локальные ссылки процессов в Phase 3.3.",
+          "tags": null,
+          "title": "Локальные ссылки процессов в Phase 3.3"
+        }
+      },
       "locations": {
         "en": {
           "end": 251,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 115
         },
         "ru": {
           "end": 251,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 115
         }
       },
@@ -3618,17 +4120,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.identity",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Идентичность и владение.",
+          "tags": null,
+          "title": "Идентичность и владение"
+        }
+      },
       "locations": {
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 13
         }
       },
@@ -3679,11 +4189,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Passing historical receipt; does not establish later-source applicability.",
+            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/process.rs. New exact-source evidence is required for VERIFIED.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -3694,17 +4204,25 @@
       },
       "id": "kolvrt.process.lifecycle",
       "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Границы функции.",
+          "tags": null,
+          "title": "Границы функции"
+        }
+      },
       "locations": {
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 7
         }
       },
@@ -3721,17 +4239,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.limits",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Ограничения и следующий gate.",
+          "tags": null,
+          "title": "Ограничения и следующий gate"
+        }
+      },
       "locations": {
         "en": {
           "end": 102,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 95
         },
         "ru": {
           "end": 102,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 95
         }
       },
@@ -3748,17 +4274,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.reclamation",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Запуск, завершение и освобождение.",
+          "tags": null,
+          "title": "Запуск, завершение и освобождение"
+        }
+      },
       "locations": {
         "en": {
           "end": 82,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 58
         },
         "ru": {
           "end": 82,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 58
         }
       },
@@ -3775,17 +4309,25 @@
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.state",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Конечный автомат состояний.",
+          "tags": null,
+          "title": "Конечный автомат состояний"
+        }
+      },
       "locations": {
         "en": {
           "end": 43,
           "path": "docs/kernel/processes.md",
-          "sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
+          "sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
           "start": 23
         },
         "ru": {
           "end": 43,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103",
+          "sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
           "start": 23
         }
       },
@@ -3873,17 +4415,36 @@
       ],
       "id": "kolvrt.security.capability-revocation",
       "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": [
+            "проверь отзыв полномочий",
+            "review capability revocation"
+          ],
+          "summary": "Текущие ограниченные Phase 3.4 grants и отзыв с явными оставшимися этапами.",
+          "tags": [
+            "capability",
+            "revocation",
+            "phase",
+            "3.4",
+            "отзыв",
+            "полномочий",
+            "полномочия"
+          ],
+          "title": "Ограниченный текущий контракт функции"
+        }
+      },
       "locations": {
         "en": {
           "end": 18,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
+          "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
           "start": 7
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
+          "sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
           "start": 7
         }
       },
@@ -3902,6 +4463,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.compat-authority",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Инвариант совместимости.",
+          "tags": null,
+          "title": "Инвариант совместимости"
+        }
+      },
       "locations": {
         "en": {
           "end": 69,
@@ -3992,6 +4561,14 @@
       ],
       "id": "kolvrt.security.domains",
       "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Домены, budgets и retained notification outcomes.",
+          "tags": ["domain", "security", "grant", "notification"],
+          "title": "Границы реализованной функции"
+        }
+      },
       "locations": {
         "en": {
           "end": 18,
@@ -4019,6 +4596,14 @@
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.grants",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Контракт: Grants и revocation",
+          "tags": null,
+          "title": "Grants и revocation"
+        }
+      },
       "locations": {
         "en": {
           "end": 36,
@@ -4045,6 +4630,14 @@
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.identity",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Контракт: Identity, ownership и limits",
+          "tags": null,
+          "title": "Identity, ownership и limits"
+        }
+      },
       "locations": {
         "en": {
           "end": 28,
@@ -4071,6 +4664,14 @@
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.notification",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Контракт: Конкретная notification boundary",
+          "tags": null,
+          "title": "Конкретная notification boundary"
+        }
+      },
       "locations": {
         "en": {
           "end": 56,
@@ -4097,6 +4698,14 @@
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Контракт: Teardown и evidence",
+          "tags": null,
+          "title": "Teardown и evidence"
+        }
+      },
       "locations": {
         "en": {
           "end": 177,
@@ -4127,7 +4736,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 7640,
+      "estimated_bytes": 7778,
       "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "feature": {
         "acceptance": ["research/results/event-revocation-ci.json"],
@@ -4158,11 +4767,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Original merged PR #72 CI profiles imported with source and ELF digests; not a rerun by this documentation change.",
+            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel-core/src/handles.rs, crates/kernel-core/src/wait.rs, crates/kernel/src/handles.rs, crates/kernel/src/handles/testing.rs. New exact-source evidence is required for VERIFIED.",
             "receipt": "research/results/event-revocation-ci.json",
             "receipt_sha256": "b403eab6ca342921cff86c1d48c07395ebe5c2a18d4f4f1a6a331c17cbb8d8bf",
             "scope": "Only synchronous Event SEND/TRANSFER/REVOKE and retained positive DEV/PROD CI profiles at 4313feb82ea345e15d4a309889a3986b3558848a. Actual max/TCG/QEMU configuration is recorded; no issuer/service/domain, async drain, current-host-tool or silicon verification.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -4173,17 +4782,35 @@
       },
       "id": "kolvrt.security.event-revocation",
       "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": [
+            "проверь отзыв полномочий",
+            "review capability revocation"
+          ],
+          "summary": "Синхронные Event grants и отзыв допуска для всех aliases.",
+          "tags": [
+            "event",
+            "revocation",
+            "grant",
+            "отзыв",
+            "полномочий",
+            "полномочия"
+          ],
+          "title": "Ограниченный синхронный Event-срез"
+        }
+      },
       "locations": {
         "en": {
           "end": 175,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
+          "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
           "start": 17
         },
         "ru": {
-          "end": 175,
+          "end": 191,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b",
+          "sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
           "start": 17
         }
       },
@@ -4201,6 +4828,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.handle-retention",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Текущие ограниченные полномочия дескрипторов и удержание ресурсов.",
+          "tags": null,
+          "title": "Текущие ограниченные полномочия дескрипторов и удержание ресурсов"
+        }
+      },
       "locations": {
         "en": {
           "end": 219,
@@ -4228,6 +4863,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.phase2",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Observation boundary Phase 2.",
+          "tags": null,
+          "title": "Observation boundary Phase 2"
+        }
+      },
       "locations": {
         "en": {
           "end": 91,
@@ -4255,6 +4898,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.phase30",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Граница scheduler Phase 3.0.",
+          "tags": null,
+          "title": "Граница scheduler Phase 3.0"
+        }
+      },
       "locations": {
         "en": {
           "end": 97,
@@ -4282,6 +4933,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.phase31",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Граница процессов Phase 3.1.",
+          "tags": null,
+          "title": "Граница процессов Phase 3.1"
+        }
+      },
       "locations": {
         "en": {
           "end": 105,
@@ -4309,6 +4968,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.phase32",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Граница памяти в Phase 3.2.",
+          "tags": null,
+          "title": "Граница памяти в Phase 3.2"
+        }
+      },
       "locations": {
         "en": {
           "end": 111,
@@ -4336,6 +5003,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.phase33",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Ограниченная reference identity Phase 3.3.",
+          "tags": null,
+          "title": "Ограниченная reference identity Phase 3.3"
+        }
+      },
       "locations": {
         "en": {
           "end": 119,
@@ -4363,6 +5038,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.placement",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Привилегированное размещение и рассмотрение отказов.",
+          "tags": null,
+          "title": "Привилегированное размещение и рассмотрение отказов"
+        }
+      },
       "locations": {
         "en": {
           "end": 63,
@@ -4390,6 +5073,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.profiles",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Профили, диагностика и пределы.",
+          "tags": null,
+          "title": "Профили, диагностика и пределы"
+        }
+      },
       "locations": {
         "en": {
           "end": 85,
@@ -4417,6 +5108,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.revocation",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Отзыв и восстановление.",
+          "tags": null,
+          "title": "Отзыв и восстановление"
+        }
+      },
       "locations": {
         "en": {
           "end": 77,
@@ -4444,6 +5143,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.threats",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Угрозы и условия проверки.",
+          "tags": null,
+          "title": "Угрозы и условия проверки"
+        }
+      },
       "locations": {
         "en": {
           "end": 44,
@@ -4471,6 +5178,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.trust",
       "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Цели и доверие.",
+          "tags": null,
+          "title": "Цели и доверие"
+        }
+      },
       "locations": {
         "en": {
           "end": 30,
@@ -4499,6 +5214,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.001",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Собственные контракты и изоляция зависимостей.",
+          "tags": null,
+          "title": "LAW-001 — Собственные контракты и изоляция зависимостей"
+        }
+      },
       "locations": {
         "en": {
           "end": 30,
@@ -4527,6 +5250,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.003",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Одновременные собственные маршруты и совместимость.",
+          "tags": null,
+          "title": "LAW-003 — Одновременные собственные маршруты и совместимость"
+        }
+      },
       "locations": {
         "en": {
           "end": 48,
@@ -4555,6 +5286,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.004",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Явная привязка поведения.",
+          "tags": null,
+          "title": "LAW-004 — Явная привязка поведения"
+        }
+      },
       "locations": {
         "en": {
           "end": 66,
@@ -4583,6 +5322,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.005",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Согласованность общего состояния.",
+          "tags": null,
+          "title": "LAW-005 — Согласованность общего состояния"
+        }
+      },
       "locations": {
         "en": {
           "end": 84,
@@ -4611,6 +5358,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.008",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Управляемое изменение и вывод из эксплуатации.",
+          "tags": null,
+          "title": "LAW-008 — Управляемое изменение и вывод из эксплуатации"
+        }
+      },
       "locations": {
         "en": {
           "end": 102,
@@ -4639,6 +5394,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.009",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Преобразование не расширяет effective authority.",
+          "tags": null,
+          "title": "LAW-009 — Преобразование не расширяет effective authority"
+        }
+      },
       "locations": {
         "en": {
           "end": 120,
@@ -4667,6 +5430,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.013",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Явная идентичность и владение временем жизни.",
+          "tags": null,
+          "title": "LAW-013 — Явная идентичность и владение временем жизни"
+        }
+      },
       "locations": {
         "en": {
           "end": 138,
@@ -4695,6 +5466,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.018",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Проверенные данные на границах.",
+          "tags": null,
+          "title": "LAW-018 — Проверенные данные на границах"
+        }
+      },
       "locations": {
         "en": {
           "end": 156,
@@ -4723,6 +5502,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.020",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Владение памятью устройства и порядок доступа.",
+          "tags": null,
+          "title": "LAW-020 — Владение памятью устройства и порядок доступа"
+        }
+      },
       "locations": {
         "en": {
           "end": 174,
@@ -4751,6 +5538,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.025",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Единое управление ресурсом и его учёт.",
+          "tags": null,
+          "title": "LAW-025 — Единое управление ресурсом и его учёт"
+        }
+      },
       "locations": {
         "en": {
           "end": 192,
@@ -4779,6 +5574,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.026",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Наблюдаемые результаты определены явно.",
+          "tags": null,
+          "title": "LAW-026 — Наблюдаемые результаты определены явно"
+        }
+      },
       "locations": {
         "en": {
           "end": 210,
@@ -4807,6 +5610,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.027",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Видимая область планирования.",
+          "tags": null,
+          "title": "LAW-027 — Видимая область планирования"
+        }
+      },
       "locations": {
         "en": {
           "end": 228,
@@ -4835,6 +5646,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.030",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Атомарное ожидание и откат подготовки.",
+          "tags": null,
+          "title": "LAW-030 — Атомарное ожидание и откат подготовки"
+        }
+      },
       "locations": {
         "en": {
           "end": 246,
@@ -4863,6 +5682,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.031",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Ограниченная адаптация платформы.",
+          "tags": null,
+          "title": "LAW-031 — Ограниченная адаптация платформы"
+        }
+      },
       "locations": {
         "en": {
           "end": 264,
@@ -4891,6 +5718,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.035",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Профили сохраняют корректность.",
+          "tags": null,
+          "title": "LAW-035 — Профили сохраняют корректность"
+        }
+      },
       "locations": {
         "en": {
           "end": 282,
@@ -4919,6 +5754,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.036",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Честные наблюдения и сравнения.",
+          "tags": null,
+          "title": "LAW-036 — Честные наблюдения и сравнения"
+        }
+      },
       "locations": {
         "en": {
           "end": 300,
@@ -4947,6 +5790,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.040",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Доказательная основа и проверяемое изменение архитектуры.",
+          "tags": null,
+          "title": "LAW-040 — Доказательная основа и проверяемое изменение архитектуры"
+        }
+      },
       "locations": {
         "en": {
           "end": 318,
@@ -4975,6 +5826,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.041",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Продвижение имеет явные зависимости и пределы.",
+          "tags": null,
+          "title": "LAW-041 — Продвижение имеет явные зависимости и пределы"
+        }
+      },
       "locations": {
         "en": {
           "end": 336,
@@ -5003,6 +5862,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.042",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Сдерживание отказов и восстановление заданы явно.",
+          "tags": null,
+          "title": "LAW-042 — Сдерживание отказов и восстановление заданы явно"
+        }
+      },
       "locations": {
         "en": {
           "end": 354,
@@ -5031,6 +5898,14 @@
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "law.043",
       "kind": "law",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Публикация и остановка следуют порядку зависимостей.",
+          "tags": null,
+          "title": "LAW-043 — Публикация и остановка следуют порядку зависимостей"
+        }
+      },
       "locations": {
         "en": {
           "end": 544,
@@ -5057,6 +5932,14 @@
       "evidence_scope": "documentation review of Linux v6.12 pinned at adc218676eef25575469234709c2d87185ca223a; no reproduced driver execution, first-origin history or KOLVRT allocation service.",
       "id": "linux.memory.allocation",
       "kind": "linux-mechanism",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Каноническая секция: Контекст выделения и reclaim.",
+          "tags": ["linux", "memory", "allocation", "reclaim"],
+          "title": "Контекст выделения и reclaim"
+        }
+      },
       "locations": {
         "en": {
           "end": 48,

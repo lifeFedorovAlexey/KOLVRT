@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "base_commit": "c0d319e09da03600ffad0942e4770238d1fd9ca4",
+  "files": [
+    {
+      "path": "crates/repository-checks/src/knowledge.rs",
+      "before_sha256_lf": "cc1e7ec389b4c769d76658c4e22ebb1c2fd627b3b7d3729811f721a412378b0a",
+      "after_sha256_lf": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
+      "disposition": "existing-feature",
+      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+    },
+    {
+      "path": "crates/repository-checks/src/knowledge/impact.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
+      "disposition": "existing-feature",
+      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+    },
+    {
+      "path": "crates/repository-checks/tests/knowledge.rs",
+      "before_sha256_lf": "090fe869bf22dade4f57ef80576cd7eb72ce583a4718257499a42f280c0217df",
+      "after_sha256_lf": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
+      "disposition": "existing-feature",
+      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+    },
+    {
+      "path": "schemas/implementation-impact.schema.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
+      "disposition": "existing-feature",
+      "reason": "Hardens documented offline navigation: current-source receipt binding, Unicode locale retrieval and explicit per-change impact review. No kernel behavior changes."
+    }
+  ],
+  "features": [
+    {
+      "id": "kolvrt.docs.navigation",
+      "disposition": "semantic-change",
+      "reason": "Canonical EN/RU navigation contract now defines exact-source VERIFIED freshness, Unicode retrieval and review-visible declarations, including limits on automatic semantic proof."
+    }
+  ]
+}

@@ -159,8 +159,8 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Passing historical receipt; does not establish later-source applicability.",
+            "state": "STALE",
+            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/process.rs. New exact-source evidence is required for VERIFIED.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"

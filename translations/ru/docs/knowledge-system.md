@@ -30,7 +30,7 @@ Current reference: [Политика документации](documentation-pol
 
 Первый переход UNRECORDED фиксирует ранее проверенное состояние, не приписывая реализацию каталогу. Последующие переходы непрерывны, добавляются в конец и проверяются относительно базы CI. События перехода к реализации содержат реальные acceptance paths. Код без acceptance остаётся EXPERIMENTAL. Удалённые исходники могут отсутствовать; история и ID сохраняются.
 
-Проверка задаётся по окружениям: UNKNOWN, VERIFIED, FAILED, STALE, NOT_APPLICABLE с причинами. VERIFIED содержит точный digest результата и границы исходников, ревизии, профиля, платформы. QEMU в пилоте означает исходники исторической записи, не любой последующий код. Непроверенное оборудование остаётся UNKNOWN. Изменение значимых входов требует оценки применимости и STALE/новых результатов; отдельная правка документации не создаёт поведенческую регрессию. Готовность UNKNOWN/NOT_READY/READY независима; READY требует отдельного acceptance. Фаза дорожной карты задаёт порядок гарантий, не статус.
+Проверка задаётся по окружениям: UNKNOWN, VERIFIED, FAILED, STALE, NOT_APPLICABLE с причинами. VERIFIED содержит точный digest результата и границы исходников, ревизии, профиля, платформы. Исторические receipts сохраняют исходные границы; текущий VERIFIED дополнительно требует совпадения digests объявленных исходников. Непроверенное оборудование остаётся UNKNOWN. Изменение значимых входов требует оценки применимости и STALE/новых результатов; отдельная правка документации не создаёт поведенческую регрессию. Готовность UNKNOWN/NOT_READY/READY независима; READY требует отдельного acceptance. Фаза дорожной карты задаёт порядок гарантий, не статус.
 
 Каждое проверенное изменение функции ОБЯЗАНО в том же изменении обновить её канонический статус, границы, acceptance/применимость evidence, ограничения и следующий этап, перегенерировать каталог/граф и затронутые публичные обзоры, проверить полные EN/RU пары и пройти проверки. Это относится к добавлению, частичной/экспериментальной реализации, ограничениям, удалению, замене, аппаратной проверке и готовности. PR не завершён, пока публичный статус заведомо ложен. Закрытие issue требует acceptance в обозначенных границах либо явно исследовательского результата.
 
@@ -47,6 +47,7 @@ Current reference: [Политика документации](documentation-pol
 ## Команды и проверки
 
 ```text
+cargo xtask docs context "проверь отзыв полномочий" --locale ru --budget-bytes 262144
 cargo xtask docs generate
 cargo xtask docs generate --check
 cargo xtask docs find dma
@@ -61,7 +62,7 @@ cargo xtask docs check-change origin/main
 
 Фасад xtask вызывает существующий repository-checks, использующий общую библиотеку. Context детерминированно ранжирует ID/tags/read conditions/title/summary, выбирает до трёх кандидатов с оценкой не ниже 60% лучшего результата и полное обязательное замыкание. Результат объясняет выбор, пробелы, bytes и приблизительные ceil(bytes/4) единицы. Превышение бюджета явно завершает команду ошибкой; обязательные зависимости не отбрасываются. Сузьте запрос. Related edges раскрываются по необходимости. Impact следует объявленным обратным связям; это влияние на документацию, а не исчерпывающий анализ кода.
 
-Основная проверка отклоняет ошибки schema/IDs/aliases/edges/cycles, отсутствие обязательных metadata, устаревшие outputs, отсутствующие sources/anchors, ложные feature transitions, изменение receipt digest и расхождение машинных EN/RU полей. Проверка относительно CI base дополнительно отвергает переписанную историю и изменение объявленных исходников без обновления канонического impact. Допустима содержательная запись об отсутствии поведенческого изменения; истинность оценивает reviewer. Существование внешних issues проверяется авторизованными GitHub tools; автономный инструмент лишь записывает IDs без вывода о существовании/закрытии. Сетевые ошибки означают UNKNOWN.
+Основная проверка отклоняет ошибки schema/IDs/aliases/edges/cycles, отсутствие обязательных metadata, устаревшие outputs, отсутствующие sources/anchors, ложные feature transitions, изменение receipt digest, устаревшие исходники VERIFIED и расхождение машинных EN/RU полей. Проверка относительно CI base дополнительно отвергает переписанную историю и изменения реализации/сборки без impact-деклараций, привязанных к digests. Явные объяснения no-impact допускают сохранение canonical контракта без правки; истинность оценивает reviewer. Существование внешних issues проверяется авторизованными GitHub tools; автономный инструмент лишь записывает IDs без вывода о существовании/закрытии. Сетевые ошибки означают UNKNOWN.
 
 ## Миграция и пределы доказательств
 
@@ -70,6 +71,16 @@ Stage A задаёт schema/policy/checks; B мигрирует processes/user-c
 Linux research использует [шаблон механизма](../research/linux/mechanism-template.md); первичные источники фиксируют version/commit/path/configuration и review date. COST-L lifecycle, native decision, driver observations, compatibility modules и feature states различаются. Инструмент не собирает и не публикует личный hardware inventory. Используйте существующие research issues и provenance gates.
 
 [Английский оригинал](../../../docs/knowledge-system.md)
+
+### Проверка точных исходников и влияние изменений реализации
+
+VERIFIED требует, чтобы каждый объявленный исходник feature встретился ровно один раз в `source_files` receipt с совпадающим `sha256_lf` после нормализации LF. Дубликаты, неверные digests, отсутствие покрытия или изменение исходника проваливают CI. До слияния укажите STALE с причиной либо предоставьте новое evidence с совпадающими исходниками. Исторические receipts неизменяемы; их digest проверяется и при STALE. Область реализации и исторический acceptance независимы от текущей проверки. После успешной проверки README не может публиковать устаревший VERIFIED.
+
+Для каждого PR с изменениями реализации или входов сборки заполните [декларацию влияния](../../../docs/implementation-impact.json) относительно точного base commit для review. Её [закрытая схема](../../../schemas/implementation-impact.schema.json) связывает каждый изменённый файл с LF hashes до и после изменения (null при создании/удалении). Обязательная граница включает все файлы в crates, scripts, .cargo и .github/workflows, корневые Cargo/package manifests и locks, build.rs/rust-toolchain.toml и все объявленные исходники feature. Новые и удалённые файлы учитываются, включая untracked при локальной проверке. Другие корни реализации остаются обязанностью ручного enrollment review; checker не распознаёт произвольную новую функциональность по смыслу.
+
+Классифицируйте каждый файл как new-feature, existing-feature или no-feature-impact с объяснением. New-feature требует нового canonical feature, которому принадлежит исходник. Для изменений известных исходников также нужен один disposition feature: semantic-change, evidence-change или no-impact. Semantic-change требует содержательного обновления canonical документа; whitespace-touch недостаточен. Evidence-change требует изменения evidence metadata. No-impact допускает изменение исходника без правки контракта после review объяснения, но никогда не обходит проверку точных исходников. Это утверждение для review, а не автоматическое доказательство эквивалентности. Публикуйте dispositions в описании PR и выводе CI; reviewer оценивает причины и смысл EN/RU. Rebase, правка исходников или продвижение base инвалидируют декларацию и требуют нового review. Файл хранит запись review для изменения, сохраняемую историей Git, а не второй реестр feature.
+
+Не закрывайте infrastructure issue, пока обязательное смысловое или языковое review ещё ожидается. Успешные checks устанавливают механическую согласованность, а не завершение review.
 
 <!-- knowledge -->
 
@@ -88,26 +99,28 @@ Linux research использует [шаблон механизма](../researc
       "tags": ["documentation", "catalog", "navigation"],
       "feature": {
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Offline metadata validation, ID/locale extraction, prerequisite closure, impact and deterministic candidate ranking.",
+        "implementation_scope": "Offline metadata validation, Unicode EN/RU context, exact-source verification freshness, prerequisite closure and review-visible per-change implementation impact declarations.",
         "sources": [
           "crates/repository-checks/src/knowledge.rs",
-          "crates/repository-checks/tests/knowledge.rs"
+          "crates/repository-checks/src/knowledge/impact.rs",
+          "crates/repository-checks/tests/knowledge.rs",
+          "schemas/implementation-impact.schema.json"
         ],
         "acceptance": ["research/results/documentation-knowledge-pilot.json"],
         "issues": [74],
         "adrs": ["adr.0024"],
         "limitations": [
-          "No automatic semantic-completeness proof, LLM search or all-doc migration."
+          "No automatic semantic-completeness proof, no-impact truth proof, LLM search or all-doc migration; arbitrary implementation roots outside the declared CI boundary still require human enrollment review."
         ],
         "next_gate": "Review coverage on additional tasks before enrolling further domains or adding semantic search.",
         "verification": [
           {
             "environment": "host-process",
             "state": "VERIFIED",
-            "reason": "Executed bounded offline pilot; broader task coverage remains unknown.",
+            "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "75244623262d0564348b55704e9e49c0b77afbe6ea9767d605497b500950b932",
-            "scope": "Named Phase 3.4 query, mandatory authority/lifetime closure, explicit planned gap and budget; source hashes and selected document digests are bound in the receipt. No LLM semantic, kernel or physical-hardware acceptance."
+            "receipt_sha256": "446d14a28d1b5eca3d227f4cd35c1da959cf8e548211fe795449fcb07de64658",
+            "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim."
           },
           {
             "environment": "physical-arm64",

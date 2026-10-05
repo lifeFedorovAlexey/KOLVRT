@@ -1,21 +1,25 @@
 {
   "locales": {
     "ru": {
+      "AGENTS.md": {
+        "source_sha256": "7780399162944afb196e52b5d1eb58879a48e2bd1bba33de7c3a5c9be9cba774",
+        "translation_sha256": "aa7c3e1cecfaaea4666675a7840efcad484e35f9a76cb96bba8322405d05a19d"
+      },
       "CONTRIBUTING.md": {
         "source_sha256": "7af3945c1eeb2f2f5e44171168f3c0f57b887ff49b8b36dd465312a5b8c0e5f1",
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "d682cf4f00c8b0da4c272a0943dab9c980f033f4e927cd5b476ea528e1787d02",
-        "translation_sha256": "7038eab1ca098fee77e8d21318eed2bc9e4bdc0d034bc327637802abeeaf3946"
+        "source_sha256": "0ae77a4df849e8b75a97afe6bc45fd63c97a6884cc7b785e70538e1f8eb95498",
+        "translation_sha256": "f171beb0880d1bee041735e3bf1228cfe52dff09efee9769c9ce6bf79e8c8f26"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "81fbacc6d3c1ba7ac517afa1214fa059fba894913e81b36299efda95cefe35d6",
         "translation_sha256": "af1aee5b63e36915f4eaab5ce949e109dfcd601a76069abe3d6b9092603eec51"
       },
       "docs/ai-retrieval.md": {
-        "source_sha256": "bfc124431363392e912bf0b9c691045e6058c08dcff11fa933d4dd8aee750f73",
-        "translation_sha256": "7a9fc91c0baf4413397a6442d72fe29d07b0ac3e50712e041f6f1f128eb94774"
+        "source_sha256": "1f173117d19bcc0ab2b5d4698eb8763b0946bb1611b87434539fd1c7a00c3c10",
+        "translation_sha256": "5a9811879a17391768df70497b280bea90303ec3b334e0793f94f90bcc7f61e7"
       },
       "docs/architecture-decisions/0001-native-authority.md": {
         "source_sha256": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
@@ -222,8 +226,8 @@
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/capabilities.md": {
-        "source_sha256": "43fc88f79d1665bd2cb232a2875134bcdf3ee24982e43a531c1e7ac2866236dd",
-        "translation_sha256": "407b1563872d2ed84e9b2bce91e8ae4385c0e35298a247b4d7a7cca25ceaf77b"
+        "source_sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
+        "translation_sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb"
       },
       "docs/kernel/domains.md": {
         "source_sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
@@ -238,8 +242,8 @@
         "translation_sha256": "10877c0699389148900a032edb023e00472f46ede186b85a427461d3c2282070"
       },
       "docs/kernel/handles.md": {
-        "source_sha256": "ae117929dd1a7689ddc2f550ed0a977e2ad335c66b837a5604f025976b02619a",
-        "translation_sha256": "0ed8dcf00f4554342f0edf8b321ee7faad90a05fcc2e377a137d493a3efb256b"
+        "source_sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+        "translation_sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3"
       },
       "docs/kernel/interrupts.md": {
         "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",
@@ -250,8 +254,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "ade796785aef0a81c1a26b207c4ecf372aaca587b5beb63a8b15d7dd64ceeaa7",
-        "translation_sha256": "b6a533b45f0a631767ca9b98ae6b90ce76ac301cd320aac6e57621351e715103"
+        "source_sha256": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
+        "translation_sha256": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
@@ -286,8 +290,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "22bf054027268ab5c09f9fce661847c62974e8f271daaa59b03239c0e77f152a",
-        "translation_sha256": "ef4779cff11e63ce09e1ba4052919bdae1b79abb01e9018755cb5cf8be8fa8d7"
+        "source_sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
+        "translation_sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
