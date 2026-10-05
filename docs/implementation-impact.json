@@ -1,187 +1,60 @@
 {
   "schema_version": 1,
-  "base_commit": "e64d82fb137ccc1f0caf5ca99401957402be79eb",
+  "base_commit": "0ec75af8477423f89debc6c98b56ada98dad106b",
   "files": [
     {
-      "path": ".github/workflows/ci-timings.yml",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "85dd44a96b14f9ecbb627f8b5d8a713c9a5bf954d25e1620887222d938432c3d",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
       "path": ".github/workflows/ci-windows-workload.yml",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "5a8d4245a6d88e913713ef1ee1ae6bac7d1740fc7d73bcc8b6720834d8abb76d",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": ".github/workflows/dependencies.yml",
-      "before_sha256_lf": "df98db96ce44420768364891dee5dde65ab44438c9bcfcf245b19ca04efd2172",
-      "after_sha256_lf": "996e8caf186d7f7376f5e566c040172f5d156a1431022d0a678aacbb8e3affc2",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
+      "before_sha256_lf": "5a8d4245a6d88e913713ef1ee1ae6bac7d1740fc7d73bcc8b6720834d8abb76d",
+      "after_sha256_lf": "846a0a8a287e7f8e5b1ce2ba522a0acd0785a64327fbd4661741770a7cf2f705",
+      "disposition": "existing-feature",
+      "reason": "Remove the legacy serial CI execution and mode-dependent gate; retain every partitioned mandatory check, host-only waiver validation and immutable historical timing evidence."
     },
     {
       "path": ".github/workflows/kernel.yml",
-      "before_sha256_lf": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
-      "after_sha256_lf": "57b4d69983349bcceea4db7f152eda02f85003a7ed7bfa609f8a018e429ca6cd",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "crates/xtask/src/main.rs",
-      "before_sha256_lf": "efe182f94f493c3eb492b73451fea6e7873ff8e7cb4384b512bb1d3a69ced344",
-      "after_sha256_lf": "caa349117180e8ccd204747695933dc8a6e1a424ea78b891339be6ece403c885",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "crates/xtask/src/matrix.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "f74e946dbc3ed3de56d5155501f7fc35a0a812398076a3bc0803fb0e1c36e161",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "crates/xtask/src/routing_demo.rs",
-      "before_sha256_lf": "87467ee740a420b8bfcbedc5d2c4e6fc2f5a91f81e0c4858ea57f16b822f94cd",
-      "after_sha256_lf": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "crates/xtask/src/timing.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "package.json",
-      "before_sha256_lf": "7aa54fc1c9f90dacd2e7aeab0339b4cc2d7ac2bd55e833cdd51d75a824a2c3b6",
-      "after_sha256_lf": "52f006ec589a437637af166d547e57aba80089c39e9887dd336d446cd0cdb979",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/cache-integrity.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "f42cb71b34c3859e05db7c58f18908841b22a0a6b9493959967191a530dba365",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/ci-build-reuse.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "c8d9f3e7da672a71f04a1ca6f4dc68a9ec7d32914bccf63b32cab602512b2767",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/ci-evidence.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "a74e61a7bfd4c6736a46ebd2b4f15cc7182944ceacd2add41ed9eb0c2e3d9b97",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
+      "before_sha256_lf": "57b4d69983349bcceea4db7f152eda02f85003a7ed7bfa609f8a018e429ca6cd",
+      "after_sha256_lf": "3f5b7a9485a30ac2f67632d37f1c20f318dd119cdb5e347f63281f635e97251a",
+      "disposition": "existing-feature",
+      "reason": "Remove the legacy serial CI execution and mode-dependent gate; retain every partitioned mandatory check, host-only waiver validation and immutable historical timing evidence."
     },
     {
       "path": "scripts/ci-gate.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "d561264643eb2052f30d2225722860d656c5cd291cc67ed0255d06bc30b415fc",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/ci-impact.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "76df8cacf98947a359352930d67b50a61c456eb0442b08482e3f89933cb577a5",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/ci-observations.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "83175acd9e5b11910e2a4d7d38fbd12f5df14b5d68fbc528e62a2f81ec9d37fb",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
+      "before_sha256_lf": "d561264643eb2052f30d2225722860d656c5cd291cc67ed0255d06bc30b415fc",
+      "after_sha256_lf": "e431f322b9fedcf3e2363ee7518eeb98e3994180294fc0a14f0629923c6614f0",
+      "disposition": "existing-feature",
+      "reason": "Remove the legacy serial CI execution and mode-dependent gate; retain every partitioned mandatory check, host-only waiver validation and immutable historical timing evidence."
     },
     {
       "path": "scripts/ci-timings.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "d5ac2e3e6a4741b7827f8d0422af42cc031e9b80a4dbfa2795491c872e164def",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
+      "before_sha256_lf": "d5ac2e3e6a4741b7827f8d0422af42cc031e9b80a4dbfa2795491c872e164def",
+      "after_sha256_lf": "fe5a1d32bd128db3bd79fd5e77d60c66f9f8fd7658ede3a7fc6b50bc38a26d80",
+      "disposition": "existing-feature",
+      "reason": "Remove the legacy serial CI execution and mode-dependent gate; retain every partitioned mandatory check, host-only waiver validation and immutable historical timing evidence."
     },
     {
       "path": "scripts/ci-workload.ps1",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "3c72fb5951ef093721d44cf26cd6bc615f9836d2d1b079557c39f89d4da5ba02",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/run-timed.ps1",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "533fa2fbf8b3a69794ace806175597e1475226e745f3a3730183da37d428b4e7",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/setup-qemu.ps1",
-      "before_sha256_lf": "5ad2a080fb7d26f84d819b1917a706cb6c0adfea7867c8ac0bd13dfc8a901a7c",
-      "after_sha256_lf": "b77e6ebeeb391cf931340193927e99b8f9e51b46ed30e86ef5e0d4b2defe4bae",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
+      "before_sha256_lf": "3c72fb5951ef093721d44cf26cd6bc615f9836d2d1b079557c39f89d4da5ba02",
+      "after_sha256_lf": "cee27cf1b576a78b37836f8a0cc9e123e64bed3e3407e5c515f1364d972f3f5b",
+      "disposition": "existing-feature",
+      "reason": "Remove the legacy serial CI execution and mode-dependent gate; retain every partitioned mandatory check, host-only waiver validation and immutable historical timing evidence."
     },
     {
       "path": "scripts/tests/ci-infrastructure.test.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "11596fd719a95604fb7c682d2c6d99805d8a45a68a009b8cf52c4426f76162d1",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "scripts/tests/ci-timings.test.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
-      "disposition": "new-feature",
-      "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
-    },
-    {
-      "path": "crates/kernel/src/main.rs",
-      "before_sha256_lf": "e10e49c1e19ef505689fa075e795ae6e0b74130a5b613d4272e09dc8fbca84fa",
-      "after_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
+      "before_sha256_lf": "11596fd719a95604fb7c682d2c6d99805d8a45a68a009b8cf52c4426f76162d1",
+      "after_sha256_lf": "03c1f623a8ae4e14254a998be8e47334e092db895114b46d0be2a968a70bdefc",
       "disposition": "existing-feature",
-      "reason": "Emit the exact failed process verification check before the existing PROD panic. All predicates, timeout/budget behavior, profiles and failure propagation remain unchanged; no retry masks a failed run."
+      "reason": "Remove the legacy serial CI execution and mode-dependent gate; retain every partitioned mandatory check, host-only waiver validation and immutable historical timing evidence."
     }
   ],
   "features": [
     {
-      "id": "kolvrt.ci.performance",
-      "disposition": "semantic-change",
-      "reason": "Document the experimental parallel graph, cache trust/configuration boundaries, shared 130-task inventory, aggregate provenance checks, historical baseline and pending hosted/semantic acceptance in complete EN/RU units."
-    },
-    {
-      "id": "kolvrt.ipc.transport",
-      "disposition": "evidence-change",
-      "reason": "The host verifier source changes and gains a shared serial/sharded inventory; mark old verification STALE and retain immutable prior receipts and bounded readiness scope. Fresh local 130-task QEMU execution is separate from reviewed hosted acceptance."
-    },
-    {
       "id": "kolvrt.dependencies.hygiene",
       "disposition": "semantic-change",
-      "reason": "Describe verified-byte pinned cargo-deny caching and split CI orchestration while preserving all supply-chain and native dependency boundary checks; retained verification stays STALE."
+      "reason": "Document dependency boundary enforcement in the single mandatory static path and removal of serial-mode bypass; the separate supply-chain workflow remains required."
     },
     {
-      "id": "kolvrt.arena",
-      "disposition": "no-impact",
-      "reason": "Only host kernel matrix orchestration and timing change in the shared xtask entry point; arena forwarding, its commands, authority and implementation remain unchanged. This explanation requires human review."
-    },
-    {
-      "id": "kolvrt.research.host-survey",
-      "disposition": "no-impact",
-      "reason": "The shared package manifest reorganizes repository check commands; host-survey collector, allowlist, schema, fixtures and research test invocation remain unchanged. Historical verification remains STALE; this explanation requires human review."
+      "id": "kolvrt.ci.performance",
+      "disposition": "semantic-change",
+      "reason": "Document one partitioned execution graph for push, PR and manual dispatch, with no legacy serial alternative; preserve incomplete hosted performance acceptance explicitly in the complete EN/RU contract."
     }
   ]
 }
