@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "745ba4829082dc6a942a480af8d0c0a5ab8c7fb73076b5955e3610442a96d114",
-        "translation_sha256": "ab41fade4c08799f1dd89f60e866ddd88cdeca613928dacf5f719366f359243d"
+        "source_sha256": "a4f8beb45e94e6edda3fc0dfec572685ca7ecd8609ce653dc5280d67d187328b",
+        "translation_sha256": "436080ffaa92fc26371692264c7e9eba93930580e43c4a3e56f358451d1b1627"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -144,6 +144,10 @@
       "docs/architecture/component-arena.md": {
         "source_sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
         "translation_sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0"
+      },
+      "docs/architecture/dependency-hygiene.md": {
+        "source_sha256": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
+        "translation_sha256": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -282,8 +286,8 @@
         "translation_sha256": "fd7639a0953f930ccf44aadb37c5fc48718061f71a0098f3e49640fa8007b077"
       },
       "docs/kernel/time.md": {
-        "source_sha256": "6540a71e17d1570b896f9f37f4901aef90220adaa36dc14713645a9ef81a7fbe",
-        "translation_sha256": "ac0f8f67818efd18224432e005fc7cf14fce818a5230cb9729ad61050097728b"
+        "source_sha256": "914f19c7b23522d014d3e6365dc2b30df7a908ab346c929dc31d6b6464ca6dac",
+        "translation_sha256": "07d1471945282d5acc7d43d5ad17e9e0873996d62043bb514dea2e5a06918d0a"
       },
       "docs/kernel/unsafe.md": {
         "source_sha256": "a675371c3fd7298d473b321e4e3dd1b50d17e61dda4c84302eb1138954e31a05",
@@ -298,8 +302,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "1cc708dd0fd1f3a031a59279c56f01a2b334f912895ae9aca1cbc3f173c96c37",
-        "translation_sha256": "b98c220be404059ed4f31b5eeabf16fa48e7627edc3e4aff2b6bd18657cce04d"
+        "source_sha256": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
+        "translation_sha256": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -322,8 +326,8 @@
         "translation_sha256": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee"
       },
       "docs/research/host-survey.md": {
-        "source_sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
-        "translation_sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14"
+        "source_sha256": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
+        "translation_sha256": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7"
       },
       "docs/research/issue-submissions.md": {
         "source_sha256": "a41fefd0cf19757b3029cab46b3bcb2060f8130c229c8a3956b3f5ad5f1b78a8",

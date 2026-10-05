@@ -286,6 +286,106 @@
       "type": "implemented_by"
     },
     {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": ".github/dependabot.yml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": ".github/workflows/dependencies.yml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": ".github/workflows/kernel.yml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": ".nvmrc",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "adr.0013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "crates/kernel-core/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "crates/kernel/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "crates/migration-workbench/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "crates/routing-demo/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "crates/routing/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "crates/window-compat/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "crates/xtask/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "deny.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "dependencies/policy.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "package.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "research/results/issue94-dependency-hygiene.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "scripts/audit-heavy-dependencies.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "scripts/dependency-audit.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "scripts/dependency-base.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.dependencies.hygiene",
+      "to": "scripts/tests/dependency-audit.test.cjs",
+      "type": "implemented_by"
+    },
+    {
       "from": "kolvrt.docs.navigation",
       "to": "adr.0024",
       "type": "depends_on"
@@ -1007,13 +1107,19 @@
     }
   ],
   "inputs": {
+    ".github/dependabot.yml": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b",
+    ".github/workflows/dependencies.yml": "2476207ec9c963652121e75d517f944c6b1181cd03a305e4820eb316d96eeab2",
+    ".github/workflows/kernel.yml": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
+    ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
     "Cargo.lock": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+    "crates/kernel-core/Cargo.toml": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
     "crates/kernel-core/src/domain.rs": "17c2ca3dfc9f25510a1780ae6745737801d90fa575e7471977e31d945c5e37c5",
     "crates/kernel-core/src/domain/pool.rs": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05",
     "crates/kernel-core/src/handles.rs": "4d7c64d95bfa34377065728b51242e63c8c6a4822989587c500c818de130fedb",
     "crates/kernel-core/src/process.rs": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979",
     "crates/kernel-core/src/user_copy.rs": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da",
     "crates/kernel-core/src/wait.rs": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a",
+    "crates/kernel/Cargo.toml": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29",
     "crates/kernel/src/handles.rs": "52b5e9abced2988a68ac0438f3b67237ab0b52f6dc97141d1dc31dc6dce5cfe6",
     "crates/kernel/src/handles/testing.rs": "749a978761de7705e39ba3567e1279279f00edd1f7afb90f4b851ea999d9076f",
     "crates/kernel/src/process.rs": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
@@ -1024,6 +1130,7 @@
     "crates/migration-advisor/src/provenance.rs": "c06e4b62474dd989d4b80dba8f661e179355601e1506695f16605060449f4511",
     "crates/migration-advisor/tests/migration.rs": "1035455910a6bdc85cb4d64350715f0c770641e75f0f4dc38e12405111848245",
     "crates/migration-advisor/tests/provisioned_provenance.rs": "c16e74bc027150961cf714c064d854545c611cfb9d4e102e9c26ce9af32525c9",
+    "crates/migration-workbench/Cargo.toml": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
     "crates/repository-checks/Cargo.toml": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
     "crates/repository-checks/src/arena.rs": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
     "crates/repository-checks/src/cost_l.rs": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
@@ -1037,7 +1144,13 @@
     "crates/repository-checks/tests/cost_l_queries.rs": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
     "crates/repository-checks/tests/host_survey_schema.rs": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a",
     "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
+    "crates/routing-demo/Cargo.toml": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e",
+    "crates/routing/Cargo.toml": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
+    "crates/window-compat/Cargo.toml": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
+    "crates/xtask/Cargo.toml": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
     "crates/xtask/src/main.rs": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e",
+    "deny.toml": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
+    "dependencies/policy.json": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
     "docs/architecture-decisions/0003-profiles.md": "e468a33090c9ab7ae112cf41f222edfd7faf459907a1117106dbfc19c64e3280",
@@ -1066,6 +1179,7 @@
     "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/component-arena.md": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+    "docs/architecture/dependency-hygiene.md": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/kernel/capabilities.md": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
@@ -1073,14 +1187,14 @@
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "491047a4ff98c09bfd17319c85f930e1348d04c913e5d3002e02827c71dff324",
-    "docs/knowledge-system.md": "1cc708dd0fd1f3a031a59279c56f01a2b334f912895ae9aca1cbc3f173c96c37",
+    "docs/knowledge-enrollment.json": "3ecbb075cff3f4f40cd71899e9c089f1b37aa9353113a8ae4127bccc2229b7c5",
+    "docs/knowledge-system.md": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
     "docs/research/cost-l-queries.md": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
-    "docs/research/host-survey.md": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
+    "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "docs/security/verifier-time.md": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
-    "package.json": "0976fae10a6766c302bfba03e70555c9bb1893ee40822b1777a5204a23d2fc82",
+    "package.json": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768",
     "research/arena/profiles/user-copy-range.json": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
     "research/arena/standards.json": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -1129,11 +1243,15 @@
     "schemas/host-survey.schema.json": "af897efaa4d052a8a10d36bda983544cd16884fa5a6500e1476239da20b65ae2",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
+    "scripts/audit-heavy-dependencies.cjs": "84194ea6cd1b0b4ecbe3a33186cd5aefcf5d35666a5fc3bcad67db39d7d55eac",
     "scripts/collect-host-survey.ps1": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
+    "scripts/dependency-audit.cjs": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee",
+    "scripts/dependency-base.cjs": "46e2343c13a4d6e1f9bcc3a6b54a2d8e1fdeb6508cdd00550de96b3377071f8f",
     "scripts/host-survey.cjs": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
     "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
+    "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "66df654f6a8a0776813381e3b0d30ab5e836adffaa073dcc346940d9d9940b6a",
+    "translations/manifest.json": "65977e179c5097b00603e86c6369b8d968c7a5561586fa3446ece50f1d6739ab",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -1162,6 +1280,7 @@
     "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/component-arena.md": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
+    "translations/ru/docs/architecture/dependency-hygiene.md": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/kernel/capabilities.md": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
@@ -1169,9 +1288,9 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "b98c220be404059ed4f31b5eeabf16fa48e7627edc3e4aff2b6bd18657cce04d",
+    "translations/ru/docs/knowledge-system.md": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
     "translations/ru/docs/research/cost-l-queries.md": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
-    "translations/ru/docs/research/host-survey.md": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
+    "translations/ru/docs/research/host-survey.md": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
     "translations/ru/docs/security/verifier-time.md": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340",
@@ -3302,6 +3421,40 @@
       "tags": ["arena", "standards", "measurement", "security"],
       "title": "Arena measurement contract"
     },
+    "doc.kolvrt.dependencies.hygiene": {
+      "document": "doc.kolvrt.dependencies.hygiene",
+      "document_status": "CURRENT",
+      "estimated_bytes": 11762,
+      "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
+      "id": "doc.kolvrt.dependencies.hygiene",
+      "kind": "policy",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Production TCB dependency boundary and observable host supply chain.",
+          "tags": null,
+          "title": "Гигиена зависимостей"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 128,
+          "path": "docs/architecture/dependency-hygiene.md",
+          "sha256": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
+          "start": 1
+        },
+        "ru": {
+          "end": 128,
+          "path": "translations/ru/docs/architecture/dependency-hygiene.md",
+          "sha256": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/dependency-hygiene.md",
+      "schema_version": 1,
+      "summary": "Production TCB dependency boundary and observable host supply chain.",
+      "title": "Dependency hygiene"
+    },
     "doc.kolvrt.docs.knowledge": {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
@@ -3321,13 +3474,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "1cc708dd0fd1f3a031a59279c56f01a2b334f912895ae9aca1cbc3f173c96c37",
+          "sha256": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "b98c220be404059ed4f31b5eeabf16fa48e7627edc3e4aff2b6bd18657cce04d",
+          "sha256": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
           "start": 1
         }
       },
@@ -3646,7 +3799,7 @@
     "doc.kolvrt.research.host-survey": {
       "document": "doc.kolvrt.research.host-survey",
       "document_status": "CURRENT",
-      "estimated_bytes": 12315,
+      "estimated_bytes": 12398,
       "evidence_scope": "versioned Windows host-tool framework, synthetic provider experiments and schema/CLI checks; no actual host inventory collected or published.",
       "id": "doc.kolvrt.research.host-survey",
       "kind": "subsystem-contract",
@@ -3662,13 +3815,13 @@
         "en": {
           "end": 148,
           "path": "docs/research/host-survey.md",
-          "sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
+          "sha256": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
           "start": 1
         },
         "ru": {
           "end": 148,
           "path": "translations/ru/docs/research/host-survey.md",
-          "sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
+          "sha256": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
           "start": 1
         }
       },
@@ -4401,6 +4554,96 @@
       "summary": "Read-only host COST-L show/consumers/deps/list/top with UNKNOWN, exact-scope sorting and pagination.",
       "title": "Query contract"
     },
+    "kolvrt.dependencies.hygiene": {
+      "anchor": "kolvrt-dependency-hygiene",
+      "document": "doc.kolvrt.dependencies.hygiene",
+      "document_status": "CURRENT",
+      "estimated_bytes": 11527,
+      "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
+      "feature": {
+        "acceptance": ["research/results/issue94-dependency-hygiene.json"],
+        "adrs": ["adr.0013"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Host-only metadata and policy checker; no external production kernel dependency, no count quota.",
+        "issues": [94],
+        "limitations": [
+          "Workspace-unified all-target closures are conservative, not compiled size or isolated consumer counts. Artifact history expires after 90 days without external archival. No kernel execution claim."
+        ],
+        "next_gate": "Review EN/RU policy, rerun Node 24 CI on Windows 2022 and Ubuntu 24.04, and review PR-base delta before integration.",
+        "readiness": "NOT_READY",
+        "sources": [
+          "scripts/dependency-audit.cjs",
+          "scripts/dependency-base.cjs",
+          "scripts/audit-heavy-dependencies.cjs",
+          "scripts/tests/dependency-audit.test.cjs",
+          ".github/workflows/dependencies.yml",
+          "dependencies/policy.json",
+          "deny.toml",
+          "package.json",
+          "crates/kernel/Cargo.toml",
+          "crates/kernel-core/Cargo.toml",
+          "crates/routing/Cargo.toml",
+          "crates/routing-demo/Cargo.toml",
+          "crates/window-compat/Cargo.toml",
+          "crates/xtask/Cargo.toml",
+          "crates/migration-workbench/Cargo.toml",
+          ".github/dependabot.yml",
+          ".github/workflows/kernel.yml",
+          ".nvmrc"
+        ],
+        "transitions": [
+          {
+            "acceptance": ["research/results/issue94-dependency-hygiene.json"],
+            "from": "UNRECORDED",
+            "reason": "First bounded implementation of the dependency hygiene policy, inventory and CI controls.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "host-process",
+            "reason": "Historical dependency checks retain their original receipt. CI workflows and Node version changed; fresh hosted-runner evidence is pending.",
+            "receipt": "research/results/issue94-dependency-hygiene.json",
+            "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f",
+            "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
+            "state": "STALE"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "Host dependency checks do not establish kernel behavior.",
+            "state": "NOT_APPLICABLE"
+          }
+        ]
+      },
+      "id": "kolvrt.dependencies.hygiene",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "All-declaration kernel boundary, feature-expanded inventory, graph deltas and supply-chain checks.",
+          "tags": ["dependencies", "supply-chain", "kernel", "tcb"],
+          "title": "Политика и реализация"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 128,
+          "path": "docs/architecture/dependency-hygiene.md",
+          "sha256": "8964920671122a8c277ae8b1c6ce1244a307e60d5199dbe21591adb89bb31f5c",
+          "start": 7
+        },
+        "ru": {
+          "end": 128,
+          "path": "translations/ru/docs/architecture/dependency-hygiene.md",
+          "sha256": "5ce987d3ece2c7c18e2e41484b3a9f21006b15baf8fac96ea0e445e82284f772",
+          "start": 7
+        }
+      },
+      "path": "docs/architecture/dependency-hygiene.md",
+      "summary": "All-declaration kernel boundary, feature-expanded inventory, graph deltas and supply-chain checks.",
+      "tags": ["dependencies", "supply-chain", "kernel", "tcb"],
+      "title": "Policy and implementation"
+    },
     "kolvrt.docs.navigation": {
       "anchor": "kolvrt-docs-navigation",
       "document": "doc.kolvrt.docs.knowledge",
@@ -4445,7 +4688,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "6e9b3323270b97ebb5e23f6c2af790bdc6c84e879eeca3eff9232431afe62bfa",
+            "receipt_sha256": "e2e0100d711cd863cc2f7e3f91af44c01fff35b83f1970018df2dceb6b302bd2",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4470,13 +4713,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "1cc708dd0fd1f3a031a59279c56f01a2b334f912895ae9aca1cbc3f173c96c37",
+          "sha256": "5c187c5d5338366027482bacbe115981f220c1f158e768d7b8a5329b8d719a38",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "b98c220be404059ed4f31b5eeabf16fa48e7627edc3e4aff2b6bd18657cce04d",
+          "sha256": "7589ef24aa7bb6182b74a85f1ccf61dadf79450b7f5530416844823eed7b970f",
           "start": 7
         }
       },
@@ -5737,11 +5980,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Thirteen real CLI/PowerShell synthetic tests and one independent JSON-schema/golden-report test passed on these declared source bytes.",
+            "reason": "Dependency audit extends package.json repository check integration; the immutable issue53 receipt retains prior exact-source bytes. Host-survey semantics are unchanged; refresh synthetic exact-source evidence separately.",
             "receipt": "research/results/issue53-host-survey.json",
             "receipt_sha256": "cc07b61d771e202ca0ffc7025fd3070a3c27d179c40704618b3dccb51b896beb",
             "scope": "Synthetic fixtures and shadowed CIM providers only; no actual hardware collection or kernel execution.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "windows-cim",
@@ -5769,13 +6012,13 @@
         "en": {
           "end": 29,
           "path": "docs/research/host-survey.md",
-          "sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
+          "sha256": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
           "start": 7
         },
         "ru": {
           "end": 29,
           "path": "translations/ru/docs/research/host-survey.md",
-          "sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14",
+          "sha256": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
           "start": 7
         }
       },

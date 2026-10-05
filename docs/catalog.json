@@ -759,6 +759,16 @@
       "title": "Arena measurement contract"
     },
     {
+      "document": "doc.kolvrt.dependencies.hygiene",
+      "document_status": "CURRENT",
+      "estimated_bytes": 11762,
+      "id": "doc.kolvrt.dependencies.hygiene",
+      "kind": "policy",
+      "path": "docs/architecture/dependency-hygiene.md",
+      "summary": "Production TCB dependency boundary and observable host supply chain.",
+      "title": "Dependency hygiene"
+    },
+    {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
       "estimated_bytes": 15485,
@@ -862,7 +872,7 @@
     {
       "document": "doc.kolvrt.research.host-survey",
       "document_status": "CURRENT",
-      "estimated_bytes": 12315,
+      "estimated_bytes": 12398,
       "id": "doc.kolvrt.research.host-survey",
       "kind": "subsystem-contract",
       "path": "docs/research/host-survey.md",
@@ -1084,6 +1094,19 @@
       "path": "docs/research/cost-l-queries.md",
       "summary": "Read-only host COST-L show/consumers/deps/list/top with UNKNOWN, exact-scope sorting and pagination.",
       "title": "Query contract"
+    },
+    {
+      "anchor": "kolvrt-dependency-hygiene",
+      "document": "doc.kolvrt.dependencies.hygiene",
+      "document_status": "CURRENT",
+      "estimated_bytes": 11527,
+      "id": "kolvrt.dependencies.hygiene",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/architecture/dependency-hygiene.md",
+      "summary": "All-declaration kernel boundary, feature-expanded inventory, graph deltas and supply-chain checks.",
+      "tags": ["dependencies", "supply-chain", "kernel", "tcb"],
+      "title": "Policy and implementation"
     },
     {
       "anchor": "kolvrt-docs-navigation",
