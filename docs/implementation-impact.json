@@ -1,79 +1,84 @@
 {
+  "schema_version": 1,
   "features": [
     {
+      "id": "kolvrt.compatibility.manifests",
       "reason": "New EN/RU contract explicitly separates synthetic declarations, production debt/artifact reciprocity, native Cargo closure and remaining review/runtime gates.",
-      "disposition": "semantic-change",
-      "id": "kolvrt.compatibility.manifests"
+      "disposition": "semantic-change"
     },
     {
+      "id": "kolvrt.arena",
       "reason": "Shared checker source digest changes; historical Arena evidence retained and current host verification marked STALE.",
-      "disposition": "evidence-change",
-      "id": "kolvrt.arena"
+      "disposition": "evidence-change"
     },
     {
+      "id": "kolvrt.cost-l.offline-queries",
       "reason": "Shared COST-L helper/dispatcher/library source digests change; historical query evidence retained and current host verification marked STALE.",
-      "disposition": "evidence-change",
-      "id": "kolvrt.cost-l.offline-queries"
+      "disposition": "evidence-change"
+    },
+    {
+      "reason": "window-compat Cargo metadata gains the compatibility marker; existing dependency graph/retention semantics remain unchanged. Historical receipt retained and host verification remains STALE with the additional source change recorded.",
+      "id": "kolvrt.dependencies.hygiene",
+      "disposition": "evidence-change"
     }
   ],
-  "schema_version": 1,
-  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c",
   "files": [
     {
-      "before_sha256_lf": null,
       "path": "crates/repository-checks/src/compat_modules.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "after_sha256_lf": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+      "before_sha256_lf": null,
+      "after_sha256_lf": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2"
     },
     {
-      "before_sha256_lf": null,
       "path": "crates/repository-checks/tests/compat_modules.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "after_sha256_lf": "32897939bef7f43161eebdd99f7fd3065860e89910f992b27a1896257aeabd53",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+      "before_sha256_lf": null,
+      "after_sha256_lf": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6"
     },
     {
-      "before_sha256_lf": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
       "path": "crates/repository-checks/src/cost_l.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "after_sha256_lf": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+      "before_sha256_lf": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
+      "after_sha256_lf": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83"
     },
     {
-      "before_sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
       "path": "crates/repository-checks/src/lib.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "after_sha256_lf": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+      "before_sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
+      "after_sha256_lf": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad"
     },
     {
-      "before_sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
       "path": "crates/repository-checks/src/main.rs",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "after_sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+      "before_sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
+      "after_sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d"
     },
     {
-      "before_sha256_lf": null,
       "path": "schemas/compatibility-modules.schema.json",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "after_sha256_lf": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
-    },
-    {
       "before_sha256_lf": null,
-      "path": "policy/compatibility-modules.json",
-      "disposition": "new-feature",
-      "after_sha256_lf": "7a0c2866298342b9fa43f4dbfe626397c907be715a659530f2b1f5ab7dd9665d",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+      "after_sha256_lf": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e"
     },
     {
-      "before_sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
-      "path": "crates/window-compat/Cargo.toml",
+      "path": "policy/compatibility-modules.json",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
       "disposition": "new-feature",
-      "after_sha256_lf": "988fb4a314a1246fa0289441f22dd161af84c2bc4d7d313fc84e9c895b86bc71",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes."
+      "before_sha256_lf": null,
+      "after_sha256_lf": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
+      "disposition": "new-feature",
+      "before_sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
+      "after_sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
     }
-  ]
+  ],
+  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c"
 }

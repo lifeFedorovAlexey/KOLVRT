@@ -58,11 +58,22 @@ fn expected(pc: usize) {
         .store(pc as u64, Ordering::Release);
 }
 fn wait_irq() -> bool {
+    let start = cpu::ticks();
     let end = crate::time::deadline_after(TEST_IRQ_TIMEOUT);
-    irq_wait::wait_for_delivery(
+    let delivered = irq_wait::wait_for_delivery(
         || interrupt::delivered().load(Ordering::Acquire) > 0,
         || cpu::ticks() >= end,
-    )
+        cpu::mask,
+    );
+    if !delivered {
+        event!(
+            "{{\"event\":\"timer-wait\",\"status\":\"fail\",\"elapsed_ticks\":{},\"counter_hz\":{},\"deliveries\":{}}}",
+            cpu::ticks() - start,
+            cpu::frequency(),
+            interrupt::delivered().load(Ordering::Acquire)
+        );
+    }
+    delivered
 }
 pub fn remote_fault(address: usize) {
     expected(&raw const probe_read_pc as usize);
@@ -485,13 +496,11 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
     );
     cpu::unmask();
     let delivered = wait_irq();
-    cpu::mask();
     report("interrupt_delivery", delivered);
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));
     cpu::unmask();
     let delivered = wait_irq();
-    cpu::mask();
     report("timer_rearm", delivered);
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));

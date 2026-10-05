@@ -16,7 +16,7 @@
       "sources": [
         {
           "path": "crates/window-compat/Cargo.toml",
-          "sha256_lf": "988fb4a314a1246fa0289441f22dd161af84c2bc4d7d313fc84e9c895b86bc71"
+          "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
         },
         {
           "path": "crates/window-compat/src/lib.rs",
@@ -55,7 +55,7 @@
       "sources": [
         {
           "path": "crates/window-compat/Cargo.toml",
-          "sha256_lf": "988fb4a314a1246fa0289441f22dd161af84c2bc4d7d313fc84e9c895b86bc71"
+          "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
         },
         {
           "path": "crates/window-compat/src/lib.rs",
@@ -94,7 +94,7 @@
       "sources": [
         {
           "path": "crates/window-compat/Cargo.toml",
-          "sha256_lf": "988fb4a314a1246fa0289441f22dd161af84c2bc4d7d313fc84e9c895b86bc71"
+          "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
         },
         {
           "path": "crates/window-compat/src/lib.rs",

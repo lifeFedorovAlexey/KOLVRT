@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 48241,
-  "catalog_bytes": 66577,
-  "catalog_nodes": 165,
+  "approximate_tokens": 48438,
+  "catalog_bytes": 67367,
+  "catalog_nodes": 167,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "e3e423d5ddc3a76d75f8089e5eb9e0f3efdb347c85030f706f890db96fbf40a4",
+  "catalog_sha256": "2f69561247756d6c6d2d6da73d3cd2a98c6d59537a910fda5996df84287b81fa",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 192961,
+  "context_plus_catalog_bytes": 193751,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 93,
-    "utf8_bytes": 717701
+    "documents": 94,
+    "utf8_bytes": 729807
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -52,12 +52,12 @@
   "query": "review Phase 3.4 capability revocation",
   "rendered_context_bytes": 126384,
   "russian_pilot": {
-    "approximate_tokens": 74233,
-    "catalog_bytes": 66577,
-    "context_plus_navigation_bytes": 296930,
+    "approximate_tokens": 74546,
+    "catalog_bytes": 67367,
+    "context_plus_navigation_bytes": 298181,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 36831,
+    "localized_navigation_bytes": 37292,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",

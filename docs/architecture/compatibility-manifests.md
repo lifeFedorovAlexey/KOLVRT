@@ -51,40 +51,34 @@ Remaining #47 gates include reviewed production module/debt/consumer data when a
 
 ```json
 {
+  "id": "doc.kolvrt.architecture.compatibility-manifests",
+  "schema_version": 1,
   "units": [
     {
+      "id": "kolvrt.compatibility.manifests",
       "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority.",
+      "anchor": "kolvrt-compatibility-manifests",
+      "tags": [
+        "compatibility",
+        "debt",
+        "module",
+        "manifest",
+        "cargo",
+        "retirement"
+      ],
+      "depends_on": [
+        "law.008",
+        "law.009",
+        "law.013",
+        "law.018",
+        "law.035",
+        "law.040",
+        "adr.0007",
+        "adr.0013",
+        "adr.0015"
+      ],
+      "kind": "feature",
       "feature": {
-        "next_gate": "Review real production declarations and source/feature completeness; integrate full #48 queries without promoting synthetic evidence.",
-        "adrs": ["adr.0007", "adr.0013", "adr.0015"],
-        "implementation_scope": "Closed module inventory, reciprocal debt/consumer/version/scope checks, source/artifact/EXC/support identities and Cargo-parsed native declaration closure, with existing synthetic window contracts only.",
-        "readiness": "NOT_READY",
-        "issues": [47, 46, 48],
-        "transitions": [
-          {
-            "reason": "First bounded manifest gate with synthetic current inventory and exact-source host controls; production/runtime gates remain open.",
-            "acceptance": [
-              "research/results/issue47-compatibility-manifests.json"
-            ],
-            "from": "UNRECORDED",
-            "to": "BOUNDED_IMPLEMENTED"
-          }
-        ],
-        "verification": [
-          {
-            "scope": "Host consistency and declaration boundary only; production-shaped artifacts are non-executable test bytes, not supported modules.",
-            "reason": "Thirteen host regressions, actual CLI and real Cargo declaration fixture passed on these exact source bytes.",
-            "state": "VERIFIED",
-            "receipt_sha256": "a2cdd955c319fc90449689133da0eb28c1d1a9da993513c3aab0822a244c26be",
-            "receipt": "research/results/issue47-compatibility-manifests.json",
-            "environment": "host-process"
-          },
-          {
-            "reason": "Host declaration checking does not verify kernel, driver or physical execution.",
-            "state": "NOT_APPLICABLE",
-            "environment": "physical-arm64"
-          }
-        ],
         "roadmap_gate": "COST-L module/CI declarations #47",
         "sources": [
           "Cargo.lock",
@@ -113,39 +107,45 @@ Remaining #47 gates include reviewed production module/debt/consumer data when a
           "rust-toolchain.toml",
           "schemas/compatibility-modules.schema.json"
         ],
-        "acceptance": ["research/results/issue47-compatibility-manifests.json"],
-        "implementation": "BOUNDED_IMPLEMENTED",
         "limitations": [
           "Unmarked adapters and auxiliary source completeness require review; no production module/driver data, loader, live consumers, admission or runtime retirement proof. Current Linux debts remain research-only."
-        ]
-      },
-      "depends_on": [
-        "law.008",
-        "law.009",
-        "law.013",
-        "law.018",
-        "law.035",
-        "law.040",
-        "adr.0007",
-        "adr.0013",
-        "adr.0015"
-      ],
-      "tags": [
-        "compatibility",
-        "debt",
-        "module",
-        "manifest",
-        "cargo",
-        "retirement"
-      ],
-      "anchor": "kolvrt-compatibility-manifests",
-      "id": "kolvrt.compatibility.manifests",
-      "kind": "feature"
+        ],
+        "adrs": ["adr.0007", "adr.0013", "adr.0015"],
+        "verification": [
+          {
+            "environment": "host-process",
+            "reason": "Thirteen host regressions, actual CLI and real Cargo declaration fixture passed on these exact source bytes.",
+            "state": "VERIFIED",
+            "receipt": "research/results/issue47-compatibility-manifests.json",
+            "receipt_sha256": "95766b2a15e17e5d3324ff9692e3f4c7ec2725e6971c0af8b249e1cfc113decb",
+            "scope": "Host consistency and declaration boundary only; production-shaped artifacts are non-executable test bytes, not supported modules."
+          },
+          {
+            "reason": "Host declaration checking does not verify kernel, driver or physical execution.",
+            "state": "NOT_APPLICABLE",
+            "environment": "physical-arm64"
+          }
+        ],
+        "acceptance": ["research/results/issue47-compatibility-manifests.json"],
+        "next_gate": "Review real production declarations and source/feature completeness; integrate full #48 queries without promoting synthetic evidence.",
+        "issues": [47, 46, 48],
+        "implementation_scope": "Closed module inventory, reciprocal debt/consumer/version/scope checks, source/artifact/EXC/support identities and Cargo-parsed native declaration closure, with existing synthetic window contracts only.",
+        "transitions": [
+          {
+            "acceptance": [
+              "research/results/issue47-compatibility-manifests.json"
+            ],
+            "reason": "First bounded manifest gate with synthetic current inventory and exact-source host controls; production/runtime gates remain open.",
+            "from": "UNRECORDED",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "readiness": "NOT_READY"
+      }
     }
   ],
-  "kind": "subsystem-contract",
-  "id": "doc.kolvrt.architecture.compatibility-manifests",
-  "schema_version": 1,
-  "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority."
+  "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority.",
+  "kind": "subsystem-contract"
 }
 ```

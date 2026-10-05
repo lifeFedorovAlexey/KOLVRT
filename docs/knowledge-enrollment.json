@@ -30,6 +30,7 @@
     "docs/architecture/benchmarking.md",
     "docs/architecture/compatibility-manifests.md",
     "docs/architecture/component-arena.md",
+    "docs/architecture/dependency-hygiene.md",
     "docs/architecture/kernel-laws.md",
     "docs/architecture/native-model.md",
     "docs/kernel/capabilities.md",

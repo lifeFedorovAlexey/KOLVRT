@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "62b8f5b4b224ea5ff31e4fb60abe06ac56bf43901c237b48378d19c62420d629",
-        "translation_sha256": "dc5518da83fc406a0bf23192e206b7f4f1ffb2a2f29e220460a285e14ed513a2"
+        "source_sha256": "6d374dbff4a62663d0a5ec01ab5316add7351bf9f5b13611502528abb25ba64d",
+        "translation_sha256": "4467194d2dbbb194c3bc5c8333a2e39a2fc1425c8ad15e8adb174faecf445811"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -138,8 +138,8 @@
         "translation_sha256": "74bdf535cf65d63d48888d31ca10a024ab73fee63bb3017c4d6f1f206fa0b349"
       },
       "docs/architecture/compatibility-manifests.md": {
-        "source_sha256": "e2102cebf197d3eed341afedba55fdd42e735e7989f1e457d31f7c1fdce90ba5",
-        "translation_sha256": "2c281d6cfad01456f72796f6e694865949b7cbfaa73cc518a7825d1b02c6efc7"
+        "source_sha256": "f9414e84663b3a966943e1158f4706c6c6ee0b14287c99c4bc3c94079fbffb93",
+        "translation_sha256": "f4548a126263c55a4062a9f4fbed10693a4293b964216e7202222ce4ff345d18"
       },
       "docs/architecture/compatibility-model.md": {
         "source_sha256": "5026400cd373e9dd33154781669a19acfaa4ddeb308972e6b9c173f3574a3ff9",
@@ -148,6 +148,10 @@
       "docs/architecture/component-arena.md": {
         "source_sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
         "translation_sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6"
+      },
+      "docs/architecture/dependency-hygiene.md": {
+        "source_sha256": "8a3c76008209642f50515facad62287f20efab10a54d8380e741d370498b8508",
+        "translation_sha256": "0509eea05e53834cfa25bd3e32891e058a46d36a6e02a7a2c95284e46d003b74"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -286,8 +290,8 @@
         "translation_sha256": "fd7639a0953f930ccf44aadb37c5fc48718061f71a0098f3e49640fa8007b077"
       },
       "docs/kernel/time.md": {
-        "source_sha256": "6540a71e17d1570b896f9f37f4901aef90220adaa36dc14713645a9ef81a7fbe",
-        "translation_sha256": "ac0f8f67818efd18224432e005fc7cf14fce818a5230cb9729ad61050097728b"
+        "source_sha256": "914f19c7b23522d014d3e6365dc2b30df7a908ab346c929dc31d6b6464ca6dac",
+        "translation_sha256": "07d1471945282d5acc7d43d5ad17e9e0873996d62043bb514dea2e5a06918d0a"
       },
       "docs/kernel/unsafe.md": {
         "source_sha256": "a675371c3fd7298d473b321e4e3dd1b50d17e61dda4c84302eb1138954e31a05",
@@ -302,8 +306,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "e1c6f1967cf390d0e29a98d3533420439ebb4afc51d0072f1fe1ed955af7d4ce",
-        "translation_sha256": "ddc02ca9782687851d557a826b5b2c959d93b50007d19f1031d4d383415e60ee"
+        "source_sha256": "ee103bf18d5d2666bb2832115fbd2bbc35b69de5a0451ffeb0028616d47f9769",
+        "translation_sha256": "259f9969f9f1371506e7e8ca35971ae5e31c3e48d7c7240d0afaea9432f9c65a"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -326,8 +330,8 @@
         "translation_sha256": "81fdae2a7380ef0b6198f220ad6fc8ff705133ce4f9c167676da6643bedf8163"
       },
       "docs/research/host-survey.md": {
-        "source_sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
-        "translation_sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14"
+        "source_sha256": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
+        "translation_sha256": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7"
       },
       "docs/research/issue-submissions.md": {
         "source_sha256": "a41fefd0cf19757b3029cab46b3bcb2060f8130c229c8a3956b3f5ad5f1b78a8",

@@ -145,7 +145,7 @@ fn dangling_debts_exceptions_and_missing_reverse_manifests_reject() {
     i["modules"][0]["debt_ids"] = json!(["COST-L-9999"]);
     reject(&i, &r, &m, "dangling debt");
     let mut i = inventory();
-    i["modules"][0]["exception_ids"] = json!(["EXC-9999"]);
+    i["modules"][0]["exception_ids"] = json!([format!("EXC-{:04}", 9999)]);
     reject(&i, &records(), &metadata(), "dangling exception");
     let (mut i, r, m) = production();
     i["modules"].as_array_mut().unwrap().remove(0);

@@ -1,15 +1,24 @@
 {
-  "schema_version": 1,
-  "issue": 47,
-  "scope": "Bounded host declaration checker and synthetic module/graph fixtures only; no production module, loader, Linux driver, live consumer observation or retirement execution.",
-  "claim": "Exact-source host mechanism evidence, no full #47/#46/#48 closure or production readiness.",
-  "worktree_dirty": true,
   "remaining": [
     "reviewed actual production debt/module/consumer data",
     "source/feature and semantic owner review",
     "full query manifest integration under #48",
     "runtime admission and retirement, archival and authority enforcement"
   ],
+  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c",
+  "schema_version": 1,
+  "claim": "Exact-source host mechanism evidence, no full #47/#46/#48 closure or production readiness.",
+  "issue": 47,
+  "worktree_dirty": true,
+  "correctness": {
+    "native_roots": ["kolvrt-kernel", "kernel-core"],
+    "current_production_modules": 0,
+    "failures": 0,
+    "tests": 13,
+    "real_cargo_disabled_renamed_target_fixture": "passed",
+    "current_synthetic_modules": 3,
+    "current_cli": "passed"
+  },
   "source_files": [
     {
       "sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
@@ -24,11 +33,11 @@
       "path": "crates/host-process-metrics/Cargo.toml"
     },
     {
-      "sha256_lf": "a75f06d9abf31569f4c900fd9a00934ea2c0ced59c26f1d597155f38e5bf1855",
+      "sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
       "path": "crates/kernel-core/Cargo.toml"
     },
     {
-      "sha256_lf": "0d2fcaaf0df342d76e89dd79aa72adde59733f3d03f2642ffa21d1f2a9d1656a",
+      "sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29",
       "path": "crates/kernel/Cargo.toml"
     },
     {
@@ -36,7 +45,7 @@
       "path": "crates/migration-advisor/Cargo.toml"
     },
     {
-      "sha256_lf": "e489b540d096ece69ebf3b03130118607e8c8114bd5cb5acba124c00e1288f23",
+      "sha256_lf": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
       "path": "crates/migration-workbench/Cargo.toml"
     },
     {
@@ -68,19 +77,19 @@
       "path": "crates/repository-checks/src/main.rs"
     },
     {
-      "sha256_lf": "32897939bef7f43161eebdd99f7fd3065860e89910f992b27a1896257aeabd53",
+      "sha256_lf": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6",
       "path": "crates/repository-checks/tests/compat_modules.rs"
     },
     {
-      "sha256_lf": "593c770bfbec0501375e7ce0179c8fd2812c74f5289ff1c24cdec9ffe0935b67",
+      "sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e",
       "path": "crates/routing-demo/Cargo.toml"
     },
     {
-      "sha256_lf": "9548e345350d519945be7a4c840f0ecf855056c484b0bf277d91501f60a62af8",
+      "sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
       "path": "crates/routing/Cargo.toml"
     },
     {
-      "sha256_lf": "988fb4a314a1246fa0289441f22dd161af84c2bc4d7d313fc84e9c895b86bc71",
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55",
       "path": "crates/window-compat/Cargo.toml"
     },
     {
@@ -92,11 +101,11 @@
       "path": "crates/window-compat/tests/protocols.rs"
     },
     {
-      "sha256_lf": "694f5ce95a7b52ffcb19172f724b7dbec7b58880d32322d838f146dff26afbe2",
+      "sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
       "path": "crates/xtask/Cargo.toml"
     },
     {
-      "sha256_lf": "7a0c2866298342b9fa43f4dbfe626397c907be715a659530f2b1f5ab7dd9665d",
+      "sha256_lf": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631",
       "path": "policy/compatibility-modules.json"
     },
     {
@@ -112,14 +121,5 @@
       "path": "schemas/compatibility-modules.schema.json"
     }
   ],
-  "correctness": {
-    "current_production_modules": 0,
-    "tests": 13,
-    "current_cli": "passed",
-    "current_synthetic_modules": 3,
-    "failures": 0,
-    "native_roots": ["kolvrt-kernel", "kernel-core"],
-    "real_cargo_disabled_renamed_target_fixture": "passed"
-  },
-  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c"
+  "scope": "Bounded host declaration checker and synthetic module/graph fixtures only; no production module, loader, Linux driver, live consumer observation or retirement execution."
 }
