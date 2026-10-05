@@ -117,9 +117,9 @@ VERIFIED требует, чтобы каждый объявленный исхо
           {
             "environment": "host-process",
             "state": "VERIFIED",
-            "reason": "Executed current-source deterministic EN/RU retrieval and reverse-impact pilots after the consolidated IPC/dependency integration; semantic sufficiency remains review judgment.",
-            "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "a4bea0f88187a284b3290eb8af6ffbe987e87e0d79cc61bdc6293c71f702d760",
+            "reason": "Executed current-source EN/RU retrieval and reverse-impact pilot after COST-L manifest-query integration; immutable earlier main receipt retained separately, semantic sufficiency remains review judgment.",
+            "receipt": "research/results/issue48-documentation-pilot-main-2ff6e14.json",
+            "receipt_sha256": "faf645631131e9b3320b999b14285fbe47d07efd244527ee665caf1119db3e47",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim."
           },
           {
