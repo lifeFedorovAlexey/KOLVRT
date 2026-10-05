@@ -35,7 +35,7 @@
     "migration-workbench/quanta/normal": {
       "requirement": "=0.13.0",
       "purpose": "Calibrated monotonic host request-group timing",
-      "reason_for_retention": "KEEP: measurement profile is bound to calibrated clock semantics; mock features reviewed separately."
+      "reason_for_retention": "Retain calibrated host clock with default-features=false; unused mock/flaky_tests removed without changing production timing semantics or claiming a smaller dependency closure."
     },
     "migration-workbench/rand_core/normal": {
       "requirement": "=0.6.4",
@@ -111,6 +111,11 @@
       "requirement": "=0.10.9",
       "purpose": "SHA-256 artifact and protocol digests",
       "reason_for_retention": "Cryptographic digests require reviewed implementation; host/EL0 demo code only, never production EL1."
+    },
+    "host-process-metrics/serde/normal": {
+      "requirement": "=1.0.228",
+      "purpose": "Serialize shared bounded host-process memory/timing observations",
+      "reason_for_retention": "Introduced by accepted #92; typed host evidence only, no kernel reachability. Shared serialization is retained at the pinned version."
     }
   }
 }

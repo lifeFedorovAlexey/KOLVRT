@@ -16,7 +16,7 @@ A dependency exception requires a separate accepted architectural decision: need
 
 ### Host supply chain
 
-[Retention policy](../../dependencies/policy.json) records each consumer/crate/dependency-kind requirement, purpose and retention reason. New direct dependencies and requirement changes fail until this decision is reviewed. Generated inventory adds version, license, source, features, direct/transitive status, closure and reachability. Routing/demo dependencies are explicitly outside production EL1; demo EL0 code is not labelled purely host-only. Path dependencies outside the workspace count as external. Six previously unlicensed workspace crates are marked `publish = false`; this assigns no license and prevents accidental publication. Private workspace license metadata is skipped; their external dependencies are fully checked.
+[Retention policy](../../dependencies/policy.json) records each consumer/crate/dependency-kind requirement, purpose and retention reason. New direct dependencies and requirement changes fail until this decision is reviewed. Generated inventory adds version, license, source, features, direct/transitive status, closure and reachability. Routing/demo dependencies are explicitly outside production EL1; demo EL0 code is not labelled purely host-only. Path dependencies outside the workspace count as external and are denied by the current crates.io-only source policy. Six previously unlicensed workspace crates are marked `publish = false`; this assigns no license and prevents accidental publication. Private workspace license metadata is skipped; their external dependencies are fully checked.
 
 `deny.toml` allows only crates.io sources and explicit licenses (including MIT-0), denies external wildcard versions, OpenSSL and RustSec/yanked findings, and reports duplicate versions. Local unpublished path dependencies are permitted. There are no advisory exemptions. Dependency count is not an optimization target or a fixed quota. Every graph growth is flagged for review, including additions masked by removals with the same total count.
 
@@ -29,6 +29,8 @@ Run `npm run check:dependencies` or `node scripts/dependency-audit.cjs check`. R
 `target/dependencies/inventory.json` contains default and all-workspace-features graphs for every workspace crate, normal/build/dev edges and target predicates, per-direct-dependency external closures, compiler/lock/policy provenance, duplicate versions and supply-chain diagnostics. Counts exclude the root and distinguish unique crate names from resolved package versions. These are conservative workspace-unified/all-target graphs, not isolated consumer feature counts or actual linked binary sizes. A skipped or incomplete supply check has explicit status and null metrics, never fabricated zeroes. RustSec database commit and raw diagnostics are retained when checked.
 
 CI compares the actual PR base SHA using current checker code against historical manifests, publishes `before → after` in the PR check summary and uploads commit-named evidence for 90 days. No write token or automated PR comment is required; historical audit scripts are not executed. Downloaded artifacts provide recent commit history; archive artifacts externally before expiry for long-term retention. The checked-in [main baseline](../../dependencies/baseline-main.json) remains immutable evidence of main `599fa24a3278297f9fc9614b0882dd4afc98d423`; it is graph evidence, not a historical claim that current supply policy already existed.
+
+After integration of #92, an additional [current main snapshot](../../dependencies/baselines/0a3a3d69ff2381b6ec922682af03c1fd13e41a23.json) records `0a3a3d69ff2381b6ec922682af03c1fd13e41a23`. The first baseline is unchanged; the new host-process-metrics/serde dependency is included in retention policy. No external package versions were added.
 
 ### First heavy dependency audit
 
@@ -96,10 +98,10 @@ Rejection controls include real Cargo metadata for optional/target-specific, bui
           {
             "environment": "host-process",
             "state": "VERIFIED",
-            "reason": "Seven rejection tests including real Cargo metadata, completed cargo-deny checks, live negative supply controls, PR-base comparison and repository checks passed on declared exact-source bytes.",
+            "reason": "Eight rejection tests including real Cargo metadata, completed cargo-deny checks, live negative supply controls, PR-base comparison and repository checks passed on declared exact-source bytes.",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
-            "receipt_sha256": "1dea8db5fefaff224dc88c3046c7e54a5a3d62c1d279dfd2a1b2e97c38aa398d"
+            "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f"
           },
           {
             "environment": "physical-arm64",

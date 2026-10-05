@@ -16,7 +16,7 @@ Production EL1/TCB допускает ровно `kolvrt-kernel → kernel-core`
 
 ### Host supply chain
 
-[Retention policy](../../../../dependencies/policy.json) хранит requirement, назначение и причину сохранения для каждой пары consumer/crate/dependency-kind. Новые прямые зависимости и изменения requirement ломают проверку до рассмотрения решения. Генерируемый inventory добавляет версию, лицензию, source, features, direct/transitive status, closure и reachability. Routing/demo dependencies явно находятся вне production EL1; demo EL0 code не помечается как исключительно host-only. Path dependencies вне workspace считаются внешними. Шесть ранее не имевших лицензии workspace crates помечены `publish = false`; это не назначает лицензию и предотвращает случайную публикацию. Лицензия private workspace crates пропускается, но их внешние зависимости проверяются полностью.
+[Retention policy](../../../../dependencies/policy.json) хранит requirement, назначение и причину сохранения для каждой пары consumer/crate/dependency-kind. Новые прямые зависимости и изменения requirement ломают проверку до рассмотрения решения. Генерируемый inventory добавляет версию, лицензию, source, features, direct/transitive status, closure и reachability. Routing/demo dependencies явно находятся вне production EL1; demo EL0 code не помечается как исключительно host-only. Path dependencies вне workspace считаются внешними и запрещены текущей source policy, допускающей только crates.io. Шесть ранее не имевших лицензии workspace crates помечены `publish = false`; это не назначает лицензию и предотвращает случайную публикацию. Лицензия private workspace crates пропускается, но их внешние зависимости проверяются полностью.
 
 `deny.toml` допускает только crates.io sources и явные лицензии (включая MIT-0), запрещает внешние wildcard versions, OpenSSL и RustSec/yanked findings, сообщает о дубликатах версий. Локальные unpublished path dependencies допустимы. Advisory exemptions отсутствуют. Dependency count не является целью оптимизации или фиксированной квотой. Любое расширение graph помечается для review, включая добавления, замаскированные удалениями при одинаковом итоговом количестве.
 
@@ -29,6 +29,8 @@ Dependabot проверяет GitHub Actions, Cargo и npm еженедельн�
 `target/dependencies/inventory.json` содержит default и all-workspace-features graphs для каждого workspace crate, normal/build/dev edges и target predicates, внешние closures каждой прямой зависимости, compiler/lock/policy provenance, дубликаты версий и supply-chain diagnostics. Счётчики исключают корневой пакет и различают уникальные имена crates и разрешённые версии пакетов. Это консервативные workspace-unified/all-target graphs, а не isolated consumer feature counts или реальные размеры linked binaries. Пропущенная или незавершённая supply check имеет явный status и null metrics, без выдуманных нулей. При проверке сохраняются RustSec database commit и raw diagnostics.
 
 CI сравнивает фактический PR base SHA, применяя текущий checker к историческим manifests, публикует `before → after` в PR check summary и загружает evidence с commit в имени на 90 дней. Write token и автоматический PR comment не нужны; исторические audit scripts не выполняются. Скачиваемые artifacts дают недавнюю историю по commit; для длительного хранения архивировать их отдельно до истечения срока. Сохранённый [main baseline](../../../../dependencies/baseline-main.json) остаётся неизменяемым evidence main `599fa24a3278297f9fc9614b0882dd4afc98d423`; это graph evidence, а не историческое утверждение, что текущая supply policy уже существовала.
+
+После интеграции #92 дополнительно сохранён [актуальный main snapshot](../../../../dependencies/baselines/0a3a3d69ff2381b6ec922682af03c1fd13e41a23.json) для `0a3a3d69ff2381b6ec922682af03c1fd13e41a23`. Первый baseline не изменён; новая host-process-metrics/serde dependency включена в retention policy. Новых внешних package versions нет.
 
 ### Первый аудит тяжёлых зависимостей
 
@@ -96,10 +98,10 @@ Rejection controls включают реальные Cargo metadata для optio
           {
             "environment": "host-process",
             "state": "VERIFIED",
-            "reason": "Seven rejection tests including real Cargo metadata, completed cargo-deny checks, live negative supply controls, PR-base comparison and repository checks passed on declared exact-source bytes.",
+            "reason": "Eight rejection tests including real Cargo metadata, completed cargo-deny checks, live negative supply controls, PR-base comparison and repository checks passed on declared exact-source bytes.",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
-            "receipt_sha256": "1dea8db5fefaff224dc88c3046c7e54a5a3d62c1d279dfd2a1b2e97c38aa398d"
+            "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f"
           },
           {
             "environment": "physical-arm64",

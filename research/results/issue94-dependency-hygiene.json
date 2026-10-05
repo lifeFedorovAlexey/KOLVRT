@@ -1,25 +1,25 @@
 {
   "schema_version": 1,
   "issue": 94,
-  "base_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
+  "base_commit": "0a3a3d69ff2381b6ec922682af03c1fd13e41a23",
   "worktree_dirty": true,
   "scope": "Executed host metadata/rejection controls, PR-base diff, supply-chain scan and DEV/PROD compilation; no kernel runtime or physical-hardware claim.",
   "source_files": [
     {
       "path": "scripts/dependency-audit.cjs",
-      "sha256_lf": "c2c180fb97d4d62a3ec6050b9c6a9913909736c8446734c52dcb2534db6001d8"
+      "sha256_lf": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee"
     },
     {
       "path": "scripts/dependency-base.cjs",
-      "sha256_lf": "eccb55d41f52bfd11371509f48527973a20a361835fa7b318c96d7f054840ed7"
+      "sha256_lf": "46e2343c13a4d6e1f9bcc3a6b54a2d8e1fdeb6508cdd00550de96b3377071f8f"
     },
     {
       "path": "scripts/audit-heavy-dependencies.cjs",
-      "sha256_lf": "d5f12cf388613f3756b377f70805821393dc769376d22e9beaa2d8e437c4b6cb"
+      "sha256_lf": "84194ea6cd1b0b4ecbe3a33186cd5aefcf5d35666a5fc3bcad67db39d7d55eac"
     },
     {
       "path": "scripts/tests/dependency-audit.test.cjs",
-      "sha256_lf": "48d076c794afb2a63fae002e2ce34de658ccf84b84c80cf0a0db482a041643eb"
+      "sha256_lf": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1"
     },
     {
       "path": ".github/workflows/dependencies.yml",
@@ -27,7 +27,7 @@
     },
     {
       "path": "dependencies/policy.json",
-      "sha256_lf": "1422a5735e57da217df6e8fd85ece8891648541074816cfa6f097c67aba53811"
+      "sha256_lf": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29"
     },
     {
       "path": "deny.toml",
@@ -59,7 +59,7 @@
     },
     {
       "path": "crates/xtask/Cargo.toml",
-      "sha256_lf": "1cbfbde0f1784bee059bc5176b6df8ed36e99a9223e80c007e79221a3a9d8ade"
+      "sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055"
     },
     {
       "path": "crates/migration-workbench/Cargo.toml",
@@ -71,7 +71,7 @@
     }
   ],
   "verification": {
-    "dependency_rejection_tests": 7,
+    "dependency_rejection_tests": 8,
     "supply_chain": {
       "status": "passed",
       "exit_code": 0,
@@ -401,6 +401,21 @@
                                 "Krate": {
                                   "name": "referencing",
                                   "version": "0.33.0"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          },
+                          {
+                            "Krate": {
+                              "name": "host-process-metrics",
+                              "version": "0.1.0"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "migration-workbench",
+                                  "version": "0.1.0"
                                 },
                                 "repeat": true
                               }

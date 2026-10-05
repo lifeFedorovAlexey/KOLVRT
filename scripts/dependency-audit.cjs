@@ -218,6 +218,17 @@ function graph(m) {
   };
 }
 function retention(g, policy) {
+  // cargo-deny handles registries/git; explicitly cover non-workspace path sources too.
+  for (const p of g.packages || []) {
+    if (
+      !p.workspace &&
+      p.source !== "registry+https://github.com/rust-lang/crates.io-index"
+    ) {
+      throw new Error(
+        `unapproved external dependency source: ${p.id}: ${p.source}`,
+      );
+    }
+  }
   const used = new Set();
   for (const d of g.direct_external_dependencies) {
     const id = `${d.consumer}/${d.crate}/${d.kind}`;

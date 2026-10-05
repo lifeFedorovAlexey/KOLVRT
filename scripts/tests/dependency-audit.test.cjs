@@ -52,6 +52,39 @@ function fixture() {
     },
   };
 }
+test("source policy rejects non-workspace paths, git and unknown registries", () => {
+  for (const source of [
+    "external-path",
+    "git+https://example.invalid/code",
+    "registry+https://example.invalid/index",
+  ]) {
+    assert.throws(
+      () =>
+        retention(
+          {
+            packages: [{ id: "external", workspace: false, source }],
+            direct_external_dependencies: [],
+          },
+          { direct_dependencies: {} },
+        ),
+      /unapproved external dependency source/,
+    );
+  }
+  retention(
+    {
+      packages: [
+        {
+          id: "serde",
+          workspace: false,
+          source: "registry+https://github.com/rust-lang/crates.io-index",
+        },
+        { id: "local", workspace: true, source: "workspace" },
+      ],
+      direct_external_dependencies: [],
+    },
+    { direct_dependencies: {} },
+  );
+});
 test("TCB declarations reject optional, target-only, renamed, build/dev and disguised path dependencies", () => {
   assert.equal(boundary(fixture()).normal_external_crates, 0);
   for (const d of [

@@ -1,7 +1,86 @@
 {
   "schema_version": 1,
-  "source_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
-  "cargo_lock_sha256": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712",
+  "baseline_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
+  "evaluated_commit": "fec38f73a53fff2fcae63883fbd0ba18663cd1c0",
+  "evaluated_source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da"
+    },
+    {
+      "path": "crates/host-process-metrics/Cargo.toml",
+      "sha256_lf": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29"
+    },
+    {
+      "path": "crates/migration-advisor/Cargo.toml",
+      "sha256_lf": "2f45888422385b193610a02f8be01021afaeafd652853af5b374d96339a02754"
+    },
+    {
+      "path": "crates/migration-workbench/Cargo.toml",
+      "sha256_lf": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044"
+    },
+    {
+      "path": "crates/native-protocol-model/Cargo.toml",
+      "sha256_lf": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e"
+    },
+    {
+      "path": "crates/native-state-models/Cargo.toml",
+      "sha256_lf": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007"
+    },
+    {
+      "path": "crates/repository-checks/Cargo.toml",
+      "sha256_lf": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055"
+    },
+    {
+      "path": "deny.toml",
+      "sha256_lf": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3"
+    },
+    {
+      "path": "dependencies/policy.json",
+      "sha256_lf": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    },
+    {
+      "path": "scripts/dependency-audit.cjs",
+      "sha256_lf": "c2c180fb97d4d62a3ec6050b9c6a9913909736c8446734c52dcb2534db6001d8"
+    }
+  ],
+  "cargo_lock_sha256": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
   "audit_date": "2026-10-05",
   "scope": "Pinned source review with measured workspace-unified all-target closure; changed quanta features evaluated in implementation worktree",
   "audits": [

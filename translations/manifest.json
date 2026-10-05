@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "e760abe829b7e145af883ef95ae92e14d1dcfa14036146459275a81f7e7e79d2",
-        "translation_sha256": "f14c3381f833c0bbc7d2ed4e8511859c7451144b7c99fea19801c8e8f1532d57"
+        "source_sha256": "9f59c9805123ded07c457fd8c5b025d68afe8384c236c8e856ea6e9b9e39472c",
+        "translation_sha256": "95f8c153a25d2be774c64e743ab6855bc95e807eb9a6fe5d55cb8aa7cdba08d7"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -140,6 +140,10 @@
       "docs/architecture/component-arena.md": {
         "source_sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
         "translation_sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b"
+      },
+      "docs/architecture/dependency-hygiene.md": {
+        "source_sha256": "db770bc4017c863a28c309153567980cff699f94142c3a35926f10446c29fdfb",
+        "translation_sha256": "3a416c9bbf85f881f7f5e1bdf98a7b7d4ebe0b9ef53ca1bb6e76d2fa9e7788d2"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -294,8 +298,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "0b999ceaad9ce013632fc475dea777829f36c2f2fbebe5524072f3744224bcea",
-        "translation_sha256": "6e301eecde312e186c214ec2fe9d21421b94504b3023057c64dac9562ddeeb01"
+        "source_sha256": "b2b20e41b173b1050e429a11901b6c883f3a63cd274da8a888525deaed1a08ad",
+        "translation_sha256": "7022011db0b26b92bfc627eecf484fd7c9496feced8f77383acc5856dc3062a2"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -318,8 +322,8 @@
         "translation_sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032"
       },
       "docs/research/host-survey.md": {
-        "source_sha256": "f2a68caa2e837855b3d2d3667244123c845b36dfcc276a1711fb77d7099a000e",
-        "translation_sha256": "221d02c88b1096b4ebf4e0ab19a148368dc9a3df06ee2db962f7d93cb933bf14"
+        "source_sha256": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
+        "translation_sha256": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7"
       },
       "docs/research/issue-submissions.md": {
         "source_sha256": "a41fefd0cf19757b3029cab46b3bcb2060f8130c229c8a3956b3f5ad5f1b78a8",

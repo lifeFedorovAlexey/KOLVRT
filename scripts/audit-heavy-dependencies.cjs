@@ -135,8 +135,10 @@ fs.writeFileSync(
   JSON.stringify(
     {
       schema_version: 1,
-      source_commit: baseline.commit,
-      cargo_lock_sha256: baseline.cargo_lock_sha256,
+      baseline_commit: baseline.commit,
+      evaluated_commit: inventory.commit,
+      evaluated_source_files: inventory.source_files,
+      cargo_lock_sha256: inventory.cargo_lock_sha256,
       audit_date: "2026-10-05",
       scope:
         "Pinned source review with measured workspace-unified all-target closure; changed quanta features evaluated in implementation worktree",
