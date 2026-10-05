@@ -1,6 +1,7 @@
 //! Offline research consistency checks. Passing does not establish historical truth.
 #![forbid(unsafe_code)]
 
+pub mod arena;
 pub mod cost_l;
 pub mod cost_l_queries;
 pub mod database;

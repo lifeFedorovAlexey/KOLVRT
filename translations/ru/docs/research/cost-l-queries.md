@@ -56,11 +56,11 @@ Metric sorting принимает cpu, latency, memory, copies, allocations, con
       "feature": {
         "verification": [
           {
-            "receipt_sha256": "beeeca5564e1abf20147531a1bd19b25b34063f70a11c9162c5503359cb13fbb",
-            "receipt": "research/results/issue48-cost-l-queries.json",
-            "scope": "Windows host only; synthetic fixtures do not establish production consumers or observed runtime costs.",
-            "reason": "The declared Cargo.lock digest changed when typed host measurement serialization added the existing pinned serde dependency. Historical receipts remain immutable; current source verification requires a new exact-source host receipt.",
-            "state": "STALE",
+            "receipt_sha256": "bdc6a41c6c16ff647bbb83acabb48b74b530dbffc0259ccdc94c09bbde77010b",
+            "receipt": "research/results/issue48-cost-l-arena-rebased.json",
+            "scope": "Bounded host query semantics only; no production consumers or runtime costs.",
+            "reason": "Executed five existing COST-L CLI tests after main rebase and Arena dispatcher integration; exact-source host evidence only.",
+            "state": "VERIFIED",
             "environment": "host-process"
           },
           {
@@ -75,7 +75,11 @@ Metric sorting принимает cpu, latency, memory, copies, allocations, con
         "limitations": [
           "Direct/transitive relations are declarations without reconstructed package paths; current global coverage is UNKNOWN. #47 production-manifest integration and full #48 acceptance remain open."
         ],
-        "acceptance": ["research/results/issue48-cost-l-queries.json"],
+        "acceptance": [
+          "research/results/issue48-cost-l-queries.json",
+          "research/results/issue48-cost-l-arena-dispatch.json",
+          "research/results/issue48-cost-l-arena-rebased.json"
+        ],
         "transitions": [
           {
             "to": "BOUNDED_IMPLEMENTED",
