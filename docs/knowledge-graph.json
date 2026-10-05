@@ -21,13 +21,78 @@
       "type": "related_to"
     },
     {
+      "from": "doc.kolvrt.arena.measurement-contract",
+      "to": "adr.0003",
+      "type": "depends_on"
+    },
+    {
+      "from": "doc.kolvrt.arena.measurement-contract",
+      "to": "adr.0006",
+      "type": "depends_on"
+    },
+    {
+      "from": "doc.kolvrt.arena.measurement-contract",
+      "to": "adr.0024",
+      "type": "depends_on"
+    },
+    {
+      "from": "doc.kolvrt.arena.measurement-contract",
+      "to": "kolvrt.memory.user-copy.api",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "adr.0003",
+      "type": "depends_on"
+    },
+    {
       "from": "kolvrt.arena",
       "to": "adr.0006",
       "type": "depends_on"
     },
     {
       "from": "kolvrt.arena",
+      "to": "adr.0024",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "crates/repository-checks/src/arena.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "crates/repository-checks/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "crates/repository-checks/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "crates/repository-checks/tests/arena.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "crates/repository-checks/tests/arena_launcher.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "crates/xtask/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
       "to": "doc.kolvrt.architecture.benchmarking",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "doc.kolvrt.arena.measurement-contract",
       "type": "depends_on"
     },
     {
@@ -64,6 +129,51 @@
       "from": "kolvrt.arena",
       "to": "kolvrt.arena.roadmap",
       "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "research/arena/profiles/user-copy-range.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "research/arena/standards.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "research/results/arena-foundation-host-final.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "research/results/arena-foundation-host.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "research/results/arena-launcher-host.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "schemas/arena-profile.schema.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "schemas/arena-run.schema.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "schemas/arena-standards.schema.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "scripts/run-arena.ps1",
+      "type": "implemented_by"
     },
     {
       "from": "kolvrt.cost-l.offline-queries",
@@ -144,6 +254,16 @@
       "from": "kolvrt.cost-l.offline-queries",
       "to": "research/cost-l/registry.json",
       "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "research/results/issue48-cost-l-arena-dispatch.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.cost-l.offline-queries",
+      "to": "research/results/issue48-cost-l-arena-rebased.json",
+      "type": "validated_by"
     },
     {
       "from": "kolvrt.cost-l.offline-queries",
@@ -925,12 +1045,15 @@
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
     "crates/migration-workbench/Cargo.toml": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
     "crates/repository-checks/Cargo.toml": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
+    "crates/repository-checks/src/arena.rs": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
     "crates/repository-checks/src/cost_l.rs": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
     "crates/repository-checks/src/cost_l_queries.rs": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967",
     "crates/repository-checks/src/knowledge.rs": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
     "crates/repository-checks/src/knowledge/impact.rs": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
-    "crates/repository-checks/src/lib.rs": "b29b711566dd7bef0b5b9fc97bd7aa3251447aab82f12b7c59897783abe5a45e",
-    "crates/repository-checks/src/main.rs": "200077845468ae7033d5f9b3ec28fefe48fc7ff432b6ef2ff5b4028d245d3d56",
+    "crates/repository-checks/src/lib.rs": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
+    "crates/repository-checks/src/main.rs": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
+    "crates/repository-checks/tests/arena.rs": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
+    "crates/repository-checks/tests/arena_launcher.rs": "e9c55f7bd1944557dea30761e98d3b78bec0da0370484f13643d263942c13c48",
     "crates/repository-checks/tests/cost_l_queries.rs": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
     "crates/repository-checks/tests/host_survey_schema.rs": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a",
     "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
@@ -938,6 +1061,7 @@
     "crates/routing/Cargo.toml": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
     "crates/window-compat/Cargo.toml": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
     "crates/xtask/Cargo.toml": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
+    "crates/xtask/src/main.rs": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e",
     "deny.toml": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
     "dependencies/policy.json": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
@@ -965,8 +1089,9 @@
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
-    "docs/architecture/benchmarking.md": "f1830d127dc789a35f2a52930375169e986358e5cb9163a7ec71993b27abfe30",
-    "docs/architecture/component-arena.md": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+    "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
+    "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
+    "docs/architecture/component-arena.md": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
     "docs/architecture/dependency-hygiene.md": "db770bc4017c863a28c309153567980cff699f94142c3a35926f10446c29fdfb",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
@@ -975,13 +1100,15 @@
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "1d89d39f33ee3018cfd5359ae5ca867a5b4dee2104f4dcbca8c7b33901d968ff",
-    "docs/knowledge-system.md": "b2b20e41b173b1050e429a11901b6c883f3a63cd274da8a888525deaed1a08ad",
-    "docs/research/cost-l-queries.md": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
+    "docs/knowledge-enrollment.json": "e24cd6b14d97717fef40c0e3d096eb135077af5eeeeb2c7afd6e3ab4a32ad862",
+    "docs/knowledge-system.md": "724bcc439d84cde970c525e9face32ff2bdd0387dd29138567f3e1e3948a3aa2",
+    "docs/research/cost-l-queries.md": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "package.json": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768",
+    "research/arena/profiles/user-copy-range.json": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
+    "research/arena/standards.json": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
     "research/cases/KOL-PATH-0002.json": "db1c5219328b188bd049731fcfe7a8c78bd171b0ae0d6abc2ee8702f9c836675",
     "research/cases/KOL-PATH-0003.json": "9df75d09e6da02f5fb5525b202c6bc04be96433100820967bcaae9d9415c730f",
@@ -1020,6 +1147,9 @@
     "research/hardware/fixtures/synthetic-survey-report.json": "d14121245afe12b622eade249c4030e8961f6d1f721cf77c89330d6f66684e76",
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+    "schemas/arena-profile.schema.json": "a05437b1b9619d601d5826e17bccafee2ab4b6129a0ce6eb4e2795ecca7b6d99",
+    "schemas/arena-run.schema.json": "7cc1dae715ba4d452319a0a5c20bf8374aafc7277edfb80887beb9249011ad1c",
+    "schemas/arena-standards.schema.json": "dbe8d79baae2db350b914f201d388353305d355a99c76e4cdc707a0c03c687fe",
     "schemas/cost-l-registry.schema.json": "34a6bb442291351647c8826054fb582f89ec121c5abff19bf2bcc350b9d24254",
     "schemas/cost-l.schema.json": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
     "schemas/host-survey.schema.json": "af897efaa4d052a8a10d36bda983544cd16884fa5a6500e1476239da20b65ae2",
@@ -1030,9 +1160,10 @@
     "scripts/dependency-audit.cjs": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee",
     "scripts/dependency-base.cjs": "46e2343c13a4d6e1f9bcc3a6b54a2d8e1fdeb6508cdd00550de96b3377071f8f",
     "scripts/host-survey.cjs": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
+    "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "eac29d021921f04002cbe0ac0eb23716340569012fdb18d6a2db115124cd7083",
+    "translations/manifest.json": "38190b3d6ba3e10f1fa8d23c0a67b7816d9098e406d8418ba91135c50e1dbca8",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -1058,8 +1189,9 @@
     "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
-    "translations/ru/docs/architecture/benchmarking.md": "238dd8c769f118c77f0e1252e1f6912f63c672837b91fac0b246993651470e9f",
-    "translations/ru/docs/architecture/component-arena.md": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+    "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
+    "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
+    "translations/ru/docs/architecture/component-arena.md": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
     "translations/ru/docs/architecture/dependency-hygiene.md": "3a416c9bbf85f881f7f5e1bdf98a7b7d4ebe0b9ef53ca1bb6e76d2fa9e7788d2",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
@@ -1068,8 +1200,8 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "7022011db0b26b92bfc627eecf484fd7c9496feced8f77383acc5856dc3062a2",
-    "translations/ru/docs/research/cost-l-queries.md": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032",
+    "translations/ru/docs/knowledge-system.md": "915389d84d33402e9fc979ee4c7ed14ecc36d51a19a3a014340b7d42e1079604",
+    "translations/ru/docs/research/cost-l-queries.md": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
     "translations/ru/docs/research/host-survey.md": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
@@ -3056,9 +3188,9 @@
     },
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 15181,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "document_status": "CURRENT",
+      "estimated_bytes": 17543,
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "localized": {
@@ -3071,15 +3203,15 @@
       },
       "locations": {
         "en": {
-          "end": 221,
+          "end": 252,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 1
         },
         "ru": {
-          "end": 221,
+          "end": 252,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 1
         }
       },
@@ -3125,7 +3257,7 @@
     "doc.kolvrt.architecture.benchmarking": {
       "document": "doc.kolvrt.architecture.benchmarking",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6413,
+      "estimated_bytes": 6677,
       "evidence_scope": "measurement and reproducibility requirements; no new execution results are claimed.",
       "id": "doc.kolvrt.architecture.benchmarking",
       "kind": "policy",
@@ -3141,13 +3273,13 @@
         "en": {
           "end": 103,
           "path": "docs/architecture/benchmarking.md",
-          "sha256": "f1830d127dc789a35f2a52930375169e986358e5cb9163a7ec71993b27abfe30",
+          "sha256": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
           "start": 1
         },
         "ru": {
           "end": 109,
           "path": "translations/ru/docs/architecture/benchmarking.md",
-          "sha256": "238dd8c769f118c77f0e1252e1f6912f63c672837b91fac0b246993651470e9f",
+          "sha256": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
           "start": 1
         }
       },
@@ -3155,6 +3287,50 @@
       "schema_version": 1,
       "summary": "Benchmark methodology: statistics, comparison fairness, attribution and reproducibility.",
       "title": "Migration benchmark methodology"
+    },
+    "doc.kolvrt.arena.measurement-contract": {
+      "depends_on": [
+        "adr.0006",
+        "adr.0003",
+        "adr.0024",
+        "kolvrt.memory.user-copy.api"
+      ],
+      "document": "doc.kolvrt.arena.measurement-contract",
+      "document_status": "CURRENT",
+      "estimated_bytes": 9662,
+      "evidence_scope": "experimental offline A0/A1 contracts and import admission checks; no executed Arena kernel benchmark, records service, independent attestation or certification.",
+      "id": "doc.kolvrt.arena.measurement-contract",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": ["Arena профили измерений сравнимость SFR SAR допуск"],
+          "summary": "Экспериментальный реестр методик, замороженные профили измерений и офлайн-допуск импортов; без kernel records.",
+          "tags": ["arena", "standards", "measurement", "security"],
+          "title": "Контракт измерений Arena"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 78,
+          "path": "docs/architecture/arena-measurement-contract.md",
+          "sha256": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
+          "start": 1
+        },
+        "ru": {
+          "end": 78,
+          "path": "translations/ru/docs/architecture/arena-measurement-contract.md",
+          "sha256": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/arena-measurement-contract.md",
+      "read_when": [
+        "Arena Measurement Profile comparison class SFR SAR admission"
+      ],
+      "schema_version": 1,
+      "summary": "Experimental standards registry, frozen measurement profiles and offline import admission; no kernel records.",
+      "tags": ["arena", "standards", "measurement", "security"],
+      "title": "Arena measurement contract"
     },
     "doc.kolvrt.dependencies.hygiene": {
       "document": "doc.kolvrt.dependencies.hygiene",
@@ -3209,13 +3385,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "b2b20e41b173b1050e429a11901b6c883f3a63cd274da8a888525deaed1a08ad",
+          "sha256": "724bcc439d84cde970c525e9face32ff2bdd0387dd29138567f3e1e3948a3aa2",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "7022011db0b26b92bfc627eecf484fd7c9496feced8f77383acc5856dc3062a2",
+          "sha256": "915389d84d33402e9fc979ee4c7ed14ecc36d51a19a3a014340b7d42e1079604",
           "start": 1
         }
       },
@@ -3500,7 +3676,7 @@
     "doc.kolvrt.research.cost-l-queries": {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 9086,
+      "estimated_bytes": 9110,
       "evidence_scope": "bounded host queries over validated registry declarations; issue #48 remains open for production-manifest integration after #47.",
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
@@ -3514,15 +3690,15 @@
       },
       "locations": {
         "en": {
-          "end": 115,
+          "end": 119,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
+          "sha256": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
           "start": 1
         },
         "ru": {
-          "end": 115,
+          "end": 119,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032",
+          "sha256": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
           "start": 1
         }
       },
@@ -3644,38 +3820,65 @@
         "kolvrt.arena.cost-l",
         "kolvrt.arena.roadmap",
         "adr.0006",
-        "doc.kolvrt.architecture.benchmarking"
+        "doc.kolvrt.architecture.benchmarking",
+        "doc.kolvrt.arena.measurement-contract"
       ],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1237,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "feature": {
-        "acceptance": [],
-        "adrs": ["adr.0006"],
-        "implementation": "PLANNED",
-        "implementation_scope": "Design baseline for replaceable component contracts, passports and reproducible comparisons; no Arena runtime tooling exists.",
-        "issues": [],
-        "limitations": [
-          "No implemented runner, versioned passport schema, eligible leaderboard, measured Arena comparisons or physical ARM64 acceptance."
+        "acceptance": [
+          "research/results/arena-foundation-host.json",
+          "research/results/arena-foundation-host-final.json",
+          "research/results/arena-launcher-host.json"
         ],
-        "next_gate": "Review contract and common suite ownership/versioning for the first real component family before designing schemas and a bounded runner.",
+        "adrs": ["adr.0006", "adr.0003", "adr.0024"],
+        "implementation": "EXPERIMENTAL",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates; no kernel benchmark runner or records publication.",
+        "issues": [93, 32, 33, 34, 35, 36, 50],
+        "limitations": [
+          "Producer assertions are not attestation; record_eligible is always false. The proposed range profile and synthetic tests do not establish kernel PERF/SEC acceptance, DEV attribution, PROD external outcomes or physical ARM64 performance."
+        ],
+        "next_gate": "Review source mappings and implement the first real kernel mechanism pipeline in #32; independently verify execution/applicability before records.",
         "readiness": "NOT_READY",
         "roadmap_gate": "Replaceable Component Arena / Performance & Reliability Passports",
-        "sources": [],
+        "sources": [
+          "crates/repository-checks/src/arena.rs",
+          "crates/repository-checks/tests/arena.rs",
+          "schemas/arena-standards.schema.json",
+          "schemas/arena-profile.schema.json",
+          "schemas/arena-run.schema.json",
+          "research/arena/standards.json",
+          "research/arena/profiles/user-copy-range.json",
+          "crates/repository-checks/src/main.rs",
+          "crates/repository-checks/src/lib.rs",
+          "crates/xtask/src/main.rs",
+          "scripts/run-arena.ps1",
+          "crates/repository-checks/tests/arena_launcher.rs"
+        ],
         "transitions": [
           {
             "acceptance": [],
             "from": "UNRECORDED",
             "reason": "Enroll the existing Arena design baseline without claiming implementation or execution.",
             "to": "PLANNED"
+          },
+          {
+            "acceptance": [],
+            "from": "PLANNED",
+            "reason": "Introduce the offline standards/profile/import contract foundation for #93; complete Arena runtime and records acceptance remains open.",
+            "to": "EXPERIMENTAL"
           }
         ],
         "verification": [
           {
             "environment": "host-process",
-            "reason": "No Arena implementation or execution receipt exists.",
-            "state": "UNKNOWN"
+            "reason": "Executed 17 Arena and 3 launcher tests plus the actual launch script on these exact source bytes; offline host scope only.",
+            "receipt": "research/results/arena-launcher-host.json",
+            "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be",
+            "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -3685,14 +3888,14 @@
         ]
       },
       "gaps": [
-        "Arena runner, passport schemas and leaderboard are not implemented or measured."
+        "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
       ],
       "id": "kolvrt.arena",
       "kind": "feature",
       "localized": {
         "ru": {
           "read_when": ["сравнить заменяемые компоненты Arena"],
-          "summary": "Запланированная Arena заменяемых компонентов и её архитектурная граница.",
+          "summary": "Экспериментальная офлайн-валидация контракта Arena; реальные измерения и records остаются открытыми.",
           "tags": ["arena", "passports", "components"],
           "title": "Принцип и архитектурная граница"
         }
@@ -3701,19 +3904,19 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 7
         }
       },
       "path": "docs/architecture/component-arena.md",
       "read_when": ["compare replaceable components Arena"],
-      "summary": "Planned replaceable-component Arena and its architecture boundary.",
+      "summary": "Experimental offline Arena contract validation; real measurement and record gates remain open.",
       "tags": ["arena", "passports", "components"],
       "title": "Principle and architectural boundary"
     },
@@ -3721,9 +3924,9 @@
       "anchor": "kolvrt-arena-admission",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1057,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "kolvrt.arena.admission",
       "kind": "contract-section",
       "localized": {
@@ -3738,13 +3941,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 33
         }
       },
@@ -3756,9 +3959,9 @@
       "anchor": "kolvrt-arena-comparison",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1142,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "kolvrt.arena.comparison",
       "kind": "contract-section",
       "localized": {
@@ -3773,13 +3976,13 @@
         "en": {
           "end": 80,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 63
         },
         "ru": {
           "end": 80,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 63
         }
       },
@@ -3791,9 +3994,9 @@
       "anchor": "kolvrt-arena-contract",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1175,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "kolvrt.arena.contract",
       "kind": "contract-section",
       "localized": {
@@ -3808,13 +4011,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 19
         }
       },
@@ -3826,9 +4029,9 @@
       "anchor": "kolvrt-arena-cost-l",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1170,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "kolvrt.arena.cost-l",
       "kind": "contract-section",
       "localized": {
@@ -3843,13 +4046,13 @@
         "en": {
           "end": 90,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 79
         },
         "ru": {
           "end": 90,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 79
         }
       },
@@ -3861,9 +4064,9 @@
       "anchor": "kolvrt-arena-passports",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 2181,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "document_status": "CURRENT",
+      "estimated_bytes": 2193,
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "kolvrt.arena.passports",
       "kind": "contract-section",
       "localized": {
@@ -3878,13 +4081,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 41
         }
       },
@@ -3896,9 +4099,9 @@
       "anchor": "kolvrt-arena-receipts",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
+      "document_status": "CURRENT",
       "estimated_bytes": 1080,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "kolvrt.arena.receipts",
       "kind": "contract-section",
       "localized": {
@@ -3913,13 +4116,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 55
         }
       },
@@ -3931,9 +4134,9 @@
       "anchor": "kolvrt-arena-roadmap",
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5987,
-      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1978,
+      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "kolvrt.arena.roadmap",
       "kind": "contract-section",
       "localized": {
@@ -3946,15 +4149,15 @@
       },
       "locations": {
         "en": {
-          "end": 221,
+          "end": 104,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
           "start": 89
         },
         "ru": {
-          "end": 221,
+          "end": 104,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0",
           "start": 89
         }
       },
@@ -4145,7 +4348,11 @@
       "estimated_bytes": 2487,
       "evidence_scope": "bounded host queries over validated registry declarations; issue #48 remains open for production-manifest integration after #47.",
       "feature": {
-        "acceptance": ["research/results/issue48-cost-l-queries.json"],
+        "acceptance": [
+          "research/results/issue48-cost-l-queries.json",
+          "research/results/issue48-cost-l-arena-dispatch.json",
+          "research/results/issue48-cost-l-arena-rebased.json"
+        ],
         "adrs": ["adr.0007", "adr.0008"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Host queries over the existing validated registry declarations; no production-manifest or runtime integration.",
@@ -4183,11 +4390,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "The declared Cargo.lock digest changed when typed host measurement serialization added the existing pinned serde dependency. Historical receipts remain immutable; current source verification requires a new exact-source host receipt.",
-            "receipt": "research/results/issue48-cost-l-queries.json",
-            "receipt_sha256": "beeeca5564e1abf20147531a1bd19b25b34063f70a11c9162c5503359cb13fbb",
-            "scope": "Windows host only; synthetic fixtures do not establish production consumers or observed runtime costs.",
-            "state": "STALE"
+            "reason": "Executed five existing COST-L CLI tests after main rebase and Arena dispatcher integration; exact-source host evidence only.",
+            "receipt": "research/results/issue48-cost-l-arena-rebased.json",
+            "receipt_sha256": "bdc6a41c6c16ff647bbb83acabb48b74b530dbffc0259ccdc94c09bbde77010b",
+            "scope": "Bounded host query semantics only; no production consumers or runtime costs.",
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -4210,13 +4417,13 @@
         "en": {
           "end": 26,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
+          "sha256": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
           "start": 7
         },
         "ru": {
           "end": 26,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032",
+          "sha256": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee",
           "start": 7
         }
       },
@@ -4356,7 +4563,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "75730250d40cdb0fde1c10423a8bee9d94f0fc11c454b729875adb499461f214",
+            "receipt_sha256": "06a047eae8c4f512f048b31954b645950b592a4903663702ab3900b1ad324ae6",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4381,13 +4588,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "b2b20e41b173b1050e429a11901b6c883f3a63cd274da8a888525deaed1a08ad",
+          "sha256": "724bcc439d84cde970c525e9face32ff2bdd0387dd29138567f3e1e3948a3aa2",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "7022011db0b26b92bfc627eecf484fd7c9496feced8f77383acc5856dc3062a2",
+          "sha256": "915389d84d33402e9fc979ee4c7ed14ecc36d51a19a3a014340b7d42e1079604",
           "start": 7
         }
       },

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "base_commit": "0a3a3d69ff2381b6ec922682af03c1fd13e41a23",
+  "working_tree": "Exact source_files identify the final PR bytes including launcher and rebase integration",
+  "claim": "20 offline Arena/launcher tests and actual one-command launch; no kernel measurements, accepted contribution verification, records or certification.",
+  "source_files": [
+    {
+      "path": "crates/repository-checks/src/arena.rs",
+      "sha256_lf": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446"
+    },
+    {
+      "path": "crates/repository-checks/tests/arena.rs",
+      "sha256_lf": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e"
+    },
+    {
+      "path": "schemas/arena-standards.schema.json",
+      "sha256_lf": "dbe8d79baae2db350b914f201d388353305d355a99c76e4cdc707a0c03c687fe"
+    },
+    {
+      "path": "schemas/arena-profile.schema.json",
+      "sha256_lf": "a05437b1b9619d601d5826e17bccafee2ab4b6129a0ce6eb4e2795ecca7b6d99"
+    },
+    {
+      "path": "schemas/arena-run.schema.json",
+      "sha256_lf": "7cc1dae715ba4d452319a0a5c20bf8374aafc7277edfb80887beb9249011ad1c"
+    },
+    {
+      "path": "research/arena/standards.json",
+      "sha256_lf": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351"
+    },
+    {
+      "path": "research/arena/profiles/user-copy-range.json",
+      "sha256_lf": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c"
+    },
+    {
+      "path": "crates/repository-checks/src/main.rs",
+      "sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5"
+    },
+    {
+      "path": "crates/repository-checks/src/lib.rs",
+      "sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e"
+    },
+    {
+      "path": "scripts/run-arena.ps1",
+      "sha256_lf": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996"
+    },
+    {
+      "path": "crates/repository-checks/tests/arena_launcher.rs",
+      "sha256_lf": "e9c55f7bd1944557dea30761e98d3b78bec0da0370484f13643d263942c13c48"
+    }
+  ],
+  "checks": [
+    {
+      "command": "cargo test --locked -p repository-checks --test arena --test arena_launcher",
+      "exit_code": 0,
+      "transcript": "\nrunning 17 tests\ntest published_standard_cannot_be_superseded_by_draft_or_cycles ... ok\ntest malformed_registry_and_fake_standard_classification_are_rejected ... ok\ntest prod_forbids_internal_attribution_even_for_shared_metric ... ok\ntest missing_observation_keeps_reason_and_never_becomes_zero ... ok\ntest warmup_failure_and_whitespace_units_cannot_admit ... ok\ntest same_version_labels_cannot_hide_methodology_change ... ok\ntest metrics_need_sources_units_and_explicit_custom_origin ... ok\ntest checked_registry_and_example_resolve_canonical_targets ... ok\ntest accepted_authorship_requires_links_and_fixture_never_becomes_kernel_evidence ... ok\ntest evidence_corruption_escape_and_unlinked_assertions_are_rejected ... ok\ntest implementation_changes_do_not_freeze_class_but_require_fresh_artifacts ... ok\ntest changed_current_registry_does_not_rewrite_old_snapshots ... ok\ntest overhead_is_matched_versioned_and_not_subtracted ... ok\ntest broken_oracle_or_missing_sar_cannot_admit_fastest_result ... ok\ntest dropped_unfinished_and_bad_sample_plan_remain_ineligible ... ok\ntest cli_enforces_nonzero_rejections_without_publishing_records ... ok\ntest semantic_environment_and_protocol_changes_never_share_class ... ok\n\ntest result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.35s\n\n\nrunning 3 tests\ntest launcher_default_runs_current_project_check_from_another_directory ... ok\ntest launcher_help_and_invalid_inputs_do_not_start_measurements ... ok\ntest launcher_profile_default_and_space_containing_paths_are_preserved ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.40s\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s\n     Running tests\\arena.rs (target\\debug\\deps\\arena-4e70c4d63449b38b.exe)\n     Running tests\\arena_launcher.rs (target\\debug\\deps\\arena_launcher-08b6ecefcb5f25a8.exe)\n"
+    },
+    {
+      "command": "pwsh -NoProfile -File scripts/run-arena.ps1",
+      "exit_code": 0,
+      "transcript": "{\n  \"scope\": \"Registry/profile validation only; no kernel run or certification\",\n  \"state\": \"PASS\"\n}\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running `target\\debug\\xtask.exe arena check`\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.10s\n     Running `target\\debug\\repository-checks.exe arena check`\n"
+    }
+  ]
+}

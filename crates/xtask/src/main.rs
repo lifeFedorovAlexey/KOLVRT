@@ -341,11 +341,11 @@ fn run() -> Result<()> {
     fs::create_dir_all("target/kernel")?;
     let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {
-        Some("docs") => {
+        Some("docs" | "arena") => {
             let status = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()))
-                .args(["run", "--locked", "-p", "repository-checks", "--", "docs"])
+                .args(["run", "--locked", "-p", "repository-checks", "--", &args[0]])
                 .args(&args[1..]).status()?;
-            if status.success() { Ok(()) } else { Err("documentation command failed".into()) }
+            if status.success() { Ok(()) } else { Err("repository tooling command failed".into()) }
         }
         Some("audit") => audit(),
         Some("routing") => {

@@ -109,8 +109,8 @@ This generated registry summary separates implementation from verification. `BOU
 
 | Canonical feature                                                                                          | Implementation      | Evidence limit                                                            |
 | ---------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
-| [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                    | PLANNED             | host-process: UNKNOWN; physical-arm64: UNKNOWN                            |
-| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)             | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
+| [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                    | EXPERIMENTAL        | host-process: VERIFIED; physical-arm64: UNKNOWN                           |
+| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)             | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)           | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                  | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |

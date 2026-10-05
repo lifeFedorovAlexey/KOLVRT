@@ -26,6 +26,7 @@
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md",
     "docs/architecture-decisions/0024-documentation-knowledge.md",
     "docs/architecture/architecture-audit-2026-10-04.md",
+    "docs/architecture/arena-measurement-contract.md",
     "docs/architecture/benchmarking.md",
     "docs/architecture/component-arena.md",
     "docs/architecture/dependency-hygiene.md",

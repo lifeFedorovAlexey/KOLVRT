@@ -1,0 +1,656 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KOLVRT Arena Measurement Profile v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+      "maxLength": 160
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "\\S"
+    },
+    "review_state": {
+      "enum": ["PROPOSED", "REVIEWED"]
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "block_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+          "maxLength": 160
+        },
+        "contract_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+          "maxLength": 160
+        },
+        "functional_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "contract_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "block_id",
+        "contract_id",
+        "functional_version",
+        "contract_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "workload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+          "maxLength": 160
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "semantics_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "input_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "seed": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "useful_operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "oracle": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+              "maxLength": 160
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": ["id", "version", "sha256"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "semantics_sha256",
+        "input_sha256",
+        "seed",
+        "useful_operation",
+        "oracle"
+      ],
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "architecture": {
+          "enum": ["ARM64", "X86_64"]
+        },
+        "platform_kind": {
+          "enum": ["HOST_FIXTURE", "QEMU", "PHYSICAL_HARDWARE"]
+        },
+        "hardware_profile": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+              "maxLength": 160
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            }
+          },
+          "required": ["id", "version"],
+          "additionalProperties": false
+        },
+        "configuration_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "execution_profile": {
+          "enum": ["DEV", "PROD"]
+        },
+        "toolchain": {
+          "type": "object",
+          "properties": {
+            "compiler": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            },
+            "flags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              },
+              "minItems": 0,
+              "maxItems": 256
+            }
+          },
+          "required": ["compiler", "version", "flags"],
+          "additionalProperties": false
+        },
+        "measurement": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+              "maxLength": 160
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            },
+            "clock": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            },
+            "resolution_units": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            },
+            "instrumentation": {
+              "enum": ["EXTERNAL", "DEV_INTERNAL"]
+            }
+          },
+          "required": [
+            "id",
+            "version",
+            "clock",
+            "resolution_units",
+            "instrumentation"
+          ],
+          "additionalProperties": false
+        },
+        "resource_policy_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "architecture",
+        "platform_kind",
+        "hardware_profile",
+        "configuration_sha256",
+        "execution_profile",
+        "toolchain",
+        "measurement",
+        "resource_policy_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "sampling": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "warmup_samples": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "samples": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "repeats": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "stopping_rule": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "quantile_estimator": {
+          "const": "NEAREST_RANK"
+        },
+        "analysis_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "version",
+        "warmup_samples",
+        "samples",
+        "repeats",
+        "stopping_rule",
+        "quantile_estimator",
+        "analysis_version"
+      ],
+      "additionalProperties": false
+    },
+    "overhead": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+          "maxLength": 160
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "matched_workload_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "collection_method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "matched_workload_sha256",
+        "collection_method"
+      ],
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+            "maxLength": 160
+          },
+          "dimension": {
+            "enum": ["PERF", "REL", "RES"]
+          },
+          "definition": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "pattern": "\\S"
+          },
+          "units": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "pattern": "\\S"
+          },
+          "denominator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "pattern": "\\S"
+          },
+          "origin": {
+            "enum": ["REFERENCED", "KOLVRT_DEFINED"]
+          },
+          "methodologies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+                  "maxLength": 160
+                },
+                "version": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "pattern": "\\S"
+                },
+                "section": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "pattern": "\\S"
+                }
+              },
+              "required": ["id", "version", "section"],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 256
+          },
+          "visibility": {
+            "enum": ["SHARED", "DEV_INTERNAL"]
+          },
+          "statistic": {
+            "enum": ["MEDIAN", "P95", "P99", "MEAN", "COUNT"]
+          },
+          "direction": {
+            "enum": ["MIN", "MAX"]
+          },
+          "minimum_samples": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000000
+          }
+        },
+        "required": [
+          "id",
+          "dimension",
+          "definition",
+          "units",
+          "denominator",
+          "origin",
+          "methodologies",
+          "visibility",
+          "statistic",
+          "direction",
+          "minimum_samples"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 256
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+          "maxLength": 160
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "definition_origin": {
+          "const": "KOLVRT_DEFINED"
+        },
+        "methodologies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+                "maxLength": 160
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              },
+              "section": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              }
+            },
+            "required": ["id", "version", "section"],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 256
+        },
+        "toe": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "spd": {
+          "type": "object",
+          "properties": {
+            "attacker_model": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "\\S"
+            },
+            "threats": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              },
+              "minItems": 1,
+              "maxItems": 256,
+              "uniqueItems": true
+            },
+            "assumptions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              },
+              "minItems": 1,
+              "maxItems": 256,
+              "uniqueItems": true
+            },
+            "policies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              },
+              "minItems": 1,
+              "maxItems": 256,
+              "uniqueItems": true
+            },
+            "boundaries": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              },
+              "minItems": 1,
+              "maxItems": 256,
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "attacker_model",
+            "threats",
+            "assumptions",
+            "policies",
+            "boundaries"
+          ],
+          "additionalProperties": false
+        },
+        "sfr": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+                "maxLength": 160
+              },
+              "claim": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              },
+              "mandatory": {
+                "type": "boolean"
+              },
+              "required_sar": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+                  "maxLength": 160
+                },
+                "minItems": 1,
+                "maxItems": 256,
+                "uniqueItems": true
+              }
+            },
+            "required": ["id", "claim", "mandatory", "required_sar"],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 256
+        },
+        "sar": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9-]+)+$",
+                "maxLength": 160
+              },
+              "method": {
+                "enum": [
+                  "DETERMINISTIC",
+                  "NEGATIVE_CONTROL",
+                  "STATE_MODEL",
+                  "SMP_RACE",
+                  "FUZZ",
+                  "FAULT_INJECTION",
+                  "PHYSICAL_HARDWARE",
+                  "VULNERABILITY_ANALYSIS"
+                ]
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "pattern": "\\S"
+              }
+            },
+            "required": ["id", "method", "scope"],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 256
+        },
+        "ava_van_scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        },
+        "attack_potential_scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "definition_origin",
+        "methodologies",
+        "toe",
+        "spd",
+        "sfr",
+        "sar",
+        "ava_van_scope",
+        "attack_potential_scope"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "review_state",
+    "target",
+    "workload",
+    "environment",
+    "sampling",
+    "overhead",
+    "metrics",
+    "security"
+  ],
+  "additionalProperties": false
+}

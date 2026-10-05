@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "9f59c9805123ded07c457fd8c5b025d68afe8384c236c8e856ea6e9b9e39472c",
-        "translation_sha256": "95f8c153a25d2be774c64e743ab6855bc95e807eb9a6fe5d55cb8aa7cdba08d7"
+        "source_sha256": "e875ee7aa7e9a52a9d7b659f2539a838544d49b4bfc00e7b5d261cb36102bb7a",
+        "translation_sha256": "a00455720cee13370f01b6f2cb14a678aef000a2182d61bacbc794b65eab1e74"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -125,9 +125,13 @@
         "source_sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
         "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
+      "docs/architecture/arena-measurement-contract.md": {
+        "source_sha256": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
+        "translation_sha256": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d"
+      },
       "docs/architecture/benchmarking.md": {
-        "source_sha256": "f1830d127dc789a35f2a52930375169e986358e5cb9163a7ec71993b27abfe30",
-        "translation_sha256": "238dd8c769f118c77f0e1252e1f6912f63c672837b91fac0b246993651470e9f"
+        "source_sha256": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
+        "translation_sha256": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012"
       },
       "docs/architecture/compatibility-debt.md": {
         "source_sha256": "8fd9c89a08237e7c4c1958c14bf6c61d3e84eb11299d10aa17e5e1656fdd5b23",
@@ -138,8 +142,8 @@
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
-        "translation_sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b"
+        "source_sha256": "5b51b9d48cfa6d1944efb27dd56169bb4c49198c6c90001e1d7338d282440ee2",
+        "translation_sha256": "c2ddcc845b2e532e3e950912bd13b085773a34ff3aba2d03aaee95799c95a0d0"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "db770bc4017c863a28c309153567980cff699f94142c3a35926f10446c29fdfb",
@@ -298,8 +302,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "b2b20e41b173b1050e429a11901b6c883f3a63cd274da8a888525deaed1a08ad",
-        "translation_sha256": "7022011db0b26b92bfc627eecf484fd7c9496feced8f77383acc5856dc3062a2"
+        "source_sha256": "724bcc439d84cde970c525e9face32ff2bdd0387dd29138567f3e1e3948a3aa2",
+        "translation_sha256": "915389d84d33402e9fc979ee4c7ed14ecc36d51a19a3a014340b7d42e1079604"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -318,8 +322,8 @@
         "translation_sha256": "a47b17b48533d5613e8e2549f7124a8617253f83409c61bcb9ea53331f604c34"
       },
       "docs/research/cost-l-queries.md": {
-        "source_sha256": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
-        "translation_sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032"
+        "source_sha256": "217f6323f5ef537216d84faf06980ed09f1fbfa3f83201ab766392ee5bd97dd5",
+        "translation_sha256": "af27d4318c34f5d9cebd6f99ee1d98c7e19be8a18aca42ae7463d1c7c37795ee"
       },
       "docs/research/host-survey.md": {
         "source_sha256": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",

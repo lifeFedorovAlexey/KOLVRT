@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "base_commit": "0a3a3d69ff2381b6ec922682af03c1fd13e41a23",
+  "base_commit": "41ecd0656fd440585fbc1c4b2f5e969faa7ba815",
   "files": [
     {
       "path": ".github/dependabot.yml",

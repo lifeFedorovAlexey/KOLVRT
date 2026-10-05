@@ -71,7 +71,7 @@ Do not subtract noisy observer cost and claim an exact corrected value. Report u
 Unavailable counters remain unavailable. Separate adapter cost, shared native service
 cost and end-to-end cost. A run artifact contains its manifest, workload digest, oracle
 result, raw samples, rejected-run log, analysis version and report. Implement a benchmark
-runner only when two real comparable paths exist. Case records specify workload-specific obligations.
+comparison runner only when two real comparable paths exist. A standalone mechanism measurement may use one real useful path with an oracle and explicit scope; it establishes no comparative superiority. Case records specify workload-specific obligations.
 
 Missing required data rejects the analysis; a configured resource budget makes both
 baseline and candidate measurements mandatory for every selected observation. Optional
@@ -85,9 +85,9 @@ latency claim; it does not establish compliance with unconfigured resource budge
 ## Replaceable component comparisons
 
 [KOLVRT Arena](component-arena.md) extends this methodology to replaceable components
-through shared contracts and suites, three implementation passports and admission gates.
+through shared contracts and suites, PERF/SEC/REL/RES dimensions and admission gates.
 Its roadmap covers reproducible comparisons and COST-L migration evidence. These requirements
-preserve this document's statistical and fairness obligations; no Arena CLI is implemented yet.
+preserve this document's statistical and fairness obligations. Experimental offline contract validation is available through cargo xtask arena; real measurement pipelines and records remain open under #93/#32.
 
 [Russian translation](../../translations/ru/docs/architecture/benchmarking.md)
 
