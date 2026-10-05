@@ -154,8 +154,8 @@
         "translation_sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6"
       },
       "docs/architecture/dependency-hygiene.md": {
-        "source_sha256": "8079201658b2d4deb3200b5e0a54bf89a1cc6dbceb7fcde3f89312bf776deec5",
-        "translation_sha256": "1752fca39044e323e10120900a4b643c08ce7846207d1565c2fd403f3218e441"
+        "source_sha256": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
+        "translation_sha256": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -242,8 +242,8 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
-        "translation_sha256": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac"
+        "source_sha256": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
+        "translation_sha256": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",

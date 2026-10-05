@@ -95,8 +95,6 @@ function dagDuration(jobs) {
   }
   if (Object.keys(durations).length === 1 && "foundation" in durations)
     return durations.foundation;
-  if ("baseline" in durations && "foundation" in durations)
-    return criticalPath(durations, { foundation: ["baseline"] });
   const shards = Object.keys(durations).filter((id) => /^matrix-\d+$/.test(id));
   const parallel = [
     "host",
@@ -142,11 +140,6 @@ function kernelInventory(run, jobs) {
       "Real EL0 routing matrix and failure propagation",
       "Real 16-bit ASID baseline comparison",
     ].every((name) => names.includes(name))
-  )
-    return "kernel-130-v1";
-  if (
-    jobs.some((job) => job.name.startsWith("baseline / ")) &&
-    names.includes("Execute required workload")
   )
     return "kernel-130-v1";
   const prefixes = jobs

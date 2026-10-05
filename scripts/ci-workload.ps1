@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][ValidateSet('baseline', 'static', 'host', 'kernel-dev', 'kernel-prod', 'matrix', 'routing', 'asid', 'evidence')][string]$Workload)
+param([Parameter(Mandatory)][ValidateSet('static', 'host', 'kernel-dev', 'kernel-prod', 'matrix', 'routing', 'asid', 'evidence')][string]$Workload)
 $ErrorActionPreference = 'Stop'
 function Invoke-Check([string]$Kind, [string]$Label, [string]$Command, [string[]]$CommandArguments) {
     & "$PSScriptRoot/run-timed.ps1" -Kind $Kind -Label $Label -Command $Command -CommandArguments $CommandArguments
@@ -28,25 +28,6 @@ switch ($Workload) {
         foreach ($pair in $receipt.pairs) {
             if ($pair.results.tagged.hardware_asid_bits -ne 16 -or $pair.results.baseline.hardware_asid_bits -ne 16) { throw 'Expected actual 16-bit ASID hardware profile' }
         }
-    }
-    'baseline' {
-        # Retain the original ordered checks, including its duplicate exception subset.
-        Invoke-Check 'host' 'original-npm-check' 'npm.cmd' @('run', 'check:dependencies')
-        Invoke-Check 'static' 'original-format' 'npm.cmd' @('run', 'format:check')
-        Invoke-Check 'host' 'original-lint' 'npm.cmd' @('run', 'lint')
-        Invoke-Check 'host' 'original-research' 'npm.cmd' @('run', 'test:research')
-        Invoke-Check 'cargo-test' 'original-workspace-tests' 'cargo' @('test', '--locked')
-        Invoke-Check 'host' 'original-models' 'cargo' @('run', '--locked', '-p', 'native-state-models', '--', '--check')
-        Invoke-Check 'static' 'original-repository' 'cargo' @('run', '--locked', '-p', 'repository-checks', '--', 'check')
-        if ($env:KNOWLEDGE_BASE) { Invoke-Check 'static' 'original-impact' 'cargo' @('run', '--locked', '-p', 'repository-checks', '--', 'docs', 'check-change', $env:KNOWLEDGE_BASE) }
-        Invoke-Check 'cargo-test' 'original-exceptions' 'cargo' @('test', '--locked', '-p', 'repository-checks', 'exceptions::tests')
-        Invoke-Check 'cargo-test' 'routing-all-features' 'cargo' @('test', '--locked', '-p', 'routing', '--all-features')
-        Invoke-Check 'cargo-test' 'routing-no-default' 'cargo' @('test', '--locked', '-p', 'routing', '--no-default-features')
-        & "$PSScriptRoot/ci-workload.ps1" kernel-dev
-        & "$PSScriptRoot/ci-workload.ps1" kernel-prod
-        & "$PSScriptRoot/ci-workload.ps1" matrix
-        & "$PSScriptRoot/ci-workload.ps1" routing
-        & "$PSScriptRoot/ci-workload.ps1" asid
     }
 }
 if ($Workload -eq 'static' -and $env:KNOWLEDGE_BASE) {

@@ -2025,9 +2025,9 @@
   "inputs": {
     ".github/dependabot.yml": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b",
     ".github/workflows/ci-timings.yml": "85dd44a96b14f9ecbb627f8b5d8a713c9a5bf954d25e1620887222d938432c3d",
-    ".github/workflows/ci-windows-workload.yml": "5a8d4245a6d88e913713ef1ee1ae6bac7d1740fc7d73bcc8b6720834d8abb76d",
+    ".github/workflows/ci-windows-workload.yml": "846a0a8a287e7f8e5b1ce2ba522a0acd0785a64327fbd4661741770a7cf2f705",
     ".github/workflows/dependencies.yml": "996e8caf186d7f7376f5e566c040172f5d156a1431022d0a678aacbb8e3affc2",
-    ".github/workflows/kernel.yml": "57b4d69983349bcceea4db7f152eda02f85003a7ed7bfa609f8a018e429ca6cd",
+    ".github/workflows/kernel.yml": "3f5b7a9485a30ac2f67632d37f1c20f318dd119cdb5e347f63281f635e97251a",
     ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
     "Cargo.lock": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86",
     "Cargo.toml": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
@@ -2145,7 +2145,7 @@
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/compatibility-manifests.md": "77449f5c953520cca56a9eb1fb7d9f6c78419886eba0810acc9c59d09c156380",
     "docs/architecture/component-arena.md": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
-    "docs/architecture/dependency-hygiene.md": "8079201658b2d4deb3200b5e0a54bf89a1cc6dbceb7fcde3f89312bf776deec5",
+    "docs/architecture/dependency-hygiene.md": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
     "docs/architecture/first-native-slice.md": "ca5ca82fe87f0adb59d7bbca7ab8c78b7d08c3b8d85e49680de1fddcb35a9383",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
     "docs/architecture/ipc-phase35-review.md": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
@@ -2153,7 +2153,7 @@
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
-    "docs/ci/performance.md": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
+    "docs/ci/performance.md": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
     "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
     "docs/kernel/domains.md": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
@@ -2226,11 +2226,11 @@
     "scripts/cache-integrity.cjs": "f42cb71b34c3859e05db7c58f18908841b22a0a6b9493959967191a530dba365",
     "scripts/ci-build-reuse.cjs": "c8d9f3e7da672a71f04a1ca6f4dc68a9ec7d32914bccf63b32cab602512b2767",
     "scripts/ci-evidence.cjs": "a74e61a7bfd4c6736a46ebd2b4f15cc7182944ceacd2add41ed9eb0c2e3d9b97",
-    "scripts/ci-gate.cjs": "d561264643eb2052f30d2225722860d656c5cd291cc67ed0255d06bc30b415fc",
+    "scripts/ci-gate.cjs": "e431f322b9fedcf3e2363ee7518eeb98e3994180294fc0a14f0629923c6614f0",
     "scripts/ci-impact.cjs": "76df8cacf98947a359352930d67b50a61c456eb0442b08482e3f89933cb577a5",
     "scripts/ci-observations.cjs": "83175acd9e5b11910e2a4d7d38fbd12f5df14b5d68fbc528e62a2f81ec9d37fb",
-    "scripts/ci-timings.cjs": "d5ac2e3e6a4741b7827f8d0422af42cc031e9b80a4dbfa2795491c872e164def",
-    "scripts/ci-workload.ps1": "3c72fb5951ef093721d44cf26cd6bc615f9836d2d1b079557c39f89d4da5ba02",
+    "scripts/ci-timings.cjs": "fe5a1d32bd128db3bd79fd5e77d60c66f9f8fd7658ede3a7fc6b50bc38a26d80",
+    "scripts/ci-workload.ps1": "cee27cf1b576a78b37836f8a0cc9e123e64bed3e3407e5c515f1364d972f3f5b",
     "scripts/collect-host-survey.ps1": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
     "scripts/dependency-audit.cjs": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee",
     "scripts/dependency-base.cjs": "46e2343c13a4d6e1f9bcc3a6b54a2d8e1fdeb6508cdd00550de96b3377071f8f",
@@ -2238,11 +2238,11 @@
     "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
     "scripts/run-timed.ps1": "533fa2fbf8b3a69794ace806175597e1475226e745f3a3730183da37d428b4e7",
     "scripts/setup-qemu.ps1": "b77e6ebeeb391cf931340193927e99b8f9e51b46ed30e86ef5e0d4b2defe4bae",
-    "scripts/tests/ci-infrastructure.test.cjs": "11596fd719a95604fb7c682d2c6d99805d8a45a68a009b8cf52c4426f76162d1",
+    "scripts/tests/ci-infrastructure.test.cjs": "03c1f623a8ae4e14254a998be8e47334e092db895114b46d0be2a968a70bdefc",
     "scripts/tests/ci-timings.test.cjs": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "ade58452543768a38d6748ab039a38ac4560d4112e7a9f583ea388d67296e2d4",
+    "translations/manifest.json": "35149c1995bfb884b2ccf794d961d7f2007b86b3ec06b16bc79040c5de4a7531",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2273,7 +2273,7 @@
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/compatibility-manifests.md": "486c7abf22df094f0583c463e2da368ea1ae6961ee231f98331314c1bf598db1",
     "translations/ru/docs/architecture/component-arena.md": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
-    "translations/ru/docs/architecture/dependency-hygiene.md": "1752fca39044e323e10120900a4b643c08ce7846207d1565c2fd403f3218e441",
+    "translations/ru/docs/architecture/dependency-hygiene.md": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3",
     "translations/ru/docs/architecture/first-native-slice.md": "257f3b1f05661f5125b3a564642f2a627a510295753208c640e2f881d872a3c0",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
     "translations/ru/docs/architecture/ipc-phase35-review.md": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074",
@@ -2281,7 +2281,7 @@
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
-    "translations/ru/docs/ci/performance.md": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac",
+    "translations/ru/docs/ci/performance.md": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab",
     "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
     "translations/ru/docs/kernel/domains.md": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
@@ -4599,7 +4599,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 14298,
+      "estimated_bytes": 14340,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
@@ -4615,13 +4615,13 @@
         "en": {
           "end": 140,
           "path": "docs/ci/performance.md",
-          "sha256": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
+          "sha256": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
           "start": 1
         },
         "ru": {
           "end": 140,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac",
+          "sha256": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab",
           "start": 1
         }
       },
@@ -4633,7 +4633,7 @@
     "doc.kolvrt.dependencies.hygiene": {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12305,
+      "estimated_bytes": 12647,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
@@ -4647,15 +4647,15 @@
       },
       "locations": {
         "en": {
-          "end": 130,
+          "end": 132,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "8079201658b2d4deb3200b5e0a54bf89a1cc6dbceb7fcde3f89312bf776deec5",
+          "sha256": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
           "start": 1
         },
         "ru": {
-          "end": 130,
+          "end": 132,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "1752fca39044e323e10120900a4b643c08ce7846207d1565c2fd403f3218e441",
+          "sha256": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3",
           "start": 1
         }
       },
@@ -5956,13 +5956,13 @@
         "en": {
           "end": 16,
           "path": "docs/ci/performance.md",
-          "sha256": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
+          "sha256": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
           "start": 7
         },
         "ru": {
           "end": 16,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac",
+          "sha256": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab",
           "start": 7
         }
       },
@@ -6218,7 +6218,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12070,
+      "estimated_bytes": 12412,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "feature": {
         "acceptance": ["research/results/issue94-dependency-hygiene.json"],
@@ -6287,15 +6287,15 @@
       },
       "locations": {
         "en": {
-          "end": 130,
+          "end": 132,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "8079201658b2d4deb3200b5e0a54bf89a1cc6dbceb7fcde3f89312bf776deec5",
+          "sha256": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
           "start": 7
         },
         "ru": {
-          "end": 130,
+          "end": 132,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "1752fca39044e323e10120900a4b643c08ce7846207d1565c2fd403f3218e441",
+          "sha256": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3",
           "start": 7
         }
       },
