@@ -1,102 +1,41 @@
 {
-  "schema_version": 1,
-  "base_commit": "0a3a3d69ff2381b6ec922682af03c1fd13e41a23",
+  "base_commit": "41ecd0656fd440585fbc1c4b2f5e969faa7ba815",
   "files": [
     {
-      "path": "crates/repository-checks/src/arena.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+      "before_sha256_lf": "3d354bbbc13c0fc220483d67bfa9fd4ec3527095584440664ad5a3ce6256cb04",
+      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
+      "after_sha256_lf": "c06e4b62474dd989d4b80dba8f661e179355601e1506695f16605060449f4511",
+      "disposition": "new-feature",
+      "path": "crates/migration-advisor/src/provenance.rs"
     },
     {
-      "path": "crates/repository-checks/src/lib.rs",
-      "before_sha256_lf": "b29b711566dd7bef0b5b9fc97bd7aa3251447aab82f12b7c59897783abe5a45e",
-      "after_sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+      "before_sha256_lf": "0feec818a0fefd124932568005cb814376f8fcbf7bb85119f6b9c2968187f542",
+      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
+      "after_sha256_lf": "0d717362dcd88c812c73759b62414a6959a6646cf5332272df6643ae573b40af",
+      "disposition": "new-feature",
+      "path": "crates/migration-advisor/src/main.rs"
     },
     {
-      "path": "crates/repository-checks/src/main.rs",
-      "before_sha256_lf": "200077845468ae7033d5f9b3ec28fefe48fc7ff432b6ef2ff5b4028d245d3d56",
-      "after_sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+      "before_sha256_lf": "ab272f7bba27811f754f335d89ee32814c884cc620c7fab96b7d10c88bfc2b46",
+      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
+      "after_sha256_lf": "c16e74bc027150961cf714c064d854545c611cfb9d4e102e9c26ce9af32525c9",
+      "disposition": "new-feature",
+      "path": "crates/migration-advisor/tests/provisioned_provenance.rs"
     },
     {
-      "path": "crates/repository-checks/tests/arena.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "crates/repository-checks/tests/arena_launcher.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "e9c55f7bd1944557dea30761e98d3b78bec0da0370484f13643d263942c13c48",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "crates/xtask/src/main.rs",
-      "before_sha256_lf": "e100795dffd676c18feceec446da2546a96037f9e504c0724b04e05e89c016c0",
-      "after_sha256_lf": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "research/arena/profiles/user-copy-range.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "research/arena/standards.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "schemas/arena-profile.schema.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "a05437b1b9619d601d5826e17bccafee2ab4b6129a0ce6eb4e2795ecca7b6d99",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "schemas/arena-run.schema.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "7cc1dae715ba4d452319a0a5c20bf8374aafc7277edfb80887beb9249011ad1c",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "schemas/arena-standards.schema.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "dbe8d79baae2db350b914f201d388353305d355a99c76e4cdc707a0c03c687fe",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
-    },
-    {
-      "path": "scripts/run-arena.ps1",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
-      "disposition": "existing-feature",
-      "reason": "Implement experimental Arena A0/A1 registry/profile/import validation in the existing host tooling; canonical Arena scope and exact-source host receipts are updated, with no kernel instrumentation or records publication."
+      "before_sha256_lf": "cbfde512183c620d55d84524b4682f3e9d8ee65c11b281802025e8d7c8aeff0e",
+      "reason": "Newly enrolled corrected host temporal-verifier scope: injected current clock, fail-closed temporal acceptance, immutable single-session lifetime, CLI adapter and deterministic signed integration/regression tests. No durable-ledger or kernel implementation claim.",
+      "after_sha256_lf": "1035455910a6bdc85cb4d64350715f0c770641e75f0f4dc38e12405111848245",
+      "disposition": "new-feature",
+      "path": "crates/migration-advisor/tests/migration.rs"
     }
   ],
   "features": [
     {
-      "id": "kolvrt.arena",
-      "disposition": "semantic-change",
-      "reason": "Advance the existing Arena feature from PLANNED to EXPERIMENTAL for scoped offline contract validation; complete EN/RU contract, limitations, open gates and exact-source host tests are retained."
-    },
-    {
-      "id": "kolvrt.cost-l.offline-queries",
-      "disposition": "evidence-change",
-      "reason": "Shared library/CLI dispatcher bytes changed to add Arena commands. Existing COST-L semantics are unchanged; five end-to-end tests and current-registry query produce a fresh exact-source receipt while preserving earlier evidence."
+      "reason": "Complete EN/RU contract defines constructor API correction, current/final-time checks, sticky clock failure, issuer/key intervals, policy snapshot and explicit remaining durable replay/production gates.",
+      "id": "kolvrt.security.verifier-time",
+      "disposition": "semantic-change"
     }
-  ]
+  ],
+  "schema_version": 1
 }

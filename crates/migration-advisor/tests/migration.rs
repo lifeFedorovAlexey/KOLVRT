@@ -1584,7 +1584,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         policy.clone(),
         root.clone(),
         root.join("session-ledger-direct"),
-        now,
+        fixed_clock(now),
     )
     .unwrap();
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
@@ -1675,7 +1675,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         policy.clone(),
         root.clone(),
         root.join("session-ledger-authorization"),
-        now,
+        fixed_clock(now),
     )
     .unwrap();
     let receipt = migration_advisor::authorization::authorize(
@@ -1735,7 +1735,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         policy.clone(),
         root.clone(),
         root.join("session-ledger-missing-pilot"),
-        now,
+        fixed_clock(now),
     )
     .unwrap();
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
@@ -1761,7 +1761,7 @@ fn signed_chain_and_cli_verify_bytes_but_tampering_downgrades_the_candidate() {
         policy.clone(),
         root.clone(),
         root.join("session-ledger-altered-benchmark"),
-        now,
+        fixed_clock(now),
     )
     .unwrap();
     let report = advise_with_verifier(&r, &solver(), &store).unwrap();
@@ -1869,4 +1869,15 @@ fn required_measurements_reject_missing_baseline_candidate_and_consumer_data() {
         pair.consumer_id = Some("other".into());
     }
     assert!(analyze_family(&pairs, &policy, 1).is_err());
+}
+
+// Static time exists only in deterministic fixtures, not the public verifier API.
+struct FixtureClock(u64);
+impl migration_advisor::provenance::TrustedUtcClock for FixtureClock {
+    fn now_unix(&self) -> Result<u64, String> {
+        Ok(self.0)
+    }
+}
+fn fixed_clock(now: u64) -> std::sync::Arc<dyn migration_advisor::provenance::TrustedUtcClock> {
+    std::sync::Arc::new(FixtureClock(now))
 }
