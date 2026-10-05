@@ -21,7 +21,7 @@
     },
     {
       "path": "crates/kernel/Cargo.toml",
-      "sha256_lf": "837d0028308d980a0ff915dc25b052ec0433288f31b3cafbf1d985bc382553dc"
+      "sha256_lf": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035"
     },
     {
       "path": "crates/kernel/assets/minimal-exit.elf",
@@ -45,7 +45,7 @@
     },
     {
       "path": "crates/kernel/src/arch/aarch64/mod.rs",
-      "sha256_lf": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc"
+      "sha256_lf": "cf4b8e1c9216c750905e46975ad45e34d72fcf9bdd855599fd3a711bc51a18ef"
     },
     {
       "path": "crates/kernel/src/arch/aarch64/page.rs",
@@ -169,11 +169,11 @@
     },
     {
       "path": "crates/kernel/src/process.rs",
-      "sha256_lf": "a3305a500a2ea07b301cf0fd2da14341e414fc933b3347075c9c4f2c6d87ba79"
+      "sha256_lf": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340"
     },
     {
       "path": "crates/kernel/src/process_workload.rs",
-      "sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a"
+      "sha256_lf": "59c6c440e068edb27ace525137ab6c0c52a32bd477ccd3799c699751cf937499"
     },
     {
       "path": "crates/kernel/src/scheduler/config.rs",
@@ -209,15 +209,15 @@
     },
     {
       "path": "crates/kernel/src/supervision.rs",
-      "sha256_lf": "83edf8ec2c9db1e71b950a234b72eac5a4e4f92a97c7c4ca1fef4f463bffcfa8"
+      "sha256_lf": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401"
     },
     {
       "path": "crates/kernel/src/supervision_workload.S",
-      "sha256_lf": "5381ca8ef27242cd82aef33cf4d8aa2a990ec15b70af031b05a350fdfdb1721f"
+      "sha256_lf": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a"
     },
     {
       "path": "crates/kernel/src/supervision_workload.rs",
-      "sha256_lf": "ea5320fbef9116e34d16bff94ef25ff0791cecb359c721e56b02b13b7ccc7a04"
+      "sha256_lf": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599"
     },
     {
       "path": "crates/kernel/src/sync/mod.rs",
@@ -229,7 +229,7 @@
     },
     {
       "path": "crates/kernel/src/tests.rs",
-      "sha256_lf": "48b7f71740e54f3059d2fdda1e8ca4dab258992c92b86c43577ee5a631493e25"
+      "sha256_lf": "031329651b16d1b23828c6a0c11f48644415fad42970d8b70d188cbfda5e32aa"
     },
     {
       "path": "crates/kernel/src/time/mod.rs",
@@ -301,7 +301,7 @@
     },
     {
       "path": "crates/kernel-core/src/process.rs",
-      "sha256_lf": "3e5495a849246cb904f39442429adfe04e26a40a39a9478bae6ffdaa4bd5e853"
+      "sha256_lf": "53f19c3658319b5908efdedca44c6b3c5d733f5c523f0ea52bf96f3110c6ed05"
     },
     {
       "path": "crates/kernel-core/src/scheduling/ownership.rs",
@@ -345,7 +345,7 @@
     },
     {
       "path": "crates/kernel-core/tests/process_protocol.rs",
-      "sha256_lf": "11018fe4419e11fcd577aa555f9b684589f38f65aeaa45f64a395ad0d8ab3fb8"
+      "sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447"
     },
     {
       "path": "crates/kernel-core/tests/wait.rs",
@@ -401,7 +401,7 @@
     },
     {
       "path": "crates/xtask/src/main.rs",
-      "sha256_lf": "a991346219f95f224084828211ac7a869c883ad0401a8f6f8e43215644f5e86c"
+      "sha256_lf": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1"
     },
     {
       "path": "crates/xtask/src/matrix.rs",
@@ -449,8 +449,8 @@
     }
   ],
   "execution_receipt": {
-    "path": "research/measurements/runs/1791238253366-issue27-commit-ack-5b9cbf3a8590.json",
-    "sha256": "7da8c951dba0eab7b4dd0e41b41588c34948a60d73eafdd05b495dac93ae72e5"
+    "path": "research/measurements/runs/1791242758980-issue27-stand-c79876d.json",
+    "sha256": "b8213a9e6658a798c7999a00cfb589c41910375c93ee1f2a23393bcee115b5ef"
   },
   "earlier_development_receipts": [
     {
@@ -468,31 +468,25 @@
     {
       "path": "research/measurements/runs/1791236111255-issue27-ci-integration-55ff79709344.json",
       "sha256": "5e4496ed62f2a6f272ec20ada17b63a5d41f5ebacef0111c263dcf3a43d183ca"
+    },
+    {
+      "path": "research/measurements/runs/1791238253366-issue27-commit-ack-5b9cbf3a8590.json",
+      "sha256": "7da8c951dba0eab7b4dd0e41b41588c34948a60d73eafdd05b495dac93ae72e5"
     }
   ],
   "correctness": {
-    "ipc_negative_controls": 52,
     "matrix": "passed",
-    "negative_host_controls": 132,
-    "tests_per_profile": 125
+    "tests_per_profile": 125,
+    "negative_host_controls": 136,
+    "ipc_negative_controls": 56
   },
   "supervision_controls": [
     {
-      "build": {
-        "artifact": "target/kernel/dev-supervision-authority-negative.elf",
-        "compiler": "1.99.0",
-        "elf_bytes": 6500136,
-        "features": [
-          "machine-events",
-          "diagnostics",
-          "kernel-tests",
-          "supervision-authority-negative"
-        ],
-        "load_bytes": 1098643,
-        "memory_bytes": 2200467,
-        "sha256": "e72cac60053f643454803406ae7610ffc38599f42ce2e6b5c687aaf0779540bd",
-        "target": "aarch64-unknown-none"
-      },
+      "profile": "dev",
+      "flag": "--supervision-authority-control",
+      "feature": "supervision-authority-negative",
+      "expected": "supervision:Scenario",
+      "status": "rejected",
       "exact_rejections": [
         {
           "actual": 8,
@@ -504,10 +498,21 @@
           "value": 0
         }
       ],
-      "expected": "supervision:Scenario",
-      "feature": "supervision-authority-negative",
-      "flag": "--supervision-authority-control",
-      "profile": "dev",
+      "build": {
+        "artifact": "target/kernel/dev-supervision-authority-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6100048,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "supervision-authority-negative"
+        ],
+        "load_bytes": 1094811,
+        "memory_bytes": 2200723,
+        "sha256": "68fb3ab1a034d53209954efc58ca6b2dd06605eca747ce4dd2bac8d76f6e73a5",
+        "target": "aarch64-unknown-none"
+      },
       "run": {
         "accelerator": "TCG",
         "active_cpus": 2,
@@ -515,7 +520,7 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -535,29 +540,18 @@
           "target/kernel/dev-supervision-authority-negative.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "e72cac60053f643454803406ae7610ffc38599f42ce2e6b5c687aaf0779540bd",
+        "elf_sha256": "68fb3ab1a034d53209954efc58ca6b2dd06605eca747ce4dd2bac8d76f6e73a5",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
-      },
-      "status": "rejected"
+      }
     },
     {
-      "build": {
-        "artifact": "target/kernel/dev-supervision-stale-negative.elf",
-        "compiler": "1.99.0",
-        "elf_bytes": 6500232,
-        "features": [
-          "machine-events",
-          "diagnostics",
-          "kernel-tests",
-          "supervision-stale-negative"
-        ],
-        "load_bytes": 1098899,
-        "memory_bytes": 2196627,
-        "sha256": "488a0a2832e0e93bdedc947e67bf90ef418375a49ca539e97f38835751929b69",
-        "target": "aarch64-unknown-none"
-      },
+      "profile": "dev",
+      "flag": "--supervision-stale-control",
+      "feature": "supervision-stale-negative",
+      "expected": "supervision:Scenario",
+      "status": "rejected",
       "exact_rejections": [
         {
           "actual": 0,
@@ -569,10 +563,21 @@
           "value": 0
         }
       ],
-      "expected": "supervision:Scenario",
-      "feature": "supervision-stale-negative",
-      "flag": "--supervision-stale-control",
-      "profile": "dev",
+      "build": {
+        "artifact": "target/kernel/dev-supervision-stale-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6100696,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "supervision-stale-negative"
+        ],
+        "load_bytes": 1095027,
+        "memory_bytes": 2200939,
+        "sha256": "0387301301b898d0b36936d800ec34b7a183c1f80ab2048512c52aaeef9d8bda",
+        "target": "aarch64-unknown-none"
+      },
       "run": {
         "accelerator": "TCG",
         "active_cpus": 2,
@@ -580,7 +585,7 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -600,40 +605,44 @@
           "target/kernel/dev-supervision-stale-negative.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "488a0a2832e0e93bdedc947e67bf90ef418375a49ca539e97f38835751929b69",
+        "elf_sha256": "0387301301b898d0b36936d800ec34b7a183c1f80ab2048512c52aaeef9d8bda",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
-      },
-      "status": "rejected"
+      }
     },
     {
+      "profile": "dev",
+      "flag": "--supervision-dependency-control",
+      "feature": "supervision-dependency-negative",
+      "expected": "supervision:DependencyNotRejected",
+      "status": "rejected",
+      "exact_rejections": [
+        {
+          "actual": 12,
+          "coverage": 1,
+          "error": "DependencyNotRejected",
+          "event": "supervision-reject",
+          "exit": "Exited(1200)",
+          "status": "fail",
+          "value": 0
+        }
+      ],
       "build": {
-        "artifact": "target/kernel/dev-supervision-wait-negative.elf",
+        "artifact": "target/kernel/dev-supervision-dependency-negative.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 6500352,
+        "elf_bytes": 6098600,
         "features": [
           "machine-events",
           "diagnostics",
           "kernel-tests",
-          "supervision-wait-negative"
+          "supervision-dependency-negative"
         ],
-        "load_bytes": 1098867,
-        "memory_bytes": 2200691,
-        "sha256": "9c4e4c4d437a753c2ce3a471f113ffd2dc4eb5ac051c49105dbc11a789c79d94",
+        "load_bytes": 1095075,
+        "memory_bytes": 2196899,
+        "sha256": "ebf394e23ead47007590af26c0eafeaca0ec2625fd5c752a30df93fd4161b88e",
         "target": "aarch64-unknown-none"
       },
-      "exact_rejections": [
-        {
-          "error": "WaitIdentityLost",
-          "event": "supervision-reject",
-          "status": "fail"
-        }
-      ],
-      "expected": "supervision:WaitIdentityLost",
-      "feature": "supervision-wait-negative",
-      "flag": "--supervision-wait-control",
-      "profile": "dev",
       "run": {
         "accelerator": "TCG",
         "active_cpus": 2,
@@ -641,7 +650,133 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-supervision-dependency-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "ebf394e23ead47007590af26c0eafeaca0ec2625fd5c752a30df93fd4161b88e",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "profile": "dev",
+      "flag": "--supervision-commit-control",
+      "feature": "supervision-commit-negative",
+      "expected": "supervision:CommitNotProven",
+      "status": "rejected",
+      "exact_rejections": [
+        {
+          "actual": 4,
+          "coverage": 127,
+          "error": "CommitNotProven",
+          "event": "supervision-reject",
+          "exit": "Exited(1100)",
+          "status": "fail",
+          "value": 24
+        }
+      ],
+      "build": {
+        "artifact": "target/kernel/dev-supervision-commit-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6100600,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "supervision-commit-negative"
+        ],
+        "load_bytes": 1095059,
+        "memory_bytes": 2196883,
+        "sha256": "dde70230262dbfa75688c30c7eb00293cd6c01a1b3708865e537c49b21c62844",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-supervision-commit-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "dde70230262dbfa75688c30c7eb00293cd6c01a1b3708865e537c49b21c62844",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "profile": "dev",
+      "flag": "--supervision-wait-control",
+      "feature": "supervision-wait-negative",
+      "expected": "supervision:WaitIdentityLost",
+      "status": "rejected",
+      "exact_rejections": [
+        {
+          "error": "WaitIdentityLost",
+          "event": "supervision-reject",
+          "status": "fail"
+        }
+      ],
+      "build": {
+        "artifact": "target/kernel/dev-supervision-wait-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6100104,
+        "features": [
+          "machine-events",
+          "diagnostics",
+          "kernel-tests",
+          "supervision-wait-negative"
+        ],
+        "load_bytes": 1095035,
+        "memory_bytes": 2196859,
+        "sha256": "539f09390b48506328256d8dda9cfdc844311d685dd0ea52748c5dbe61dc356c",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -661,28 +796,18 @@
           "target/kernel/dev-supervision-wait-negative.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "9c4e4c4d437a753c2ce3a471f113ffd2dc4eb5ac051c49105dbc11a789c79d94",
+        "elf_sha256": "539f09390b48506328256d8dda9cfdc844311d685dd0ea52748c5dbe61dc356c",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
-      },
-      "status": "rejected"
+      }
     },
     {
-      "build": {
-        "artifact": "target/kernel/prod-supervision-authority-negative.elf",
-        "compiler": "1.99.0",
-        "elf_bytes": 2581216,
-        "features": [
-          "machine-events",
-          "kernel-tests",
-          "supervision-authority-negative"
-        ],
-        "load_bytes": 686200,
-        "memory_bytes": 1783936,
-        "sha256": "4de70089e0397ba6f4547eaff70acf40121b7875e66952de42519127be3f1fe5",
-        "target": "aarch64-unknown-none"
-      },
+      "profile": "prod",
+      "flag": "--supervision-authority-control",
+      "feature": "supervision-authority-negative",
+      "expected": "supervision:Scenario",
+      "status": "rejected",
       "exact_rejections": [
         {
           "actual": 8,
@@ -694,10 +819,20 @@
           "value": 0
         }
       ],
-      "expected": "supervision:Scenario",
-      "feature": "supervision-authority-negative",
-      "flag": "--supervision-authority-control",
-      "profile": "prod",
+      "build": {
+        "artifact": "target/kernel/prod-supervision-authority-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2593064,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "supervision-authority-negative"
+        ],
+        "load_bytes": 689312,
+        "memory_bytes": 1787048,
+        "sha256": "78cce4a7160e1dd2854884d1da2b97792dc2861644b94a6c70581c7711661f2c",
+        "target": "aarch64-unknown-none"
+      },
       "run": {
         "accelerator": "TCG",
         "active_cpus": 2,
@@ -705,7 +840,7 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -725,28 +860,18 @@
           "target/kernel/prod-supervision-authority-negative.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "4de70089e0397ba6f4547eaff70acf40121b7875e66952de42519127be3f1fe5",
+        "elf_sha256": "78cce4a7160e1dd2854884d1da2b97792dc2861644b94a6c70581c7711661f2c",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
-      },
-      "status": "rejected"
+      }
     },
     {
-      "build": {
-        "artifact": "target/kernel/prod-supervision-stale-negative.elf",
-        "compiler": "1.99.0",
-        "elf_bytes": 2581184,
-        "features": [
-          "machine-events",
-          "kernel-tests",
-          "supervision-stale-negative"
-        ],
-        "load_bytes": 686208,
-        "memory_bytes": 1783936,
-        "sha256": "ac43c769726edc47c900fb95fe8b10c0a88d89f0007ddb29b972e869061a06ea",
-        "target": "aarch64-unknown-none"
-      },
+      "profile": "prod",
+      "flag": "--supervision-stale-control",
+      "feature": "supervision-stale-negative",
+      "expected": "supervision:Scenario",
+      "status": "rejected",
       "exact_rejections": [
         {
           "actual": 0,
@@ -758,10 +883,20 @@
           "value": 0
         }
       ],
-      "expected": "supervision:Scenario",
-      "feature": "supervision-stale-negative",
-      "flag": "--supervision-stale-control",
-      "profile": "prod",
+      "build": {
+        "artifact": "target/kernel/prod-supervision-stale-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2594144,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "supervision-stale-negative"
+        ],
+        "load_bytes": 689524,
+        "memory_bytes": 1787252,
+        "sha256": "4bbbd53e3de888b16cc46b69d2d26d1fe2b56646a2a92abf18dd16c74be7f833",
+        "target": "aarch64-unknown-none"
+      },
       "run": {
         "accelerator": "TCG",
         "active_cpus": 2,
@@ -769,7 +904,7 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -789,39 +924,43 @@
           "target/kernel/prod-supervision-stale-negative.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "ac43c769726edc47c900fb95fe8b10c0a88d89f0007ddb29b972e869061a06ea",
+        "elf_sha256": "4bbbd53e3de888b16cc46b69d2d26d1fe2b56646a2a92abf18dd16c74be7f833",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
-      },
-      "status": "rejected"
+      }
     },
     {
+      "profile": "prod",
+      "flag": "--supervision-dependency-control",
+      "feature": "supervision-dependency-negative",
+      "expected": "supervision:DependencyNotRejected",
+      "status": "rejected",
+      "exact_rejections": [
+        {
+          "actual": 12,
+          "coverage": 1,
+          "error": "DependencyNotRejected",
+          "event": "supervision-reject",
+          "exit": "Exited(1200)",
+          "status": "fail",
+          "value": 0
+        }
+      ],
       "build": {
-        "artifact": "target/kernel/prod-supervision-wait-negative.elf",
+        "artifact": "target/kernel/prod-supervision-dependency-negative.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 2582184,
+        "elf_bytes": 2594184,
         "features": [
           "machine-events",
           "kernel-tests",
-          "supervision-wait-negative"
+          "supervision-dependency-negative"
         ],
-        "load_bytes": 686312,
-        "memory_bytes": 1784040,
-        "sha256": "84457f443306477db00345ec8b1fb2e233b8ce311848db778abdd681968c6f24",
+        "load_bytes": 689448,
+        "memory_bytes": 1787176,
+        "sha256": "0804a5b0642b5093db1e681ed1fd03dfd7b7f8c0f125d69a89c3d143980450b2",
         "target": "aarch64-unknown-none"
       },
-      "exact_rejections": [
-        {
-          "error": "WaitIdentityLost",
-          "event": "supervision-reject",
-          "status": "fail"
-        }
-      ],
-      "expected": "supervision:WaitIdentityLost",
-      "feature": "supervision-wait-negative",
-      "flag": "--supervision-wait-control",
-      "profile": "prod",
       "run": {
         "accelerator": "TCG",
         "active_cpus": 2,
@@ -829,7 +968,131 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-supervision-dependency-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "0804a5b0642b5093db1e681ed1fd03dfd7b7f8c0f125d69a89c3d143980450b2",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "profile": "prod",
+      "flag": "--supervision-commit-control",
+      "feature": "supervision-commit-negative",
+      "expected": "supervision:CommitNotProven",
+      "status": "rejected",
+      "exact_rejections": [
+        {
+          "actual": 4,
+          "coverage": 127,
+          "error": "CommitNotProven",
+          "event": "supervision-reject",
+          "exit": "Exited(1100)",
+          "status": "fail",
+          "value": 24
+        }
+      ],
+      "build": {
+        "artifact": "target/kernel/prod-supervision-commit-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2594184,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "supervision-commit-negative"
+        ],
+        "load_bytes": 689480,
+        "memory_bytes": 1787208,
+        "sha256": "cb49b4689a191eaba5f1d64754774781d176d140688ff82ee72201d641a49df3",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-supervision-commit-negative.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "cb49b4689a191eaba5f1d64754774781d176d140688ff82ee72201d641a49df3",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "profile": "prod",
+      "flag": "--supervision-wait-control",
+      "feature": "supervision-wait-negative",
+      "expected": "supervision:WaitIdentityLost",
+      "status": "rejected",
+      "exact_rejections": [
+        {
+          "error": "WaitIdentityLost",
+          "event": "supervision-reject",
+          "status": "fail"
+        }
+      ],
+      "build": {
+        "artifact": "target/kernel/prod-supervision-wait-negative.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2594032,
+        "features": [
+          "machine-events",
+          "kernel-tests",
+          "supervision-wait-negative"
+        ],
+        "load_bytes": 689424,
+        "memory_bytes": 1787152,
+        "sha256": "125c6259aff4fcb8828d9f4a057116ec36689dac4a19862f7ac731b23d5b21aa",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -849,12 +1112,11 @@
           "target/kernel/prod-supervision-wait-negative.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "84457f443306477db00345ec8b1fb2e233b8ce311848db778abdd681968c6f24",
+        "elf_sha256": "125c6259aff4fcb8828d9f4a057116ec36689dac4a19862f7ac731b23d5b21aa",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
-      },
-      "status": "rejected"
+      }
     }
   ],
   "profiles": {
@@ -862,21 +1124,21 @@
       "test_build": {
         "artifact": "target/kernel/dev-tests.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 6500272,
+        "elf_bytes": 6099344,
         "features": ["machine-events", "diagnostics", "kernel-tests"],
-        "load_bytes": 1098859,
-        "memory_bytes": 2200683,
-        "sha256": "43165284dbe9e46225b61c5bbbe33c0902585fe82429405e9fc02a11f0b21ec0",
+        "load_bytes": 1095075,
+        "memory_bytes": 2196899,
+        "sha256": "fb0ee768dadaad6e1dcf68b81fc338e4eb0bc10902c4514d1edb21d6ed2ec31d",
         "target": "aarch64-unknown-none"
       },
       "boot_build": {
         "artifact": "target/kernel/dev-boot.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 5221224,
+        "elf_bytes": 4889504,
         "features": ["machine-events", "diagnostics"],
-        "load_bytes": 837763,
-        "memory_bytes": 1935683,
-        "sha256": "9570c339b8351535ba5d39f6f0df4af01799c2afc9bab8bea68ec073a2cdeae9",
+        "load_bytes": 836107,
+        "memory_bytes": 1934027,
+        "sha256": "9d0335145813e3a20c43d0965cdc040d5ee9a1f52db33e9569b603106da432af",
         "target": "aarch64-unknown-none"
       },
       "run": {
@@ -886,7 +1148,7 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -906,7 +1168,7 @@
           "target/kernel/dev-tests.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "43165284dbe9e46225b61c5bbbe33c0902585fe82429405e9fc02a11f0b21ec0",
+        "elf_sha256": "fb0ee768dadaad6e1dcf68b81fc338e4eb0bc10902c4514d1edb21d6ed2ec31d",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
@@ -925,21 +1187,21 @@
       "test_build": {
         "artifact": "target/kernel/prod-tests.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 2582344,
+        "elf_bytes": 2594184,
         "features": ["machine-events", "kernel-tests"],
-        "load_bytes": 686336,
-        "memory_bytes": 1784064,
-        "sha256": "99674634030ab0f036911bbc3e79e8312d3bda26257b736fc0983f0a9c98f17b",
+        "load_bytes": 689448,
+        "memory_bytes": 1787176,
+        "sha256": "d83d9b665fb5121b183545c92e24f593ddcaefff2b813d78734b997e33d6dcaa",
         "target": "aarch64-unknown-none"
       },
       "boot_build": {
         "artifact": "target/kernel/prod-boot.elf",
         "compiler": "1.99.0",
-        "elf_bytes": 1884008,
+        "elf_bytes": 1894048,
         "features": ["machine-events"],
-        "load_bytes": 536764,
-        "memory_bytes": 1630588,
-        "sha256": "18747d74645a1b15b2987e036dbba40b789a71c103c7e6756f3b497ad1178e79",
+        "load_bytes": 538152,
+        "memory_bytes": 1631976,
+        "sha256": "49a59bbb92cda588ca1c2f624c57429fc3239f542509e8ebe1727910c815c8c1",
         "target": "aarch64-unknown-none"
       },
       "run": {
@@ -949,7 +1211,7 @@
           "-machine",
           "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
           "-cpu",
-          "max",
+          "cortex-a57",
           "-accel",
           "tcg",
           "-smp",
@@ -969,7 +1231,7 @@
           "target/kernel/prod-tests.elf"
         ],
         "configured_cpus": 2,
-        "elf_sha256": "99674634030ab0f036911bbc3e79e8312d3bda26257b736fc0983f0a9c98f17b",
+        "elf_sha256": "d83d9b665fb5121b183545c92e24f593ddcaefff2b813d78734b997e33d6dcaa",
         "measurement_claim": "emulator timer ticks; not hardware throughput",
         "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
         "timeout_seconds": 30
@@ -987,13 +1249,13 @@
   },
   "scenario_groups": [
     "Ordered authenticated peer/worker startup",
-    "Missing dependency and forged grant selector",
+    "Missing dependency requested through the common EL0 launch policy; unpublished native quota-exhaustion rollback; forged grant selector denial",
     "Irreversible seal, unused grant extinction, instance-credit exhaustion and unsupported version",
     "Requester cannot forge readiness through SEND",
     "Committed crash, fresh instance and old token/SEND rejection",
     "Startup timeout before commitment followed by explicit Terminated",
     "Three EL0 restart attempts with bounded backoff; healthy peer continues",
-    "Under-load effect-unknown cancellation, stopped admission, explicit Terminated and complete resource/owner/source drainage"
+    "Exact-instance commit acknowledgement, under-load effect-unknown cancellation, stopped admission, explicit Terminated and complete resource/owner/source drainage"
   ],
   "bootstrap_assurance": "Development static linked-image/grant/EL0-manifest binding only; #38 remains production trust gate.",
   "qemu_binary_sha256": "f4ccb59031c56e5f5e8beb1c4f247db4ccfcd1b70f7c75a8cf7f01f0db027efd",
@@ -1017,6 +1279,22 @@
       "stage": "GitHub ASID run 37375943605 on 16bebd6",
       "failure": "Seven counterbalanced pairs passed; shutdown race then observed cancelled-before-effect (4) instead of effect-unknown (5). Scheduler quanta did not prove service commitment.",
       "resolution": "Exact-instance feedback SEND/RECEIVE handshake proves successful COMMIT before cancellation; complete local QEMU max matrix and eight counterbalanced 16-bit ASID pairs in GitHub CI run 37379814835 passed."
+    },
+    {
+      "stage": "CI 37381381721 on 6f8f89a",
+      "failure": "ASID mutation actually exposed a stale same-VA translation before the deterministic invalidation test was reported, so the exact required witness was missing.",
+      "resolution": "Report mandatory invalidation before the dependent same-VA observation; current stand artifact has exact failing asid_reuse_requires_invalidation."
+    },
+    {
+      "stage": "Dependency mutation development",
+      "failure": "Quota exhaustion exposed a genuine unpublished rollback bug: Prepared was falsely admitted then completed with forbidden CreationFailed, causing Transition panic.",
+      "resolution": "Acquire detachment and retire Prepared directly to Reclaiming; host stale-identity/admitted-state tests and real EL0 quota rollback plus complete current matrix passed."
+    },
+    {
+      "stage": "CI 37384092701 on c9169df",
+      "failure": "Capability mutation never reached its witness: timer_rearm observed zero IRQ deliveries in 500 ms. That unrelated panic was rejected.",
+      "resolution": "Six retained-ELF replays and 24 parallel diagnostic runs reached exact revocation rejection. IRQ wrappers now preserve compiler memory ordering; unchanged 500 ms failure diagnostics capture read-only timer/GIC state. Full current stand passed 140 tasks, including exact revocation and ASID witnesses.",
+      "root_cause": "The intermittent timer timeout cause is not conclusively established; compiler ordering correction and successful bounded runs do not prove general race-freedom."
     }
   ],
   "host_checks": {
@@ -1026,14 +1304,35 @@
     "git_diff_check": "passed"
   },
   "asid_ci_receipt": {
-    "path": "research/measurements/runs/1791238253366-issue27-ci-asid-992fafe.json",
-    "sha256": "92fbc6976879097f1082946981c52c6510804a32a993eb540b42b34632b2c713",
-    "run_url": "https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37379814835",
-    "job_id": 111999396295,
-    "head_sha": "992fafed261b43a25bfcfe97a0eec293ee4391d6",
+    "path": "research/measurements/runs/1791242937179-issue27-stand-asid-c79876d.json",
+    "sha256": "733e6bc66b41c0e034f670a7997cb16cc4019945eccf6de7ed14155019cf63f7",
+    "run_url": "https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37386934314",
+    "head_sha": "c79876de859c125ef7299b315ea9be9813dd51b5",
     "status": "passed",
     "counterbalanced_pairs": 8,
     "hardware_asid_bits": 16,
     "source_digests": "all match current source inventory"
+  },
+  "ci_run": {
+    "url": "https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37386934314",
+    "head_sha": "c79876de859c125ef7299b315ea9be9813dd51b5",
+    "all_required_jobs": "passed",
+    "matrix_tasks": 140,
+    "exact_legacy_witnesses": {
+      "asid_reuse": [
+        {
+          "event": "test",
+          "name": "asid_reuse_requires_invalidation",
+          "status": "fail"
+        }
+      ],
+      "capability_revoke": [
+        {
+          "event": "test",
+          "name": "capability_el0_scope_attenuation_and_denial",
+          "status": "fail"
+        }
+      ]
+    }
   }
 }

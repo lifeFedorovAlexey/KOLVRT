@@ -46,7 +46,7 @@ Under accepted load, the service sends a commit acknowledgement over its exact-i
 
 ## Verification and next gate
 
-The retained [exact-source execution receipt](../../research/results/supervision-phase36.json) records 125 DEV and 125 PROD checks, both non-test boots and 132 rejected control runs. Its six supervisor-specific mutations are included in the 52 IPC/supervision controls. The latest source set distinguishes actual Terminated from BudgetExpired; the two earlier development snapshots remain immutable. Technical QEMU verification does not complete proposed architecture or human EN/RU acceptance.
+The retained [exact-source execution receipt](../../research/results/supervision-phase36.json) records 125 DEV and 125 PROD checks, both non-test boots and 136 rejected control runs. Its ten supervisor-specific runs are included in the 56 IPC/supervision controls. The latest source set verifies dependency denial, unpublished quota rollback and a commitment-aware shutdown handshake as well as actual Terminated distinct from BudgetExpired; earlier snapshots remain immutable. Technical QEMU verification does not complete proposed architecture or human EN/RU acceptance.
 
 The real images check eight scenario groups: ordered normal startup; missing dependency and forged grant selector; irreversible seal, unused launch-grant extinction, instance-credit exhaustion, unsupported-version and repeated launch denial; forged readiness denial; crash, fresh restart and stale binding denial; startup timeout; bounded restart storm and healthy peer progress; shutdown under committed load. A bitmap is returned by EL0 control flow and checked together with actual process completion, released CPU owners, zero live domains/processes and restored physical page count. It does not replace source review.
 
@@ -58,7 +58,7 @@ Sources: [lifecycle mechanism](../../crates/kernel/src/supervision.rs), [EL0 ima
 
 ## CI integration source boundary
 
-The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, including the shared serial/four-shard CI task inventory. All ten supervisor control runs remain mandatory, bringing the plan to 140 tasks. The matrix runner recognizes exact supervision: failure events rather than any panic. Earlier execution receipts retain their original source scopes. The new exact-source receipt verifies the combined QEMU max matrix and the commit-acknowledgement fix; the GitHub ASID receipt records eight successful 16-bit pairs for that source snapshot. These historical receipts do not verify the new regression inputs; current verification is STALE pending the new full matrix. Human architecture/EN-RU acceptance remains open.
+The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, including the shared serial/four-shard CI task inventory. All ten supervisor control runs remain mandatory, bringing the plan to 140 tasks. The matrix runner recognizes exact supervision: failure events rather than any panic. Earlier execution receipts retain their original source scopes. The latest source-matching stand receipt records a complete Cortex-A57 matrix and eight successful 16-bit QEMU max ASID pairs. The earlier timer_rearm failure is retained and was never counted as a revocation witness. The current bounded run passed after the compiler-ordering correction; the intermittent timeout cause is not conclusively established, and general race-freedom is not claimed. Human architecture/EN-RU acceptance remains open.
 
 <!-- knowledge -->
 
@@ -116,10 +116,10 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "ASID mutation now reports its deterministic invalidation violation before dependent same-VA observations; an exact CommitNotProven regression control is added. Historical receipts remain immutable; current full matrix verification is pending.",
+            "state": "VERIFIED",
+            "reason": "Stand run 37386934314 passed all 140 exact-source tasks: 125 checks per DEV/PROD profile, both boots and 136 negative controls, including 56 exact IPC/supervision witnesses. ASID/revocation events and ELF/source digests independently checked. This is bounded run evidence, not proof of general race-freedom or human supervision acceptance.",
             "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "ca1e2ff9472fac6273bb18d2fc5eb217592bd4d210cbc2fe93183b9b07a216e3",
+            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."
           },
           {

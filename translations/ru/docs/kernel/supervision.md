@@ -48,7 +48,7 @@ Committed crashing service сообщает effect-unknown и exact fault observ
 
 ## Проверка и следующий gate
 
-[Сохранённый exact-source execution receipt](../../../../research/results/supervision-phase36.json) содержит 125 DEV и 125 PROD checks, оба non-test boot и 132 rejected control runs. Шесть supervisor-specific mutations входят в 52 IPC/supervision controls. Последний source set различает фактические Terminated и BudgetExpired; два предыдущих development snapshots остаются неизменными. Technical QEMU verification не завершает proposed architecture или human EN/RU acceptance.
+[Сохранённый exact-source execution receipt](../../../../research/results/supervision-phase36.json) содержит 125 DEV и 125 PROD checks, оба non-test boot и 136 rejected control runs. Десять supervisor-specific runs входят в 56 IPC/supervision controls. Последний source set проверяет dependency denial, unpublished quota rollback и commitment-aware shutdown handshake, а также фактические Terminated отдельно от BudgetExpired; предыдущие snapshots остаются неизменными. Technical QEMU verification не завершает proposed architecture или human EN/RU acceptance.
 
 Реальные images проверяют восемь групп сценариев: ordered normal startup; missing dependency и forged grant selector; irreversible seal, прекращение unused launch grant, исчерпание instance credits, отказ unsupported version и repeated launch denial; forged readiness denial; crash, fresh restart и stale binding denial; startup timeout; bounded restart storm и healthy peer progress; shutdown under committed load. Bitmap возвращается control flow EL0 и проверяется вместе с actual process completion, освобождёнными CPU owners, отсутствием live domains/processes и восстановленным числом physical pages. Это не заменяет source review.
 
@@ -60,7 +60,7 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
 
 ## Граница исходников при интеграции CI
 
-Ветка интегрирует reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, включая общий serial/four-shard CI task inventory. Все десять supervisor control runs обязательны, поэтому plan содержит 140 задач. Matrix runner распознаёт точные supervision: failure events, а не любой panic. Предыдущие execution receipts сохраняют свои source scopes. Новый exact-source receipt проверяет combined QEMU max matrix и исправление commit acknowledgement; GitHub ASID receipt с совпадающими для того snapshot source hashes фиксирует восемь успешных 16-bit pairs. Эти historical receipts не проверяют новые regression inputs; current verification имеет статус STALE до нового полного прогона. Human architecture/EN-RU acceptance остаётся открытой.
+Ветка интегрирует reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, включая общий serial/four-shard CI task inventory. Все десять supervisor control runs обязательны, поэтому plan содержит 140 задач. Matrix runner распознаёт точные supervision: failure events, а не любой panic. Предыдущие execution receipts сохраняют свои source scopes. Последний стендовый receipt с совпадающими source hashes фиксирует полную Cortex-A57 matrix и восемь успешных 16-bit QEMU max ASID pairs. Предыдущий timer_rearm failure сохранён и никогда не засчитывался как revocation witness. Актуальный bounded run прошёл после исправления compiler ordering; причина intermittent timeout окончательно не установлена, общая свобода от гонок не заявляется. Human architecture/EN-RU acceptance остаётся открытой.
 
 <!-- knowledge -->
 
@@ -118,10 +118,10 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "ASID mutation now reports its deterministic invalidation violation before dependent same-VA observations; an exact CommitNotProven regression control is added. Historical receipts remain immutable; current full matrix verification is pending.",
+            "state": "VERIFIED",
+            "reason": "Stand run 37386934314 passed all 140 exact-source tasks: 125 checks per DEV/PROD profile, both boots and 136 negative controls, including 56 exact IPC/supervision witnesses. ASID/revocation events and ELF/source digests independently checked. This is bounded run evidence, not proof of general race-freedom or human supervision acceptance.",
             "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "ca1e2ff9472fac6273bb18d2fc5eb217592bd4d210cbc2fe93183b9b07a216e3",
+            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."
           },
           {
