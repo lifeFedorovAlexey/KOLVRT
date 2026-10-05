@@ -731,7 +731,7 @@
     {
       "document": "doc.kolvrt.architecture.benchmarking",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5722,
+      "estimated_bytes": 6413,
       "id": "doc.kolvrt.architecture.benchmarking",
       "kind": "policy",
       "path": "docs/architecture/benchmarking.md",
@@ -832,7 +832,7 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 8969,
+      "estimated_bytes": 9086,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",

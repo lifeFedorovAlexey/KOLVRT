@@ -1,74 +1,90 @@
 {
   "schema_version": 1,
-  "base_commit": "80ae125a5ba9cf8f9b09dc45f96de81687377323",
+  "base_commit": "7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca",
   "files": [
     {
-      "path": ".cargo/config.toml",
-      "before_sha256_lf": "91d700fe48f16676040c34186151cde1a222aedea3ac787130f4e0a0fdf8ccd6",
-      "after_sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41",
-      "disposition": "no-feature-impact",
-      "reason": "Require warning-free AArch64 compilation in every Cargo build, including machine-event and negative-control configurations. This changes build acceptance only, not kernel runtime or architectural authority."
-    },
-    {
-      "path": "crates/kernel/src/memory/mod.rs",
-      "before_sha256_lf": "2d60ccb3555a412e0d70a6a4deb1968bf0883248c095af5806f316263cd9d7b0",
-      "after_sha256_lf": "138a815965a33980c33f3f0923c62ce914b02f0b087abffab1236d6e8ada7248",
-      "disposition": "no-feature-impact",
-      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. No mappings, accounting, ownership, allocations or runtime observations change in supported payload builds."
-    },
-    {
-      "path": "crates/kernel/src/process.rs",
-      "before_sha256_lf": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
-      "after_sha256_lf": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
+      "path": "Cargo.lock",
+      "before_sha256_lf": "4fe1a9cfc051183af66f60a173adef01cce830afd9d2beb9da4b50fe048d1712",
+      "after_sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
       "disposition": "existing-feature",
-      "reason": "Compile the resident frame observation helper only alongside its actual boot-payload and machine-events caller. Process identity, state, charges, lifetime and the existing payload observation remain unchanged; domain source verification is explicitly STALE."
+      "reason": "Typed host metric receipts add the already pinned serde dependency to host-process-metrics; the enrolled COST-L query feature declares this lockfile and its exact-source verification is explicitly STALE."
     },
     {
-      "path": "crates/kernel/src/main.rs",
-      "before_sha256_lf": "1ebc12733c073213f0ea00f03fe957630e516b2a20acc1950ae8a19fd6a34ee8",
-      "after_sha256_lf": "1362087d5ec4701aa54ba017866ced514017b1a3028bc2edd5a29e4c0d3087cd",
+      "path": "crates/host-process-metrics/Cargo.toml",
+      "before_sha256_lf": "dc530a9f895d3bb399894012d2bca430632bccdcafbaf1523956e368054d46f2",
+      "after_sha256_lf": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6",
       "disposition": "no-feature-impact",
-      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
     },
     {
-      "path": "crates/kernel/src/tests.rs",
-      "before_sha256_lf": "2232acbc22694d35e0726ed42a458d07fbe6c548a61609727732c66b192cf656",
-      "after_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
+      "path": "crates/host-process-metrics/src/lib.rs",
+      "before_sha256_lf": "07545360dff084fb941a05f283deece282420e7df2358e7ecec77b90bf294a9e",
+      "after_sha256_lf": "ee1d24ab87e9c15328f3a07a629f5734ec58aacb41eac61d295baeddd6ff96d4",
       "disposition": "no-feature-impact",
-      "reason": "Move failure probes behind ordinary function calls so their fail-closed panic fallback does not create unreachable verification code. The same physical ownership/mapping and secondary panic enforcement and expected failures remain exercised; normal boot is unchanged."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
     },
     {
-      "path": "crates/kernel/src/boot_workload.rs",
-      "before_sha256_lf": "fd41700102fc9819ae2069092fb5708cfd0746a57b3afe8276a0f54b3d378de1",
-      "after_sha256_lf": "6b74202e42c957ab2963f1f106be81c24333b94bf932e767b7b2cdf8dff393a9",
+      "path": "crates/migration-advisor/src/advisor.rs",
+      "before_sha256_lf": "40a93f93bf7e998a2d583c920f2b66025b153ed2ea00a26a27eb6d8f7f6ace58",
+      "after_sha256_lf": "243db38f10af82f4eadb6733894a5be86d1778e0fc6da961c64661dc1400b51f",
       "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
     },
     {
-      "path": "crates/kernel/src/scheduler/local.rs",
-      "before_sha256_lf": "be0cf3b0d5750e0cf3f571026d782d0df42454369cdc55e2e1be61c4a9eba037",
-      "after_sha256_lf": "86f071a62cd3736062741424e43f0183bb6b1bf7e95448aa65be453e2cb41e11",
+      "path": "crates/migration-advisor/src/statistics.rs",
+      "before_sha256_lf": "d807602091c9858da837a4d88f1845aa486145ff21eece705a14ad1f06c0467a",
+      "after_sha256_lf": "0ce91e28eb36bf95b3f906b0644b6809cfbc4cd3f83dc2e26e9e9b13560ac656",
       "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
     },
     {
-      "path": "crates/kernel/src/scheduler/mod.rs",
-      "before_sha256_lf": "932b14a5442b365f6a23257f8eb70c260af543e6d7719007fdcd84c86882027f",
-      "after_sha256_lf": "025ed1e0f69dc3b1729d5f050b123c6c95c022b257f16b0d2b9150a27517bedd",
+      "path": "crates/migration-advisor/tests/migration.rs",
+      "before_sha256_lf": "ad4f814b9a9f2c6015fb1952fe64ea90f00923614290a018d3ace1c84fcbf73e",
+      "after_sha256_lf": "cbfde512183c620d55d84524b4682f3e9d8ee65c11b281802025e8d7c8aeff0e",
       "disposition": "no-feature-impact",
-      "reason": "Keep failure probes compile-clean: use an ordinary call boundary for fail-closed panic fallbacks, compile enforcement helpers only when their caller is present, and consume the optional generation argument in control configurations that do not use it. Expected rejection and normal runtime contracts remain unchanged."
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
+    },
+    {
+      "path": "crates/migration-workbench/src/lib.rs",
+      "before_sha256_lf": "51e8b41928b5534e9d7a2b08d70bae3ca5462e893e1a0d55cc4b7a8fd416e6bc",
+      "after_sha256_lf": "6b7c994a73433d599b908f2cbc5e78bab1a7d0b1366a03dd4e50477a9e6d0857",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
+    },
+    {
+      "path": "crates/migration-workbench/src/main.rs",
+      "before_sha256_lf": "516973dd03334f3752516b88d4c6a9081322eef6af5fa160e81e9533cd95d2a8",
+      "after_sha256_lf": "68c8de14c3f26868a676d457245b442f37c1f4e01bdc92c677e2bc75e2a622b3",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
+    },
+    {
+      "path": "crates/migration-workbench/tests/workload.rs",
+      "before_sha256_lf": "8b73270a4f61c7455e1fcaaf5a9ee71d6cd013edac46e5875381ad7fc0f58de9",
+      "after_sha256_lf": "198c6c09f52f819b99618ce728324988f189fee2734ef56f1b12b29dacf3c75e",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "before_sha256_lf": "d1d1139b4384ecb73499f9c4ef01bd87ad611aa4c297f823278bb6ca668ac661",
+      "after_sha256_lf": "694f5ce95a7b52ffcb19172f724b7dbec7b58880d32322d838f146dff26afbe2",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "before_sha256_lf": "ce31d83e4ef6d5d54501b137e8f0e6a85f411d43e62fc8f50e37b0284f8ec302",
+      "after_sha256_lf": "427b0bb8048844b2a5e6e0db39f25df9e4d2dbad6f5108b273f5400050807c33",
+      "disposition": "no-feature-impact",
+      "reason": "Harden existing bounded host analysis/reporting: reject missing required input and represent unavailable measurements and unconfigured budgets explicitly. The contracts are updated in benchmarking, migration-advisor and migration-workbench documentation; no enrolled kernel feature source or native kernel behavior changes."
     }
   ],
   "features": [
     {
-      "id": "kolvrt.process.lifecycle",
-      "disposition": "no-impact",
-      "reason": "The optional observation helper is unavailable when there is no boot-payload caller. Lifecycle semantics and historical STALE verification remain unchanged."
-    },
-    {
-      "id": "kolvrt.security.domains",
+      "id": "kolvrt.cost-l.offline-queries",
       "disposition": "evidence-change",
-      "reason": "The compile-time caller gate changes the declared process.rs digest, so historical exact-source QEMU verification is explicitly marked STALE without rewriting its receipt."
+      "reason": "The declared Cargo.lock source digest changed due to the existing pinned serde dependency added to host metric serialization. Historical host receipts remain immutable and current exact-source verification is explicitly STALE; COST-L query semantics and implementation status do not change."
     }
   ]
 }

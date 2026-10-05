@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "35272a8c89ad0050b05dcb565fda1575169e74b6d1f8ee03403f944fc8b39d82",
-        "translation_sha256": "453cdffc533efcda45c2593f8089160aea28c27e453040bf915704b51b72025c"
+        "source_sha256": "8a2b0dd06d214947d3a79eea00f0e9f11533f1fa8a937e54b425b0bd9e837890",
+        "translation_sha256": "b0d978df5ef2a12f0c4ff71821d0e60c6112885fc6410cc5f7ac2cfc7c91eef9"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -126,8 +126,8 @@
         "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
       "docs/architecture/benchmarking.md": {
-        "source_sha256": "f79a97abd46d97bcdcb761787e8ffae52926907b39cf5c0b538f5c2a8f2e3690",
-        "translation_sha256": "ee7f5578fa8766424ec8f9a49011371cebeefb4bd5e5c0c1ce68d07c8cbe85d5"
+        "source_sha256": "f1830d127dc789a35f2a52930375169e986358e5cb9163a7ec71993b27abfe30",
+        "translation_sha256": "238dd8c769f118c77f0e1252e1f6912f63c672837b91fac0b246993651470e9f"
       },
       "docs/architecture/compatibility-debt.md": {
         "source_sha256": "8fd9c89a08237e7c4c1958c14bf6c61d3e84eb11299d10aa17e5e1656fdd5b23",
@@ -174,12 +174,12 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "6e204dc36db48b881ccca4ac04bcc0a7b76f54301a3a41cbf08748981f1c0b7c",
-        "translation_sha256": "e637def4c0fd37c216e8163243d00d7e609371edc4175c70e03d2da0f894c44e"
+        "source_sha256": "12ffe983dda1bb0ba794107ec5cd01b6bc525a6931837fac9c032a5c59b589f4",
+        "translation_sha256": "e471196580bd1c9c04cb72a6e36afa513d1b49bf3220c2a0c03ccd31a86d9472"
       },
       "docs/architecture/migration-workbench.md": {
-        "source_sha256": "d233aac554b7cb12df0a917acf5be250bc3eedf9e7e2d55338ccb4ff3643d780",
-        "translation_sha256": "c994175d71d00d59d9c8e54af384df13d4bd8fe7ec249defeff135baea2fae0c"
+        "source_sha256": "d2d125443913054ebce8c0913bc8a44841d8d2b909c8707b93058586a49ea44b",
+        "translation_sha256": "cd559fccffa8c83522ec1663bb73af2e68e91dc1a231f491dea75a58c7fabdc7"
       },
       "docs/architecture/native-abi.md": {
         "source_sha256": "b12049bda133a0dcb78cd7512cdc4c7b545be1f0373bfbe94efac5bea948b590",
@@ -294,8 +294,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
-        "translation_sha256": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e"
+        "source_sha256": "b41c15c89707ee60fd3bfe85123ba9f5d1694d6402574ba969d3ed59911ff3a0",
+        "translation_sha256": "12866cca6a4d3b71cf19a08c5549e20db94b4f97dbb631b16cb0b4d1ad530af7"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -314,8 +314,8 @@
         "translation_sha256": "a47b17b48533d5613e8e2549f7124a8617253f83409c61bcb9ea53331f604c34"
       },
       "docs/research/cost-l-queries.md": {
-        "source_sha256": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
-        "translation_sha256": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb"
+        "source_sha256": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
+        "translation_sha256": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032"
       },
       "docs/research/issue-submissions.md": {
         "source_sha256": "897b58b97d587425b7470e88e0cda2a17d2523109d1bfd0102127289d82f0631",

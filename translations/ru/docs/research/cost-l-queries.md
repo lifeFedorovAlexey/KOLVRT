@@ -59,8 +59,8 @@ Metric sorting принимает cpu, latency, memory, copies, allocations, con
             "receipt_sha256": "beeeca5564e1abf20147531a1bd19b25b34063f70a11c9162c5503359cb13fbb",
             "receipt": "research/results/issue48-cost-l-queries.json",
             "scope": "Windows host only; synthetic fixtures do not establish production consumers or observed runtime costs.",
-            "reason": "Five real-binary end-to-end tests and current-registry query passed against these exact declared source digests.",
-            "state": "VERIFIED",
+            "reason": "The declared Cargo.lock digest changed when typed host measurement serialization added the existing pinned serde dependency. Historical receipts remain immutable; current source verification requires a new exact-source host receipt.",
+            "state": "STALE",
             "environment": "host-process"
           },
           {
