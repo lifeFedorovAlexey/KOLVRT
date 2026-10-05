@@ -282,8 +282,8 @@
         "translation_sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630"
       },
       "docs/kernel/interrupts.md": {
-        "source_sha256": "e10bd8fd09d0a081dc9e2426a8fe880121e5a497200e3179427dded0aebe39b7",
-        "translation_sha256": "1f3cc5d5ac7ae656c926f18c78460b44295edfa472b1e9b41febd0fbd2b2ed07"
+        "source_sha256": "59fd8cb5f3d90bd9295f5844f73611ac117e909810b02322785fc644a4a11ce2",
+        "translation_sha256": "8c76788a6bc18163556d3fe632335cedea24af1c10d851418b4a4cde79713db1"
       },
       "docs/kernel/ipc-performance.md": {
         "source_sha256": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
