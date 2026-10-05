@@ -238,8 +238,8 @@
         "translation_sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e"
       },
       "docs/kernel/el0.md": {
-        "source_sha256": "4d2140e9e09cc624d5cd519d8815cb8fe97ba2352d0ff31bf5019c8506cee503",
-        "translation_sha256": "e86bf55e86e04555b63cb7d52a94f9bc0b7351c74d96a53f05c188f909d765c8"
+        "source_sha256": "e63f2a44bcfd4f4cb2dfdc409ee5d6c08abfe1b9628ba350722f6b75950162ac",
+        "translation_sha256": "f105a04ceb7655cf93e0d06b838ed51807841edc08c96d06b4037944c2fa8d0f"
       },
       "docs/kernel/exceptions.md": {
         "source_sha256": "7ab0345bf609b17bbe42b1f8d5f332473c8245e2cfdb01582626fc3382c62ae0",
@@ -294,8 +294,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "a6e2166f380fce2e00e13333bde1c8ade02d5c3427a36066baa7616d23884f98",
-        "translation_sha256": "437b29ccaa4713f71a1c509f0eb853c735a94e47341f6313ebd77e8378aacaba"
+        "source_sha256": "7efcfd84167c24c533c83ba9fec17caf56616dd5ff6cb7a0244a5f94ffd25c4b",
+        "translation_sha256": "cc4ab891f8135cefadae47351e68ad466c49a834d9675da0fc83c8f928a683a1"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",

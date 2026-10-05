@@ -180,6 +180,11 @@ const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
 ];
+const ELF_CONTROLS: &[(&str, &str, &str)] = &[(
+    "--elf-entry-alignment-control",
+    "elf-entry-alignment-negative",
+    "\"name\":\"elf_entry_alignment\",\"status\":\"fail\"",
+)];
 const SECURITY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--domain-budget-control",
@@ -297,6 +302,7 @@ const TESTS: &[&str] = &[
     "process_quantum_return_and_peer_progress",
     "process_wait_block_and_wakeup",
     "elf_invalid_images_are_transactional",
+    "elf_entry_alignment",
     "elf_creation_failure_is_transactional",
     "elf_executes_in_isolated_el0_spaces",
     "elf_bss_and_page_padding_are_zero",
@@ -372,7 +378,7 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
-            for &(flag, feature, _) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
+            for &(flag, feature, _) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()).chain(ELF_CONTROLS.iter()) {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
                     return execute(&elf, true, true);
@@ -455,7 +461,7 @@ fn run() -> Result<()> {
             }
             println!("Native kernel matrix passed (two active CPUs; scheduler ownership enforced).");
             for prod in [false, true] {
-                for &(flag, _, marker) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
+                for &(flag, _, marker) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()).chain(ELF_CONTROLS.iter()) {
                     let mut command = Command::new(env::current_exe()?);
                     command.args(["test", flag]);
                     if prod { command.arg("--prod"); }
@@ -920,7 +926,7 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len()) * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + ELF_CONTROLS.len()) * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {
@@ -1137,6 +1143,7 @@ mod native_architecture_tests {
         for &(flag, _, marker) in super::USER_COPY_CONTROLS
             .iter()
             .chain(super::HANDLE_CONTROLS.iter())
+            .chain(super::ELF_CONTROLS.iter())
         {
             if flag == "--user-copy-recovery-control" {
                 continue; // Recovery deliberately causes a fatal architectural exception.
@@ -1145,6 +1152,8 @@ mod native_architecture_tests {
                 ("handle-retirement-reject", None)
             } else if flag == "--user-copy-snapshot-control" {
                 ("test", Some("user_copy_el0_boundary_and_snapshot"))
+            } else if flag == "--elf-entry-alignment-control" {
+                ("test", Some("elf_entry_alignment"))
             } else {
                 (
                     "test",

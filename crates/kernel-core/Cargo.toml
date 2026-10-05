@@ -5,6 +5,7 @@ edition = "2024"
 
 
 [features]
+elf-entry-alignment-negative = []
 handle-generation-negative = []
 handle-owner-negative = []
 handle-type-negative = []
