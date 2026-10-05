@@ -8,9 +8,9 @@ Current reference: [Current scheduler contract](../kernel/scheduler.md)
 
 After the architecture review, the user instructed continuation through the complete Phase 3.5 implementation, tests, documentation and PR. Implementation proceeds with execution option E1 and synchronization option A. ADR-0025 records the selected invariants; this review remains the comparison record and does not itself close #26.
 
-The retained implementation includes the bounded endpoint/request arbiter, initialized copied frames, scoped grants, transactional receive/collect, wake/ack mailboxes and continuous idle/resume. The original technical receipt records 124 checks per DEV/PROD profile and 46 exact-event IPC mutation runs. After integration with main ac63c75, both positive profiles again pass all 124 checks; the integration receipt separates current observations from unchanged historical enforcement evidence. The 144-group performance baseline per profile is retained. Final acceptance review remains open.
+The retained implementation includes the bounded endpoint/request arbiter, initialized copied frames, scoped grants, transactional receive/collect, wake/ack mailboxes and continuous idle/resume. The original technical receipt records 124 checks per DEV/PROD profile and 46 exact-event IPC mutation runs. After integration with main ac63c75, both positive profiles again pass all 124 checks; the integration receipt separates current observations from unchanged historical enforcement evidence. The 144-group performance baseline per profile is retained. Bounded acceptance is complete; the separate acceptance review retains the current-source mutation and EN/RU correspondence evidence.
 
-The fetched and periodically refreshed `origin/main` and the work branch start at `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`. The original checkout remains untouched and its unrelated local documentation changes are excluded. GitHub issue [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) remains open; [#75](https://github.com/lifeFedorovAlexey/KOLVRT/pull/75) and [#76](https://github.com/lifeFedorovAlexey/KOLVRT/pull/76) are merged. [#27](https://github.com/lifeFedorovAlexey/KOLVRT/issues/27) and [#28](https://github.com/lifeFedorovAlexey/KOLVRT/issues/28) remain later service gates.
+The fetched and periodically refreshed `origin/main` and the work branch start at `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`. The original checkout remains untouched and its unrelated local documentation changes are excluded. GitHub issue [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) tracks this bounded acceptance; [#75](https://github.com/lifeFedorovAlexey/KOLVRT/pull/75) and [#76](https://github.com/lifeFedorovAlexey/KOLVRT/pull/76) are merged. [#27](https://github.com/lifeFedorovAlexey/KOLVRT/issues/27) and [#28](https://github.com/lifeFedorovAlexey/KOLVRT/issues/28) remain later service gates.
 
 The review’s execution-architecture decision is resolved: IPC adds a continuous owner-local idle/resume path while retaining whole-session retirement. A continuously admitted idle owner is not declared quiescent merely because no process is READY. The kernel keeps fixed affinity, exclusive scheduler access and immutable mappings; independent CPU sessions, migration and per-process retirement remain outside this milestone.
 
@@ -114,7 +114,7 @@ Replace the security.rs single-cell Work/Receipt model for general IPC with dedi
 
 The implementation covers payload, authority, queues, waits, SMP, cancellation/deadline, death, accounting and reclamation with real EL0 fixtures. Final acceptance is audited against the original task; physical ARM remains UNKNOWN and is not inferred from QEMU. New IPC storage adds the reviewed Cell Sync and HRTB unsafe access wrapper; separate unsafe ranges describe immutable linked EL0 images and execution contexts. The inventory is not a safety proof.
 
-The implementation keeps IPC EXPERIMENTAL until the remaining acceptance gates close. The EN/RU contracts, ADR-0025, unsafe inventory, stable IPC section IDs, enrollment/catalog/graph and generated README summaries are present. #26 remains open; #27 is the subsequent supervisor gate and #28 the persistent-service gate.
+The bounded IPC mechanism is BOUNDED_IMPLEMENTED and READY for Phase 3.5; native.request/1 remains EXPERIMENTAL and unfrozen. The [acceptance review](ipc-phase35-acceptance-review.md) records the current-source 46 mutations and semantic EN/RU correspondence. #27 is the supervisor gate; #28 is the persistent-service gate.
 
 [Russian translation](../../translations/ru/docs/architecture/ipc-phase35-review.md)
 
@@ -125,7 +125,7 @@ The implementation keeps IPC EXPERIMENTAL until the remaining acceptance gates c
   "schema_version": 1,
   "id": "doc.kolvrt.ipc.review",
   "kind": "security-analysis",
-  "summary": "Phase 3.5 IPC architecture re-derivation; E1/A decisions are implemented while milestone acceptance remains open.",
+  "summary": "Phase 3.5 IPC architecture re-derivation; E1/A decisions are implemented and bounded milestone acceptance is complete.",
   "units": [
     {
       "id": "kolvrt.ipc.review.synchronization",

@@ -119,7 +119,7 @@ VERIFIED требует, чтобы каждый объявленный исхо
             "state": "VERIFIED",
             "reason": "Executed current-source deterministic EN/RU retrieval and reverse-impact pilots after the consolidated IPC/dependency integration; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "7efbfdd2ecedf0a4d84d52f4f4ef52930735b4d27d76bca835f4ba3ed01297d3",
+            "receipt_sha256": "a4bea0f88187a284b3290eb8af6ffbe987e87e0d79cc61bdc6293c71f702d760",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim."
           },
           {

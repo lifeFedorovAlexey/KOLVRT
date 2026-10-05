@@ -1,9 +1,9 @@
 # ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution
 
-Status: **Accepted для bounded Phase 3.5 mechanism; final acceptance review pending**. Date: 2026-10-05.
+Status: **Accepted для bounded Phase 3.5 mechanism; bounded Phase 3.5 acceptance complete**. Date: 2026-10-05.
 
 Document status: CURRENT
-Evidence scope: принятое архитектурное решение и реализованный mechanism; технические DEV/PROD, mutation и performance receipts сохранены. Итоговое acceptance review открыто; physical ARM не проверен.
+Evidence scope: принятое архитектурное решение и реализованный mechanism; технические DEV/PROD, mutation и performance receipts сохранены. Bounded acceptance завершено со свежими source-matched controls и явным EN/RU semantic review; physical ARM не проверен.
 Current reference: [IPC contract](../kernel/ipc.md)
 
 ## Context
@@ -68,7 +68,7 @@ Protocol остаётся экспериментальным; сохранить
 
 ## Verification and next gates
 
-Исходный технический receipt сохраняет 124 проверки каждого DEV/PROD профиля и 46 IPC mutation runs с точным expected event; положительные integration checks свежего main прошли в обоих профилях. Сохранены controlled performance paths, unsafe inventory и source-bound receipts. Итоговое acceptance review остаётся открытым. QEMU — regression platform, не silicon evidence.
+Исходный технический receipt сохраняет 124 проверки каждого DEV/PROD профиля и 46 IPC mutation runs с точным expected event; положительные integration checks свежего main прошли в обоих профилях. Сохранены controlled performance paths, unsafe inventory и source-bound receipts. Bounded acceptance завершено; см. явное [приёмочное review](../architecture/ipc-phase35-acceptance-review.md) и свежий receipt 46 controls. QEMU — regression platform, не silicon evidence.
 
 Следующий scope — supervisor #27, затем isolated persistent service #28. Их execution, admission и retirement выводятся заново из accepted invariants. Existing E1 code, effort и tests не определяют будущую architecture. Mutable mappings, zero-copy, wait-any, device/network/storage policy и independent service supervision здесь исключены.
 
