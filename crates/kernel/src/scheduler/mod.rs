@@ -219,6 +219,7 @@ fn dispatch_inner(
 }
 /// Unlink scheduler references before publishing process completion. Reports and
 /// copied frame evidence remain diagnostic data; roots can no longer be dispatched.
+#[cfg(not(feature = "process-unlink-negative"))]
 pub(crate) fn unlink(completed: &Completed) {
     assert!(completed.owners_released);
     for local in &LOCALS {

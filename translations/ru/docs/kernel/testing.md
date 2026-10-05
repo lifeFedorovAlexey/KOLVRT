@@ -6,6 +6,8 @@
 
 ## Команды
 
+Все сборки Cargo для `aarch64-unknown-none` запрещают предупреждения через целевые rustflags в `.cargo/config.toml`. Это включает загрузки DEV/PROD, сборки с машинными событиями, тестовые контроли, routing payloads и сравнения ASID. Необязательные вспомогательные методы наблюдения компилируются только вместе со своими фактическими вызывающими функциями; предупреждения исправляются, а не подавляются.
+
 ```powershell
 rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
 rustup target add aarch64-unknown-none --toolchain 1.99.0

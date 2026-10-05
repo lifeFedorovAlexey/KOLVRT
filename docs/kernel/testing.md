@@ -6,6 +6,8 @@ Install Rust 1.99.0 with rustfmt, clippy and target aarch64-unknown-none, Node.j
 
 ## Commands
 
+All Cargo builds for `aarch64-unknown-none` deny warnings through the target rustflags in `.cargo/config.toml`. This includes DEV/PROD boots, machine-event builds, test controls, routing payloads and ASID comparisons. Optional observation helpers compile only with their actual callers; warnings are fixed rather than suppressed.
+
 ```powershell
 rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
 rustup target add aarch64-unknown-none --toolchain 1.99.0

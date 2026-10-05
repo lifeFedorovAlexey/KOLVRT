@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "823412c79608ce361098c7b74823b0afc437fb999ec3a92e3ee455923ba31856",
-        "translation_sha256": "7d2193e5d65d3447a54a7101e3b661648d739e786faa191b1d41fc42cc5626e4"
+        "source_sha256": "afdf53476cb86ce18f97a5d12534530b2ebd1ba980ac21c9dbfb7f61be7ce57b",
+        "translation_sha256": "7d08c049372b49bd3b4fc31f0644c69cd4273b825b82da3afa49617c30bb4442"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -234,8 +234,8 @@
         "translation_sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94"
       },
       "docs/kernel/domains.md": {
-        "source_sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
-        "translation_sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e"
+        "source_sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
+        "translation_sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0"
       },
       "docs/kernel/el0.md": {
         "source_sha256": "e63f2a44bcfd4f4cb2dfdc409ee5d6c08abfe1b9628ba350722f6b75950162ac",
@@ -274,8 +274,8 @@
         "translation_sha256": "42527fe33efde8585fd971294d565d95a53a386d04d75da46ad570ae2cfd7678"
       },
       "docs/kernel/testing.md": {
-        "source_sha256": "dbf833e697611d74863d6b4ee912a5d14339687cb7b80115c592ce9d17dcdbf6",
-        "translation_sha256": "6c26244ebe22ab9c428925a0564f0936a790ea219d7fee1120112c16f0f6b850"
+        "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",
+        "translation_sha256": "fd7639a0953f930ccf44aadb37c5fc48718061f71a0098f3e49640fa8007b077"
       },
       "docs/kernel/time.md": {
         "source_sha256": "462d6b1a36e874e592b1c3d888ceb26f03254f21a8d5971755637682462a824e",
@@ -294,8 +294,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "24ef088d4e0ae437ebe21f1aae30672a974e1ec7f0e3823be045c1e4bc3ef598",
-        "translation_sha256": "ef11e7c1d1d1e0d7e872f784558b58caed62fd5cf08f114d0871dc1ea0dff4c7"
+        "source_sha256": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
+        "translation_sha256": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",

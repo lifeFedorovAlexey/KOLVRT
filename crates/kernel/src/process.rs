@@ -454,7 +454,7 @@ impl Registry {
     }
     /// Kernel-owned resident frame charge for an exact live process identity.
     /// This remains valid after terminal completion and before explicit reclaim.
-    #[cfg(feature = "machine-events")]
+    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
     pub fn resident_pages(&self, id: ProcessId) -> Result<usize, Error> {
         context_contract()?;
         self.table.state(id)?;

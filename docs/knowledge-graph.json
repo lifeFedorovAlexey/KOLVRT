@@ -741,7 +741,7 @@
     "crates/kernel-core/src/wait.rs": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a",
     "crates/kernel/src/handles.rs": "52b5e9abced2988a68ac0438f3b67237ab0b52f6dc97141d1dc31dc6dce5cfe6",
     "crates/kernel/src/handles/testing.rs": "749a978761de7705e39ba3567e1279279f00edd1f7afb90f4b851ea999d9076f",
-    "crates/kernel/src/process.rs": "8328ac66e6360dca84738477ebdc989c24b98245dc694c1fec9d55fda408f16c",
+    "crates/kernel/src/process.rs": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
     "crates/repository-checks/Cargo.toml": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
@@ -783,12 +783,12 @@
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/kernel/capabilities.md": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
-    "docs/kernel/domains.md": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+    "docs/kernel/domains.md": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "ad8610e934ec2aef4feff2d63bc218ac2d3a4ac94ed6e3dff7e26537bdf762ad",
-    "docs/knowledge-system.md": "24ef088d4e0ae437ebe21f1aae30672a974e1ec7f0e3823be045c1e4bc3ef598",
+    "docs/knowledge-system.md": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
     "docs/research/cost-l-queries.md": "4064a980f6bea22cb8e497cc5b4dee270cd0f8d973040b3dffcbfc0f8588b721",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
@@ -832,7 +832,7 @@
     "schemas/cost-l.schema.json": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "93ff227f36b6601908f7b45ed33cd251ae06e97f4db70a9d20b61863540312f5",
+    "translations/manifest.json": "db618637fb6807a81af630d4b4024bf74a098cc0d4a408ada8dd3e56224ff1cd",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -863,11 +863,11 @@
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/kernel/capabilities.md": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
-    "translations/ru/docs/kernel/domains.md": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
+    "translations/ru/docs/kernel/domains.md": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "ef11e7c1d1d1e0d7e872f784558b58caed62fd5cf08f114d0871dc1ea0dff4c7",
+    "translations/ru/docs/knowledge-system.md": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e",
     "translations/ru/docs/research/cost-l-queries.md": "5cd76a4ef47e4ec5ab978e6ac9dcbef8338020a92d596130e1a54aeecad5c2cb",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
@@ -2973,13 +2973,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "24ef088d4e0ae437ebe21f1aae30672a974e1ec7f0e3823be045c1e4bc3ef598",
+          "sha256": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "ef11e7c1d1d1e0d7e872f784558b58caed62fd5cf08f114d0871dc1ea0dff4c7",
+          "sha256": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e",
           "start": 1
         }
       },
@@ -3094,7 +3094,7 @@
     "doc.kolvrt.kernel.domains": {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13127,
+      "estimated_bytes": 13273,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
@@ -3110,13 +3110,13 @@
         "en": {
           "end": 177,
           "path": "docs/kernel/domains.md",
-          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
           "start": 1
         },
         "ru": {
           "end": 177,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
+          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
           "start": 1
         }
       },
@@ -3998,7 +3998,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "c0ee29d1280fd18636329347d251a9297d754fa78ce2e08c305280bc5acaee9c",
+            "receipt_sha256": "121a3c281e05e9e0c28c8b39e47625b2939d62732dc32416718e974d616e16f9",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4023,13 +4023,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "24ef088d4e0ae437ebe21f1aae30672a974e1ec7f0e3823be045c1e4bc3ef598",
+          "sha256": "4d403e98acb350bb6c229af8b17b6fdcfdb8b600a36d7a50a19fab21cbb4d334",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "ef11e7c1d1d1e0d7e872f784558b58caed62fd5cf08f114d0871dc1ea0dff4c7",
+          "sha256": "892fff0f29d52fb031203b25f065e7c8de3e40bc556eb0ec0c64bbfd4912ab9e",
           "start": 7
         }
       },
@@ -5450,11 +5450,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Passing historical integrated Phase 3.4 receipt; no later-source or silicon inference.",
+            "reason": "The resident_pages observation helper now requires machine-events and boot-payload together. The retained Phase 3.4 receipt predates this process.rs source change; current-source domain verification requires a new exact-source receipt.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -5480,13 +5480,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/domains.md",
-          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
           "start": 11
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
+          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
           "start": 11
         }
       },
@@ -5515,13 +5515,13 @@
         "en": {
           "end": 36,
           "path": "docs/kernel/domains.md",
-          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
           "start": 27
         },
         "ru": {
           "end": 36,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
+          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
           "start": 27
         }
       },
@@ -5549,13 +5549,13 @@
         "en": {
           "end": 28,
           "path": "docs/kernel/domains.md",
-          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
           "start": 17
         },
         "ru": {
           "end": 28,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
+          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
           "start": 17
         }
       },
@@ -5583,13 +5583,13 @@
         "en": {
           "end": 56,
           "path": "docs/kernel/domains.md",
-          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
           "start": 35
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
+          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
           "start": 35
         }
       },
@@ -5601,7 +5601,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6753,
+      "estimated_bytes": 6899,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
@@ -5617,13 +5617,13 @@
         "en": {
           "end": 177,
           "path": "docs/kernel/domains.md",
-          "sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
+          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
           "start": 55
         },
         "ru": {
           "end": 177,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
+          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
           "start": 55
         }
       },

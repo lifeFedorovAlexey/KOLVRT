@@ -122,8 +122,8 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Passing historical integrated Phase 3.4 receipt; no later-source or silicon inference.",
+            "state": "STALE",
+            "reason": "The resident_pages observation helper now requires machine-events and boot-payload together. The retained Phase 3.4 receipt predates this process.rs source change; current-source domain verification requires a new exact-source receipt.",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"

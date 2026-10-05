@@ -34,6 +34,24 @@ const BOOT_TIMER_DELAY: time::Duration = time::Duration::from_millis(10);
 #[cfg(not(feature = "kernel-tests"))]
 const BOOT_IRQ_TIMEOUT: time::Duration = time::Duration::from_secs(1);
 use core::sync::atomic::Ordering;
+// Keep failure probes behind an ordinary call boundary: a probe returning is
+// an explicit failure, while its panic must not make the rest of boot code
+// syntactically unreachable in the control build.
+#[cfg(feature = "ownership-test")]
+fn ownership_control(d: &kernel_core::platform::Description) {
+    let _foreign_owner = memory::Physical::new(d);
+    panic!("second physical owner was accepted");
+}
+#[cfg(feature = "retained-mapping-test")]
+fn retained_mapping_control(physical: &mut memory::Physical) {
+    let frame = physical
+        .allocate(1, 1)
+        .expect("retained mapping control allocation");
+    let mapping = memory::map(&frame, memory::DYNAMIC_BASE, true, false).unwrap();
+    core::mem::forget(mapping);
+    physical.release(frame);
+    panic!("retained mapping release was accepted");
+}
 #[unsafe(no_mangle)]
 pub extern "C" fn kernel_main() -> ! {
     let d = platform::discover_boot();
@@ -93,20 +111,9 @@ pub extern "C" fn kernel_main() -> ! {
         format_args!("{} CPUs participating", platform::config::ACTIVE_CPUS),
     );
     #[cfg(feature = "ownership-test")]
-    {
-        let _foreign_owner = memory::Physical::new(&d);
-        panic!("second physical owner was accepted");
-    }
+    ownership_control(&d);
     #[cfg(feature = "retained-mapping-test")]
-    {
-        let frame = physical
-            .allocate(1, 1)
-            .expect("retained mapping control allocation");
-        let mapping = memory::map(&frame, memory::DYNAMIC_BASE, true, false).unwrap();
-        core::mem::forget(mapping);
-        physical.release(frame);
-        panic!("retained mapping release was accepted");
-    }
+    retained_mapping_control(&mut physical);
     #[cfg(feature = "kernel-tests")]
     tests::run(&d, &mut physical, &mut processes);
     #[cfg(not(feature = "kernel-tests"))]
