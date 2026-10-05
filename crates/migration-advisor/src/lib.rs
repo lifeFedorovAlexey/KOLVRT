@@ -156,8 +156,8 @@ pub fn validate_catalog(catalog: &[Package]) -> Result<(), String> {
 
 pub fn plan_digest(plan: &solver::Plan) -> String {
     // Plan verification requires sorted identities; serialization is canonical for this type.
-    format!(
-        "{:x}",
-        Sha256::digest(serde_json::to_vec(plan).expect("string-only plan"))
-    )
+    (Sha256::digest(serde_json::to_vec(plan).expect("string-only plan")))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>()
 }

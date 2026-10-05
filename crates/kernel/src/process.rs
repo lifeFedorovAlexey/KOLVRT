@@ -275,13 +275,6 @@ impl Registry {
         trace(id, State::Prepared, None);
         Ok(id)
     }
-    #[cfg_attr(
-        not(feature = "kernel-tests"),
-        expect(
-            dead_code,
-            reason = "Protected bootstrap API; current boot validation has no persistent service consumer"
-        )
-    )]
     pub fn bootstrap_grant(
         &mut self,
         id: ProcessId,
@@ -302,9 +295,16 @@ impl Registry {
                 kernel_core::handles::CreationError::Publication(()) => unreachable!(),
             })
     }
-    #[cfg(feature = "kernel-tests")]
     pub fn domain_reference(&self, id: ProcessId) -> kernel_core::domain::Reference {
-        self.objects[id.slot()].as_ref().unwrap().domain.reference()
+        context_contract().expect("domain reference bootstrap owner");
+        self.table
+            .state(id)
+            .expect("exact live domain process identity");
+        let object = self.objects[id.slot()]
+            .as_ref()
+            .expect("retained domain object");
+        assert_eq!(object.id, id);
+        object.domain.reference()
     }
     #[cfg(feature = "kernel-tests")]
     pub fn security_input(&mut self, id: ProcessId, values: [u64; 7]) {
@@ -317,6 +317,156 @@ impl Registry {
         self.table.start(id)?;
         trace(id, State::Admitted, None);
         Ok(())
+    }
+    /// Trusted bootstrap binds one exact prepared service; the nondelegable
+    /// receiver handle is separate from subsequently installed scoped SEND grants.
+    pub fn bootstrap_endpoint(
+        &mut self,
+        service: ProcessId,
+        capacity: usize,
+    ) -> Result<
+        (kernel_core::ipc::Reference, kernel_core::handles::Handle),
+        kernel_core::handles::Error,
+    > {
+        use kernel_core::handles::{CreationError, Error as H};
+        context_contract().map_err(|_| H::Denied)?;
+        if self.table.state(service).ok() != Some(State::Prepared)
+            || memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0
+        {
+            return Err(H::Denied);
+        }
+        let domain = self.objects[service.slot()]
+            .as_ref()
+            .ok_or(H::Denied)?
+            .domain
+            .reference();
+        let reference = crate::ipc::create(domain, service.slot() / OWNER_CAPACITY, capacity)
+            .map_err(|error| {
+                if error == kernel_core::ipc::Error::Exhausted {
+                    H::Budget
+                } else {
+                    H::Denied
+                }
+            })?;
+        let handle = self.handles[service.slot()].create_endpoint_receiver(
+            service,
+            reference
+                .try_clone()
+                .expect("fresh endpoint reference bound"),
+            |_| Ok::<_, ()>(()),
+        );
+        match handle {
+            Ok(handle) => Ok((reference, handle)),
+            Err(error) => {
+                crate::ipc::discard(&reference);
+                drop(reference);
+                crate::ipc::reap();
+                Err(match error {
+                    CreationError::Handle(error) => error,
+                    CreationError::Publication(()) => unreachable!(),
+                })
+            }
+        }
+    }
+    pub fn bootstrap_sender(
+        &mut self,
+        client: ProcessId,
+        endpoint: &kernel_core::ipc::Reference,
+        rights: kernel_core::handles::Rights,
+    ) -> Result<kernel_core::handles::Handle, kernel_core::handles::Error> {
+        use kernel_core::handles::{CreationError, Error as H};
+        context_contract().map_err(|_| H::Denied)?;
+        if self.table.state(client).ok() != Some(State::Prepared)
+            || memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0
+        {
+            return Err(H::Denied);
+        }
+        self.handles[client.slot()]
+            .create_endpoint_sender(
+                client,
+                endpoint.try_clone().map_err(|_| H::ReferenceExhausted)?,
+                rights,
+                |_| Ok::<_, ()>(()),
+            )
+            .map_err(|error| match error {
+                CreationError::Handle(error) => error,
+                CreationError::Publication(()) => unreachable!(),
+            })
+    }
+    pub fn ipc_input(&mut self, id: ProcessId, role: u64, handle: kernel_core::handles::Handle) {
+        context_contract().expect("IPC bootstrap fixture setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        let context = &mut self.objects[id.slot()]
+            .as_mut()
+            .expect("prepared IPC process")
+            .context;
+        context.gpr[20] = role;
+        context.gpr[21] = handle.encode();
+    }
+    pub fn ipc_control_input(&mut self, id: ProcessId, handle: kernel_core::handles::Handle) {
+        context_contract().expect("IPC control bootstrap setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.objects[id.slot()]
+            .as_mut()
+            .expect("prepared control process")
+            .context
+            .gpr[22] = handle.encode();
+    }
+    pub fn ipc_survivor_input(&mut self, id: ProcessId, handle: kernel_core::handles::Handle) {
+        context_contract().expect("IPC survivor bootstrap setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.objects[id.slot()]
+            .as_mut()
+            .expect("prepared survivor process")
+            .context
+            .gpr[23] = handle.encode();
+    }
+    pub fn ipc_previous_token_input(&mut self, id: ProcessId, token: u64) {
+        context_contract().expect("IPC previous token fixture setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.objects[id.slot()]
+            .as_mut()
+            .expect("prepared token fixture")
+            .context
+            .gpr[23] = token;
+    }
+    pub fn ipc_queue_input(&mut self, id: ProcessId, capacity: usize) {
+        context_contract().expect("IPC queue bootstrap setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        assert!([1, 4].contains(&capacity));
+        self.objects[id.slot()]
+            .as_mut()
+            .expect("prepared queue process")
+            .context
+            .gpr[23] = capacity as u64;
+    }
+    #[cfg(feature = "ipc-benchmark")]
+    pub fn ipc_bench_input(&mut self, id: ProcessId, payload: usize, kind: u64) {
+        context_contract().expect("IPC benchmark bootstrap setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        assert!([0, 8, 64, 256].contains(&payload) && (1..=9).contains(&kind));
+        let context = &mut self.objects[id.slot()]
+            .as_mut()
+            .expect("benchmark object")
+            .context;
+        context.gpr[23] = payload as u64;
+        context.gpr[24] = kind;
+    }
+    pub fn ipc_authority_input(
+        &mut self,
+        id: ProcessId,
+        missing: kernel_core::handles::Handle,
+        event: kernel_core::handles::Handle,
+        control: kernel_core::handles::Handle,
+    ) {
+        context_contract().expect("IPC authority bootstrap setup");
+        assert_eq!(self.table.state(id), Ok(State::Prepared));
+        self.objects[id.slot()]
+            .as_mut()
+            .expect("prepared authority process")
+            .context
+            .gpr[22..25]
+            .copy_from_slice(&[missing.encode(), event.encode(), control.encode()]);
     }
     pub fn state(&self, id: ProcessId) -> Result<State, Error> {
         context_contract()?;
@@ -467,12 +617,15 @@ impl Registry {
     /// Internal synchronous completion driver, not a public wait ABI. No default
     /// workload deadline. The future service loop may schedule another dispatch.
     pub fn dispatch(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {
-        self.dispatch_inner(timeout, false)
+        self.dispatch_inner(timeout, false, false)
     }
     /// Preemptible scheduling step: surviving processes stay Admitted and retain
     /// their full context/accounting. No deadline is used to make dispatch return.
     pub fn step(&mut self) -> scheduler::Completed {
-        self.dispatch_inner(None, true)
+        self.dispatch_inner(None, true, false)
+    }
+    pub fn dispatch_ipc(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {
+        self.dispatch_inner(timeout, false, true)
     }
     /// Trusted bootstrap notification, not an EL0 send API. Identity lookup and
     /// coordinator ownership precede touching the retained event of this generation.
@@ -502,6 +655,7 @@ impl Registry {
         &mut self,
         timeout: Option<time::Duration>,
         step: bool,
+        continuous: bool,
     ) -> scheduler::Completed {
         context_contract().expect("process dispatch owner");
         let mut tasks: [Option<Admission<'_>>; CAPACITY] = core::array::from_fn(|_| None);
@@ -529,6 +683,8 @@ impl Registry {
         }
         let completed = if step {
             scheduler::step(&mut tasks)
+        } else if continuous {
+            scheduler::dispatch_ipc(&mut tasks, timeout)
         } else {
             scheduler::dispatch(&mut tasks, timeout)
         };

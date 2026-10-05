@@ -65,8 +65,8 @@ The Rust constructor API intentionally changes: callers must provide a clock imp
             "receipt_sha256": "fd273b9171688235813dddb0b7e83492b6a63dbd2f405676588bbe7836c68e67",
             "environment": "host-process",
             "receipt": "research/results/issue71-verifier-time.json",
-            "reason": "Fifteen provisioned synthetic-key/clock regressions and existing advisor integration tests passed on these exact source bytes.",
-            "state": "VERIFIED"
+            "reason": "Historical receipt retained after consolidated IPC/dependency integration; current-source revalidation is required for changed declared inputs: crates/migration-advisor/src/provenance.rs, crates/migration-advisor/Cargo.toml, Cargo.lock",
+            "state": "STALE"
           },
           {
             "state": "NOT_APPLICABLE",

@@ -205,7 +205,10 @@ pub fn validate(
             if bytes.len() > 64 * 1024 * 1024 {
                 return Err("artifact grew beyond 64 MiB".into());
             }
-            let digest = format!("{:x}", Sha256::digest(bytes));
+            let digest = Sha256::digest(bytes)
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>();
             if digest != artifact["sha256"] {
                 errors.push(format!("{identity}: artifact digest mismatch"));
             }

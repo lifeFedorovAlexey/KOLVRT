@@ -1,5 +1,13 @@
 # Native request ABI candidate v0
 
+Document status: DESIGN BASELINE
+Evidence scope: historical host proposal and its version-0 conformance models. This is not the implemented EL0 IPC encoding.
+Current reference: [Implemented experimental native.request/1](../kernel/ipc.md)
+
+The Phase 3.5 re-derivation replaces this proposal for EL0 transport with `native.request/1`, using actual caller-local 8/56 handles, separate service tokens and requester receipts, typed operations and transactional copy-out. The 32/32 field below records the historical host encoding; it must not be used to implement the production handle representation. Existing version-0 host models remain separately scoped and do not establish production consumers.
+
+Lifecycle notice, 2026-10-05: native.request/0 is deprecated as an EL0 design proposal; replacement is native.request/1. Known repository consumers are native-protocol-model and its host conformance fixtures. No PUBLIC/STABLE support window or ABI-FREEZE was declared, and this replacement creates none. The new transport explicitly rejects version 0; there is no implicit translation or fallback. Historical host decoding continues to accept only version 0 under its stated model scope.
+
 This is a testable encoding candidate for the [first slice](first-native-slice.md), not a stable public ABI. It is independent of compiler structure layout. All integers are unsigned little-endian unless stated otherwise. No pointers or padding bytes cross the protocol boundary. The caller's protection domain is established by entry context, never a message field.
 
 ABI contract: native.request/0
@@ -102,4 +110,15 @@ The no_std [decoder](../../crates/native-protocol-model/src/lib.rs) checks encod
 
 ## Current bounded Phase 3.3 handle boundary
 
-[Process-local handles](../kernel/handles.md) implement caller-local reference identity, type, lifetime and attenuated transfer through explicit LE64 handles and copied 48-byte requests. [Domains and grants](../kernel/domains.md) add explicit Event authority, revocation, quotas and retained terminal outcomes. native.notification/1 is a separate experimental pilot, not a freeze of the candidate general IPC frame above. Full payload IPC, cancellation/deadline arbitration and automatic wait registration remain future contracts.
+[Process-local handles](../kernel/handles.md) implement caller-local reference identity, type, lifetime and attenuated transfer through explicit LE64 handles and copied 48-byte requests. [Domains and grants](../kernel/domains.md) add explicit Event authority, revocation, quotas and retained terminal outcomes. native.notification/1 remains a separate experimental pilot. [native.request/1](../kernel/ipc.md) implements the new bounded IPC mechanism; full Phase 3.5 acceptance is still in progress. Neither transport freezes the historical candidate above.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.architecture.native-abi",
+  "kind": "api-contract",
+  "summary": "Historical native.request/0 candidate lifecycle and current experimental request/1 reference."
+}
+```

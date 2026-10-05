@@ -6,6 +6,20 @@ pub(crate) const CONTEXT_EXITED: usize = 2;
 pub(crate) const CONTEXT_FAULTED: usize = 3;
 pub(crate) const CONTEXT_TIMED_OUT: usize = 4;
 pub(crate) const CONTEXT_BLOCKED: usize = 6;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum IpcWait {
+    Wake {
+        key: kernel_core::ipc::WaitKey,
+        target: kernel_core::ipc::WaitTarget,
+    },
+    Finish,
+    Retry,
+}
+pub(super) struct IpcPending {
+    pub caller: kernel_core::process::ProcessId,
+    pub action: crate::ipc::native::Action,
+    pub copy: Result<usize, u64>,
+}
 pub(super) const CONTEXT_VACANT: usize = 5;
 /// Small fully initialized admission descriptor; no diagnostic report storage is
 /// copied through caller stacks. The retained root belongs to the process owner.
@@ -26,6 +40,10 @@ pub(crate) struct Admission<'a> {
 }
 #[derive(Clone, Copy)]
 pub(crate) struct Task {
+    pub ipc_blocks: u64,
+    pub ipc_terminal_blocks: u64,
+    pub ipc_wakes: u64,
+    pub(super) ipc_wait: Option<IpcWait>,
     #[cfg(feature = "kernel-tests")]
     pub copy_snapshot: [u8; 8],
     pub context: Context,
@@ -56,6 +74,10 @@ struct Definition {
 }
 impl Task {
     pub const ZERO: Self = Self {
+        ipc_blocks: 0,
+        ipc_terminal_blocks: 0,
+        ipc_wakes: 0,
+        ipc_wait: None,
         #[cfg(feature = "kernel-tests")]
         copy_snapshot: [0; 8],
         context: Context::ZERO,
@@ -113,6 +135,42 @@ impl Task {
         self.definition.root = 0;
         self.definition.linked = false;
     }
+    /// The continuous IPC session cannot transfer a blocked context back to
+    /// a coordinator. Its root stays linked until actual terminal quiescence.
+    #[cfg(any(
+        not(feature = "process-unlink-negative"),
+        feature = "ipc-blocked-reclaim-negative"
+    ))]
+    pub(super) fn unlink_ipc(&mut self) {
+        if !matches!(
+            self.state,
+            CONTEXT_VACANT | CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+        ) || self.ipc_wait.is_some()
+        {
+            reject_ipc("BlockedTaskReclaim");
+        }
+        self.unlink();
+    }
+    /// Only the fixed owner may publish one runnable state for this exact wait.
+    /// Replaying a publication cannot create a second runnable/running owner.
+    pub(super) fn publish_ipc_ready(&mut self, key: kernel_core::ipc::WaitKey) {
+        if key.process().slot() != self.id()
+            || key.process().generation() != self.process_generation()
+        {
+            reject_ipc("WrongProcessWake");
+        }
+        if self.state != CONTEXT_BLOCKED
+            || !matches!(self.ipc_wait, Some(IpcWait::Wake { key: saved, .. }) if saved == key)
+        {
+            reject_ipc("DuplicateReady");
+        }
+        self.ipc_wakes = self
+            .ipc_wakes
+            .checked_add(1)
+            .expect("IPC wake counter exhausted");
+        self.ipc_wait = None;
+        self.state = CONTEXT_READY;
+    }
     pub fn linked(&self) -> bool {
         self.definition.linked
     }
@@ -137,6 +195,9 @@ impl Task {
     }
     pub fn result(&self) -> TaskResult {
         TaskResult {
+            ipc_blocks: self.ipc_blocks,
+            ipc_terminal_blocks: self.ipc_terminal_blocks,
+            ipc_wakes: self.ipc_wakes,
             context: self.context,
             state: self.state,
             slices: self.slices,
@@ -148,15 +209,24 @@ impl Task {
             process_generation: self.process_generation(),
             fault_far: self.fault_far,
             peer_faults_at_exit: self.peer_faults_at_exit,
-            #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+            #[cfg(all(
+                feature = "machine-events",
+                any(feature = "boot-payload", feature = "ipc-benchmark")
+            ))]
             report_len: self.report_len,
             #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
             native_attempts: self.observations.attempts(),
         }
     }
 }
+fn reject_ipc(error: &'static str) -> ! {
+    super::reject_ipc(error)
+}
 #[derive(Clone, Copy)]
 pub(crate) struct TaskResult {
+    pub ipc_blocks: u64,
+    pub ipc_terminal_blocks: u64,
+    pub ipc_wakes: u64,
     pub context: Context,
     pub state: usize,
     pub slices: usize,
@@ -168,13 +238,19 @@ pub(crate) struct TaskResult {
     pub process_generation: u64,
     pub fault_far: usize,
     pub peer_faults_at_exit: usize,
-    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+    #[cfg(all(
+        feature = "machine-events",
+        any(feature = "boot-payload", feature = "ipc-benchmark")
+    ))]
     pub report_len: usize,
     #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
     pub native_attempts: u64,
 }
 impl TaskResult {
     pub const ZERO: Self = Self {
+        ipc_blocks: 0,
+        ipc_terminal_blocks: 0,
+        ipc_wakes: 0,
         context: Context::ZERO,
         state: CONTEXT_VACANT,
         slices: 0,
@@ -186,13 +262,17 @@ impl TaskResult {
         process_generation: 0,
         fault_far: 0,
         peer_faults_at_exit: 0,
-        #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+        #[cfg(all(
+            feature = "machine-events",
+            any(feature = "boot-payload", feature = "ipc-benchmark")
+        ))]
         report_len: 0,
         #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
         native_attempts: 0,
     };
 }
 pub(super) struct State {
+    pub ipc_pending: [Option<IpcPending>; TASKS],
     pub tasks: [Task; TASKS],
     pub handles: [crate::handles::Namespace; TASKS],
     pub requests: crate::security::Queue,
@@ -202,6 +282,7 @@ pub(super) struct State {
 }
 impl State {
     pub const ZERO: Self = Self {
+        ipc_pending: [const { None }; TASKS],
         tasks: [Task::ZERO; TASKS],
         handles: [const { crate::handles::Namespace::new() }; TASKS],
         requests: crate::security::Queue::EMPTY,

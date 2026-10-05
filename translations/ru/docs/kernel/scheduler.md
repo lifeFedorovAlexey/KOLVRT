@@ -92,9 +92,13 @@ Phase 3.1 завершает ограниченный внутренний жи�
 
 [Жизненный цикл](processes.md) дополняет основу незанятыми слотами и независимыми поколениями процессов. При запуске ядра создаётся один `Registry`, сохраняемый между вызовами; тестовые образы и необязательная полезная нагрузка используют общий путь создания, запуска, пошагового исполнения, диспетчеризации, отправки сигнала и освобождения. Ограниченный [контракт ожидания](wait.md) позволяет задаче EL0 заблокироваться на собственном событии и вернуть управление загрузочному координатору; публичных полномочий ожидания и промышленного цикла обработки событий он не добавляет. Дескрипторы допуска заимствуют принадлежащие процессам адресные пространства; корни очереди удаляются при подтверждённом безопасном изменении до возврата результата завершения. Для изменения используется существующее исключительное разрешение и те же три места разыменования хранилища. Необязательные пределы задаются вызывающей стороной; `None` не вводит скрытого срока завершения. Исторические результаты Phase 3.0 сохранены. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) фиксирует консервативную границу освобождения и дальнейшие обязательства по копированию данных пользователя.
 
-## Phase 3.4 current security boundary
+## Историческая security boundary Phase 3.4
 
-[Security domains](domains.md) связывают каждую process generation с локальными handles, явными bootstrap grants и неизменяемыми memory/handle/queue/request quotas, переданными caller. SEND/TRANSFER rights допускают attenuation; REVOKE=4 означает явную issuer authority. Revocation запрещает новые effects, а принятая работа удерживает consumer charge и target до completion либо service-fault cancellation. Закрытие handle не отзывает aliases. Ограниченный same-CPU notification pilot сообщает EL0 terminal outcomes; general IPC, automatic wakeups, supervisor policy и persistent services относятся к следующим этапам. Перед расширением storage и encoding нужно заново вывести из требований #26/#27.
+[Security domains](domains.md) фиксируют границу Phase 3.4: caller-local handles, явные bootstrap grants, ограниченные quotas и same-CPU notification pilot. Source receipt пилота не подтверждает новый путь IPC. Phase 3.5 заново выведена для #26 и добавляет отдельный механизм concrete endpoint.
+
+## Исполнение bounded IPC Phase 3.5
+
+[Native IPC](ipc.md) запускает реальные EL0 peers через `dispatch_ipc()` в непрерывной fixed-affinity session. Пока задачи заблокированы, каждый owner сохраняет scheduler state и native root, обрабатывает bounded deadlines и mailbox work с точной generation, а retirement ждёт quiescence всех peers и retained wakes. User copies, endpoint permits и scheduler storage используют отдельные scopes; global IPC lock не добавлен. Реализация остаётся experimental: полные wait/wake, terminal/accounting mutations, контролируемые performance paths и итоговая приемка точных исходников ещё впереди. Прежние receipts Phase 3.0–3.4 подтверждают только записанные для них исходники.
 
 [English original](../../../../docs/kernel/scheduler.md)
 
@@ -105,3 +109,14 @@ Phase 3.1 завершает ограниченный внутренний жи�
 ## Владение namespace в Phase 3.3
 
 [Владение handles](handles.md) использует existing publication/mutation/quiescent permits. Admission исключительно заимствует Registry namespace; move помещает его в indexed CPU state, а acquired completion двух CPU возвращает ровно один раз. Namespace остаётся линейным в nonterminal steps. Global lock и unsafe storage не добавлены; retained resource borrows заканчиваются внутри masked current-task callback.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.kernel.scheduler",
+  "kind": "subsystem-contract",
+  "summary": "Владение fixed-affinity scheduler, исторические границы Phase 3 и экспериментальный continuous IPC execution."
+}
+```

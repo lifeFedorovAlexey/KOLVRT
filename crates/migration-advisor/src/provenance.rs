@@ -121,7 +121,10 @@ pub struct TrustPolicy {
 }
 
 pub fn subject_digest(payload: &[u8]) -> String {
-    format!("{:x}", Sha256::digest(payload))
+    (Sha256::digest(payload))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>()
 }
 
 /// Stable domain separation. Sign the serialized typed payload's digest and its role.
@@ -514,7 +517,12 @@ impl SignedArtifactStore {
             }
             hash.update(&buffer[..n]);
         }
-        if format!("{:x}", hash.finalize()) != digest {
+        if (hash.finalize())
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect::<String>()
+            != digest
+        {
             return Err("artifact bytes do not match digest".into());
         }
         Ok(())

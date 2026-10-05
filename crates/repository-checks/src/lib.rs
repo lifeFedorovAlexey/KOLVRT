@@ -94,10 +94,10 @@ pub fn read_json(path: &Path) -> CheckResult<Value> {
     parse_json(&read(path)?).map_err(|e| format!("{}: {e}", path.display()))
 }
 pub fn hash(text: &str) -> String {
-    format!(
-        "{:x}",
-        Sha256::digest(text.replace("\r\n", "\n").as_bytes())
-    )
+    (Sha256::digest(text.replace("\r\n", "\n").as_bytes()))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>()
 }
 pub fn write_json(path: &Path, value: &Value) -> CheckResult<()> {
     let text = serde_json::to_string_pretty(value).map_err(|e| e.to_string())? + "\n";

@@ -5,7 +5,7 @@ $archive = Join-Path $cache 'setup.exe'
 $expected = '5e6b88318ab1233e6d9cea187f657a8d69c5007fbaaee18c57383abbadf080c2731ccdcfe5c12b021b344b285b4bf2d69f6c80124714a2ac7d5f6a46b7297ccc'
 New-Item -ItemType Directory -Force -Path $cache | Out-Null
 if (!(Test-Path -LiteralPath $archive) -or (Get-FileHash -LiteralPath $archive -Algorithm SHA512).Hash.ToLowerInvariant() -ne $expected) {
-    & curl.exe --fail --location --silent --show-error --max-time 600 --output $archive 'https://qemu.weilnetz.de/w64/2025/qemu-w64-setup-20250826.exe'
+    & curl.exe --ssl-revoke-best-effort --retry 3 --retry-all-errors --fail --location --silent --show-error --max-time 600 --output $archive 'https://qemu.weilnetz.de/w64/2025/qemu-w64-setup-20250826.exe'
     if ($LASTEXITCODE -ne 0) { throw 'QEMU download failed' }
 }
 if ((Get-FileHash -LiteralPath $archive -Algorithm SHA512).Hash.ToLowerInvariant() -ne $expected) { throw 'QEMU SHA-512 mismatch' }

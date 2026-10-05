@@ -114,8 +114,8 @@ cargo test --locked -p repository-checks --test compat_modules
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Thirteen host regressions, actual CLI and real Cargo declaration fixture passed on these exact source bytes.",
-            "state": "VERIFIED",
+            "reason": "Historical receipt retained after consolidated IPC/dependency integration; current-source revalidation is required for changed declared inputs: Cargo.lock, crates/host-process-metrics/Cargo.toml, crates/kernel-core/Cargo.toml, crates/kernel/Cargo.toml, crates/migration-advisor/Cargo.toml, crates/migration-workbench/Cargo.toml, crates/repository-checks/Cargo.toml, crates/repository-checks/src/cost_l.rs, crates/repository-checks/src/lib.rs, crates/routing-demo/Cargo.toml, crates/routing/Cargo.toml, crates/xtask/Cargo.toml",
+            "state": "STALE",
             "receipt": "research/results/issue47-compatibility-manifests.json",
             "receipt_sha256": "95766b2a15e17e5d3324ff9692e3f4c7ec2725e6971c0af8b249e1cfc113decb",
             "scope": "Host consistency and declaration boundary only; production-shaped artifacts are non-executable test bytes, not supported modules."

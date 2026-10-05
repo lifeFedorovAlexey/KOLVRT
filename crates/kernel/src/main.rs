@@ -12,6 +12,10 @@ mod execution;
 mod hal;
 mod handles;
 mod interrupt;
+mod ipc;
+#[cfg(feature = "ipc-benchmark")]
+mod ipc_benchmark;
+mod ipc_workload;
 mod memory;
 mod percpu;
 mod platform;
@@ -144,6 +148,11 @@ pub extern "C" fn kernel_main() -> ! {
         process_workload::exercise(&mut physical, &mut processes, |name, passed| {
             assert!(passed, "process workload check failed: {name}");
         });
+        ipc_workload::exercise(&mut physical, &mut processes, |name, passed| {
+            assert!(passed, "IPC workload check failed: {name}");
+        });
+        #[cfg(feature = "ipc-benchmark")]
+        ipc_benchmark::exercise(&mut physical, &mut processes);
         #[cfg(feature = "boot-payload")]
         boot_workload::payload(
             &mut physical,
@@ -183,7 +192,7 @@ pub extern "C" fn kernel_main() -> ! {
             format_args!("secondary CPU shutdown verified"),
         );
         event!(
-            "{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true,\"active_cpus\":{},\"secondary_shutdown_verified\":true}}",
+            "{{\"event\":\"boot\",\"status\":\"pass\",\"el\":1,\"timer_irq\":true,\"active_cpus\":{},\"secondary_shutdown_verified\":true,\"ipc_runs\":8,\"ipc_deadline_runs\":4,\"ipc_lifetime_runs\":28,\"ipc_requester_death_runs\":12,\"ipc_authority_runs\":4,\"ipc_payload_runs\":8,\"ipc_queue_runs\":8}}",
             platform::config::ACTIVE_CPUS
         );
     }

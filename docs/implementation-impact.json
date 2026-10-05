@@ -1,84 +1,544 @@
 {
   "schema_version": 1,
-  "features": [
-    {
-      "id": "kolvrt.compatibility.manifests",
-      "reason": "New EN/RU contract explicitly separates synthetic declarations, production debt/artifact reciprocity, native Cargo closure and remaining review/runtime gates.",
-      "disposition": "semantic-change"
-    },
-    {
-      "id": "kolvrt.arena",
-      "reason": "Shared checker source digest changes; historical Arena evidence retained and current host verification marked STALE.",
-      "disposition": "evidence-change"
-    },
-    {
-      "id": "kolvrt.cost-l.offline-queries",
-      "reason": "Shared COST-L helper/dispatcher/library source digests change; historical query evidence retained and current host verification marked STALE.",
-      "disposition": "evidence-change"
-    },
-    {
-      "reason": "window-compat Cargo metadata gains the compatibility marker; existing dependency graph/retention semantics remain unchanged. Historical receipt retained and host verification remains STALE with the additional source change recorded.",
-      "id": "kolvrt.dependencies.hygiene",
-      "disposition": "evidence-change"
-    }
-  ],
+  "base_commit": "ac63c75342fe9a2c2196c203e98b40bbb20edf64",
   "files": [
     {
-      "path": "crates/repository-checks/src/compat_modules.rs",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
-      "disposition": "new-feature",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2"
+      "path": ".github/workflows/dependencies.yml",
+      "before_sha256_lf": "2476207ec9c963652121e75d517f944c6b1181cd03a305e4820eb316d96eeab2",
+      "after_sha256_lf": "df98db96ce44420768364891dee5dde65ab44438c9bcfcf245b19ca04efd2172",
+      "disposition": "existing-feature",
+      "reason": "Dependency CI compares the PR base only after inventory succeeds; the original failed admission still fails CI and no missing report is fabricated."
     },
     {
-      "path": "crates/repository-checks/tests/compat_modules.rs",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
-      "disposition": "new-feature",
+      "path": "Cargo.lock",
+      "before_sha256_lf": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+      "after_sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/host-process-metrics/Cargo.toml",
+      "before_sha256_lf": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6",
+      "after_sha256_lf": "36380556d3cea0e454abdd5ae11ccc646ba505e4576e81326d433122a411518f",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "before_sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
+      "after_sha256_lf": "92332d431593d27f87b094500d28614b79f39567cf8d948b6feea168be270e86",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/domain.rs",
+      "before_sha256_lf": "17c2ca3dfc9f25510a1780ae6745737801d90fa575e7471977e31d945c5e37c5",
+      "after_sha256_lf": "58625f331d38ae932646be0594c50cac9b6efe42aed1bc8b4fa3c20622ca3125",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "before_sha256_lf": "4d7c64d95bfa34377065728b51242e63c8c6a4822989587c500c818de130fedb",
+      "after_sha256_lf": "7313263daa42cd5709a653fa36d71d595569877d062801de64e201da1b74f9cc",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/ipc.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6"
+      "after_sha256_lf": "7eb4a735aafaee2418988d846c221f8c2d3dede409ae1befcdb196e9126e733b",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/identity.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "2595d0ce4cdf6804a59509651acbd80265a62f88fa5b90af681160860ec3ea6e",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/mailbox.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/tests.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/wire.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "before_sha256_lf": "af126e89c9de2362b2ab728a4b98cd4d289b09a7f66539bfc49760ba8c705698",
+      "after_sha256_lf": "3ff7fe9052e7ceab49b0cc14d19cc92b8d50b0d61454f065dfb179c839e612de",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "before_sha256_lf": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979",
+      "after_sha256_lf": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel-core/tests/handle_contract.rs",
+      "before_sha256_lf": "9b33e011cb86aa5a15f13c0eb70114a3366189822ced49cd8144d381eb50ff04",
+      "after_sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "before_sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29",
+      "after_sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "before_sha256_lf": "176afe4b5887dd4a1062d69a2a7f52719093961341be91598c42972cebdd94cf",
+      "after_sha256_lf": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "before_sha256_lf": "6b74202e42c957ab2963f1f106be81c24333b94bf932e767b7b2cdf8dff393a9",
+      "after_sha256_lf": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/handles.rs",
+      "before_sha256_lf": "52b5e9abced2988a68ac0438f3b67237ab0b52f6dc97141d1dc31dc6dce5cfe6",
+      "after_sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "before_sha256_lf": "749a978761de7705e39ba3567e1279279f00edd1f7afb90f4b851ea999d9076f",
+      "after_sha256_lf": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc/deferred.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "5205ed2effd778b45a220e295e3961952af1790ac3f54d857a2b25da304b5cb7",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc/native.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "171f940df42bb216af8636b504586dc555b8999833900101e328e57ffd8dd01e",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc/storage.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_authority_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "558fded93ba926105bcb14e03719d52e66dc62ac20148ec6fdbd616eab8710d1",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_death_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_multi_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_paths_benchmark.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_payload_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_queue_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_revoke_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "before_sha256_lf": "1362087d5ec4701aa54ba017866ced514017b1a3028bc2edd5a29e4c0d3087cd",
+      "after_sha256_lf": "e10e49c1e19ef505689fa075e795ae6e0b74130a5b613d4272e09dc8fbca84fa",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "before_sha256_lf": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
+      "after_sha256_lf": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "before_sha256_lf": "df98675c81934a0219547a89e50540b45d6648dd23fc33c2221e95b70fd54a76",
+      "after_sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "before_sha256_lf": "86f071a62cd3736062741424e43f0183bb6b1bf7e95448aa65be453e2cb41e11",
+      "after_sha256_lf": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "before_sha256_lf": "025ed1e0f69dc3b1729d5f050b123c6c95c022b257f16b0d2b9150a27517bedd",
+      "after_sha256_lf": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "before_sha256_lf": "869609814a5c83ec7f53748e27d851e56cbcbe91b177a6e338eb12cbe4c016fa",
+      "after_sha256_lf": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/security/testing.rs",
+      "before_sha256_lf": "3830a814601463718f3ea9c6bd0324aea26dffebaa6a9881b28db3e2865291ae",
+      "after_sha256_lf": "8153b6402505f0254132a17c2aa91279f4e35562390961519075e0d3d5243fe3",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "before_sha256_lf": "ea2b134265b738ba4fedc77647ecd22e6fe473139afec407aba7dcb26ad89a0a",
+      "after_sha256_lf": "08b9a851296995e4db04efea39189d603f1e6fda3e4cc45d3be4a5e96a528628",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "before_sha256_lf": "41ee84dc04fa2c68fa7349693847dc3a222bbca8c9b5c4ebd12c774d29a8d82d",
+      "after_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "before_sha256_lf": "be83632ac1b2716d5154f90200643f259be777a948b28c7294ff2854d61955a7",
+      "after_sha256_lf": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a",
+      "disposition": "new-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/migration-advisor/Cargo.toml",
+      "before_sha256_lf": "2f45888422385b193610a02f8be01021afaeafd652853af5b374d96339a02754",
+      "after_sha256_lf": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/migration-advisor/src/advisor.rs",
+      "before_sha256_lf": "243db38f10af82f4eadb6733894a5be86d1778e0fc6da961c64661dc1400b51f",
+      "after_sha256_lf": "734b60735ed1e0c271230e11e614bcd73c7d4707b6e14e10e70ed862c1465801",
+      "disposition": "no-feature-impact",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/migration-advisor/src/lib.rs",
+      "before_sha256_lf": "fe3d8d02480639f5d916749689d2f22a410245c3803dc54311deffd4a1029be6",
+      "after_sha256_lf": "57f82c76e2adcbe35fd4004ae0f8c33e007ddef18141751b040c55f7c20f0efb",
+      "disposition": "no-feature-impact",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/migration-advisor/src/provenance.rs",
+      "before_sha256_lf": "c06e4b62474dd989d4b80dba8f661e179355601e1506695f16605060449f4511",
+      "after_sha256_lf": "6df01569cd2347564f8fca90547635f8c1b4a57676b9aca623f846e1387dd441",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/migration-workbench/Cargo.toml",
+      "before_sha256_lf": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
+      "after_sha256_lf": "71c6a5caa4afbf4ea7da2fea7f5b2586c7d1c470a9ba31c35cccce5d22ce900a",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/migration-workbench/src/main.rs",
+      "before_sha256_lf": "68c8de14c3f26868a676d457245b442f37c1f4e01bdc92c677e2bc75e2a622b3",
+      "after_sha256_lf": "78b7022577fb99414d43c74fcc217beb8b6e5bf6607e9b4ef412dd6f532e59fa",
+      "disposition": "no-feature-impact",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/repository-checks/Cargo.toml",
+      "before_sha256_lf": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
+      "after_sha256_lf": "90c543bdaed3980edabb0c9d661f3a31a608888b8b2227f94e919b388b4f35b8",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/repository-checks/src/arena.rs",
+      "before_sha256_lf": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
+      "after_sha256_lf": "39d0d0e635ac92ef03f2e1b031859a3319f932fffd20026385b56c5ec63b0c0b",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/repository-checks/src/compat_modules.rs",
+      "before_sha256_lf": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2",
+      "after_sha256_lf": "8a053ff7e6285e11d8bef8e5c8ea8c88ddbb13929092e8cf77bf051430761c76",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
     },
     {
       "path": "crates/repository-checks/src/cost_l.rs",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
-      "disposition": "new-feature",
-      "before_sha256_lf": "483faf99466ca42f15a6d6d3a1998f6dbc102753b4f644c5ec58b193839f5dc4",
-      "after_sha256_lf": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83"
+      "before_sha256_lf": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83",
+      "after_sha256_lf": "045971103a1bfe03e5c414d3cbc5824ce0727faf5da9b44fdb00a443c7f6a98e",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
     },
     {
       "path": "crates/repository-checks/src/lib.rs",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
-      "disposition": "new-feature",
-      "before_sha256_lf": "2247b5b29e523ca495cab5c985035ead86c360fed7532c298438d30d94b32489",
-      "after_sha256_lf": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad"
+      "before_sha256_lf": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad",
+      "after_sha256_lf": "321bf155abcd7bf03ebfbd586722f7bc9c32d56d55fa37b62f338c57d4ec804d",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
     },
     {
-      "path": "crates/repository-checks/src/main.rs",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
-      "disposition": "new-feature",
-      "before_sha256_lf": "897f1be570dc208b021b16c1908f8edcfde8169d733b7998e061b46bfa8b97a5",
-      "after_sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d"
+      "path": "crates/repository-checks/tests/compat_modules.rs",
+      "before_sha256_lf": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6",
+      "after_sha256_lf": "1d0cb757806db8f0dbce2825bed411b89212cf29da0360a71fc20b650ae73b18",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
     },
     {
-      "path": "schemas/compatibility-modules.schema.json",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
-      "disposition": "new-feature",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "b76020ab67fd3fe159e47ce9effac4a07156e0943d2d0f03270313b687d46a7e"
+      "path": "crates/repository-checks/tests/cost_l.rs",
+      "before_sha256_lf": "879d40199343e981fe3ff2bc6b89508edadfe32ab880aa695cf0d3f54a1b595e",
+      "after_sha256_lf": "f301e57f456bb27df5e1e0d2dc3b72b8a3e6a01736301283c26ae7e2ea082a9d",
+      "disposition": "no-feature-impact",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
     },
     {
-      "path": "policy/compatibility-modules.json",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
-      "disposition": "new-feature",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631"
+      "path": "crates/repository-checks/tests/cost_l_queries.rs",
+      "before_sha256_lf": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
+      "after_sha256_lf": "e03177398b210f49680268545eef9820acf6be7e8cf30548f4b9e3de0ebdba32",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
     },
     {
-      "path": "crates/window-compat/Cargo.toml",
-      "reason": "New bounded host compatibility-manifest gate, closed inventory/schema, reciprocal graph tests and Cargo marker; existing COST-L helpers are exposed internally for reuse. No kernel/runtime source changes.",
+      "path": "crates/routing-demo/Cargo.toml",
+      "before_sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e",
+      "after_sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "before_sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
+      "after_sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "before_sha256_lf": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
+      "after_sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "before_sha256_lf": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e",
+      "after_sha256_lf": "efe182f94f493c3eb492b73451fea6e7873ff8e7cb4384b512bb1d3a69ced344",
+      "disposition": "existing-feature",
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "before_sha256_lf": "c88cd4e2a0626c197010d8b623eb9ffc5a5bdceff4d739b099c03a93597f1da7",
+      "after_sha256_lf": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff",
       "disposition": "new-feature",
-      "before_sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900",
-      "after_sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+      "reason": "Complete bounded Phase 3.5 IPC mechanism from the preserved implementation; current positive and upgraded routing checks supplement separately retained original mutation/native-only evidence."
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "before_sha256_lf": "427b0bb8048844b2a5e6e0db39f25df9e4d2dbad6f5108b273f5400050807c33",
+      "after_sha256_lf": "87467ee740a420b8bfcbedc5d2c4e6fc2f5a91f81e0c4858ea57f16b822f94cd",
+      "disposition": "no-feature-impact",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "dependencies/policy.json",
+      "before_sha256_lf": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29",
+      "after_sha256_lf": "557c5214d437d2ca01516cc0d6cee6ddc3827901080c89a01803838d1c66664c",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "package-lock.json",
+      "before_sha256_lf": "5fbec12dd79b6d482c6559d34c90f87176ffc687a824956a5c1aa738b7eccc44",
+      "after_sha256_lf": "14e293c62337a05c271085b51832112bf395c2626f9d4834caa61656e3aaf31b",
+      "disposition": "no-feature-impact",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "package.json",
+      "before_sha256_lf": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768",
+      "after_sha256_lf": "7aa54fc1c9f90dacd2e7aeab0339b4cc2d7ac2bd55e833cdd51d75a824a2c3b6",
+      "disposition": "existing-feature",
+      "reason": "Consolidated requested host dependency updates preserve serialization/digest/signature contracts; host/schema/crypto checks and native dependency exclusion verify their stated scope."
+    },
+    {
+      "path": "scripts/setup-qemu.ps1",
+      "before_sha256_lf": "bf22ffe37a93ebb4a28ae7eb6360318a4ccc71e3902d0cc1cdf5cf4be9765c89",
+      "after_sha256_lf": "5ad2a080fb7d26f84d819b1917a706cb6c0adfea7867c8ac0bd13dfc8a901a7c",
+      "disposition": "no-feature-impact",
+      "reason": "Windows download fixture uses best-effort offline CRL checking and bounded retries while certificate validation, mandatory pinned SHA-512 and QEMU version checks remain enforced."
     }
   ],
-  "base_commit": "658cd226166b8940be983099538aa18e8d3a7f8c"
+  "features": [
+    {
+      "id": "kolvrt.arena",
+      "disposition": "no-impact",
+      "reason": "Canonical semantics and verification metadata are unchanged relative to current main; shared source/build edits and formatting do not promote this feature or its already-stale historical evidence."
+    },
+    {
+      "id": "kolvrt.compatibility.manifests",
+      "disposition": "evidence-change",
+      "reason": "Current-source checks or explicit stale historical source scope update verification; no stronger production/hardware claim is inferred from host or QEMU execution."
+    },
+    {
+      "id": "kolvrt.cost-l.offline-queries",
+      "disposition": "no-impact",
+      "reason": "Canonical semantics and verification metadata are unchanged relative to current main; shared source/build edits and formatting do not promote this feature or its already-stale historical evidence."
+    },
+    {
+      "id": "kolvrt.dependencies.hygiene",
+      "disposition": "no-impact",
+      "reason": "Canonical semantics and verification metadata are unchanged relative to current main; shared source/build edits and formatting do not promote this feature or its already-stale historical evidence."
+    },
+    {
+      "id": "kolvrt.handles.local",
+      "disposition": "evidence-change",
+      "reason": "Current-source checks or explicit stale historical source scope update verification; no stronger production/hardware claim is inferred from host or QEMU execution."
+    },
+    {
+      "id": "kolvrt.ipc.transport",
+      "disposition": "semantic-change",
+      "reason": "New bounded endpoint transport, scoped authority, copied frames, blocking wake/deadline/death arbitration and explicit retained ownership; unfrozen ABI and physical ARM limitations remain."
+    },
+    {
+      "id": "kolvrt.process.lifecycle",
+      "disposition": "evidence-change",
+      "reason": "Current-source checks or explicit stale historical source scope update verification; no stronger production/hardware claim is inferred from host or QEMU execution."
+    },
+    {
+      "id": "kolvrt.research.host-survey",
+      "disposition": "no-impact",
+      "reason": "Canonical semantics and verification metadata are unchanged relative to current main; shared source/build edits and formatting do not promote this feature or its already-stale historical evidence."
+    },
+    {
+      "id": "kolvrt.security.capability-revocation",
+      "disposition": "evidence-change",
+      "reason": "Current-source checks or explicit stale historical source scope update verification; no stronger production/hardware claim is inferred from host or QEMU execution."
+    },
+    {
+      "id": "kolvrt.security.domains",
+      "disposition": "evidence-change",
+      "reason": "Current-source checks or explicit stale historical source scope update verification; no stronger production/hardware claim is inferred from host or QEMU execution."
+    },
+    {
+      "id": "kolvrt.security.event-revocation",
+      "disposition": "evidence-change",
+      "reason": "Current-source checks or explicit stale historical source scope update verification; no stronger production/hardware claim is inferred from host or QEMU execution."
+    },
+    {
+      "id": "kolvrt.security.verifier-time",
+      "disposition": "evidence-change",
+      "reason": "Current-source checks or explicit stale historical source scope update verification; no stronger production/hardware claim is inferred from host or QEMU execution."
+    }
+  ]
 }

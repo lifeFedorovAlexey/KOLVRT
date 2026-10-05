@@ -283,7 +283,7 @@ fn measured_zero_is_accepted_only_with_an_exact_bounded_receipt() {
     value["runtime_cost"]["cpu"] = json!({
         "state":"MEASURED","value":0,"unit":"ns","scope":"synthetic host fixture only",
         "denominator":"one fixture operation","coverage":"COMPLETE","reason":null,
-        "provenance":{"artifact":"receipt.json","sha256":format!("{:x}",Sha256::digest(receipt)),"source_type":"host_model"}
+        "provenance":{"artifact":"receipt.json","sha256":(Sha256::digest(receipt)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"source_type":"host_model"}
     });
     assert!(cost_l::record_errors(validator(), &temp.0, &value, "COST-L-0001.json").is_empty());
     fs::write(temp.0.join("receipt.json"), b"changed receipt").unwrap();

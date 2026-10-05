@@ -43,7 +43,10 @@ fn production() -> (Value, Vec<Value>, Value) {
     module["debt_unassigned_reason"] = Value::Null;
     // Deliberately non-executable retained bytes: this fixture tests identity, not module execution.
     let path = "policy/exceptions.json";
-    let digest = format!("{:x}", Sha256::digest(fs::read(root().join(path)).unwrap()));
+    let digest = Sha256::digest(fs::read(root().join(path)).unwrap())
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
     module["artifact"] = json!({"path":path,"sha256":digest});
     let debt = &mut records[0];
     debt["status"] = json!("ACTIVE");

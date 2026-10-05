@@ -128,6 +128,7 @@ pub(crate) fn call(
     let kind = match word(3) {
         1 => Kind::Event,
         2 => Kind::Completion,
+        3 => Kind::Endpoint,
         _ => {
             frame.gpr[0] = 1;
             return true;

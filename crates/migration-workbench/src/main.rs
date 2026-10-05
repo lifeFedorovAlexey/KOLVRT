@@ -5,7 +5,7 @@ use migration_advisor::{
     solver::Plan, statistics::StatisticalPolicy,
 };
 use migration_workbench::{CONTRACT, ITERATIONS, PROTOCOL, Receipt};
-use rand_core::OsRng;
+use rand_core::{OsRng, RngCore};
 use serde::Serialize;
 use std::{
     fs,
@@ -97,7 +97,9 @@ fn execute(path: &Path, mode: &str, log: &Path) -> Result<Receipt, String> {
 struct EphemeralFixtureSigner(SigningKey);
 impl EphemeralFixtureSigner {
     fn generate() -> Self {
-        Self(SigningKey::generate(&mut OsRng))
+        let mut secret = [0_u8; 32];
+        OsRng.fill_bytes(&mut secret);
+        Self(SigningKey::from_bytes(&secret))
     }
     fn attest<T: Serialize>(&self, role: Role, payload: &T) -> Attestation {
         let digest = subject_digest(&serde_json::to_vec(payload).unwrap());

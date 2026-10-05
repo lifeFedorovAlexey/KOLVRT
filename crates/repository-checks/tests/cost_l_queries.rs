@@ -192,7 +192,10 @@ fn measured_zero_is_ranked_without_converting_unknown_or_foreign_scope() {
     let relative = format!("target/cost-l-query-receipt-{}.json", std::process::id());
     fs::copy(&receipt, root().join(&relative)).unwrap();
     use sha2::{Digest, Sha256};
-    let digest = format!("{:x}", Sha256::digest(fs::read(&receipt).unwrap()));
+    let digest = (Sha256::digest(fs::read(&receipt).unwrap()))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
     registry.edit("COST-L-0002",|r| {
         r["last_observed_at"]=json!("2026-10-03");
         r["runtime_cost"]["cpu"]=json!({"state":"MEASURED","value":0,"unit":"ns","scope":"synthetic cost fixture","denominator":"one fixture operation","coverage":"PARTIAL","reason":"Synthetic partial fixture; not production","provenance":{"artifact":relative,"sha256":digest,"source_type":"host_model"}});

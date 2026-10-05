@@ -92,9 +92,13 @@ Phase 3.1 completes the bounded kernel-internal lifecycle requested for this mil
 
 The [dynamic lifecycle](processes.md) extends this foundation with vacant slots and independent process generations. Kernel bootstrap retains one Registry across callers; old fixtures and the optional image use create/start/step/dispatch/signal/reclaim. The bounded [wait contract](wait.md) lets a stepped EL0 workload block on one own-process event and return to the bootstrap coordinator; it adds no public wait authority or production event loop. Admission descriptors borrow owned spaces, and roots are removed under acquired quiescent editing before returning process completion. Inspection and editing share the existing exclusive permit and three storage dereference sites. Optional bounds belong to the caller; None has no hidden completion deadline. The historical Phase 3.0 result records remain unchanged. [ADR-0017](../architecture-decisions/0017-process-lifecycle.md) records the conservative retirement boundary and next user-copy obligations.
 
-## Phase 3.4 current security boundary
+## Phase 3.4 historical security boundary
 
-[Security domains](domains.md) now bind each process generation to caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The bounded same-CPU notification pilot reports terminal outcomes to EL0; general IPC, automatic wakeups, supervisor policy and persistent services remain later milestones. Its storage and encoding must be rederived from the requirements of #26/#27 before extension.
+[Security domains](domains.md) record the Phase 3.4 boundary: caller-local handles, explicit bootstrap grants, bounded quotas and a same-CPU notification pilot. The pilot's source receipt does not verify the new IPC path. Phase 3.5 has been rederived for #26 and adds a separate concrete endpoint mechanism.
+
+## Phase 3.5 bounded IPC execution
+
+[Native IPC](ipc.md) runs real EL0 peers through `dispatch_ipc()` in a continuous fixed-affinity session. Each owner keeps its scheduler state and native root while blocked, processes bounded deadlines and exact-generation mailbox work, and retires only after all peers and retained wakes quiesce. User copies, endpoint permits and scheduler storage occupy separate scopes; no global IPC lock is introduced. This is still experimental: complete wait/wake, terminal/accounting mutations, controlled performance paths and final source-bound acceptance are pending. The preceding Phase 3.0–3.4 receipts remain historical evidence for their declared sources.
 
 [Russian translation](../../translations/ru/docs/kernel/scheduler.md)
 
@@ -105,3 +109,14 @@ The [dynamic lifecycle](processes.md) extends this foundation with vacant slots 
 ## Phase 3.3 namespace ownership
 
 [Handle ownership](handles.md) uses existing publication/mutation/quiescent permits. Admission exclusively borrows each Registry namespace; a move places it into the indexed CPU state and acquired two-CPU completion returns it exactly once. The namespace remains linear across nonterminal steps. No new global lock or unsafe storage is introduced; retained resource borrows end inside the masked current-task callback.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.kernel.scheduler",
+  "kind": "subsystem-contract",
+  "summary": "Fixed-affinity scheduler ownership, historical Phase 3 boundaries and experimental continuous IPC execution."
+}
+```

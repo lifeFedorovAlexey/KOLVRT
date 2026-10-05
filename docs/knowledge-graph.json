@@ -671,6 +671,481 @@
       "type": "validated_by"
     },
     {
+      "from": "kolvrt.ipc.cancel",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.cross-cpu",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.deadline",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.endpoint",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.payload",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.performance",
+      "to": "kolvrt.ipc",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.queue",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.receive",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.request",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.execution",
+      "to": "adr.0016",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.execution",
+      "to": "adr.0017",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.execution",
+      "to": "adr.0018",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.execution",
+      "to": "adr.0021",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.synchronization",
+      "to": "adr.0013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.synchronization",
+      "to": "adr.0016",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.synchronization",
+      "to": "adr.0018",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.synchronization",
+      "to": "adr.0020",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.review.synchronization",
+      "to": "adr.0023",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.teardown",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.terminal",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0016",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0017",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0018",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0019",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0020",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0021",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0022",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0023",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "adr.0025",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/domain.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/handles.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/ipc.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/ipc/identity.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/ipc/mailbox.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/ipc/tests.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/ipc/wire.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/src/process.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel-core/tests/handle_contract.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/arch/aarch64/mod.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/boot_workload.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/handles.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/handles/testing.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc/deferred.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc/native.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc/storage.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_authority_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_benchmark.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_benchmark.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_death_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_multi_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_paths_benchmark.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_payload_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_queue_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_revoke_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/ipc_workload.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/process.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/process_workload.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/scheduler/local.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/scheduler/mod.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/scheduler/task.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/security/testing.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/smp.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/test_support/irq_wait.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/tests.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/user_copy/testing.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/xtask/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "crates/xtask/src/output.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "doc.kolvrt.architecture.first-native-slice",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "doc.kolvrt.architecture.native-abi",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "doc.kolvrt.architecture.production-scheduler",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "doc.kolvrt.kernel.wait",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "kolvrt.handles.lifetime",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "kolvrt.handles.local",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "kolvrt.memory.user-copy",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "kolvrt.process.identity",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "kolvrt.security.domains",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "law.009",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "law.013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "law.025",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/measurements/ipc-phase35-baseline.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/results/ipc-phase35-acceptance.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/results/ipc-phase35-main-integration.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/results/kernel-phase35-unsafe-audit.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/results/native-compat-removal-phase35.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/results/phase35-dependency-upgrades.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/results/routing-phase35-regression.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
+      "to": "research/results/routing-phase35-upgrades.json",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.ipc.wait",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.ipc.wakeup",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
       "from": "kolvrt.memory.user-copy",
       "to": "adr.0018",
       "type": "depends_on"
@@ -1283,57 +1758,92 @@
   ],
   "inputs": {
     ".github/dependabot.yml": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b",
-    ".github/workflows/dependencies.yml": "2476207ec9c963652121e75d517f944c6b1181cd03a305e4820eb316d96eeab2",
+    ".github/workflows/dependencies.yml": "df98db96ce44420768364891dee5dde65ab44438c9bcfcf245b19ca04efd2172",
     ".github/workflows/kernel.yml": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
     ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
-    "Cargo.lock": "71cdb213efee74ddb985ea7e418a7e125984308d3e615686f6c1493a041d30d8",
+    "Cargo.lock": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86",
     "Cargo.toml": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
-    "crates/host-process-metrics/Cargo.toml": "8574fe451cb2ff16dfa00a1b71aa7a4159b971a24beffde88ee84180d0e68af6",
-    "crates/kernel-core/Cargo.toml": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64",
-    "crates/kernel-core/src/domain.rs": "17c2ca3dfc9f25510a1780ae6745737801d90fa575e7471977e31d945c5e37c5",
+    "crates/host-process-metrics/Cargo.toml": "36380556d3cea0e454abdd5ae11ccc646ba505e4576e81326d433122a411518f",
+    "crates/kernel-core/Cargo.toml": "92332d431593d27f87b094500d28614b79f39567cf8d948b6feea168be270e86",
+    "crates/kernel-core/src/domain.rs": "58625f331d38ae932646be0594c50cac9b6efe42aed1bc8b4fa3c20622ca3125",
     "crates/kernel-core/src/domain/pool.rs": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05",
-    "crates/kernel-core/src/handles.rs": "4d7c64d95bfa34377065728b51242e63c8c6a4822989587c500c818de130fedb",
-    "crates/kernel-core/src/process.rs": "f1e9b90a71abd713bd8aab209a40008f6b6040272c0858a360846bef3fc6a979",
+    "crates/kernel-core/src/handles.rs": "7313263daa42cd5709a653fa36d71d595569877d062801de64e201da1b74f9cc",
+    "crates/kernel-core/src/ipc.rs": "7eb4a735aafaee2418988d846c221f8c2d3dede409ae1befcdb196e9126e733b",
+    "crates/kernel-core/src/ipc/identity.rs": "2595d0ce4cdf6804a59509651acbd80265a62f88fa5b90af681160860ec3ea6e",
+    "crates/kernel-core/src/ipc/mailbox.rs": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c",
+    "crates/kernel-core/src/ipc/tests.rs": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0",
+    "crates/kernel-core/src/ipc/wire.rs": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178",
+    "crates/kernel-core/src/lib.rs": "3ff7fe9052e7ceab49b0cc14d19cc92b8d50b0d61454f065dfb179c839e612de",
+    "crates/kernel-core/src/process.rs": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73",
     "crates/kernel-core/src/user_copy.rs": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da",
     "crates/kernel-core/src/wait.rs": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a",
-    "crates/kernel/Cargo.toml": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29",
-    "crates/kernel/src/handles.rs": "52b5e9abced2988a68ac0438f3b67237ab0b52f6dc97141d1dc31dc6dce5cfe6",
-    "crates/kernel/src/handles/testing.rs": "749a978761de7705e39ba3567e1279279f00edd1f7afb90f4b851ea999d9076f",
-    "crates/kernel/src/process.rs": "6e80a27729397d23800912e2462c92881866b4c35a363271707ee4eaa3942e01",
+    "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
+    "crates/kernel/Cargo.toml": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50",
+    "crates/kernel/src/arch/aarch64/mod.rs": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc",
+    "crates/kernel/src/boot_workload.rs": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6",
+    "crates/kernel/src/handles.rs": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2",
+    "crates/kernel/src/handles/testing.rs": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
+    "crates/kernel/src/ipc.rs": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933",
+    "crates/kernel/src/ipc/deferred.rs": "5205ed2effd778b45a220e295e3961952af1790ac3f54d857a2b25da304b5cb7",
+    "crates/kernel/src/ipc/native.rs": "171f940df42bb216af8636b504586dc555b8999833900101e328e57ffd8dd01e",
+    "crates/kernel/src/ipc/storage.rs": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991",
+    "crates/kernel/src/ipc_authority_workload.S": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997",
+    "crates/kernel/src/ipc_benchmark.S": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835",
+    "crates/kernel/src/ipc_benchmark.rs": "558fded93ba926105bcb14e03719d52e66dc62ac20148ec6fdbd616eab8710d1",
+    "crates/kernel/src/ipc_death_workload.S": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3",
+    "crates/kernel/src/ipc_multi_workload.S": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1",
+    "crates/kernel/src/ipc_paths_benchmark.S": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606",
+    "crates/kernel/src/ipc_payload_workload.S": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec",
+    "crates/kernel/src/ipc_queue_workload.S": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370",
+    "crates/kernel/src/ipc_revoke_workload.S": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb",
+    "crates/kernel/src/ipc_workload.S": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465",
+    "crates/kernel/src/ipc_workload.rs": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
+    "crates/kernel/src/main.rs": "e10e49c1e19ef505689fa075e795ae6e0b74130a5b613d4272e09dc8fbca84fa",
+    "crates/kernel/src/process.rs": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
+    "crates/kernel/src/process_workload.rs": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
+    "crates/kernel/src/scheduler/local.rs": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
+    "crates/kernel/src/scheduler/mod.rs": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
+    "crates/kernel/src/scheduler/task.rs": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
+    "crates/kernel/src/security/testing.rs": "8153b6402505f0254132a17c2aa91279f4e35562390961519075e0d3d5243fe3",
+    "crates/kernel/src/smp.rs": "08b9a851296995e4db04efea39189d603f1e6fda3e4cc45d3be4a5e96a528628",
+    "crates/kernel/src/test_support/irq_wait.rs": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
+    "crates/kernel/src/tests.rs": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
-    "crates/migration-advisor/Cargo.toml": "2f45888422385b193610a02f8be01021afaeafd652853af5b374d96339a02754",
+    "crates/kernel/src/user_copy/testing.rs": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a",
+    "crates/migration-advisor/Cargo.toml": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968",
     "crates/migration-advisor/src/main.rs": "0d717362dcd88c812c73759b62414a6959a6646cf5332272df6643ae573b40af",
-    "crates/migration-advisor/src/provenance.rs": "c06e4b62474dd989d4b80dba8f661e179355601e1506695f16605060449f4511",
+    "crates/migration-advisor/src/provenance.rs": "6df01569cd2347564f8fca90547635f8c1b4a57676b9aca623f846e1387dd441",
     "crates/migration-advisor/tests/migration.rs": "1035455910a6bdc85cb4d64350715f0c770641e75f0f4dc38e12405111848245",
     "crates/migration-advisor/tests/provisioned_provenance.rs": "c16e74bc027150961cf714c064d854545c611cfb9d4e102e9c26ce9af32525c9",
-    "crates/migration-workbench/Cargo.toml": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044",
+    "crates/migration-workbench/Cargo.toml": "71c6a5caa4afbf4ea7da2fea7f5b2586c7d1c470a9ba31c35cccce5d22ce900a",
     "crates/native-protocol-model/Cargo.toml": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e",
     "crates/native-state-models/Cargo.toml": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007",
-    "crates/repository-checks/Cargo.toml": "2ba31b3160181bc903976e2ede491f55f2a8494a62a34a03712c8f97442635f6",
-    "crates/repository-checks/src/arena.rs": "99c8f9c0014dfd293230ded38749474f57a7225f892e8f78cb09b335e2c9c446",
-    "crates/repository-checks/src/compat_modules.rs": "add141932b0e0b6e1768723a5c01824fb5170590e3a838a5ab78ecf82ad678e2",
-    "crates/repository-checks/src/cost_l.rs": "36245ff2f415f714b38d0266ef1fd3f00f243c6cb7cfc4c981a8a28349427b83",
+    "crates/repository-checks/Cargo.toml": "90c543bdaed3980edabb0c9d661f3a31a608888b8b2227f94e919b388b4f35b8",
+    "crates/repository-checks/src/arena.rs": "39d0d0e635ac92ef03f2e1b031859a3319f932fffd20026385b56c5ec63b0c0b",
+    "crates/repository-checks/src/compat_modules.rs": "8a053ff7e6285e11d8bef8e5c8ea8c88ddbb13929092e8cf77bf051430761c76",
+    "crates/repository-checks/src/cost_l.rs": "045971103a1bfe03e5c414d3cbc5824ce0727faf5da9b44fdb00a443c7f6a98e",
     "crates/repository-checks/src/cost_l_queries.rs": "39c6a2b92c772a5a6018fb001d20ac122a46c7651ca22aa1500e6995fee05967",
     "crates/repository-checks/src/knowledge.rs": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
     "crates/repository-checks/src/knowledge/impact.rs": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
-    "crates/repository-checks/src/lib.rs": "bf9ca889c4634c0a304e496fd715fdfdd87cb45833877f03e5d0a2549641b6ad",
+    "crates/repository-checks/src/lib.rs": "321bf155abcd7bf03ebfbd586722f7bc9c32d56d55fa37b62f338c57d4ec804d",
     "crates/repository-checks/src/main.rs": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d",
     "crates/repository-checks/tests/arena.rs": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
     "crates/repository-checks/tests/arena_launcher.rs": "e9c55f7bd1944557dea30761e98d3b78bec0da0370484f13643d263942c13c48",
-    "crates/repository-checks/tests/compat_modules.rs": "8660f1a2c5e0033d2ae656d9c2c0cd482b19d84edf9c3fe8a46e21bb2e67c8b6",
-    "crates/repository-checks/tests/cost_l_queries.rs": "42349729f174be3dfa4e45e1cb749de302bf14a8e77817cb28da227b4f14401f",
+    "crates/repository-checks/tests/compat_modules.rs": "1d0cb757806db8f0dbce2825bed411b89212cf29da0360a71fc20b650ae73b18",
+    "crates/repository-checks/tests/cost_l_queries.rs": "e03177398b210f49680268545eef9820acf6be7e8cf30548f4b9e3de0ebdba32",
     "crates/repository-checks/tests/host_survey_schema.rs": "9c94699a0e54e6b8ec076851429df1724c1998e88a66ac22b684dfaecbc9249a",
     "crates/repository-checks/tests/knowledge.rs": "67f24aa4db2532b0985a6b15df57ecea8dd397427c9df7ac6ebd0216c82c842e",
-    "crates/routing-demo/Cargo.toml": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e",
-    "crates/routing/Cargo.toml": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e",
+    "crates/routing-demo/Cargo.toml": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c",
+    "crates/routing/Cargo.toml": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558",
     "crates/window-compat/Cargo.toml": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55",
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
-    "crates/xtask/Cargo.toml": "2b56fe1fdf719741d1485ba0b1acd1039f72008d661c0d05316a7a73a7c31055",
-    "crates/xtask/src/main.rs": "ac89f07d689b391c284af8aa379b243d97a3bdce4deda7f678e07b028f9e1f9e",
+    "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
+    "crates/xtask/src/main.rs": "efe182f94f493c3eb492b73451fea6e7873ff8e7cb4384b512bb1d3a69ced344",
+    "crates/xtask/src/output.rs": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff",
     "deny.toml": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
-    "dependencies/policy.json": "16c1a4944a29eb46c19f6eee12c74d104dbf86281910ae9e7dc14a2d65461f29",
+    "dependencies/policy.json": "557c5214d437d2ca01516cc0d6cee6ddc3827901080c89a01803838d1c66664c",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
     "docs/architecture-decisions/0002-stateful-routing.md": "2b683f659195fd4ff983cd5363df5dacdd5cf52980e01fcbe3dd11029fbb7adf",
     "docs/architecture-decisions/0003-profiles.md": "e468a33090c9ab7ae112cf41f222edfd7faf459907a1117106dbfc19c64e3280",
@@ -1358,27 +1868,36 @@
     "docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "17179221ff4e65bb1e06e11f57f5ef721e34d040acf00e6e0fa476cc15f065bd",
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
+    "docs/architecture-decisions/0025-bounded-native-ipc.md": "6cf9d700b97ce1721042fa5699fc7f1e32e7b13cb5a5b693839bba0cdd5c98cc",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
     "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
-    "docs/architecture/compatibility-manifests.md": "f9414e84663b3a966943e1158f4706c6c6ee0b14287c99c4bc3c94079fbffb93",
+    "docs/architecture/compatibility-manifests.md": "75f6ece7871ace0dc8af6a0ccdaacfe3d3dd66a839141e9078c71a8062cc25ae",
     "docs/architecture/component-arena.md": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
     "docs/architecture/dependency-hygiene.md": "8a3c76008209642f50515facad62287f20efab10a54d8380e741d370498b8508",
+    "docs/architecture/first-native-slice.md": "ca5ca82fe87f0adb59d7bbca7ab8c78b7d08c3b8d85e49680de1fddcb35a9383",
+    "docs/architecture/ipc-phase35-review.md": "a81d2e610c07e9a5851d11ab93dcb01c00b139c935a0c84c6965a130de993356",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+    "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
-    "docs/kernel/capabilities.md": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
-    "docs/kernel/domains.md": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
-    "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
-    "docs/kernel/processes.md": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+    "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
+    "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
+    "docs/kernel/domains.md": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+    "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+    "docs/kernel/ipc-performance.md": "8837996edeee0855b5ba7ae908702c66e9836efa335227f3451c73adf6d494d1",
+    "docs/kernel/ipc.md": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+    "docs/kernel/processes.md": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
+    "docs/kernel/scheduler.md": "c12ad5f32bb4b21e666897f25ca982c70eecdde6d5dc0dd75e6e941dc2677a0d",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "7d8a0f7075ff07ac4a32651ccb5c616b405f263d2d35c8b936cf6d939a69e965",
-    "docs/knowledge-system.md": "ee103bf18d5d2666bb2832115fbd2bbc35b69de5a0451ffeb0028616d47f9769",
+    "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
+    "docs/knowledge-enrollment.json": "475fbcb5421b1747172b05bd1fc908847c279f6aaf7975a36c2a9c12593e49c8",
+    "docs/knowledge-system.md": "9b79c1fbfa689e6495038edd6518fb797b2cd366febb383a4f380a0f91917416",
     "docs/research/cost-l-queries.md": "1cf9c3da1dfa5e78071820dc7b67163f7d1b934af62f236769fcd67b0213bdd8",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
-    "docs/security/verifier-time.md": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
-    "package.json": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768",
+    "docs/security/verifier-time.md": "ee7e3401b184b27edf1ce9ac1a31f341d0327889f6f8505ccf3d2ee5f58d543e",
+    "package.json": "7aa54fc1c9f90dacd2e7aeab0339b4cc2d7ac2bd55e833cdd51d75a824a2c3b6",
     "policy/compatibility-modules.json": "80bdc68205fed05f4d1b2497962b83c03f24f958cb670f28fe937b3d734b1631",
     "policy/exceptions.json": "6405d8b34e84bf4317be1ba349cce4fae2078f82776733bb75af94933f24241c",
     "research/arena/profiles/user-copy-range.json": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
@@ -1438,7 +1957,7 @@
     "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "cf609d1208c359c2c96619ae9d20906c01c2d029d3d7578828de416c593bb481",
+    "translations/manifest.json": "f056565b2950908c25088b7e1f9f75e6116be21f182bd004cfd705e1c0b6c1f5",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -1463,25 +1982,34 @@
     "translations/ru/docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "a01b2ec4c7f890ee7a08c1febf431bc786f0056deaf175924c6746f8c0b8fddf",
     "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
+    "translations/ru/docs/architecture-decisions/0025-bounded-native-ipc.md": "48aaf34f636cdb55f9e9bac11ab563178b54145f90d51f5e733f3d578c762103",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
     "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
-    "translations/ru/docs/architecture/compatibility-manifests.md": "f4548a126263c55a4062a9f4fbed10693a4293b964216e7202222ce4ff345d18",
+    "translations/ru/docs/architecture/compatibility-manifests.md": "c7153eadf3493983967a0f759553ce95e6f3ad117b855f2766866ad2b30749d9",
     "translations/ru/docs/architecture/component-arena.md": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
     "translations/ru/docs/architecture/dependency-hygiene.md": "0509eea05e53834cfa25bd3e32891e058a46d36a6e02a7a2c95284e46d003b74",
+    "translations/ru/docs/architecture/first-native-slice.md": "257f3b1f05661f5125b3a564642f2a627a510295753208c640e2f881d872a3c0",
+    "translations/ru/docs/architecture/ipc-phase35-review.md": "84b0330347aed418187ae9183c17842ed3f3d87cf7b67b095bccb634f559c23c",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
+    "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
-    "translations/ru/docs/kernel/capabilities.md": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
-    "translations/ru/docs/kernel/domains.md": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
-    "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
-    "translations/ru/docs/kernel/processes.md": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+    "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
+    "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
+    "translations/ru/docs/kernel/domains.md": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+    "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
+    "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
+    "translations/ru/docs/kernel/ipc.md": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+    "translations/ru/docs/kernel/processes.md": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
+    "translations/ru/docs/kernel/scheduler.md": "75f26986cc053838c76c57c615e43e504c82881d508436d2da0a3f7d8ee7df8b",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "259f9969f9f1371506e7e8ca35971ae5e31c3e48d7c7240d0afaea9432f9c65a",
+    "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
+    "translations/ru/docs/knowledge-system.md": "24676cba95e582f8c91468e34955e276d949f7469364a7e2b5d2d9cdec9bd96f",
     "translations/ru/docs/research/cost-l-queries.md": "81fdae2a7380ef0b6198f220ad6fc8ff705133ce4f9c167676da6643bedf8163",
     "translations/ru/docs/research/host-survey.md": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
-    "translations/ru/docs/security/verifier-time.md": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340",
+    "translations/ru/docs/security/verifier-time.md": "2851cdab47bbd9b2d545ad3e07fcbc169a0f2f7eda5cdacd19b7f093ed0305e1",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
   },
   "nodes": {
@@ -2359,6 +2887,41 @@
       "schema_version": 1,
       "summary": "Bounded shared documentation navigation and feature freshness contract.",
       "title": "ADR-0024 — Documentation knowledge navigation and feature freshness"
+    },
+    "adr.0025": {
+      "aliases": ["ADR-0025"],
+      "document": "adr.0025",
+      "document_status": "CURRENT",
+      "estimated_bytes": 8522,
+      "evidence_scope": "accepted architecture and implemented mechanism; technical DEV/PROD, mutation and performance receipts are retained. Final acceptance review is open; physical ARM is unverified.",
+      "id": "adr.0025",
+      "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченный IPC через native endpoint и непрерывное исполнение с фиксированной привязкой.",
+          "tags": null,
+          "title": "ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 87,
+          "path": "docs/architecture-decisions/0025-bounded-native-ipc.md",
+          "sha256": "6cf9d700b97ce1721042fa5699fc7f1e32e7b13cb5a5b693839bba0cdd5c98cc",
+          "start": 1
+        },
+        "ru": {
+          "end": 87,
+          "path": "translations/ru/docs/architecture-decisions/0025-bounded-native-ipc.md",
+          "sha256": "48aaf34f636cdb55f9e9bac11ab563178b54145f90d51f5e733f3d578c762103",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture-decisions/0025-bounded-native-ipc.md",
+      "schema_version": 1,
+      "summary": "Bounded native endpoint IPC and retained continuous fixed-affinity execution.",
+      "title": "ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution"
     },
     "case.kol-path.0001": {
       "aliases": ["KOL-PATH-0001"],
@@ -3568,7 +4131,7 @@
     "doc.kolvrt.architecture.compatibility-manifests": {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12321,
+      "estimated_bytes": 12735,
       "evidence_scope": "bounded host/CI declarations and synthetic regression fixtures; no loader, Linux driver support or deployed module acceptance.",
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
@@ -3584,13 +4147,13 @@
         "en": {
           "end": 151,
           "path": "docs/architecture/compatibility-manifests.md",
-          "sha256": "f9414e84663b3a966943e1158f4706c6c6ee0b14287c99c4bc3c94079fbffb93",
+          "sha256": "75f6ece7871ace0dc8af6a0ccdaacfe3d3dd66a839141e9078c71a8062cc25ae",
           "start": 1
         },
         "ru": {
           "end": 151,
           "path": "translations/ru/docs/architecture/compatibility-manifests.md",
-          "sha256": "f4548a126263c55a4062a9f4fbed10693a4293b964216e7202222ce4ff345d18",
+          "sha256": "c7153eadf3493983967a0f759553ce95e6f3ad117b855f2766866ad2b30749d9",
           "start": 1
         }
       },
@@ -3598,6 +4161,108 @@
       "schema_version": 1,
       "summary": "Bounded compatibility module declarations and reciprocal COST-L/Cargo checks without runtime authority.",
       "title": "Compatibility module declarations"
+    },
+    "doc.kolvrt.architecture.first-native-slice": {
+      "document": "doc.kolvrt.architecture.first-native-slice",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 5989,
+      "evidence_scope": "complete isolated-task workload defined here (IPC, handles, cancellation, and failure containment); bounded EL0, scheduler, and routing milestones have separate implementation evidence.",
+      "id": "doc.kolvrt.architecture.first-native-slice",
+      "kind": "navigation",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Проект широкой нагрузки изолированных задач, отдельно от экспериментального bounded IPC Phase 3.5.",
+          "tags": null,
+          "title": "Первый собственный сквозной сценарий"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 53,
+          "path": "docs/architecture/first-native-slice.md",
+          "sha256": "ca5ca82fe87f0adb59d7bbca7ab8c78b7d08c3b8d85e49680de1fddcb35a9383",
+          "start": 1
+        },
+        "ru": {
+          "end": 53,
+          "path": "translations/ru/docs/architecture/first-native-slice.md",
+          "sha256": "257f3b1f05661f5125b3a564642f2a627a510295753208c640e2f881d872a3c0",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/first-native-slice.md",
+      "schema_version": 1,
+      "summary": "Broader isolated-task workload design, scoped separately from experimental bounded Phase 3.5 IPC.",
+      "title": "First native slice"
+    },
+    "doc.kolvrt.architecture.native-abi": {
+      "document": "doc.kolvrt.architecture.native-abi",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 12219,
+      "evidence_scope": "historical host proposal and its version-0 conformance models. This is not the implemented EL0 IPC encoding.",
+      "id": "doc.kolvrt.architecture.native-abi",
+      "kind": "api-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Жизненный цикл исторического native.request/0 и текущая ссылка на экспериментальный request/1.",
+          "tags": null,
+          "title": "Кандидат собственного двоичного интерфейса запросов v0"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 124,
+          "path": "docs/architecture/native-abi.md",
+          "sha256": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
+          "start": 1
+        },
+        "ru": {
+          "end": 124,
+          "path": "translations/ru/docs/architecture/native-abi.md",
+          "sha256": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/native-abi.md",
+      "schema_version": 1,
+      "summary": "Historical native.request/0 candidate lifecycle and current experimental request/1 reference.",
+      "title": "Native request ABI candidate v0"
+    },
+    "doc.kolvrt.architecture.production-scheduler": {
+      "document": "doc.kolvrt.architecture.production-scheduler",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 11590,
+      "evidence_scope": "historical user-directed implementation sequence. Bounded preemption and own-process event wait have DEV/PROD QEMU evidence; Issue #26 now has a separate experimental bounded native IPC implementation whose full acceptance remains pending. This document does not implement supervisor or persistent-service policy.",
+      "id": "doc.kolvrt.architecture.production-scheduler",
+      "kind": "navigation",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Исторический порядок этапов планировщика с текущим статусом bounded IPC и будущими gates supervisor.",
+          "tags": null,
+          "title": "Планировщик для постоянных служб и жизненный цикл запросов"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 77,
+          "path": "docs/architecture/production-scheduler.md",
+          "sha256": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
+          "start": 1
+        },
+        "ru": {
+          "end": 119,
+          "path": "translations/ru/docs/architecture/production-scheduler.md",
+          "sha256": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/production-scheduler.md",
+      "schema_version": 1,
+      "summary": "Historical scheduler milestone order with current bounded IPC implementation status and later supervisor gates.",
+      "title": "Production scheduling and request lifecycle: next implementation order"
     },
     "doc.kolvrt.arena.measurement-contract": {
       "depends_on": [
@@ -3680,7 +4345,7 @@
     "doc.kolvrt.docs.knowledge": {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
-      "estimated_bytes": 15485,
+      "estimated_bytes": 15534,
       "evidence_scope": "deterministic offline navigation and the enrolled Phase 3 pilot; no kernel or hardware acceptance is inferred.",
       "id": "doc.kolvrt.docs.knowledge",
       "kind": "policy",
@@ -3696,13 +4361,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "ee103bf18d5d2666bb2832115fbd2bbc35b69de5a0451ffeb0028616d47f9769",
+          "sha256": "9b79c1fbfa689e6495038edd6518fb797b2cd366febb383a4f380a0f91917416",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "259f9969f9f1371506e7e8ca35971ae5e31c3e48d7c7240d0afaea9432f9c65a",
+          "sha256": "24676cba95e582f8c91468e34955e276d949f7469364a7e2b5d2d9cdec9bd96f",
           "start": 1
         }
       },
@@ -3746,6 +4411,40 @@
       "tags": ["historical", "phase-0"],
       "title": "Phase 0.1 results and limits"
     },
+    "doc.kolvrt.ipc.review": {
+      "document": "doc.kolvrt.ipc.review",
+      "document_status": "CURRENT",
+      "estimated_bytes": 32484,
+      "evidence_scope": "architecture was re-derived from origin/main `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`; implementation and QEMU evidence are current through this source set. The accepted execution/synchronization choices are E1/A and are recorded in ADR-0025.",
+      "id": "doc.kolvrt.ipc.review",
+      "kind": "security-analysis",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Повторное выведение архитектуры IPC Phase 3.5; решения E1/A реализованы, acceptance milestone остаётся открытым.",
+          "tags": null,
+          "title": "Повторное выведение архитектуры IPC Phase 3.5"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 146,
+          "path": "docs/architecture/ipc-phase35-review.md",
+          "sha256": "a81d2e610c07e9a5851d11ab93dcb01c00b139c935a0c84c6965a130de993356",
+          "start": 1
+        },
+        "ru": {
+          "end": 146,
+          "path": "translations/ru/docs/architecture/ipc-phase35-review.md",
+          "sha256": "84b0330347aed418187ae9183c17842ed3f3d87cf7b67b095bccb634f559c23c",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/ipc-phase35-review.md",
+      "schema_version": 1,
+      "summary": "Phase 3.5 IPC architecture re-derivation; E1/A decisions are implemented while milestone acceptance remains open.",
+      "title": "Phase 3.5 IPC architecture re-derivation"
+    },
     "doc.kolvrt.kernel-laws": {
       "document": "doc.kolvrt.kernel-laws",
       "document_status": "CURRENT",
@@ -3783,7 +4482,7 @@
     "doc.kolvrt.kernel.capabilities": {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 9506,
+      "estimated_bytes": 9552,
       "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
@@ -3799,13 +4498,13 @@
         "en": {
           "end": 176,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
+          "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
           "start": 1
         },
         "ru": {
           "end": 192,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
+          "sha256": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
           "start": 1
         }
       },
@@ -3817,7 +4516,7 @@
     "doc.kolvrt.kernel.domains": {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13273,
+      "estimated_bytes": 13987,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
@@ -3831,15 +4530,15 @@
       },
       "locations": {
         "en": {
-          "end": 177,
+          "end": 179,
           "path": "docs/kernel/domains.md",
-          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
+          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
           "start": 1
         },
         "ru": {
-          "end": 177,
+          "end": 179,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
+          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
           "start": 1
         }
       },
@@ -3851,7 +4550,7 @@
     "doc.kolvrt.kernel.handles": {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 18665,
+      "estimated_bytes": 19550,
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
@@ -3865,15 +4564,15 @@
       },
       "locations": {
         "en": {
-          "end": 224,
+          "end": 226,
           "path": "docs/kernel/handles.md",
-          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+          "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
           "start": 1
         },
         "ru": {
-          "end": 224,
+          "end": 226,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
+          "sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
           "start": 1
         }
       },
@@ -3882,10 +4581,78 @@
       "summary": "Caller-local generation-safe references, SEND/TRANSFER attenuation and retained Event targets.",
       "title": "Process-local handles"
     },
+    "doc.kolvrt.kernel.ipc": {
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 20773,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "doc.kolvrt.kernel.ipc",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Экспериментальный контракт bounded native EL0 IPC и текущие свидетельства Phase 3.5.",
+          "tags": null,
+          "title": "Ограниченный IPC между нативными EL0-процессами"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 322,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 1
+        },
+        "ru": {
+          "end": 322,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 1
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "schema_version": 1,
+      "summary": "Experimental bounded native EL0 IPC contract and current Phase 3.5 evidence.",
+      "title": "Bounded native EL0 IPC"
+    },
+    "doc.kolvrt.kernel.ipc-performance": {
+      "document": "doc.kolvrt.kernel.ipc-performance",
+      "document_status": "CURRENT",
+      "estimated_bytes": 4750,
+      "evidence_scope": "reproducible QEMU regression baseline for the experimental bounded IPC implementation; not a hardware performance claim.",
+      "id": "doc.kolvrt.kernel.ipc-performance",
+      "kind": "benchmark-evidence",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Метод измерения в QEMU, copy count и ограничения bounded native IPC.",
+          "tags": null,
+          "title": "Паспорт производительности IPC Phase 3.5"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 54,
+          "path": "docs/kernel/ipc-performance.md",
+          "sha256": "8837996edeee0855b5ba7ae908702c66e9836efa335227f3451c73adf6d494d1",
+          "start": 1
+        },
+        "ru": {
+          "end": 54,
+          "path": "translations/ru/docs/kernel/ipc-performance.md",
+          "sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
+          "start": 1
+        }
+      },
+      "path": "docs/kernel/ipc-performance.md",
+      "schema_version": 1,
+      "summary": "QEMU performance measurement method, copy count and limits for bounded native IPC.",
+      "title": "Phase 3.5 IPC performance passport"
+    },
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 20903,
+      "estimated_bytes": 21351,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
@@ -3899,15 +4666,15 @@
       },
       "locations": {
         "en": {
-          "end": 255,
+          "end": 259,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 1
         },
         "ru": {
-          "end": 255,
+          "end": 259,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 1
         }
       },
@@ -3915,6 +4682,40 @@
       "schema_version": 1,
       "summary": "Current bounded process lifecycle and historical evidence.",
       "title": "Dynamic process lifecycle"
+    },
+    "doc.kolvrt.kernel.scheduler": {
+      "document": "doc.kolvrt.kernel.scheduler",
+      "document_status": "CURRENT",
+      "estimated_bytes": 15200,
+      "evidence_scope": "Phase 3.0 ownership and Phase 3.1 bounded two-CPU process lifecycle; fixed affinity.",
+      "id": "doc.kolvrt.kernel.scheduler",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Владение fixed-affinity scheduler, исторические границы Phase 3 и экспериментальный continuous IPC execution.",
+          "tags": null,
+          "title": "Фундамент ownership scheduler"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 122,
+          "path": "docs/kernel/scheduler.md",
+          "sha256": "c12ad5f32bb4b21e666897f25ca982c70eecdde6d5dc0dd75e6e941dc2677a0d",
+          "start": 1
+        },
+        "ru": {
+          "end": 122,
+          "path": "translations/ru/docs/kernel/scheduler.md",
+          "sha256": "75f26986cc053838c76c57c615e43e504c82881d508436d2da0a3f7d8ee7df8b",
+          "start": 1
+        }
+      },
+      "path": "docs/kernel/scheduler.md",
+      "schema_version": 1,
+      "summary": "Fixed-affinity scheduler ownership, historical Phase 3 boundaries and experimental continuous IPC execution.",
+      "title": "Scheduler ownership foundation"
     },
     "doc.kolvrt.kernel.user-copy": {
       "document": "doc.kolvrt.kernel.user-copy",
@@ -3949,6 +4750,40 @@
       "schema_version": 1,
       "summary": "Bounded synchronous initialized snapshot copies across EL0 boundary.",
       "title": "Safe user copy"
+    },
+    "doc.kolvrt.kernel.wait": {
+      "document": "doc.kolvrt.kernel.wait",
+      "document_status": "CURRENT",
+      "estimated_bytes": 3252,
+      "evidence_scope": "the `0x55` own-process event latch under trusted bootstrap coordination; the separate `native.request/1` IPC waiter has its own retained-source contract and evidence.",
+      "id": "doc.kolvrt.kernel.wait",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Защёлка события 0x55 доверенного загрузочного пути, отдельно от источника ожидания native IPC.",
+          "tags": null,
+          "title": "Основа ожидания и пробуждения"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 62,
+          "path": "docs/kernel/wait.md",
+          "sha256": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
+          "start": 1
+        },
+        "ru": {
+          "end": 65,
+          "path": "translations/ru/docs/kernel/wait.md",
+          "sha256": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
+          "start": 1
+        }
+      },
+      "path": "docs/kernel/wait.md",
+      "schema_version": 1,
+      "summary": "Trusted bootstrap 0x55 event latch scoped separately from the native IPC wait source.",
+      "title": "Wait and wake foundation"
     },
     "doc.kolvrt.native-model": {
       "document": "doc.kolvrt.native-model",
@@ -4089,7 +4924,7 @@
     "doc.kolvrt.security.verifier-time": {
       "document": "doc.kolvrt.security.verifier-time",
       "document_status": "CURRENT",
-      "estimated_bytes": 8582,
+      "estimated_bytes": 8688,
       "evidence_scope": "bounded host-side correction for #71; injected-clock regression evidence, not production clock authenticity, live revocation or crash-durable replay acceptance.",
       "id": "doc.kolvrt.security.verifier-time",
       "kind": "subsystem-contract",
@@ -4105,13 +4940,13 @@
         "en": {
           "end": 112,
           "path": "docs/security/verifier-time.md",
-          "sha256": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
+          "sha256": "ee7e3401b184b27edf1ce9ac1a31f341d0327889f6f8505ccf3d2ee5f58d543e",
           "start": 1
         },
         "ru": {
           "end": 112,
           "path": "translations/ru/docs/security/verifier-time.md",
-          "sha256": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340",
+          "sha256": "2851cdab47bbd9b2d545ad3e07fcbc169a0f2f7eda5cdacd19b7f093ed0305e1",
           "start": 1
         }
       },
@@ -4754,11 +5589,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Thirteen host regressions, actual CLI and real Cargo declaration fixture passed on these exact source bytes.",
+            "reason": "Historical receipt retained after consolidated IPC/dependency integration; current-source revalidation is required for changed declared inputs: Cargo.lock, crates/host-process-metrics/Cargo.toml, crates/kernel-core/Cargo.toml, crates/kernel/Cargo.toml, crates/migration-advisor/Cargo.toml, crates/migration-workbench/Cargo.toml, crates/repository-checks/Cargo.toml, crates/repository-checks/src/cost_l.rs, crates/repository-checks/src/lib.rs, crates/routing-demo/Cargo.toml, crates/routing/Cargo.toml, crates/xtask/Cargo.toml",
             "receipt": "research/results/issue47-compatibility-manifests.json",
             "receipt_sha256": "95766b2a15e17e5d3324ff9692e3f4c7ec2725e6971c0af8b249e1cfc113decb",
             "scope": "Host consistency and declaration boundary only; production-shaped artifacts are non-executable test bytes, not supported modules.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -4788,13 +5623,13 @@
         "en": {
           "end": 14,
           "path": "docs/architecture/compatibility-manifests.md",
-          "sha256": "f9414e84663b3a966943e1158f4706c6c6ee0b14287c99c4bc3c94079fbffb93",
+          "sha256": "75f6ece7871ace0dc8af6a0ccdaacfe3d3dd66a839141e9078c71a8062cc25ae",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/architecture/compatibility-manifests.md",
-          "sha256": "f4548a126263c55a4062a9f4fbed10693a4293b964216e7202222ce4ff345d18",
+          "sha256": "c7153eadf3493983967a0f759553ce95e6f3ad117b855f2766866ad2b30749d9",
           "start": 7
         }
       },
@@ -5033,9 +5868,9 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
+            "reason": "Executed current-source deterministic EN/RU retrieval and reverse-impact pilots after the consolidated IPC/dependency integration; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "74e53f0e1030fa5498e4ec518bafc8c1a59137a1001a0c18544af2970805f51b",
+            "receipt_sha256": "7efbfdd2ecedf0a4d84d52f4f4ef52930735b4d27d76bca835f4ba3ed01297d3",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -5060,13 +5895,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "ee103bf18d5d2666bb2832115fbd2bbc35b69de5a0451ffeb0028616d47f9769",
+          "sha256": "9b79c1fbfa689e6495038edd6518fb797b2cd366febb383a4f380a0f91917416",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "259f9969f9f1371506e7e8ca35971ae5e31c3e48d7c7240d0afaea9432f9c65a",
+          "sha256": "24676cba95e582f8c91468e34955e276d949f7469364a7e2b5d2d9cdec9bd96f",
           "start": 7
         }
       },
@@ -5094,16 +5929,16 @@
       },
       "locations": {
         "en": {
-          "end": 106,
+          "end": 108,
           "path": "docs/kernel/handles.md",
-          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
-          "start": 83
+          "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+          "start": 85
         },
         "ru": {
-          "end": 106,
+          "end": 108,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
-          "start": 81
+          "sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
+          "start": 83
         }
       },
       "path": "docs/kernel/handles.md",
@@ -5115,7 +5950,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 3370,
+      "estimated_bytes": 3388,
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.identity",
       "kind": "contract-section",
@@ -5131,13 +5966,13 @@
         "en": {
           "end": 37,
           "path": "docs/kernel/handles.md",
-          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+          "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
           "start": 13
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
+          "sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
           "start": 13
         }
       },
@@ -5150,7 +5985,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 3903,
+      "estimated_bytes": 4704,
       "evidence_scope": "bounded generation-safe caller-local handles with explicit SEND/TRANSFER/REVOKE rights, attenuated shared targets and target-wide Event admission revocation; two fixed-affinity CPUs.",
       "id": "kolvrt.handles.lifetime",
       "kind": "contract-section",
@@ -5164,15 +5999,15 @@
       },
       "locations": {
         "en": {
-          "end": 67,
+          "end": 69,
           "path": "docs/kernel/handles.md",
-          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+          "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
           "start": 36
         },
         "ru": {
-          "end": 65,
+          "end": 67,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
+          "sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
           "start": 34
         }
       },
@@ -5199,16 +6034,16 @@
       },
       "locations": {
         "en": {
-          "end": 110,
+          "end": 112,
           "path": "docs/kernel/handles.md",
-          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
-          "start": 105
+          "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+          "start": 107
         },
         "ru": {
-          "end": 110,
+          "end": 112,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
-          "start": 105
+          "sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
+          "start": 107
         }
       },
       "path": "docs/kernel/handles.md",
@@ -5263,7 +6098,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/handles.rs, crates/kernel-core/src/handles.rs. New exact-source evidence is required for VERIFIED.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
             "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
@@ -5290,13 +6125,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/handles.md",
-          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+          "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
+          "sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
           "start": 7
         }
       },
@@ -5323,21 +6158,709 @@
       },
       "locations": {
         "en": {
-          "end": 84,
+          "end": 86,
           "path": "docs/kernel/handles.md",
-          "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
-          "start": 66
+          "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+          "start": 68
         },
         "ru": {
-          "end": 82,
+          "end": 84,
           "path": "translations/ru/docs/kernel/handles.md",
-          "sha256": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
-          "start": 64
+          "sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
+          "start": 66
         }
       },
       "path": "docs/kernel/handles.md",
       "summary": "Handle contract: publication",
       "title": "Generation and transactional publication"
+    },
+    "kolvrt.ipc.cancel": {
+      "anchor": "copy-transactions-and-terminal-arbitration",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1086,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.cancel",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Отмена до и после commitment service effect.",
+          "tags": null,
+          "title": "Copy transactions and terminal arbitration"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 67,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 58
+        },
+        "ru": {
+          "end": 67,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 58
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Cancellation before and after service effect commitment.",
+      "title": "Copy transactions and terminal arbitration"
+    },
+    "kolvrt.ipc.cross-cpu": {
+      "anchor": "blocking-cross-cpu-wake-and-idle",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1443,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.cross-cpu",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Cross-CPU signalling с фиксированной привязкой и drainage wake.",
+          "tags": null,
+          "title": "Blocking, cross-CPU wake and idle"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 77,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 66
+        },
+        "ru": {
+          "end": 77,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 66
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Fixed-affinity cross-CPU signaling and retained wake drainage.",
+      "title": "Blocking, cross-CPU wake and idle"
+    },
+    "kolvrt.ipc.deadline": {
+      "anchor": "copy-transactions-and-terminal-arbitration",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1086,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.deadline",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Абсолютный monotonic deadline и terminal arbitration.",
+          "tags": null,
+          "title": "Copy transactions and terminal arbitration"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 67,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 58
+        },
+        "ru": {
+          "end": 67,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 58
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Absolute monotonic request deadline and terminal arbitration.",
+      "title": "Copy transactions and terminal arbitration"
+    },
+    "kolvrt.ipc.endpoint": {
+      "anchor": "authority-and-identities",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1371,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.endpoint",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Concrete endpoint, привязка service и scoped SEND authority.",
+          "tags": null,
+          "title": "Authority and identities"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 27,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 16
+        },
+        "ru": {
+          "end": 27,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 16
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Concrete endpoint, service binding and scoped SEND authority.",
+      "title": "Authority and identities"
+    },
+    "kolvrt.ipc.payload": {
+      "anchor": "copied-transport",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 2223,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.payload",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Инициализированные bounded snapshots payload и байты ответа.",
+          "tags": null,
+          "title": "Copied transport"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 59,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 34
+        },
+        "ru": {
+          "end": 59,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 34
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Initialized bounded payload snapshots and response bytes.",
+      "title": "Copied transport"
+    },
+    "kolvrt.ipc.performance": {
+      "anchor": "measurement-method",
+      "depends_on": ["kolvrt.ipc"],
+      "document": "doc.kolvrt.kernel.ipc-performance",
+      "document_status": "CURRENT",
+      "estimated_bytes": 4637,
+      "evidence_scope": "reproducible QEMU regression baseline for the experimental bounded IPC implementation; not a hardware performance claim.",
+      "id": "kolvrt.ipc.performance",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Raw baseline, области измерения, границы интерпретации и контролируемые дальнейшие испытания.",
+          "tags": null,
+          "title": "Паспорт производительности IPC Phase 3.5"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 54,
+          "path": "docs/kernel/ipc-performance.md",
+          "sha256": "8837996edeee0855b5ba7ae908702c66e9836efa335227f3451c73adf6d494d1",
+          "start": 4
+        },
+        "ru": {
+          "end": 54,
+          "path": "translations/ru/docs/kernel/ipc-performance.md",
+          "sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
+          "start": 4
+        }
+      },
+      "path": "docs/kernel/ipc-performance.md",
+      "summary": "Raw baseline with verified hot, blocked and full-queue paths and explicit interpretation boundaries.",
+      "title": "Phase 3.5 IPC performance passport"
+    },
+    "kolvrt.ipc.queue": {
+      "anchor": "bounded-storage-and-accounting",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1150,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.queue",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченные очередь, result slots и domain charges.",
+          "tags": null,
+          "title": "Bounded storage and accounting"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 35,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 26
+        },
+        "ru": {
+          "end": 35,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 26
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Bounded queue, result slots and domain charges.",
+      "title": "Bounded storage and accounting"
+    },
+    "kolvrt.ipc.receive": {
+      "anchor": "copy-transactions-and-terminal-arbitration",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1086,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.receive",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Транзакционная доставка receive и сохранение очереди.",
+          "tags": null,
+          "title": "Copy transactions and terminal arbitration"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 67,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 58
+        },
+        "ru": {
+          "end": 67,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 58
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Transactional receive delivery and retained queue state.",
+      "title": "Copy transactions and terminal arbitration"
+    },
+    "kolvrt.ipc.request": {
+      "anchor": "copied-transport",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 2223,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.request",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Фрейм запросов native.request/1 и операции с копированием.",
+          "tags": null,
+          "title": "Copied transport"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 59,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 34
+        },
+        "ru": {
+          "end": 59,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 34
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Copied native.request/1 request framing and operations.",
+      "title": "Copied transport"
+    },
+    "kolvrt.ipc.review.execution": {
+      "anchor": "kolvrt-ipc-review-execution",
+      "depends_on": ["adr.0016", "adr.0017", "adr.0018", "adr.0021"],
+      "document": "doc.kolvrt.ipc.review",
+      "document_status": "CURRENT",
+      "estimated_bytes": 6207,
+      "evidence_scope": "architecture was re-derived from origin/main `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`; implementation and QEMU evidence are current through this source set. The accepted execution/synchronization choices are E1/A and are recorded in ADR-0025.",
+      "id": "kolvrt.ipc.review.execution",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Выбран continuous owner-local idle с retirement всей session; independent sessions вне scope.",
+          "tags": null,
+          "title": "Решение об execution architecture"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 80,
+          "path": "docs/architecture/ipc-phase35-review.md",
+          "sha256": "a81d2e610c07e9a5851d11ab93dcb01c00b139c935a0c84c6965a130de993356",
+          "start": 61
+        },
+        "ru": {
+          "end": 80,
+          "path": "translations/ru/docs/architecture/ipc-phase35-review.md",
+          "sha256": "84b0330347aed418187ae9183c17842ed3f3d87cf7b67b095bccb634f559c23c",
+          "start": 61
+        }
+      },
+      "path": "docs/architecture/ipc-phase35-review.md",
+      "summary": "Selected continuous owner-local idle with whole-session retirement; independent sessions remain out of scope.",
+      "title": "Execution architecture decision"
+    },
+    "kolvrt.ipc.review.synchronization": {
+      "anchor": "kolvrt-ipc-review-synchronization",
+      "depends_on": [
+        "adr.0013",
+        "adr.0016",
+        "adr.0018",
+        "adr.0020",
+        "adr.0023"
+      ],
+      "document": "doc.kolvrt.ipc.review",
+      "document_status": "CURRENT",
+      "estimated_bytes": 8262,
+      "evidence_scope": "architecture was re-derived from origin/main `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`; implementation and QEMU evidence are current through this source set. The accepted execution/synchronization choices are E1/A and are recorded in ADR-0025.",
+      "id": "kolvrt.ipc.review.synchronization",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Сравнение split syscall synchronization, bounded atomics и endpoint-owner mailboxes.",
+          "tags": null,
+          "title": "Варианты synchronization"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 62,
+          "path": "docs/architecture/ipc-phase35-review.md",
+          "sha256": "a81d2e610c07e9a5851d11ab93dcb01c00b139c935a0c84c6965a130de993356",
+          "start": 40
+        },
+        "ru": {
+          "end": 62,
+          "path": "translations/ru/docs/architecture/ipc-phase35-review.md",
+          "sha256": "84b0330347aed418187ae9183c17842ed3f3d87cf7b67b095bccb634f559c23c",
+          "start": 40
+        }
+      },
+      "path": "docs/architecture/ipc-phase35-review.md",
+      "summary": "Compare split syscall synchronization, bounded atomics and endpoint-owner mailboxes.",
+      "title": "Synchronization alternatives"
+    },
+    "kolvrt.ipc.teardown": {
+      "anchor": "teardown-and-reclamation",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 894,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.teardown",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Завершение, shutdown, удержание authority и reclamation endpoint.",
+          "tags": null,
+          "title": "Teardown and reclamation"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 83,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 76
+        },
+        "ru": {
+          "end": 83,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 76
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Death, shutdown, retained authority and endpoint reclamation.",
+      "title": "Teardown and reclamation"
+    },
+    "kolvrt.ipc.terminal": {
+      "anchor": "copy-transactions-and-terminal-arbitration",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1086,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.terminal",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ровно один сохранённый terminal result и граница commitment.",
+          "tags": null,
+          "title": "Copy transactions and terminal arbitration"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 67,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 58
+        },
+        "ru": {
+          "end": 67,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 58
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Exactly one retained terminal result and commitment boundary.",
+      "title": "Copy transactions and terminal arbitration"
+    },
+    "kolvrt.ipc.transport": {
+      "aliases": ["kolvrt.ipc"],
+      "anchor": "bounded-native-ipc",
+      "depends_on": [
+        "kolvrt.process.identity",
+        "kolvrt.handles.local",
+        "kolvrt.handles.lifetime",
+        "kolvrt.security.domains",
+        "kolvrt.memory.user-copy",
+        "law.009",
+        "law.013",
+        "law.025",
+        "adr.0016",
+        "adr.0017",
+        "adr.0018",
+        "adr.0019",
+        "adr.0020",
+        "adr.0021",
+        "adr.0022",
+        "adr.0023",
+        "adr.0025",
+        "doc.kolvrt.architecture.native-abi",
+        "doc.kolvrt.architecture.first-native-slice",
+        "doc.kolvrt.architecture.production-scheduler",
+        "doc.kolvrt.kernel.wait"
+      ],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 20660,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "feature": {
+        "acceptance": [
+          "research/results/ipc-phase35-acceptance.json",
+          "research/results/native-compat-removal-phase35.json",
+          "research/results/routing-phase35-regression.json",
+          "research/measurements/ipc-phase35-baseline.json",
+          "research/results/kernel-phase35-unsafe-audit.json",
+          "research/results/ipc-phase35-main-integration.json",
+          "research/results/routing-phase35-upgrades.json",
+          "research/results/phase35-dependency-upgrades.json"
+        ],
+        "adrs": ["adr.0025"],
+        "implementation": "EXPERIMENTAL",
+        "implementation_scope": "Complete bounded native.request/1 mechanism with verified EL0 DEV/PROD execution; final human semantic/EN/RU review remains pending.",
+        "issues": [26],
+        "limitations": [
+          "ABI remains experimental and unfrozen.",
+          "Fixed affinity, immutable mappings and conservative whole-session retirement; no supervisor, service discovery, migration, zero-copy or universal wait/invoke.",
+          "Physical ARM and production bootstrap trust are unverified.",
+          "Human semantic/EN/RU review is still pending."
+        ],
+        "next_gate": "Obtain human semantic/EN/RU review for #26 acceptance, then Phase 3.6/#27 EL0 supervision; rederive its architecture from current laws and accepted decisions.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Phase 3.5",
+        "sources": [
+          "crates/kernel-core/Cargo.toml",
+          "crates/kernel-core/src/domain.rs",
+          "crates/kernel-core/src/handles.rs",
+          "crates/kernel-core/src/lib.rs",
+          "crates/kernel-core/src/process.rs",
+          "crates/kernel-core/src/ipc.rs",
+          "crates/kernel-core/src/ipc/identity.rs",
+          "crates/kernel-core/src/ipc/wire.rs",
+          "crates/kernel-core/src/ipc/mailbox.rs",
+          "crates/kernel-core/src/ipc/tests.rs",
+          "crates/kernel-core/tests/handle_contract.rs",
+          "crates/kernel/Cargo.toml",
+          "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/boot_workload.rs",
+          "crates/kernel/src/handles.rs",
+          "crates/kernel/src/handles/testing.rs",
+          "crates/kernel/src/main.rs",
+          "crates/kernel/src/process.rs",
+          "crates/kernel/src/process_workload.rs",
+          "crates/kernel/src/scheduler/local.rs",
+          "crates/kernel/src/scheduler/mod.rs",
+          "crates/kernel/src/scheduler/task.rs",
+          "crates/kernel/src/security/testing.rs",
+          "crates/kernel/src/smp.rs",
+          "crates/kernel/src/tests.rs",
+          "crates/kernel/src/user_copy/testing.rs",
+          "crates/kernel/src/ipc.rs",
+          "crates/kernel/src/ipc/native.rs",
+          "crates/kernel/src/ipc/storage.rs",
+          "crates/kernel/src/ipc/deferred.rs",
+          "crates/kernel/src/ipc_workload.rs",
+          "crates/kernel/src/ipc_workload.S",
+          "crates/kernel/src/ipc_death_workload.S",
+          "crates/kernel/src/ipc_authority_workload.S",
+          "crates/kernel/src/ipc_payload_workload.S",
+          "crates/kernel/src/ipc_queue_workload.S",
+          "crates/kernel/src/ipc_benchmark.rs",
+          "crates/kernel/src/ipc_benchmark.S",
+          "crates/xtask/src/main.rs",
+          "crates/xtask/src/output.rs",
+          "crates/kernel/src/ipc_multi_workload.S",
+          "crates/kernel/src/ipc_paths_benchmark.S",
+          "crates/kernel/src/ipc_revoke_workload.S",
+          "crates/kernel/src/test_support/irq_wait.rs"
+        ],
+        "transitions": [
+          {
+            "acceptance": [],
+            "from": "UNRECORDED",
+            "reason": "Record the implemented bounded IPC contract while Issue #26 acceptance remains incomplete.",
+            "to": "EXPERIMENTAL"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "reason": "124 named checks pass in DEV and PROD on main ac63c75 with the requested dependency upgrades. The 46 original IPC mutation runs retain their original source snapshot; enforcement code is unchanged.",
+            "receipt": "research/results/ipc-phase35-main-integration.json",
+            "receipt_sha256": "23ae23c695ce5528b931769dbca7a0f1af6067fbd965f29c497d7056a22bb863",
+            "scope": "Current-source positive QEMU integration with separately retained ELF artifacts; no new mutation/native-only/performance or physical ARM claim. Six upgraded routing configurations and three rejection controls are recorded separately.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "No physical ARM64 receipt exists.",
+            "state": "UNKNOWN"
+          }
+        ]
+      },
+      "gaps": [
+        "Human semantic and complete EN/RU review remain pending before milestone acceptance/promotion.",
+        "Physical ARM is unverified; QEMU does not establish silicon behavior."
+      ],
+      "id": "kolvrt.ipc.transport",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченный IPC через endpoint с копированием запросов, блокирующим ожиданием и точными terminal outcomes.",
+          "tags": ["ipc", "endpoint", "native", "el0"],
+          "title": "Ограниченный IPC между нативными EL0-процессами"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 322,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 4
+        },
+        "ru": {
+          "end": 322,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 4
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Bounded endpoint IPC with copied requests, blocking waits and exact terminal outcomes.",
+      "tags": ["ipc", "endpoint", "native", "el0"],
+      "title": "Bounded native EL0 IPC"
+    },
+    "kolvrt.ipc.wait": {
+      "anchor": "blocking-cross-cpu-wake-and-idle",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1443,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.wait",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Блокирующие readable и terminal conditions с регистрацией и повторной проверкой.",
+          "tags": null,
+          "title": "Blocking, cross-CPU wake and idle"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 77,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 66
+        },
+        "ru": {
+          "end": 77,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 66
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Blocking readable and terminal conditions with register and recheck.",
+      "title": "Blocking, cross-CPU wake and idle"
+    },
+    "kolvrt.ipc.wakeup": {
+      "anchor": "blocking-cross-cpu-wake-and-idle",
+      "depends_on": ["kolvrt.ipc.transport"],
+      "document": "doc.kolvrt.kernel.ipc",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1443,
+      "evidence_scope": "retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main ac63c75. Final acceptance review remains open; physical ARM is unverified.",
+      "id": "kolvrt.ipc.wakeup",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Точная owner wake identity, подтверждение mailbox и прогресс idle.",
+          "tags": null,
+          "title": "Blocking, cross-CPU wake and idle"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 77,
+          "path": "docs/kernel/ipc.md",
+          "sha256": "924ace19cd6e2ced5d3ae9b68fb83bbab02270a23d59885f8f87f5359648f173",
+          "start": 66
+        },
+        "ru": {
+          "end": 77,
+          "path": "translations/ru/docs/kernel/ipc.md",
+          "sha256": "4ae044716dad5a755c7c0584627c9e1dd0eea52008fbb4c5b8c9499519845106",
+          "start": 66
+        }
+      },
+      "path": "docs/kernel/ipc.md",
+      "summary": "Exact owner wake identity, mailbox acknowledgement and idle progress.",
+      "title": "Blocking, cross-CPU wake and idle"
     },
     "kolvrt.memory.user-copy": {
       "anchor": "kolvrt-memory-user-copy",
@@ -5900,13 +7423,13 @@
         "en": {
           "end": 100,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 93
         },
         "ru": {
           "end": 100,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 93
         }
       },
@@ -5933,16 +7456,16 @@
       },
       "locations": {
         "en": {
-          "end": 120,
+          "end": 124,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
-          "start": 113
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
+          "start": 117
         },
         "ru": {
-          "end": 120,
+          "end": 124,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
-          "start": 113
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
+          "start": 117
         }
       },
       "path": "docs/kernel/processes.md",
@@ -5970,13 +7493,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 42
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 42
         }
       },
@@ -6005,13 +7528,13 @@
         "en": {
           "end": 94,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 81
         },
         "ru": {
           "end": 94,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 81
         }
       },
@@ -6024,7 +7547,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 4830,
+      "estimated_bytes": 4875,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.handle-boundary",
       "kind": "contract-section",
@@ -6038,16 +7561,16 @@
       },
       "locations": {
         "en": {
-          "end": 255,
+          "end": 259,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
-          "start": 119
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
+          "start": 123
         },
         "ru": {
-          "end": 255,
+          "end": 259,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
-          "start": 119
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
+          "start": 123
         }
       },
       "path": "docs/kernel/processes.md",
@@ -6075,13 +7598,13 @@
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 13
         }
       },
@@ -6132,7 +7655,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/process.rs. New exact-source evidence is required for VERIFIED.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
@@ -6159,13 +7682,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 7
         }
       },
@@ -6194,13 +7717,13 @@
         "en": {
           "end": 106,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 99
         },
         "ru": {
           "end": 106,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 99
         }
       },
@@ -6229,13 +7752,13 @@
         "en": {
           "end": 82,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 58
         },
         "ru": {
           "end": 82,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 58
         }
       },
@@ -6264,13 +7787,13 @@
         "en": {
           "end": 43,
           "path": "docs/kernel/processes.md",
-          "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
           "start": 23
         },
         "ru": {
           "end": 43,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "5e8496a815c60e949ad36df6a86b7ad01cddbbf6107071f054381f3e3b5e8a0e",
+          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
           "start": 23
         }
       },
@@ -6437,11 +7960,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Passing historical integrated Phase 3.4 receipt; no later-source or silicon inference.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -6478,13 +8001,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
+          "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
           "start": 7
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
+          "sha256": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
           "start": 7
         }
       },
@@ -6583,7 +8106,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "The resident_pages observation helper now requires machine-events and boot-payload together. The retained Phase 3.4 receipt predates this process.rs source change; current-source domain verification requires a new exact-source receipt.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
@@ -6613,13 +8136,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/domains.md",
-          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
+          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
           "start": 11
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
+          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
           "start": 11
         }
       },
@@ -6646,16 +8169,16 @@
       },
       "locations": {
         "en": {
-          "end": 36,
+          "end": 38,
           "path": "docs/kernel/domains.md",
-          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
-          "start": 27
+          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "start": 29
         },
         "ru": {
-          "end": 36,
+          "end": 38,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
-          "start": 27
+          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "start": 29
         }
       },
       "path": "docs/kernel/domains.md",
@@ -6666,7 +8189,7 @@
       "anchor": "kolvrt-domains-identity",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 1814,
+      "estimated_bytes": 2555,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.identity",
       "kind": "contract-section",
@@ -6680,15 +8203,15 @@
       },
       "locations": {
         "en": {
-          "end": 28,
+          "end": 30,
           "path": "docs/kernel/domains.md",
-          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
+          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
           "start": 17
         },
         "ru": {
-          "end": 28,
+          "end": 30,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
+          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
           "start": 17
         }
       },
@@ -6700,7 +8223,7 @@
       "anchor": "kolvrt-domains-notification",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 2914,
+      "estimated_bytes": 2927,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.notification",
       "kind": "contract-section",
@@ -6714,16 +8237,16 @@
       },
       "locations": {
         "en": {
-          "end": 56,
+          "end": 58,
           "path": "docs/kernel/domains.md",
-          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
-          "start": 35
+          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "start": 37
         },
         "ru": {
-          "end": 56,
+          "end": 58,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
-          "start": 35
+          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "start": 37
         }
       },
       "path": "docs/kernel/domains.md",
@@ -6734,7 +8257,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6899,
+      "estimated_bytes": 6859,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
@@ -6748,16 +8271,16 @@
       },
       "locations": {
         "en": {
-          "end": 177,
+          "end": 179,
           "path": "docs/kernel/domains.md",
-          "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
-          "start": 55
+          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "start": 57
         },
         "ru": {
-          "end": 177,
+          "end": 179,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "04f70d232d3756518a4259dc3c5abc3e6b3093a541511a65c20b38d5e49b44b0",
-          "start": 55
+          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "start": 57
         }
       },
       "path": "docs/kernel/domains.md",
@@ -6776,7 +8299,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 7813,
+      "estimated_bytes": 7859,
       "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "feature": {
         "acceptance": ["research/results/event-revocation-ci.json"],
@@ -6807,7 +8330,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel-core/src/handles.rs, crates/kernel-core/src/wait.rs, crates/kernel/src/handles.rs, crates/kernel/src/handles/testing.rs. New exact-source evidence is required for VERIFIED.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "receipt": "research/results/event-revocation-ci.json",
             "receipt_sha256": "b403eab6ca342921cff86c1d48c07395ebe5c2a18d4f4f1a6a331c17cbb8d8bf",
             "scope": "Only synchronous Event SEND/TRANSFER/REVOKE and retained positive DEV/PROD CI profiles at 4313feb82ea345e15d4a309889a3986b3558848a. Actual max/TCG/QEMU configuration is recorded; no issuer/service/domain, async drain, current-host-tool or silicon verification.",
@@ -6844,13 +8367,13 @@
         "en": {
           "end": 176,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
+          "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
           "start": 17
         },
         "ru": {
           "end": 192,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
+          "sha256": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
           "start": 17
         }
       },
@@ -7328,11 +8851,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Fifteen provisioned synthetic-key/clock regressions and existing advisor integration tests passed on these exact source bytes.",
+            "reason": "Historical receipt retained after consolidated IPC/dependency integration; current-source revalidation is required for changed declared inputs: crates/migration-advisor/src/provenance.rs, crates/migration-advisor/Cargo.toml, Cargo.lock",
             "receipt": "research/results/issue71-verifier-time.json",
             "receipt_sha256": "fd273b9171688235813dddb0b7e83492b6a63dbd2f405676588bbe7836c68e67",
             "scope": "Host verification mechanism with injected fixture clocks; no production authenticated time, live revocation or storage crash guarantees.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -7355,13 +8878,13 @@
         "en": {
           "end": 16,
           "path": "docs/security/verifier-time.md",
-          "sha256": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
+          "sha256": "ee7e3401b184b27edf1ce9ac1a31f341d0327889f6f8505ccf3d2ee5f58d543e",
           "start": 7
         },
         "ru": {
           "end": 16,
           "path": "translations/ru/docs/security/verifier-time.md",
-          "sha256": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340",
+          "sha256": "2851cdab47bbd9b2d545ad3e07fcbc169a0f2f7eda5cdacd19b7f093ed0305e1",
           "start": 7
         }
       },
