@@ -24,6 +24,13 @@
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "disposition": "existing-feature",
+      "reason": "Preserve compiler memory ordering at DAIF mask/unmask boundaries; timer failure remains strict and is diagnosed with read-only local timer/GIC state.",
+      "before_sha256_lf": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc",
+      "after_sha256_lf": "cf4b8e1c9216c750905e46975ad45e34d72fcf9bdd855599fd3a711bc51a18ef"
+    },
+    {
       "path": "crates/kernel/src/main.rs",
       "before_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
       "after_sha256_lf": "0b135621d47beaf5a63813c2217306b8e2bad89ce5389aca1fea7b6458a726f9",
@@ -82,7 +89,7 @@
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
-      "after_sha256_lf": "48b7f71740e54f3059d2fdda1e8ca4dab258992c92b86c43577ee5a631493e25",
+      "after_sha256_lf": "031329651b16d1b23828c6a0c11f48644415fad42970d8b70d188cbfda5e32aa",
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },

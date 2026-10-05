@@ -935,7 +935,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22888,
+      "estimated_bytes": 23174,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -1598,7 +1598,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22775,
+      "estimated_bytes": 23061,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],

@@ -202,14 +202,16 @@ pub fn vectors() {
 }
 pub fn mask() {
     // SAFETY: INV-IRQ: affects only the calling CPU; masking cannot release an IRQ-owned resource.
+    // Keep the compiler memory clobber: protected accesses must not cross DAIF changes.
     unsafe {
-        asm!("msr daifset, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nomem, nostack));
+        asm!("msr daifset, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nostack));
     }
 }
 pub fn unmask() {
     // SAFETY: INV-IRQ: called only after GIC, source and vectors are initialized.
+    // Pending handlers can observe memory; this is also a compiler ordering boundary.
     unsafe {
-        asm!("msr daifclr, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nomem, nostack));
+        asm!("msr daifclr, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nostack));
     }
 }
 /// Wait with IRQ masked until an interrupt is pending, then service it before

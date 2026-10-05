@@ -57,7 +57,8 @@ fn expected(pc: usize) {
         .expected_pc
         .store(pc as u64, Ordering::Release);
 }
-fn wait_irq() -> bool {
+fn wait_irq(d: &Description) -> bool {
+    let irq_masked_at_entry = cpu::irq_masked();
     let start = cpu::ticks();
     let end = crate::time::deadline_after(TEST_IRQ_TIMEOUT);
     let delivered = irq_wait::wait_for_delivery(
@@ -66,11 +67,46 @@ fn wait_irq() -> bool {
         cpu::mask,
     );
     if !delivered {
+        let timer_control: u64;
+        let timer_compare: u64;
+        // SAFETY: INV-PROBE: read-only local physical timer state, native root and IRQ masked.
+        unsafe {
+            core::arch::asm!("mrs {control}, cntp_ctl_el0", "mrs {compare}, cntp_cval_el0",
+                control = out(reg) timer_control, compare = out(reg) timer_compare,
+                options(nomem, nostack));
+        }
+        let affinity = cpu::affinity();
+        let affinity = ((affinity >> 32) << 24) | (affinity & 0xffffff);
+        let mut gic_state = [0u32; 3];
+        for offset in (0..d.redistributor.size as usize).step_by(0x20000) {
+            if offset + 0x20000 > d.redistributor.size as usize {
+                break;
+            }
+            // SAFETY: INV-GIC: platform-validated bounded device region; read-only local GICR state.
+            let registers = unsafe {
+                crate::hal::Registers::new(d.redistributor.base as usize + offset, 0x20000)
+            };
+            if u64::from(registers.read(0xc)) == affinity {
+                gic_state = [
+                    registers.read(0x10100),
+                    registers.read(0x10200),
+                    registers.read(0x10300),
+                ];
+                break;
+            }
+        }
         event!(
-            "{{\"event\":\"timer-wait\",\"status\":\"fail\",\"elapsed_ticks\":{},\"counter_hz\":{},\"deliveries\":{}}}",
+            "{{\"event\":\"timer-wait\",\"status\":\"fail\",\"elapsed_ticks\":{},\"counter_hz\":{},\"deliveries\":{},\"timer_control\":{},\"timer_compare\":{},\"timer_counter\":{},\"irq_masked_at_entry\":{},\"gic_enabled\":{},\"gic_pending\":{},\"gic_active\":{}}}",
             cpu::ticks() - start,
             cpu::frequency(),
-            interrupt::delivered().load(Ordering::Acquire)
+            interrupt::delivered().load(Ordering::Acquire),
+            timer_control,
+            timer_compare,
+            cpu::ticks(),
+            irq_masked_at_entry,
+            gic_state[0],
+            gic_state[1],
+            gic_state[2]
         );
     }
     delivered
@@ -500,12 +536,12 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
         interrupt::delivered().load(Ordering::Acquire) == 0,
     );
     cpu::unmask();
-    let delivered = wait_irq();
+    let delivered = wait_irq(d);
     report("interrupt_delivery", delivered);
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));
     cpu::unmask();
-    let delivered = wait_irq();
+    let delivered = wait_irq(d);
     report("timer_rearm", delivered);
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));

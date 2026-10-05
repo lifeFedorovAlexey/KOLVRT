@@ -6,6 +6,8 @@ Platform-validated DTB descriptors provide distributor and redistributor regions
 
 Acknowledge returns the real INTID. Timer service disables/deasserts the level source, increments an atomic delivery counter and issues EOI with EOImode=0, completing priority drop and deactivation. Architectural barriers complement volatile MMIO; volatile alone does not order device effects. Spurious IDs are ignored; unexpected implemented IDs take the fatal path. Tests verify masking, delivery and rearming, not a preinstalled boolean.
 
+IRQ mask/unmask wrappers retain a compiler memory clobber as well as the architectural ISB; protected accesses and IRQ-visible publication cannot be reordered across the DAIF transition. Timer probe timeouts remain failures after the existing 500 ms bound. Failure diagnostics read the local physical timer control/compare/counter, entry IRQ mask state and affinity-matched GICR enable/pending/active bits without acknowledging an interrupt or changing controller state. These observations distinguish source state from actual delivery; no pending bit substitutes for the delivery counter.
+
 ## Locking
 
 The bounded TTAS lock waits through relaxed loads and uses Acquire CAS with Release unlock. Guard lifetimes protect UnsafeCell access; Send/Sync bounds follow the protected type. Host tests exercise publication with four concurrent threads. IRQ never takes this lock, allocates or writes UART. Thus interrupted code cannot deadlock against an IRQ that waits for its own lock. One million spin iterations is a failure bound, not a real-time guarantee or fairness proof. [Review](../architecture/implementation-review.md) records the alternatives.
