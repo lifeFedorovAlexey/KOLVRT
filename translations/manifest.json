@@ -294,8 +294,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
-        "translation_sha256": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033"
+        "source_sha256": "a6e2166f380fce2e00e13333bde1c8ade02d5c3427a36066baa7616d23884f98",
+        "translation_sha256": "437b29ccaa4713f71a1c509f0eb853c735a94e47341f6313ebd77e8378aacaba"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -362,8 +362,8 @@
         "translation_sha256": "2f49d2945fe1d1551623f251740334cf997abb06b2cb9c27c6019c7689971896"
       },
       "docs/security/threat-model.md": {
-        "source_sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
-        "translation_sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad"
+        "source_sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
+        "translation_sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732"
       },
       "docs/vision.md": {
         "source_sha256": "c5a07bd13832011ae4fe886a31c7e31bccc14111b4a27a86797b47e55f593b77",

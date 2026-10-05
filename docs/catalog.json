@@ -832,7 +832,7 @@
     {
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 17139,
+      "estimated_bytes": 17149,
       "id": "doc.kolvrt.security.threat-model",
       "kind": "security-analysis",
       "path": "docs/security/threat-model.md",
@@ -1656,7 +1656,7 @@
       ],
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 4455,
+      "estimated_bytes": 4465,
       "id": "kolvrt.security.phase34",
       "kind": "contract-section",
       "path": "docs/security/threat-model.md",

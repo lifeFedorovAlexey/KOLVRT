@@ -681,9 +681,9 @@
     "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "f7ba698e801f9d951018a8b0536a00769dabc10c95c62c726a3d121afcfca1de",
-    "docs/knowledge-system.md": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
+    "docs/knowledge-system.md": "a6e2166f380fce2e00e13333bde1c8ade02d5c3427a36066baa7616d23884f98",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
-    "docs/security/threat-model.md": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+    "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
     "research/cases/KOL-PATH-0002.json": "db1c5219328b188bd049731fcfe7a8c78bd171b0ae0d6abc2ee8702f9c836675",
     "research/cases/KOL-PATH-0003.json": "9df75d09e6da02f5fb5525b202c6bc04be96433100820967bcaae9d9415c730f",
@@ -720,7 +720,7 @@
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "d82af3fc3d68f57d8739b0890ea485f6e63f8dad49bf938eb2d560e2e9e790a7",
+    "translations/manifest.json": "a04aec8432e4cbec046caa933478fcc14dd6702cdf0c0c0dfd102d369d9238f6",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -755,9 +755,9 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033",
+    "translations/ru/docs/knowledge-system.md": "437b29ccaa4713f71a1c509f0eb853c735a94e47341f6313ebd77e8378aacaba",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
-    "translations/ru/docs/security/threat-model.md": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+    "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
   },
   "nodes": {
@@ -2860,13 +2860,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
+          "sha256": "a6e2166f380fce2e00e13333bde1c8ade02d5c3427a36066baa7616d23884f98",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033",
+          "sha256": "437b29ccaa4713f71a1c509f0eb853c735a94e47341f6313ebd77e8378aacaba",
           "start": 1
         }
       },
@@ -3151,7 +3151,7 @@
     "doc.kolvrt.security.threat-model": {
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 17139,
+      "estimated_bytes": 17149,
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "doc.kolvrt.security.threat-model",
       "kind": "security-analysis",
@@ -3167,13 +3167,13 @@
         "en": {
           "end": 237,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 1
         },
         "ru": {
           "end": 238,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 1
         }
       },
@@ -3764,7 +3764,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "c9b90d8ed880ab81e482362d3b9450a1fb8edf5ef4a6049c885e9c09cab6629f",
+            "receipt_sha256": "8a7d79da0393d28a3d9de783f0b15596c4295e61fb9e461d6ed4a10bf2bda355",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -3789,13 +3789,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
+          "sha256": "a6e2166f380fce2e00e13333bde1c8ade02d5c3427a36066baa7616d23884f98",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033",
+          "sha256": "437b29ccaa4713f71a1c509f0eb853c735a94e47341f6313ebd77e8378aacaba",
           "start": 7
         }
       },
@@ -5148,13 +5148,13 @@
         "en": {
           "end": 69,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 62
         },
         "ru": {
           "end": 70,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 63
         }
       },
@@ -5513,13 +5513,13 @@
         "en": {
           "end": 125,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 118
         },
         "ru": {
           "end": 126,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 119
         }
       },
@@ -5548,13 +5548,13 @@
         "en": {
           "end": 91,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 84
         },
         "ru": {
           "end": 92,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 85
         }
       },
@@ -5583,13 +5583,13 @@
         "en": {
           "end": 97,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 90
         },
         "ru": {
           "end": 98,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 91
         }
       },
@@ -5618,13 +5618,13 @@
         "en": {
           "end": 105,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 96
         },
         "ru": {
           "end": 106,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 97
         }
       },
@@ -5653,13 +5653,13 @@
         "en": {
           "end": 111,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 104
         },
         "ru": {
           "end": 112,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 105
         }
       },
@@ -5688,13 +5688,13 @@
         "en": {
           "end": 119,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 110
         },
         "ru": {
           "end": 120,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 111
         }
       },
@@ -5710,7 +5710,7 @@
       ],
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 4455,
+      "estimated_bytes": 4465,
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.phase34",
       "kind": "contract-section",
@@ -5726,13 +5726,13 @@
         "en": {
           "end": 237,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 124
         },
         "ru": {
           "end": 238,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 125
         }
       },
@@ -5761,13 +5761,13 @@
         "en": {
           "end": 63,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 43
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 43
         }
       },
@@ -5796,13 +5796,13 @@
         "en": {
           "end": 85,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 76
         },
         "ru": {
           "end": 86,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 77
         }
       },
@@ -5831,13 +5831,13 @@
         "en": {
           "end": 77,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 68
         },
         "ru": {
           "end": 78,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 69
         }
       },
@@ -5866,13 +5866,13 @@
         "en": {
           "end": 44,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 29
         },
         "ru": {
           "end": 44,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 29
         }
       },
@@ -5901,13 +5901,13 @@
         "en": {
           "end": 30,
           "path": "docs/security/threat-model.md",
-          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
           "start": 9
         },
         "ru": {
           "end": 30,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
           "start": 9
         }
       },
