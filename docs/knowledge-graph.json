@@ -788,7 +788,7 @@
     "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/knowledge-enrollment.json": "ad8610e934ec2aef4feff2d63bc218ac2d3a4ac94ed6e3dff7e26537bdf762ad",
-    "docs/knowledge-system.md": "b41c15c89707ee60fd3bfe85123ba9f5d1694d6402574ba969d3ed59911ff3a0",
+    "docs/knowledge-system.md": "d5694d79acdd9b9083fad0ffd10e1b2bf104545da2d4368c0e18ce7165fe92fc",
     "docs/research/cost-l-queries.md": "10545432b937d6f2f648395cc83de3b62000690baf331f72d1ecd4fa00bd78f9",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
@@ -832,7 +832,7 @@
     "schemas/cost-l.schema.json": "4d4784b75bbd05e543511b3cc46cc17bc87ac96ba7fdf27fada252b78eb2cb4c",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "dc88eca0b5216cbf2c1043036cae26b2e9cea88d19b2687c7a8145368ebe44dc",
+    "translations/manifest.json": "e75f9890ce540c59bc9bc9911889645018393dc412557ee206b32db22a194463",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -867,7 +867,7 @@
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "12866cca6a4d3b71cf19a08c5549e20db94b4f97dbb631b16cb0b4d1ad530af7",
+    "translations/ru/docs/knowledge-system.md": "8b43ba2bf9c386c41f70ce5a7532fb44f4b7b389e8982ee25a275bf9d6640cba",
     "translations/ru/docs/research/cost-l-queries.md": "b29c5ccf9d954f2d581b7190291bb80ef39451ec8444f9c4fe1a5ef806521032",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
@@ -2973,13 +2973,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "b41c15c89707ee60fd3bfe85123ba9f5d1694d6402574ba969d3ed59911ff3a0",
+          "sha256": "d5694d79acdd9b9083fad0ffd10e1b2bf104545da2d4368c0e18ce7165fe92fc",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "12866cca6a4d3b71cf19a08c5549e20db94b4f97dbb631b16cb0b4d1ad530af7",
+          "sha256": "8b43ba2bf9c386c41f70ce5a7532fb44f4b7b389e8982ee25a275bf9d6640cba",
           "start": 1
         }
       },
@@ -3998,7 +3998,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "f723bbd7a2df96c70894a51345f9a65b90cb6080b66940782613c407194708d9",
+            "receipt_sha256": "b1aedcc4607352e217214f91eebe732c6f7abd5329174ecc9526c5ed9a331abb",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -4023,13 +4023,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "b41c15c89707ee60fd3bfe85123ba9f5d1694d6402574ba969d3ed59911ff3a0",
+          "sha256": "d5694d79acdd9b9083fad0ffd10e1b2bf104545da2d4368c0e18ce7165fe92fc",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "12866cca6a4d3b71cf19a08c5549e20db94b4f97dbb631b16cb0b4d1ad530af7",
+          "sha256": "8b43ba2bf9c386c41f70ce5a7532fb44f4b7b389e8982ee25a275bf9d6640cba",
           "start": 7
         }
       },
