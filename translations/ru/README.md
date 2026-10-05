@@ -2,577 +2,106 @@
 
 ## Kernel Outside Legacy, Versioned Routing & Translation
 
-> **Legacy может работать. Оно не определяет устройство ядра.**
+KOLVRT — экспериментальное ядро операционной системы на Rust. Основная платформа — ARM64.
 
-KOLVRT — **ядро операционной системы на Rust с ARM64 как основной платформой**.
+> **Старое ПО может работать, но не диктует устройство ядра.**
 
-Проект начинается с намеренно неудобного вопроса:
-
-**Как выглядело бы современное ядро, если бы десятилетия исторического поведения перестали считаться вечным архитектурным законом?**
-
-KOLVRT не является форком Linux.
-
-Это не Linux, переписанный на Rust.
-
-Это не попытка повторить внутреннее устройство Linux с более безопасным синтаксисом.
-
-Linux и другие зрелые ОС используются как **свидетельства**: десятилетия ошибок, регрессий, hardware quirks, удачных идей, неудачных абстракций и решений совместимости, которые стоит изучить.
-
-Затем KOLVRT принимает собственное решение.
-
-**Ядро остаётся чистым. Совместимость адаптируется вокруг него.**
-
----
-
-## Идея
-
-Традиционная совместимость обычно накапливается внутри:
-
-```text
-old software
-     │
-     ▼
-special case
-     │
-     ▼
-another special case
-     │
-     ▼
-kernel
-```
-
-KOLVRT намерен вынести её наружу:
-
-```text
-                         ┌───────────────┐
-legacy software ───────► │ compat v1/v2  │ ──────┐
-                         └───────────────┘       │
-                                                 ▼
-native software ─────────────────────────► Native API
-                                                 │
-                                                 ▼
-                                          ┌────────────┐
-                                          │   KOLVRT   │
-                                          │   kernel   │
-                                          └────────────┘
-```
-
-Если старому ПО нужно старое поведение, ему место в **версионированном слое совместимости**.
-
-Если ядро когда-то предоставило ошибочное поведение и ПО стало от него зависеть, native поведение исправляется. Совместимость с ошибкой находится вне native core.
-
-Постоянный шрам не нужен лишь потому, что кто-то когда-то зависел от раны.
-
----
-
-## Зачем это существует
-
-KOLVRT строится вокруг нескольких намеренно строгих идей:
-
-- **Native поведение является источником истины.**
-- **Legacy semantics не относятся к native kernel API.**
-- **Совместимость явная, версионированная и удаляемая.**
-- **Разные приложения, драйверы и подсистемы могут одновременно использовать разные routes.**
-- **Стоимость совместимости должна быть измерима.**
-- **Старое поведение сохраняется лишь там, где оно кому-то требуется.**
-- **Ошибки ядра исправляются, а не превращаются в вечную архитектуру.**
-- **Предпочтителен safe Rust; `unsafe` — аудируемая граница, а не удобство.**
-- **ARM64 имеет Tier 1.**
-- **Другие ОС — источники для исследования, а не готовые схемы.**
-
-Или короче:
-
-> **Не переделывайте ядро под ошибочные предположения. Переводите предположения.**
-
----
+У собственного API ядра есть явные контракты. Историческое поведение сохраняется в удаляемых слоях совместимости с отдельными версиями. Linux и другие ОС служат материалом для исследований, а не образцом для копирования.
 
 ## Текущее состояние
 
-KOLVRT уже загружается как native AArch64 kernel в QEMU.
+Ядро загружается на QEMU `virt` и запускает изолированные процессы EL0 на двух процессорах. Это пока исследовательское ядро: стабильного пользовательского ABI, совместимости с Linux и проверки на физическом ARM64 ещё нет.
 
-| Область                            | Статус                                                    |
-| ---------------------------------- | --------------------------------------------------------- |
-| Rust `no_std` ядро                 | ✅                                                        |
-| AArch64 / ARM64                    | ✅ Tier 1                                                 |
-| Загрузка QEMU `virt`               | ✅                                                        |
-| Исполнение EL1                     | ✅                                                        |
-| Проверка Device Tree               | ✅                                                        |
-| PL011 UART                         | ✅                                                        |
-| Векторы исключений                 | ✅                                                        |
-| Physical memory allocator          | ✅                                                        |
-| Page tables / MMU                  | ✅                                                        |
-| W^X mappings                       | ✅                                                        |
-| Kernel heap                        | ✅                                                        |
-| GICv3                              | ✅ Оба CPU                                                |
-| ARM physical timer IRQ             | ✅                                                        |
-| DEV / PROD профили                 | ✅                                                        |
-| Автоматический kernel test harness | ✅                                                        |
-| Настоящие in-kernel tests          | ✅ 84 checks в exact-source матрице DEV/PROD              |
-| Negative failure controls          | ✅                                                        |
-| Отладка GDB                        | ✅                                                        |
-| SMP                                | ✅ Основа двух CPU в QEMU                                 |
-| EL0 / userspace                    | ✅ Ограниченный фундамент изолированных процессов         |
-| Scheduler                          | ✅ Timer-driven с фиксированной per-CPU affinity          |
-| Жизненный цикл процессов           | ✅ Ограниченные create/start/exit/reclaim на двух CPU     |
-| Ожидание собственного события      | ✅ Ограниченный block/wakeup в `Registry::step()`         |
-| Копирование из памяти пользователя | ✅ Ограниченный синхронный снимок Phase 3.2               |
-| Runtime versioned routing          | ✅ Ограниченный EL0 vertical slice; native core независим |
-| Migration advisor                  | ✅ Host planner; production integrations ещё не готовы    |
-| Linux compatibility                | ⏳ Не начата                                              |
+| Область                      | Что реализовано                                                                                                                           |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Загрузка и оборудование      | EL1, проверка Device Tree, PL011 UART, исключения, GICv3 и прерывания таймера                                                             |
+| Память                       | Распределение физических страниц, таблицы страниц, MMU, W^X и куча ядра                                                                   |
+| Работа двух процессоров      | Запуск, IPI, освобождение отображений после подтверждённого сброса TLB и выключение                                                       |
+| Процессы и планировщик       | Изолированные адресные пространства, вытеснение по таймеру, закрепление за процессором, жизненный цикл и ожидание собственного события    |
+| Доступ к памяти пользователя | Копирование с явными пределами, неизменяемые снимки запросов и восстановление после ошибок доступа                                        |
+| Дескрипторы и безопасность   | Локальные ссылки, передача с уменьшением прав, разрешения с заданной областью действия, отзыв, квоты и сохранение результатов уведомлений |
+| ELF и ASID                   | Ограниченный загрузчик AArch64, проверка выравнивания точки входа и безопасное освобождение и повторное использование ASID                |
+| Версионированные вызовы      | Пути native/v1/v2 в изолированных задачах EL0; ядро не зависит от адаптеров                                                               |
+| Инструменты разработки       | Планировщик миграции, поиск по документации и запросы к реестру COST-L без сети                                                           |
+| Чистота сборки               | Предупреждения запрещены в сборках AArch64 для DEV, PROD и отрицательных контролей                                                        |
 
-Оба настроенных CPU исполняют native EL1 code. QEMU matrix проверяет secondary boot, per-CPU ownership, двусторонние IPI, подтверждённый remote TLB retirement и multicore shutdown. Настоящее hardware остаётся непроверенным.
+На этапе 3.4 реализован ограниченный механизм уведомлений. Полноценное межпроцессное взаимодействие (IPC), отмена запросов, правила надзора за службами и постоянно работающие службы — следующие задачи. Полная основа для служб ещё не готова.
 
----
+Ранний код не определяет архитектуру следующих этапов. Перед расширением решение выводится из действующих инвариантов и принятых решений; мешающий им код перерабатывается или удаляется.
 
-## Что дальше
+## Архитектура
 
-Порядок разработки выбран намеренно:
+- Поведение ядра определяется действующими контрактами и не зависит от совместимости.
+- Совместимость явная, версионированная и удаляемая; у каждого требования указан потребитель.
+- Разные потребители и семейства API могут одновременно использовать разные пути вызовов.
+- Предпочтителен безопасный Rust. Для каждого участка `unsafe` указаны инвариант, владелец и способ проверки.
+- Заявления о производительности требуют измерений; особенности оборудования не становятся общим правилом без явного решения.
 
-```text
-Native ARM64 kernel foundation        ✅
-        │
-        ▼
-SMP correctness foundation            ✅
-        │
-        ▼
-EL0 + address spaces                  ✅
-        │
-        ▼
-Scheduler + context switching        ✅
-        │
-        ▼
-Versioned Routing & Translation      ✅ bounded EL0 slice
-        │
-        ▼
-Process lifecycle + own-event wait  ✅ bounded Phase 3.1
-        │
-        ▼
-Safe user-copy                      ✅ bounded Phase 3.2
-        │
-        ▼
-Process-local handles               ✅ bounded Phase 3.3
-        │
-        ▼
-Scoped grants and security domains  implemented (#24/#25)
-IPC and services                    next (#26)
-        │
-        ▼
-Compatibility personalities
-        │
-        ▼
-Linux ABI compatibility where useful
-```
+Нормативные требования — в [законах ядра](docs/architecture/kernel-laws.md). Подробнее: [модель ядра](docs/architecture/native-model.md), [модель совместимости](docs/architecture/compatibility-model.md) и [аудит unsafe](docs/kernel/unsafe.md).
 
-Compatibility не подключается к single-CPU kernel с последующим исправлением для SMP.
+## Совместимость и миграция
 
-Сначала native execution model. Ограниченный фундамент EL0/address spaces и timer scheduler запускает процессы с фиксированной affinity на двух CPU. Phase 2 routing исполняется в optional isolated EL0 image; native core остаётся независим. В Phase 3.1 добавлены управляемые ядром создание, запуск, завершение и освобождение процессов, а также ограниченный latch собственного события для вытесняемого пути `step()`. Это механизмы доверенной bootstrap-координации, а не публичные EL0 API процессов или ожидания. Phase 3.2 добавляет bounded safe user-copy, Phase 3.3 — process-local handles и receiver-local transfer. Phase 3.4 добавляет scoped Event grants, revocation, resource budgets и [security domains](docs/kernel/domains.md). Общий IPC, cancellation и постоянные services остаются будущей работой; полный native slice не завершён. См. [жизненный цикл процессов](docs/kernel/processes.md), [контракт ожидания](docs/kernel/wait.md), [handles](docs/kernel/handles.md) и [scheduler](docs/kernel/scheduler.md). Issue [#24](https://github.com/lifeFedorovAlexey/KOLVRT/issues/24) фиксирует gate для scoped grants, attenuation и revocation; [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) — следующий IPC gate.
+Приложение может использовать собственные API ядра для памяти и сети, а один устаревший API вызывать через `compat-v2`. Совместимость выбирается для потребителя и семейства API, а не для всей системы. [Контракт маршрутизации](docs/kernel/routing.md) описывает реализованный вариант EL0 и его ограничения.
 
----
+DEV предназначен для исследования, просмотра путей вызовов и внедрения ошибок. PROD использует оптимизацию и заранее выбранные пути без экспериментального переключения. Архитектура у профилей общая.
 
-## Versioned Routing & Translation
+Стоимость совместимости измеряется без искусственного замедления: задержки, работа процессора, память, копирования и преобразования учитываются отдельно. Результаты QEMU не доказывают производительность на оборудовании.
 
-Долгосрочная модель — **не**:
+[Советник миграции](docs/architecture/migration-advisor.md) проверяет результаты и контракты, сравнивает измерения и предлагает план отката. Он работает только на чтение: подписанное разрешение не устанавливает пакеты и не меняет пути вызовов. Интеграция с рабочей ОС, телеметрия, выполнение решений, безопасное хранение ключей, проверка статистики и испытания на физическом ARM64 остаются задачами [#14](https://github.com/lifeFedorovAlexey/KOLVRT/issues/14).
 
-```text
-SYSTEM = NATIVE
-```
+[Утилита COST-L](docs/research/cost-l-queries.md) предоставляет команды `show`, `consumers`, `deps`, `list` и `top`, JSON, фильтры и ограниченный вывод. Она читает проверенные записи реестра, а не состояние работающей системы. Интеграция с манифестами реальных компонентов остаётся открытой в [#47](https://github.com/lifeFedorovAlexey/KOLVRT/issues/47) и [#48](https://github.com/lifeFedorovAlexey/KOLVRT/issues/48).
 
-или:
+## Сборка и проверки
 
-```text
-SYSTEM = COMPAT
-```
-
-Routing должен иметь точную область действия.
-
-Например:
-
-```text
-Browser
-├── memory          → native
-├── filesystem      → native
-├── networking      → native
-└── old_sync_api    → compat-v2
-
-Database
-└── everything      → native
-
-Old driver
-└── device API      → compat-v1
-
-New driver
-└── device API      → native
-```
-
-Native и compatibility consumers могут сосуществовать.
-
-Совместимость не становится свойством всей операционной системы.
-
----
-
-## Совместимость имеет стоимость. Измеряйте её
-
-KOLVRT не намерен искусственно замедлять совместимость.
-
-Это было бы обманом.
-
-Diagnostic builds должны показывать **настоящую стоимость** translation. Следующие layout и числа служат лишь иллюстрацией; это не результаты измерений:
-
-```text
-Component: example-driver
-
-Route: COMPAT v2
-
-Calls                  1,842,991
-Translations             291,440
-Extra copies              18,202
-
-                COMPAT       NATIVE
-median latency   14.2 µs      9.1 µs
-p99              31.8 µs     19.7 µs
-CPU               3.8 %       2.9 %
-memory           18.4 MB      14.1 MB
-```
-
-Если native быстрее, разработчик видит, что даёт миграция.
-
-Если compatibility быстрее, **это повод исследовать performance bug native path**.
-
-Без искусственных штрафов.
-
-Без маркетинговых benchmarks.
-
-Без сокрытия неудобных чисел.
-
-### Migration advisor
-
-Read-only [migration advisor](docs/architecture/migration-advisor.md) работает как host subsystem: описывает capability-based dependency alternatives, проверяет evidence и contract receipts, анализирует парные измерения и готовит rollback proposals. Отдельный signed authorization gate реализован, но он не устанавливает packages и не меняет routes. Production catalog/installed-state collection, полный OS telemetry, настоящие contract/rollback executors, custody production keys, validated dependence/power analysis и physical ARM64 A/B evidence остаются открытыми по [issue #14](https://github.com/lifeFedorovAlexey/KOLVRT/issues/14).
-
----
-
-## DEV и PROD решают разные задачи
-
-KOLVRT проектируется с двумя execution profiles.
-
-### DEV / DIAGNOSTIC
-
-Для исследования:
-
-- проверки invariants
-- подробные свидетельства panic
-- tracing
-- учёт compatibility
-- исследование routes
-- A/B measurements
-- fault injection
-- аудит unsafe boundaries
-- performance counters
-
-### PROD
-
-Для исполнения уже проверенной configuration:
-
-- release optimization
-- без экспериментального route switching
-- без ненужной diagnostic instrumentation
-- только необходимые compatibility modules
-- предопределённый routing
-- минимальный runtime overhead
-
-Это **не отдельные ядра**.
-
-Одна архитектура должна работать в обоих режимах.
-
----
-
-## Linux — источник исследования, а не религия
-
-KOLVRT ведёт структурированную базу реальных механизмов отказа ОС.
-
-Проект изучает:
-
-- регрессии Linux kernel
-- ограничения ABI
-- историческое поведение, ставшее требованием совместимости
-- нарушения memory safety
-- ошибки concurrency
-- сложность driver model
-- hardware quirks
-- security fixes
-- находки syzkaller / syzbot
-- устаревшие и выведенные из использования interfaces
-- проектные решения других ОС
-
-Каждый интересный случай должен в итоге ответить:
-
-```text
-Что произошло?
-Почему это произошло?
-Было ли это ошибкой?
-Какие ограничения существовали тогда?
-Сохраняются ли эти ограничения?
-Что сделал бы KOLVRT?
-Относится ли это к native behavior?
-Относится ли это к compatibility?
-Нужно ли это вообще?
-```
-
-Выживание свидетельствует, что что-то работало.
-
-Это **не свидетельство того, что это нужно копировать**.
-
----
-
-## Законы ядра
-
-Архитектура KOLVRT ограничена явными **Kernel Laws**.
-
-Они не дают архитектуре постепенно деградировать до набора разумных исключений.
-
-Примеры принципов:
-
-```text
-Native semantics не должны зависеть от compatibility semantics.
-
-Compatibility должна удаляться без нарушения native execution.
-
-Unsafe code должен иметь явный invariant.
-
-Наблюдаемое legacy behavior не становится native specification автоматически.
-
-Hardware quirks не должны молча становиться общей архитектурой.
-
-Compatibility requirement должен назвать своего consumer.
-
-Заявления performance требуют измерений.
-```
-
-Полные нормативные правила находятся здесь:
-
-[`docs/architecture/kernel-laws.md`](docs/architecture/kernel-laws.md)
-
----
-
-## Unsafe требует объяснения
-
-Разработка ядра неизбежно пересекает границы, которые Rust не может доказать.
-
-KOLVRT не утверждает обратного.
-
-Каждая необходимая `unsafe` boundary должна ответить:
-
-```text
-Почему здесь нужен unsafe?
-Какой invariant обеспечивает корректность?
-Кто устанавливает этот invariant?
-Кто может его нарушить?
-Как это проверяется?
-```
-
-Проект генерирует unsafe inventory в составе kernel verification.
-
-См.:
-
-[`docs/kernel/unsafe.md`](docs/kernel/unsafe.md)
-
----
-
-## Быстрый старт
-
-### Требования
-
-Текущая основа разработки:
-
-- Rust **1.99.0**
-- target `aarch64-unknown-none`
-- `rustfmt`
-- `clippy`
-- Node.js **18+**
-- QEMU **10.1.0**
-- 7-Zip на Windows для автоматической настройки QEMU
-
-### Настройка Windows
+Команды выполняются из корня репозитория. Нужны Rust **1.99.0** с `rustfmt`, `clippy` и целью `aarch64-unknown-none`, Node.js **18+** и QEMU **10.1.0**. Для автоматической настройки Windows также нужен 7-Zip.
 
 ```powershell
 rustup toolchain install 1.99.0 --profile minimal --component rustfmt --component clippy
 rustup target add aarch64-unknown-none --toolchain 1.99.0
-
 ./scripts/setup-qemu.ps1
-
 npm ci --ignore-scripts
 npm run check
 cargo xtask test
 ```
 
-### Запуск матрицы проверок
+`npm run check` проверяет форматирование, стиль кода, тесты на машине разработчика, модели и документацию. Сборки Cargo для AArch64 используют `-D warnings`: предупреждение останавливает компиляцию.
 
-```bash
-cargo xtask test
-```
-
-Test command собирает и запускает настоящие AArch64 kernel images в QEMU.
-
-Отсутствие event, panic, fatal exception, ошибка emulator или timeout завершают host command ошибкой.
-
-### Отладка с GDB
-
-```bash
+```powershell
+cargo xtask routing test
+cargo xtask asid-bench
 cargo xtask debug
+cargo run --locked -p repository-checks -- cost-l list --json
 ```
 
-Затем:
+Программа проверки ядра требует **97 тестов в каждом профиле DEV/PROD**, обе обычные загрузки и **82 отрицательных контроля**. Контроли намеренно нарушают защиту и должны завершаться ожидаемым отказом. Пропущенные события, неожиданные паники, ошибки эмулятора и тайм-ауты завершают проверку ошибкой.
 
-```text
-aarch64-none-elf-gdb target/kernel/dev-boot.elf
+Сохранённый [прогон проверки выравнивания ELF](../../research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) фиксирует эти числа для конкретных хешей исходников. Он не подтверждает более поздние версии или работу на физическом оборудовании. В `target/kernel/` сохраняются ELF-образы, хеши, события UART, настройки QEMU, размеры сборок, перечень участков unsafe и выборки измерений. Подробнее — в [руководстве по проверкам и GDB](docs/kernel/testing.md).
 
-(gdb) target remote 127.0.0.1:1234
-(gdb) break kernel_main
-(gdb) continue
-(gdb) info registers
-(gdb) bt
-```
+## Документация и исследования
 
----
+| Каталог         | Содержимое                                                       |
+| --------------- | ---------------------------------------------------------------- |
+| `crates/`       | Реализация на Rust                                               |
+| `docs/`         | Архитектура, контракты подсистем и принятые решения              |
+| `research/`     | Исследования ОС с источниками и измерения с указанными границами |
+| `schemas/`      | Машиночитаемые схемы данных                                      |
+| `scripts/`      | Настройка среды и инструменты разработки                         |
+| `translations/` | Переводы документации                                            |
+| `assets/`       | Оформление проекта                                               |
 
-## Тесты должны обнаруживать ошибки ядра
+Начните с [идеи проекта](docs/vision.md), [карты документации](docs/index.md) и [архитектурных решений](docs/architecture-decisions/). Подсистемы: [загрузка](docs/kernel/boot.md), [EL0](docs/kernel/el0.md), [планировщик](docs/kernel/scheduler.md), [процессы](docs/kernel/processes.md), [ожидание](docs/kernel/wait.md), [копирование памяти](docs/kernel/user-copy.md), [дескрипторы](docs/kernel/handles.md) и [домены](docs/kernel/domains.md).
 
-Последняя сохранённая exact-source интеграционная матрица фиксирует **96 kernel checks в каждом профиле DEV и PROD** и 80 отрицательных host controls. Она включает transfer process-local handles, ограниченные пути preemption/event-wait, ELF loader и ASID lifecycle. [Отчёт](../../research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json) связывает исходники, artifacts и scope QEMU TCG; он не доказывает поведение на физическом ARM64 или более поздних изменениях исходников. Исторические milestone counts сохранены в исходных decision records.
+[База исследований](../../research/) разбирает отказы, ограничения ABI, параллельное выполнение, особенности оборудования и устаревшие интерфейсы. Для каждого случая выясняется, что произошло, какие ограничения сохранились и нужно ли это поведение ядру, слою совместимости или никому.
 
-Она также выполняет negative controls, которые обязаны корректно завершаться ошибкой.
+## Участие и лицензия
 
-Это различие существенно.
+Архитектурные изменения приветствуются при наличии обоснования. Для исключения совместимости нужно указать потребителя, причину размещения в ядре, срок существования, измеренную стоимость, способ удаления и защиту остальных потребителей от этой стоимости. Правила — в [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Зелёный test suite, не обнаруживающий намеренно внесённую ошибку, — украшение.
+Лицензия проекта пока не выбрана. Сторонние материалы сохраняют свои лицензии.
 
-Tests KOLVRT проверяют настоящее kernel behavior: allocation, mapping, memory access, unmapping, freeing, exception paths и timer delivery.
+## Проверка функций
 
-Генерируемые artifacts включают:
-
-- ELF images
-- SHA-256 hashes
-- UART logs
-- structured test events
-- аргументы и версию QEMU
-- отчёты build size
-- отчёты features
-- unsafe inventory
-- measurement samples
-
----
-
-## Структура репозитория
-
-```text
-.
-├── crates/          Rust implementation
-├── docs/            architecture and kernel documentation
-├── research/        source-backed OS research and measurements
-├── schemas/         machine-readable research schemas
-├── scripts/         development/bootstrap tooling
-├── translations/    translated project documentation
-└── assets/          project branding
-```
-
-Начните здесь:
-
-- [`Vision`](docs/vision.md)
-- [`Kernel Laws`](docs/architecture/kernel-laws.md)
-- [`Native model`](docs/architecture/native-model.md)
-- [`Compatibility model`](docs/architecture/compatibility-model.md)
-- [`Routing model`](docs/architecture/routing-model.md)
-- [`Kernel boot`](docs/kernel/boot.md)
-- [`Testing`](docs/kernel/testing.md)
-- [`SMP boundary`](docs/kernel/smp.md)
-- [`Unsafe boundaries`](docs/kernel/unsafe.md)
-- [`Architecture decisions`](docs/architecture-decisions/)
-- [`Research`](../../research/)
-
-Русская документация:
-
-[`translations/ru/`](.)
-
----
-
-## Участие в разработке
-
-KOLVRT находится на раннем этапе.
-
-Архитектурные изменения приветствуются.
-
-Бездоказательные архитектурные заявления — нет.
-
-Предлагая исключение совместимости на уровне kernel, ответьте:
-
-1. Кому нужно это поведение?
-2. Почему оно не может находиться вне native core?
-3. Каков lifetime исключения?
-4. Как измеряется его использование?
-5. Как оно удаляется?
-6. Что защищает native consumers от его стоимости?
-
-Правила formatting, checks и участия описаны здесь:
-
-[`CONTRIBUTING.md`](CONTRIBUTING.md)
-
----
-
-## Экспериментальность означает экспериментальность
-
-KOLVRT — активно разрабатываемый исследовательский проект ОС.
-
-Это ещё не general-purpose production ОС.
-
-Stable userspace ABI пока отсутствует.
-
-Обещания Linux compatibility пока нет.
-
-Широкая hardware support пока не заявляется.
-
-Заявления должны следовать свидетельствам.
-
-Нереализованные возможности должны быть названы в документации.
-
-Неизмеренные возможности не должны иметь benchmark number.
-
-Без доказательства SMP safety возможность нельзя называть SMP-safe.
-
----
-
-## Лицензия
-
-Лицензия проекта ещё не выбрана.
-
-Сторонние материалы сохраняют свои лицензии.
-
----
-
-## Итоговое правило
-
-> **Совместимость разрешена. Legacy изолировано. Native остаётся чистым.**
-
-Или на менее формальном языке проекта:
-
-> **Не плюй в ядро — сам из него пить будешь.**
-
-[Контракт фундамента EL0](docs/kernel/el0.md) фиксирует ownership, retirement, tests и ограничения; [ADR-0014](docs/architecture-decisions/0014-el0-foundation.md) рассматривает механизмы.
-
-В [контракте Phase 2](docs/kernel/routing.md) описаны настоящие EL0 routes, profile validation, measurements, authority boundary и limits. Полный IPC/service native slice остаётся незавершённым.
-
-[English source](../../README.md)
-
-## Safe user-copy в Phase 3.2
-
-[Граница user-copy](docs/kernel/user-copy.md) поддерживает bounded current-process byte copies, immutable input snapshots и precise fault recovery на обоих CPU. Её DEV/PROD suite содержит 69 checks и 57 failure controls. [ADR-0018](docs/architecture-decisions/0018-safe-user-copy.md) сохраняет синхронное исключение mapping/lifetime races и отделяет memory validity от authority.
-
-## Локальные handles процессов в Phase 3.3
-
-[Handles](docs/kernel/handles.md) дают bounded caller-local opaque references, generation/type/live/rights checks, receiver-local transfer с rights attenuation, retained Event targets и deterministic exit/fault cleanup. EL0 transfer сейчас адресует namespace на том же CPU; cross-CPU delegation подготавливает coordinator, а затем тест проверяет конкурентные EL0 close/lookup. [ADR-0019](docs/architecture-decisions/0019-process-local-handles.md) фиксирует исходное решение об identity/lifetime; [ADR-0020](docs/architecture-decisions/0020-handle-transfer-and-retention.md) описывает transfer и retention. Исходная Phase 3.3 [матрица](../../research/results/kernel-phase33.json) фиксирует 72 checks; exact-source [матрица issue #23](../../research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json) фиксирует 73 DEV/PROD checks и 69 negative controls. [Phase 3.4](docs/kernel/domains.md) добавляет scoped grants и domains; общий IPC остаётся будущей работой.
-
-## Канонические статусы функций
-
-Этот производный обзор пилота показывает границы реализации независимо от порядка дорожной карты. Перед утверждением о проверке прочитайте канонический контракт и границы исторической записи.
-
-[Карта документации](docs/index.md)
+Таблица из реестра разделяет реализацию и проверку. `BOUNDED_IMPLEMENTED` — реализовано с указанными ограничениями, `PLANNED` — запланировано. `VERIFIED` относится к записанным исходникам и среде, `STALE` означает, что свидетельства не покрывают текущий код, `UNKNOWN` — результат не установлен, `NOT_APPLICABLE` — среда неприменима. Готовность оценивается по контракту, на который ведёт ссылка.
 
 <!-- feature-summary:start -->
 
@@ -589,3 +118,5 @@ Stable userspace ABI пока отсутствует.
 | [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN             |
 
 <!-- feature-summary:end -->
+
+[Английский оригинал](../../README.md)
