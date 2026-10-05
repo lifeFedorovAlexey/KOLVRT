@@ -256,6 +256,7 @@ fn explicit_event_grants_attenuate_all_known_rights_and_share_revocation() {
         handles: 1,
         queue: 1,
         requests: 1,
+        endpoints: 0,
     };
     let (sender_domain, _sender_memory) = Owner::new(a, limits, 1).unwrap();
     let (receiver_domain, _receiver_memory) = Owner::new(b, limits, 1).unwrap();

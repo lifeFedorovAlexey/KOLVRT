@@ -146,6 +146,7 @@ pub fn ping(id: usize) {
     cpu::send_sgi(percpu::CPUS[id].affinity.load(Ordering::Acquire), IPI);
 }
 pub fn on_ipi() {
+    crate::scheduler::on_ipi();
     let id = percpu::id();
     percpu::current().ipis.fetch_add(1, Ordering::Release);
     if id == SECONDARY_CPU {

@@ -1,7 +1,7 @@
 # Wait and wake foundation
 
 Document status: CURRENT
-Evidence scope: bounded own-process event latch under trusted bootstrap coordination; not a production event loop or public IPC transport.
+Evidence scope: the `0x55` own-process event latch under trusted bootstrap coordination; the separate `native.request/1` IPC waiter has its own retained-source contract and evidence.
 Current reference: [Production scheduling gates](../architecture/production-scheduler.md)
 
 ## Contract
@@ -25,9 +25,10 @@ READY once. Pending notifications coalesce; a new notification after consumption
 is retained for the next wait. Events carry no payload or message count.
 
 The fixed slot's latch resets during creation, while execution is inactive and
-the registry owns the reserved slot. There are currently no external retained
-publisher handles. This lifecycle restriction must be replaced with a retained
-publisher/revocation contract before introducing concurrent native event sources.
+the registry owns the reserved slot. The statement that there are no external
+retained publisher handles applies only to this bootstrap event latch. The separate
+IPC endpoint retains exact waiter identities and cross-CPU wake records until the
+target acknowledges them; see the [IPC wait contract](ipc.md).
 
 ## Evidence and limits
 
@@ -40,9 +41,22 @@ notifications. The current native publisher is serialized by the coordinator;
 the host race is not evidence of a concurrent native publisher implementation.
 
 The waiting EL0 program performs one SVC per wait and consumes no CPU slices
-while BLOCKED. The two-CPU barrier and existing bootstrap polling remain. A
-production idle/event loop, generalized wait sources, close/death/shutdown races,
-deadline handling while blocked, IPC and capability-bearing handles remain gated
-by the production scheduling plan.
+while BLOCKED. The two-CPU barrier and existing bootstrap coordination remain
+for this `step()` event path. The Phase 3.5 IPC path separately has an EL0
+continuous dispatcher, readable and terminal waits, deadline processing while
+blocked, service/requester teardown and generation-keyed cross-CPU wakes. Those
+mechanics are specific to bounded IPC and do not turn the `0x55` latch into a
+general wait API. Full Issue #26 mutation and acceptance coverage remains pending.
 
 [Russian translation](../../translations/ru/docs/kernel/wait.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.kernel.wait",
+  "kind": "subsystem-contract",
+  "summary": "Trusted bootstrap 0x55 event latch scoped separately from the native IPC wait source."
+}
+```

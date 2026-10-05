@@ -212,6 +212,25 @@ pub fn unmask() {
         asm!("msr daifclr, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nomem, nostack));
     }
 }
+/// Wait with IRQ masked until an interrupt is pending, then service it before
+/// returning to the masked owner-local continuation. Pending SGIs close the
+/// recheck-to-WFI race; the physical timer supplies finite deferred retries.
+pub fn ipc_idle() {
+    assert!(irq_masked());
+    crate::sync::assert_scheduler_unlocked();
+    assert!(
+        !crate::percpu::current()
+            .scheduler_borrow
+            .load(core::sync::atomic::Ordering::Acquire)
+    );
+    // SAFETY: INV-IPC-IDLE: native permanent EL1 stack/root, initialized GIC and
+    // vectors, no scheduler/object/copy permit spans WFI or IRQ delivery. IRQ
+    // only flags timer/SGI work; all endpoint accesses remain deferred/masked.
+    unsafe {
+        asm!("wfi", "msr daifclr, #{mask}", "isb", "msr daifset, #{mask}", "isb",
+            mask=const DAIF_IRQ_MASK, options(nostack));
+    }
+}
 pub fn timer(deadline: u64) {
     // SAFETY: INV-TIMER: deadline in the current physical-counter epoch; PPI initialized.
     unsafe {

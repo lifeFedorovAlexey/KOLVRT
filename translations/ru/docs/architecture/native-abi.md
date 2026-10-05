@@ -1,5 +1,13 @@
 # Кандидат собственного двоичного интерфейса запросов v0
 
+Document status: DESIGN BASELINE
+Evidence scope: исторический host proposal и его version-0 conformance models. Это не реализованный EL0 IPC encoding.
+Current reference: [Реализованный experimental native.request/1](../kernel/ipc.md)
+
+Phase 3.5 re-derivation заменяет этот proposal для EL0 transport на `native.request/1`: фактические caller-local handles 8/56, отдельные service tokens и requester receipts, typed operations и transactional copy-out. Поле 32/32 ниже сохраняет исторический host encoding; оно не задаёт production handle representation. Существующие version-0 host models имеют отдельный scope и не устанавливают production consumers.
+
+Lifecycle notice, 2026-10-05: native.request/0 deprecated как EL0 design proposal; replacement — native.request/1. Known repository consumers: native-protocol-model и его host conformance fixtures. PUBLIC/STABLE support window и ABI-FREEZE не объявлялись; replacement их не создаёт. Новый transport явно отклоняет version 0, без implicit translation или fallback. Исторический host decoder продолжает принимать только version 0 в заявленном model scope.
+
 Это проверяемый кандидат кодирования для [первого сценария](first-native-slice.md), а не стабильный публичный двоичный интерфейс. Он не зависит от размещения структур компилятором. Все целые беззнаковые, с младшим байтом первым, если не указано иное. Указатели и байты заполнения не пересекают границу протокола. Область защиты вызывающего определяется контекстом входа, а не полем сообщения.
 
 ABI contract: native.request/0
@@ -102,4 +110,15 @@ ADR указывает `Decision kind: ABI-FREEZE`, `ABI contract: <name/version
 
 ## Текущая ограниченная handle boundary Phase 3.3
 
-[Process-local handles](../kernel/handles.md) реализуют caller-local reference identity, type, lifetime и attenuated transfer через явные LE64 handles и копируемые 48-byte requests. [Domains and grants](../kernel/domains.md) добавляют явную Event authority, revocation, quotas и retained terminal outcomes. native.notification/1 — отдельный experimental pilot, а не freeze candidate general IPC frame выше. Full payload IPC, cancellation/deadline arbitration и automatic wait registration остаются будущими контрактами.
+[Process-local handles](../kernel/handles.md) реализуют caller-local reference identity, type, lifetime и attenuated transfer через явные LE64 handles и копируемые 48-byte requests. [Domains and grants](../kernel/domains.md) добавляют явную Event authority, revocation, quotas и retained terminal outcomes. native.notification/1 сохраняется как отдельный experimental pilot. [native.request/1](../kernel/ipc.md) реализует новый bounded IPC mechanism; full Phase 3.5 acceptance ещё продолжается. Ни один transport не замораживает исторический candidate выше.
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.architecture.native-abi",
+  "kind": "api-contract",
+  "summary": "Жизненный цикл исторического native.request/0 и текущая ссылка на экспериментальный request/1."
+}
+```

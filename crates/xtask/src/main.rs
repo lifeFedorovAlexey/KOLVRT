@@ -180,11 +180,6 @@ const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
 ];
-const ELF_CONTROLS: &[(&str, &str, &str)] = &[(
-    "--elf-entry-alignment-control",
-    "elf-entry-alignment-negative",
-    "\"name\":\"elf_entry_alignment\",\"status\":\"fail\"",
-)];
 const SECURITY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--domain-budget-control",
@@ -222,6 +217,123 @@ const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
         "--user-copy-recovery-control",
         "user-copy-recovery-negative",
         "\"event\":\"fatal\"",
+    ),
+];
+const IPC_CONTROLS: &[(&str, &str, &str)] = &[
+    (
+        "--ipc-request-generation-control",
+        "ipc-request-generation-negative",
+        "ipc_payload_snapshot_result_id_and_stress",
+    ),
+    (
+        "--ipc-double-charge-release-control",
+        "ipc-double-charge-release-negative",
+        "reject:ChargeAlreadyReleased",
+    ),
+    (
+        "--ipc-storage-scope-control",
+        "ipc-storage-scope-negative",
+        "reject:StorageInsideScheduler",
+    ),
+    (
+        "--ipc-duplicate-ready-control",
+        "ipc-duplicate-ready-negative",
+        "reject:DuplicateReady",
+    ),
+    (
+        "--ipc-wrong-process-wake-control",
+        "ipc-wrong-process-wake-negative",
+        "reject:WrongProcessWake",
+    ),
+    (
+        "--ipc-blocked-reclaim-control",
+        "ipc-blocked-reclaim-negative",
+        "reject:BlockedTaskReclaim",
+    ),
+    (
+        "--ipc-wake-generation-control",
+        "ipc-wake-generation-negative",
+        "reject:WakeGenerationAccepted",
+    ),
+    (
+        "--ipc-wait-recheck-control",
+        "ipc-wait-recheck-negative",
+        "reject:WaitRegistrationLost",
+    ),
+    (
+        "--ipc-wake-publication-control",
+        "ipc-wake-publication-negative",
+        "reject:WakePublicationLost",
+    ),
+    (
+        "--ipc-service-token-control",
+        "ipc-service-token-negative",
+        "ipc_el0_cpu0_to_cpu1",
+    ),
+    (
+        "--ipc-charge-release-control",
+        "ipc-charge-release-negative",
+        "ipc_deadline_before_effect",
+    ),
+    (
+        "--ipc-teardown-control",
+        "ipc-teardown-negative",
+        "reject:EndpointNotQuiescent",
+    ),
+    (
+        "--ipc-cancel-control",
+        "ipc-cancel-negative",
+        "ipc_cancel_before_commit",
+    ),
+    (
+        "--ipc-service-death-control",
+        "ipc-service-death-negative",
+        "ipc_service_death_queued",
+    ),
+    (
+        "--ipc-double-terminal-control",
+        "ipc-double-terminal-negative",
+        "ipc_payload_snapshot_result_id_and_stress",
+    ),
+    (
+        "--ipc-capacity-control",
+        "ipc-capacity-negative",
+        "ipc_queue_full_fifo_and_reclamation",
+    ),
+    (
+        "--ipc-fifo-control",
+        "ipc-fifo-negative",
+        "ipc_queue_full_fifo_and_reclamation",
+    ),
+    (
+        "--ipc-id-reuse-control",
+        "ipc-id-reuse-negative",
+        "ipc_payload_snapshot_result_id_and_stress",
+    ),
+    (
+        "--ipc-receive-copy-control",
+        "ipc-receive-copy-negative",
+        "ipc_receive_copy_failure_retains_queue",
+    ),
+    (
+        "--ipc-collect-copy-control",
+        "ipc-collect-copy-negative",
+        "ipc_collect_copy_failure_retains_result",
+    ),
+    (
+        "--ipc-send-rights-control",
+        "ipc-send-rights-negative",
+        "ipc_authority_denial_revoke_and_retention",
+    ),
+    (
+        "--ipc-revoke-control",
+        "ipc-revoke-negative",
+        "ipc_authority_denial_revoke_and_retention",
+    ),
+    (
+        "--ipc-deadline-control",
+        "ipc-deadline-negative",
+        "ipc_deadline_before_effect",
     ),
 ];
 #[path = "../../kernel/src/platform/config.rs"]
@@ -316,6 +428,33 @@ const TESTS: &[&str] = &[
     "handle_exit_fault_cleanup_and_process_reuse",
     "domain_memory_budget_enforced",
     "domain_el0_request_and_queue_budgets",
+    "ipc_el0_cpu0_to_cpu1",
+    "ipc_el0_cpu1_to_cpu0",
+    "ipc_el0_same_cpu0",
+    "ipc_el0_same_cpu1",
+    "ipc_deadline_before_effect",
+    "ipc_deadline_after_commit",
+    "ipc_service_death_queued",
+    "ipc_service_death_delivered",
+    "ipc_service_death_committed",
+    "ipc_receive_copy_failure_retains_queue",
+    "ipc_collect_copy_failure_retains_result",
+    "ipc_cancel_before_commit",
+    "ipc_cancel_after_commit",
+    "ipc_requester_death_queued",
+    "ipc_requester_death_delivered",
+    "ipc_requester_death_committed",
+    "ipc_authority_denial_revoke_and_retention",
+    "ipc_payload_snapshot_result_id_and_stress",
+    "ipc_queue_full_fifo_and_reclamation",
+    "ipc_concurrent_producers_fifo_and_reclamation",
+    "ipc_queued_head_nonhead_cancel_fifo",
+    "ipc_unconsumed_terminal_domain_teardown",
+    "ipc_concurrent_revoke_admission_retains_accepted",
+    "ipc_both_peers_die_with_accepted_work",
+    "ipc_shutdown_queued_and_blocked_requester",
+    "ipc_empty_service_death_reclamation",
+    "ipc_request_quota_failure_has_no_phantom_work",
     "capability_el0_scope_attenuation_and_denial",
     "capability_revocation_retains_admitted_effect",
     "domain_teardown_retains_accepted_notification",
@@ -345,6 +484,17 @@ fn run() -> Result<()> {
             if status.success() { Ok(()) } else { Err("documentation command failed".into()) }
         }
         Some("audit") => audit(),
+        Some("ipc-controls") if args.len() == 1 => ipc_controls(),
+        Some("ipc-bench") if args.len()==1 => {
+            let sources=source_inventory()?;
+            for prod in [false,true] {
+                let elf=build(prod,false,Some("ipc-benchmark"),true)?;
+                execute(&elf,false,true)?;
+            }
+            if source_inventory()?!=sources {return Err("IPC measurement sources changed during run".into());}
+            archive_ipc_benchmark(&sources)?;
+            Ok(())
+        },
         Some("routing") => {
             #[cfg(feature = "route-tools")]
             { routing_demo::run(&args[1..]) }
@@ -378,7 +528,13 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
-            for &(flag, feature, _) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()).chain(ELF_CONTROLS.iter()) {
+            for &(flag, feature, _) in IPC_CONTROLS {
+                if args.iter().any(|arg| arg == flag) {
+                    let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
+                    return execute(&elf, true, true);
+                }
+            }
+            for &(flag, feature, _) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
                     return execute(&elf, true, true);
@@ -461,7 +617,7 @@ fn run() -> Result<()> {
             }
             println!("Native kernel matrix passed (two active CPUs; scheduler ownership enforced).");
             for prod in [false, true] {
-                for &(flag, _, marker) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()).chain(ELF_CONTROLS.iter()) {
+                for &(flag, _, marker) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
                     let mut command = Command::new(env::current_exe()?);
                     command.args(["test", flag]);
                     if prod { command.arg("--prod"); }
@@ -479,11 +635,121 @@ fn run() -> Result<()> {
                 [_, flag, label] if flag == "--record" => Some(label.as_str()),
                 _ => return Err("usage: cargo xtask test [--record LABEL]".into()),
             };
+            ipc_controls()?;
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
         _ => Err("usage: cargo xtask test [--record LABEL] | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
+}
+/// Inspect the actual parsed kernel sidecar. Exit failure or an unrelated panic
+/// alone is insufficient: each mutation must fail its named real EL0 test.
+fn ipc_controls() -> Result<()> {
+    for prod in [false, true] {
+        for &(flag, feature, test) in IPC_CONTROLS {
+            let profile = if prod { "prod" } else { "dev" };
+            let receipt = PathBuf::from(format!("target/kernel/{profile}-{feature}.results.json"));
+            match fs::remove_file(&receipt) {
+                Ok(()) => {}
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+                Err(error) => return Err(error.into()),
+            }
+            let mut command = Command::new(env::current_exe()?);
+            command.args(["test", flag]);
+            if prod {
+                command.arg("--prod");
+            }
+            let output = command.output()?;
+            fs::write(
+                format!("target/kernel/{profile}-{flag}.log"),
+                format!(
+                    "{}{}",
+                    String::from_utf8_lossy(&output.stdout),
+                    String::from_utf8_lossy(&output.stderr)
+                ),
+            )?;
+            let events = read_json(receipt)?;
+            if output.status.success()
+                || !events
+                    .as_array()
+                    .ok_or("IPC control events absent")?
+                    .iter()
+                    .any(|event| {
+                        ((event["event"] == "test" && event["name"] == test)
+                            || test.strip_prefix("reject:").is_some_and(|error| {
+                                event["event"] == "ipc-reject" && event["error"] == error
+                            }))
+                            && event["status"] == "fail"
+                    })
+            {
+                return Err(format!(
+                    "IPC mutation not detected by exact test: {flag} prod={prod} expected={test}"
+                )
+                .into());
+            }
+            println!("IPC rejection verified: {flag} prod={prod} test={test}");
+        }
+    }
+    Ok(())
+}
+fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
+    let mut profiles = serde_json::Map::new();
+    for profile in ["dev", "prod"] {
+        let events = read_json(format!(
+            "target/kernel/{profile}-ipc-benchmark.results.json"
+        ))?;
+        let records = events.as_array().ok_or("IPC benchmark events absent")?;
+        output::validate(records, false, &[], platform_config::ACTIVE_CPUS)?;
+        let mut observations = Vec::new();
+        for event in records
+            .iter()
+            .filter(|event| event["event"] == "ipc-measurement")
+        {
+            let samples = event["samples"]
+                .as_array()
+                .ok_or("IPC samples absent")?
+                .iter()
+                .map(|sample| sample.as_u64().ok_or("invalid IPC sample"))
+                .collect::<std::result::Result<Vec<_>, _>>()?;
+            let mean =
+                samples.iter().map(|sample| *sample as f64).sum::<f64>() / samples.len() as f64;
+            let stddev = (samples
+                .iter()
+                .map(|sample| (*sample as f64 - mean).powi(2))
+                .sum::<f64>()
+                / samples.len() as f64)
+                .sqrt();
+            let mut observation = event.clone();
+            observation["mean"] = json!(mean);
+            observation["stddev_population"] = json!(stddev);
+            observations.push(observation);
+        }
+        if observations.len() != 144 {
+            return Err("IPC performance groups incomplete".into());
+        }
+        profiles.insert(
+            profile.into(),
+            json!({"observations":observations,
+            "build":read_json(format!("target/kernel/{profile}-ipc-benchmark-build.json"))?,
+            "run":read_json(format!("target/kernel/{profile}-ipc-benchmark.run.json"))?,
+            "events":events}),
+        );
+    }
+    fs::create_dir_all("research/measurements")?;
+    let artifact = json!({"schema_version":1,"scope":"QEMU TCG regression baseline; not physical ARM performance or a speed target",
+        "clock":"boot-local architectural counter ticks; frequency recorded per observation",
+        "measurement":"EL0 clock-probe envelopes include clock return/entry, argument setup and result checks; warmup 4, measured samples 16",
+        "round_trip":"submit through terminal wait and successful collect, without intermediate operation timing/report probes",
+        "receive":"Generic receive is mixed. Dedicated hot_ready_receive requires zero condition blocks; blocked_receive_wake and blocked_requester_wait require one condition block per operation, verified from owner-local CLOCK observations before/after every warmup and measured call. Queue-full requires explicit exhaustion with zero condition blocks.",
+        "copy_path":["client user to initialized kernel request","kernel request to service user","service user to initialized kernel response","kernel response to client user"],
+        "limitations":["No zero-copy","No hardware speed claim","No compatibility penalty or synthetic timing subtraction","Wake timing includes native publication/notification in submit and target resumption in receive/round-trip envelopes; no isolated IPI-only cost"],
+        "sources":sources,"profiles":profiles});
+    fs::write(
+        "research/measurements/ipc-phase35-baseline.json",
+        serde_json::to_string_pretty(&artifact)?,
+    )?;
+    println!("IPC baseline: research/measurements/ipc-phase35-baseline.json");
+    Ok(())
 }
 fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<PathBuf> {
     let mut c = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()));
@@ -926,7 +1192,36 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + ELF_CONTROLS.len()) * 2},"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let mut ipc_mutations = Vec::new();
+    for profile in ["dev", "prod"] {
+        for &(flag, feature, expected) in IPC_CONTROLS {
+            let sidecar = read_json(format!("target/kernel/{profile}-{feature}.results.json"))?;
+            let failures: Vec<_> = sidecar
+                .as_array()
+                .ok_or("IPC sidecar is not an event list")?
+                .iter()
+                .filter(|event| {
+                    event["status"] == "fail"
+                        && ((event["event"] == "test" && event["name"] == expected)
+                            || expected.strip_prefix("reject:").is_some_and(|error| {
+                                event["event"] == "ipc-reject" && event["error"] == error
+                            }))
+                })
+                .cloned()
+                .collect();
+            if failures.is_empty() {
+                return Err("IPC exact rejection missing during archival".into());
+            }
+            ipc_mutations.push(json!({
+                "profile":profile,"flag":flag,"feature":feature,"expected":expected,
+                "status":"rejected",
+                "exact_rejections":failures,
+                "build":read_json(format!("target/kernel/{profile}-{feature}-build.json"))?,
+                "run":read_json(format!("target/kernel/{profile}-{feature}.run.json"))?
+            }));
+        }
+    }
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_negative_controls":IPC_CONTROLS.len()*2},"ipc_negative_controls":ipc_mutations,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {
@@ -1143,7 +1438,6 @@ mod native_architecture_tests {
         for &(flag, _, marker) in super::USER_COPY_CONTROLS
             .iter()
             .chain(super::HANDLE_CONTROLS.iter())
-            .chain(super::ELF_CONTROLS.iter())
         {
             if flag == "--user-copy-recovery-control" {
                 continue; // Recovery deliberately causes a fatal architectural exception.
@@ -1152,8 +1446,6 @@ mod native_architecture_tests {
                 ("handle-retirement-reject", None)
             } else if flag == "--user-copy-snapshot-control" {
                 ("test", Some("user_copy_el0_boundary_and_snapshot"))
-            } else if flag == "--elf-entry-alignment-control" {
-                ("test", Some("elf_entry_alignment"))
             } else {
                 (
                     "test",

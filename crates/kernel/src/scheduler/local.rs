@@ -135,7 +135,10 @@ impl Local {
     pub fn inspect<R>(&self, generation: u64, operation: impl for<'a> FnOnce(&'a State) -> R) -> R {
         self.quiescent(generation, |state| operation(state))
     }
-    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+    #[cfg(all(
+        feature = "machine-events",
+        any(feature = "boot-payload", feature = "ipc-benchmark")
+    ))]
     pub fn inspect_reports<R>(
         &self,
         generation: u64,
@@ -147,8 +150,7 @@ impl Local {
             .inspect(percpu::id(), cpu::irq_masked(), generation)
             .unwrap_or_else(|error| reject(error));
         let _scope = Scope::enter();
-        // SAFETY: acquired quiescent permit excludes execution and mutation for both
-        // the task queue and report storage until this callback returns.
+        // SAFETY: quiescent ownership excludes execution and mutation for both stores.
         unsafe { operation(&*self.state.get(), &*self.reports.get()) }
     }
     /// Coordinator-only editing after acquired completion, with the same exclusive

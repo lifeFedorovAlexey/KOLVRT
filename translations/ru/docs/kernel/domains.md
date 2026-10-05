@@ -24,6 +24,8 @@ Phase 3.4 реализована в обозначенных ограничен�
 
 Memory pages включают owned page tables, code, data и guarded stacks, плюс loaded ELF pages. Memory limit проверяется до physical allocation. Handle charges учитывают каждый live namespace entry; transfer списывает receiver budget до publication. Request admission списывает consumer outstanding-request budget и service queue/request budgets. Denial откатывает все временные charges и references. Текущая namespace имеет восемь slots, а service — один queue cell; эти storage bounds не задают постоянные ABI maxima. Domain metadata и Event storage имеют отдельные явные fixed kernel pool bounds.
 
+Конкретный [IPC transport](ipc.md) использует те же one-process domain identities и отдельные quota dimensions. `Limits.endpoints` учитывает принадлежащие service domain endpoint instances и не подменяет memory/handle/queue/request limits. Admission удерживает requester request charge, service queue charge и service active request charge. Receive освобождает queue charge; единственный terminal arbiter освобождает active work charge; retained response остаётся под requester charge до успешного collect либо cleanup после смерти. Endpoint charge освобождается только после actual request/wait/reference quiescence. Legacy notification pilot сохраняет one-cell bound; IPC имеет собственные ограниченные очереди и result storage.
+
 <a name="kolvrt-domains-grants"></a>
 
 ## Grants и revocation
@@ -50,7 +52,7 @@ Memory pages включают owned page tables, code, data и guarded stacks, �
 
 Ошибки используют bounded handle statuses: invalid=1, stale=2, wrong type=3, foreign=4, inactive=5, capacity=6, generation exhausted=7, copy failure=8, rights denied=9, reference exhausted=10; scope/authority denied=11 и domain budget exhausted=12. Эта notification boundary сообщает input copy failure как invalid. Pointer, struct layout и compatibility errno не экспортируются.
 
-Service получает authority только для уже admitted concrete effect. Его собственные grants не могут заменить consumer target. Terminal receipt запрещает второй request до consumption; copied identity и sequence не дают stale outcomes связаться с более поздним процессом. Arbitrary payload, general endpoint, request cancellation API, automatic request-wait wakeup, deadline, persistent service и cross-CPU request queue отсутствуют. Это отдельные IPC/supervisor milestones, архитектура которых должна заново выводиться из accepted invariants, а не замораживаться этим pilot.
+Service получает authority только для уже admitted concrete effect. Его собственные grants не могут заменить consumer target. Terminal receipt запрещает второй request до consumption; copied identity и sequence не дают stale outcomes связаться с более поздним процессом. Эта notification boundary не содержит arbitrary payload, general endpoint, request cancellation API, automatic request-wait wakeup или deadline. Такие механизмы принадлежат отдельному native IPC contract. Persistent service и supervisor policy остаются следующими gates; pilot не замораживает их архитектуру.
 
 <a name="kolvrt-domains-teardown"></a>
 

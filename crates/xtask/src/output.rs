@@ -1,5 +1,5 @@
 use serde::de::{self, Deserialize, Deserializer, MapAccess, SeqAccess, Visitor};
-use serde_json::Value;
+use serde_json::{Value, json};
 use std::collections::BTreeSet;
 use std::io::{self, IsTerminal};
 
@@ -184,6 +184,21 @@ impl<'de> Deserialize<'de> for UniqueJson {
 }
 
 pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -> Result<()> {
+    let mut ipc_runs = BTreeSet::new();
+    let mut ipc_deadlines = BTreeSet::new();
+    let mut ipc_lifetimes = BTreeSet::new();
+    let mut requester_deaths = BTreeSet::new();
+    let mut authority_runs = BTreeSet::new();
+    let mut payload_runs = BTreeSet::new();
+    let mut queue_runs = BTreeSet::new();
+    let mut producer_runs = BTreeSet::new();
+    let mut queued_cancels = BTreeSet::new();
+    let mut terminal_deaths = BTreeSet::new();
+    let mut revoke_races = BTreeSet::new();
+    let mut closing_runs = BTreeSet::new();
+    let mut empty_service_deaths = BTreeSet::new();
+    let mut quota_failures = BTreeSet::new();
+    let mut ipc_measurements = BTreeSet::new();
     let mut names = BTreeSet::new();
     let mut terminal = false;
     let mut measurements = BTreeSet::new();
@@ -198,6 +213,387 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
             return Err("event after terminal kernel result".into());
         }
         match event["event"].as_str() {
+            Some("ipc-measurement") => {
+                let scope = event["scope"]
+                    .as_str()
+                    .ok_or("IPC measurement scope absent")?;
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("measurement client absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("measurement service absent")?;
+                let payload = event["payload"]
+                    .as_u64()
+                    .ok_or("measurement payload absent")?;
+                let controlled = [
+                    "hot_ready_receive",
+                    "blocked_receive_wake",
+                    "blocked_requester_wait",
+                    "queue_full_rejection",
+                ]
+                .contains(&scope);
+                if !["submit", "receive", "reply", "collect", "round_trip"].contains(&scope)
+                    && !controlled
+                    || event["controlled_path"] != controlled
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || ![0, 8, 64, 256].contains(&payload)
+                    || event["units"] != "timer_ticks"
+                    || event["frequency"]
+                        .as_u64()
+                        .is_none_or(|frequency| frequency == 0)
+                    || event["warmup"] != 4
+                    || event["iterations"] != 16
+                    || !ipc_measurements.insert((scope, client, service, payload))
+                {
+                    return Err("invalid or duplicate IPC measurement".into());
+                }
+                let mut samples = event["samples"]
+                    .as_array()
+                    .ok_or("IPC samples absent")?
+                    .iter()
+                    .map(|sample| sample.as_u64().ok_or("invalid IPC sample"))
+                    .collect::<std::result::Result<Vec<_>, _>>()?;
+                if samples.len() != 16 {
+                    return Err("incomplete IPC samples".into());
+                }
+                let quantiles = kernel_core::quantiles(&mut samples).unwrap();
+                for (name, value) in ["median", "p95", "p99"].into_iter().zip(quantiles) {
+                    if event[name].as_u64() != Some(value) {
+                        return Err("IPC quantile mismatch".into());
+                    }
+                }
+            }
+            Some("ipc-multiple-producers") => {
+                let first = event["first_cpu"]
+                    .as_u64()
+                    .ok_or("first producer CPU absent")?;
+                let second = event["second_cpu"]
+                    .as_u64()
+                    .ok_or("second producer CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("producer service CPU absent")?;
+                if ![(0, 0, 0), (1, 1, 1), (0, 1, 0), (0, 1, 1)].contains(&(first, second, service))
+                    || event["status"] != "pass"
+                    || event["capacity"] != 4
+                    || event["requests"] != 32
+                    || event["fifo"] != true
+                    || event["reclaimed"] != true
+                    || !producer_runs.insert((first, second, service))
+                {
+                    return Err("invalid concurrent producer evidence".into());
+                }
+            }
+            Some("ipc-queued-cancel") => {
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("cancel client CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("cancel service CPU absent")?;
+                if client >= cpus as u64
+                    || service >= cpus as u64
+                    || event["status"] != "pass"
+                    || event["capacity"] != 4
+                    || event["delivered"] != 2
+                    || event["fifo"] != true
+                    || event["full_rejected"] != true
+                    || event["reclaimed"] != true
+                    || !queued_cancels.insert((client, service))
+                {
+                    return Err("invalid queued head/non-head cancel evidence".into());
+                }
+            }
+            Some("ipc-terminal-death") => {
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("terminal death client absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("terminal death service absent")?;
+                if client >= cpus as u64
+                    || service >= cpus as u64
+                    || event["status"] != "pass"
+                    || event["completed_unconsumed"] != true
+                    || event["reclaimed"] != true
+                    || !terminal_deaths.insert((client, service))
+                {
+                    return Err("invalid unconsumed terminal death evidence".into());
+                }
+            }
+            Some("ipc-revoke-race") => {
+                let first = event["first_cpu"]
+                    .as_u64()
+                    .ok_or("revoke issuer CPU absent")?;
+                let second = event["second_cpu"]
+                    .as_u64()
+                    .ok_or("revoke sender CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("revoke service CPU absent")?;
+                if ![(0, 0, 0), (1, 1, 1), (0, 1, 0), (0, 1, 1)].contains(&(first, second, service))
+                    || event["status"] != "pass"
+                    || event["attempts_per_client"] != 16
+                    || event["issuer_post_revoke_denials"] != 14
+                    || event["accepted_completed"]
+                        .as_u64()
+                        .is_none_or(|count| count > 4)
+                    || event["reclaimed"] != true
+                    || !revoke_races.insert((first, second, service))
+                {
+                    return Err("invalid revoke/admission race evidence".into());
+                }
+            }
+            Some(name @ ("ipc-both-death" | "ipc-shutdown-load")) => {
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("closing client absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("closing service absent")?;
+                if client >= cpus as u64
+                    || service >= cpus as u64
+                    || event["status"] != "pass"
+                    || event["capacity"] != 4
+                    || event["delivered"] != 0
+                    || event["reclaimed"] != true
+                    || (name == "ipc-shutdown-load"
+                        && event["client_terminal_blocks"]
+                            .as_u64()
+                            .is_none_or(|count| count == 0))
+                    || !closing_runs.insert((name, client, service))
+                {
+                    return Err("invalid closing/death evidence".into());
+                }
+            }
+            Some("ipc-empty-service-death") => {
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("empty service CPU absent")?;
+                if service >= cpus as u64
+                    || event["status"] != "pass"
+                    || event["reclaimed"] != true
+                    || !empty_service_deaths.insert(service)
+                {
+                    return Err("invalid empty service death evidence".into());
+                }
+            }
+            Some("ipc-request-quota") => {
+                let client = event["client_cpu"].as_u64().ok_or("quota client absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("quota service absent")?;
+                if client >= cpus as u64
+                    || service >= cpus as u64
+                    || event["status"] != "pass"
+                    || event["requests_limit"] != 0
+                    || event["exhausted"] != true
+                    || event["reclaimed"] != true
+                    || !quota_failures.insert((client, service))
+                {
+                    return Err("invalid request quota rollback evidence".into());
+                }
+            }
+            Some("ipc-queue") => {
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("queue client CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("queue service CPU absent")?;
+                let capacity = event["capacity"].as_u64().ok_or("queue capacity absent")?;
+                if event["status"] != "pass"
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || ![1, 4].contains(&capacity)
+                    || event["delivered"].as_u64() != Some(capacity)
+                    || event["full_rejected"] != true
+                    || event["fifo"] != true
+                    || event["reclaimed"] != true
+                    || !queue_runs.insert((client, service, capacity))
+                {
+                    return Err("invalid or duplicate bounded queue evidence".into());
+                }
+            }
+            Some("ipc-payload-stress") => {
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("payload client CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("payload service CPU absent")?;
+                let capacity = event["capacity"]
+                    .as_u64()
+                    .ok_or("payload capacity absent")?;
+                if event["status"] != "pass"
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || ![1, 4].contains(&capacity)
+                    || event["requests"].as_u64() != Some(24)
+                    || event["payload_sizes"] != json!([0, 1, 8, 64, 255, 256])
+                    || event["reclaimed"] != true
+                    || !payload_runs.insert((client, service, capacity))
+                {
+                    return Err("invalid or duplicate payload stress evidence".into());
+                }
+            }
+            Some("ipc-authority") => {
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("authority client CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("authority service CPU absent")?;
+                if event["status"] != "pass"
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || event["denied_probes"].as_u64() != Some(13)
+                    || event["accepted_after_revoke_close"] != true
+                    || event["reclaimed"] != true
+                    || !authority_runs.insert((client, service))
+                {
+                    return Err("invalid or duplicate IPC authority evidence".into());
+                }
+            }
+            Some("ipc-requester-death") => {
+                let name = event["name"]
+                    .as_str()
+                    .ok_or("requester death name absent")?;
+                if ![
+                    "ipc_requester_death_queued",
+                    "ipc_requester_death_delivered",
+                    "ipc_requester_death_committed",
+                ]
+                .contains(&name)
+                {
+                    return Err("unknown requester death stage".into());
+                }
+                let client = event["client_cpu"].as_u64().ok_or("requester CPU absent")?;
+                let service = event["service_cpu"].as_u64().ok_or("service CPU absent")?;
+                let survivor = event["survivor_cpu"]
+                    .as_u64()
+                    .ok_or("survivor CPU absent")?;
+                if event["status"] != "pass"
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || survivor >= cpus as u64
+                    || survivor == client
+                    || event["reclaimed"] != true
+                    || event["survivor_completed"] != true
+                    || !requester_deaths.insert((name, client, service))
+                {
+                    return Err("invalid or duplicate requester death evidence".into());
+                }
+            }
+            Some("ipc-lifetime") => {
+                let name = event["name"].as_str().ok_or("lifetime case absent")?;
+                let outcome = match name {
+                    "ipc_service_death_queued"
+                    | "ipc_service_death_delivered"
+                    | "ipc_cancel_before_commit" => 4,
+                    "ipc_service_death_committed" | "ipc_cancel_after_commit" => 5,
+                    "ipc_receive_copy_failure_retains_queue"
+                    | "ipc_collect_copy_failure_retains_result" => 0,
+                    _ => return Err("unknown IPC lifetime case".into()),
+                };
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("lifetime client CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("lifetime service CPU absent")?;
+                if event["status"] != "pass"
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || event["outcome"].as_u64() != Some(outcome)
+                    || event["reclaimed"] != true
+                    || !ipc_lifetimes.insert((name, client, service))
+                {
+                    return Err("invalid or duplicate IPC lifetime evidence".into());
+                }
+                for peer in ["client", "service"] {
+                    let blocks = event[format!("{peer}_blocks")]
+                        .as_u64()
+                        .ok_or("lifetime block count absent")?;
+                    let wakes = event[format!("{peer}_wakes")]
+                        .as_u64()
+                        .ok_or("lifetime wake count absent")?;
+                    if blocks != wakes {
+                        return Err("lifetime exact wake count mismatch".into());
+                    }
+                }
+            }
+            Some("ipc-deadline") => {
+                let outcome = match event["name"].as_str() {
+                    Some("ipc_deadline_before_effect") => 6,
+                    Some("ipc_deadline_after_commit") => 5,
+                    _ => return Err("unknown IPC deadline case".into()),
+                };
+                let client = event["client_cpu"]
+                    .as_u64()
+                    .ok_or("deadline client CPU absent")?;
+                let service = event["service_cpu"]
+                    .as_u64()
+                    .ok_or("deadline service CPU absent")?;
+                if event["status"] != "pass"
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || client == service
+                    || event["outcome"].as_u64() != Some(outcome)
+                    || event["all_blocked"].as_u64().is_none_or(|count| count == 0)
+                    || event["reclaimed"] != true
+                    || !ipc_deadlines.insert((outcome, client, service))
+                {
+                    return Err("invalid or duplicate blocked deadline evidence".into());
+                }
+                for peer in ["client", "service"] {
+                    let blocks = event[format!("{peer}_blocks")]
+                        .as_u64()
+                        .ok_or("deadline block count absent")?;
+                    let wakes = event[format!("{peer}_wakes")]
+                        .as_u64()
+                        .ok_or("deadline wake count absent")?;
+                    if blocks == 0 || blocks != wakes {
+                        return Err("deadline did not wake exact blocked peer".into());
+                    }
+                }
+            }
+            Some("ipc") => {
+                let (client, service) = match event["name"].as_str() {
+                    Some("ipc_el0_cpu0_to_cpu1") => (0, 1),
+                    Some("ipc_el0_cpu1_to_cpu0") => (1, 0),
+                    Some("ipc_el0_same_cpu0") => (0, 0),
+                    Some("ipc_el0_same_cpu1") => (1, 1),
+                    _ => return Err("unknown IPC matrix case".into()),
+                };
+                let capacity = event["capacity"].as_u64().ok_or("IPC capacity absent")?;
+                if event["status"] != "pass"
+                    || ![1, 4].contains(&capacity)
+                    || event["client_cpu"].as_u64() != Some(client)
+                    || event["service_cpu"].as_u64() != Some(service)
+                    || client >= cpus as u64
+                    || service >= cpus as u64
+                    || !ipc_runs.insert((client, service, capacity))
+                {
+                    return Err("invalid or duplicate IPC matrix evidence".into());
+                }
+                for peer in ["client", "service"] {
+                    let generation = event[format!("{peer}_generation")]
+                        .as_u64()
+                        .ok_or("IPC generation absent")?;
+                    let blocks = event[format!("{peer}_blocks")]
+                        .as_u64()
+                        .ok_or("IPC block count absent")?;
+                    let wakes = event[format!("{peer}_wakes")]
+                        .as_u64()
+                        .ok_or("IPC wake count absent")?;
+                    if generation == 0 || blocks != wakes {
+                        return Err("IPC exact wake count mismatch".into());
+                    }
+                }
+            }
             Some("test") if tests => {
                 let name = event["name"].as_str().ok_or("test missing name")?;
                 if event["status"] != "pass" || !expected.contains(&name) || !names.insert(name) {
@@ -365,6 +761,124 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
     if !terminal {
         return Err("missing terminal kernel result".into());
     }
+    // Historical output-policy receipts remain readable. Current boot declares
+    // the IPC matrix explicitly; current suites require its named real tests.
+    let ipc_required = expected.contains(&"ipc_el0_cpu0_to_cpu1")
+        || events
+            .iter()
+            .any(|event| event["event"] == "boot" && event.get("ipc_runs").is_some());
+    if ipc_required
+        && (ipc_runs.len() != 8
+            || events
+                .iter()
+                .any(|event| event["event"] == "boot" && event["ipc_runs"].as_u64() != Some(8)))
+    {
+        return Err("missing or invalid current IPC matrix".into());
+    }
+    let deadline_required = expected.contains(&"ipc_deadline_before_effect")
+        || events
+            .iter()
+            .any(|event| event["event"] == "boot" && event.get("ipc_deadline_runs").is_some());
+    if deadline_required
+        && (ipc_deadlines.len() != 4
+            || events.iter().any(|event| {
+                event["event"] == "boot" && event["ipc_deadline_runs"].as_u64() != Some(4)
+            }))
+    {
+        return Err("missing current blocked deadline matrix".into());
+    }
+    let lifetime_required = expected.contains(&"ipc_service_death_queued")
+        || events
+            .iter()
+            .any(|event| event["event"] == "boot" && event.get("ipc_lifetime_runs").is_some());
+    if lifetime_required
+        && (ipc_lifetimes.len() != 28
+            || events.iter().any(|event| {
+                event["event"] == "boot" && event["ipc_lifetime_runs"].as_u64() != Some(28)
+            }))
+    {
+        return Err("missing current IPC lifetime matrix".into());
+    }
+    if !ipc_measurements.is_empty() && ipc_measurements.len() != 144 {
+        return Err("incomplete IPC performance matrix".into());
+    }
+    if expected.contains(&"ipc_concurrent_producers_fifo_and_reclamation")
+        && producer_runs.len() != 4
+    {
+        return Err("incomplete concurrent producer matrix".into());
+    }
+    if expected.contains(&"ipc_queued_head_nonhead_cancel_fifo") && queued_cancels.len() != 4 {
+        return Err("incomplete queued head/non-head cancel matrix".into());
+    }
+    if expected.contains(&"ipc_unconsumed_terminal_domain_teardown") && terminal_deaths.len() != 4 {
+        return Err("incomplete unconsumed terminal domain teardown matrix".into());
+    }
+    if expected.contains(&"ipc_concurrent_revoke_admission_retains_accepted")
+        && revoke_races.len() != 4
+    {
+        return Err("incomplete IPC revoke/admission race matrix".into());
+    }
+    if expected.contains(&"ipc_both_peers_die_with_accepted_work") && closing_runs.len() != 8 {
+        return Err("incomplete shutdown/both-death matrix".into());
+    }
+    if expected.contains(&"ipc_empty_service_death_reclamation")
+        && empty_service_deaths.len() != cpus
+    {
+        return Err("incomplete empty service death matrix".into());
+    }
+    if expected.contains(&"ipc_request_quota_failure_has_no_phantom_work")
+        && quota_failures.len() != 4
+    {
+        return Err("incomplete IPC quota rollback matrix".into());
+    }
+    let queue_required = expected.contains(&"ipc_queue_full_fifo_and_reclamation")
+        || events
+            .iter()
+            .any(|event| event["event"] == "boot" && event.get("ipc_queue_runs").is_some());
+    if queue_required
+        && (queue_runs.len() != 8
+            || events.iter().any(|event| {
+                event["event"] == "boot" && event["ipc_queue_runs"].as_u64() != Some(8)
+            }))
+    {
+        return Err("missing current queue matrix".into());
+    }
+    let payload_required = expected.contains(&"ipc_payload_snapshot_result_id_and_stress")
+        || events
+            .iter()
+            .any(|event| event["event"] == "boot" && event.get("ipc_payload_runs").is_some());
+    if payload_required
+        && (payload_runs.len() != 8
+            || events.iter().any(|event| {
+                event["event"] == "boot" && event["ipc_payload_runs"].as_u64() != Some(8)
+            }))
+    {
+        return Err("missing current payload stress matrix".into());
+    }
+    let authority_required = expected.contains(&"ipc_authority_denial_revoke_and_retention")
+        || events
+            .iter()
+            .any(|event| event["event"] == "boot" && event.get("ipc_authority_runs").is_some());
+    if authority_required
+        && (authority_runs.len() != 4
+            || events.iter().any(|event| {
+                event["event"] == "boot" && event["ipc_authority_runs"].as_u64() != Some(4)
+            }))
+    {
+        return Err("missing current authority matrix".into());
+    }
+    let requester_required = expected.contains(&"ipc_requester_death_queued")
+        || events.iter().any(|event| {
+            event["event"] == "boot" && event.get("ipc_requester_death_runs").is_some()
+        });
+    if requester_required
+        && (requester_deaths.len() != 12
+            || events.iter().any(|event| {
+                event["event"] == "boot" && event["ipc_requester_death_runs"].as_u64() != Some(12)
+            }))
+    {
+        return Err("missing current requester death matrix".into());
+    }
     Ok(())
 }
 
@@ -372,6 +886,118 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
 mod tests {
     use super::*;
     use serde_json::json;
+    #[test]
+    fn blocked_deadline_and_lifetime_receipts_reject_missing_or_corrupt_controls() {
+        let mut events = vec![el0()];
+        for (name, outcome) in [
+            ("ipc_deadline_before_effect", 6),
+            ("ipc_deadline_after_commit", 5),
+        ] {
+            for (client, service) in [(0, 1), (1, 0)] {
+                events.push(json!({"event":"ipc-deadline", "status":"pass", "name":name,
+                    "client_cpu":client, "service_cpu":service, "outcome":outcome,
+                    "all_blocked":1, "client_blocks":2, "client_wakes":2,
+                    "service_blocks":1, "service_wakes":1, "reclaimed":true}));
+            }
+        }
+        for (name, outcome) in [
+            ("ipc_service_death_queued", 4),
+            ("ipc_service_death_delivered", 4),
+            ("ipc_service_death_committed", 5),
+            ("ipc_receive_copy_failure_retains_queue", 0),
+            ("ipc_collect_copy_failure_retains_result", 0),
+            ("ipc_cancel_before_commit", 4),
+            ("ipc_cancel_after_commit", 5),
+        ] {
+            for (client, service) in [(0, 1), (1, 0), (0, 0), (1, 1)] {
+                events.push(json!({"event":"ipc-lifetime", "status":"pass", "name":name,
+                    "client_cpu":client, "service_cpu":service, "outcome":outcome,
+                    "client_blocks":1, "client_wakes":1, "service_blocks":0,
+                    "service_wakes":0, "reclaimed":true}));
+            }
+        }
+        let mut terminal = boot();
+        terminal["ipc_deadline_runs"] = json!(4);
+        terminal["ipc_lifetime_runs"] = json!(28);
+        events.push(terminal);
+        validate(&events, false, &[], 2).unwrap();
+        for (index, field, bad) in [
+            (1, "all_blocked", json!(0)),
+            (1, "outcome", json!(0)),
+            (1, "client_blocks", json!(0)),
+            (1, "client_wakes", json!(1)),
+            (1, "client_cpu", json!(1)),
+            (5, "outcome", json!(6)),
+            (5, "reclaimed", json!(false)),
+            (5, "service_wakes", json!(1)),
+            (5, "service_cpu", json!(2)),
+            (5, "name", json!("unknown")),
+        ] {
+            for value in [bad, Value::Null, json!("wrong-type")] {
+                let mut corrupt = events.clone();
+                corrupt[index][field] = value;
+                assert!(
+                    validate(&corrupt, false, &[], 2).is_err(),
+                    "accepted invalid {index}.{field}"
+                );
+            }
+        }
+        for index in [1, 5] {
+            let mut missing = events.clone();
+            missing.remove(index);
+            assert!(validate(&missing, false, &[], 2).is_err());
+            let mut duplicate = events.clone();
+            duplicate.insert(index, events[index].clone());
+            assert!(validate(&duplicate, false, &[], 2).is_err());
+        }
+    }
+    #[test]
+    fn ipc_receipt_requires_complete_matrix_and_exact_typed_wake_counts() {
+        let mut events = vec![el0()];
+        for (name, client, service) in [
+            ("ipc_el0_cpu0_to_cpu1", 0, 1),
+            ("ipc_el0_cpu1_to_cpu0", 1, 0),
+            ("ipc_el0_same_cpu0", 0, 0),
+            ("ipc_el0_same_cpu1", 1, 1),
+        ] {
+            for capacity in [1, 4] {
+                events.push(json!({"event":"ipc", "status":"pass", "name":name,
+                    "capacity":capacity, "client_cpu":client, "service_cpu":service,
+                    "client_generation":1, "service_generation":2,
+                    "client_blocks":1, "client_wakes":1, "service_blocks":0, "service_wakes":0}));
+            }
+        }
+        let mut terminal = boot();
+        terminal["ipc_runs"] = json!(8);
+        events.push(terminal);
+        validate(&events, false, &[], 2).unwrap();
+        for (field, bad) in [
+            ("capacity", json!(2)),
+            ("client_cpu", json!(1)),
+            ("service_cpu", json!(0)),
+            ("client_generation", json!(0)),
+            ("service_generation", json!(0)),
+            ("client_wakes", json!(2)),
+            ("service_wakes", json!(1)),
+            ("status", json!("fail")),
+            ("name", json!("other")),
+        ] {
+            for value in [bad, Value::Null, json!("wrong-type")] {
+                let mut corrupt = events.clone();
+                corrupt[1][field] = value;
+                assert!(
+                    validate(&corrupt, false, &[], 2).is_err(),
+                    "accepted invalid IPC {field}"
+                );
+            }
+        }
+        let mut missing = events.clone();
+        missing.remove(1);
+        assert!(validate(&missing, false, &[], 2).is_err());
+        let mut duplicate = events.clone();
+        duplicate.insert(1, events[1].clone());
+        assert!(validate(&duplicate, false, &[], 2).is_err());
+    }
     #[test]
     fn colors_preserve_labels_and_never_enter_evidence() {
         let text = "KOLVRT | DEV | AArch64 | EL1\n[OK] console: ready\n[FAIL] panic: halted\n[LEGACY] declared dependency\n[COMPAT] observed scope\n[MIXED] observed scope\n[MOSTLY_NATIVE] budget met\n[NATIVE] verified scope\n@KOLVRT/1 {\"event\":\"panic\",\"status\":\"fail\"}\n";

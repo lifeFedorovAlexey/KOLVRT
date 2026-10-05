@@ -91,6 +91,7 @@ pub(crate) fn exercise(
         handles: 1,
         queue: 1,
         requests: 1,
+        endpoints: 0,
     };
     let memory_denied = match r.create_bounded(p, Origin::Bootstrap, spec(image, 0), None, limits) {
         Err(_) => p.available() == before,
@@ -116,6 +117,7 @@ pub(crate) fn exercise(
                 handles: 2,
                 queue,
                 requests,
+                endpoints: 0,
             };
             let client = r
                 .create_bounded(
@@ -182,6 +184,7 @@ pub(crate) fn exercise(
                         handles: 0,
                         queue: 1,
                         requests: 1,
+                        endpoints: 0,
                     },
                 )
                 .unwrap();
@@ -407,6 +410,7 @@ fn limits() -> kernel_core::domain::Limits {
         handles: crate::handles::CAPACITY as u16,
         queue: 1,
         requests: 1,
+        endpoints: 0,
     }
 }
 

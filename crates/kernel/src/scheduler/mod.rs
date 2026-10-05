@@ -19,15 +19,25 @@ const NO_TASK: usize = TASKS;
 const NO_CPU: usize = usize::MAX;
 const QUANTUM: time::Duration = time::Duration::from_millis(1);
 pub(crate) struct Completed {
+    pub ipc_all_blocked: u64,
     pub switches: usize,
     pub tasks: [TaskResult; config::TOTAL_TASKS],
     pub owners_released: bool,
-    #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+    #[cfg(all(
+        feature = "machine-events",
+        any(feature = "boot-payload", feature = "ipc-benchmark")
+    ))]
     generation: u64,
 }
-#[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+#[cfg(all(
+    feature = "machine-events",
+    any(feature = "boot-payload", feature = "ipc-benchmark")
+))]
 pub(crate) const REPORT_CHUNK_WORDS: usize = 64;
-#[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+#[cfg(all(
+    feature = "machine-events",
+    any(feature = "boot-payload", feature = "ipc-benchmark")
+))]
 impl Completed {
     pub fn report_chunk(&self, id: usize, offset: usize) -> ([u64; REPORT_CHUNK_WORDS], usize) {
         assert!(id < config::TOTAL_TASKS);
@@ -53,6 +63,57 @@ static START: AtomicBool = AtomicBool::new(false);
 static ARRIVED: AtomicUsize = AtomicUsize::new(0);
 static SESSION: AtomicBool = AtomicBool::new(false);
 static STEP: AtomicBool = AtomicBool::new(false);
+static CONTINUOUS: AtomicBool = AtomicBool::new(false);
+static IPC_FINISHED: AtomicUsize = AtomicUsize::new(0);
+static IPC_BLOCKED_IDLE: AtomicUsize = AtomicUsize::new(0);
+static IPC_ALL_BLOCKED: AtomicU64 = AtomicU64::new(0);
+static IPC_REJECTION: AtomicUsize = AtomicUsize::new(0);
+const IPC_REJECTIONS: [&str; 9] = [
+    "ChargeAlreadyReleased",
+    "StorageInsideScheduler",
+    "BlockedTaskReclaim",
+    "DuplicateReady",
+    "WrongProcessWake",
+    "WakeGenerationAccepted",
+    "WaitRegistrationLost",
+    "WakePublicationLost",
+    "EndpointNotQuiescent",
+];
+/// A secondary cannot print UART records. Retain its exact rejection for the
+/// primary native continuation, then stop the failed CPU without reclaiming it.
+pub(crate) fn reject_ipc(error: &'static str) -> ! {
+    let code = IPC_REJECTIONS
+        .iter()
+        .position(|candidate| *candidate == error)
+        .expect("bounded known IPC rejection")
+        + 1;
+    if percpu::is_secondary() {
+        let _ = IPC_REJECTION.compare_exchange(0, code, Ordering::AcqRel, Ordering::Acquire);
+        crate::smp::secondary_failure();
+    }
+    crate::event!(
+        "{{\"event\":\"ipc-reject\",\"status\":\"fail\",\"error\":\"{}\"}}",
+        error
+    );
+    panic!("IPC invariant rejected: {error}")
+}
+fn check_ipc_failure() {
+    if !percpu::is_secondary() {
+        // Acquiring FAILED first also acquires the preceding exact rejection
+        // publication, so a racing failure cannot degrade to a generic panic.
+        let failed = percpu::CPUS[percpu::SECONDARY_CPU]
+            .state
+            .load(Ordering::Acquire)
+            == percpu::FAILED;
+        let code = IPC_REJECTION.load(Ordering::Acquire);
+        if code != 0 {
+            reject_ipc(IPC_REJECTIONS[code - 1]);
+        }
+        assert!(!failed, "IPC peer CPU failure");
+    }
+}
+static IPC_IPI: [AtomicBool; platform_config::ACTIVE_CPUS] =
+    [const { AtomicBool::new(false) }; platform_config::ACTIVE_CPUS];
 static CURSOR: [AtomicUsize; platform_config::ACTIVE_CPUS] =
     [const { AtomicUsize::new(NO_TASK) }; platform_config::ACTIVE_CPUS];
 const WAIT_OWN_EVENT: u16 = 0x55;
@@ -75,17 +136,26 @@ pub(crate) fn dispatch(
     tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
 ) -> Completed {
-    dispatch_inner(tasks, timeout, false)
+    dispatch_inner(tasks, timeout, false, false)
 }
 /// Return after at most one timer quantum/terminal event per CPU, without
 /// requiring processes to terminate. This still retains the two-CPU barrier.
 pub(crate) fn step(tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
-    dispatch_inner(tasks, None, true)
+    dispatch_inner(tasks, None, true, false)
+}
+/// Continuous native IPC session: blocked queues retain owner-local storage,
+/// roots and namespaces until all admitted processes have actually terminated.
+pub(crate) fn dispatch_ipc(
+    tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
+    timeout: Option<time::Duration>,
+) -> Completed {
+    dispatch_inner(tasks, timeout, false, true)
 }
 fn dispatch_inner(
     tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
     step: bool,
+    continuous: bool,
 ) -> Completed {
     percpu::primary_only();
     assert!(cpu::irq_masked(), "scheduler coordinator IRQ contract");
@@ -101,12 +171,20 @@ fn dispatch_inner(
         .expect("scheduler generation exhausted");
     START.store(false, Ordering::Release);
     STEP.store(step, Ordering::Release);
+    CONTINUOUS.store(continuous, Ordering::Release);
+    IPC_FINISHED.store(0, Ordering::Release);
+    IPC_BLOCKED_IDLE.store(0, Ordering::Release);
+    IPC_ALL_BLOCKED.store(0, Ordering::Release);
     ARRIVED.store(0, Ordering::Release);
     NATIVE_ROOT.store(memory::table_root(), Ordering::Release);
     for (owner, local) in LOCALS.iter().enumerate() {
         // Initialize existing storage under the exclusive preparing permit. A
         // by-value State would put multiple report/namespace arrays on DEV stacks.
         local.prepare(generation, |state| {
+            assert!(
+                state.ipc_pending.iter().all(Option::is_none),
+                "IPC continuation survived session retirement"
+            );
             state.current = if step {
                 CURSOR[owner].load(Ordering::Acquire)
             } else {
@@ -166,6 +244,7 @@ fn dispatch_inner(
             }
         });
         local.preempt.store(false, Ordering::Release);
+        IPC_IPI[owner].store(false, Ordering::Release);
     }
     memory::USER_EXECUTION_ACTIVE.store(platform_config::ACTIVE_CPUS, Ordering::Release);
     for local in &LOCALS {
@@ -184,10 +263,14 @@ fn dispatch_inner(
         .all(|owner| owner.load(Ordering::Acquire) == NO_CPU);
     assert!(owners_released, "scheduler executing owner retained");
     let mut completed = Completed {
+        ipc_all_blocked: IPC_ALL_BLOCKED.load(Ordering::Acquire),
         switches: 0,
         tasks: [TaskResult::ZERO; config::TOTAL_TASKS],
         owners_released,
-        #[cfg(all(feature = "machine-events", feature = "boot-payload"))]
+        #[cfg(all(
+            feature = "machine-events",
+            any(feature = "boot-payload", feature = "ipc-benchmark")
+        ))]
         generation,
     };
     for (owner, local) in LOCALS.iter().enumerate() {
@@ -227,7 +310,11 @@ pub(crate) fn unlink(completed: &Completed) {
         local.quiescent(local.generation(), |state| {
             state.current = NO_TASK;
             for task in &mut state.tasks {
-                task.unlink();
+                if CONTINUOUS.load(Ordering::Acquire) {
+                    task.unlink_ipc();
+                } else {
+                    task.unlink();
+                }
             }
         });
     }
@@ -284,6 +371,13 @@ pub fn on_timer() {
         local.with(local.generation(), |_| {
             local.preempt.store(true, Ordering::Release)
         });
+    }
+}
+/// IRQ only publishes a flag; target owner drains exact mailbox work outside
+/// IRQ and storage scopes. SGI rescheduling does not fabricate a timer slice.
+pub fn on_ipi() {
+    if CONTINUOUS.load(Ordering::Acquire) && LOCALS[percpu::id()].phase() == Phase::Running {
+        IPC_IPI[percpu::id()].store(true, Ordering::Release);
     }
 }
 pub fn poll_secondary() {
@@ -377,6 +471,9 @@ fn run_local() {
         }
     }
     assert_eq!(cpu::el(), cpu::CURRENT_EL1);
+    if CONTINUOUS.load(Ordering::Acquire) {
+        continuous_local(local, generation);
+    }
     memory::USER_EXECUTION_ACTIVE.fetch_sub(1, Ordering::AcqRel);
     let quiescent = cpu::active_root() == NATIVE_ROOT.load(Ordering::Acquire)
         && local.with(generation, |state| {
@@ -390,10 +487,125 @@ fn run_local() {
             .all(|owner| owner.load(Ordering::Acquire) == NO_CPU);
     local.complete(generation, quiescent);
 }
+fn continuous_local(local: &Local, generation: u64) {
+    loop {
+        // Clear before any owner-local wake/selection can change BLOCKED to
+        // READY/RUNNING. The idle bit describes actual saved blocked contexts.
+        IPC_BLOCKED_IDLE.fetch_and(!(1 << percpu::id()), Ordering::AcqRel);
+        // Idle timer/SGI flags describe deferred work, never execution slices
+        // for the next resumed task. Mailbox/deadline records are drained below.
+        local.preempt.store(false, Ordering::Release);
+        IPC_IPI[percpu::id()].store(false, Ordering::Release);
+        let work = deferred_local(local, generation);
+        let (live, pending, session_deadline, next) = local.with(generation, |state| {
+            if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
+                for (index, task) in state.tasks.iter_mut().enumerate() {
+                    if matches!(task.state, CONTEXT_READY | CONTEXT_BLOCKED) {
+                        task.state = CONTEXT_TIMED_OUT;
+                        task.ipc_wait = None;
+                        state.handles[index].begin_teardown();
+                        state.requests.close_service(index);
+                        state.requests.close_consumer(index);
+                        crate::asid::retire(task.lease());
+                    }
+                }
+            }
+            let live = state.tasks.iter().any(|task| {
+                matches!(
+                    task.state,
+                    CONTEXT_READY | CONTEXT_RUNNING | CONTEXT_BLOCKED
+                )
+            });
+            let pending = state.ipc_pending.iter().any(Option::is_some);
+            let next = choose(state, generation).map(|index| {
+                let task = &state.tasks[index];
+                (task.context, task.root(), task.lease(), task.id())
+            });
+            (live, pending, state.deadline, next)
+        });
+        #[cfg(feature = "ipc-wait-recheck-negative")]
+        if !live
+            && !pending
+            && session_deadline.is_some_and(|limit| cpu::ticks() >= limit)
+            && crate::ipc::native::wait_registration_omitted()
+        {
+            reject_ipc("WaitRegistrationLost");
+        }
+        if let Some(next) = next {
+            acquire_process(next.3);
+            // SAFETY: INV-USER-TTBR: continuous admitted session retains the
+            // exact immutable root/lease until both owners complete; no storage
+            // borrow survives this activation or subsequent EL0 entry.
+            unsafe {
+                activate(next.1, next.2.asid);
+            }
+            cpu::timer(time::deadline_after(QUANTUM));
+            local.with(generation, |state| {
+                state.tasks[next.3 % TASKS].entered_at = cpu::ticks()
+            });
+            // SAFETY: INV-USER-CONTEXT: validated permanent frame/stack ABI;
+            // owner-local saved frame is copied before releasing storage.
+            unsafe {
+                cpu::context::enter(&next.0, local.resume_sp.as_ptr());
+            }
+            continue;
+        }
+        if !live && !pending && work.complete {
+            IPC_FINISHED.fetch_or(1 << percpu::id(), Ordering::AcqRel);
+        }
+        #[cfg(feature = "ipc-wake-publication-negative")]
+        if !live
+            && !pending
+            && session_deadline.is_some_and(|limit| cpu::ticks() >= limit)
+            && !work.quiescent
+        {
+            reject_ipc("WakePublicationLost");
+        }
+        if IPC_FINISHED.load(Ordering::Acquire) == (1 << platform_config::ACTIVE_CPUS) - 1
+            && work.quiescent
+            && !pending
+        {
+            cpu::timer_stop();
+            break;
+        }
+        // Every idle owner remains Phase::Running. It services exact wake/death
+        // and timeout work and does not publish root/frame retirement merely
+        // because no task is currently READY. Even a terminal local CPU stays
+        // available until peer terminal state and source/ack drainage agree.
+        let retry = time::deadline_after(QUANTUM);
+        let deadline = [work.deadline, session_deadline, Some(retry)]
+            .into_iter()
+            .flatten()
+            .min()
+            .expect("bounded deferred retry timer");
+        cpu::timer(deadline);
+        if live && !pending {
+            let owners = IPC_BLOCKED_IDLE.fetch_or(1 << percpu::id(), Ordering::AcqRel)
+                | (1 << percpu::id());
+            if owners == (1 << platform_config::ACTIVE_CPUS) - 1 {
+                IPC_ALL_BLOCKED.fetch_add(1, Ordering::AcqRel);
+            }
+        }
+        cpu::ipc_idle();
+    }
+}
 
 pub(crate) fn trap(frame: &mut Context, kind: Trap, entry_ticks: u64) -> usize {
     let local = &LOCALS[percpu::id()];
     let generation = local.generation();
+    if matches!(
+        kind,
+        Trap::Sync {
+            class: ESR_SVC64,
+            operation: crate::ipc::native::REQUEST,
+            ..
+        }
+    ) {
+        return ipc_trap(local, generation, frame, entry_ticks);
+    }
+    if CONTINUOUS.load(Ordering::Acquire) {
+        deferred_local(local, generation);
+    }
     #[cfg(feature = "machine-events")]
     {
         local.with_reports(generation, |state, reports| {
@@ -446,12 +658,16 @@ fn trap_owned(
         .expect("per-process EL0 residency counter exhausted");
     task.context = *frame;
     if matches!(kind, Trap::Irq) {
-        if !local.preempt.swap(false, Ordering::AcqRel) {
+        let timer = local.preempt.swap(false, Ordering::AcqRel);
+        let ipc = IPC_IPI[percpu::id()].swap(false, Ordering::AcqRel);
+        if !timer && !ipc {
             task.entered_at = cpu::ticks();
             return 0;
         }
-        task.slices += 1;
-        task.observations.service_timer(task.slices);
+        if timer {
+            task.slices += 1;
+            task.observations.service_timer(task.slices);
+        }
         task.state = if task
             .slice_budget()
             .is_some_and(|limit| task.slices >= limit)
@@ -511,9 +727,21 @@ fn trap_owned(
             task.fault_far = far;
         }
     }
+    reschedule(state, frame, local, generation, current)
+}
+fn reschedule(
+    state: &mut State,
+    frame: &mut Context,
+    local: &Local,
+    generation: u64,
+    current: usize,
+) -> usize {
     if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
         for task in &mut state.tasks {
-            if task.state == CONTEXT_READY || task.state == CONTEXT_RUNNING {
+            if matches!(
+                task.state,
+                CONTEXT_READY | CONTEXT_RUNNING | CONTEXT_BLOCKED
+            ) {
                 task.state = CONTEXT_TIMED_OUT;
             }
         }
@@ -568,6 +796,234 @@ fn trap_owned(
         local.resume_sp.load(Ordering::Acquire)
     }
 }
+fn ipc_trap(local: &Local, generation: u64, frame: &mut Context, entry_ticks: u64) -> usize {
+    let prepared = local.with(generation, |state| {
+        let current = state.current;
+        let task = &mut state.tasks[current];
+        validate_task(task, current, generation);
+        assert_eq!(task.state, CONTEXT_RUNNING);
+        assert!(
+            task.ipc_wait.is_none(),
+            "running task retained IPC wait reason"
+        );
+        task.el0_residency_ticks = task
+            .el0_residency_ticks
+            .checked_add(
+                entry_ticks
+                    .checked_sub(task.entered_at)
+                    .expect("architectural counter moved backwards"),
+            )
+            .expect("EL0 residency exhausted");
+        task.context = *frame;
+        if !CONTINUOUS.load(Ordering::Acquire) {
+            return Err(13);
+        }
+        let prepared = crate::ipc::native::prepare(task, &state.handles[current], frame)?;
+        #[cfg(feature = "ipc-storage-scope-negative")]
+        let _ = crate::ipc::native::execute(&prepared, cpu::ticks());
+        Ok(prepared)
+    });
+    let prepared = match prepared {
+        Ok(prepared) => prepared,
+        Err(status) => return ipc_return(local, generation, frame, status, 0),
+    };
+    let action = match crate::ipc::native::execute(&prepared, cpu::ticks()) {
+        Ok(action) => action,
+        #[cfg(feature = "ipc-double-charge-release-negative")]
+        Err(crate::ipc::native::Failure::State(kernel_core::ipc::Error::ChargeAlreadyReleased)) => {
+            reject_ipc("ChargeAlreadyReleased");
+        }
+        Err(error) if error.retry(prepared.blocking()) => {
+            return local.with(generation, |state| {
+                let current = state.current;
+                let task = &mut state.tasks[current];
+                task.context.pc = task.context.pc.checked_sub(4).expect("SVC retry address");
+                task.ipc_wait = Some(IpcWait::Retry);
+                task.state = CONTEXT_BLOCKED;
+                reschedule(state, frame, local, generation, current)
+            });
+        }
+        Err(error) => {
+            return ipc_return(local, generation, frame, error.status(), 0);
+        }
+    };
+    if let crate::ipc::native::Action::Blocked { key, target } = action {
+        let resume = local.with(generation, |state| {
+            let current = state.current;
+            let task = &mut state.tasks[current];
+            // Restart this finite syscall once its registered condition wakes.
+            // Only architectural registers persist, never a user-memory borrow.
+            task.context.pc = task.context.pc.checked_sub(4).expect("SVC restart address");
+            #[cfg(feature = "ipc-wake-generation-negative")]
+            let key = key.with_generation(
+                key.process()
+                    .generation()
+                    .checked_add(1)
+                    .expect("test generation mutation has room"),
+            );
+            task.ipc_wait = Some(IpcWait::Wake { key, target });
+            task.ipc_blocks = task
+                .ipc_blocks
+                .checked_add(1)
+                .expect("IPC block counter exhausted");
+            if matches!(target, kernel_core::ipc::WaitTarget::Terminal(..)) {
+                task.ipc_terminal_blocks = task
+                    .ipc_terminal_blocks
+                    .checked_add(1)
+                    .expect("IPC terminal block counter exhausted");
+            }
+            task.state = CONTEXT_BLOCKED;
+            #[cfg(feature = "ipc-blocked-reclaim-negative")]
+            task.unlink_ipc();
+            reschedule(state, frame, local, generation, current)
+        });
+        deferred_local(local, generation);
+        return resume;
+    }
+    if let crate::ipc::native::Action::Returned(value) = action {
+        deferred_local(local, generation);
+        return ipc_return(local, generation, frame, 0, value);
+    }
+    let copied = local.with(generation, |state| {
+        crate::ipc::native::copy(&prepared, &state.tasks[state.current], &action)
+    });
+    match crate::ipc::native::finish(&action, copied.is_ok()) {
+        Err(kernel_core::ipc::Error::Busy) => {
+            let resume = local.with(generation, |state| {
+                let current = state.current;
+                let caller = state.handles[current].owner().expect("executing caller");
+                assert!(state.ipc_pending[current].is_none());
+                state.ipc_pending[current] = Some(IpcPending {
+                    caller,
+                    action,
+                    copy: copied,
+                });
+                state.tasks[current].ipc_wait = Some(IpcWait::Finish);
+                state.tasks[current].state = CONTEXT_BLOCKED;
+                reschedule(state, frame, local, generation, current)
+            });
+            deferred_local(local, generation);
+            resume
+        }
+        finished => {
+            deferred_local(local, generation);
+            let result = copied.and_then(|length| {
+                finished
+                    .map(|()| length)
+                    .map_err(crate::ipc::native::status)
+            });
+            match result {
+                Ok(length) => ipc_return(local, generation, frame, 0, length as u64),
+                Err(error) => ipc_return(local, generation, frame, error, 0),
+            }
+        }
+    }
+}
+fn ipc_return(
+    local: &Local,
+    generation: u64,
+    frame: &mut Context,
+    status: u64,
+    value: u64,
+) -> usize {
+    frame.gpr[0] = status;
+    frame.gpr[1] = value;
+    local.with(generation, |state| {
+        let task = &mut state.tasks[state.current];
+        assert_eq!(task.state, CONTEXT_RUNNING);
+        task.context = *frame;
+        task.entered_at = cpu::ticks();
+    });
+    0
+}
+/// Consume exact owner-local wake reasons, complete owned copy reservations,
+/// and drain source state in separate nonoverlapping ownership scopes.
+fn deferred_local(local: &Local, generation: u64) -> crate::ipc::deferred::Poll {
+    check_ipc_failure();
+    let mut notified = false;
+    let deaths = local.with(generation, |state| {
+        for index in 0..TASKS {
+            let task = &mut state.tasks[index];
+            if task.state == CONTEXT_BLOCKED && task.ipc_wait == Some(IpcWait::Retry) {
+                task.ipc_wait = None;
+                task.state = CONTEXT_READY;
+            }
+            let mailbox = crate::ipc::deferred::mailbox(percpu::id() * TASKS + index);
+            if let Some(sequence) = mailbox.pending() {
+                let exact = matches!(task.ipc_wait, Some(IpcWait::Wake { key, .. })
+                    if key.sequence() == sequence && key.process().slot() == task.id()
+                        && (cfg!(feature = "ipc-wake-generation-negative")
+                            || key.process().generation() == task.process_generation()));
+                if exact && task.state == CONTEXT_BLOCKED {
+                    #[cfg(feature = "ipc-wake-generation-negative")]
+                    if let Some(IpcWait::Wake { key, .. }) = task.ipc_wait {
+                        if key.process().generation() != task.process_generation() {
+                            reject_ipc("WakeGenerationAccepted");
+                        }
+                    }
+                    let Some(IpcWait::Wake { key, .. }) = task.ipc_wait else {
+                        unreachable!("exact IPC wake requires saved wait");
+                    };
+                    #[cfg(feature = "ipc-wrong-process-wake-negative")]
+                    let destination = (index + 1) % TASKS;
+                    #[cfg(not(feature = "ipc-wrong-process-wake-negative"))]
+                    let destination = index;
+                    state.tasks[destination].publish_ipc_ready(key);
+                    #[cfg(feature = "ipc-duplicate-ready-negative")]
+                    state.tasks[destination].publish_ipc_ready(key);
+                }
+                // A stale task/slot never becomes READY, but the retained source
+                // still needs an acknowledgement for actual quiescence.
+                if mailbox.consume(sequence).is_ok() {
+                    notified = true;
+                }
+            }
+        }
+        core::array::from_fn::<_, TASKS, _>(|index| {
+            matches!(
+                state.tasks[index].state,
+                CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+            )
+            .then(|| state.handles[index].owner())
+            .flatten()
+        })
+    });
+    for index in 0..TASKS {
+        let pending = local.with(generation, |state| state.ipc_pending[index].take());
+        if let Some(pending) = pending {
+            match crate::ipc::native::finish(&pending.action, pending.copy.is_ok()) {
+                Err(kernel_core::ipc::Error::Busy) => local.with(generation, |state| {
+                    assert!(state.ipc_pending[index].is_none());
+                    state.ipc_pending[index] = Some(pending);
+                }),
+                finished => local.with(generation, |state| {
+                    let task = &mut state.tasks[index];
+                    assert_eq!(task.id(), pending.caller.slot());
+                    assert_eq!(task.process_generation(), pending.caller.generation());
+                    if task.state == CONTEXT_BLOCKED && task.ipc_wait == Some(IpcWait::Finish) {
+                        let result = pending.copy.and_then(|length| {
+                            finished
+                                .map(|()| length)
+                                .map_err(crate::ipc::native::status)
+                        });
+                        task.context.gpr[0] = result.as_ref().err().copied().unwrap_or(0);
+                        task.context.gpr[1] = result.unwrap_or(0) as u64;
+                        task.ipc_wait = None;
+                        task.state = CONTEXT_READY;
+                    }
+                }),
+            }
+        }
+    }
+    if notified {
+        for owner in 0..platform_config::ACTIVE_CPUS {
+            if owner != percpu::id() {
+                crate::smp::ping(owner);
+            }
+        }
+    }
+    crate::ipc::deferred::poll(&deaths)
+}
 fn native_call(
     task: &mut Task,
     handles: &mut [crate::handles::Namespace; TASKS],
@@ -597,6 +1053,12 @@ fn native_call(
             frame.gpr[1] = cpu::frequency();
             frame.gpr[2] = task.el0_residency_ticks;
             frame.gpr[3] = task.native_window_service_ticks;
+            // Measurement-only observation: classify the actual operation's
+            // condition-block path without an extra probe inside its envelope.
+            #[cfg(feature = "ipc-benchmark")]
+            {
+                frame.gpr[4] = task.ipc_blocks;
+            }
         }
         #[cfg(feature = "machine-events")]
         abi::REPORT => {

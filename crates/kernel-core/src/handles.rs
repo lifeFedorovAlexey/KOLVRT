@@ -1,4 +1,4 @@
-//! Process-local references and explicit scoped grants to two native primitives.
+//! Process-local references and finite authority over concrete native primitives.
 use crate::{
     process::{Completion, ProcessId},
     wait::{SharedEvent, SignalError},
@@ -18,6 +18,7 @@ impl Handle {
 pub enum Kind {
     Event,
     Completion,
+    Endpoint,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Rights(u8);
@@ -74,6 +75,10 @@ pub struct TargetId {
 enum Primitive {
     Event(SharedEvent),
     Completion(Completion),
+    Endpoint {
+        reference: crate::ipc::Reference,
+        receiver: bool,
+    },
 }
 struct Resource {
     identity: TargetId,
@@ -87,12 +92,14 @@ impl Resource {
         match &self.value {
             Primitive::Event(e) => e.revoked(),
             Primitive::Completion(_) => false,
+            Primitive::Endpoint { reference, .. } => !reference.open(),
         }
     }
     fn kind(&self) -> Kind {
         match self.value {
             Primitive::Event(_) => Kind::Event,
             Primitive::Completion(_) => Kind::Completion,
+            Primitive::Endpoint { .. } => Kind::Endpoint,
         }
     }
     fn delegated(&self, rights: Rights) -> Result<Self, Error> {
@@ -101,6 +108,16 @@ impl Resource {
                 Primitive::Event(event.try_clone().ok_or(Error::ReferenceExhausted)?)
             }
             Primitive::Completion(completion) => Primitive::Completion(*completion),
+            Primitive::Endpoint {
+                reference,
+                receiver: false,
+            } => Primitive::Endpoint {
+                reference: reference
+                    .try_clone()
+                    .map_err(|_| Error::ReferenceExhausted)?,
+                receiver: false,
+            },
+            Primitive::Endpoint { receiver: true, .. } => return Err(Error::Denied),
         };
         Ok(Self {
             identity: self.identity,
@@ -161,6 +178,33 @@ impl Retained<'_> {
             _ => None,
         }
     }
+    /// SEND only: receiver bindings cannot be substituted for consumer grants.
+    pub fn endpoint_sender(&self) -> Result<&crate::ipc::Reference, Error> {
+        if !cfg!(feature = "ipc-send-rights-negative")
+            && !self.resource.rights.contains(Rights::SEND)
+        {
+            return Err(Error::Rights);
+        }
+        match &self.resource.value {
+            Primitive::Endpoint {
+                reference,
+                receiver: false,
+            } => Ok(reference),
+            Primitive::Endpoint { .. } => Err(Error::Denied),
+            _ => Err(Error::WrongType),
+        }
+    }
+    /// Exact nondelegable bootstrap binding, in addition to current caller identity.
+    pub fn endpoint_receiver(&self, caller: ProcessId) -> Result<&crate::ipc::Reference, Error> {
+        match &self.resource.value {
+            Primitive::Endpoint {
+                reference,
+                receiver: true,
+            } if reference.service() == caller => Ok(reference),
+            Primitive::Endpoint { .. } => Err(Error::Denied),
+            _ => Err(Error::WrongType),
+        }
+    }
     /// Revoke future admissions for a shared Event target. Existing accepted
     /// references and already-pending notification remain valid.
     pub fn revoke(&self) -> Result<bool, Error> {
@@ -170,6 +214,11 @@ impl Retained<'_> {
         match &self.resource.value {
             Primitive::Event(event) => Ok(event.revoke()),
             Primitive::Completion(_) => Err(Error::WrongType),
+            Primitive::Endpoint {
+                reference,
+                receiver: false,
+            } => Ok(reference.revoke()),
+            Primitive::Endpoint { .. } => Err(Error::Denied),
         }
     }
     pub fn signal(&self) -> Result<bool, Error> {
@@ -185,6 +234,7 @@ impl Retained<'_> {
                 .admit_signal()
                 .map_err(|SignalError::Revoked| Error::Revoked),
             Primitive::Completion(_) => Err(Error::WrongType),
+            Primitive::Endpoint { .. } => Err(Error::WrongType),
         }
     }
     pub fn rights(&self) -> Rights {
@@ -356,6 +406,16 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
             return Err(Error::Rights);
         }
         receiver.context(receiver_owner)?;
+        if let Primitive::Endpoint {
+            reference,
+            receiver: bound_receiver,
+        } = &source.value
+        {
+            if *bound_receiver || !reference.open() {
+                return Err(Error::Denied);
+            }
+            self.domain()?.validate(caller).map_err(|_| Error::Denied)?;
+        }
         let target = receiver
             .slots
             .iter()
@@ -386,6 +446,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
             match &source.value {
                 Primitive::Event(event) => Some(event.admit().ok_or(Error::Denied)?),
                 Primitive::Completion(_) => return Err(Error::Denied),
+                Primitive::Endpoint { .. } => return Err(Error::Denied),
             }
         } else {
             None
@@ -393,6 +454,9 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         let charge = receiver.handle_charge()?;
         let mut delegated = source.delegated(requested)?;
         delegated._charge = charge;
+        if let Primitive::Endpoint { reference, .. } = &source.value {
+            reference.admit_delegation().map_err(|_| Error::Denied)?;
+        }
         receiver.slots[target].generation = generation;
         receiver.slots[target].resource = Some(delegated);
         Ok(Handle((generation << 8) | target as u64))
@@ -409,7 +473,18 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         if let Some(domain) = &self.domain {
             domain.validate(caller).map_err(|_| Error::Denied)?;
         }
-        self.lookup_with_rights(caller, handle, Kind::Event, Rights::REVOKE)?
+        let index = self.index(caller, handle)?;
+        let kind = self.slots[index]
+            .resource
+            .as_ref()
+            .ok_or(Error::Stale)?
+            .kind();
+        let kind = if kind == Kind::Endpoint {
+            Kind::Endpoint
+        } else {
+            Kind::Event
+        };
+        self.lookup_with_rights(caller, handle, kind, Rights::REVOKE)?
             .revoke()
     }
     pub fn retire(&mut self, caller: ProcessId) -> Result<usize, Error> {
@@ -525,6 +600,54 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         publish: impl FnOnce(Handle) -> Result<(), E>,
     ) -> Result<Handle, CreationError<E>> {
         self.create_completion_with_rights(caller, completion, Rights::NONE, publish)
+    }
+    /// Trusted bootstrap installs this reference; EL0 has no grant-issuance SVC.
+    pub fn create_endpoint_sender<E>(
+        &mut self,
+        caller: ProcessId,
+        reference: crate::ipc::Reference,
+        rights: Rights,
+        publish: impl FnOnce(Handle) -> Result<(), E>,
+    ) -> Result<Handle, CreationError<E>> {
+        self.domain()
+            .and_then(|d| d.validate(caller).map_err(|_| Error::Denied))
+            .map_err(CreationError::Handle)?;
+        if !reference.open() {
+            return Err(CreationError::Handle(Error::Denied));
+        }
+        self.create(
+            caller,
+            Primitive::Endpoint {
+                reference,
+                receiver: false,
+            },
+            rights,
+            None,
+            publish,
+        )
+    }
+    pub fn create_endpoint_receiver<E>(
+        &mut self,
+        caller: ProcessId,
+        reference: crate::ipc::Reference,
+        publish: impl FnOnce(Handle) -> Result<(), E>,
+    ) -> Result<Handle, CreationError<E>> {
+        self.domain()
+            .and_then(|d| d.validate(caller).map_err(|_| Error::Denied))
+            .map_err(CreationError::Handle)?;
+        if reference.service() != caller || !reference.open() {
+            return Err(CreationError::Handle(Error::Denied));
+        }
+        self.create(
+            caller,
+            Primitive::Endpoint {
+                reference,
+                receiver: true,
+            },
+            Rights::NONE,
+            None,
+            publish,
+        )
     }
     pub fn create_completion_with_rights<E>(
         &mut self,

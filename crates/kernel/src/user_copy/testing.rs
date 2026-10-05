@@ -284,5 +284,6 @@ fn limits() -> kernel_core::domain::Limits {
         handles: crate::handles::CAPACITY as u16,
         queue: 1,
         requests: 1,
+        endpoints: 0,
     }
 }

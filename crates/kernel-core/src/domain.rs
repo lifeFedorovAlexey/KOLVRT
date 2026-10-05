@@ -13,6 +13,8 @@ pub struct Limits {
     pub handles: u16,
     pub queue: u16,
     pub requests: u16,
+    /// Concrete owned endpoints; the packed closing word leaves 15 count bits.
+    pub endpoints: u16,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
@@ -30,6 +32,7 @@ pub enum ChargeKind {
     Handle,
     Queue,
     Request,
+    Endpoint,
 }
 impl ChargeKind {
     fn shift(self) -> u32 {
@@ -37,6 +40,14 @@ impl ChargeKind {
             Self::Handle => 0,
             Self::Queue => 16,
             Self::Request => 32,
+            Self::Endpoint => 48,
+        }
+    }
+    fn mask(self) -> u64 {
+        if matches!(self, Self::Endpoint) {
+            0x7fff
+        } else {
+            FIELD
         }
     }
 }
@@ -47,7 +58,7 @@ pub struct Charge {
 impl Owner {
     /// Bootstrap supplies limits; kernel only validates and enforces them.
     pub fn new(process: ProcessId, limits: Limits, pages: usize) -> Result<(Self, Memory), Error> {
-        if pages == 0 {
+        if pages == 0 || limits.endpoints > 0x7fff {
             return Err(Error::Invalid);
         }
         if pages > limits.memory_pages && !cfg!(feature = "domain-budget-negative") {
@@ -115,14 +126,15 @@ impl Reference {
             ChargeKind::Handle => self.0.limits.handles,
             ChargeKind::Queue => self.0.limits.queue,
             ChargeKind::Request => self.0.limits.requests,
+            ChargeKind::Endpoint => self.0.limits.endpoints,
         };
         let mut s = self.0.state.load(Ordering::Acquire);
         loop {
             if s & CLOSING != 0 && !cfg!(feature = "domain-teardown-negative") {
                 return Err(Error::Denied);
             }
-            let used = (s >> shift) & FIELD;
-            if used == FIELD
+            let used = (s >> shift) & kind.mask();
+            if used == kind.mask()
                 || used >= u64::from(limit) && !cfg!(feature = "domain-budget-negative")
             {
                 return Err(Error::Exhausted);
@@ -143,6 +155,9 @@ impl Reference {
             }
         }
     }
+    pub fn endpoint_usage(&self) -> u16 {
+        ((self.0.state.load(Ordering::Acquire) >> 48) & 0x7fff) as u16
+    }
 }
 impl Charge {
     pub fn domain(&self) -> &Reference {
@@ -158,7 +173,7 @@ impl Drop for Charge {
             .state
             .fetch_sub(1 << shift, Ordering::AcqRel);
         assert_ne!(
-            (s >> shift) & FIELD,
+            (s >> shift) & self.kind.mask(),
             0,
             "domain charge released exactly once"
         );
@@ -183,6 +198,7 @@ mod tests {
             handles: 1,
             queue: 1,
             requests: 1,
+            endpoints: 0,
         };
         assert!(matches!(Owner::new(id, limits, 5), Err(Error::Exhausted)));
         let (owner, memory) = Owner::new(id, limits, 4).unwrap();
@@ -216,6 +232,7 @@ mod tests {
                 handles: 1,
                 queue: 1,
                 requests: 1,
+                endpoints: 0,
             },
             1,
         )

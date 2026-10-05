@@ -100,9 +100,13 @@ Phase 3.1 added no IPC, user-copy, handles, capabilities, domains, ELF loader, m
 
 The accepted issue #22 user-copy boundary builds on exact process identity, privately retained address spaces, explicit admission, terminal isolation, scheduler detachment and nonreusable stale references. The Phase 3.2 boundary described below supplies fault-contained copies, access validation, immutable request snapshots and synchronous race exclusion; a ProcessId or numerical address is never a user-copy authorization. No public user-pointer API is introduced. Future asynchronous lifecycle needs an explicit retained lookup/borrow protocol and per-object quiescence before extending this conservative barrier. Handles/capabilities and public creation authority remain separate milestones.
 
-## Phase 3.4 current security boundary
+## Phase 3.4 historical security boundary
 
-[Security domains](domains.md) now bind each process generation to caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The bounded same-CPU notification pilot reports terminal outcomes to EL0; general IPC, automatic wakeups, supervisor policy and persistent services remain later milestones. Its storage and encoding must be rederived from the requirements of #26/#27 before extension.
+[Security domains](domains.md) record the Phase 3.4 boundary: each process generation binds caller-local handles, explicit bootstrap grants and immutable caller-supplied memory/handle/queue/request quotas. SEND/TRANSFER rights attenuate; REVOKE=4 is explicit issuer authority. Revocation rejects new effects while accepted work retains its consumer charge and target through completion or service-fault cancellation. Closing a handle does not revoke aliases. The same-CPU notification pilot and its source receipt remain Phase 3.4 evidence; the later IPC design has been rederived for #26.
+
+## Phase 3.5 bounded IPC status
+
+[Native IPC](ipc.md) adds an experimental copied EL0 request transport, bounded endpoints, scoped SEND and nondelegable receiver authority, blocking cross-CPU waits, exact terminal arbitration and retained results. It extends process execution without adding EL0 process creation, migration, supervisor policy or persistent-service admission. Issue #26 acceptance is still pending, and this document's Phase 3.1/3.2 lifecycle receipts do not verify the changed current source.
 
 [Russian translation](../../translations/ru/docs/kernel/processes.md)
 

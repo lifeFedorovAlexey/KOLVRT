@@ -26,3 +26,4 @@ pub fn quantiles(samples: &mut [u64]) -> Option<[u64; 3]> {
 pub mod handles;
 
 pub mod domain;
+pub mod ipc;
