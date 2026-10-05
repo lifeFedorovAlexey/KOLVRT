@@ -19,14 +19,14 @@
     {
       "path": ".github/workflows/dependencies.yml",
       "before_sha256_lf": "df98db96ce44420768364891dee5dde65ab44438c9bcfcf245b19ca04efd2172",
-      "after_sha256_lf": "9a91ea23e4bce83b6acbd586f1c7bfbf4272d6aa3dbebd745e768ca051b1666e",
+      "after_sha256_lf": "996e8caf186d7f7376f5e566c040172f5d156a1431022d0a678aacbb8e3affc2",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": ".github/workflows/kernel.yml",
       "before_sha256_lf": "775949f6034457b9b781ece929073101a1df3329b35e8b31cb11618c22186a45",
-      "after_sha256_lf": "fc1b86b5627f8a1d9b958ea57741e8783a240688f3fa1600e6d47bd93ccdf3d0",
+      "after_sha256_lf": "57b4d69983349bcceea4db7f152eda02f85003a7ed7bfa609f8a018e429ca6cd",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
@@ -148,6 +148,13 @@
       "after_sha256_lf": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "before_sha256_lf": "e10e49c1e19ef505689fa075e795ae6e0b74130a5b613d4272e09dc8fbca84fa",
+      "after_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
+      "disposition": "existing-feature",
+      "reason": "Emit the exact failed process verification check before the existing PROD panic. All predicates, timeout/budget behavior, profiles and failure propagation remain unchanged; no retry masks a failed run."
     }
   ],
   "features": [

@@ -211,7 +211,7 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Issue #109 changes the host matrix runner and adds a shared serial/sharded task inventory. Native IPC implementation and prior bounded readiness acceptance are unchanged; historical receipts remain immutable, but current runner-source verification requires fresh scoped receipt and semantic review.",
+            "reason": "Issue #109 changes the host matrix runner and shared serial/sharded inventory, and makes failed non-test process checks emit their exact name in PROD machine evidence. Failure predicates and native IPC behavior remain unchanged; historical receipts remain immutable, but current-source runner verification and semantic review are pending.",
             "receipt": "research/results/ipc-phase35-readiness.json",
             "receipt_sha256": "f3a34e38f84c8f9f776b23e8b513b21ae8f1b59df04958657cecbef82f4f77e9",
             "scope": "Two fixed-affinity QEMU CPUs, current bounded IPC mechanism, fresh enforcement controls and explicit semantic EN/RU review. No physical ARM or stable ABI claim."

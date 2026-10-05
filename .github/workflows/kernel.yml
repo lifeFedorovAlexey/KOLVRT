@@ -1,6 +1,7 @@
 name: Kernel foundation
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
     inputs:
@@ -9,6 +10,9 @@ on:
         type: choice
         options: [baseline, optimized]
         default: optimized
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
   actions: read

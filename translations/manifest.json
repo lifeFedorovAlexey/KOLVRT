@@ -242,8 +242,8 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "d63a50fbe505d4743950a67ce0f8c43f566428dcad4f01f12b4e2def0b0bc413",
-        "translation_sha256": "47b68868de9bfb8b13373144466d1cce85d5e72fcf77d5e4610a48da5fabe39e"
+        "source_sha256": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
+        "translation_sha256": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
@@ -286,8 +286,8 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
-        "translation_sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829"
+        "source_sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+        "translation_sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",

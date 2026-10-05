@@ -2026,8 +2026,8 @@
     ".github/dependabot.yml": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b",
     ".github/workflows/ci-timings.yml": "85dd44a96b14f9ecbb627f8b5d8a713c9a5bf954d25e1620887222d938432c3d",
     ".github/workflows/ci-windows-workload.yml": "5a8d4245a6d88e913713ef1ee1ae6bac7d1740fc7d73bcc8b6720834d8abb76d",
-    ".github/workflows/dependencies.yml": "9a91ea23e4bce83b6acbd586f1c7bfbf4272d6aa3dbebd745e768ca051b1666e",
-    ".github/workflows/kernel.yml": "fc1b86b5627f8a1d9b958ea57741e8783a240688f3fa1600e6d47bd93ccdf3d0",
+    ".github/workflows/dependencies.yml": "996e8caf186d7f7376f5e566c040172f5d156a1431022d0a678aacbb8e3affc2",
+    ".github/workflows/kernel.yml": "57b4d69983349bcceea4db7f152eda02f85003a7ed7bfa609f8a018e429ca6cd",
     ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
     "Cargo.lock": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86",
     "Cargo.toml": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
@@ -2066,7 +2066,7 @@
     "crates/kernel/src/ipc_revoke_workload.S": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb",
     "crates/kernel/src/ipc_workload.S": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465",
     "crates/kernel/src/ipc_workload.rs": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
-    "crates/kernel/src/main.rs": "e10e49c1e19ef505689fa075e795ae6e0b74130a5b613d4272e09dc8fbca84fa",
+    "crates/kernel/src/main.rs": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
     "crates/kernel/src/process.rs": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
     "crates/kernel/src/process_workload.rs": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
     "crates/kernel/src/scheduler/local.rs": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
@@ -2153,12 +2153,12 @@
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
-    "docs/ci/performance.md": "d63a50fbe505d4743950a67ce0f8c43f566428dcad4f01f12b4e2def0b0bc413",
+    "docs/ci/performance.md": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
     "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
     "docs/kernel/domains.md": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+    "docs/kernel/ipc.md": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
     "docs/kernel/processes.md": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
     "docs/kernel/scheduler.md": "c12ad5f32bb4b21e666897f25ca982c70eecdde6d5dc0dd75e6e941dc2677a0d",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
@@ -2242,7 +2242,7 @@
     "scripts/tests/ci-timings.test.cjs": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "9d2149b779e15dd54268983c296ac2d58ed2939f262bc02eadde73e07fd54244",
+    "translations/manifest.json": "ade58452543768a38d6748ab039a38ac4560d4112e7a9f583ea388d67296e2d4",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2281,12 +2281,12 @@
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
-    "translations/ru/docs/ci/performance.md": "47b68868de9bfb8b13373144466d1cce85d5e72fcf77d5e4610a48da5fabe39e",
+    "translations/ru/docs/ci/performance.md": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac",
     "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
     "translations/ru/docs/kernel/domains.md": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+    "translations/ru/docs/kernel/ipc.md": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
     "translations/ru/docs/kernel/processes.md": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
     "translations/ru/docs/kernel/scheduler.md": "75f26986cc053838c76c57c615e43e504c82881d508436d2da0a3f7d8ee7df8b",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
@@ -4599,7 +4599,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 13991,
+      "estimated_bytes": 14298,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
@@ -4615,13 +4615,13 @@
         "en": {
           "end": 140,
           "path": "docs/ci/performance.md",
-          "sha256": "d63a50fbe505d4743950a67ce0f8c43f566428dcad4f01f12b4e2def0b0bc413",
+          "sha256": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
           "start": 1
         },
         "ru": {
           "end": 140,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "47b68868de9bfb8b13373144466d1cce85d5e72fcf77d5e4610a48da5fabe39e",
+          "sha256": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac",
           "start": 1
         }
       },
@@ -4947,7 +4947,7 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22116,
+      "estimated_bytes": 22156,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
@@ -4963,13 +4963,13 @@
         "en": {
           "end": 334,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 1
         },
         "ru": {
           "end": 334,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 1
         }
       },
@@ -5956,13 +5956,13 @@
         "en": {
           "end": 16,
           "path": "docs/ci/performance.md",
-          "sha256": "d63a50fbe505d4743950a67ce0f8c43f566428dcad4f01f12b4e2def0b0bc413",
+          "sha256": "f8b4518a0e46f8c559752bb5b13d5d1e1d22a06d683887cd2a076f97af2048d6",
           "start": 7
         },
         "ru": {
           "end": 16,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "47b68868de9bfb8b13373144466d1cce85d5e72fcf77d5e4610a48da5fabe39e",
+          "sha256": "15c7e411e23453fa89f4a25633f5391e38b3c7de051405be7f868a17b73636ac",
           "start": 7
         }
       },
@@ -6673,13 +6673,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 58
         }
       },
@@ -6708,13 +6708,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 66
         }
       },
@@ -6743,13 +6743,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 58
         }
       },
@@ -6778,13 +6778,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 16
         }
       },
@@ -6813,13 +6813,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 34
         }
       },
@@ -6883,13 +6883,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 26
         }
       },
@@ -6918,13 +6918,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 58
         }
       },
@@ -6953,13 +6953,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 34
         }
       },
@@ -7064,13 +7064,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 76
         }
       },
@@ -7099,13 +7099,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 58
         }
       },
@@ -7141,7 +7141,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22003,
+      "estimated_bytes": 22043,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
       "feature": {
         "acceptance": [
@@ -7237,7 +7237,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Issue #109 changes the host matrix runner and adds a shared serial/sharded task inventory. Native IPC implementation and prior bounded readiness acceptance are unchanged; historical receipts remain immutable, but current runner-source verification requires fresh scoped receipt and semantic review.",
+            "reason": "Issue #109 changes the host matrix runner and shared serial/sharded inventory, and makes failed non-test process checks emit their exact name in PROD machine evidence. Failure predicates and native IPC behavior remain unchanged; historical receipts remain immutable, but current-source runner verification and semantic review are pending.",
             "receipt": "research/results/ipc-phase35-readiness.json",
             "receipt_sha256": "f3a34e38f84c8f9f776b23e8b513b21ae8f1b59df04958657cecbef82f4f77e9",
             "scope": "Two fixed-affinity QEMU CPUs, current bounded IPC mechanism, fresh enforcement controls and explicit semantic EN/RU review. No physical ARM or stable ABI claim.",
@@ -7267,13 +7267,13 @@
         "en": {
           "end": 334,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 4
         },
         "ru": {
           "end": 334,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 4
         }
       },
@@ -7303,13 +7303,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 66
         }
       },
@@ -7338,13 +7338,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "c31a7ad7fe8e6a05a97ebfda338ca88794e8c1676cb9a2ad1c461ef660436fe5",
+          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "019c0dbb1683d175dd60edbc0056df68f92a955e7994fa8dba4043438f761829",
+          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
           "start": 66
         }
       },

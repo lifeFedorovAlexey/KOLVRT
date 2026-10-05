@@ -44,7 +44,7 @@ Shell wrapper записывает полное время настройки/с
 
 ## Выполнение и оставшиеся этапы
 
-Push/PR runs используют оптимизированный граф. workflow_dispatch mode=baseline сохраняет последовательный reference path без кэшей, включая его историческое повторное подмножество exception tests. Явный dispatch mode имеет приоритет. Отчёты и raw evidence сохраняются девяносто дней; baselines в репозитории сохраняются постоянно.
+Push в main и PR runs используют оптимизированный граф. Push в feature-ветку не дублирует synchronize run открытого PR; до открытия PR доступны локальные проверки и ручной запуск workflow. Новые commits PR автоматически отменяют устаревшие runs того же workflow/PR. Разные workflows не отменяют друг друга; активный main run сохраняется. workflow_dispatch mode=baseline сохраняет последовательный reference path без кэшей, включая его историческое повторное подмножество exception tests. Явный dispatch mode имеет приоритет. Отчёты и raw evidence сохраняются девяносто дней; baselines в репозитории сохраняются постоянно.
 
 ```text
 npm run check
