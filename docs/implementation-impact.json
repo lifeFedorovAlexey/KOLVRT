@@ -33,9 +33,9 @@
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "e8d076f608bf91052bda3ea6b8efbbd408442a3a552fd29bfcfd0d0b200e8e22",
-      "after_sha256_lf": "ac3e8db067c6bcc89ebfd7ef340a74bf28cd71b2a08dfe96f7a6364eeabf4036",
+      "after_sha256_lf": "3fa2f4e5785bb3e1703b709811cc7012c34fdd83a73733f47f0535041affb91b",
       "disposition": "no-feature-impact",
-      "reason": "Fix bounded verification fixture polling order: observe actual IRQ delivery before timeout and take a final observation at expiration. The 500 ms bound remains and missing delivery fails; native IRQ handling and process lifetime semantics do not change."
+      "reason": "Strengthen kernel-test acceptance with a separately recorded generation published after the actual completed remote TLBI sequence and before its ACK. The test requires that witness, so the omission control fails even when a stale translation is naturally evicted; the host expects the specific smp_remote_ack rejection. The witness is absent from non-test builds; native invalidation and retirement contracts do not change."
     },
     {
       "path": "crates/migration-advisor/src/advisor.rs",
@@ -99,6 +99,20 @@
       "after_sha256_lf": "439b2b70df1d62d70d4ae63bc8f03ea8699cc91d26c863fe30907d943a6a5791",
       "disposition": "no-feature-impact",
       "reason": "Fix bounded verification fixture polling order: observe actual IRQ delivery before timeout and take a final observation at expiration. The 500 ms bound remains and missing delivery fails; native IRQ handling and process lifetime semantics do not change."
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "before_sha256_lf": "87dac4741eccafee11e76270db155586757e3a2776127f1b598b6fdf8fc1e886",
+      "after_sha256_lf": "ea2b134265b738ba4fedc77647ecd22e6fe473139afec407aba7dcb26ad89a0a",
+      "disposition": "no-feature-impact",
+      "reason": "Strengthen kernel-test acceptance with a separately recorded generation published after the actual completed remote TLBI sequence and before its ACK. The test requires that witness, so the omission control fails even when a stale translation is naturally evicted; the host expects the specific smp_remote_ack rejection. The witness is absent from non-test builds; native invalidation and retirement contracts do not change."
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "before_sha256_lf": "c8c061917a18e871c039b7a4de4d0c664f44b23140e95468a650b831fc9d5878",
+      "after_sha256_lf": "e100795dffd676c18feceec446da2546a96037f9e504c0724b04e05e89c016c0",
+      "disposition": "no-feature-impact",
+      "reason": "Strengthen kernel-test acceptance with a separately recorded generation published after the actual completed remote TLBI sequence and before its ACK. The test requires that witness, so the omission control fails even when a stale translation is naturally evicted; the host expects the specific smp_remote_ack rejection. The witness is absent from non-test builds; native invalidation and retirement contracts do not change."
     }
   ],
   "features": [

@@ -213,7 +213,7 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
         drop(retirement);
         report(
             "smp_remote_ack",
-            p.reclaimable(&a) && second.tlb_ack.load(Ordering::Acquire) > 0,
+            p.reclaimable(&a) && smp::remote_tlbi_completed(second.tlb_ack.load(Ordering::Acquire)),
         );
         // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.
         unsafe {

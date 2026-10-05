@@ -15,6 +15,13 @@ CPU1: secondary_entry -> masked EL1h -> private stack -> FP setup -> native root
 
 CPU1 не очищает BSS и не инициализирует shared resources. Cleaning linked RAM, включая tables и boot publication, обеспечивает видимость для MMU-off entry; coherent atomics действуют после native MMU activation. Cache line размером 64 bytes входит в Cortex-A57 platform pin. Контракты CPU_ON и initial state следуют [PSCI DEN0022D](https://documentation-service.arm.com/static/5f905c71f86e16515cdc1fd0?token=), разделы 5.6 и 6.4.
 
+Сборки проверок ядра сохраняют отдельное поколение завершённой TLBI, публикуемое только
+после возврата вторичного CPU из `DSB; TLBI; DSB; ISB`, до подтверждения. Проверка
+`smp_remote_ack` требует это наблюдение исполнения для подтверждённого поколения.
+Поэтому контроль пропуска процедуры отказывает даже при исчезновении старой трансляции
+по другой причине; одного сбоя трансляции недостаточно для доказательства исполнения
+процедуры. Наблюдение отсутствует в обычных сборках и не заменяет аппаратную проверку сбоя.
+
 ## Ownership и синхронизация
 
 | Ресурс                           | Владелец и синхронизация                                        | Lifetime                                       |
