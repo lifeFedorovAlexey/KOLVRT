@@ -49,13 +49,25 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
-            ~/.cargo/registry/
-            ~/.cargo/git/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
             target/debug/
             target/aarch64-unknown-none/
             target/route-tools/debug/
             target/cache-integrity.json
           key: cargo-v1-${{ runner.os }}-1.99.0-x86_64-msvc-aarch64-${{ inputs.workload }}-${{ inputs.shard }}-${{ hashFiles('Cargo.lock', 'Cargo.toml', 'rust-toolchain.toml', '.cargo/**', 'crates/**', 'assets/branding/boot-logo.txt', 'scripts/**', 'package.json', '.github/workflows/ci-windows-workload.yml') }}
+      - name: Verify restored Git dependency objects
+        if: inputs.cached
+        shell: pwsh
+        run: |
+          $gitCache = Join-Path $env:USERPROFILE '.cargo/git/db'
+          if (Test-Path -LiteralPath $gitCache) {
+            foreach ($repository in Get-ChildItem -LiteralPath $gitCache -Directory) {
+              git -C $repository.FullName fsck --full
+              if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            }
+          }
       - name: Validate restored compiled cache
         if: inputs.cached && steps.cargo-cache.outputs.cache-hit == 'true'
         run: node scripts/cache-integrity.cjs verify target/cache-integrity.json

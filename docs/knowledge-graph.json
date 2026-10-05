@@ -2025,7 +2025,7 @@
   "inputs": {
     ".github/dependabot.yml": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b",
     ".github/workflows/ci-timings.yml": "85dd44a96b14f9ecbb627f8b5d8a713c9a5bf954d25e1620887222d938432c3d",
-    ".github/workflows/ci-windows-workload.yml": "9b0e1e7c9c940a62fa7a422f068667c2735d998ca1a9d3370d52e71f3bdf9f86",
+    ".github/workflows/ci-windows-workload.yml": "7c4ff74745d5016680f1a50d142c5565e65c03e8114954784c1078591e65f3b1",
     ".github/workflows/dependencies.yml": "84ffe1244f6233366d3f915f68ac57009c42204a9775b16abe6153d80fa833e6",
     ".github/workflows/kernel.yml": "fc1b86b5627f8a1d9b958ea57741e8783a240688f3fa1600e6d47bd93ccdf3d0",
     ".nvmrc": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
@@ -2153,7 +2153,7 @@
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
-    "docs/ci/performance.md": "3a078585e37cfbf1855670fd501c60c1aecbf1f1a052a8dea806574f86a1f6d6",
+    "docs/ci/performance.md": "d63a50fbe505d4743950a67ce0f8c43f566428dcad4f01f12b4e2def0b0bc413",
     "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
     "docs/kernel/domains.md": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
@@ -2242,7 +2242,7 @@
     "scripts/tests/ci-timings.test.cjs": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "9b8a6dffbb6328c0ee05e16ed5d805755d2f6d81ba5c85c94780e5acc6dcc302",
+    "translations/manifest.json": "cc328d11f4efe52aecc224b2782723a7e4af1e2efc68b7a3547aad68f136a60b",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2281,7 +2281,7 @@
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
-    "translations/ru/docs/ci/performance.md": "c29d30b980bcb0d92914af086fc568885233d5e6f527849a913287f764c5aa92",
+    "translations/ru/docs/ci/performance.md": "47b68868de9bfb8b13373144466d1cce85d5e72fcf77d5e4610a48da5fabe39e",
     "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
     "translations/ru/docs/kernel/domains.md": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
@@ -4599,7 +4599,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 13736,
+      "estimated_bytes": 13991,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
@@ -4615,13 +4615,13 @@
         "en": {
           "end": 140,
           "path": "docs/ci/performance.md",
-          "sha256": "3a078585e37cfbf1855670fd501c60c1aecbf1f1a052a8dea806574f86a1f6d6",
+          "sha256": "d63a50fbe505d4743950a67ce0f8c43f566428dcad4f01f12b4e2def0b0bc413",
           "start": 1
         },
         "ru": {
           "end": 140,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "c29d30b980bcb0d92914af086fc568885233d5e6f527849a913287f764c5aa92",
+          "sha256": "47b68868de9bfb8b13373144466d1cce85d5e72fcf77d5e4610a48da5fabe39e",
           "start": 1
         }
       },
@@ -5956,13 +5956,13 @@
         "en": {
           "end": 16,
           "path": "docs/ci/performance.md",
-          "sha256": "3a078585e37cfbf1855670fd501c60c1aecbf1f1a052a8dea806574f86a1f6d6",
+          "sha256": "d63a50fbe505d4743950a67ce0f8c43f566428dcad4f01f12b4e2def0b0bc413",
           "start": 7
         },
         "ru": {
           "end": 16,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "c29d30b980bcb0d92914af086fc568885233d5e6f527849a913287f764c5aa92",
+          "sha256": "47b68868de9bfb8b13373144466d1cce85d5e72fcf77d5e4610a48da5fabe39e",
           "start": 7
         }
       },

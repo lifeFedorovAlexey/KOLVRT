@@ -12,7 +12,7 @@
     {
       "path": ".github/workflows/ci-windows-workload.yml",
       "before_sha256_lf": null,
-      "after_sha256_lf": "9b0e1e7c9c940a62fa7a422f068667c2735d998ca1a9d3370d52e71f3bdf9f86",
+      "after_sha256_lf": "7c4ff74745d5016680f1a50d142c5565e65c03e8114954784c1078591e65f3b1",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
