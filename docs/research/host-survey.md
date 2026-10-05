@@ -92,8 +92,8 @@ The design follows the [native contracts](../architecture/native-model.md), [sec
         "verification": [
           {
             "receipt_sha256": "cc07b61d771e202ca0ffc7025fd3070a3c27d179c40704618b3dccb51b896beb",
-            "state": "VERIFIED",
-            "reason": "Thirteen real CLI/PowerShell synthetic tests and one independent JSON-schema/golden-report test passed on these declared source bytes.",
+            "state": "STALE",
+            "reason": "Dependency audit extends package.json repository check integration; the immutable issue53 receipt retains prior exact-source bytes. Host-survey semantics are unchanged; refresh synthetic exact-source evidence separately.",
             "scope": "Synthetic fixtures and shadowed CIM providers only; no actual hardware collection or kernel execution.",
             "receipt": "research/results/issue53-host-survey.json",
             "environment": "host-process"

@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "kernel_boundary": {
+    "members": ["kolvrt-kernel", "kernel-core"],
+    "exceptions": [],
+    "exception_process": "Separate accepted ADR reviewing need, small implementation alternative, closure/size, unsafe, maintenance, license, security history, TCB impact and removal. Then explicitly revise checker and rejection controls."
+  },
+  "growth_review": "Any graph growth is marked for review; no numerical crate quota.",
+  "direct_dependencies": {
+    "migration-advisor/ed25519-dalek/normal": {
+      "requirement": "=2.2.0",
+      "purpose": "Sign fixture evidence and strictly verify provenance",
+      "reason_for_retention": "KEEP: reviewed signature implementation; do not replace cryptography with custom code."
+    },
+    "migration-advisor/serde_json/normal": {
+      "requirement": "=1.0.145",
+      "purpose": "Read and write machine-readable JSON contracts",
+      "reason_for_retention": "Existing schema/receipt format requires JSON; retained with pinned version."
+    },
+    "migration-advisor/serde/normal": {
+      "requirement": "=1.0.228",
+      "purpose": "Serialize typed host evidence and configuration",
+      "reason_for_retention": "Shared typed serialization used by existing artifact contracts; derive stays host-side."
+    },
+    "migration-advisor/sha2/normal": {
+      "requirement": "=0.10.9",
+      "purpose": "SHA-256 artifact and protocol digests",
+      "reason_for_retention": "Cryptographic digests require reviewed implementation; host/EL0 demo code only, never production EL1."
+    },
+    "migration-workbench/ed25519-dalek/normal": {
+      "requirement": "=2.2.0",
+      "purpose": "Sign fixture evidence and strictly verify provenance",
+      "reason_for_retention": "KEEP: reviewed signature implementation; do not replace cryptography with custom code."
+    },
+    "migration-workbench/quanta/normal": {
+      "requirement": "=0.13.0",
+      "purpose": "Calibrated monotonic host request-group timing",
+      "reason_for_retention": "KEEP: measurement profile is bound to calibrated clock semantics; mock features reviewed separately."
+    },
+    "migration-workbench/rand_core/normal": {
+      "requirement": "=0.6.4",
+      "purpose": "OS randomness for ephemeral fixture signing keys",
+      "reason_for_retention": "Required by SigningKey::generate; getrandom entropy source, host only."
+    },
+    "migration-workbench/serde_json/normal": {
+      "requirement": "=1.0.145",
+      "purpose": "Read and write machine-readable JSON contracts",
+      "reason_for_retention": "Existing schema/receipt format requires JSON; retained with pinned version."
+    },
+    "migration-workbench/serde/normal": {
+      "requirement": "=1.0.228",
+      "purpose": "Serialize typed host evidence and configuration",
+      "reason_for_retention": "Shared typed serialization used by existing artifact contracts; derive stays host-side."
+    },
+    "native-state-models/serde_json/normal": {
+      "requirement": "=1.0.145",
+      "purpose": "Read and write machine-readable JSON contracts",
+      "reason_for_retention": "Existing schema/receipt format requires JSON; retained with pinned version."
+    },
+    "repository-checks/jsonschema/normal": {
+      "requirement": "=0.33.0",
+      "purpose": "Validate Draft 2020-12 research and security artifacts",
+      "reason_for_retention": "KEEP: schema validator semantics exceed a safe small replacement; HTTP/file resolution already disabled."
+    },
+    "repository-checks/regex/normal": {
+      "requirement": "=1.11.2",
+      "purpose": "Validate and extract repository documentation fields",
+      "reason_for_retention": "Bounded documentation checks use established expression matching."
+    },
+    "repository-checks/serde_json/normal": {
+      "requirement": "=1.0.145",
+      "purpose": "Read and write machine-readable JSON contracts",
+      "reason_for_retention": "Existing schema/receipt format requires JSON; retained with pinned version."
+    },
+    "repository-checks/serde/normal": {
+      "requirement": "=1.0.228",
+      "purpose": "Serialize typed host evidence and configuration",
+      "reason_for_retention": "Shared typed serialization used by existing artifact contracts; derive stays host-side."
+    },
+    "repository-checks/sha2/normal": {
+      "requirement": "=0.10.9",
+      "purpose": "SHA-256 artifact and protocol digests",
+      "reason_for_retention": "Cryptographic digests require reviewed implementation; host/EL0 demo code only, never production EL1."
+    },
+    "routing-demo/sha2/build": {
+      "requirement": "=0.10.9",
+      "purpose": "SHA-256 artifact and protocol digests",
+      "reason_for_retention": "Cryptographic digests require reviewed implementation; host/EL0 demo code only, never production EL1."
+    },
+    "routing/sha2/build": {
+      "requirement": "=0.10.9",
+      "purpose": "SHA-256 artifact and protocol digests",
+      "reason_for_retention": "Cryptographic digests require reviewed implementation; host/EL0 demo code only, never production EL1."
+    },
+    "routing/sha2/normal": {
+      "requirement": "=0.10.9",
+      "purpose": "SHA-256 artifact and protocol digests",
+      "reason_for_retention": "Cryptographic digests require reviewed implementation; host/EL0 demo code only, never production EL1."
+    },
+    "xtask/serde_json/normal": {
+      "requirement": "=1.0.145",
+      "purpose": "Read and write machine-readable JSON contracts",
+      "reason_for_retention": "Existing schema/receipt format requires JSON; retained with pinned version."
+    },
+    "xtask/serde/normal": {
+      "requirement": "=1.0.228",
+      "purpose": "Serialize typed host evidence and configuration",
+      "reason_for_retention": "Shared typed serialization used by existing artifact contracts; derive stays host-side."
+    },
+    "xtask/sha2/normal": {
+      "requirement": "=0.10.9",
+      "purpose": "SHA-256 artifact and protocol digests",
+      "reason_for_retention": "Cryptographic digests require reviewed implementation; host/EL0 demo code only, never production EL1."
+    }
+  }
+}

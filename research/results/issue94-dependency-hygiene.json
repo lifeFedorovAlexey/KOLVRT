@@ -1,0 +1,982 @@
+{
+  "schema_version": 1,
+  "issue": 94,
+  "base_commit": "599fa24a3278297f9fc9614b0882dd4afc98d423",
+  "worktree_dirty": true,
+  "scope": "Executed host metadata/rejection controls, PR-base diff, supply-chain scan and DEV/PROD compilation; no kernel runtime or physical-hardware claim.",
+  "source_files": [
+    {
+      "path": "scripts/dependency-audit.cjs",
+      "sha256_lf": "c2c180fb97d4d62a3ec6050b9c6a9913909736c8446734c52dcb2534db6001d8"
+    },
+    {
+      "path": "scripts/dependency-base.cjs",
+      "sha256_lf": "eccb55d41f52bfd11371509f48527973a20a361835fa7b318c96d7f054840ed7"
+    },
+    {
+      "path": "scripts/audit-heavy-dependencies.cjs",
+      "sha256_lf": "d5f12cf388613f3756b377f70805821393dc769376d22e9beaa2d8e437c4b6cb"
+    },
+    {
+      "path": "scripts/tests/dependency-audit.test.cjs",
+      "sha256_lf": "48d076c794afb2a63fae002e2ce34de658ccf84b84c80cf0a0db482a041643eb"
+    },
+    {
+      "path": ".github/workflows/dependencies.yml",
+      "sha256_lf": "d3dcd244800a3ab89cd75a6f60dcae50c84392099daff90983a5ce05fa3958e1"
+    },
+    {
+      "path": "dependencies/policy.json",
+      "sha256_lf": "1422a5735e57da217df6e8fd85ece8891648541074816cfa6f097c67aba53811"
+    },
+    {
+      "path": "deny.toml",
+      "sha256_lf": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3"
+    },
+    {
+      "path": "package.json",
+      "sha256_lf": "cee31af73038278f0b63eec859fcb56990dc39fc3f7ee8ef30f86a3bd62cc768"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "d430b247f9482aef5e1a9eccbac58b5bbd60a068213521202fdb8dfc4b550f29"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "e0726103a7f8e479acd3b067af19e1a281091f5ea6ecc9b99073da99bce71c64"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "f0b167c501eeb3731fb7ef919573481c6f2bbf8dc83e8ffed583fa9cc317374e"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "2301827915e246a07bc8301dfb5c1692025dd7c8952d35787ac8435671e34f6e"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "aa7fd350a03f5250624db59da769c93a53aa4aab71263d0b92fe6dcde6a58900"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "1cbfbde0f1784bee059bc5176b6df8ed36e99a9223e80c007e79221a3a9d8ade"
+    },
+    {
+      "path": "crates/migration-workbench/Cargo.toml",
+      "sha256_lf": "b7077c7b97d6ffc13e05631327c0de97af5c7af6f123f7dfa254b88ef93c0044"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "sha256_lf": "cc11cf951379440439067e3a056cd7a2262396688f98c1e371304012c5a5d34b"
+    }
+  ],
+  "verification": {
+    "dependency_rejection_tests": 7,
+    "supply_chain": {
+      "status": "passed",
+      "exit_code": 0,
+      "advisory_ids": [],
+      "advisory_count": 0,
+      "license_violations": 0,
+      "source_violations": 0,
+      "check_statistics": {
+        "advisories": {
+          "errors": 0,
+          "helps": 0,
+          "notes": 0,
+          "warnings": 0
+        },
+        "bans": {
+          "errors": 0,
+          "helps": 0,
+          "notes": 0,
+          "warnings": 2
+        },
+        "licenses": {
+          "errors": 0,
+          "helps": 124,
+          "notes": 12,
+          "warnings": 3
+        },
+        "sources": {
+          "errors": 0,
+          "helps": 0,
+          "notes": 0,
+          "warnings": 0
+        }
+      },
+      "diagnostics": [
+        {
+          "fields": {
+            "code": "duplicate",
+            "graphs": [
+              {
+                "Krate": {
+                  "name": "getrandom",
+                  "version": "0.2.17"
+                },
+                "parents": [
+                  {
+                    "Krate": {
+                      "name": "rand_core",
+                      "version": "0.6.4"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "ed25519-dalek",
+                          "version": "2.2.0"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "migration-advisor",
+                              "version": "0.1.0"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "migration-workbench",
+                                  "version": "0.1.0"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "Krate": {
+                              "name": "migration-workbench",
+                              "version": "0.1.0"
+                            },
+                            "repeat": true
+                          }
+                        ]
+                      },
+                      {
+                        "Krate": {
+                          "name": "migration-workbench",
+                          "version": "0.1.0"
+                        },
+                        "repeat": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Krate": {
+                  "name": "getrandom",
+                  "version": "0.3.4"
+                },
+                "parents": [
+                  {
+                    "Krate": {
+                      "name": "ahash",
+                      "version": "0.8.12"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "jsonschema",
+                          "version": "0.33.0"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "repository-checks",
+                              "version": "0.1.0"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "Krate": {
+                          "name": "referencing",
+                          "version": "0.33.0"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "jsonschema",
+                              "version": "0.33.0"
+                            },
+                            "repeat": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "labels": [
+              {
+                "column": 1,
+                "line": 30,
+                "message": "lock entries",
+                "span": "getrandom 0.2.17 registry+https://github.com/rust-lang/crates.io-index\ngetrandom 0.3.4 registry+https://github.com/rust-lang/crates.io-index"
+              }
+            ],
+            "message": "found 2 duplicate entries for crate 'getrandom'",
+            "severity": "warning"
+          },
+          "type": "diagnostic"
+        },
+        {
+          "fields": {
+            "code": "license-not-encountered",
+            "graphs": [],
+            "labels": [
+              {
+                "column": 103,
+                "line": 12,
+                "message": "unmatched license allowance",
+                "span": "CC0-1.0"
+              }
+            ],
+            "message": "license was not encountered",
+            "severity": "warning"
+          },
+          "type": "diagnostic"
+        },
+        {
+          "fields": {
+            "code": "license-not-encountered",
+            "graphs": [],
+            "labels": [
+              {
+                "column": 73,
+                "line": 12,
+                "message": "unmatched license allowance",
+                "span": "ISC"
+              }
+            ],
+            "message": "license was not encountered",
+            "severity": "warning"
+          },
+          "type": "diagnostic"
+        },
+        {
+          "fields": {
+            "code": "license-not-encountered",
+            "graphs": [],
+            "labels": [
+              {
+                "column": 95,
+                "line": 12,
+                "message": "unmatched license allowance",
+                "span": "Zlib"
+              }
+            ],
+            "message": "license was not encountered",
+            "severity": "warning"
+          },
+          "type": "diagnostic"
+        },
+        {
+          "fields": {
+            "code": "duplicate",
+            "graphs": [
+              {
+                "Krate": {
+                  "name": "syn",
+                  "version": "2.0.119"
+                },
+                "parents": [
+                  {
+                    "Krate": {
+                      "name": "curve25519-dalek-derive",
+                      "version": "0.1.1"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "curve25519-dalek",
+                          "version": "4.1.3"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "ed25519-dalek",
+                              "version": "2.2.0"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "migration-advisor",
+                                  "version": "0.1.0"
+                                },
+                                "parents": [
+                                  {
+                                    "Krate": {
+                                      "name": "migration-workbench",
+                                      "version": "0.1.0"
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "Krate": {
+                                  "name": "migration-workbench",
+                                  "version": "0.1.0"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Krate": {
+                      "name": "serde_derive",
+                      "version": "1.0.228"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "serde",
+                          "version": "1.0.228"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "ahash",
+                              "version": "0.8.12"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "jsonschema",
+                                  "version": "0.33.0"
+                                },
+                                "parents": [
+                                  {
+                                    "Krate": {
+                                      "name": "repository-checks",
+                                      "version": "0.1.0"
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "Krate": {
+                                  "name": "referencing",
+                                  "version": "0.33.0"
+                                },
+                                "parents": [
+                                  {
+                                    "Krate": {
+                                      "name": "jsonschema",
+                                      "version": "0.33.0"
+                                    },
+                                    "repeat": true
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "Krate": {
+                              "name": "email_address",
+                              "version": "0.2.9"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "jsonschema",
+                                  "version": "0.33.0"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          },
+                          {
+                            "Krate": {
+                              "name": "fluent-uri",
+                              "version": "0.3.2"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "referencing",
+                                  "version": "0.33.0"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          },
+                          {
+                            "Krate": {
+                              "name": "jsonschema",
+                              "version": "0.33.0"
+                            },
+                            "repeat": true
+                          },
+                          {
+                            "Krate": {
+                              "name": "migration-advisor",
+                              "version": "0.1.0"
+                            },
+                            "repeat": true
+                          },
+                          {
+                            "Krate": {
+                              "name": "migration-workbench",
+                              "version": "0.1.0"
+                            },
+                            "repeat": true
+                          },
+                          {
+                            "Krate": {
+                              "name": "repository-checks",
+                              "version": "0.1.0"
+                            },
+                            "repeat": true
+                          },
+                          {
+                            "Krate": {
+                              "name": "xtask",
+                              "version": "0.1.0"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Krate": {
+                  "name": "syn",
+                  "version": "3.0.6"
+                },
+                "parents": [
+                  {
+                    "Krate": {
+                      "name": "displaydoc",
+                      "version": "0.2.7"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "icu_collections",
+                          "version": "2.3.0"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "icu_normalizer",
+                              "version": "2.3.0"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "idna_adapter",
+                                  "version": "1.2.2"
+                                },
+                                "parents": [
+                                  {
+                                    "Krate": {
+                                      "name": "idna",
+                                      "version": "1.1.0"
+                                    },
+                                    "parents": [
+                                      {
+                                        "Krate": {
+                                          "name": "jsonschema",
+                                          "version": "0.33.0"
+                                        },
+                                        "parents": [
+                                          {
+                                            "Krate": {
+                                              "name": "repository-checks",
+                                              "version": "0.1.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "Krate": {
+                              "name": "icu_properties",
+                              "version": "2.3.0"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "idna_adapter",
+                                  "version": "1.2.2"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Krate": {
+                          "name": "icu_locale_core",
+                          "version": "2.3.0"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "icu_properties",
+                              "version": "2.3.0"
+                            },
+                            "repeat": true
+                          },
+                          {
+                            "Krate": {
+                              "name": "icu_provider",
+                              "version": "2.3.1"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "icu_normalizer",
+                                  "version": "2.3.0"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "icu_properties",
+                                  "version": "2.3.0"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Krate": {
+                          "name": "icu_properties",
+                          "version": "2.3.0"
+                        },
+                        "repeat": true
+                      },
+                      {
+                        "Krate": {
+                          "name": "icu_provider",
+                          "version": "2.3.1"
+                        },
+                        "repeat": true
+                      },
+                      {
+                        "Krate": {
+                          "name": "tinystr",
+                          "version": "0.8.4"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "icu_locale_core",
+                              "version": "2.3.0"
+                            },
+                            "repeat": true
+                          }
+                        ]
+                      },
+                      {
+                        "Krate": {
+                          "name": "zerotrie",
+                          "version": "0.2.5"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "icu_properties",
+                              "version": "2.3.0"
+                            },
+                            "repeat": true
+                          },
+                          {
+                            "Krate": {
+                              "name": "icu_provider",
+                              "version": "2.3.1"
+                            },
+                            "repeat": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Krate": {
+                      "name": "ref-cast-impl",
+                      "version": "1.0.27"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "ref-cast",
+                          "version": "1.0.27"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "fluent-uri",
+                              "version": "0.3.2"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "referencing",
+                                  "version": "0.33.0"
+                                },
+                                "parents": [
+                                  {
+                                    "Krate": {
+                                      "name": "jsonschema",
+                                      "version": "0.33.0"
+                                    },
+                                    "repeat": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Krate": {
+                      "name": "synstructure",
+                      "version": "0.14.0"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "yoke-derive",
+                          "version": "0.8.4"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "yoke",
+                              "version": "0.8.3"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "icu_collections",
+                                  "version": "2.3.0"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "icu_provider",
+                                  "version": "2.3.1"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "zerotrie",
+                                  "version": "0.2.5"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "zerovec",
+                                  "version": "0.11.8"
+                                },
+                                "parents": [
+                                  {
+                                    "Krate": {
+                                      "name": "icu_collections",
+                                      "version": "2.3.0"
+                                    },
+                                    "repeat": true
+                                  },
+                                  {
+                                    "Krate": {
+                                      "name": "icu_locale_core",
+                                      "version": "2.3.0"
+                                    },
+                                    "repeat": true
+                                  },
+                                  {
+                                    "Krate": {
+                                      "name": "icu_normalizer",
+                                      "version": "2.3.0"
+                                    },
+                                    "repeat": true
+                                  },
+                                  {
+                                    "Krate": {
+                                      "name": "icu_properties",
+                                      "version": "2.3.0"
+                                    },
+                                    "repeat": true
+                                  },
+                                  {
+                                    "Krate": {
+                                      "name": "icu_provider",
+                                      "version": "2.3.1"
+                                    },
+                                    "repeat": true
+                                  },
+                                  {
+                                    "Krate": {
+                                      "name": "potential_utf",
+                                      "version": "0.1.6"
+                                    },
+                                    "parents": [
+                                      {
+                                        "Krate": {
+                                          "name": "icu_collections",
+                                          "version": "2.3.0"
+                                        },
+                                        "repeat": true
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "Krate": {
+                                      "name": "tinystr",
+                                      "version": "0.8.4"
+                                    },
+                                    "repeat": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Krate": {
+                          "name": "zerofrom-derive",
+                          "version": "0.1.8"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "zerofrom",
+                              "version": "0.1.8"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "icu_collections",
+                                  "version": "2.3.0"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "icu_provider",
+                                  "version": "2.3.1"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "yoke",
+                                  "version": "0.8.3"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "zerotrie",
+                                  "version": "0.2.5"
+                                },
+                                "repeat": true
+                              },
+                              {
+                                "Krate": {
+                                  "name": "zerovec",
+                                  "version": "0.11.8"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Krate": {
+                      "name": "wasm-bindgen-macro-support",
+                      "version": "0.2.129"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "wasm-bindgen-macro",
+                          "version": "0.2.129"
+                        },
+                        "parents": [
+                          {
+                            "Krate": {
+                              "name": "wasm-bindgen",
+                              "version": "0.2.129"
+                            },
+                            "parents": [
+                              {
+                                "Krate": {
+                                  "name": "js-sys",
+                                  "version": "0.3.106"
+                                },
+                                "parents": [
+                                  {
+                                    "Krate": {
+                                      "name": "web-sys",
+                                      "version": "0.3.106"
+                                    },
+                                    "parents": [
+                                      {
+                                        "Krate": {
+                                          "name": "quanta",
+                                          "version": "0.13.0"
+                                        },
+                                        "parents": [
+                                          {
+                                            "Krate": {
+                                              "name": "migration-workbench",
+                                              "version": "0.1.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "Krate": {
+                                  "name": "web-sys",
+                                  "version": "0.3.106"
+                                },
+                                "repeat": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Krate": {
+                      "name": "yoke-derive",
+                      "version": "0.8.4"
+                    },
+                    "repeat": true
+                  },
+                  {
+                    "Krate": {
+                      "name": "zerofrom-derive",
+                      "version": "0.1.8"
+                    },
+                    "repeat": true
+                  },
+                  {
+                    "Krate": {
+                      "name": "zerovec-derive",
+                      "version": "0.11.6"
+                    },
+                    "parents": [
+                      {
+                        "Krate": {
+                          "name": "zerovec",
+                          "version": "0.11.8"
+                        },
+                        "repeat": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "labels": [
+              {
+                "column": 1,
+                "line": 103,
+                "message": "lock entries",
+                "span": "syn 2.0.119 registry+https://github.com/rust-lang/crates.io-index\nsyn 3.0.6 registry+https://github.com/rust-lang/crates.io-index"
+              }
+            ],
+            "message": "found 2 duplicate entries for crate 'syn'",
+            "severity": "warning"
+          },
+          "type": "diagnostic"
+        },
+        {
+          "fields": {
+            "advisories": {
+              "errors": 0,
+              "helps": 0,
+              "notes": 0,
+              "warnings": 0
+            },
+            "bans": {
+              "errors": 0,
+              "helps": 0,
+              "notes": 0,
+              "warnings": 2
+            },
+            "licenses": {
+              "errors": 0,
+              "helps": 124,
+              "notes": 12,
+              "warnings": 3
+            },
+            "sources": {
+              "errors": 0,
+              "helps": 0,
+              "notes": 0,
+              "warnings": 0
+            }
+          },
+          "type": "summary"
+        }
+      ],
+      "tool_version": "cargo-deny 0.19.9",
+      "advisory_database_commits": [
+        {
+          "database": "advisory-db-3157b0e258782691",
+          "commit": "ef6173cbc5c50ec8166f9a5b28f07834144373ee"
+        }
+      ]
+    },
+    "production_kernel_external_crates": 0,
+    "dev_prod_kernel_clippy": "passed",
+    "cargo_advisor_workbench_tests": "passed after disabling quanta defaults",
+    "repository_check": "passed",
+    "pr_base_diff": "Executed current schema against a separate clean main checkout; quanta feature reduction visible at unchanged count 130.",
+    "supply_rejection_controls": [
+      {
+        "kind": "source",
+        "exit_code": 8
+      },
+      {
+        "kind": "license",
+        "exit_code": 4
+      },
+      {
+        "kind": "bans",
+        "exit_code": 2
+      }
+    ]
+  },
+  "tooling": {
+    "node": "v18.20.8",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)"
+  },
+  "baseline": "dependencies/baseline-main.json",
+  "heavy_audit": "dependencies/heavy-audit.json"
+}

@@ -1,0 +1,47 @@
+name: Dependency hygiene
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 5 * * 1"
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Pinned Rust
+        run: rustup toolchain install 1.99.0 --profile minimal
+      - name: Install pinned host audit tool
+        run: cargo install --locked cargo-deny --version 0.19.9
+      - name: Boundary rejection controls
+        run: node --test scripts/tests/dependency-audit.test.cjs
+      - name: Inventory and supply chain
+        run: node scripts/dependency-audit.cjs check --supply-chain
+      - name: Compare actual PR base
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/dependency-base" "$BASE_SHA"
+          node scripts/dependency-base.cjs "$RUNNER_TEMP/dependency-base" "$RUNNER_TEMP/dependency-base-inventory"
+          node scripts/dependency-audit.cjs diff "$RUNNER_TEMP/dependency-base-inventory/inventory.json" target/dependencies/inventory.json target/dependencies/pr-diff.md
+      - name: Publish dependency diff in PR check summary
+        if: always()
+        run: |
+          if [ -f target/dependencies/report.md ]; then cat target/dependencies/report.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f target/dependencies/pr-diff.md ]; then cat target/dependencies/pr-diff.md >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f target/dependencies/diff.md ]; then cat target/dependencies/diff.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-evidence-${{ github.event.pull_request.head.sha || github.sha }}
+          path: target/dependencies/
+          retention-days: 90
