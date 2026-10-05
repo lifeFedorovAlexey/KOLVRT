@@ -890,6 +890,16 @@
       "title": "Security threat model"
     },
     {
+      "document": "doc.kolvrt.security.verifier-time",
+      "document_status": "CURRENT",
+      "estimated_bytes": 8582,
+      "id": "doc.kolvrt.security.verifier-time",
+      "kind": "subsystem-contract",
+      "path": "docs/security/verifier-time.md",
+      "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
+      "title": "Provisioned verifier time and session lifetime"
+    },
+    {
       "document": "doc.linux.memory.allocation",
       "document_status": "CURRENT",
       "estimated_bytes": 2848,
@@ -1822,6 +1832,27 @@
       "path": "docs/security/threat-model.md",
       "summary": "Security requirement: trust",
       "title": "Objectives and trust"
+    },
+    {
+      "anchor": "kolvrt-verifier-time",
+      "depends_on": [
+        "law.009",
+        "law.013",
+        "law.036",
+        "law.040",
+        "adr.0013",
+        "adr.0008"
+      ],
+      "document": "doc.kolvrt.security.verifier-time",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1215,
+      "id": "kolvrt.security.verifier-time",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/security/verifier-time.md",
+      "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
+      "tags": ["trust", "clock", "freshness", "session", "migration"],
+      "title": "Temporal boundary"
     },
     {
       "aliases": ["LAW-001"],

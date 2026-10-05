@@ -111,13 +111,12 @@ fn configured_verifier(
 ) -> Result<SignedArtifactStore, String> {
     match (policy.schema, session_args) {
         (1, []) => SignedArtifactStore::new(policy, artifact_root.into()),
-        (2, [flag, ledger]) if flag == "--session-ledger" => {
-            let now = std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .map_err(|_| "system UTC clock is before UNIX epoch")?
-                .as_secs();
-            SignedArtifactStore::provisioned(policy, artifact_root.into(), ledger.into(), now)
-        }
+        (2, [flag, ledger]) if flag == "--session-ledger" => SignedArtifactStore::provisioned(
+            policy,
+            artifact_root.into(),
+            ledger.into(),
+            std::sync::Arc::new(migration_advisor::provenance::SystemUtcClock),
+        ),
         _ => Err("schema 1 uses fixture policy; schema 2 requires --session-ledger DIR".into()),
     }
 }

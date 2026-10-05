@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "9f799bb2d87bc8c5659da4cef71ba0c17d899b87e7fe68e1e04f6a3c1eb2f362",
-        "translation_sha256": "bbc88f070e0457ab8ef20fb4dfe4baa6f9a0aee4a3b611e83263cf6c1762c001"
+        "source_sha256": "a4f8beb45e94e6edda3fc0dfec572685ca7ecd8609ce653dc5280d67d187328b",
+        "translation_sha256": "436080ffaa92fc26371692264c7e9eba93930580e43c4a3e56f358451d1b1627"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -182,8 +182,8 @@
         "translation_sha256": "8ac1260b3cb2b4ac4e3dde3bcf7b45ea8ad2936ffefd827a0da50e5ccc57ad05"
       },
       "docs/architecture/migration-advisor.md": {
-        "source_sha256": "12ffe983dda1bb0ba794107ec5cd01b6bc525a6931837fac9c032a5c59b589f4",
-        "translation_sha256": "e471196580bd1c9c04cb72a6e36afa513d1b49bf3220c2a0c03ccd31a86d9472"
+        "source_sha256": "da2f22f6dd3df8a47782b45ba4a99ccb233d11af9d40f777254e44af5f940a0b",
+        "translation_sha256": "6c064579cae1a120a05000bd067fd6506b65ec720d1e0e1626462a0cc3c947b0"
       },
       "docs/architecture/migration-workbench.md": {
         "source_sha256": "d2d125443913054ebce8c0913bc8a44841d8d2b909c8707b93058586a49ea44b",
@@ -302,8 +302,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "dfb90dca65a29e05b74f2b8809bb540fc6e948e3558cb9003edbab5cef20f99c",
-        "translation_sha256": "8d89426407e06528e19d313e7419aabd7695612e6566b7f2f209565118138fc3"
+        "source_sha256": "b4623df3e8e0cbf82cf7a5a6c5b1de9ba0b43c457994cc24da5aaaf8e3538d8c",
+        "translation_sha256": "5f02bf8090fb84da77da5555aabd9b2037f5df0804a7d06ade721fcbd323e96f"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -380,6 +380,10 @@
       "docs/security/threat-model.md": {
         "source_sha256": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
         "translation_sha256": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732"
+      },
+      "docs/security/verifier-time.md": {
+        "source_sha256": "20a367eea91030387bca755c26fdbbd7497ce2a9c45a4367165d1e5f84fddbe1",
+        "translation_sha256": "e4df3e31e395f91586371fc6fca8b4650164a702ec54acaaa1752f027cc78340"
       },
       "docs/vision.md": {
         "source_sha256": "c5a07bd13832011ae4fe886a31c7e31bccc14111b4a27a86797b47e55f593b77",
