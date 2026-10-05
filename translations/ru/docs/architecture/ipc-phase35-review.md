@@ -8,7 +8,7 @@ Current reference: [Текущий контракт scheduler](../kernel/schedul
 
 После архитектурного review пользователь поручил продолжать до полной реализации Phase 3.5, тестов, документации и PR. Реализация использует execution option E1 и synchronization option A. ADR-0025 фиксирует выбранные invariants; это review сохраняет сравнение вариантов и не закрывает #26.
 
-Реализация включает bounded endpoint/request arbiter, initialized copied frames, scoped endpoint grants, transactional receive/collect, retained requester receipts, wake/ack mailbox, native syscall dispatch и continuous scheduler idle/resume. DEV/PROD suite прошёл 118 kernel checks, включая concurrent producers, unaligned cross-page frames и queued head/non-head cancellation. Добавлены 20 IPC mutation controls; их итоговая матрица выполняется. Benchmark из 144 групп каждого профиля включает проверенные hot/blocked/full-queue paths; после последних source edits требуется обновить baseline. Final exact-source evidence, remaining acceptance audit, repository checks и human EN/RU review ещё не завершены.
+Сохранённая реализация включает endpoint/request arbiter, initialized copied frames, scoped grants, transactional receive/collect, wake/ack mailboxes и continuous idle/resume. Исходный технический receipt содержит 124 проверки каждого DEV/PROD профиля и 46 IPC mutation runs с точным expected event. После integration с main 658cd22 оба положительных профиля снова прошли все 124 проверки; отдельный receipt различает текущие наблюдения и исторические свидетельства неизменённого enforcement. Сохранён performance baseline из 144 групп каждого профиля. Итоговое acceptance review остаётся открытым.
 
 Периодически обновляемые origin/main и work branch начинаются с `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`. Исходный checkout оставлен без изменений; его локальная документация исключена из review. GitHub issue [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) остаётся открытым; [#75](https://github.com/lifeFedorovAlexey/KOLVRT/pull/75) и [#76](https://github.com/lifeFedorovAlexey/KOLVRT/pull/76) merged. [#27](https://github.com/lifeFedorovAlexey/KOLVRT/issues/27) и [#28](https://github.com/lifeFedorovAlexey/KOLVRT/issues/28) остаются последующими service gates.
 
@@ -76,7 +76,7 @@ Review использует текущие контракты [domains](../kerne
 
 Рекомендация: E1 для Phase 3.5. Принимаемое изменение должно ограничиваться continuous execution/idle и split syscall continuation. Не ослаблять whole-session frame retirement barrier, не добавлять migration или supervisor/restart policy. E2 требует отдельного retained-lifecycle architecture decision. E3 — допустимая conservative alternative, но она обязана реализовать настоящий event-driven sleeping и владеть explicit wake handoffs на границах sessions.
 
-Это предусмотренный stop gate: выбрать E1, E2 или E3 до реализации новых scheduler continuations. Рекомендации — предложения; current ADRs и existing code не изменены так, чтобы представить их принятыми.
+Исходный execution decision gate разрешён принятым выбором E1/A в ADR-0025; варианты выше сохраняются как запись сравнения архитектур.
 
 ## Предлагаемый transport contract после решения
 

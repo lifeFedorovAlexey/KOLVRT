@@ -355,7 +355,10 @@ pub fn record_errors(
                                 fail("metric receipt grew beyond byte limit");
                                 continue;
                             }
-                            let digest = format!("{:x}", Sha256::digest(&bytes));
+                            let digest = (Sha256::digest(&bytes))
+                                .iter()
+                                .map(|byte| format!("{byte:02x}"))
+                                .collect::<String>();
                             if provenance["sha256"] != digest {
                                 fail("metric provenance artifact digest mismatch");
                             }

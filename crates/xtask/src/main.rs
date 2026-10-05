@@ -857,7 +857,7 @@ fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<
     {
         return Err("production includes negative test".into());
     }
-    let report = json!({"artifact":dest,"elf_bytes":bytes.len(),"load_bytes":loaded,"memory_bytes":memory,"features":features,"sha256":format!("{:x}",Sha256::digest(&bytes)),"compiler":"1.99.0","target":"aarch64-unknown-none"});
+    let report = json!({"artifact":dest,"elf_bytes":bytes.len(),"load_bytes":loaded,"memory_bytes":memory,"features":features,"sha256":(Sha256::digest(&bytes)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"compiler":"1.99.0","target":"aarch64-unknown-none"});
     fs::write(
         format!("target/kernel/{name}-build.json"),
         serde_json::to_string_pretty(&report)?,
@@ -948,7 +948,7 @@ fn execute_mode(
     fs::write(
         elf.with_extension("run.json"),
         serde_json::to_string_pretty(
-            &json!({"qemu_version":String::from_utf8(version.stdout)?,"arguments":qemu_args(elf),"active_cpus":platform_config::ACTIVE_CPUS,"configured_cpus":platform_config::CONFIGURED_CPUS,"elf_sha256":format!("{:x}",Sha256::digest(fs::read(elf)?)),"timeout_seconds":QEMU_TIMEOUT.as_secs(),"accelerator":"TCG","measurement_claim":"emulator timer ticks; not hardware throughput"}),
+            &json!({"qemu_version":String::from_utf8(version.stdout)?,"arguments":qemu_args(elf),"active_cpus":platform_config::ACTIVE_CPUS,"configured_cpus":platform_config::CONFIGURED_CPUS,"elf_sha256":(Sha256::digest(fs::read(elf)?)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"timeout_seconds":QEMU_TIMEOUT.as_secs(),"accelerator":"TCG","measurement_claim":"emulator timer ticks; not hardware throughput"}),
         )?,
     )?;
     let mut child = Command::new(emulator)
@@ -1040,9 +1040,9 @@ fn source_inventory() -> Result<Value> {
         let path = file.to_string_lossy().replace('\\', "/");
         if let Ok(text) = std::str::from_utf8(&bytes) {
             let normalized = text.replace("\r\n", "\n");
-            inventory.push(json!({"path":path,"sha256_lf":format!("{:x}",Sha256::digest(normalized.as_bytes()))}));
+            inventory.push(json!({"path":path,"sha256_lf":(Sha256::digest(normalized.as_bytes())).iter().map(|byte| format!("{byte:02x}")).collect::<String>()}));
         } else {
-            inventory.push(json!({"path":path,"sha256":format!("{:x}",Sha256::digest(bytes))}));
+            inventory.push(json!({"path":path,"sha256":(Sha256::digest(bytes)).iter().map(|byte| format!("{byte:02x}")).collect::<String>()}));
         }
     }
     Ok(json!(inventory))
@@ -1122,7 +1122,10 @@ fn asid_bench() -> Result<()> {
     } else {
         (sorted[sorted.len() / 2 - 1] as f64 + sorted[sorted.len() / 2] as f64) / 2.0
     };
-    let digest = format!("{:x}", Sha256::digest(serde_json::to_vec(&sources)?));
+    let digest = (Sha256::digest(serde_json::to_vec(&sources)?))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
     let record = json!({
         "schema_version": 1,
         "issue": 18,
@@ -1239,10 +1242,10 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
             );
         }
         fs::create_dir_all("research/measurements/runs")?;
-        let digest = format!(
-            "{:x}",
-            Sha256::digest(serde_json::to_vec(starting_sources)?)
-        );
+        let digest = (Sha256::digest(serde_json::to_vec(starting_sources)?))
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect::<String>();
         let path = format!(
             "research/measurements/runs/{timestamp}-{label}-{}.json",
             &digest[..12]
@@ -1360,7 +1363,7 @@ fn audit() -> Result<()> {
                 .map(|line| format!("{})", line.split(',').next().unwrap())),
         );
         if file.extension().is_some_and(|e| e == "S") {
-            assembly.push(json!({"path":file,"sha256":format!("{:x}",Sha256::digest(source.as_bytes())),"review":"INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE"}));
+            assembly.push(json!({"path":file,"sha256":(Sha256::digest(source.as_bytes())).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"review":"INV-ENTRY, INV-VECTOR, INV-PROBE, INV-USER-CONTEXT, INV-USER-IMAGE"}));
         }
         for (i, line) in source.lines().enumerate() {
             if line.contains("unsafe") && !line.trim_start().starts_with("//") {
@@ -1392,7 +1395,7 @@ fn audit() -> Result<()> {
                 .iter()
                 .any(|prefix| name.starts_with(prefix))
         {
-            runtime.push(json!({"artifact":name,"sha256":format!("{:x}",Sha256::digest(fs::read(&p)?)),"source_unsafe_coverage":"compiler-trusted; not individually proven"}));
+            runtime.push(json!({"artifact":name,"sha256":(Sha256::digest(fs::read(&p)?)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"source_unsafe_coverage":"compiler-trusted; not individually proven"}));
         }
     }
     let report = json!({"scope":"first-party source inventory with local invariant context; assembly and compiled runtime artifacts included; not a safety proof","locations":locations,"assembly":assembly,"native_dependency_tree":tree,"compiler_runtime":runtime,"generated_wrappers":generated_wrappers,"compiler":"Rust 1.99.0","dependency_boundary":"compiler runtime and generated instructions require compiler trust; no compatibility dependency"});

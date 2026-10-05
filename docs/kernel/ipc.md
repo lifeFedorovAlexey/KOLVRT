@@ -1,11 +1,12 @@
 <!-- markdownlint-disable MD041 -->
 <!-- The stable knowledge anchor precedes the visible document heading. -->
+
 <a name="bounded-native-ipc"></a>
 
 # Bounded native EL0 IPC
 
 Document status: CURRENT
-Evidence scope: Phase 3.5 implementation in progress. Real DEV/PROD EL0 peers exercise bounded transport, waits, deadlines, death, copy transactions and reclamation; milestone acceptance remains incomplete.
+Evidence scope: retained Phase 3.5 implementation; 124 DEV and 124 PROD checks pass after integration with main 658cd22. Final acceptance review remains open; physical ARM is unverified.
 Current reference: [Architecture re-derivation](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -88,7 +89,7 @@ Current real EL0 fixtures cover both cross-CPU directions and each same-CPU plac
 
 Twenty-three focused mutation controls cover authority, queue bounds/FIFO, client-ID and internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wrong-process wake, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, missing and duplicate charge release, endpoint teardown, copy transactions and service death. All 46 DEV/PROD runs were rejected by their exact expected event or named failing test; an arbitrary panic is insufficient. A CPU1 kernel failure retains its exact cause in a bounded atomic record for CPU0, which stops the continuous session without authorizing reclamation.
 
-Current source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). All runtime/harness digests match the current files. Human semantic and complete EN/RU review are required before closing #26 and promoting the feature to BOUNDED_IMPLEMENTED. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
+Current source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records current-source positive checks and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. Human semantic and complete EN/RU review are required before closing #26 and promoting the feature to BOUNDED_IMPLEMENTED. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
 
 Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](../../crates/kernel-core/src/ipc/identity.rs), [wire](../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../crates/kernel/src/ipc/native.rs), [storage](../../crates/kernel/src/ipc/storage.rs), [deferred work](../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../crates/kernel/src/ipc_workload.rs), [runner](../../crates/xtask/src/main.rs).
 
@@ -108,12 +109,7 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
       "anchor": "bounded-native-ipc",
       "kind": "feature",
       "summary": "Bounded endpoint IPC with copied requests, blocking waits and exact terminal outcomes.",
-      "tags": [
-        "ipc",
-        "endpoint",
-        "native",
-        "el0"
-      ],
+      "tags": ["ipc", "endpoint", "native", "el0"],
       "depends_on": [
         "kolvrt.process.identity",
         "kolvrt.handles.local",
@@ -195,14 +191,11 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           "research/results/native-compat-removal-phase35.json",
           "research/results/routing-phase35-regression.json",
           "research/measurements/ipc-phase35-baseline.json",
-          "research/results/kernel-phase35-unsafe-audit.json"
+          "research/results/kernel-phase35-unsafe-audit.json",
+          "research/results/ipc-phase35-main-integration.json"
         ],
-        "issues": [
-          26
-        ],
-        "adrs": [
-          "adr.0025"
-        ],
+        "issues": [26],
+        "adrs": ["adr.0025"],
         "limitations": [
           "ABI remains experimental and unfrozen.",
           "Fixed affinity, immutable mappings and conservative whole-session retirement; no supervisor, service discovery, migration, zero-copy or universal wait/invoke.",
@@ -214,10 +207,10 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "124 real kernel checks per DEV/PROD profile and 46 exact-event IPC mutation runs passed on the integrated main source set; source digests match current files.",
-            "receipt": "research/results/ipc-phase35-acceptance.json",
-            "receipt_sha256": "960c88b3ee28978d02f73bdd0373d4fe193a66a65423f01df8deaabad65fc853",
-            "scope": "Reviewed main base 41ecd0656fd440585fbc1c4b2f5e969faa7ba815; integrated implementation commit 0851dde5406c87b8dec6554c75aaaaa530df14fb plus exact LF source inventory. Two fixed-affinity QEMU CPUs, DEV/PROD, normal boot and named IPC acceptance; no physical ARM claim."
+            "reason": "124 named checks pass in DEV and PROD after integration with main 658cd22. The 46 historical mutation runs are retained separately; IPC enforcement sources are unchanged.",
+            "receipt": "research/results/ipc-phase35-main-integration.json",
+            "receipt_sha256": "9b199a5dc0e23d65c1396001d337d768270cdbac2411a9c69c93fe2044edab9b",
+            "scope": "Current source inventory for two positive QEMU runs. Historical mutation, native-only and routing receipts retain their original snapshots; they are not represented as reruns."
           },
           {
             "environment": "physical-arm64",
@@ -236,117 +229,91 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
         ],
         "roadmap_gate": "Phase 3.5"
       },
-      "aliases": [
-        "kolvrt.ipc"
-      ]
+      "aliases": ["kolvrt.ipc"]
     },
     {
       "id": "kolvrt.ipc.endpoint",
       "anchor": "authority-and-identities",
       "kind": "contract-section",
       "summary": "Concrete endpoint, service binding and scoped SEND authority.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.queue",
       "anchor": "bounded-storage-and-accounting",
       "kind": "contract-section",
       "summary": "Bounded queue, result slots and domain charges.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.request",
       "anchor": "copied-transport",
       "kind": "contract-section",
       "summary": "Copied native.request/1 request framing and operations.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.payload",
       "anchor": "copied-transport",
       "kind": "contract-section",
       "summary": "Initialized bounded payload snapshots and response bytes.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.receive",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Transactional receive delivery and retained queue state.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.wait",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
       "summary": "Blocking readable and terminal conditions with register and recheck.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.wakeup",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
       "summary": "Exact owner wake identity, mailbox acknowledgement and idle progress.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.terminal",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Exactly one retained terminal result and commitment boundary.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.cancel",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Cancellation before and after service effect commitment.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.deadline",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Absolute monotonic request deadline and terminal arbitration.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.cross-cpu",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
       "summary": "Fixed-affinity cross-CPU signaling and retained wake drainage.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.teardown",
       "anchor": "teardown-and-reclamation",
       "kind": "contract-section",
       "summary": "Death, shutdown, retained authority and endpoint reclamation.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     }
   ]
 }

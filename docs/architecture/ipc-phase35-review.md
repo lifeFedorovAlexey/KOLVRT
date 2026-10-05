@@ -8,7 +8,7 @@ Current reference: [Current scheduler contract](../kernel/scheduler.md)
 
 After the architecture review, the user instructed continuation through the complete Phase 3.5 implementation, tests, documentation and PR. Implementation proceeds with execution option E1 and synchronization option A. ADR-0025 records the selected invariants; this review remains the comparison record and does not itself close #26.
 
-The implementation includes a bounded endpoint/request arbiter, initialized copied frames, scoped endpoint grants, transactional receive/collect, retained requester receipts, a wake/ack mailbox, native syscall dispatch and continuous scheduler idle/resume. The DEV/PROD suite passed 118 kernel checks, including concurrent producers, unaligned cross-page frames and queued head/non-head cancellation. Twenty IPC mutation controls are implemented; their final matrix is running. The 144-group benchmark per profile includes verified hot/blocked/full-queue paths; final source edits require a baseline refresh. Final exact-source evidence, the remaining acceptance audit, repository checks and human EN/RU review are not yet complete.
+The retained implementation includes the bounded endpoint/request arbiter, initialized copied frames, scoped grants, transactional receive/collect, wake/ack mailboxes and continuous idle/resume. The original technical receipt records 124 checks per DEV/PROD profile and 46 exact-event IPC mutation runs. After integration with main 658cd22, both positive profiles again pass all 124 checks; the integration receipt separates current observations from unchanged historical enforcement evidence. The 144-group performance baseline per profile is retained. Final acceptance review remains open.
 
 The fetched and periodically refreshed `origin/main` and the work branch start at `7c8ed152fb3ed5fa1c996f6b447396ad6aa0caca`. The original checkout remains untouched and its unrelated local documentation changes are excluded. GitHub issue [#26](https://github.com/lifeFedorovAlexey/KOLVRT/issues/26) remains open; [#75](https://github.com/lifeFedorovAlexey/KOLVRT/pull/75) and [#76](https://github.com/lifeFedorovAlexey/KOLVRT/pull/76) are merged. [#27](https://github.com/lifeFedorovAlexey/KOLVRT/issues/27) and [#28](https://github.com/lifeFedorovAlexey/KOLVRT/issues/28) remain later service gates.
 
@@ -76,7 +76,7 @@ All three choices require actual timer/SGI wake handling when no task is runnabl
 
 Recommendation: E1 for Phase 3.5. Its accepted change should be limited to continuous execution/idle and split syscall continuation. Do not relax the whole-session frame retirement barrier, admit migration, or add supervisor/restart policy. E2 requires a separate retained-lifecycle architecture decision. E3 is a viable conservative alternative, but must implement actual event-driven sleeping and own explicit wake handoffs at session boundaries.
 
-This is the requested stop gate: choose E1, E2 or E3 before implementing new scheduler continuations. The recommendations are proposals; current ADRs and existing code have not been changed to make them appear accepted.
+The original execution decision gate is resolved by the accepted E1/A choice in ADR-0025; the alternatives above remain the design comparison record.
 
 ## Proposed transport contract after the decision
 

@@ -1,11 +1,12 @@
 <!-- markdownlint-disable MD041 -->
 <!-- Stable knowledge anchor расположен перед видимым заголовком документа. -->
+
 <a name="bounded-native-ipc"></a>
 
 # Ограниченный IPC между нативными EL0-процессами
 
 Document status: CURRENT
-Evidence scope: реализация Phase 3.5 продолжается. Реальные DEV/PROD EL0 peers проверяют bounded transport, waits, deadlines, death, copy transactions и reclamation; milestone acceptance ещё не завершён.
+Evidence scope: техническая реализация Phase 3.5 сохранена; после integration с main 658cd22 прошли 124 DEV и 124 PROD checks. Окончательное acceptance review остаётся открытым; physical ARM не проверен.
 Current reference: [Повторное выведение архитектуры](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -82,13 +83,13 @@ Independent admission, migration, mutable user mappings, supervisor/service poli
 
 ## Evidence and remaining acceptance
 
-Воспроизводимые данные QEMU и описание copy count находятся в [паспорте производительности](ipc-performance.md); raw observations обоих профилей сохранены в связанном JSON artifact. Отдельные измерения hot/blocked/queue-full остаются gap.
+Метод измерения, четыре копирования и raw observations описаны в [паспорте производительности](ipc-performance.md). Сохранены 144 группы каждого профиля, включая проверенные hot/blocked/full-queue пути. Базовый артефакт относится к исходникам предыдущего integration; production IPC и benchmark source при обновлении main не изменились.
 
 Текущие реальные EL0 fixtures проверяют оба cross-CPU направления и same-CPU placement на каждом CPU, capacity 1/4, initialized payload boundaries, mutation после submit/reply, duplicate IDs до collection, failed receive/collect copy-out, blocked expiry до/после commitment, service/requester death, cancellation через отдельный IPC handshake, authority denial, revoke/close retention, FIFO/full rejection и zero charges/frames после quiescence. Payload stress выполняет 24 requests на CPU/capacity configuration, включая четыре прохода размеров 0/1/8/64/255/256.
 
 Двадцать три focused mutation controls проверяют authority, queue bounds/FIFO, client-ID и internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wake неверного процесса, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, потерю и повторный release charge, endpoint teardown, copy transactions и service death. Все 46 DEV/PROD прогонов отклонены с точным expected event либо named failing test; любой panic не считается достаточным. Kernel failure CPU1 передаёт точную причину через bounded atomic record на CPU0, который прекращает continuous session без ложного reclaim.
 
-Текущие source-bound artifacts: [kernel acceptance](../../../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../../../research/results/routing-phase35-regression.json) и [unsafe inventory](../../../../research/results/kernel-phase35-unsafe-audit.json). Все runtime/harness digests совпадают с текущими файлами. Смысловое review и полное EN/RU review человеком нужны перед закрытием #26 и переходом feature в BOUNDED_IMPLEMENTED. Следующий gate — #27; ABI остаётся EXPERIMENTAL и unfrozen.
+Текущие source-bound artifacts: [kernel acceptance](../../../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../../../research/results/routing-phase35-regression.json) и [unsafe inventory](../../../../research/results/kernel-phase35-unsafe-audit.json). Исходные receipts сохраняют свои snapshots. [Receipt integration с main](../../../../research/results/ipc-phase35-main-integration.json) фиксирует положительные проверки текущих исходников и review неизменности enforcement; изменились package metadata и test-only финализация IRQ. Смысловое review и полное EN/RU review человеком нужны перед закрытием #26 и переходом feature в BOUNDED_IMPLEMENTED. Следующий gate — #27; ABI остаётся EXPERIMENTAL и unfrozen.
 
 Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [identity](../../../../crates/kernel-core/src/ipc/identity.rs), [wire](../../../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../../../crates/kernel/src/ipc/native.rs), [storage](../../../../crates/kernel/src/ipc/storage.rs), [deferred work](../../../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../../../crates/kernel/src/ipc_workload.rs), [runner](../../../../crates/xtask/src/main.rs).
 
@@ -108,12 +109,7 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
       "anchor": "bounded-native-ipc",
       "kind": "feature",
       "summary": "Ограниченный IPC через endpoint с копированием запросов, блокирующим ожиданием и точными terminal outcomes.",
-      "tags": [
-        "ipc",
-        "endpoint",
-        "native",
-        "el0"
-      ],
+      "tags": ["ipc", "endpoint", "native", "el0"],
       "depends_on": [
         "kolvrt.process.identity",
         "kolvrt.handles.local",
@@ -195,14 +191,11 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           "research/results/native-compat-removal-phase35.json",
           "research/results/routing-phase35-regression.json",
           "research/measurements/ipc-phase35-baseline.json",
-          "research/results/kernel-phase35-unsafe-audit.json"
+          "research/results/kernel-phase35-unsafe-audit.json",
+          "research/results/ipc-phase35-main-integration.json"
         ],
-        "issues": [
-          26
-        ],
-        "adrs": [
-          "adr.0025"
-        ],
+        "issues": [26],
+        "adrs": ["adr.0025"],
         "limitations": [
           "ABI remains experimental and unfrozen.",
           "Fixed affinity, immutable mappings and conservative whole-session retirement; no supervisor, service discovery, migration, zero-copy or universal wait/invoke.",
@@ -214,10 +207,10 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "124 real kernel checks per DEV/PROD profile and 46 exact-event IPC mutation runs passed on the integrated main source set; source digests match current files.",
-            "receipt": "research/results/ipc-phase35-acceptance.json",
-            "receipt_sha256": "960c88b3ee28978d02f73bdd0373d4fe193a66a65423f01df8deaabad65fc853",
-            "scope": "Reviewed main base 41ecd0656fd440585fbc1c4b2f5e969faa7ba815; integrated implementation commit 0851dde5406c87b8dec6554c75aaaaa530df14fb plus exact LF source inventory. Two fixed-affinity QEMU CPUs, DEV/PROD, normal boot and named IPC acceptance; no physical ARM claim."
+            "reason": "124 named checks pass in DEV and PROD after integration with main 658cd22. The 46 historical mutation runs are retained separately; IPC enforcement sources are unchanged.",
+            "receipt": "research/results/ipc-phase35-main-integration.json",
+            "receipt_sha256": "9b199a5dc0e23d65c1396001d337d768270cdbac2411a9c69c93fe2044edab9b",
+            "scope": "Current source inventory for two positive QEMU runs. Historical mutation, native-only and routing receipts retain their original snapshots; they are not represented as reruns."
           },
           {
             "environment": "physical-arm64",
@@ -236,117 +229,91 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
         ],
         "roadmap_gate": "Phase 3.5"
       },
-      "aliases": [
-        "kolvrt.ipc"
-      ]
+      "aliases": ["kolvrt.ipc"]
     },
     {
       "id": "kolvrt.ipc.endpoint",
       "anchor": "authority-and-identities",
       "kind": "contract-section",
       "summary": "Concrete endpoint, привязка service и scoped SEND authority.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.queue",
       "anchor": "bounded-storage-and-accounting",
       "kind": "contract-section",
       "summary": "Ограниченные очередь, result slots и domain charges.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.request",
       "anchor": "copied-transport",
       "kind": "contract-section",
       "summary": "Фрейм запросов native.request/1 и операции с копированием.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.payload",
       "anchor": "copied-transport",
       "kind": "contract-section",
       "summary": "Инициализированные bounded snapshots payload и байты ответа.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.receive",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Транзакционная доставка receive и сохранение очереди.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.wait",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
       "summary": "Блокирующие readable и terminal conditions с регистрацией и повторной проверкой.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.wakeup",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
       "summary": "Точная owner wake identity, подтверждение mailbox и прогресс idle.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.terminal",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Ровно один сохранённый terminal result и граница commitment.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.cancel",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Отмена до и после commitment service effect.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.deadline",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
       "summary": "Абсолютный monotonic deadline и terminal arbitration.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.cross-cpu",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
       "summary": "Cross-CPU signalling с фиксированной привязкой и drainage wake.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     },
     {
       "id": "kolvrt.ipc.teardown",
       "anchor": "teardown-and-reclamation",
       "kind": "contract-section",
       "summary": "Завершение, shutdown, удержание authority и reclamation endpoint.",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ]
+      "depends_on": ["kolvrt.ipc.transport"]
     }
   ]
 }

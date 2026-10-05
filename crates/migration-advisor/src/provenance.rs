@@ -9,7 +9,10 @@ use std::{
     fs::{self, OpenOptions},
     io::Read,
     path::PathBuf,
-    sync::Mutex,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, Ordering},
+    },
     time::{SystemTime, UNIX_EPOCH},
 };
 
@@ -118,7 +121,10 @@ pub struct TrustPolicy {
 }
 
 pub fn subject_digest(payload: &[u8]) -> String {
-    format!("{:x}", Sha256::digest(payload))
+    (Sha256::digest(payload))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>()
 }
 
 /// Stable domain separation. Sign the serialized typed payload's digest and its role.
@@ -223,12 +229,45 @@ fn hex_bytes<const N: usize>(text: &str) -> Result<[u8; N], String> {
     Ok(bytes)
 }
 
+/// Trusted application configuration, never deserialized from a request.
+/// The provider must return current UTC seconds or fail; monotonicity is checked
+/// by each verifier, but authenticity and a progressing clock remain provider obligations.
+pub trait TrustedUtcClock: Send + Sync {
+    fn now_unix(&self) -> Result<u64, String>;
+}
+
+/// Host CLI clock adapter. OS UTC is an explicit deployment trust assumption,
+/// not an authenticated production time service.
+pub struct SystemUtcClock;
+impl TrustedUtcClock for SystemUtcClock {
+    fn now_unix(&self) -> Result<u64, String> {
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|elapsed| elapsed.as_secs())
+            .map_err(|_| "system UTC clock unavailable or before UNIX epoch".into())
+    }
+}
+
+#[derive(Default)]
+struct ClockState {
+    last_unix: Option<u64>,
+    failed: bool,
+}
+
+#[derive(Clone)]
+struct ActiveSession {
+    binding: SessionBinding,
+    issuer_key_id: String,
+}
+
 pub struct SignedArtifactStore {
     policy: TrustPolicy,
     root: PathBuf,
     ledger: Option<PathBuf>,
-    now_unix: Option<u64>,
-    active_session: Mutex<Option<SessionBinding>>,
+    clock: Option<Arc<dyn TrustedUtcClock>>,
+    clock_state: Mutex<ClockState>,
+    session_attempted: AtomicBool,
+    active_session: Mutex<Option<ActiveSession>>,
 }
 impl SignedArtifactStore {
     pub fn new(policy: TrustPolicy, root: PathBuf) -> Result<Self, String> {
@@ -273,7 +312,9 @@ impl SignedArtifactStore {
             policy,
             root,
             ledger: None,
-            now_unix: None,
+            clock: None,
+            clock_state: Mutex::new(ClockState::default()),
+            session_attempted: AtomicBool::new(false),
             active_session: Mutex::new(None),
         })
     }
@@ -284,7 +325,7 @@ impl SignedArtifactStore {
         policy: TrustPolicy,
         root: PathBuf,
         ledger: PathBuf,
-        now_unix: u64,
+        clock: Arc<dyn TrustedUtcClock>,
     ) -> Result<Self, String> {
         if policy.schema != 2 {
             return Err("provisioned verification requires trust-policy schema 2".into());
@@ -370,13 +411,80 @@ impl SignedArtifactStore {
         if !ledger.is_dir() {
             return Err("session ledger is not a directory".into());
         }
-        Ok(Self {
+        let verifier = Self {
             policy,
             root,
             ledger: Some(ledger),
-            now_unix: Some(now_unix),
+            clock: Some(clock),
+            clock_state: Mutex::new(ClockState::default()),
+            session_attempted: AtomicBool::new(false),
             active_session: Mutex::new(None),
-        })
+        };
+        verifier.checked_now()?;
+        Ok(verifier)
+    }
+
+    fn checked_now(&self) -> Result<u64, String> {
+        // The external clock callback runs outside every verifier mutex.
+        let sample = self
+            .clock
+            .as_ref()
+            .ok_or("trusted UTC clock unavailable")?
+            .now_unix();
+        let mut state = self
+            .clock_state
+            .lock()
+            .map_err(|_| "clock verifier poisoned")?;
+        if state.failed {
+            return Err("trusted clock verifier invalidated".into());
+        }
+        let Ok(now) = sample else {
+            state.failed = true;
+            return Err("trusted UTC clock unavailable; verifier invalidated".into());
+        };
+        if state.last_unix.is_some_and(|last| now < last) {
+            state.failed = true;
+            return Err("trusted UTC clock moved backwards; verifier invalidated".into());
+        }
+        state.last_unix = Some(now);
+        Ok(now)
+    }
+
+    fn verification_time(&self) -> Result<Option<u64>, String> {
+        if self.policy.schema == 2 {
+            return self.checked_now().map(Some);
+        }
+        if self.policy.required_session_id.is_some()
+            || self.policy.max_attestation_age_seconds.is_some()
+            || self.policy.max_clock_skew_seconds.is_some()
+        {
+            return SystemUtcClock.now_unix().map(Some);
+        }
+        Ok(None)
+    }
+
+    fn session_current(&self, session: &SessionBinding, now: u64) -> Result<(), String> {
+        let policy = self
+            .policy
+            .session
+            .as_ref()
+            .ok_or("missing session policy")?;
+        if session.issued_at_unix > now.saturating_add(policy.max_future_skew_secs)
+            || now >= session.expires_at_unix
+        {
+            return Err("stale or not-yet-valid evidence session".into());
+        }
+        Ok(())
+    }
+
+    fn active_current(&self, active: &ActiveSession, now: u64) -> Result<(), String> {
+        self.session_current(&active.binding, now)?;
+        if !self.policy.keys.iter().any(|key| {
+            key.key_id == active.issuer_key_id && self.key_usable(key, Role::Session, Some(now))
+        }) {
+            return Err("session issuer no longer valid in policy snapshot".into());
+        }
+        Ok(())
     }
 
     fn verify_bytes(&self, digest: &str) -> Result<(), String> {
@@ -409,7 +517,12 @@ impl SignedArtifactStore {
             }
             hash.update(&buffer[..n]);
         }
-        if format!("{:x}", hash.finalize()) != digest {
+        if (hash.finalize())
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect::<String>()
+            != digest
+        {
             return Err("artifact bytes do not match digest".into());
         }
         Ok(())
@@ -425,20 +538,14 @@ impl SignedArtifactStore {
             })
     }
 
-    fn verify_signature(&self, attestation: &Attestation, role: Role, digest: &str) -> bool {
-        let at = if self.policy.schema == 2 {
-            self.now_unix
-        } else if self.policy.required_session_id.is_some()
-            || self.policy.max_attestation_age_seconds.is_some()
-            || self.policy.max_clock_skew_seconds.is_some()
-        {
-            let Ok(elapsed) = SystemTime::now().duration_since(UNIX_EPOCH) else {
-                return false;
-            };
-            Some(elapsed.as_secs())
-        } else {
-            None
-        };
+    fn verify_signature(
+        &self,
+        attestation: &Attestation,
+        role: Role,
+        digest: &str,
+        at: Option<u64>,
+        active: Option<&ActiveSession>,
+    ) -> bool {
         if self.policy.schema == 2 && at.is_none() {
             return false;
         }
@@ -466,10 +573,7 @@ impl SignedArtifactStore {
             let Some(session) = attestation.session.as_ref() else {
                 return false;
             };
-            let Ok(active) = self.active_session.lock() else {
-                return false;
-            };
-            if active.as_ref() != Some(session) {
+            if active.map(|active| &active.binding) != Some(session) {
                 return false;
             }
             signing_message_bound(role, digest, session)
@@ -496,58 +600,95 @@ impl EvidenceVerifier for SignedArtifactStore {
         attestations: &[Attestation],
     ) -> Result<(), String> {
         let digest = subject_digest(payload);
-        let matching: Vec<_> = attestations
-            .iter()
-            .filter(|a| a.role == role && a.subject_digest == digest)
-            .filter(|a| self.verify_signature(a, role, &digest))
-            .collect();
-        let authenticated = !matching.is_empty();
-        if !authenticated {
-            return Err("missing, revoked, wrong-role or invalid Ed25519 signature".into());
+        let active = self
+            .active_session
+            .lock()
+            .map_err(|_| "session verifier poisoned")?
+            .clone();
+        if self.policy.schema == 2 && active.is_none() {
+            return Err("no active provisioned session".into());
         }
-        for rule in self
-            .policy
-            .independence
-            .iter()
-            .filter(|rule| rule.role == role)
-        {
-            let eligible: Vec<_> = matching
-                .iter()
-                .filter_map(|attestation| {
-                    self.policy
-                        .keys
-                        .iter()
-                        .find(|key| key.key_id == attestation.key_id)
-                        .and_then(|key| key.producer.as_ref())
-                })
-                .collect();
-            // Different key IDs and declared domains do not make aliases of one
-            // signing key independent evidence producers.
-            let signers: BTreeSet<_> = matching
-                .iter()
-                .filter_map(|attestation| {
-                    self.policy
-                        .keys
-                        .iter()
-                        .find(|key| key.key_id == attestation.key_id)
-                        .map(|key| &key.public_key)
-                })
-                .collect();
-            let producer_ids: BTreeSet<_> = eligible.iter().map(|p| &p.producer_id).collect();
-            let custody: BTreeSet<_> = eligible.iter().map(|p| &p.custody_domain).collect();
-            let enforcement: BTreeSet<_> = eligible.iter().map(|p| &p.enforcement_domain).collect();
-            if signers.len() < rule.min_producers
-                || producer_ids.len() < rule.min_producers
-                || custody.len() < rule.min_custody_domains
-                || enforcement.len() < rule.min_enforcement_domains
-            {
-                return Err(format!(
-                    "{role:?}: producer independence policy not satisfied"
-                ));
+        // Revalidate after artifact I/O, before returning an accepted result.
+        // The policy/session are immutable snapshots during both passes.
+        let passes = if self.policy.schema == 2 { 2 } else { 1 };
+        let mut verified_matching: Option<Vec<&Attestation>> = None;
+        for pass in 0..passes {
+            let at = self.verification_time()?;
+            if let (Some(active), Some(now)) = (active.as_ref(), at) {
+                self.active_current(active, now)?;
             }
-        }
-        for reference in references.iter().collect::<BTreeSet<_>>() {
-            self.verify_bytes(reference)?;
+            let matching: Vec<_> = if let Some(verified) = verified_matching.take() {
+                // Bytes, signatures, policy and pinned session are unchanged.
+                // Recheck temporal key eligibility, not Ed25519 or artifact I/O.
+                verified
+                    .into_iter()
+                    .filter(|attestation| {
+                        self.policy
+                            .keys
+                            .iter()
+                            .find(|key| key.key_id == attestation.key_id)
+                            .is_some_and(|key| self.key_usable(key, role, at))
+                    })
+                    .collect()
+            } else {
+                attestations
+                    .iter()
+                    .filter(|a| a.role == role && a.subject_digest == digest)
+                    .filter(|a| self.verify_signature(a, role, &digest, at, active.as_ref()))
+                    .collect()
+            };
+            let authenticated = !matching.is_empty();
+            if !authenticated {
+                return Err("missing, revoked, wrong-role or invalid Ed25519 signature".into());
+            }
+            for rule in self
+                .policy
+                .independence
+                .iter()
+                .filter(|rule| rule.role == role)
+            {
+                let eligible: Vec<_> = matching
+                    .iter()
+                    .filter_map(|attestation| {
+                        self.policy
+                            .keys
+                            .iter()
+                            .find(|key| key.key_id == attestation.key_id)
+                            .and_then(|key| key.producer.as_ref())
+                    })
+                    .collect();
+                // Different key IDs and declared domains do not make aliases of one
+                // signing key independent evidence producers.
+                let signers: BTreeSet<_> = matching
+                    .iter()
+                    .filter_map(|attestation| {
+                        self.policy
+                            .keys
+                            .iter()
+                            .find(|key| key.key_id == attestation.key_id)
+                            .map(|key| &key.public_key)
+                    })
+                    .collect();
+                let producer_ids: BTreeSet<_> = eligible.iter().map(|p| &p.producer_id).collect();
+                let custody: BTreeSet<_> = eligible.iter().map(|p| &p.custody_domain).collect();
+                let enforcement: BTreeSet<_> =
+                    eligible.iter().map(|p| &p.enforcement_domain).collect();
+                if signers.len() < rule.min_producers
+                    || producer_ids.len() < rule.min_producers
+                    || custody.len() < rule.min_custody_domains
+                    || enforcement.len() < rule.min_enforcement_domains
+                {
+                    return Err(format!(
+                        "{role:?}: producer independence policy not satisfied"
+                    ));
+                }
+            }
+            if pass == 0 {
+                for reference in references.iter().collect::<BTreeSet<_>>() {
+                    self.verify_bytes(reference)?;
+                }
+                verified_matching = Some(matching);
+            }
         }
         Ok(())
     }
@@ -589,12 +730,8 @@ impl EvidenceVerifier for SignedArtifactStore {
                 "offline evidence is disabled without a trusted offline clock source".into(),
             );
         }
-        let now = self.now_unix.ok_or("trusted UTC clock unavailable")?;
-        if session.issued_at_unix > now.saturating_add(policy.max_future_skew_secs)
-            || now >= session.expires_at_unix
-        {
-            return Err("stale or not-yet-valid evidence session".into());
-        }
+        let now = self.checked_now()?;
+        self.session_current(session, now)?;
         let session_bytes = serde_json::to_vec(session).map_err(|error| error.to_string())?;
         let digest = subject_digest(&session_bytes);
         let issuer_attestation = attestations
@@ -626,6 +763,9 @@ impl EvidenceVerifier for SignedArtifactStore {
             .ledger
             .as_ref()
             .ok_or("provisioned session ledger unavailable")?;
+        if self.session_attempted.swap(true, Ordering::AcqRel) {
+            return Err("provisioned verifier already used for session admission".into());
+        }
         // Consume the issuer's challenge digest, so a retry cannot obtain a
         // second session id around the same signed challenge.
         let marker = ledger.join(format!("{}.used", session.challenge_digest));
@@ -647,10 +787,20 @@ impl EvidenceVerifier for SignedArtifactStore {
             session.issued_at_unix, session.context_digest
         )
         .map_err(|error| error.to_string())?;
+        // A failed final check leaves the challenge consumed. Never roll back
+        // a marker to make an interrupted or expired admission retryable.
+        let final_now = self.checked_now()?;
+        self.session_current(session, final_now)?;
+        if !self.key_usable(issuer_key, Role::Session, Some(final_now)) {
+            return Err("session issuer expired before publication".into());
+        }
         *self
             .active_session
             .lock()
-            .map_err(|_| "session verifier poisoned")? = Some(session.clone());
+            .map_err(|_| "session verifier poisoned")? = Some(ActiveSession {
+            binding: session.clone(),
+            issuer_key_id: issuer_key.key_id.clone(),
+        });
         Ok(())
     }
 

@@ -32,6 +32,7 @@
     "docs/architecture/component-arena.md",
     "docs/architecture/first-native-slice.md",
     "docs/architecture/ipc-phase35-review.md",
+    "docs/architecture/dependency-hygiene.md",
     "docs/architecture/kernel-laws.md",
     "docs/architecture/native-abi.md",
     "docs/architecture/native-model.md",
@@ -50,6 +51,7 @@
     "docs/research/host-survey.md",
     "docs/research/phase-0-1-report.md",
     "docs/security/threat-model.md",
+    "docs/security/verifier-time.md",
     "research/linux/memory-allocation.md"
   ]
 }

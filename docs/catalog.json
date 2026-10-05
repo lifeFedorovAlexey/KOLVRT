@@ -497,7 +497,7 @@
       ],
       "document": "adr.0025",
       "document_status": "CURRENT",
-      "estimated_bytes": 8497,
+      "estimated_bytes": 8522,
       "id": "adr.0025",
       "kind": "adr",
       "path": "docs/architecture-decisions/0025-bounded-native-ipc.md",
@@ -986,6 +986,16 @@
       "title": "Arena measurement contract"
     },
     {
+      "document": "doc.kolvrt.dependencies.hygiene",
+      "document_status": "CURRENT",
+      "estimated_bytes": 11762,
+      "id": "doc.kolvrt.dependencies.hygiene",
+      "kind": "policy",
+      "path": "docs/architecture/dependency-hygiene.md",
+      "summary": "Production TCB dependency boundary and observable host supply chain.",
+      "title": "Dependency hygiene"
+    },
+    {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
       "estimated_bytes": 15485,
@@ -1012,7 +1022,7 @@
     {
       "document": "doc.kolvrt.ipc.review",
       "document_status": "CURRENT",
-      "estimated_bytes": 32695,
+      "estimated_bytes": 32484,
       "id": "doc.kolvrt.ipc.review",
       "kind": "security-analysis",
       "path": "docs/architecture/ipc-phase35-review.md",
@@ -1062,7 +1072,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 19306,
+      "estimated_bytes": 20565,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -1142,7 +1152,7 @@
     {
       "document": "doc.kolvrt.research.host-survey",
       "document_status": "CURRENT",
-      "estimated_bytes": 12315,
+      "estimated_bytes": 12398,
       "id": "doc.kolvrt.research.host-survey",
       "kind": "subsystem-contract",
       "path": "docs/research/host-survey.md",
@@ -1158,6 +1168,16 @@
       "path": "docs/security/threat-model.md",
       "summary": "Cross-subsystem security requirements and explicitly bounded observations.",
       "title": "Security threat model"
+    },
+    {
+      "document": "doc.kolvrt.security.verifier-time",
+      "document_status": "CURRENT",
+      "estimated_bytes": 8582,
+      "id": "doc.kolvrt.security.verifier-time",
+      "kind": "subsystem-contract",
+      "path": "docs/security/verifier-time.md",
+      "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
+      "title": "Provisioned verifier time and session lifetime"
     },
     {
       "document": "doc.linux.memory.allocation",
@@ -1366,6 +1386,24 @@
       "path": "docs/research/cost-l-queries.md",
       "summary": "Read-only host COST-L show/consumers/deps/list/top with UNKNOWN, exact-scope sorting and pagination.",
       "title": "Query contract"
+    },
+    {
+      "anchor": "kolvrt-dependency-hygiene",
+      "document": "doc.kolvrt.dependencies.hygiene",
+      "document_status": "CURRENT",
+      "estimated_bytes": 11527,
+      "id": "kolvrt.dependencies.hygiene",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/architecture/dependency-hygiene.md",
+      "summary": "All-declaration kernel boundary, feature-expanded inventory, graph deltas and supply-chain checks.",
+      "tags": [
+        "dependencies",
+        "supply-chain",
+        "kernel",
+        "tcb"
+      ],
+      "title": "Policy and implementation"
     },
     {
       "anchor": "kolvrt-docs-navigation",
@@ -1603,7 +1641,7 @@
       ],
       "document": "doc.kolvrt.ipc.review",
       "document_status": "CURRENT",
-      "estimated_bytes": 6277,
+      "estimated_bytes": 6207,
       "id": "kolvrt.ipc.review.execution",
       "kind": "contract-section",
       "path": "docs/architecture/ipc-phase35-review.md",
@@ -1686,10 +1724,10 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 19194,
+      "estimated_bytes": 20452,
       "gaps": [
-        "Integrated-source evidence and human semantic/EN/RU review are being finalized.",
-        "Physical ARM remains unverified; this milestone's execution acceptance is QEMU."
+        "Human semantic and complete EN/RU review remain pending before milestone acceptance/promotion.",
+        "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
       "id": "kolvrt.ipc.transport",
       "implementation": "EXPERIMENTAL",
@@ -2387,6 +2425,33 @@
       "path": "docs/security/threat-model.md",
       "summary": "Security requirement: trust",
       "title": "Objectives and trust"
+    },
+    {
+      "anchor": "kolvrt-verifier-time",
+      "depends_on": [
+        "law.009",
+        "law.013",
+        "law.036",
+        "law.040",
+        "adr.0013",
+        "adr.0008"
+      ],
+      "document": "doc.kolvrt.security.verifier-time",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1215,
+      "id": "kolvrt.security.verifier-time",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/security/verifier-time.md",
+      "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
+      "tags": [
+        "trust",
+        "clock",
+        "freshness",
+        "session",
+        "migration"
+      ],
+      "title": "Temporal boundary"
     },
     {
       "aliases": [

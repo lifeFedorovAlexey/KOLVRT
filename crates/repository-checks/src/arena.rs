@@ -20,7 +20,10 @@ pub fn digest(value: &Value) -> String {
     )
 }
 pub fn bytes_digest(bytes: &[u8]) -> String {
-    format!("{:x}", Sha256::digest(bytes))
+    (Sha256::digest(bytes))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>()
 }
 
 fn input(path: &Path) -> CheckResult<Value> {

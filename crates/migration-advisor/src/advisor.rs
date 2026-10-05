@@ -518,12 +518,12 @@ fn analyze_scoped_resolutions(request: &Request) -> Vec<ScopedResolutionResult> 
                 Ok((plan, metrics)) => {
                     verify_scoped(&problem, &plan)
                         .expect("scoped solver output must pass independent verification");
-                    let plan_digest = format!(
-                        "{:x}",
-                        sha2::Sha256::digest(
-                            serde_json::to_vec(&plan).expect("string-only scoped plan")
-                        )
-                    );
+                    let plan_digest = (sha2::Sha256::digest(
+                        serde_json::to_vec(&plan).expect("string-only scoped plan"),
+                    ))
+                    .iter()
+                    .map(|byte| format!("{byte:02x}"))
+                    .collect::<String>();
                     ScopedResolutionResult {
                         id: scenario.id.clone(),
                         status: "solved".into(),

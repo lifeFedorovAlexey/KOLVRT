@@ -1,9 +1,9 @@
 # ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution
 
-Status: **Accepted for the bounded Phase 3.5 mechanism; milestone verification pending**. Date: 2026-10-05.
+Status: **Accepted for the bounded Phase 3.5 mechanism; final acceptance review pending**. Date: 2026-10-05.
 
 Document status: CURRENT
-Evidence scope: architectural decision and implemented bounded mechanism; preliminary QEMU fixtures do not complete Phase 3.5 acceptance or establish physical ARM behavior.
+Evidence scope: accepted architecture and implemented mechanism; technical DEV/PROD, mutation and performance receipts are retained. Final acceptance review is open; physical ARM is unverified.
 Current reference: [IPC contract](../kernel/ipc.md)
 
 ## Context
@@ -46,7 +46,7 @@ The native.request/1 contract remains experimental and unfrozen. Its actual hand
 
 ## Performance impact
 
-The initial QEMU data is a regression baseline only. The required controlled same-CPU/cross-CPU paths and physical hardware measurements remain future evidence.
+The retained QEMU baseline covers controlled same-CPU/cross-CPU hot, blocked and full-queue paths. It is a regression baseline; physical hardware measurements remain absent.
 
 ## Security impact
 
@@ -68,7 +68,7 @@ The selected mechanism introduces private fixed endpoint storage and audited syn
 
 ## Verification and next gates
 
-Real DEV/PROD fixtures and mutation controls are preliminary evidence for the selected mechanism. Full wait/wake and arbiter/death/authority adversarial coverage, performance controlled paths, exact-source receipts, unsafe review and EN/RU knowledge/status audit remain required before milestone acceptance. QEMU is a regression platform, not silicon evidence.
+The original technical receipt retains 124 checks per DEV/PROD profile and 46 exact-event IPC mutation runs; current-main positive integration checks pass in both profiles. Controlled performance paths, unsafe inventory and source-bound receipts are retained. Final acceptance review remains open. QEMU is a regression platform, not silicon evidence.
 
 Issue #27 is the next supervisor scope; #28 follows with an isolated persistent service. They must rederive execution, admission and retirement from their accepted invariants. Existing E1 code, effort or tests cannot force their architecture. Mutable mappings, zero-copy, wait-any, device/network/storage policy and independent service supervision remain excluded here.
 

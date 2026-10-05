@@ -229,10 +229,10 @@ fn guest(features: &[&str], evidence: bool) -> Result<Value> {
     let profile = routing::Profile::new(PROFILE_GENERATION, routes)
         .map_err(|e| format!("profile creation: {e:?}"))?
         .encode();
-    let digest = format!(
-        "{:x}",
-        Sha256::digest(&profile[..profile.len() - SHA256_BYTES])
-    );
+    let digest = (Sha256::digest(&profile[..profile.len() - SHA256_BYTES]))
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
     fs::write("target/kernel/routing-profile.bin", profile)?;
     if !Command::new(&cargo)
         .env(
@@ -283,7 +283,7 @@ fn guest(features: &[&str], evidence: bool) -> Result<Value> {
         return Err("native-only user depends on adapter".into());
     }
     Ok(
-        json!({"elf_sha256":format!("{:x}",Sha256::digest(&elf)),"image_sha256":format!("{:x}",Sha256::digest(&image)),"image_bytes":image.len(),"elf_bytes":elf.len(),"features":features,"evidence":evidence,"profile_sha256":digest,"profile_bytes":profile.to_vec(),"dependencies":dependencies}),
+        json!({"elf_sha256":(Sha256::digest(&elf)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"image_sha256":(Sha256::digest(&image)).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"image_bytes":image.len(),"elf_bytes":elf.len(),"features":features,"evidence":evidence,"profile_sha256":digest,"profile_bytes":profile.to_vec(),"dependencies":dependencies}),
     )
 }
 fn reports(events: &[Value], expected: [u64; 4], dev: bool) -> Result<Value> {
