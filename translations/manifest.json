@@ -250,8 +250,8 @@
         "translation_sha256": "f0f8060a4a50345ab33676736c79dc955637f5a383cb36c50b55027107eefb24"
       },
       "docs/index.md": {
-        "source_sha256": "de2ecdf5132a7f2a01858d81f900b9b476c845f6174a70aa49a59db7bf3980bf",
-        "translation_sha256": "d705135243152c5f754b4a6615b1bc18f3b9a555eb863f9855ceebc126eb405a"
+        "source_sha256": "908624e2456ee40147b98e1a4056f02aad81724fcd3a36d3605a91c9011eebfe",
+        "translation_sha256": "19dcbf9e7b69a9140cfced0a89ef2eb1e5d51d9aaa4f1cd83d6877efb91c4ad9"
       },
       "docs/kernel/boot.md": {
         "source_sha256": "954bdb7cf092fab4af77f592981da339db2e14dc901ca3735864a6e29169112f",
