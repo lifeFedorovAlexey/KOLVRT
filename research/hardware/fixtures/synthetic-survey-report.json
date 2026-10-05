@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "scope": "research_host",
+  "provenance": {
+    "collector": "kolvrt.windows-cim-survey",
+    "version": 1,
+    "input_kind": "SYNTHETIC_FIXTURE",
+    "providers": [
+      {
+        "name": "Win32_ComputerSystem",
+        "outcome": "OBSERVED"
+      },
+      {
+        "name": "Win32_PnPEntity",
+        "outcome": "OBSERVED"
+      },
+      {
+        "name": "Win32_PnPSignedDriver",
+        "outcome": "OBSERVED"
+      },
+      {
+        "name": "Win32_Processor",
+        "outcome": "OBSERVED"
+      }
+    ]
+  },
+  "system": {
+    "architecture": {
+      "status": "OBSERVED",
+      "value": "x86_64"
+    },
+    "cpus": [
+      {
+        "model": {
+          "status": "OBSERVED",
+          "value": "Synthetic Fixture CPU"
+        },
+        "cores": {
+          "status": "OBSERVED",
+          "value": 4
+        },
+        "logical_processors": {
+          "status": "OBSERVED",
+          "value": 8
+        },
+        "firmware_virtualization": {
+          "status": "OBSERVED",
+          "value": true
+        }
+      }
+    ],
+    "ram_bytes": {
+      "status": "OBSERVED",
+      "value": 8589934592
+    },
+    "hypervisor_present": {
+      "status": "OBSERVED",
+      "value": true
+    },
+    "iommu": {
+      "status": "UNKNOWN",
+      "reason": "unsupported_provider"
+    }
+  },
+  "devices": [
+    {
+      "alias": "device-0001",
+      "bus": "PCI",
+      "category": "network",
+      "ids": {
+        "vendor_id": {
+          "status": "OBSERVED",
+          "value": "8086"
+        },
+        "device_id": {
+          "status": "OBSERVED",
+          "value": "100E"
+        },
+        "subsystem_vendor_id": {
+          "status": "OBSERVED",
+          "value": "1234"
+        },
+        "subsystem_device_id": {
+          "status": "OBSERVED",
+          "value": "5678"
+        },
+        "class_id": {
+          "status": "OBSERVED",
+          "value": "020000"
+        }
+      },
+      "driver": {
+        "inf_name": {
+          "status": "OBSERVED",
+          "value": "fixture-net.inf"
+        },
+        "version": {
+          "status": "OBSERVED",
+          "value": "1.2.3.4"
+        }
+      }
+    },
+    {
+      "alias": "device-0002",
+      "bus": "USB",
+      "category": "hid",
+      "ids": {
+        "vendor_id": {
+          "status": "OBSERVED",
+          "value": "1234"
+        },
+        "device_id": {
+          "status": "OBSERVED",
+          "value": "5678"
+        },
+        "subsystem_vendor_id": {
+          "status": "UNKNOWN",
+          "reason": "not_reported"
+        },
+        "subsystem_device_id": {
+          "status": "UNKNOWN",
+          "reason": "not_reported"
+        },
+        "class_id": {
+          "status": "OBSERVED",
+          "value": "03"
+        }
+      },
+      "driver": {
+        "inf_name": {
+          "status": "UNKNOWN",
+          "reason": "not_reported"
+        },
+        "version": {
+          "status": "UNKNOWN",
+          "reason": "not_reported"
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "inventory": "PARTIAL",
+    "reason": "pnp_observation_is_not_exhaustive",
+    "unobserved_classes": ["storage", "gpu", "audio", "bluetooth", "other"]
+  },
+  "kolvrt_execution": "NOT_RUN",
+  "publication": "LOCAL_REVIEW_REQUIRED"
+}
