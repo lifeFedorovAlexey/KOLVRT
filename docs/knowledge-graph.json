@@ -21,6 +21,51 @@
       "type": "related_to"
     },
     {
+      "from": "kolvrt.arena",
+      "to": "adr.0006",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "doc.kolvrt.architecture.benchmarking",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "kolvrt.arena.admission",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "kolvrt.arena.comparison",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "kolvrt.arena.contract",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "kolvrt.arena.cost-l",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "kolvrt.arena.passports",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "kolvrt.arena.receipts",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "kolvrt.arena.roadmap",
+      "type": "depends_on"
+    },
+    {
       "from": "kolvrt.docs.navigation",
       "to": "adr.0024",
       "type": "depends_on"
@@ -357,6 +402,11 @@
     },
     {
       "from": "kolvrt.security.capability-revocation",
+      "to": "kolvrt.security.phase34",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.capability-revocation",
       "to": "kolvrt.security.revocation",
       "type": "depends_on"
     },
@@ -569,6 +619,16 @@
       "from": "kolvrt.security.event-revocation",
       "to": "research/results/event-revocation-ci.json",
       "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.security.phase34",
+      "to": "kolvrt.security.domains",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.security.phase34",
+      "to": "kolvrt.security.event-revocation",
+      "type": "depends_on"
     }
   ],
   "inputs": {
@@ -610,17 +670,20 @@
     "docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "17179221ff4e65bb1e06e11f57f5ef721e34d040acf00e6e0fa476cc15f065bd",
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
+    "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+    "docs/architecture/benchmarking.md": "f79a97abd46d97bcdcb761787e8ffae52926907b39cf5c0b538f5c2a8f2e3690",
+    "docs/architecture/component-arena.md": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
-    "docs/kernel/capabilities.md": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
+    "docs/kernel/capabilities.md": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
     "docs/kernel/domains.md": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
     "docs/kernel/handles.md": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
     "docs/kernel/processes.md": "2509c0533782eb250b8d0b4d0317ec85fb6a92af001a5b70f3ec41d81988a738",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
-    "docs/knowledge-enrollment.json": "eb86acfa5b712ae63ab096afb1d1edc7491afc33689f8f1a8eb0074d4d9bb2bf",
-    "docs/knowledge-system.md": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
+    "docs/knowledge-enrollment.json": "f7ba698e801f9d951018a8b0536a00769dabc10c95c62c726a3d121afcfca1de",
+    "docs/knowledge-system.md": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
-    "docs/security/threat-model.md": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+    "docs/security/threat-model.md": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
     "research/cases/KOL-PATH-0002.json": "db1c5219328b188bd049731fcfe7a8c78bd171b0ae0d6abc2ee8702f9c836675",
     "research/cases/KOL-PATH-0003.json": "9df75d09e6da02f5fb5525b202c6bc04be96433100820967bcaae9d9415c730f",
@@ -657,7 +720,7 @@
     "research/linux/memory-allocation.md": "c30a9a18f0c0b9dc7b19662a651e5027a9b57c0c1fbcb4976c9772f75aed54e2",
     "schemas/implementation-impact.schema.json": "d6192fd1d251bb9b17ba46bfa5789929bebba1ee483fc1ad53d194aa3de6a958",
     "schemas/knowledge.schema.json": "b8b9efda6ab265f3c08bec9ab8713525b489eabbdbad77f1e856abd1e1cda32f",
-    "translations/manifest.json": "cd10b05b7b52b510bc8a2c3df7068f6c81c44427700210a81cafca0d6beb46c6",
+    "translations/manifest.json": "d82af3fc3d68f57d8739b0890ea485f6e63f8dad49bf938eb2d560e2e9e790a7",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -682,16 +745,19 @@
     "translations/ru/docs/architecture-decisions/0022-native-event-grants-and-revocation.md": "a01b2ec4c7f890ee7a08c1febf431bc786f0056deaf175924c6746f8c0b8fddf",
     "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
+    "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
+    "translations/ru/docs/architecture/benchmarking.md": "ee7f5578fa8766424ec8f9a49011371cebeefb4bd5e5c0c1ce68d07c8cbe85d5",
+    "translations/ru/docs/architecture/component-arena.md": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
-    "translations/ru/docs/kernel/capabilities.md": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
+    "translations/ru/docs/kernel/capabilities.md": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
     "translations/ru/docs/kernel/domains.md": "663b7fa26d3d0bb5c09e897ce766d3a5bffbbbeb3df913162e428bcda0c5234e",
     "translations/ru/docs/kernel/handles.md": "7404b56428e91fbee1b897816a0da64750ec056bb345298b7c19ad8a1611b2a3",
     "translations/ru/docs/kernel/processes.md": "a6d47ac27dd6dd6d965772bf29e4e16b5d1c38c02265d96dbd421fee4cff7d1d",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
-    "translations/ru/docs/knowledge-system.md": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
+    "translations/ru/docs/knowledge-system.md": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
-    "translations/ru/docs/security/threat-model.md": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+    "translations/ru/docs/security/threat-model.md": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
     "translations/ru/research/linux/memory-allocation.md": "2dd5fbbf241536cc12630efa5f4381b73028a34b8acf4cd63779e50347ccdbae"
   },
   "nodes": {
@@ -2673,6 +2739,108 @@
       "summary": "Source-backed research candidate for a recurring semantic dependency. No active KOLVRT consumer, compatibility implementation or measured cost is claimed.",
       "title": "ioctl structure layouts that vary across caller ABIs"
     },
+    "doc.kolvrt.architecture.arena": {
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 15181,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "doc.kolvrt.architecture.arena",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Проектный план Arena: заменяемые компоненты, паспорта и сравнения со свидетельствами.",
+          "tags": null,
+          "title": "KOLVRT Arena — арена заменяемых компонентов / паспорта производительности и надёжности"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 221,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 1
+        },
+        "ru": {
+          "end": 221,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "schema_version": 1,
+      "summary": "Arena design: replaceable components, passports and evidence-bound comparisons.",
+      "title": "KOLVRT Arena — Replaceable Component Arena / Performance & Reliability Passports"
+    },
+    "doc.kolvrt.architecture.audit-2026-10-04": {
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 9702,
+      "evidence_scope": "architecture review of published main da16d9f; retained runtime receipts identify their own c5c440c source.",
+      "id": "doc.kolvrt.architecture.audit-2026-10-04",
+      "kind": "research",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Исторический аудит da16d9f с исходными результатами c5c440c и отдельной последующей сверкой.",
+          "tags": null,
+          "title": "Аудит архитектуры — 2026-10-04"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 113,
+          "path": "docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+          "start": 1
+        },
+        "ru": {
+          "end": 113,
+          "path": "translations/ru/docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "schema_version": 1,
+      "summary": "Historical da16d9f architecture audit with original c5c440c receipts and separate later reconciliation.",
+      "title": "Architecture audit — 2026-10-04"
+    },
+    "doc.kolvrt.architecture.benchmarking": {
+      "document": "doc.kolvrt.architecture.benchmarking",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 5722,
+      "evidence_scope": "measurement and reproducibility requirements; no new execution results are claimed.",
+      "id": "doc.kolvrt.architecture.benchmarking",
+      "kind": "policy",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Методика измерений: статистика, справедливость сравнения, атрибуция и воспроизводимость.",
+          "tags": null,
+          "title": "Методика измерений при переходе"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 94,
+          "path": "docs/architecture/benchmarking.md",
+          "sha256": "f79a97abd46d97bcdcb761787e8ffae52926907b39cf5c0b538f5c2a8f2e3690",
+          "start": 1
+        },
+        "ru": {
+          "end": 99,
+          "path": "translations/ru/docs/architecture/benchmarking.md",
+          "sha256": "ee7f5578fa8766424ec8f9a49011371cebeefb4bd5e5c0c1ce68d07c8cbe85d5",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/benchmarking.md",
+      "schema_version": 1,
+      "summary": "Benchmark methodology: statistics, comparison fairness, attribution and reproducibility.",
+      "title": "Migration benchmark methodology"
+    },
     "doc.kolvrt.docs.knowledge": {
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
@@ -2692,13 +2860,13 @@
         "en": {
           "end": 152,
           "path": "docs/knowledge-system.md",
-          "sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
+          "sha256": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
           "start": 1
         },
         "ru": {
           "end": 152,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
+          "sha256": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033",
           "start": 1
         }
       },
@@ -2779,7 +2947,7 @@
     "doc.kolvrt.kernel.capabilities": {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 9471,
+      "estimated_bytes": 9506,
       "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
@@ -2793,15 +2961,15 @@
       },
       "locations": {
         "en": {
-          "end": 175,
+          "end": 176,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
+          "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
           "start": 1
         },
         "ru": {
-          "end": 191,
+          "end": 192,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
+          "sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
           "start": 1
         }
       },
@@ -2983,7 +3151,7 @@
     "doc.kolvrt.security.threat-model": {
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 15402,
+      "estimated_bytes": 17139,
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "doc.kolvrt.security.threat-model",
       "kind": "security-analysis",
@@ -2997,15 +3165,15 @@
       },
       "locations": {
         "en": {
-          "end": 219,
+          "end": 237,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 1
         },
         "ru": {
-          "end": 220,
+          "end": 238,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 1
         }
       },
@@ -3047,6 +3215,510 @@
       "schema_version": 1,
       "summary": "Pinned allocation-context and reclaim research; native service remains proposed.",
       "title": "Linux allocation context research"
+    },
+    "kolvrt.arena": {
+      "anchor": "kolvrt-arena-scope",
+      "depends_on": [
+        "kolvrt.arena.contract",
+        "kolvrt.arena.admission",
+        "kolvrt.arena.passports",
+        "kolvrt.arena.receipts",
+        "kolvrt.arena.comparison",
+        "kolvrt.arena.cost-l",
+        "kolvrt.arena.roadmap",
+        "adr.0006",
+        "doc.kolvrt.architecture.benchmarking"
+      ],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1237,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "feature": {
+        "acceptance": [],
+        "adrs": ["adr.0006"],
+        "implementation": "PLANNED",
+        "implementation_scope": "Design baseline for replaceable component contracts, passports and reproducible comparisons; no Arena runtime tooling exists.",
+        "issues": [],
+        "limitations": [
+          "No implemented runner, versioned passport schema, eligible leaderboard, measured Arena comparisons or physical ARM64 acceptance."
+        ],
+        "next_gate": "Review contract and common suite ownership/versioning for the first real component family before designing schemas and a bounded runner.",
+        "readiness": "NOT_READY",
+        "roadmap_gate": "Replaceable Component Arena / Performance & Reliability Passports",
+        "sources": [],
+        "transitions": [
+          {
+            "acceptance": [],
+            "from": "UNRECORDED",
+            "reason": "Enroll the existing Arena design baseline without claiming implementation or execution.",
+            "to": "PLANNED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "host-process",
+            "reason": "No Arena implementation or execution receipt exists.",
+            "state": "UNKNOWN"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "No physical Arena campaign exists.",
+            "state": "UNKNOWN"
+          }
+        ]
+      },
+      "gaps": [
+        "Arena runner, passport schemas and leaderboard are not implemented or measured."
+      ],
+      "id": "kolvrt.arena",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": ["сравнить заменяемые компоненты Arena"],
+          "summary": "Запланированная Arena заменяемых компонентов и её архитектурная граница.",
+          "tags": ["arena", "passports", "components"],
+          "title": "Принцип и архитектурная граница"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 20,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 7
+        },
+        "ru": {
+          "end": 20,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 7
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "read_when": ["compare replaceable components Arena"],
+      "summary": "Planned replaceable-component Arena and its architecture boundary.",
+      "tags": ["arena", "passports", "components"],
+      "title": "Principle and architectural boundary"
+    },
+    "kolvrt.arena.admission": {
+      "anchor": "kolvrt-arena-admission",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1057,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "kolvrt.arena.admission",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Общие условия допуска по корректности, безопасности, надёжности и хвостовой задержке.",
+          "tags": null,
+          "title": "Общий контракт проверок и допуск"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 42,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 33
+        },
+        "ru": {
+          "end": 42,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 33
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Shared correctness, security, reliability and tail-latency admission.",
+      "title": "Common test contract and admission"
+    },
+    "kolvrt.arena.comparison": {
+      "anchor": "kolvrt-arena-comparison",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1142,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "kolvrt.arena.comparison",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Многомерное сравнение допущенных кандидатов без универсального рейтинга.",
+          "tags": null,
+          "title": "Сравнение и таблица результатов"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 80,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 63
+        },
+        "ru": {
+          "end": 80,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 63
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Multidimensional eligible comparisons without universal scoring.",
+      "title": "Comparison and leaderboard"
+    },
+    "kolvrt.arena.contract": {
+      "anchor": "kolvrt-arena-contract",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1175,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "kolvrt.arena.contract",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Версионированный контракт входов, выходов, полномочий, времени жизни и отказов.",
+          "tags": null,
+          "title": "Контракт заменяемого компонента"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 34,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 19
+        },
+        "ru": {
+          "end": 34,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 19
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Versioned inputs, outputs, authority, lifetime and failure contract.",
+      "title": "Replaceable component contract"
+    },
+    "kolvrt.arena.cost-l": {
+      "anchor": "kolvrt-arena-cost-l",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1170,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "kolvrt.arena.cost-l",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Фактическая атрибуция COST-L для адаптера и собственной реализации.",
+          "tags": null,
+          "title": "Свидетельства миграции COST-L"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 90,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 79
+        },
+        "ru": {
+          "end": 90,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 79
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Actual adapter/native COST-L attribution and migration evidence.",
+      "title": "COST-L migration evidence"
+    },
+    "kolvrt.arena.passports": {
+      "anchor": "kolvrt-arena-passports",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 2181,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "kolvrt.arena.passports",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Паспорта производительности, надёжности и безопасности с областью учёта.",
+          "tags": null,
+          "title": "Паспорта реализации"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 56,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 41
+        },
+        "ru": {
+          "end": 56,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 41
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Performance, reliability and security passports with accounting scope.",
+      "title": "Implementation passports"
+    },
+    "kolvrt.arena.receipts": {
+      "anchor": "kolvrt-arena-receipts",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1080,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "kolvrt.arena.receipts",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Воспроизводимые рецепты, происхождение, исходные измерения и группы платформ.",
+          "tags": null,
+          "title": "Воспроизводимые свидетельства"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 64,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 55
+        },
+        "ru": {
+          "end": 64,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 55
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Reproducible recipes, provenance, raw samples and platform cohorts.",
+      "title": "Reproducible receipts"
+    },
+    "kolvrt.arena.roadmap": {
+      "anchor": "kolvrt-arena-roadmap",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.arena",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 5987,
+      "evidence_scope": "architectural requirements and staged roadmap; no Arena runner, passport schema, leaderboard or component comparison has been implemented or measured by this document.",
+      "id": "kolvrt.arena.roadmap",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Отдельные поэтапные условия приёмки Arena.",
+          "tags": null,
+          "title": "Направление плана и условия приёмки"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 221,
+          "path": "docs/architecture/component-arena.md",
+          "sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+          "start": 89
+        },
+        "ru": {
+          "end": 221,
+          "path": "translations/ru/docs/architecture/component-arena.md",
+          "sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b",
+          "start": 89
+        }
+      },
+      "path": "docs/architecture/component-arena.md",
+      "summary": "Separate staged Arena acceptance gates.",
+      "title": "Roadmap direction and acceptance gates"
+    },
+    "kolvrt.audit.2026-10-04.coverage": {
+      "anchor": "kolvrt-audit-2026-10-04-coverage",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 3606,
+      "evidence_scope": "architecture review of published main da16d9f; retained runtime receipts identify their own c5c440c source.",
+      "id": "kolvrt.audit.2026-10-04.coverage",
+      "kind": "research",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Исторический аудит: coverage",
+          "tags": null,
+          "title": "Охват и распределение требований"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 38,
+          "path": "docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+          "start": 18
+        },
+        "ru": {
+          "end": 38,
+          "path": "translations/ru/docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
+          "start": 18
+        }
+      },
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: coverage",
+      "title": "Coverage and disposition"
+    },
+    "kolvrt.audit.2026-10-04.evidence": {
+      "anchor": "kolvrt-audit-2026-10-04-evidence",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 845,
+      "evidence_scope": "architecture review of published main da16d9f; retained runtime receipts identify their own c5c440c source.",
+      "id": "kolvrt.audit.2026-10-04.evidence",
+      "kind": "research",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Исторический аудит: evidence",
+          "tags": null,
+          "title": "Результаты проверок и ограничения"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 60,
+          "path": "docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+          "start": 51
+        },
+        "ru": {
+          "end": 60,
+          "path": "translations/ru/docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
+          "start": 51
+        }
+      },
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: evidence",
+      "title": "Evidence and limits"
+    },
+    "kolvrt.audit.2026-10-04.findings": {
+      "anchor": "kolvrt-audit-2026-10-04-findings",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 1954,
+      "evidence_scope": "architecture review of published main da16d9f; retained runtime receipts identify their own c5c440c source.",
+      "id": "kolvrt.audit.2026-10-04.findings",
+      "kind": "research",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Исторический аудит: findings",
+          "tags": null,
+          "title": "Найденные проблемы и действия"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 52,
+          "path": "docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+          "start": 37
+        },
+        "ru": {
+          "end": 52,
+          "path": "translations/ru/docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
+          "start": 37
+        }
+      },
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: findings",
+      "title": "Findings and actions"
+    },
+    "kolvrt.audit.2026-10-04.reconciliation": {
+      "anchor": "kolvrt-audit-2026-10-04-reconciliation",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 2142,
+      "evidence_scope": "architecture review of published main da16d9f; retained runtime receipts identify their own c5c440c source.",
+      "id": "kolvrt.audit.2026-10-04.reconciliation",
+      "kind": "research",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Исторический аудит: reconciliation",
+          "tags": null,
+          "title": "Последующая сверка — 2026-10-05"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 113,
+          "path": "docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+          "start": 59
+        },
+        "ru": {
+          "end": 113,
+          "path": "translations/ru/docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
+          "start": 59
+        }
+      },
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: reconciliation",
+      "title": "Subsequent reconciliation — 2026-10-05"
+    },
+    "kolvrt.audit.2026-10-04.scope": {
+      "anchor": "kolvrt-audit-2026-10-04-scope",
+      "depends_on": [],
+      "document": "doc.kolvrt.architecture.audit-2026-10-04",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 1103,
+      "evidence_scope": "architecture review of published main da16d9f; retained runtime receipts identify their own c5c440c source.",
+      "id": "kolvrt.audit.2026-10-04.scope",
+      "kind": "research",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Исторический аудит: scope",
+          "tags": null,
+          "title": "Охват и результат"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 19,
+          "path": "docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+          "start": 8
+        },
+        "ru": {
+          "end": 19,
+          "path": "translations/ru/docs/architecture/architecture-audit-2026-10-04.md",
+          "sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
+          "start": 8
+        }
+      },
+      "path": "docs/architecture/architecture-audit-2026-10-04.md",
+      "summary": "Historical architecture audit: scope",
+      "title": "Scope and result"
     },
     "kolvrt.docs.navigation": {
       "anchor": "kolvrt-docs-navigation",
@@ -3092,7 +3764,7 @@
             "environment": "host-process",
             "reason": "Executed named EN/RU offline context pilots with current declared source digests; semantic sufficiency remains review judgment.",
             "receipt": "research/results/documentation-knowledge-pilot.json",
-            "receipt_sha256": "446d14a28d1b5eca3d227f4cd35c1da959cf8e548211fe795449fcb07de64658",
+            "receipt_sha256": "c9b90d8ed880ab81e482362d3b9450a1fb8edf5ef4a6049c885e9c09cab6629f",
             "scope": "Named Phase 3.4 revocation queries and mandatory prerequisites, Unicode Russian retrieval, explicit planned gaps and reverse impact on this exact-source host tool; no kernel execution, universal retrieval quality or physical hardware claim.",
             "state": "VERIFIED"
           },
@@ -3117,13 +3789,13 @@
         "en": {
           "end": 12,
           "path": "docs/knowledge-system.md",
-          "sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
+          "sha256": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
           "start": 7
         },
         "ru": {
           "end": 12,
           "path": "translations/ru/docs/knowledge-system.md",
-          "sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803",
+          "sha256": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033",
           "start": 7
         }
       },
@@ -4359,7 +5031,8 @@
         "kolvrt.security.trust",
         "kolvrt.security.threats",
         "kolvrt.security.event-revocation",
-        "kolvrt.security.domains"
+        "kolvrt.security.domains",
+        "kolvrt.security.phase34"
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
@@ -4438,13 +5111,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
+          "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
           "start": 7
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
+          "sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
           "start": 7
         }
       },
@@ -4475,13 +5148,13 @@
         "en": {
           "end": 69,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 62
         },
         "ru": {
           "end": 70,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 63
         }
       },
@@ -4736,7 +5409,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 7778,
+      "estimated_bytes": 7813,
       "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "feature": {
         "acceptance": ["research/results/event-revocation-ci.json"],
@@ -4802,15 +5475,15 @@
       },
       "locations": {
         "en": {
-          "end": 175,
+          "end": 176,
           "path": "docs/kernel/capabilities.md",
-          "sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
+          "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
           "start": 17
         },
         "ru": {
-          "end": 191,
+          "end": 192,
           "path": "translations/ru/docs/kernel/capabilities.md",
-          "sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb",
+          "sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94",
           "start": 17
         }
       },
@@ -4824,35 +5497,35 @@
       "depends_on": [],
       "document": "doc.kolvrt.security.threat-model",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 3554,
+      "estimated_bytes": 876,
       "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
       "id": "kolvrt.security.handle-retention",
       "kind": "contract-section",
       "localized": {
         "ru": {
           "read_when": null,
-          "summary": "Каноническая секция: Текущие ограниченные полномочия дескрипторов и удержание ресурсов.",
+          "summary": "Историческая область полномочий и удержания ADR-0020 до Phase 3.4.",
           "tags": null,
-          "title": "Текущие ограниченные полномочия дескрипторов и удержание ресурсов"
+          "title": "Историческая граница ADR-0020: полномочия и удержание"
         }
       },
       "locations": {
         "en": {
-          "end": 219,
+          "end": 125,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 118
         },
         "ru": {
-          "end": 220,
+          "end": 126,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 119
         }
       },
       "path": "docs/security/threat-model.md",
-      "summary": "Security requirement: handle-retention",
-      "title": "Current bounded handle authority and retention"
+      "summary": "Historical ADR-0020 authority and retention scope before Phase 3.4.",
+      "title": "Historical ADR-0020 authority and retention boundary"
     },
     "kolvrt.security.phase2": {
       "anchor": "kolvrt-security-phase2",
@@ -4875,13 +5548,13 @@
         "en": {
           "end": 91,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 84
         },
         "ru": {
           "end": 92,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 85
         }
       },
@@ -4910,13 +5583,13 @@
         "en": {
           "end": 97,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 90
         },
         "ru": {
           "end": 98,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 91
         }
       },
@@ -4945,13 +5618,13 @@
         "en": {
           "end": 105,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 96
         },
         "ru": {
           "end": 106,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 97
         }
       },
@@ -4980,13 +5653,13 @@
         "en": {
           "end": 111,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 104
         },
         "ru": {
           "end": 112,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 105
         }
       },
@@ -5015,19 +5688,57 @@
         "en": {
           "end": 119,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 110
         },
         "ru": {
           "end": 120,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 111
         }
       },
       "path": "docs/security/threat-model.md",
       "summary": "Security requirement: phase33",
       "title": "Phase 3.3 bounded reference identity"
+    },
+    "kolvrt.security.phase34": {
+      "anchor": "kolvrt-security-phase34",
+      "depends_on": [
+        "kolvrt.security.domains",
+        "kolvrt.security.event-revocation"
+      ],
+      "document": "doc.kolvrt.security.threat-model",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 4455,
+      "evidence_scope": "Accepted intended obligations; implementation and verification remain separately scoped.",
+      "id": "kolvrt.security.phase34",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Текущая ограниченная безопасность Phase 3.4 с отдельными будущими условиями.",
+          "tags": null,
+          "title": "Текущая ограниченная граница Phase 3.4"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 237,
+          "path": "docs/security/threat-model.md",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+          "start": 124
+        },
+        "ru": {
+          "end": 238,
+          "path": "translations/ru/docs/security/threat-model.md",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
+          "start": 125
+        }
+      },
+      "path": "docs/security/threat-model.md",
+      "summary": "Current bounded Phase 3.4 security boundary and separate future gates.",
+      "title": "Current bounded Phase 3.4 boundary"
     },
     "kolvrt.security.placement": {
       "anchor": "kolvrt-security-placement",
@@ -5050,13 +5761,13 @@
         "en": {
           "end": 63,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 43
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 43
         }
       },
@@ -5085,13 +5796,13 @@
         "en": {
           "end": 85,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 76
         },
         "ru": {
           "end": 86,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 77
         }
       },
@@ -5120,13 +5831,13 @@
         "en": {
           "end": 77,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 68
         },
         "ru": {
           "end": 78,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 69
         }
       },
@@ -5155,13 +5866,13 @@
         "en": {
           "end": 44,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 29
         },
         "ru": {
           "end": 44,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 29
         }
       },
@@ -5190,13 +5901,13 @@
         "en": {
           "end": 30,
           "path": "docs/security/threat-model.md",
-          "sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
+          "sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
           "start": 9
         },
         "ru": {
           "end": 30,
           "path": "translations/ru/docs/security/threat-model.md",
-          "sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81",
+          "sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad",
           "start": 9
         }
       },

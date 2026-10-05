@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "0ae77a4df849e8b75a97afe6bc45fd63c97a6884cc7b785e70538e1f8eb95498",
-        "translation_sha256": "f171beb0880d1bee041735e3bf1228cfe52dff09efee9769c9ce6bf79e8c8f26"
+        "source_sha256": "7fdd4cceb84758603dfc632def6742e5d15f218fe232e136d3de3dbef1667ae3",
+        "translation_sha256": "b3f6eff8cc0787c3996e7e5b88ec1241bfea1336763a87c2912b20fdea2b3de7"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "81fbacc6d3c1ba7ac517afa1214fa059fba894913e81b36299efda95cefe35d6",
@@ -122,12 +122,12 @@
         "translation_sha256": "6bba979226854f6a7272b5635bd0bcc81f993c93c371bf3f3e0e207ee60b5fc1"
       },
       "docs/architecture/architecture-audit-2026-10-04.md": {
-        "source_sha256": "076c7c1054e01c831a183297d95c0d3bdc970bc62a4e1f5ee2fd015e3d23e171",
-        "translation_sha256": "05917a82caba6128e8891214bb22a144237437b5679d809ec5b95f6719662b37"
+        "source_sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
+        "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
       "docs/architecture/benchmarking.md": {
-        "source_sha256": "1361b8d72ae81cb94a4b67e0f5b82d902798776027e0bd9f4e3ee8ec7b592aa0",
-        "translation_sha256": "a3663804370470d156dd9a698aa3ed92d567649ef0d03cf6cedef9ac18cf19e1"
+        "source_sha256": "f79a97abd46d97bcdcb761787e8ffae52926907b39cf5c0b538f5c2a8f2e3690",
+        "translation_sha256": "ee7f5578fa8766424ec8f9a49011371cebeefb4bd5e5c0c1ce68d07c8cbe85d5"
       },
       "docs/architecture/compatibility-debt.md": {
         "source_sha256": "e7ce00ccdc4fc6a2487f8b1ffef980ef2cc27f3cb05dbc75960f6d3ddf78f8ce",
@@ -136,6 +136,10 @@
       "docs/architecture/compatibility-model.md": {
         "source_sha256": "5026400cd373e9dd33154781669a19acfaa4ddeb308972e6b9c173f3574a3ff9",
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
+      },
+      "docs/architecture/component-arena.md": {
+        "source_sha256": "54468991f1b1d68e7bee23f152da05c6aebfdf0cd68927bc38ea77a9e0b15dab",
+        "translation_sha256": "a18e5106ed482f62e583b3770e02119c2923753309e8e5d0e390d3f1aee7a62b"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -218,16 +222,16 @@
         "translation_sha256": "f0f8060a4a50345ab33676736c79dc955637f5a383cb36c50b55027107eefb24"
       },
       "docs/index.md": {
-        "source_sha256": "f4a56fc0f0f6066bd8df249e757b79c269127bd4638f9e3b40bb3aa7398c2268",
-        "translation_sha256": "f97da79ecfa31503d1d1acd841f2a0fee1ca12edfdee1e60aada38a05371dc95"
+        "source_sha256": "0a7e9cbedfe0b91dfa14af39d0693dca7d71a53b5ed0f8be89e26ac5d7928ded",
+        "translation_sha256": "6ab4c000edf71c88b9f2fc6cbe829a64ff19f29862989fb7607f6e7c0280bafb"
       },
       "docs/kernel/boot.md": {
         "source_sha256": "954bdb7cf092fab4af77f592981da339db2e14dc901ca3735864a6e29169112f",
         "translation_sha256": "4ef4686ec6d2312f65a87b4c94c997f6a971b1d9c840a378673f2bab4178d9f6"
       },
       "docs/kernel/capabilities.md": {
-        "source_sha256": "7c2a6dee8654dc3e8af864237f964e68c7a8e11c53d1b5ab4d394eace2276370",
-        "translation_sha256": "2653c85983f95612bdd37e198aaa0c24ce26b03b7ce3569c2a086b13fe155dbb"
+        "source_sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
+        "translation_sha256": "35bceca92d9f325d3be68f5cc31fc5e95d4f82e6a073397a11a01a9f158e7a94"
       },
       "docs/kernel/domains.md": {
         "source_sha256": "26f60c6e96fa6f4a5673281fa2ddbc23bc241dedbacf809e24b3cbed23bd9b1c",
@@ -290,8 +294,8 @@
         "translation_sha256": "04a27e3c3f2f619dce4fa7cce28c5387b0e88fbeaed036c1d8b538bdab075380"
       },
       "docs/knowledge-system.md": {
-        "source_sha256": "64ff83ce08ff6efd37d2b76058f267b18d3ad6f26078c2d48e61d3b47c93f8d3",
-        "translation_sha256": "b5dc407d18f855424e7d69a845f59dabff0aa639146319146064449de2434803"
+        "source_sha256": "d8530875414932dcf8b2f9eff26777657848c98c96cc6222f439a24143cd1cac",
+        "translation_sha256": "c7730c5705f8ceccdbf8f8921aeffde11dde1092410aca10b8c29df692b5a033"
       },
       "docs/project-structure.md": {
         "source_sha256": "afa6046d47853038aa7191b40a0b1070c69d7a86e7a9a901651938965caff3c9",
@@ -358,12 +362,12 @@
         "translation_sha256": "2f49d2945fe1d1551623f251740334cf997abb06b2cb9c27c6019c7689971896"
       },
       "docs/security/threat-model.md": {
-        "source_sha256": "e06109b4f36847c77ab6dab22710bbff6de5dff0d19870f11ae86315f1129daa",
-        "translation_sha256": "8ff61f9d6332c09d7c20058e776b0729faa2e966a085896e4ac97d8563861e81"
+        "source_sha256": "00607cfc4fd2aec328a3ec6714b47ad2cfe3f32d19fa5ebdac4f7c98185a1c71",
+        "translation_sha256": "160f11a36c7388b2c655863d7e71361a6eb645b3beb42accb475b16727a087ad"
       },
       "docs/vision.md": {
-        "source_sha256": "a558a848a36b831d76a107d0803ea597d1db631b007dc71baf997491705391e2",
-        "translation_sha256": "d1f7c6c17a88a43bb6772f044377fe34a1a0fa6830f3fc7ea31ec5ebf15e7907"
+        "source_sha256": "c5a07bd13832011ae4fe886a31c7e31bccc14111b4a27a86797b47e55f593b77",
+        "translation_sha256": "670bb2fd2f6d7c3c9562835cda70306e21ec8ddb7eda63e9e0d97e68abd0253f"
       },
       "research/compatibility/adapter-versus-native.md": {
         "source_sha256": "79e4963093364027ca36c0dcb3a5b7c3314a46ce7a0b9f3453a6c58623cda0f4",

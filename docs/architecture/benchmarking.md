@@ -1,5 +1,9 @@
 # Migration benchmark methodology
 
+Document status: DESIGN BASELINE
+Evidence scope: measurement and reproducibility requirements; no new execution results are claimed.
+Current reference: [ADR-0006](../architecture-decisions/0006-metrics.md)
+
 This is a methodology, not measured results. Native execution is not presumed faster.
 Artificial delays, unequal quotas and weaker safety for one path are prohibited. A
 faster compatibility path is reported honestly and motivates native-path analysis.
@@ -69,4 +73,22 @@ cost and end-to-end cost. A run artifact contains its manifest, workload digest,
 result, raw samples, rejected-run log, analysis version and report. Implement a benchmark
 runner only when two real comparable paths exist. Case records specify workload-specific obligations.
 
+## Replaceable component comparisons
+
+[KOLVRT Arena](component-arena.md) extends this methodology to replaceable components
+through shared contracts and suites, three implementation passports and admission gates.
+Its roadmap covers reproducible comparisons and COST-L migration evidence. These requirements
+preserve this document's statistical and fairness obligations; no Arena CLI is implemented yet.
+
 [Russian translation](../../translations/ru/docs/architecture/benchmarking.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.architecture.benchmarking",
+  "kind": "policy",
+  "summary": "Benchmark methodology: statistics, comparison fairness, attribution and reproducibility."
+}
+```

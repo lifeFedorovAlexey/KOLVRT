@@ -117,9 +117,17 @@ Historical milestone scope: the paragraph below describes ADR-0019 before the ac
 
 <a name="kolvrt-security-handle-retention"></a>
 
-## Current bounded handle authority and retention
+## Historical ADR-0020 authority and retention boundary
 
-[ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) adds SEND/TRANSFER checks, subset attenuation, receiver-local handles and bounded owned Event references. The executing scheduler task supplies the caller identity; EL0 cannot select a source principal. Transfer through EL0 is restricted to a live receiver on the same fixed-affinity CPU. Closing one entry leaves other retained references valid and does not revoke descendants. This is limited authority over two concrete primitive kinds, not general grant issuance, security domains or revocation. Shared Event retention does not establish a multi-waiter IPC contract. General admission, domain budgets and authorized IPC remain issues #24–#26.
+[ADR-0020](../architecture-decisions/0020-handle-transfer-and-retention.md) adds SEND/TRANSFER checks, subset attenuation, receiver-local handles and bounded owned Event references. The executing scheduler task supplies the caller identity; EL0 cannot select a source principal. Transfer through EL0 is restricted to a live receiver on the same fixed-affinity CPU. Closing one entry leaves other retained references valid and does not revoke descendants. This paragraph retains the ADR-0020 scope before Phase 3.4: general grant issuance, security domains and revocation were then separate gates. Shared Event retention alone does not establish a multi-waiter IPC contract. The current bounded implementation is described below.
+
+<a name="kolvrt-security-phase34"></a>
+
+## Current bounded Phase 3.4 boundary
+
+[ADR-0022](../architecture-decisions/0022-native-event-grants-and-revocation.md) and [ADR-0023](../architecture-decisions/0023-domains-and-scoped-grants.md) add explicit Event grants and generation-aware domains. The [domain contract](../kernel/domains.md) bounds this to one process per domain, two fixed-affinity CPUs and one Event-notification queue cell. Caller identity comes only from the executing process and its bound domain; an immutable SafeCopy snapshot cannot select a principal, scope or service-private target. Rights and budgets are checked before publication; denial rolls back temporary references and charges.
+
+Admission and revocation serialize on one atomic state: already-admitted work retains its target and domain charges while later effects through every delegated alias fail. Close is not revoke. Service teardown publishes cancelled-before-effect before release; restart does not refresh old-generation grants. Bounded #24/#25 are complete, but general IPC, multi-process domains, cross-CPU queues, trusted supervisor policy installation and immediate drain/reset remain separate gates. [Source-bound Phase 3.4 evidence](../kernel/domains.md#kolvrt-domains-teardown) describes QEMU DEV/PROD; physical ARM64, DMA and general service isolation are not established.
 
 <!-- knowledge -->
 
@@ -211,8 +219,18 @@ Historical milestone scope: the paragraph below describes ADR-0019 before the ac
       "id": "kolvrt.security.handle-retention",
       "anchor": "kolvrt-security-handle-retention",
       "kind": "contract-section",
-      "summary": "Security requirement: handle-retention",
+      "summary": "Historical ADR-0020 authority and retention scope before Phase 3.4.",
       "depends_on": []
+    },
+    {
+      "id": "kolvrt.security.phase34",
+      "anchor": "kolvrt-security-phase34",
+      "kind": "contract-section",
+      "summary": "Current bounded Phase 3.4 security boundary and separate future gates.",
+      "depends_on": [
+        "kolvrt.security.domains",
+        "kolvrt.security.event-revocation"
+      ]
     }
   ]
 }
