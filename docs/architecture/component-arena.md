@@ -132,8 +132,14 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the s
         "doc.kolvrt.architecture.benchmarking",
         "doc.kolvrt.arena.measurement-contract"
       ],
-      "tags": ["arena", "passports", "components"],
-      "read_when": ["compare replaceable components Arena"],
+      "tags": [
+        "arena",
+        "passports",
+        "components"
+      ],
+      "read_when": [
+        "compare replaceable components Arena"
+      ],
       "gaps": [
         "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
       ],
@@ -159,8 +165,20 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the s
           "research/results/arena-foundation-host-final.json",
           "research/results/arena-launcher-host.json"
         ],
-        "issues": [93, 32, 33, 34, 35, 36, 50],
-        "adrs": ["adr.0006", "adr.0003", "adr.0024"],
+        "issues": [
+          93,
+          32,
+          33,
+          34,
+          35,
+          36,
+          50
+        ],
+        "adrs": [
+          "adr.0006",
+          "adr.0003",
+          "adr.0024"
+        ],
         "limitations": [
           "Producer assertions are not attestation; record_eligible is always false. The proposed range profile and synthetic tests do not establish kernel PERF/SEC acceptance, DEV attribution, PROD external outcomes or physical ARM64 performance."
         ],
@@ -168,8 +186,8 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the s
         "verification": [
           {
             "environment": "host-process",
-            "state": "VERIFIED",
-            "reason": "Executed 17 Arena and 3 launcher tests plus the actual launch script on these exact source bytes; offline host scope only.",
+            "state": "STALE",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be"

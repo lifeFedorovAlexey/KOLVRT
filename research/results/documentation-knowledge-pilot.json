@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 47748,
-  "catalog_bytes": 64608,
-  "catalog_nodes": 161,
+  "approximate_tokens": 50618,
+  "catalog_bytes": 74441,
+  "catalog_nodes": 186,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "3e8526583929ab8560a9d9857ec261e113c610f4317bdeeec48666d5196df2e8",
+  "catalog_sha256": "926a320b798a208f61717264969734cc5ca9417f0f6111def864451b8815ed79",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 190992,
+  "context_plus_catalog_bytes": 202470,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 91,
-    "utf8_bytes": 696061
+    "documents": 95,
+    "utf8_bytes": 768424
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -24,6 +24,19 @@
     "affected": [
       "kolvrt.handles.identity",
       "kolvrt.handles.local",
+      "kolvrt.ipc.cancel",
+      "kolvrt.ipc.cross-cpu",
+      "kolvrt.ipc.deadline",
+      "kolvrt.ipc.endpoint",
+      "kolvrt.ipc.payload",
+      "kolvrt.ipc.queue",
+      "kolvrt.ipc.receive",
+      "kolvrt.ipc.request",
+      "kolvrt.ipc.teardown",
+      "kolvrt.ipc.terminal",
+      "kolvrt.ipc.transport",
+      "kolvrt.ipc.wait",
+      "kolvrt.ipc.wakeup",
       "kolvrt.security.capability-revocation",
       "kolvrt.security.domains",
       "kolvrt.security.event-revocation",
@@ -50,14 +63,14 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 126384,
+  "rendered_context_bytes": 128029,
   "russian_pilot": {
-    "approximate_tokens": 73398,
-    "catalog_bytes": 64608,
-    "context_plus_navigation_bytes": 293591,
+    "approximate_tokens": 77926,
+    "catalog_bytes": 74441,
+    "context_plus_navigation_bytes": 311704,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 35461,
+    "localized_navigation_bytes": 41677,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -69,7 +82,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 193522,
+    "rendered_context_bytes": 195586,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -121,7 +134,9 @@
     ]
   },
   "schema_version": 1,
-  "seeds": ["kolvrt.security.capability-revocation"],
+  "seeds": [
+    "kolvrt.security.capability-revocation"
+  ],
   "selected": [
     {
       "id": "adr.0013",
@@ -200,26 +215,26 @@
       "location": {
         "end": 37,
         "path": "docs/kernel/handles.md",
-        "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
         "start": 13
       }
     },
     {
       "id": "kolvrt.handles.lifetime",
       "location": {
-        "end": 67,
+        "end": 69,
         "path": "docs/kernel/handles.md",
-        "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
         "start": 36
       }
     },
     {
       "id": "kolvrt.handles.limits",
       "location": {
-        "end": 110,
+        "end": 112,
         "path": "docs/kernel/handles.md",
-        "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
-        "start": 105
+        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
+        "start": 107
       }
     },
     {
@@ -227,17 +242,17 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/handles.md",
-        "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
+        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
         "start": 7
       }
     },
     {
       "id": "kolvrt.handles.publication",
       "location": {
-        "end": 84,
+        "end": 86,
         "path": "docs/kernel/handles.md",
-        "sha256": "5562fde5ebe208a6adfcdaded5d40d6ee13f85ab6c92f876570f680bd82cdd9a",
-        "start": 66
+        "sha256": "703ef2d2f6a5eabe7c96265dcb4f86c81e73b64c8872189e601cd75a96ffb980",
+        "start": 68
       }
     },
     {
@@ -317,7 +332,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+        "sha256": "5764c546a91a96daa1ef51b082855bb6526f6460f1afb4ea0939309652f6227e",
         "start": 13
       }
     },
@@ -326,7 +341,7 @@
       "location": {
         "end": 82,
         "path": "docs/kernel/processes.md",
-        "sha256": "3a7bd28807148384ae69cc5a1f6ac081d1723eecad90c64ef78316e2c077bfe0",
+        "sha256": "5764c546a91a96daa1ef51b082855bb6526f6460f1afb4ea0939309652f6227e",
         "start": 58
       }
     },
@@ -335,7 +350,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
+        "sha256": "b138fe273cdb191b5cd8c6b59505a47023ebea635d78c5ca6f8f9baa6f1ae130",
         "start": 7
       }
     },
@@ -344,52 +359,52 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
+        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
         "start": 11
       }
     },
     {
       "id": "kolvrt.security.domains.grants",
       "location": {
-        "end": 36,
+        "end": 38,
         "path": "docs/kernel/domains.md",
-        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
-        "start": 27
+        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "start": 29
       }
     },
     {
       "id": "kolvrt.security.domains.identity",
       "location": {
-        "end": 28,
+        "end": 30,
         "path": "docs/kernel/domains.md",
-        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
+        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
         "start": 17
       }
     },
     {
       "id": "kolvrt.security.domains.notification",
       "location": {
-        "end": 56,
+        "end": 58,
         "path": "docs/kernel/domains.md",
-        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
-        "start": 35
+        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "start": 37
       }
     },
     {
       "id": "kolvrt.security.domains.teardown",
       "location": {
-        "end": 177,
+        "end": 190,
         "path": "docs/kernel/domains.md",
-        "sha256": "903e217838e56251d99f2c35385e212ba96b4241c411296753c42f19adf07b76",
-        "start": 55
+        "sha256": "57b36c4ed18f318c85f83f82645feb2fcd74604ddc19c5057bb277692f22848f",
+        "start": 57
       }
     },
     {
       "id": "kolvrt.security.event-revocation",
       "location": {
-        "end": 176,
+        "end": 202,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "6b1f362086ef4991d77bd615dd9cfe6fd1929f3123018dc685d43da5f805929f",
+        "sha256": "b138fe273cdb191b5cd8c6b59505a47023ebea635d78c5ca6f8f9baa6f1ae130",
         "start": 17
       }
     },
@@ -513,7 +528,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 189998
+    "utf8_bytes": 192643
   },
   "source_files": [
     {

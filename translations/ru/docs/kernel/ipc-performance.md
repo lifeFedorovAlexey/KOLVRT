@@ -1,6 +1,8 @@
-# Паспорт производительности IPC Phase 3.5
-
+<!-- markdownlint-disable MD041 -->
+<!-- Stable knowledge anchor расположен перед видимым заголовком документа. -->
 <a name="measurement-method"></a>
+
+# Паспорт производительности IPC Phase 3.5
 
 Document status: CURRENT
 Evidence scope: воспроизводимый regression baseline в QEMU для экспериментального bounded IPC; это не заявление о производительности на оборудовании.

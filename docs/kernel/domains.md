@@ -84,7 +84,12 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
       "kind": "feature",
       "anchor": "kolvrt-domains-scope",
       "summary": "Bounded domains, budgets and retained notification outcomes.",
-      "tags": ["domain", "security", "grant", "notification"],
+      "tags": [
+        "domain",
+        "security",
+        "grant",
+        "notification"
+      ],
       "depends_on": [
         "kolvrt.security.domains.identity",
         "kolvrt.security.domains.grants",
@@ -115,8 +120,14 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
         "acceptance": [
           "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
         ],
-        "issues": [24, 25, 75],
-        "adrs": ["adr.0023"],
+        "issues": [
+          24,
+          25,
+          75
+        ],
+        "adrs": [
+          "adr.0023"
+        ],
         "limitations": [
           "One process/domain and fixed-affinity single-cell notification; no general IPC, supervisor installation policy, multi-process domains, immediate revoke/drain, migration or silicon verification."
         ],
@@ -125,7 +136,7 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "The resident_pages observation helper now requires machine-events and boot-payload together. The retained Phase 3.4 receipt predates this process.rs source change; current-source domain verification requires a new exact-source receipt.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"

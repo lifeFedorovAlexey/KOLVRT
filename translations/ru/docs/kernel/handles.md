@@ -151,8 +151,15 @@ Handle generation остаётся identity, а SEND/TRANSFER отдельно �
         "acceptance": [
           "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
         ],
-        "issues": [23],
-        "adrs": ["adr.0019", "adr.0020", "adr.0022", "adr.0023"],
+        "issues": [
+          23
+        ],
+        "adrs": [
+          "adr.0019",
+          "adr.0020",
+          "adr.0022",
+          "adr.0023"
+        ],
         "limitations": [
           "Close does not revoke retained work; no general grants, domains or IPC."
         ],
@@ -161,7 +168,7 @@ Handle generation остаётся identity, а SEND/TRANSFER отдельно �
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/handles.rs, crates/kernel-core/src/handles.rs. New exact-source evidence is required for VERIFIED.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
             "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8"

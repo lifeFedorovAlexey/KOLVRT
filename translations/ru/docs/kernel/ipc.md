@@ -1,6 +1,8 @@
-# Ограниченный IPC между нативными EL0-процессами
-
+<!-- markdownlint-disable MD041 -->
+<!-- Stable knowledge anchor расположен перед видимым заголовком документа. -->
 <a name="bounded-native-ipc"></a>
+
+# Ограниченный IPC между нативными EL0-процессами
 
 Document status: CURRENT
 Evidence scope: реализация Phase 3.5 продолжается. Реальные DEV/PROD EL0 peers проверяют bounded transport, waits, deadlines, death, copy transactions и reclamation; milestone acceptance ещё не завершён.
@@ -84,7 +86,9 @@ Independent admission, migration, mutable user mappings, supervisor/service poli
 
 Текущие реальные EL0 fixtures проверяют оба cross-CPU направления и same-CPU placement на каждом CPU, capacity 1/4, initialized payload boundaries, mutation после submit/reply, duplicate IDs до collection, failed receive/collect copy-out, blocked expiry до/после commitment, service/requester death, cancellation через отдельный IPC handshake, authority denial, revoke/close retention, FIFO/full rejection и zero charges/frames после quiescence. Payload stress выполняет 24 requests на CPU/capacity configuration, включая четыре прохода размеров 0/1/8/64/255/256.
 
-Двадцать focused mutation controls проверяют authority, queue bounds/FIFO, request identity reuse, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wake неверного процесса, blocked-task reclamation, terminal arbitration, cancellation/commitment, deadlines, charge release, endpoint teardown, copy transactions и service death. Runner требует точное rejection event или named failing real kernel test в новом parsed sidecar. Полная итоговая матрица и exact-source receipt ещё проверяются; human semantic/EN/RU review остаётся обязательным gate. Физический ARM остаётся непроверенным окружением, а не дополнительным условием заданной QEMU acceptance.
+Двадцать три focused mutation controls проверяют authority, queue bounds/FIFO, client-ID и internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wake неверного процесса, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, потерю и повторный release charge, endpoint teardown, copy transactions и service death. Все 46 DEV/PROD прогонов отклонены с точным expected event либо named failing test; любой panic не считается достаточным. Kernel failure CPU1 передаёт точную причину через bounded atomic record на CPU0, который прекращает continuous session без ложного reclaim.
+
+Текущие source-bound artifacts: [kernel acceptance](../../../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../../../research/results/routing-phase35-regression.json) и [unsafe inventory](../../../../research/results/kernel-phase35-unsafe-audit.json). Все runtime/harness digests совпадают с текущими файлами. Смысловое review и полное EN/RU review человеком нужны перед закрытием #26 и переходом feature в BOUNDED_IMPLEMENTED. Следующий gate — #27; ABI остаётся EXPERIMENTAL и unfrozen.
 
 Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [identity](../../../../crates/kernel-core/src/ipc/identity.rs), [wire](../../../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../../../crates/kernel/src/ipc/native.rs), [storage](../../../../crates/kernel/src/ipc/storage.rs), [deferred work](../../../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../../../crates/kernel/src/ipc_workload.rs), [runner](../../../../crates/xtask/src/main.rs).
 
@@ -104,7 +108,12 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
       "anchor": "bounded-native-ipc",
       "kind": "feature",
       "summary": "Ограниченный IPC через endpoint с копированием запросов, блокирующим ожиданием и точными terminal outcomes.",
-      "tags": ["ipc", "endpoint", "native", "el0"],
+      "tags": [
+        "ipc",
+        "endpoint",
+        "native",
+        "el0"
+      ],
       "depends_on": [
         "kolvrt.process.identity",
         "kolvrt.handles.local",
@@ -122,15 +131,19 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
         "adr.0021",
         "adr.0022",
         "adr.0023",
-        "adr.0025"
+        "adr.0025",
+        "doc.kolvrt.architecture.native-abi",
+        "doc.kolvrt.architecture.first-native-slice",
+        "doc.kolvrt.architecture.production-scheduler",
+        "doc.kolvrt.kernel.wait"
       ],
       "gaps": [
-        "Final exact-source acceptance, remaining death/shutdown coverage and EN/RU review are pending.",
-        "QEMU does not establish physical ARM behavior."
+        "Human semantic and complete EN/RU review remain pending before milestone acceptance/promotion.",
+        "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "A bounded native.request/1 endpoint mechanism is implemented with real EL0 fixtures; Issue #26 acceptance and publication stability are still under review.",
+        "implementation_scope": "Complete bounded native.request/1 mechanism with verified EL0 DEV/PROD execution; final human semantic/EN/RU review remains pending.",
         "sources": [
           "crates/kernel-core/Cargo.toml",
           "crates/kernel-core/src/domain.rs",
@@ -173,22 +186,38 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           "crates/xtask/src/main.rs",
           "crates/xtask/src/output.rs",
           "crates/kernel/src/ipc_multi_workload.S",
-          "crates/kernel/src/ipc_paths_benchmark.S"
+          "crates/kernel/src/ipc_paths_benchmark.S",
+          "crates/kernel/src/ipc_revoke_workload.S",
+          "crates/kernel/src/test_support/irq_wait.rs"
         ],
-        "acceptance": [],
-        "issues": [26],
-        "adrs": ["adr.0025"],
+        "acceptance": [
+          "research/results/ipc-phase35-acceptance.json",
+          "research/results/native-compat-removal-phase35.json",
+          "research/results/routing-phase35-regression.json",
+          "research/measurements/ipc-phase35-baseline.json",
+          "research/results/kernel-phase35-unsafe-audit.json"
+        ],
+        "issues": [
+          26
+        ],
+        "adrs": [
+          "adr.0025"
+        ],
         "limitations": [
-          "The ABI remains experimental and unfrozen.",
-          "QEMU is regression evidence only; physical ARM is unverified.",
-          "Final exact-source receipt, full acceptance and human semantic/EN/RU review remain pending."
+          "ABI remains experimental and unfrozen.",
+          "Fixed affinity, immutable mappings and conservative whole-session retirement; no supervisor, service discovery, migration, zero-copy or universal wait/invoke.",
+          "Physical ARM and production bootstrap trust are unverified.",
+          "Human semantic/EN/RU review is still pending."
         ],
-        "next_gate": "Complete every Issue #26 functional, negative-control, DEV/PROD, source-receipt, performance, EN/RU knowledge and native-only/routing acceptance gate before changing implementation status.",
+        "next_gate": "Obtain human semantic/EN/RU review for #26 acceptance, then Phase 3.6/#27 EL0 supervision; rederive its architecture from current laws and accepted decisions.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "UNKNOWN",
-            "reason": "Preliminary DEV/PROD fixtures and focused mutation controls exist, but the full requested matrix and exact final-source milestone receipt are not yet complete."
+            "state": "VERIFIED",
+            "reason": "124 real kernel checks per DEV/PROD profile and 46 exact-event IPC mutation runs passed on the integrated main source set; source digests match current files.",
+            "receipt": "research/results/ipc-phase35-acceptance.json",
+            "receipt_sha256": "960c88b3ee28978d02f73bdd0373d4fe193a66a65423f01df8deaabad65fc853",
+            "scope": "Reviewed main base 41ecd0656fd440585fbc1c4b2f5e969faa7ba815; integrated implementation commit 0851dde5406c87b8dec6554c75aaaaa530df14fb plus exact LF source inventory. Two fixed-affinity QEMU CPUs, DEV/PROD, normal boot and named IPC acceptance; no physical ARM claim."
           },
           {
             "environment": "physical-arm64",
@@ -207,79 +236,117 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
         ],
         "roadmap_gate": "Phase 3.5"
       },
-      "aliases": ["kolvrt.ipc"]
+      "aliases": [
+        "kolvrt.ipc"
+      ]
     },
     {
       "id": "kolvrt.ipc.endpoint",
       "anchor": "authority-and-identities",
       "kind": "contract-section",
-      "summary": "Concrete endpoint, привязка service и scoped SEND authority."
+      "summary": "Concrete endpoint, привязка service и scoped SEND authority.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.queue",
       "anchor": "bounded-storage-and-accounting",
       "kind": "contract-section",
-      "summary": "Ограниченные очередь, result slots и domain charges."
+      "summary": "Ограниченные очередь, result slots и domain charges.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.request",
       "anchor": "copied-transport",
       "kind": "contract-section",
-      "summary": "Фрейм запросов native.request/1 и операции с копированием."
+      "summary": "Фрейм запросов native.request/1 и операции с копированием.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.payload",
       "anchor": "copied-transport",
       "kind": "contract-section",
-      "summary": "Инициализированные bounded snapshots payload и байты ответа."
+      "summary": "Инициализированные bounded snapshots payload и байты ответа.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.receive",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
-      "summary": "Транзакционная доставка receive и сохранение очереди."
+      "summary": "Транзакционная доставка receive и сохранение очереди.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.wait",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
-      "summary": "Блокирующие readable и terminal conditions с регистрацией и повторной проверкой."
+      "summary": "Блокирующие readable и terminal conditions с регистрацией и повторной проверкой.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.wakeup",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
-      "summary": "Точная owner wake identity, подтверждение mailbox и прогресс idle."
+      "summary": "Точная owner wake identity, подтверждение mailbox и прогресс idle.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.terminal",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
-      "summary": "Ровно один сохранённый terminal result и граница commitment."
+      "summary": "Ровно один сохранённый terminal result и граница commitment.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.cancel",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
-      "summary": "Отмена до и после commitment service effect."
+      "summary": "Отмена до и после commitment service effect.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.deadline",
       "anchor": "copy-transactions-and-terminal-arbitration",
       "kind": "contract-section",
-      "summary": "Абсолютный monotonic deadline и terminal arbitration."
+      "summary": "Абсолютный monotonic deadline и terminal arbitration.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.cross-cpu",
       "anchor": "blocking-cross-cpu-wake-and-idle",
       "kind": "contract-section",
-      "summary": "Cross-CPU signalling с фиксированной привязкой и drainage wake."
+      "summary": "Cross-CPU signalling с фиксированной привязкой и drainage wake.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     },
     {
       "id": "kolvrt.ipc.teardown",
       "anchor": "teardown-and-reclamation",
       "kind": "contract-section",
-      "summary": "Завершение, shutdown, удержание authority и reclamation endpoint."
+      "summary": "Завершение, shutdown, удержание authority и reclamation endpoint.",
+      "depends_on": [
+        "kolvrt.ipc.transport"
+      ]
     }
   ]
 }

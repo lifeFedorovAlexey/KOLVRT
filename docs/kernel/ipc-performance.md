@@ -1,6 +1,8 @@
-# Phase 3.5 IPC performance passport
-
+<!-- markdownlint-disable MD041 -->
+<!-- The stable knowledge anchor precedes the visible document heading. -->
 <a name="measurement-method"></a>
+
+# Phase 3.5 IPC performance passport
 
 Document status: CURRENT
 Evidence scope: reproducible QEMU regression baseline for the experimental bounded IPC implementation; not a hardware performance claim.

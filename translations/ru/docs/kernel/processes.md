@@ -157,9 +157,15 @@ Phase 3.1 не добавила IPC, безопасное копирование
           "crates/kernel/src/process.rs",
           "crates/kernel-core/src/process.rs"
         ],
-        "acceptance": ["research/results/kernel-phase31.json"],
-        "issues": [20],
-        "adrs": ["adr.0017"],
+        "acceptance": [
+          "research/results/kernel-phase31.json"
+        ],
+        "issues": [
+          20
+        ],
+        "adrs": [
+          "adr.0017"
+        ],
         "limitations": [
           "No public EL0 create API, migration or asynchronous retirement."
         ],
@@ -168,7 +174,7 @@ Phase 3.1 не добавила IPC, безопасное копирование
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Retained historical receipt does not cover current declared sources: crates/kernel/src/process.rs. New exact-source evidence is required for VERIFIED.",
+            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"
@@ -186,7 +192,9 @@ Phase 3.1 не добавила IPC, безопасное копирование
             "from": "UNRECORDED",
             "to": "BOUNDED_IMPLEMENTED",
             "reason": "Initial reviewed catalog adoption of existing scoped contract; not a new implementation transition.",
-            "acceptance": ["research/results/kernel-phase31.json"]
+            "acceptance": [
+              "research/results/kernel-phase31.json"
+            ]
           }
         ]
       }
@@ -196,7 +204,10 @@ Phase 3.1 не добавила IPC, безопасное копирование
       "anchor": "kolvrt-process-identity",
       "kind": "contract-section",
       "summary": "Каноническая секция: Идентичность и владение.",
-      "depends_on": ["adr.0017", "adr.0021"]
+      "depends_on": [
+        "adr.0017",
+        "adr.0021"
+      ]
     },
     {
       "id": "kolvrt.process.state",
@@ -217,7 +228,10 @@ Phase 3.1 не добавила IPC, безопасное копирование
       "anchor": "kolvrt-process-reclamation",
       "kind": "contract-section",
       "summary": "Каноническая секция: Запуск, завершение и освобождение.",
-      "depends_on": ["adr.0017", "adr.0021"]
+      "depends_on": [
+        "adr.0017",
+        "adr.0021"
+      ]
     },
     {
       "id": "kolvrt.process.evidence",
