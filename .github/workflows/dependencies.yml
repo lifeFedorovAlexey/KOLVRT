@@ -22,7 +22,7 @@ jobs:
         run: rustup toolchain install 1.99.0 --profile minimal
       - name: Pinned cargo-deny cache
         id: deny-cache
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5 (Node 24)
         with:
           path: |
             target/ci-tools/cargo-deny/bin/

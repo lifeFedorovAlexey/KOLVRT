@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "base_commit": "4e713a2194742fa2d5c75fd58d2dd7608e7617be",
+  "base_commit": "e64d82fb137ccc1f0caf5ca99401957402be79eb",
   "files": [
     {
       "path": ".github/workflows/ci-timings.yml",
@@ -12,14 +12,14 @@
     {
       "path": ".github/workflows/ci-windows-workload.yml",
       "before_sha256_lf": null,
-      "after_sha256_lf": "7c4ff74745d5016680f1a50d142c5565e65c03e8114954784c1078591e65f3b1",
+      "after_sha256_lf": "5a8d4245a6d88e913713ef1ee1ae6bac7d1740fc7d73bcc8b6720834d8abb76d",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },
     {
       "path": ".github/workflows/dependencies.yml",
       "before_sha256_lf": "df98db96ce44420768364891dee5dde65ab44438c9bcfcf245b19ca04efd2172",
-      "after_sha256_lf": "84ffe1244f6233366d3f915f68ac57009c42204a9775b16abe6153d80fa833e6",
+      "after_sha256_lf": "9a91ea23e4bce83b6acbd586f1c7bfbf4272d6aa3dbebd745e768ca051b1666e",
       "disposition": "new-feature",
       "reason": "Implement issue #109 timing, conservative knowledge/source-backed scheduling, configuration-bound integrity-checked caches and complete sharded QEMU acceptance; all unique checks and negative controls are preserved."
     },

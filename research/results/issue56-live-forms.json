@@ -1,0 +1,53 @@
+{
+  "issue": 56,
+  "observed_date": "2026-10-05",
+  "timezone": "Europe/Moscow",
+  "environment": "Authenticated GitHub in-app browser",
+  "chooser_url": "https://github.com/lifeFedorovAlexey/KOLVRT/issues/new/choose",
+  "result": "PASS within recorded render/sample scope",
+  "source_files": [
+    {
+      "path": ".github/ISSUE_TEMPLATE/compatibility-adapter-proposal.yml",
+      "git_blob": "a1b1ca040796ad34a08ca1f48b496ea07463420f",
+      "sha256_lf": "d13f65518bd6935d7d2e5e336911aec84989788c0dd153461a8dc3b703b2fb55"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/cost-l-candidate.yml",
+      "git_blob": "f8022e509d5f861bc7b505f3d51d32f0e911ee1b",
+      "sha256_lf": "e94dd424e10786abcb9af7ddd069393d112df5a20c25d43912eed69d04ea3b8b"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/driver-compatibility-research.yml",
+      "git_blob": "4c99b273e34ea2cda0b5c8a00d57b02a162b7a2e",
+      "sha256_lf": "42faa776ad580337c23376e3baabca26fdc559b1fb59a3fd692bfff04eee815d"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/hardware-bring-up.yml",
+      "git_blob": "bda99c80d13190846bcba9d2c45bd70c8c9706dd",
+      "sha256_lf": "788a6180929018dde1078590e8c2714502b23f8cb9c2251db272a91384a9c80f"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/hardware-test-result.yml",
+      "git_blob": "fa03605005577d736b82cc2729a339d49e3367cd",
+      "sha256_lf": "78dee0230e8828a7f8c6bd9b4f2a77fa42ee5a362614ce14fa3d6037510293f1"
+    }
+  ],
+  "observations": [
+    "All five forms and Blank issue appear in live chooser.",
+    "Each form accepts synthetic text, renders Markdown preview and exposes the documented privacy acknowledgements.",
+    "Each empty form rejects blank title, mandatory text fields and unchecked mandatory acknowledgements. Optional bring-up upstream field has no required marker or empty-field error.",
+    "Dropdowns expose documented classification, DMA/IOMMU, role, execution-scope and outcome choices; selection changes were observed.",
+    "Hardware Test distinguishes host collection, QEMU, physical boot, physical device operation and NOT RUN.",
+    "Malformed COST-L-1, reserved COST-L-0000 and unallocated COST-L-9999 can be entered as free text; documented reviewer rejection remains required.",
+    "Public visibility, local sanitation and linked submission/program/registry instructions render. Repository link targets were checked locally."
+  ],
+  "sample_issues_created": 0,
+  "inventory_collected": false,
+  "attachments_uploaded": false,
+  "limitations": [
+    "Manual UI observations, not a replayable automated browser suite.",
+    "No successful issue submission or server-side validation of a completed sample was attempted.",
+    "Free text cannot validate evidence truth, COST-L allocation or sanitize private data.",
+    "Observation is bound to these form blobs and the GitHub UI on the recorded date; changes require renewed review."
+  ]
+}
