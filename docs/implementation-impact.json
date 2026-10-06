@@ -397,7 +397,7 @@
     {
       "path": "crates/xtask/src/matrix.rs",
       "before_sha256_lf": "f3934e65d3932afe535f39ee3254424df857c84c3fa43d02a8b5d2e269715718",
-      "after_sha256_lf": "14ae526672fe222c66b9eb872e4c84648b817a453c742061dfed75a001c24304",
+      "after_sha256_lf": "bb092622e14f42bb4f07d138a07af139e3f311bca23c32e51640d4eb37c1f170",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },

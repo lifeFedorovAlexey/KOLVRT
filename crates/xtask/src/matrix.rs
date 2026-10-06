@@ -123,6 +123,12 @@ fn ipc_failure(events: &Value, test: &str) -> Result<bool> {
         }))
 }
 
+fn control_diagnostic(id: &str, reason: &str, output: &str) -> String {
+    let lines = output.lines().collect::<Vec<_>>();
+    let tail = lines[lines.len().saturating_sub(24)..].join("\n");
+    format!("{reason}: {id}\nSubprocess output (last 24 lines):\n{tail}")
+}
+
 fn execute_task(task: &Task) -> Result<Value> {
     let profile = if task.prod { "prod" } else { "dev" };
     let artifact = format!(
@@ -151,6 +157,23 @@ fn execute_task(task: &Task) -> Result<Value> {
             String::from_utf8_lossy(&output.stderr)
         );
         fs::write(format!("target/kernel/{}.host.log", task.id), &text)?;
+        // These sidecars were removed before invocation. A compiler failure, even
+        // one printing the expected marker, cannot witness a guest control.
+        let missing = ["-build.json", ".run.json", ".results.json"]
+            .into_iter()
+            .filter(|suffix| !Path::new(&format!("{artifact}{suffix}")).is_file())
+            .collect::<Vec<_>>();
+        if !missing.is_empty() {
+            return Err(control_diagnostic(
+                &task.id,
+                &format!(
+                    "negative control did not produce runtime evidence; missing {}",
+                    missing.join(", ")
+                ),
+                &text,
+            )
+            .into());
+        }
         let witnessed = if task.feature == Some("irq-simd-restore-negative") {
             irq_context_failure(&read_json(format!("{artifact}.results.json"))?)?
         } else if task.feature == Some("checkpoint-publication-negative") {
@@ -178,7 +201,12 @@ fn execute_task(task: &Task) -> Result<Value> {
                 .is_some_and(|marker| text.contains(marker))
         };
         if output.status.success() || !witnessed {
-            return Err(format!("required negative control not witnessed: {}", task.id).into());
+            return Err(control_diagnostic(
+                &task.id,
+                "required negative control not witnessed",
+                &text,
+            )
+            .into());
         }
     } else {
         let elf = build(task.prod, task.tests, None, true)?;
