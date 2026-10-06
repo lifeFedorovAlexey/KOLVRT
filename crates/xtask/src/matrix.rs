@@ -53,7 +53,11 @@ fn tasks() -> Vec<Task> {
                 prod,
                 flag,
                 feature,
-                Some(format!("\"error\":\"{error}\"")),
+                Some(if feature.ends_with("-input") {
+                    error.to_owned()
+                } else {
+                    format!("\"error\":\"{error}\"")
+                }),
                 None,
             ));
         }
@@ -74,6 +78,24 @@ fn tasks() -> Vec<Task> {
 
 pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
     match flag {
+        "--scheduler-aarch32-control" => Some(&["process_aarch32_context_rejected"]),
+        "--scheduler-user-irq-control" => Some(&["process_masked_user_irq_rejected"]),
+        "--scheduler-context-control" => Some(&["process_privileged_context_rejected"]),
+        "--scheduler-start-control" => Some(&["scheduler_duplicate_start_rejected"]),
+        "--scheduler-foreign-control" => Some(&[
+            "scheduler_foreign_cpu_rejected",
+            "process_registry_and_cpu_ownership",
+        ]),
+        "--scheduler-reentry-control" => Some(&["scheduler_reentry_rejected"]),
+        "--scheduler-stale-control" => Some(&["scheduler_stale_generation_rejected"]),
+        "--scheduler-reset-control" => Some(&["scheduler_live_reset_rejected"]),
+        "--scheduler-inspect-control" => Some(&["scheduler_early_inspection_rejected"]),
+        "--scheduler-complete-control" => Some(&["completion_publication_state_inputs"]),
+        "--scheduler-irq-control" => Some(&[
+            "scheduler_unmasked_access_rejected",
+            "process_unmasked_access_rejected",
+        ]),
+        "--irq-simd-restore-control" => Some(&["irq_simd_context"]),
         "--process-unlink-control" => Some(&[
             "process_unlinked_reclaim_rejected",
             "el0_quiescent_reclamation",
@@ -138,11 +160,12 @@ pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
         _ => None,
     }
 }
-fn observable_task(flag: &str, prod: bool) -> Task {
+fn observable_task(flag: &'static str, prod: bool) -> Task {
     let label = match flag {
         "--shootdown-control" => "shootdown-invariants",
         "--remote-tlbi-control" => "remote-tlbi-invariants",
         "--asid-reuse-control" => "asid-reuse-invariants",
+        "--irq-simd-restore-control" => "irq-simd-roundtrip-invariant",
         "--checkpoint-publication-control" => "completion-publication-state-inputs",
         _ => flag,
     };
@@ -150,29 +173,18 @@ fn observable_task(flag: &str, prod: bool) -> Task {
         id: format!("{}-{label}", if prod { "prod" } else { "dev" }),
         prod,
         tests: true,
-        flag: Some(match flag {
-            "--process-unlink-control" => "--process-unlink-control",
-            "--process-start-control" => "--process-start-control",
-            "--process-stale-control" => "--process-stale-control",
-            "--process-reclaim-control" => "--process-reclaim-control",
-            "--checkpoint-publication-control" => "--checkpoint-publication-control",
-            "--process-exit-control" => "--process-exit-control",
-            "--process-rollback-control" => "--process-rollback-control",
-            "--asid-reuse-control" => "--asid-reuse-control",
-            "--user-context-control" => "--user-context-control",
-            "--user-retirement-control" => "--user-retirement-control",
-            "--user-root-control" => "--user-root-control",
-            "--shootdown-control" => "--shootdown-control",
-            "--remote-tlbi-control" => "--remote-tlbi-control",
-            _ => unreachable!(),
-        }),
+        flag: Some(flag),
         feature: None,
         marker: None,
         ipc_test: None,
     }
 }
 pub(super) fn run_observable(flag: &str, prod: bool) -> Result<()> {
-    execute_task(&observable_task(flag, prod)).map(|_| ())
+    let task = tasks()
+        .into_iter()
+        .find(|task| task.prod == prod && task.flag == Some(flag))
+        .ok_or("unregistered observable control")?;
+    execute_task(&task).map(|_| ())
 }
 fn required_observations(events: &Value, names: &[&str]) -> Result<bool> {
     let events = events.as_array().ok_or("control observations absent")?;
@@ -209,16 +221,20 @@ fn control(
 fn coverage_kind(task: &Task) -> &'static str {
     match task.flag {
         None => "ordinary",
-        Some("--shootdown-control" | "--remote-tlbi-control" | "--asid-reuse-control") => {
-            "invariant"
-        }
+        Some(
+            "--shootdown-control"
+            | "--remote-tlbi-control"
+            | "--asid-reuse-control"
+            | "--irq-simd-restore-control",
+        ) => "invariant",
         Some(flag) if observable_checks(flag).is_some() => "negative-input",
+        _ if task.feature.is_some_and(|f| f.ends_with("-input")) => "negative-input",
         _ => "legacy-failure",
     }
 }
 
 fn describe(task: &Task) -> Value {
-    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test,"coverage_kind":coverage_kind(task),"observable_checks":task.flag.and_then(observable_checks),"control_scope":if matches!(task.flag, Some("--shootdown-control"|"--remote-tlbi-control"|"--asid-reuse-control")){"positive invariant coverage; not equivalent to missing ACK or skipped invalidation controls"}else if task.flag == Some("--checkpoint-publication-control"){"production Ownership UNIT invalid inputs; not a withheld remote publication SYSTEM test"}else if task.flag.and_then(observable_checks).is_some(){"real invalid inputs; no implementation mutation"}else{"legacy"}})
+    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test,"coverage_kind":coverage_kind(task),"observable_checks":task.flag.and_then(observable_checks),"control_scope":if matches!(task.flag, Some("--shootdown-control"|"--remote-tlbi-control"|"--asid-reuse-control")){"positive invariant coverage; not equivalent to missing ACK or skipped invalidation controls"}else if task.flag == Some("--checkpoint-publication-control"){"production Ownership UNIT invalid inputs; not a withheld remote publication SYSTEM test"}else if task.flag == Some("--irq-simd-restore-control"){"actual IRQ/SIMD round-trip invariant; no skipped-restore detection claim"}else if task.feature.is_some_and(|f| f.ends_with("-input")){"production adapter assertions invoked with forbidden test inputs"}else if task.flag.is_some_and(|f| f.starts_with("--scheduler-")){"production Ownership UNIT guards plus mapped adapter checks; not corrupted runtime storage"}else if task.flag.and_then(observable_checks).is_some(){"real invalid inputs; no implementation mutation"}else{"legacy"}})
 }
 
 pub fn plan_document() -> Result<Value> {
@@ -305,8 +321,8 @@ fn execute_task(task: &Task) -> Result<Value> {
             )
             .into());
         }
-        let witnessed = if task.feature == Some("irq-simd-restore-negative") {
-            irq_context_failure(&read_json(format!("{artifact}.results.json"))?)?
+        let witnessed = if task.feature.is_some_and(|f| f.ends_with("-input")) {
+            assertion_witness(&text, &read_json(format!("{artifact}.results.json"))?, flag)?
         } else if let Some(test) = task.ipc_test {
             ipc_failure(&read_json(format!("{artifact}.results.json"))?, test)?
         } else {
@@ -362,6 +378,19 @@ pub fn run(shard: Option<(usize, usize)>) -> Result<()> {
     Ok(())
 }
 
+pub fn run_one(flag: &str, prod: bool) -> Result<()> {
+    let task = tasks()
+        .into_iter()
+        .find(|task| task.prod == prod && task.flag == Some(flag))
+        .ok_or("unregistered matrix task")?;
+    let sources = source_inventory()?;
+    execute_task(&task)?;
+    if sources != source_inventory()? {
+        return Err("matrix task sources changed during execution".into());
+    }
+    Ok(())
+}
+
 pub fn run_ipc() -> Result<()> {
     for task in tasks().iter().filter(|task| task.ipc_test.is_some()) {
         execute_task(task)?;
@@ -369,21 +398,94 @@ pub fn run_ipc() -> Result<()> {
     Ok(())
 }
 
-fn irq_context_failure(events: &Value) -> Result<bool> {
-    let events = events.as_array().ok_or("IRQ control events absent")?;
-    Ok(events
+// PROD deliberately omits diagnostic panic messages. Match the actual assertion
+// site and fresh guest panic event instead of enabling extra production logging.
+fn assertion_witness(output: &str, events: &Value, flag: &str) -> Result<bool> {
+    let (path, function, message) = match flag {
+        "--scheduler-inner-lock-control" => (
+            "crates/kernel/src/sync/mod.rs",
+            "pub fn try_lock(",
+            "lock inside scheduler ownership contract",
+        ),
+        "--scheduler-lock-control" => (
+            "crates/kernel/src/sync/mod.rs",
+            "pub fn assert_scheduler_unlocked(",
+            "scheduler lock order contract",
+        ),
+        "--scheduler-task-control" => (
+            "crates/kernel/src/scheduler/mod.rs",
+            "fn validate_task(",
+            "stale scheduler task",
+        ),
+        "--scheduler-owner-control" => (
+            "crates/kernel/src/scheduler/mod.rs",
+            "fn choose(",
+            "duplicate running task",
+        ),
+        _ => return Err("unregistered assertion input".into()),
+    };
+    let source = fs::read_to_string(path)?;
+    let lines = source.lines().collect::<Vec<_>>();
+    let start = lines
         .iter()
-        .any(|e| e["event"] == "test" && e["name"] == "irq_simd_context" && e["status"] == "fail")
-        && events.iter().any(|e| {
-            e["event"] == "irq-context"
-                && e["status"] == "fail"
-                && e["probe_result"] == 0
-                && e["deliveries"].as_u64().is_some_and(|n| n > 0)
-        }))
+        .position(|line| line.contains(function))
+        .ok_or("assertion function absent")?;
+    let end = (start + 1..lines.len())
+        .find(|&i| lines[i].starts_with("fn ") || lines[i].trim_start().starts_with("pub fn "))
+        .unwrap_or(lines.len());
+    let sites = lines
+        .iter()
+        .enumerate()
+        .skip(start)
+        .take(end - start)
+        .filter(|(_, line)| line.contains(&format!("\"{message}\"")))
+        .map(|(i, _)| i)
+        .collect::<Vec<_>>();
+    if sites.len() != 1 {
+        return Err("assertion site must be unique".into());
+    }
+    let line = (0..=sites[0])
+        .rev()
+        .find(|&i| lines[i].contains("assert!(") || lines[i].contains("assert_eq!("))
+        .ok_or("assertion site absent")?
+        + 1;
+    let site = format!("kernel halted at {}:{line}", path.replace('/', "\\"));
+    let slash_site = format!("kernel halted at {path}:{line}");
+    panic_site_witness(output, events, &site, &slash_site, line)
 }
+fn panic_site_witness(
+    output: &str,
+    events: &Value,
+    site: &str,
+    slash_site: &str,
+    line: usize,
+) -> Result<bool> {
+    Ok((output.contains(site) || output.contains(slash_site))
+        && events
+            .as_array()
+            .ok_or("panic observations absent")?
+            .iter()
+            .any(|e| e["event"] == "panic" && e["status"] == "fail" && e["line"] == line))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn assertion_oracle_rejects_unrelated_or_missing_guest_panic() {
+        let site = "kernel halted at crates/kernel/src/sync/mod.rs:40";
+        let panic = json!({"event":"panic","line":40,"status":"fail"});
+        assert!(panic_site_witness(site, &json!([panic.clone()]), site, site, 40).unwrap());
+        assert!(!panic_site_witness("unrelated panic", &json!([panic]), site, site, 40).unwrap());
+        for events in [
+            json!([]),
+            json!([{"event":"panic","line":41,"status":"fail"}]),
+            json!([{"event":"test","line":40,"status":"fail"}]),
+            json!([{"event":"panic","line":40,"status":"pass"}]),
+        ] {
+            assert!(!panic_site_witness(site, &events, site, site, 40).unwrap());
+        }
+    }
     #[test]
     fn invariant_controls_reject_missing_failed_and_duplicate_observations() {
         let pass = json!({"event":"test","name":"guard","status":"pass"});
@@ -396,19 +498,6 @@ mod tests {
         ] {
             assert!(!required_observations(&events, &["guard"]).unwrap());
         }
-    }
-    #[test]
-    fn irq_control_requires_named_failure_and_real_delivery() {
-        let failure = json!({"event":"test","name":"irq_simd_context","status":"fail"});
-        let evidence =
-            json!({"event":"irq-context","status":"fail","probe_result":0,"deliveries":1});
-        assert!(irq_context_failure(&json!([failure.clone(), evidence.clone()])).unwrap());
-        assert!(!irq_context_failure(&json!([failure.clone()])).unwrap());
-        assert!(
-            !irq_context_failure(&json!([evidence.clone(),{"event":"panic","status":"fail"}]))
-                .unwrap()
-        );
-        assert!(!irq_context_failure(&json!([failure,{"event":"irq-context","status":"fail","probe_result":0,"deliveries":0}])).unwrap());
     }
     #[test]
     fn migrated_tasks_have_no_mutation_feature_or_failure_marker() {

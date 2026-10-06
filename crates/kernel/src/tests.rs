@@ -421,6 +421,40 @@ fn state_machine_inputs() {
     drop(owner.prepare(0, true, 1).unwrap());
     owner.publish(0, true, 1).unwrap();
     owner.start(1, true, 1).unwrap();
+
+    let retained =
+        || owner.phase() == Phase::Running && owner.generation() == 1 && !owner.completed();
+    report(
+        "scheduler_foreign_cpu_rejected",
+        owner.mutate(0, true, 1).err() == Some(OwnerError::ForeignCpu) && retained(),
+    );
+    report(
+        "scheduler_unmasked_access_rejected",
+        owner.mutate(1, false, 1).err() == Some(OwnerError::IrqEnabled) && retained(),
+    );
+    report(
+        "scheduler_stale_generation_rejected",
+        owner.mutate(1, true, 0).err() == Some(OwnerError::StaleGeneration) && retained(),
+    );
+    report(
+        "scheduler_duplicate_start_rejected",
+        owner.start(1, true, 1) == Err(OwnerError::WrongPhase) && retained(),
+    );
+    report(
+        "scheduler_live_reset_rejected",
+        owner.prepare(0, true, 2).err() == Some(OwnerError::WrongPhase) && retained(),
+    );
+    report(
+        "scheduler_early_inspection_rejected",
+        owner.inspect(0, true, 1).err() == Some(OwnerError::WrongPhase) && retained(),
+    );
+    let borrowed = owner.mutate(1, true, 1).unwrap();
+    report(
+        "scheduler_reentry_rejected",
+        owner.mutate(1, true, 1).err() == Some(OwnerError::Reentry) && retained(),
+    );
+    drop(borrowed);
+
     let access = owner.mutate(1, true, 1).unwrap();
     let borrowed_rejected =
         owner.complete(1, true, 1, true) == Err(OwnerError::Reentry) && !owner.completed();
@@ -466,6 +500,13 @@ fn state_machine_inputs() {
 pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     TESTS_REPORTED.store(0, Ordering::Relaxed);
     state_machine_inputs();
+    #[cfg(any(
+        feature = "scheduler-inner-lock-input",
+        feature = "scheduler-lock-input",
+        feature = "scheduler-task-input",
+        feature = "scheduler-owner-input"
+    ))]
+    crate::scheduler::testing::forbidden_input();
     report("boot_el1", cpu::el() == cpu::CURRENT_EL1);
     let uart = platform::uart(d);
     report(

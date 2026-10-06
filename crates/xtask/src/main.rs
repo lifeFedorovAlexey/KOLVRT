@@ -53,7 +53,7 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
 ];
 const FOUNDATION_CONTROLS: &[(&str, &str, &str)] = &[(
     "--irq-simd-restore-control",
-    "irq-simd-restore-negative",
+    "kernel-tests",
     "\"name\":\"irq_simd_context\",\"status\":\"fail\"",
 )];
 const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
@@ -70,78 +70,54 @@ const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
     ("--process-reclaim-control", "kernel-tests", "Transition"),
     (
         "--scheduler-aarch32-control",
-        "scheduler-aarch32-negative",
+        "kernel-tests",
         "InvalidUserContext",
     ),
     (
         "--scheduler-user-irq-control",
-        "scheduler-user-irq-negative",
+        "kernel-tests",
         "InvalidUserContext",
     ),
     (
         "--scheduler-context-control",
-        "scheduler-context-negative",
+        "kernel-tests",
         "InvalidUserContext",
     ),
     (
         "--scheduler-inner-lock-control",
-        "scheduler-inner-lock-negative",
-        "InnerLock",
+        "scheduler-inner-lock-input",
+        "lock inside scheduler ownership contract",
     ),
-    (
-        "--scheduler-start-control",
-        "scheduler-start-negative",
-        "WrongPhase",
-    ),
+    ("--scheduler-start-control", "kernel-tests", "WrongPhase"),
     (
         "--scheduler-task-control",
-        "scheduler-task-negative",
-        "StaleTask",
+        "scheduler-task-input",
+        "stale scheduler task",
     ),
     (
         "--scheduler-owner-control",
-        "scheduler-owner-negative",
-        "DuplicateOwner",
+        "scheduler-owner-input",
+        "duplicate running task",
     ),
-    (
-        "--scheduler-foreign-control",
-        "scheduler-foreign-negative",
-        "ForeignCpu",
-    ),
-    (
-        "--scheduler-reentry-control",
-        "scheduler-reentry-negative",
-        "Reentry",
-    ),
+    ("--scheduler-foreign-control", "kernel-tests", "ForeignCpu"),
+    ("--scheduler-reentry-control", "kernel-tests", "Reentry"),
     (
         "--scheduler-stale-control",
-        "scheduler-stale-negative",
+        "kernel-tests",
         "StaleGeneration",
     ),
-    (
-        "--scheduler-reset-control",
-        "scheduler-reset-negative",
-        "WrongPhase",
-    ),
-    (
-        "--scheduler-inspect-control",
-        "scheduler-inspect-negative",
-        "WrongPhase",
-    ),
+    ("--scheduler-reset-control", "kernel-tests", "WrongPhase"),
+    ("--scheduler-inspect-control", "kernel-tests", "WrongPhase"),
     (
         "--scheduler-complete-control",
-        "scheduler-complete-negative",
+        "kernel-tests",
         "NotQuiescent",
     ),
-    (
-        "--scheduler-irq-control",
-        "scheduler-irq-negative",
-        "IrqEnabled",
-    ),
+    ("--scheduler-irq-control", "kernel-tests", "IrqEnabled"),
     (
         "--scheduler-lock-control",
-        "scheduler-lock-negative",
-        "LockHeld",
+        "scheduler-lock-input",
+        "scheduler lock order contract",
     ),
 ];
 const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
@@ -364,6 +340,17 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 const TESTS: &[&str] = &[
     "boot_el1",
     "completion_publication_state_inputs",
+    "scheduler_foreign_cpu_rejected",
+    "scheduler_unmasked_access_rejected",
+    "scheduler_reentry_rejected",
+    "scheduler_stale_generation_rejected",
+    "scheduler_duplicate_start_rejected",
+    "scheduler_live_reset_rejected",
+    "scheduler_early_inspection_rejected",
+    "process_aarch32_context_rejected",
+    "process_masked_user_irq_rejected",
+    "process_privileged_context_rejected",
+    "process_unmasked_access_rejected",
     "process_duplicate_completion_rejected",
     "uart_mmio",
     "exception_vectors",
@@ -523,6 +510,10 @@ fn run() -> Result<()> {
             println!("{}", serde_json::to_string_pretty(&matrix::plan_document()?)?);
             Ok(())
         }
+        Some("matrix-task") if args.len() == 2 || args.len() == 3 && args[2] == "--prod" => {
+            qemu()?;
+            matrix::run_one(&args[1], args.len() == 3)
+        }
         Some("matrix-shard") if args.len() == 3 => {
             let index: usize = args[1].parse()?;
             let count: usize = args[2].parse()?;
@@ -628,7 +619,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | native-controls [--prod] | test [--record LABEL] | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {

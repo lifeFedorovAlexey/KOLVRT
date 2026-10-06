@@ -41,13 +41,17 @@ CI on exact 7d64fac stopped at user-context (shard 0), retirement (shard 1), sho
 | user-retirement  | Registry::reclaim rejects a live process; state and retained frames remain unchanged; eventual reclaim is checked         | Real public ownership API; no extraction of private frame            |
 | remote-tlbi      | acknowledged rejects a future generation; actual TLBI observer precedes ACK; access to retired mapping translation-faults | Instrumented test build; no skipped-TLBI mutation claim              |
 
-These controls use ordinary kernel-tests builds and require every mapped test exactly once with status pass. Missing, duplicate, failed and unrelated observations are rejected. The task inventory is preserved. The four obsolete corruption features are removed. The ordinary suite now has 132 checks per profile. REMOTE_TLBI_COMPLETED is observation-only instrumentation in kernel-tests; this evidence is not byte-identical production-binary execution. The production supervisor crash-recovery acceptance remains incomplete.
+These controls use ordinary kernel-tests builds and require every mapped test exactly once with status pass. Missing, duplicate, failed and unrelated observations are rejected. The task inventory is preserved. The four obsolete corruption features are removed. The ordinary suite now has 143 checks per profile. REMOTE_TLBI_COMPLETED is observation-only instrumentation in kernel-tests; this evidence is not byte-identical production-binary execution. The production supervisor crash-recovery acceptance remains incomplete.
 
 The next obsolete controls are classified explicitly. completion-publication-state-inputs imports the production Ownership state machine and rejects completion while borrowed or not quiescent, rejects inspection before Done and verifies phase/generation retention. This UNIT evidence does not test a withheld remote CPU publication or its liveness/failure handling. process-exit calls the single production Table::complete with a duplicate completion and verifies the terminal record, state and live-slot count remain unchanged; the test-only Registry::repeat_completion wrapper is removed. process-rollback uses real zero-memory-budget creation failures and checks resource rollback. asid-reuse-invariants observes actual same-VA isolation, invalidation counters and pool exhaustion; it is not a skipped-invalidation negative control.
 
 shootdown-invariants and remote-tlbi-invariants are positive invariant coverage; their previous control flags are CLI aliases. They do not establish missing-ACK or skipped-TLBI detection. The plan and archived counts distinguish ordinary, negative-input, invariant and remaining legacy-failure tasks. Withheld publication/missing ACK/skipped invalidation SYSTEM coverage and the production-supervisor crash-recovery E2E remain acceptance gaps.
 
 The process transition family now uses explicit production-method negative inputs: Table::reclaim without quiescence preserves the completed record/live-slot count (UNIT); Registry::start for an already admitted process preserves state/frames; stale IDs fail start/data/receipt validation after actual slot reuse; Registry::reclaim for a live process preserves state/frames. No forced scheduler unlink is claimed. Obsolete process-contract features and early panic branches are removed.
+
+The scheduler family now separates three levels of evidence. Registry::create rejects AArch32, privileged-mode and masked-user-IRQ input contexts before allocation; process count and available pages remain unchanged. Ownership UNIT tests call the one production protocol with foreign CPU, unmasked access, borrowed/reentrant access, stale generation, duplicate start, live reset and premature inspection; phase/generation remain retained. Adapter UNIT tests construct actual Local/Task/State fixture values and invoke the real methods with a lock held, a lock inside an ownership callback, stale task generation or an already running peer. These four fatal assertions execute in DEV and PROD; the host requires a fresh guest panic at the actual unique production assertion site, because PROD omits the diagnostic message. No implementation body is copied or mutated. The IRQ/SIMD compatibility flag now selects the real interrupt round-trip invariant; it does not establish skipped-restore detection. These tests do not establish complete hardware adapter fault coverage or current Phase 3.7 acceptance.
+
+Exact d33ce92 CI passed static, native, host, kernel DEV/PROD, routing and ASID jobs, but all matrix shards failed: scheduler-user-irq (0), scheduler-context (1), scheduler-inner-lock (2), scheduler-aarch32 (3). The foundation aggregate failed and evidence was skipped. The scheduler migration addresses these obsolete controls and adjacent family controls; a full current matrix is still required.
 
 ## Commands and evidence limits
 
@@ -146,6 +150,7 @@ Full Phase 3.7 is incomplete. Remaining gates: the complete production superviso
           "crates/kernel/src/supervision_workload.rs",
           "crates/kernel/src/sync/mod.rs",
           "crates/kernel/src/test_support/arch_probes.S",
+          "crates/kernel/src/test_support/scheduler_inputs.rs",
           "crates/kernel/src/tests.rs",
           "crates/kernel/src/user_copy.rs",
           "crates/kernel/src/user_copy/testing.rs",

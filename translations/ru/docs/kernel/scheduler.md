@@ -116,6 +116,8 @@ Phase 3.1 завершает ограниченный внутренний жи�
 
 Экспериментальный [supervisor](supervision.md) использует отдельно scoped checkpoint двух CPU. Exact IPC waits, retry reasons и counters удерживаются; pending copy continuations завершаются до namespace transfer. Каждый CPU восстанавливает native root и освобождает running ownership до изменения membership CPU0. SGI-only traps не расходуют checkpoint timer quantum до исполнения EL0. Saved cursor продолжается только для соответствующей живой process generation. Root detachment blocked peer не разрешает reclaim. Назначение continuous IPC dispatch сохраняется; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) принят для bounded functional scope после #126; performance readiness отделена.
 
+UNIT-тесты в test_support/scheduler_inputs.rs создают настоящие типы Local/Task/State и вызывают production-методы с запрещённым порядком lock, устаревшим поколением задачи и работающей соседней задачей. Они наблюдают реальные assertions; в телах production-методов нет тестовых веток. Тесты Ownership импортируют единственный протокол kernel-core и проверяют отказ с сохранением фазы и поколения. Проверки контекста Registry передают недопустимые архитектурные кадры через настоящий интерфейс create и подтверждают неизменность ресурсов. Эти проверки не доказывают обнаружение повреждения реализации или аппаратную конкурентность. Текущий полный suite и пределы доказательств описаны в [native applications](native-applications.md).
+
 <!-- knowledge -->
 
 ```json

@@ -329,6 +329,11 @@
     },
     {
       "from": "kolvrt.apps.native-elf",
+      "to": "crates/kernel/src/test_support/scheduler_inputs.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
       "to": "crates/kernel/src/tests.rs",
       "type": "implemented_by"
     },
@@ -2602,7 +2607,7 @@
     "crates/kernel-core/src/wait.rs": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
-    "crates/kernel/Cargo.toml": "f6901faa4ed43d34a24ac404ac133bf51ab2ad36a6db7d086b1c0a47d21810cd",
+    "crates/kernel/Cargo.toml": "a6056f18142d5f47333521861227113125c5a94884f30976e0f0f3b51b14a087",
     "crates/kernel/build.rs": "57afe17f2335680941554dcc379b1b4827540194992c62c4ddef241d0a28ce11",
     "crates/kernel/src/arch/aarch64/context.rs": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c",
     "crates/kernel/src/arch/aarch64/entry.S": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c",
@@ -2631,9 +2636,9 @@
     "crates/kernel/src/native_boot.rs": "3661b97655d8781d34554af4ab5915ff82edf917d7d3320a05e46a35be3955f4",
     "crates/kernel/src/platform/config.rs": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196",
     "crates/kernel/src/process.rs": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810",
-    "crates/kernel/src/process_workload.rs": "2cb93dac9b00f7aa1e852d78b8484a3d04966fe8c7c5d893a8878f51f5d61731",
+    "crates/kernel/src/process_workload.rs": "399bdd1a37f3efebbaf30af79be2bdb0bbe259cc299d540d48df8c68521c5a89",
     "crates/kernel/src/scheduler/local.rs": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429",
-    "crates/kernel/src/scheduler/mod.rs": "e0f10b225ca84304e07d78125db6a8655440a6d73bd07ef4df6490aa20dec95b",
+    "crates/kernel/src/scheduler/mod.rs": "c3d7b8fd26234db3755138b9e0534d0c40e2a0d5e9e31cf1366566753189de56",
     "crates/kernel/src/scheduler/task.rs": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df",
     "crates/kernel/src/security.rs": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806",
     "crates/kernel/src/security/testing.rs": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df",
@@ -2644,7 +2649,8 @@
     "crates/kernel/src/sync/mod.rs": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
     "crates/kernel/src/test_support/arch_probes.S": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732",
     "crates/kernel/src/test_support/irq_wait.rs": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2",
-    "crates/kernel/src/tests.rs": "12551fbe5877f7e4f684d1fae34fd7520ce4952a06e78bfae203f2f961d576fd",
+    "crates/kernel/src/test_support/scheduler_inputs.rs": "6bbf34fbb309ad7f2a80ba3782a6156f121b1da2b869e687dd59ac11deeacb96",
+    "crates/kernel/src/tests.rs": "a0a0090814d33b486c2e1e93d78b0d7d6206315174ed48f49fa706e766a51786",
     "crates/kernel/src/user_copy.rs": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0",
     "crates/kernel/src/user_copy/testing.rs": "2eba9dc02d0fe703998263017ed55bf04c12f50831f4e6368ede3508dbc1a0d3",
     "crates/migration-advisor/Cargo.toml": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968",
@@ -2676,8 +2682,8 @@
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
-    "crates/xtask/src/main.rs": "fa31168b4736033c81ff5e958fa000e32337b9c6ba98141cc87f7361b7d65689",
-    "crates/xtask/src/matrix.rs": "783faa753cb5d7c948f9c4370c5c87676d418a480f95ab9800a0a4f6ee432ac8",
+    "crates/xtask/src/main.rs": "21187d7e82acad0cc8519ab8d1d859610878c7b3a7db1757d3b35ccd437c94ab",
+    "crates/xtask/src/matrix.rs": "3a3f8c832de395c53a1f4d3f650be159be38e8843c6fc0774e94517f2ba6c91a",
     "crates/xtask/src/native_apps.rs": "c38c4edb0612931646a29ad5faa673029ac69afed99c9227511a409c14dccae5",
     "crates/xtask/src/output.rs": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
     "crates/xtask/src/routing_demo.rs": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
@@ -2730,9 +2736,9 @@
     "docs/kernel/handles.md": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "ad09129f11996560c78ed63c6a663c29b3d151552ed5dc58c76f4794d5eac299",
-    "docs/kernel/native-applications.md": "99538c940200e1dcbc4fbe83a2bd65ff63b6f4450ba95f3c3d27eda59a91f153",
+    "docs/kernel/native-applications.md": "17621de47f79f4231edd9f0b61a18d9e26395c6693eb9f51b3e8fcb2ababf447",
     "docs/kernel/processes.md": "be75f579f58fb581792f4cb51c5e415201c0875e6226f43c3ba75585374be632",
-    "docs/kernel/scheduler.md": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
+    "docs/kernel/scheduler.md": "6935d719b5fff63810d590d9dc40c0dffe5665232752caa26a3eaf15f06dbcf2",
     "docs/kernel/supervision.md": "276e39e85e645939298a01257cb545cc57af30ddaf34b7f88ef85e4557d92ab7",
     "docs/kernel/user-copy.md": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
@@ -2823,7 +2829,7 @@
     "tests/native-apps/src/abi_steps.rs": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7",
     "tests/native-apps/src/lifecycle-client.rs": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677",
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
-    "translations/manifest.json": "2be81b1fe0b5ee14a4e091cfcac92859fa709930cc7ecacc6cf49ce5afa0e2b0",
+    "translations/manifest.json": "59712abcece387f659549d9b2193f1abbbd4f58a312270dbdc5e72bbc359f168",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2870,9 +2876,9 @@
     "translations/ru/docs/kernel/handles.md": "f3f66f391e13a75665c351c505ec0eef51b0176afab84a20bb08a36e30804c37",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "ad46a77f458d0f6569a6dfed065ae1253765d5825285665dd58561c7670293ce",
-    "translations/ru/docs/kernel/native-applications.md": "9879ff0e55c13b47be3617067c1b8c328b5f9d00eb9bc1ab86d59b3eb81dfe49",
+    "translations/ru/docs/kernel/native-applications.md": "cca4afb96084e9ac3d8bff95c659f6dcf466728644a8aafe7b63fd658f3e5fac",
     "translations/ru/docs/kernel/processes.md": "b3e7b05910a6bd660aefe804e8bc7697524d0561b4deb12fd56afe08f05fa136",
-    "translations/ru/docs/kernel/scheduler.md": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
+    "translations/ru/docs/kernel/scheduler.md": "e9a5f3c03a7deb421e06895c150d08c0a415794cb71132fff9bbd74837a8893b",
     "translations/ru/docs/kernel/supervision.md": "4ef58f8855bb2e561ff54bfb7919d169905fd0eb10bb3fa9786bd4089024193e",
     "translations/ru/docs/kernel/user-copy.md": "50408bed87f99a428e3233bfe3232d6aec046507d774c0023d6c1241bf3eaec5",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
@@ -5635,7 +5641,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 18468,
+      "estimated_bytes": 20037,
       "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5649,15 +5655,15 @@
       },
       "locations": {
         "en": {
-          "end": 201,
+          "end": 206,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "99538c940200e1dcbc4fbe83a2bd65ff63b6f4450ba95f3c3d27eda59a91f153",
+          "sha256": "17621de47f79f4231edd9f0b61a18d9e26395c6693eb9f51b3e8fcb2ababf447",
           "start": 1
         },
         "ru": {
-          "end": 201,
+          "end": 205,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "9879ff0e55c13b47be3617067c1b8c328b5f9d00eb9bc1ab86d59b3eb81dfe49",
+          "sha256": "cca4afb96084e9ac3d8bff95c659f6dcf466728644a8aafe7b63fd658f3e5fac",
           "start": 1
         }
       },
@@ -5703,7 +5709,7 @@
     "doc.kolvrt.kernel.scheduler": {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 16840,
+      "estimated_bytes": 17553,
       "evidence_scope": "Phase 3.0 ownership and Phase 3.1 bounded two-CPU process lifecycle; fixed affinity.",
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
@@ -5717,15 +5723,15 @@
       },
       "locations": {
         "en": {
-          "end": 128,
+          "end": 130,
           "path": "docs/kernel/scheduler.md",
-          "sha256": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
+          "sha256": "6935d719b5fff63810d590d9dc40c0dffe5665232752caa26a3eaf15f06dbcf2",
           "start": 1
         },
         "ru": {
-          "end": 128,
+          "end": 130,
           "path": "translations/ru/docs/kernel/scheduler.md",
-          "sha256": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
+          "sha256": "e9a5f3c03a7deb421e06895c150d08c0a415794cb71132fff9bbd74837a8893b",
           "start": 1
         }
       },
@@ -6165,6 +6171,7 @@
           "crates/kernel/src/supervision_workload.rs",
           "crates/kernel/src/sync/mod.rs",
           "crates/kernel/src/test_support/arch_probes.S",
+          "crates/kernel/src/test_support/scheduler_inputs.rs",
           "crates/kernel/src/tests.rs",
           "crates/kernel/src/user_copy.rs",
           "crates/kernel/src/user_copy/testing.rs",
@@ -6219,13 +6226,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "99538c940200e1dcbc4fbe83a2bd65ff63b6f4450ba95f3c3d27eda59a91f153",
+          "sha256": "17621de47f79f4231edd9f0b61a18d9e26395c6693eb9f51b3e8fcb2ababf447",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "9879ff0e55c13b47be3617067c1b8c328b5f9d00eb9bc1ab86d59b3eb81dfe49",
+          "sha256": "cca4afb96084e9ac3d8bff95c659f6dcf466728644a8aafe7b63fd658f3e5fac",
           "start": 7
         }
       },

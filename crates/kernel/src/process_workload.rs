@@ -86,6 +86,37 @@ pub fn exercise(
                 && crate::smp::experiment::RESULT.load(core::sync::atomic::Ordering::Acquire) == 1,
         );
     }
+
+    #[cfg(feature = "kernel-tests")]
+    {
+        let pages = p.available();
+        let live = registry.live();
+        for (name, states) in [
+            ("process_aarch32_context_rejected", &[0x10, 0x13][..]),
+            ("process_masked_user_irq_rejected", &[0x80][..]),
+            ("process_privileged_context_rejected", &[1, 4, 5][..]),
+        ] {
+            let rejected = states.iter().all(|&state| {
+                let mut input = spec(percpu::BOOT_CPU, MODE_EXIT, EXIT_CODE);
+                input.context.pstate = state;
+                registry
+                    .create(p, Origin::Bootstrap, input)
+                    .err()
+                    .is_some_and(|f| f.error == Error::InvalidImage && f.completion.is_none())
+            });
+            report(
+                name,
+                rejected && p.available() == pages && registry.live() == live,
+            );
+        }
+        cpu::unmask();
+        let rejected = process::context_contract() == Err(Error::IrqEnabled);
+        cpu::mask();
+        report(
+            "process_unmasked_access_rejected",
+            rejected && p.available() == pages && registry.live() == live,
+        );
+    }
     let before = p.available();
     let first = create(registry, p, spec(percpu::BOOT_CPU, MODE_EXIT, EXIT_CODE));
     report(

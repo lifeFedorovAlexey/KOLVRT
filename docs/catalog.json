@@ -956,7 +956,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 18468,
+      "estimated_bytes": 20037,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -976,7 +976,7 @@
     {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 16840,
+      "estimated_bytes": 17553,
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
       "path": "docs/kernel/scheduler.md",

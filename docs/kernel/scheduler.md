@@ -116,6 +116,8 @@ Checkpoint completion publication uses a mandatory absolute coordination deadlin
 
 The experimental [supervisor](supervision.md) uses a separately scoped two-CPU checkpoint. Exact IPC waits, retry reasons and counters remain retained; pending copy continuations finish before namespace transfer. Each CPU restores its native root and releases running ownership before CPU0 changes membership. SGI-only traps cannot spend the checkpoint timer quantum before EL0 executes. A saved cursor continues only for its matching live process generation. Root detachment of a blocked peer does not authorize reclaim. The purpose of continuous IPC dispatch is preserved; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) is accepted for bounded functional scope after #126; performance readiness is separate.
 
+UNIT callers under test_support/scheduler_inputs.rs instantiate the actual Local/Task/State types and invoke production methods with forbidden lock order, stale task generation and a running peer. The assertions are observed directly; production method bodies contain no test branches. Ownership tests import the single kernel-core protocol and check rejection plus retained phase/generation. Registry context tests submit invalid architectural frames through the actual create interface and verify unchanged resources. These checks do not establish corruption-detection or hardware concurrency coverage. The current full suite and evidence limits are described in [native applications](native-applications.md).
+
 <!-- knowledge -->
 
 ```json

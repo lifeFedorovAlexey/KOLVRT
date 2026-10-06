@@ -2,6 +2,14 @@
 mod config;
 mod local;
 pub(crate) mod task;
+#[cfg(any(
+    feature = "scheduler-inner-lock-input",
+    feature = "scheduler-lock-input",
+    feature = "scheduler-task-input",
+    feature = "scheduler-owner-input"
+))]
+#[path = "../test_support/scheduler_inputs.rs"]
+pub(crate) mod testing;
 use crate::{
     cpu,
     cpu::context::{Context, ESR_SVC64, PSTATE_MODE_MASK, Trap, USER_EL0T},
