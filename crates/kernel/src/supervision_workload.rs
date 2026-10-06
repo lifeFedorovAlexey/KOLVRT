@@ -86,16 +86,25 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
     let mut scope = Scope::install(supervisor, grants);
     registry.start(supervisor).unwrap();
     let watchdog = crate::time::deadline_after(crate::time::Duration::from_secs(10));
+    #[cfg(feature = "kernel-tests")]
+    crate::scheduler::delay_secondary_completion(true);
     let completed = loop {
         assert!(
             crate::cpu::ticks() < watchdog,
             "supervision fixture watchdog; not lifecycle acceptance"
         );
         let completed = registry.checkpoint();
+        #[cfg(feature = "kernel-tests")]
+        {
+            assert!(crate::scheduler::pending_completion_observed());
+            crate::scheduler::delay_secondary_completion(false);
+        }
         if registry.completion(supervisor).is_ok() {
             break completed;
         }
         scope.service(registry, physical);
+        #[cfg(feature = "kernel-tests")]
+        crate::scheduler::delay_secondary_completion(true);
     };
     let reason = registry.completion(supervisor).unwrap().reason;
     let coverage = completed.tasks[supervisor.slot()].context.gpr[12];

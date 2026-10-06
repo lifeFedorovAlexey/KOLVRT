@@ -67,9 +67,23 @@ macro_rules! read_reg {
     };
 }
 read_reg!(el, "CurrentEL");
+/// Relaxed counter sample for deadline polling, without instruction ordering.
+pub fn ticks_relaxed() -> u64 {
+    let value;
+    // SAFETY: INV-TIMER: privileged counter read; callers requiring ordering
+    // relative to observations, context changes or measurements use ticks_ordered.
+    unsafe {
+        asm!("mrs {}, cntpct_el0", out(reg) value, options(nostack, nomem));
+    }
+    value
+}
+/// Preserve ordered sampling for existing measurement and context callers.
+pub fn ticks() -> u64 {
+    ticks_ordered()
+}
 /// Observe the physical counter after preceding instruction/context changes.
 /// CNTPCT_EL0 is not self-synchronizing on the pinned Armv8.0 platform.
-pub fn ticks() -> u64 {
+pub fn ticks_ordered() -> u64 {
     let value;
     // SAFETY: INV-TIMER: privileged counter read; ISB prevents speculative
     // sampling before prior observations, and the memory clobber preserves

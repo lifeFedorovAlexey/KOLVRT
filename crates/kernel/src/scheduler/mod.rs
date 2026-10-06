@@ -70,6 +70,8 @@ static CONTINUOUS: AtomicBool = AtomicBool::new(false);
 static DELAY_SECONDARY_COMPLETION: AtomicBool = AtomicBool::new(false);
 #[cfg(feature = "kernel-tests")]
 static JOIN_PENDING_SEEN: AtomicU64 = AtomicU64::new(0);
+#[cfg(feature = "checkpoint-publication-negative")]
+static SECONDARY_PUBLICATION_HELD: AtomicBool = AtomicBool::new(false);
 #[cfg(feature = "kernel-tests")]
 pub(crate) fn delay_secondary_completion(enabled: bool) {
     percpu::primary_only();
@@ -310,18 +312,31 @@ fn dispatch_inner(
         local.publish(generation);
     }
     crate::smp::ping(percpu::SECONDARY_CPU);
+    // Checkpoints have no workload expiry, but their publication bound starts
+    // before either owner runs. Continuous dispatch retains its workload bound.
+    let checkpoint_deadline = (step && continuous).then(|| crate::smp::completion_deadline(None));
     run_local();
+    let publication_deadline =
+        checkpoint_deadline.unwrap_or_else(|| crate::smp::completion_deadline(deadline));
+    #[cfg(feature = "checkpoint-publication-negative")]
+    let mut held_reported = false;
     crate::smp::wait_completion(
         || {
             let complete = LOCALS.iter().all(Local::completed);
+            #[cfg(feature = "checkpoint-publication-negative")]
+            if SECONDARY_PUBLICATION_HELD.load(Ordering::Acquire) && !held_reported {
+                crate::event!(
+                    "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"CheckpointPublicationHeld\",\"quiescent\":true}}"
+                );
+                held_reported = true;
+            }
             #[cfg(feature = "kernel-tests")]
             if !complete && DELAY_SECONDARY_COMPLETION.load(Ordering::Acquire) {
                 JOIN_PENDING_SEEN.store(generation, Ordering::Release);
             }
             complete
         },
-        deadline,
-        "scheduler completion publication stalled after workload deadline",
+        publication_deadline,
     );
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     let owners_released = RUNNING_OWNER
@@ -551,14 +566,15 @@ fn run_local() {
     if CONTINUOUS.load(Ordering::Acquire) {
         if STEP.load(Ordering::Acquire) {
             // Finish owned copy reservations before namespaces return to Registry.
-            loop {
-                deferred_local(local, generation);
-                if local.with(generation, |state| {
-                    state.ipc_pending.iter().all(Option::is_none)
-                }) {
-                    break;
-                }
-            }
+            crate::smp::wait(
+                || {
+                    deferred_local(local, generation);
+                    local.with(generation, |state| {
+                        state.ipc_pending.iter().all(Option::is_none)
+                    })
+                },
+                "checkpoint copy continuation drainage timeout; resources retained",
+            );
         } else {
             continuous_local(local, generation);
         }
@@ -585,6 +601,17 @@ fn run_local() {
             "test coordinator pending-completion observation",
         );
     }
+    #[cfg(feature = "checkpoint-publication-negative")]
+    if percpu::is_secondary() && STEP.load(Ordering::Acquire) && CONTINUOUS.load(Ordering::Acquire)
+    {
+        assert!(quiescent);
+        SECONDARY_PUBLICATION_HELD.store(true, Ordering::Release);
+        // Hold only publication, after native-root/owner quiescence. CPU0 must
+        // fail its checkpoint coordination bound without reclaiming anything.
+        loop {
+            core::hint::spin_loop();
+        }
+    }
     local.complete(generation, quiescent);
 }
 fn continuous_local(local: &Local, generation: u64) {
@@ -598,7 +625,10 @@ fn continuous_local(local: &Local, generation: u64) {
         IPC_IPI[percpu::id()].store(false, Ordering::Release);
         let work = deferred_local(local, generation);
         let (live, pending, session_deadline, next) = local.with(generation, |state| {
-            if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
+            if state
+                .deadline
+                .is_some_and(|limit| cpu::ticks_relaxed() >= limit)
+            {
                 for (index, task) in state.tasks.iter_mut().enumerate() {
                     if matches!(task.state, CONTEXT_READY | CONTEXT_BLOCKED) {
                         task.state = CONTEXT_TIMED_OUT;
@@ -626,7 +656,7 @@ fn continuous_local(local: &Local, generation: u64) {
         #[cfg(feature = "ipc-wait-recheck-negative")]
         if !live
             && !pending
-            && session_deadline.is_some_and(|limit| cpu::ticks() >= limit)
+            && session_deadline.is_some_and(|limit| cpu::ticks_relaxed() >= limit)
             && crate::ipc::native::wait_registration_omitted()
         {
             reject_ipc("WaitRegistrationLost");
@@ -656,7 +686,7 @@ fn continuous_local(local: &Local, generation: u64) {
         #[cfg(feature = "ipc-wake-publication-negative")]
         if !live
             && !pending
-            && session_deadline.is_some_and(|limit| cpu::ticks() >= limit)
+            && session_deadline.is_some_and(|limit| cpu::ticks_relaxed() >= limit)
             && !work.quiescent
         {
             reject_ipc("WakePublicationLost");
@@ -848,7 +878,10 @@ fn reschedule(
     generation: u64,
     current: usize,
 ) -> usize {
-    if state.deadline.is_some_and(|limit| cpu::ticks() >= limit) {
+    if state
+        .deadline
+        .is_some_and(|limit| cpu::ticks_relaxed() >= limit)
+    {
         for task in &mut state.tasks {
             if matches!(
                 task.state,

@@ -160,22 +160,30 @@ pub fn wait(ready: impl FnMut() -> bool, reason: &str) {
 /// Callers wait without a scheduler borrow/ordinary lock and require admitted work
 /// to eventually terminate for return; existing boot coordination keeps its bound.
 pub fn wait_optional(ready: impl FnMut() -> bool, timeout: Option<time::Duration>, reason: &str) {
-    wait_until(ready, timeout.map(time::deadline_after), reason);
+    assert!(
+        wait_until(ready, timeout.map(time::deadline_after)),
+        "{reason}"
+    );
 }
-/// Task expiry and publication progress have different bounds. Allow the
-/// established coordination interval after the common workload deadline;
-/// never derive a zero join interval from an already-expired workload.
-pub fn wait_completion(ready: impl FnMut() -> bool, workload_deadline: Option<u64>, reason: &str) {
-    let publication_deadline = workload_deadline.map(|deadline| {
-        let grace = kernel_core::time::duration_ticks(COORDINATION_TIMEOUT, cpu::frequency())
-            .expect("invalid coordination interval");
-        deadline
-            .checked_add(grace)
-            .expect("completion deadline exhausted")
-    });
-    wait_until(ready, publication_deadline, reason);
+/// Publication always has its own coordination interval. A workload deadline
+/// governs BudgetExpired only; it is never reused as a join duration.
+pub fn completion_deadline(workload_deadline: Option<u64>) -> u64 {
+    let anchor = workload_deadline.unwrap_or_else(cpu::ticks_ordered);
+    let interval = kernel_core::time::duration_ticks(COORDINATION_TIMEOUT, cpu::frequency())
+        .expect("invalid coordination interval");
+    anchor
+        .checked_add(interval)
+        .expect("completion deadline exhausted")
 }
-fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>, reason: &str) {
+pub fn wait_completion(ready: impl FnMut() -> bool, publication_deadline: u64) {
+    if !wait_until(ready, Some(publication_deadline)) {
+        crate::event!(
+            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"CompletionPublicationTimeout\"}}"
+        );
+        panic!("scheduler completion publication timeout; resources retained");
+    }
+}
+fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>) -> bool {
     assert!(
         !percpu::current().scheduler_borrow.load(Ordering::Acquire),
         "scheduler borrow across wait"
@@ -187,12 +195,11 @@ fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>, reason: &s
             panic!("secondary CPU failure");
         }
         if ready() {
-            return;
+            return true;
         }
-        assert!(
-            deadline.is_none_or(|limit| cpu::ticks() < limit),
-            "{reason}"
-        );
+        if deadline.is_some_and(|limit| cpu::ticks_relaxed() >= limit) {
+            return false;
+        }
         core::hint::spin_loop();
     }
 }

@@ -150,7 +150,24 @@ fn execute_task(task: &Task) -> Result<Value> {
             String::from_utf8_lossy(&output.stderr)
         );
         fs::write(format!("target/kernel/{}.host.log", task.id), &text)?;
-        let witnessed = if let Some(test) = task.ipc_test {
+        let witnessed = if task.feature == Some("checkpoint-publication-negative") {
+            let events = read_json(format!("{artifact}.results.json"))?;
+            let events = events
+                .as_array()
+                .ok_or("checkpoint control events absent")?;
+            let held = events.iter().any(|event| {
+                event["event"] == "scheduler-reject"
+                    && event["error"] == "CheckpointPublicationHeld"
+                    && event["quiescent"] == true
+                    && event["status"] == "fail"
+            });
+            let bounded_failure = events.iter().any(|event| {
+                event["event"] == "scheduler-reject"
+                    && event["error"] == "CompletionPublicationTimeout"
+                    && event["status"] == "fail"
+            });
+            held && bounded_failure
+        } else if let Some(test) = task.ipc_test {
             ipc_failure(&read_json(format!("{artifact}.results.json"))?, test)?
         } else {
             task.marker

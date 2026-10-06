@@ -34,6 +34,8 @@ Manifest и supervisor EL0 выбирают порядок зависимост�
 
 ## Последствия
 
+Публикация checkpoint должна иметь независимый конечный coordination deadline даже без workload expiry. Timeout является fatal failure и удерживает ресурсы; он никогда не создаёт completion и не разрешает reclaim. Workload expiry остаётся BudgetExpired и не используется повторно как длительность join. Drainage pending-copy также должен иметь конечный failure bound.
+
 Lifecycle membership changes приостанавливают здоровых peers на acquired checkpoints. Scope, authority credits и retained transport ownership остаются явными; failed quiescence требует quarantine или global stop, но никогда deadline-based reclaim.
 
 ## Влияние на безопасность
