@@ -57,6 +57,12 @@
       "type": "related_to"
     },
     {
+      "from": "doc.kolvrt.supervision.acceptance-review",
+      "scope": "Bounded lifecycle readiness and source-matched QEMU evidence; no physical ARM or stable ABI acceptance.",
+      "to": "kolvrt.services.supervision",
+      "type": "related_to"
+    },
+    {
       "from": "kolvrt.arena",
       "to": "adr.0003",
       "type": "depends_on"
@@ -2145,6 +2151,11 @@
       "from": "kolvrt.services.supervision",
       "to": "law.043",
       "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "research/results/supervision-phase36-main126.json",
+      "type": "validated_by"
     }
   ],
   "inputs": {
@@ -2270,32 +2281,33 @@
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture-decisions/0025-bounded-native-ipc.md": "1d49df8c7b779bfc0cddb787a858178fd34afffe49698eacced38cf804df4dfd",
-    "docs/architecture-decisions/0026-el0-supervision.md": "10083f32be350883f1fcd7c41744b047e8e870f15f4858334f8f20f2d3a6da6c",
+    "docs/architecture-decisions/0026-el0-supervision.md": "782f6cbc94f7704d199cb49d3d864e806de26f39194ac9a5dc4d0f4b8010a122",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
     "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/compatibility-manifests.md": "0dbd9ee68c5f4e0cd6afd9a250f0705987c947b9bab3caed41b3f38f322362a7",
     "docs/architecture/component-arena.md": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
     "docs/architecture/dependency-hygiene.md": "9801390321b0df72092f1cc69610a5feaf4122a17773aff7f40a8bbbd793537b",
-    "docs/architecture/first-native-slice.md": "da70ec18f6ea14cd67a35ae001762b801e28c464761eb9704511119fcbe04d3a",
+    "docs/architecture/first-native-slice.md": "0b342908865e42ddf9b0912aec4708cb9cde630dc1139c9e77d00f973b638fa5",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
     "docs/architecture/ipc-phase35-review.md": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
+    "docs/architecture/supervision-phase36-acceptance-review.md": "a992e5e59504abee3970c88313c07bd65675cf022b201b19f7d6b248d5df2d82",
     "docs/ci/performance.md": "c7c1d009187ed5bbf8b223f07b6fe0c0aa4a601eb091971951b3b9655154ae02",
     "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
     "docs/kernel/domains.md": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+    "docs/kernel/ipc.md": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
     "docs/kernel/processes.md": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
-    "docs/kernel/scheduler.md": "c44baeec138dc32acd80710a5865842abb97b8520052006a54bc91e940076edb",
-    "docs/kernel/supervision.md": "ea8315b414be0b5d7e901a4fe1fb249947dcfe271679e7fe0021af184ec6f725",
+    "docs/kernel/scheduler.md": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
+    "docs/kernel/supervision.md": "f3ab91510fc74f5b38df9e4d2e834a1458c08c4458ad8f673fd64dd1d20129df",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
-    "docs/knowledge-enrollment.json": "d0883b3680410178d89a81907db2bd5b123ebc5678d1a1a14b7a6f1475a19fc0",
+    "docs/knowledge-enrollment.json": "b5a614aabec13a4f0ea5f3178985e370f3bf176ed78df01451112756bc3a48e6",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
     "docs/research/cost-l-queries.md": "7ba2ae6aaa7d09b79f2ee36f6f5847d36c585357940d043f191b7323e8ed0cf9",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
@@ -2374,7 +2386,7 @@
     "scripts/tests/ci-timings.test.cjs": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "59d95b8f3acabf72cfe7a8488883cf0c69d1da358ced8903bab41cde96d29dcd",
+    "translations/manifest.json": "a5a396af2e72b37f30159d4c45bd9311dd2d8d64acea01773b5870483446324f",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2400,29 +2412,30 @@
     "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture-decisions/0025-bounded-native-ipc.md": "bf0baae8acb076f4ccccbd3c9dfb8b0488a32b3dfead3d0a83be3803935ee76a",
-    "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "38da43980f12e797aa3f9bec95f671e0b64555e89c72851d9b9bbf6ce755b9d3",
+    "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "2a702797fbd49a75375b6420cec220c6bc624b2db4b50824e7f07e44f5c08fa1",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
     "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/compatibility-manifests.md": "ce70ba5ac3fbc83ad5315886a6acff5495db4d9b8ce0d8ef058d1d4deda14cfb",
     "translations/ru/docs/architecture/component-arena.md": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
     "translations/ru/docs/architecture/dependency-hygiene.md": "bd43404196cef5ea13feda0d2b45872adee9aeda0ffa9f2eff12ee0791478f8f",
-    "translations/ru/docs/architecture/first-native-slice.md": "20dfab89806ded6d3a50a9b15b4a1d54b9f1116699d9f911186ba0fc48392fc8",
+    "translations/ru/docs/architecture/first-native-slice.md": "f68435e9a55327ef6b958df8e3d513505e636d011d63cc3e82b347a472707b36",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
     "translations/ru/docs/architecture/ipc-phase35-review.md": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
+    "translations/ru/docs/architecture/supervision-phase36-acceptance-review.md": "b80b0a60b703f507810258768c8c1cfbe5e1c532a7ded4c2045c04bd9edb6861",
     "translations/ru/docs/ci/performance.md": "a5fbcf4df649539b69498e9ae3cf6e4301d03b643db0a92f53446662e141d4a4",
     "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
     "translations/ru/docs/kernel/domains.md": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+    "translations/ru/docs/kernel/ipc.md": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
     "translations/ru/docs/kernel/processes.md": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
-    "translations/ru/docs/kernel/scheduler.md": "40764ef41be5b4c5b5ede6717f854b60082b9b30866fdcf570077589f86359ea",
-    "translations/ru/docs/kernel/supervision.md": "ed51833485e401dedcbc324c6405d954fc81c29c851b64cd29002c14016e62fd",
+    "translations/ru/docs/kernel/scheduler.md": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
+    "translations/ru/docs/kernel/supervision.md": "b291774d34e3009a05f02ce3b193faa0c9fe4b36811e25234ec05727c2035392",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -3347,15 +3360,15 @@
     "adr.0026": {
       "aliases": ["ADR-0026"],
       "document": "adr.0026",
-      "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6986,
-      "evidence_scope": "re-derived Phase 3.6 architecture and experimental static workload; no production trust, persistent service or physical ARM64 acceptance.",
+      "document_status": "CURRENT",
+      "estimated_bytes": 7208,
+      "evidence_scope": "accepted bounded Phase 3.6 architecture after #126; current-source QEMU verification is separate from the open performance question and production/hardware readiness.",
       "id": "adr.0026",
       "kind": "adr",
       "localized": {
         "ru": {
           "read_when": null,
-          "summary": "Proposed isolated EL0 supervision over bounded two-CPU lifecycle rendezvous.",
+          "summary": "Accepted bounded isolated EL0 supervision with finite completion publication after #126.",
           "tags": null,
           "title": "ADR-0026 — Изолированный supervisor EL0 и ограниченный lifecycle rendezvous"
         }
@@ -3364,19 +3377,19 @@
         "en": {
           "end": 77,
           "path": "docs/architecture-decisions/0026-el0-supervision.md",
-          "sha256": "10083f32be350883f1fcd7c41744b047e8e870f15f4858334f8f20f2d3a6da6c",
+          "sha256": "782f6cbc94f7704d199cb49d3d864e806de26f39194ac9a5dc4d0f4b8010a122",
           "start": 1
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/architecture-decisions/0026-el0-supervision.md",
-          "sha256": "38da43980f12e797aa3f9bec95f671e0b64555e89c72851d9b9bbf6ce755b9d3",
+          "sha256": "2a702797fbd49a75375b6420cec220c6bc624b2db4b50824e7f07e44f5c08fa1",
           "start": 1
         }
       },
       "path": "docs/architecture-decisions/0026-el0-supervision.md",
       "schema_version": 1,
-      "summary": "Proposed isolated EL0 supervision over bounded two-CPU lifecycle rendezvous.",
+      "summary": "Accepted bounded isolated EL0 supervision with finite completion publication after #126.",
       "title": "ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous"
     },
     "case.kol-path.0001": {
@@ -4621,7 +4634,7 @@
     "doc.kolvrt.architecture.first-native-slice": {
       "document": "doc.kolvrt.architecture.first-native-slice",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6445,
+      "estimated_bytes": 6491,
       "evidence_scope": "complete isolated-task workload defined here (IPC, handles, cancellation, and failure containment); bounded EL0, scheduler, and routing milestones have separate implementation evidence.",
       "id": "doc.kolvrt.architecture.first-native-slice",
       "kind": "navigation",
@@ -4637,13 +4650,13 @@
         "en": {
           "end": 57,
           "path": "docs/architecture/first-native-slice.md",
-          "sha256": "da70ec18f6ea14cd67a35ae001762b801e28c464761eb9704511119fcbe04d3a",
+          "sha256": "0b342908865e42ddf9b0912aec4708cb9cde630dc1139c9e77d00f973b638fa5",
           "start": 1
         },
         "ru": {
           "end": 57,
           "path": "translations/ru/docs/architecture/first-native-slice.md",
-          "sha256": "20dfab89806ded6d3a50a9b15b4a1d54b9f1116699d9f911186ba0fc48392fc8",
+          "sha256": "f68435e9a55327ef6b958df8e3d513505e636d011d63cc3e82b347a472707b36",
           "start": 1
         }
       },
@@ -5116,7 +5129,7 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 24000,
+      "estimated_bytes": 24139,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
@@ -5132,13 +5145,13 @@
         "en": {
           "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 1
         },
         "ru": {
           "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 1
         }
       },
@@ -5218,7 +5231,7 @@
     "doc.kolvrt.kernel.scheduler": {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 16804,
+      "estimated_bytes": 16840,
       "evidence_scope": "Phase 3.0 ownership and Phase 3.1 bounded two-CPU process lifecycle; fixed affinity.",
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
@@ -5234,13 +5247,13 @@
         "en": {
           "end": 128,
           "path": "docs/kernel/scheduler.md",
-          "sha256": "c44baeec138dc32acd80710a5865842abb97b8520052006a54bc91e940076edb",
+          "sha256": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
           "start": 1
         },
         "ru": {
           "end": 128,
           "path": "translations/ru/docs/kernel/scheduler.md",
-          "sha256": "40764ef41be5b4c5b5ede6717f854b60082b9b30866fdcf570077589f86359ea",
+          "sha256": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
           "start": 1
         }
       },
@@ -5252,8 +5265,8 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 19584,
-      "evidence_scope": "experimental Phase 3.6 development fixture and bounded lifecycle implementation; acceptance review, production bootstrap trust and physical ARM64 remain pending.",
+      "estimated_bytes": 18145,
+      "evidence_scope": "accepted bounded Phase 3.6 after #126, current-source functional QEMU verification and Codex EN/RU semantic review; readiness and performance acceptance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "localized": {
@@ -5266,15 +5279,15 @@
       },
       "locations": {
         "en": {
-          "end": 156,
+          "end": 162,
           "path": "docs/kernel/supervision.md",
-          "sha256": "ea8315b414be0b5d7e901a4fe1fb249947dcfe271679e7fe0021af184ec6f725",
+          "sha256": "f3ab91510fc74f5b38df9e4d2e834a1458c08c4458ad8f673fd64dd1d20129df",
           "start": 1
         },
         "ru": {
-          "end": 158,
+          "end": 164,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "ed51833485e401dedcbc324c6405d954fc81c29c851b64cd29002c14016e62fd",
+          "sha256": "b291774d34e3009a05f02ce3b193faa0c9fe4b36811e25234ec05727c2035392",
           "start": 1
         }
       },
@@ -5520,6 +5533,47 @@
       "schema_version": 1,
       "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
       "title": "Provisioned verifier time and session lifetime"
+    },
+    "doc.kolvrt.supervision.acceptance-review": {
+      "document": "doc.kolvrt.supervision.acceptance-review",
+      "document_status": "CURRENT",
+      "estimated_bytes": 14407,
+      "evidence_scope": "source-grounded Codex review requested by the maintainer on 2026-10-06, over merged main `ddd526cc5a522d97029d0324e6e619f5fd6ec6e5` and independently inspected current-source CI artifacts. No independent human review, production trust, persistent service or physical ARM acceptance is claimed.",
+      "id": "doc.kolvrt.supervision.acceptance-review",
+      "kind": "security-analysis",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Приёмка ограниченной Phase 3.6 и semantic review EN/RU по исходникам, отдельно от persistent services и production trust.",
+          "tags": null,
+          "title": "Проверка приёмки Phase 3.6"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 68,
+          "path": "docs/architecture/supervision-phase36-acceptance-review.md",
+          "sha256": "a992e5e59504abee3970c88313c07bd65675cf022b201b19f7d6b248d5df2d82",
+          "start": 1
+        },
+        "ru": {
+          "end": 68,
+          "path": "translations/ru/docs/architecture/supervision-phase36-acceptance-review.md",
+          "sha256": "b80b0a60b703f507810258768c8c1cfbe5e1c532a7ded4c2045c04bd9edb6861",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/supervision-phase36-acceptance-review.md",
+      "relationships": [
+        {
+          "scope": "Bounded lifecycle readiness and source-matched QEMU evidence; no physical ARM or stable ABI acceptance.",
+          "to": "kolvrt.services.supervision",
+          "type": "related_to"
+        }
+      ],
+      "schema_version": 1,
+      "summary": "Source-grounded bounded Phase 3.6 acceptance and EN/RU semantic review, separate from persistent services and production trust.",
+      "title": "Phase 3.6 acceptance review"
     },
     "doc.linux.memory.allocation": {
       "document": "doc.linux.memory.allocation",
@@ -6876,13 +6930,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 58
         }
       },
@@ -6911,13 +6965,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 66
         }
       },
@@ -6946,13 +7000,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 58
         }
       },
@@ -6981,13 +7035,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 16
         }
       },
@@ -7016,13 +7070,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 34
         }
       },
@@ -7086,13 +7140,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 26
         }
       },
@@ -7121,13 +7175,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 58
         }
       },
@@ -7156,13 +7210,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 34
         }
       },
@@ -7267,13 +7321,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 76
         }
       },
@@ -7302,13 +7356,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 58
         }
       },
@@ -7344,7 +7398,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 23887,
+      "estimated_bytes": 24026,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "feature": {
         "acceptance": [
@@ -7441,11 +7495,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
-            "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
+            "reason": "Fresh 142-task post-#126 functional artifact verification matches current sources and exact enforcement witnesses; performance benchmark acceptance is separate.",
+            "receipt": "research/results/supervision-phase36-main126.json",
+            "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64.",
-            "state": "STALE"
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -7471,13 +7525,13 @@
         "en": {
           "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 4
         },
         "ru": {
           "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 4
         }
       },
@@ -7507,13 +7561,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 66
         }
       },
@@ -7542,13 +7596,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
+          "sha256": "b672753e9385951dd4b3c8dc09ea49d7ba12c2a4036007905a36dfae3c8fe4f4",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
+          "sha256": "039651d13867b57600c82cf9414c031fdb8e201dfbf0270bd8aea2ffc3a2965f",
           "start": 66
         }
       },
@@ -9601,19 +9655,19 @@
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
       "estimated_bytes": 1063,
-      "evidence_scope": "experimental Phase 3.6 development fixture and bounded lifecycle implementation; acceptance review, production bootstrap trust and physical ARM64 remain pending.",
+      "evidence_scope": "accepted bounded Phase 3.6 after #126, current-source functional QEMU verification and Codex EN/RU semantic review; readiness and performance acceptance are separate.",
       "feature": {
-        "acceptance": [],
+        "acceptance": ["research/results/supervision-phase36-main126.json"],
         "adrs": ["adr.0026"],
-        "implementation": "EXPERIMENTAL",
+        "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
         "issues": [27],
         "limitations": [
           "Development static manifest/image assurance only; production trust remains #38.",
           "Fixed affinity and two-CPU lifecycle barrier; generic wait-any, migration, independent live admission and persistent services are excluded.",
-          "Semantic architecture and complete EN/RU human review remain pending; QEMU is not physical ARM64 acceptance."
+          "Codex semantic/EN-RU review completed after #126; performance attribution/admissibility and physical ARM/production acceptance remain open."
         ],
-        "next_gate": "Complete architecture/code semantic and full EN/RU human review before bounded Phase 3.6 acceptance; #28 owns persistence and #38 production bootstrap trust.",
+        "next_gate": "Phase 3.7/#28 persistent ELF integration over the accepted bounded functional foundation; performance readiness and production trust remain separate review scopes.",
         "readiness": "NOT_READY",
         "sources": [
           "crates/kernel-core/src/process.rs",
@@ -9640,16 +9694,22 @@
             "from": "UNRECORDED",
             "reason": "Implement isolated EL0 policy with a separately derived lifecycle barrier; acceptance review remains pending.",
             "to": "EXPERIMENTAL"
+          },
+          {
+            "acceptance": ["research/results/supervision-phase36-main126.json"],
+            "from": "EXPERIMENTAL",
+            "reason": "Post-#126 code/architecture and full EN/RU semantic review with independent current-source 142-task functional verification; readiness/performance acceptance remain separate.",
+            "to": "BOUNDED_IMPLEMENTED"
           }
         ],
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
-            "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
+            "reason": "Independent post-#126 142-task artifact check against all current source digests, actual ELF/result hashes and exact publication/control witnesses; no performance acceptance.",
+            "receipt": "research/results/supervision-phase36-main126.json",
+            "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust.",
-            "state": "STALE"
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -9672,13 +9732,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "ea8315b414be0b5d7e901a4fe1fb249947dcfe271679e7fe0021af184ec6f725",
+          "sha256": "f3ab91510fc74f5b38df9e4d2e834a1458c08c4458ad8f673fd64dd1d20129df",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "ed51833485e401dedcbc324c6405d954fc81c29c851b64cd29002c14016e62fd",
+          "sha256": "b291774d34e3009a05f02ce3b193faa0c9fe4b36811e25234ec05727c2035392",
           "start": 13
         }
       },
