@@ -30,6 +30,12 @@ Completion observation returns event 0 for an admitted live instance, 1 for Exit
 
 ## Execution and retirement
 
+Workload expiry and completion publication have distinct deadlines. Checkpoint has no workload deadline: its independent two-second coordination interval starts before local execution, and absence of workload expiry never removes the publication bound. Dispatch with a workload deadline retains strict BudgetExpired semantics and adds only the fixed coordination interval after that absolute deadline, never a second workload-duration join. Missing publication halts with CompletionPublicationTimeout; Registry ownership, namespaces and frames stay retained until both acquired completions and execution/root quiescence are confirmed. Pending-copy continuation drainage has its own existing two-second coordination bound and also halts without reclaim on failure. These counter-clock bounds assume timer/CPU progress; they are not physical real-time guarantees.
+
+The deterministic checkpoint publication control holds CPU1 after native-root and execution-owner quiescence, before completion publication, and invokes Registry::checkpoint() with no workload deadline. Its exact witnesses are CheckpointPublicationHeld (quiescent=true) and CompletionPublicationTimeout. Before the fix this control reached only the external 30-second QEMU timeout. Positive kernel runs force pending publication on normal checkpoints and then release it; the separate zero-workload-deadline dispatch control remains intact. The WFI masked-condition race fix and its deterministic test remain intact.
+
+Counter reads distinguish ticks_relaxed() for scheduler/coordination deadline polling from ticks_ordered() for observation/context ordering. Existing ticks() callers keep ordered semantics for measurements and accounting; trap-entry ISB instructions remain. Performance results are limited to measured QEMU scheduler workloads, with failures and variability retained; no physical-performance or absence-of-regression claim follows.
+
 Lifecycle work runs at an explicit fixed-affinity two-CPU checkpoint. Each owner executes a bounded timer quantum, terminal transition, block or explicit lifecycle yield, restores its native root and releases execution ownership. CPU0 then acquires both completions before editing Registry or allocating/reclaiming frames. Pending copy transactions finish before namespaces return. Saved IPC wait identities, retry reasons and counters survive the barrier and are restored only to the same ProcessId; endpoint and source/mailbox ownership remain retained. A blocked process has no reclaim authorization merely because its root detached.
 
 SGI-only entry cannot consume a checkpoint quantum before the first EL0 instruction; its deferred work drains while the armed timer still supplies progress. A scheduling cursor continues only for its matching live process generation. Death/stop clears blocked ownership on the exact process, closes admission and executes ASID retirement on the owning CPU. Old endpoint requests, terminal results and wake acknowledgements retain independent ownership until they drain. There is no elapsed grace-period reclamation.
@@ -45,6 +51,8 @@ A committed crashing service reports effect-unknown and an exact fault observati
 Under accepted load, the service sends a commit acknowledgement over its exact-instance feedback endpoint only after COMMIT succeeds. The supervisor validates and replies to that acknowledgement before cancellation; elapsed scheduler quanta cannot establish commitment. The supervisor observes cancellation after commitment as effect-unknown, stops admission, requests owner-local termination and waits for its exact terminal event. It never promises rollback or replays unknown effects. Final teardown closes every endpoint, finishes pending copies, drains source/mailbox ownership, retires namespaces/domains/ASIDs and releases private frames. The external ten-second test watchdog diagnoses a failed workload; it is not successful shutdown evidence or production policy. Unexpected supervisor failure, watchdog expiry or failed quiescence halts/quarantines this development fixture without reclaiming live resources; a deadline never authorizes freeing reachable state.
 
 ## Verification and next gate
+
+The [checkpoint correction receipt](../../research/results/checkpoint-publication-bound.json) retains the exact DEV/PROD held-publication and bounded-timeout events and both eight-pair ASID measurements. Tagged-ASID scheduler median changed from 12,848,759.5 to 13,050,031.5 ticks (+1.57%); ASID-zero changed from 12,008,503 to 12,805,975 ticks (+6.64%). These sequential QEMU observations include lifecycle changes and counter refinement, do not isolate ISB cost and do not establish absence of performance regression. The original IPC performance run completed DEV but failed the strict PROD blocked_requester_wait control (block_delta=0); that failure is retained. Performance attribution and architecture/EN-RU acceptance remain open; #27 is not closed by this correction.
 
 The later routing run 37389265393 failed in stripped PROD after initial EL0 validation while all kernel shards passed. Twenty-four exact-ELF replays did not reproduce the panic. Minimal failure identity now remains visible without machine-events/diagnostics: static process/IPC check names and panic source file/line, with no private data or addresses. A subsequent PROD boot latched CPU1 FAILED during the IPC deadline workload; bounded static source file/line is now retained before FAILED release-publication and read by the primary after acquire, without CPU1 UART or private values. This improves diagnosis; it does not establish a fix of that intermittent failure. Current-source verification remains STALE until the new stand run.
 
@@ -88,13 +96,15 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
         "sources": [
           "crates/kernel-core/src/process.rs",
           "crates/kernel-core/tests/process_protocol.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/src/main.rs",
           "crates/kernel/src/process.rs",
+          "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/smp.rs",
           "crates/kernel/src/scheduler/mod.rs",
           "crates/kernel/src/scheduler/task.rs",
           "crates/kernel/src/supervision.rs",
@@ -119,7 +129,7 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Routing stand run 37389265393 failed in stripped PROD boot after initial EL0 validation; no panic identity was retained. Stripped failures now retain source location and process/IPC check name without data/address disclosure. Full current-source verification is pending; historical complete receipts remain immutable.",
+            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

@@ -52,6 +52,11 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
 ];
 const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
     (
+        "--checkpoint-publication-control",
+        "checkpoint-publication-negative",
+        "CompletionPublicationTimeout",
+    ),
+    (
         "--process-exit-control",
         "process-exit-negative",
         "Transition",

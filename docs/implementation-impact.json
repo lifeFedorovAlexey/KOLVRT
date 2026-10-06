@@ -1,200 +1,92 @@
 {
   "schema_version": 1,
-  "base_commit": "096977f9a434398130b6d18ddbd6cbba20f2116f",
+  "base_commit": "9cf87bccff19349d181a1d5a8b09a3ab4033249f",
   "files": [
     {
-      "path": "crates/kernel-core/src/process.rs",
-      "before_sha256_lf": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73",
-      "after_sha256_lf": "53f19c3658319b5908efdedca44c6b3c5d733f5c523f0ea52bf96f3110c6ed05",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "crates/kernel-core/tests/process_protocol.rs",
-      "before_sha256_lf": "edb0496a8b4d2e4b3b31d64967b8bfa13579b7e6f6eb01d514034c60c54157c5",
-      "after_sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
       "path": "crates/kernel/Cargo.toml",
-      "before_sha256_lf": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50",
-      "after_sha256_lf": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
+      "before_sha256_lf": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
+      "after_sha256_lf": "f5754d159c067d8fe5b6c4a92048212c97aebe2002cb5583dddd02428bbcb5fb",
       "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
     },
     {
       "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "before_sha256_lf": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648",
+      "after_sha256_lf": "24299caf432b0cebc32434a43d34489f8e3714446fdd95b12f3ecb9f9cea1413",
       "disposition": "existing-feature",
-      "reason": "Close the one-shot IRQ condition-to-WFI lost wakeup with masked observations and masked wait/service; complete preceding accesses before WFI; exercise both native entry modes through 32 actual deliveries and deterministic host interleavings. No timer deadline or expected witness is relaxed.",
-      "before_sha256_lf": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc",
-      "after_sha256_lf": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648"
-    },
-    {
-      "path": "crates/kernel/src/main.rs",
-      "before_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
-      "after_sha256_lf": "fceb8e992ba8f70fbd51de61a02f392e0a1d4915d3f0b9a2db7817d3f6a00183",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "crates/kernel/src/process.rs",
-      "before_sha256_lf": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
-      "after_sha256_lf": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "crates/kernel/src/process_workload.rs",
-      "disposition": "existing-feature",
-      "reason": "Separate correct same-VA tags from terminal outcomes after retained two-CPU BudgetExpired failures on 1486519. Keep finite probes bounded by eight actual timer quanta and the external watchdog; require exact exit/fault. Add strict native expired-at-entry and actual two-second unlimited-spinner deadline cases with owner release and frame reclamation. No production deadline or negative-control witness is waived.",
-      "before_sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
-      "after_sha256_lf": "93d3e9ea7c5981cf86509c64b2a832dec1ca5d53f09ff547c7bbc41bb89e2f5d"
+      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
-      "before_sha256_lf": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
-      "after_sha256_lf": "0835891513ee6be934eaad49499b479f8e5701ba15a3ba11ac8fab7aaad3fd0a",
+      "before_sha256_lf": "0835891513ee6be934eaad49499b479f8e5701ba15a3ba11ac8fab7aaad3fd0a",
+      "after_sha256_lf": "6e14830a34ebd3c7af13f6b8911688e959154a4dc353bbdd5bb65cb9ca7443e0",
       "disposition": "existing-feature",
-      "reason": "Use one shared absolute workload deadline and an independent existing coordination interval for completion publication. Preserve bounded publication failure and quiescent reclamation. Test-only native rendezvous forces pending CPU1 publication at zero workload deadline; reverting the separation reproduces the exact coordinator panic."
-    },
-    {
-      "path": "crates/kernel/src/scheduler/task.rs",
-      "before_sha256_lf": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5",
-      "after_sha256_lf": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
     },
     {
       "path": "crates/kernel/src/smp.rs",
-      "before_sha256_lf": "08b9a851296995e4db04efea39189d603f1e6fda3e4cc45d3be4a5e96a528628",
+      "before_sha256_lf": "b421343b4c2a4fab8c6cbce52a20ea56ae35a71a58ddd28732f39b47ca06c21c",
+      "after_sha256_lf": "0f585ca1e2982de66a6b045e271c1b73ed319696a57fa189e0d2ed7b62fa7d36",
       "disposition": "existing-feature",
-      "reason": "Use one shared absolute workload deadline and an independent existing coordination interval for completion publication. Preserve bounded publication failure and quiescent reclamation. Test-only native rendezvous forces pending CPU1 publication at zero workload deadline; reverting the separation reproduces the exact coordinator panic.",
-      "after_sha256_lf": "b421343b4c2a4fab8c6cbce52a20ea56ae35a71a58ddd28732f39b47ca06c21c"
-    },
-    {
-      "path": "crates/kernel/src/supervision.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401",
-      "disposition": "new-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "crates/kernel/src/supervision_workload.S",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
-      "disposition": "new-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
     },
     {
       "path": "crates/kernel/src/supervision_workload.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599",
-      "disposition": "new-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "crates/kernel/src/test_support/irq_wait.rs",
-      "before_sha256_lf": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
+      "before_sha256_lf": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599",
+      "after_sha256_lf": "73868af14eeb17328f79bcd6d5c47445316047684cc4f1cc60e3fa088616ec0a",
       "disposition": "existing-feature",
-      "reason": "Close the one-shot IRQ condition-to-WFI lost wakeup with masked observations and masked wait/service; complete preceding accesses before WFI; exercise both native entry modes through 32 actual deliveries and deterministic host interleavings. No timer deadline or expected witness is relaxed.",
-      "after_sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
-    },
-    {
-      "path": "crates/kernel/src/tests.rs",
-      "before_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
-      "after_sha256_lf": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
-      "disposition": "existing-feature",
-      "reason": "Close the one-shot IRQ condition-to-WFI lost wakeup with masked observations and masked wait/service; complete preceding accesses before WFI; exercise both native entry modes through 32 actual deliveries and deterministic host interleavings. No timer deadline or expected witness is relaxed."
+      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
     },
     {
       "path": "crates/xtask/src/main.rs",
-      "before_sha256_lf": "caa349117180e8ccd204747695933dc8a6e1a424ea78b891339be6ece403c885",
-      "after_sha256_lf": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1",
+      "before_sha256_lf": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1",
+      "after_sha256_lf": "0e39fc6444c73c70bcf36dee77a72c2beb1cf66d4c7789c8c8cc638049047ded",
       "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
     },
     {
       "path": "crates/xtask/src/matrix.rs",
-      "before_sha256_lf": "f74e946dbc3ed3de56d5155501f7fc35a0a812398076a3bc0803fb0e1c36e161",
-      "after_sha256_lf": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
+      "before_sha256_lf": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
+      "after_sha256_lf": "f3934e65d3932afe535f39ee3254424df857c84c3fa43d02a8b5d2e269715718",
       "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "crates/xtask/src/output.rs",
-      "before_sha256_lf": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff",
-      "after_sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "scripts/ci-timings.cjs",
-      "before_sha256_lf": "fe5a1d32bd128db3bd79fd5e77d60c66f9f8fd7658ede3a7fc6b50bc38a26d80",
-      "after_sha256_lf": "25a235b21da2994d8423b997967ce4bf4eeb207c0c2aaf0b69afcb54b4926caf",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "scripts/tests/ci-timings.test.cjs",
-      "before_sha256_lf": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
-      "after_sha256_lf": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
-      "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
-    },
-    {
-      "path": "crates/kernel/src/arch/aarch64/entry.S",
-      "before_sha256_lf": "9409ad577dc86cfb3c0581897415e56c99fcbefa6f7d64d97c9c908829ccabce",
-      "disposition": "existing-feature",
-      "reason": "Synchronize counter observations at trap entry and in the SIMD deadline fixture; retain strict completion/IRQ evidence and historical receipts. Arm Generic Timer section 4.1 is the architectural basis; no CI root-cause claim is inferred.",
-      "after_sha256_lf": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e"
+      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
     }
   ],
   "features": [
     {
       "id": "kolvrt.arena",
       "disposition": "evidence-change",
-      "reason": "Changed shared source/build inputs invalidate current-source applicability; preserve historical receipts and record exact-source verification freshness explicitly."
+      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
     },
     {
       "id": "kolvrt.ci.performance",
       "disposition": "semantic-change",
-      "reason": "Document the combined supervision/CI execution contract, complete control inventory and evidence limits; human architecture/EN-RU acceptance remains open."
+      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
     },
     {
       "id": "kolvrt.compatibility.manifests",
       "disposition": "evidence-change",
-      "reason": "Changed shared source/build inputs invalidate current-source applicability; preserve historical receipts and record exact-source verification freshness explicitly."
+      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
     },
     {
       "id": "kolvrt.cost-l.offline-queries",
       "disposition": "evidence-change",
-      "reason": "Changed shared source/build inputs invalidate current-source applicability; preserve historical receipts and record exact-source verification freshness explicitly."
+      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
     },
     {
       "id": "kolvrt.dependencies.hygiene",
       "disposition": "evidence-change",
-      "reason": "Changed shared source/build inputs invalidate current-source applicability; preserve historical receipts and record exact-source verification freshness explicitly."
+      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
     },
     {
       "id": "kolvrt.ipc.transport",
-      "disposition": "semantic-change",
-      "reason": "Document the combined supervision/CI execution contract, complete control inventory and evidence limits; human architecture/EN-RU acceptance remains open."
-    },
-    {
-      "id": "kolvrt.process.lifecycle",
-      "disposition": "semantic-change",
-      "reason": "Document the combined supervision/CI execution contract, complete control inventory and evidence limits; human architecture/EN-RU acceptance remains open."
-    },
-    {
-      "id": "kolvrt.security.domains",
       "disposition": "evidence-change",
-      "reason": "Changed shared source/build inputs invalidate current-source applicability; preserve historical receipts and record exact-source verification freshness explicitly."
+      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
     },
     {
       "id": "kolvrt.services.supervision",
       "disposition": "semantic-change",
-      "reason": "Document the combined supervision/CI execution contract, complete control inventory and evidence limits; human architecture/EN-RU acceptance remains open."
+      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
     }
   ]
 }

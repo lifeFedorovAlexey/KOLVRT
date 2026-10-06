@@ -112,6 +112,8 @@ The [dynamic lifecycle](processes.md) extends this foundation with vacant slots 
 
 ## Phase 3.6 lifecycle checkpoint
 
+Checkpoint completion publication uses a mandatory absolute coordination deadline independent of workload expiry, including checkpoint(None). Missing publication is a fatal failure with retained resources. Pending-copy continuation drainage is separately bounded. Only acquired completion and root/execution-owner quiescence permit membership changes. Scheduler deadline polling uses relaxed counter reads; context/accounting measurements keep ordered reads and trap-entry ISB.
+
 The experimental [supervisor](supervision.md) uses a separately scoped two-CPU checkpoint. Exact IPC waits, retry reasons and counters remain retained; pending copy continuations finish before namespace transfer. Each CPU restores its native root and releases running ownership before CPU0 changes membership. SGI-only traps cannot spend the checkpoint timer quantum before EL0 executes. A saved cursor continues only for its matching live process generation. Root detachment of a blocked peer does not authorize reclaim. The purpose of continuous IPC dispatch is preserved; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) is proposed with semantic/EN-RU acceptance pending.
 
 <!-- knowledge -->

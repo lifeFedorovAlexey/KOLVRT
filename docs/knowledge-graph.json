@@ -2048,6 +2048,11 @@
     },
     {
       "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/arch/aarch64/mod.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
       "to": "crates/kernel/src/main.rs",
       "type": "implemented_by"
     },
@@ -2064,6 +2069,11 @@
     {
       "from": "kolvrt.services.supervision",
       "to": "crates/kernel/src/scheduler/task.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/smp.rs",
       "type": "implemented_by"
     },
     {
@@ -2162,9 +2172,9 @@
     "crates/kernel-core/src/wait.rs": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
-    "crates/kernel/Cargo.toml": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
+    "crates/kernel/Cargo.toml": "f5754d159c067d8fe5b6c4a92048212c97aebe2002cb5583dddd02428bbcb5fb",
     "crates/kernel/src/arch/aarch64/entry.S": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e",
-    "crates/kernel/src/arch/aarch64/mod.rs": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648",
+    "crates/kernel/src/arch/aarch64/mod.rs": "24299caf432b0cebc32434a43d34489f8e3714446fdd95b12f3ecb9f9cea1413",
     "crates/kernel/src/boot_workload.rs": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6",
     "crates/kernel/src/handles.rs": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2",
     "crates/kernel/src/handles/testing.rs": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
@@ -2187,14 +2197,14 @@
     "crates/kernel/src/process.rs": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
     "crates/kernel/src/process_workload.rs": "93d3e9ea7c5981cf86509c64b2a832dec1ca5d53f09ff547c7bbc41bb89e2f5d",
     "crates/kernel/src/scheduler/local.rs": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
-    "crates/kernel/src/scheduler/mod.rs": "0835891513ee6be934eaad49499b479f8e5701ba15a3ba11ac8fab7aaad3fd0a",
+    "crates/kernel/src/scheduler/mod.rs": "6e14830a34ebd3c7af13f6b8911688e959154a4dc353bbdd5bb65cb9ca7443e0",
     "crates/kernel/src/scheduler/task.rs": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/security/testing.rs": "8153b6402505f0254132a17c2aa91279f4e35562390961519075e0d3d5243fe3",
-    "crates/kernel/src/smp.rs": "b421343b4c2a4fab8c6cbce52a20ea56ae35a71a58ddd28732f39b47ca06c21c",
+    "crates/kernel/src/smp.rs": "0f585ca1e2982de66a6b045e271c1b73ed319696a57fa189e0d2ed7b62fa7d36",
     "crates/kernel/src/supervision.rs": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401",
     "crates/kernel/src/supervision_workload.S": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
-    "crates/kernel/src/supervision_workload.rs": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599",
+    "crates/kernel/src/supervision_workload.rs": "73868af14eeb17328f79bcd6d5c47445316047684cc4f1cc60e3fa088616ec0a",
     "crates/kernel/src/test_support/irq_wait.rs": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2",
     "crates/kernel/src/tests.rs": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
@@ -2228,8 +2238,8 @@
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
-    "crates/xtask/src/main.rs": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1",
-    "crates/xtask/src/matrix.rs": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
+    "crates/xtask/src/main.rs": "0e39fc6444c73c70bcf36dee77a72c2beb1cf66d4c7789c8c8cc638049047ded",
+    "crates/xtask/src/matrix.rs": "f3934e65d3932afe535f39ee3254424df857c84c3fa43d02a8b5d2e269715718",
     "crates/xtask/src/output.rs": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
     "crates/xtask/src/routing_demo.rs": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
     "crates/xtask/src/timing.rs": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598",
@@ -2260,13 +2270,13 @@
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture-decisions/0025-bounded-native-ipc.md": "1d49df8c7b779bfc0cddb787a858178fd34afffe49698eacced38cf804df4dfd",
-    "docs/architecture-decisions/0026-el0-supervision.md": "b9d36aafae7609438eaa9b8a4d0f2bcb42bda073e50a70e7f31596d93a7d6c2e",
+    "docs/architecture-decisions/0026-el0-supervision.md": "10083f32be350883f1fcd7c41744b047e8e870f15f4858334f8f20f2d3a6da6c",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
     "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
-    "docs/architecture/compatibility-manifests.md": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
-    "docs/architecture/component-arena.md": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
-    "docs/architecture/dependency-hygiene.md": "8636f32b9ec277da8a92d17480e3fa83b7819655d7e713f79cfd901953fe4fe9",
+    "docs/architecture/compatibility-manifests.md": "0dbd9ee68c5f4e0cd6afd9a250f0705987c947b9bab3caed41b3f38f322362a7",
+    "docs/architecture/component-arena.md": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
+    "docs/architecture/dependency-hygiene.md": "9801390321b0df72092f1cc69610a5feaf4122a17773aff7f40a8bbbd793537b",
     "docs/architecture/first-native-slice.md": "da70ec18f6ea14cd67a35ae001762b801e28c464761eb9704511119fcbe04d3a",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
     "docs/architecture/ipc-phase35-review.md": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
@@ -2274,20 +2284,20 @@
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
-    "docs/ci/performance.md": "42a3eb4d0c95da09533392e1c6907acf2855ca2acc3016e595706494b9e39b8e",
+    "docs/ci/performance.md": "c7c1d009187ed5bbf8b223f07b6fe0c0aa4a601eb091971951b3b9655154ae02",
     "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
     "docs/kernel/domains.md": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+    "docs/kernel/ipc.md": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
     "docs/kernel/processes.md": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
-    "docs/kernel/scheduler.md": "ac8610919ad6368ad1d8f698a04ab82a105fb6c8a2ab539c3641d49e49ddd10e",
-    "docs/kernel/supervision.md": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
+    "docs/kernel/scheduler.md": "c44baeec138dc32acd80710a5865842abb97b8520052006a54bc91e940076edb",
+    "docs/kernel/supervision.md": "ea8315b414be0b5d7e901a4fe1fb249947dcfe271679e7fe0021af184ec6f725",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
     "docs/knowledge-enrollment.json": "d0883b3680410178d89a81907db2bd5b123ebc5678d1a1a14b7a6f1475a19fc0",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
-    "docs/research/cost-l-queries.md": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
+    "docs/research/cost-l-queries.md": "7ba2ae6aaa7d09b79f2ee36f6f5847d36c585357940d043f191b7323e8ed0cf9",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
@@ -2364,7 +2374,7 @@
     "scripts/tests/ci-timings.test.cjs": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "71bb12f82ba0db9a6ee5ada9c29e2568c1ecfbb84eaa55c67c810d8769a7b098",
+    "translations/manifest.json": "59d95b8f3acabf72cfe7a8488883cf0c69d1da358ced8903bab41cde96d29dcd",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2390,13 +2400,13 @@
     "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture-decisions/0025-bounded-native-ipc.md": "bf0baae8acb076f4ccccbd3c9dfb8b0488a32b3dfead3d0a83be3803935ee76a",
-    "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "2acf355c686558e872c66a43a9df36665fce264906a0747f5e54ddb273a564a1",
+    "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "38da43980f12e797aa3f9bec95f671e0b64555e89c72851d9b9bbf6ce755b9d3",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
     "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
-    "translations/ru/docs/architecture/compatibility-manifests.md": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3",
-    "translations/ru/docs/architecture/component-arena.md": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
-    "translations/ru/docs/architecture/dependency-hygiene.md": "bf955e6941a4bc8c06bd253d7506fce03bf90b1b8fdb5a8a918dc80bac2cfaf9",
+    "translations/ru/docs/architecture/compatibility-manifests.md": "ce70ba5ac3fbc83ad5315886a6acff5495db4d9b8ce0d8ef058d1d4deda14cfb",
+    "translations/ru/docs/architecture/component-arena.md": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
+    "translations/ru/docs/architecture/dependency-hygiene.md": "bd43404196cef5ea13feda0d2b45872adee9aeda0ffa9f2eff12ee0791478f8f",
     "translations/ru/docs/architecture/first-native-slice.md": "20dfab89806ded6d3a50a9b15b4a1d54b9f1116699d9f911186ba0fc48392fc8",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
     "translations/ru/docs/architecture/ipc-phase35-review.md": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074",
@@ -2404,19 +2414,19 @@
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
-    "translations/ru/docs/ci/performance.md": "bab5320065e101fa7003431f2fa34477964069256a30b1191dc679aad769d054",
+    "translations/ru/docs/ci/performance.md": "a5fbcf4df649539b69498e9ae3cf6e4301d03b643db0a92f53446662e141d4a4",
     "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
     "translations/ru/docs/kernel/domains.md": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+    "translations/ru/docs/kernel/ipc.md": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
     "translations/ru/docs/kernel/processes.md": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
-    "translations/ru/docs/kernel/scheduler.md": "83dac5a77051c625992e93a31d23c52ab2f5380da114d243f8121f36f8c8ec65",
-    "translations/ru/docs/kernel/supervision.md": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
+    "translations/ru/docs/kernel/scheduler.md": "40764ef41be5b4c5b5ede6717f854b60082b9b30866fdcf570077589f86359ea",
+    "translations/ru/docs/kernel/supervision.md": "ed51833485e401dedcbc324c6405d954fc81c29c851b64cd29002c14016e62fd",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
-    "translations/ru/docs/research/cost-l-queries.md": "f2f194afe3493b46da2e78baeef2ad2cf7ba0d1b68633b26a89f10e02b2e35c1",
+    "translations/ru/docs/research/cost-l-queries.md": "6ba8ba0ec2b60303e13d814e4510e6546898b193ddb82edb47627c0db688d6a0",
     "translations/ru/docs/research/host-survey.md": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
@@ -3338,7 +3348,7 @@
       "aliases": ["ADR-0026"],
       "document": "adr.0026",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6648,
+      "estimated_bytes": 6986,
       "evidence_scope": "re-derived Phase 3.6 architecture and experimental static workload; no production trust, persistent service or physical ARM64 acceptance.",
       "id": "adr.0026",
       "kind": "adr",
@@ -3352,15 +3362,15 @@
       },
       "locations": {
         "en": {
-          "end": 75,
+          "end": 77,
           "path": "docs/architecture-decisions/0026-el0-supervision.md",
-          "sha256": "b9d36aafae7609438eaa9b8a4d0f2bcb42bda073e50a70e7f31596d93a7d6c2e",
+          "sha256": "10083f32be350883f1fcd7c41744b047e8e870f15f4858334f8f20f2d3a6da6c",
           "start": 1
         },
         "ru": {
-          "end": 75,
+          "end": 77,
           "path": "translations/ru/docs/architecture-decisions/0026-el0-supervision.md",
-          "sha256": "2acf355c686558e872c66a43a9df36665fce264906a0747f5e54ddb273a564a1",
+          "sha256": "38da43980f12e797aa3f9bec95f671e0b64555e89c72851d9b9bbf6ce755b9d3",
           "start": 1
         }
       },
@@ -4475,7 +4485,7 @@
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 17605,
+      "estimated_bytes": 17655,
       "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
@@ -4491,13 +4501,13 @@
         "en": {
           "end": 252,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 1
         },
         "ru": {
           "end": 252,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 1
         }
       },
@@ -4577,7 +4587,7 @@
     "doc.kolvrt.architecture.compatibility-manifests": {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12571,
+      "estimated_bytes": 12621,
       "evidence_scope": "bounded host/CI declarations and synthetic regression fixtures; no loader, Linux driver support or deployed module acceptance.",
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
@@ -4593,13 +4603,13 @@
         "en": {
           "end": 151,
           "path": "docs/architecture/compatibility-manifests.md",
-          "sha256": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
+          "sha256": "0dbd9ee68c5f4e0cd6afd9a250f0705987c947b9bab3caed41b3f38f322362a7",
           "start": 1
         },
         "ru": {
           "end": 151,
           "path": "translations/ru/docs/architecture/compatibility-manifests.md",
-          "sha256": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3",
+          "sha256": "ce70ba5ac3fbc83ad5315886a6acff5495db4d9b8ce0d8ef058d1d4deda14cfb",
           "start": 1
         }
       },
@@ -4758,7 +4768,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 15653,
+      "estimated_bytes": 15921,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
@@ -4772,15 +4782,15 @@
       },
       "locations": {
         "en": {
-          "end": 144,
+          "end": 146,
           "path": "docs/ci/performance.md",
-          "sha256": "42a3eb4d0c95da09533392e1c6907acf2855ca2acc3016e595706494b9e39b8e",
+          "sha256": "c7c1d009187ed5bbf8b223f07b6fe0c0aa4a601eb091971951b3b9655154ae02",
           "start": 1
         },
         "ru": {
-          "end": 144,
+          "end": 146,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "bab5320065e101fa7003431f2fa34477964069256a30b1191dc679aad769d054",
+          "sha256": "a5fbcf4df649539b69498e9ae3cf6e4301d03b643db0a92f53446662e141d4a4",
           "start": 1
         }
       },
@@ -4792,7 +4802,7 @@
     "doc.kolvrt.dependencies.hygiene": {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12614,
+      "estimated_bytes": 12664,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
@@ -4808,13 +4818,13 @@
         "en": {
           "end": 132,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "8636f32b9ec277da8a92d17480e3fa83b7819655d7e713f79cfd901953fe4fe9",
+          "sha256": "9801390321b0df72092f1cc69610a5feaf4122a17773aff7f40a8bbbd793537b",
           "start": 1
         },
         "ru": {
           "end": 132,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "bf955e6941a4bc8c06bd253d7506fce03bf90b1b8fdb5a8a918dc80bac2cfaf9",
+          "sha256": "bd43404196cef5ea13feda0d2b45872adee9aeda0ffa9f2eff12ee0791478f8f",
           "start": 1
         }
       },
@@ -5106,7 +5116,7 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 24080,
+      "estimated_bytes": 24000,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
@@ -5122,13 +5132,13 @@
         "en": {
           "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 1
         },
         "ru": {
           "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 1
         }
       },
@@ -5208,7 +5218,7 @@
     "doc.kolvrt.kernel.scheduler": {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 16325,
+      "estimated_bytes": 16804,
       "evidence_scope": "Phase 3.0 ownership and Phase 3.1 bounded two-CPU process lifecycle; fixed affinity.",
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
@@ -5222,15 +5232,15 @@
       },
       "locations": {
         "en": {
-          "end": 126,
+          "end": 128,
           "path": "docs/kernel/scheduler.md",
-          "sha256": "ac8610919ad6368ad1d8f698a04ab82a105fb6c8a2ab539c3641d49e49ddd10e",
+          "sha256": "c44baeec138dc32acd80710a5865842abb97b8520052006a54bc91e940076edb",
           "start": 1
         },
         "ru": {
-          "end": 126,
+          "end": 128,
           "path": "translations/ru/docs/kernel/scheduler.md",
-          "sha256": "83dac5a77051c625992e93a31d23c52ab2f5380da114d243f8121f36f8c8ec65",
+          "sha256": "40764ef41be5b4c5b5ede6717f854b60082b9b30866fdcf570077589f86359ea",
           "start": 1
         }
       },
@@ -5242,7 +5252,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 16783,
+      "estimated_bytes": 19584,
       "evidence_scope": "experimental Phase 3.6 development fixture and bounded lifecycle implementation; acceptance review, production bootstrap trust and physical ARM64 remain pending.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -5256,15 +5266,15 @@
       },
       "locations": {
         "en": {
-          "end": 146,
+          "end": 156,
           "path": "docs/kernel/supervision.md",
-          "sha256": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
+          "sha256": "ea8315b414be0b5d7e901a4fe1fb249947dcfe271679e7fe0021af184ec6f725",
           "start": 1
         },
         "ru": {
-          "end": 148,
+          "end": 158,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
+          "sha256": "ed51833485e401dedcbc324c6405d954fc81c29c851b64cd29002c14016e62fd",
           "start": 1
         }
       },
@@ -5378,7 +5388,7 @@
     "doc.kolvrt.research.cost-l-queries": {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 12145,
+      "estimated_bytes": 12195,
       "evidence_scope": "bounded host queries over reciprocal registry/module declarations; production data, completeness and human acceptance remain open.",
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
@@ -5394,13 +5404,13 @@
         "en": {
           "end": 151,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
+          "sha256": "7ba2ae6aaa7d09b79f2ee36f6f5847d36c585357940d043f191b7323e8ed0cf9",
           "start": 1
         },
         "ru": {
           "end": 151,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "f2f194afe3493b46da2e78baeef2ad2cf7ba0d1b68633b26a89f10e02b2e35c1",
+          "sha256": "6ba8ba0ec2b60303e13d814e4510e6546898b193ddb82edb47627c0db688d6a0",
           "start": 1
         }
       },
@@ -5610,7 +5620,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
+            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
@@ -5640,13 +5650,13 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 7
         }
       },
@@ -5677,13 +5687,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 33
         }
       },
@@ -5712,13 +5722,13 @@
         "en": {
           "end": 80,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 63
         },
         "ru": {
           "end": 80,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 63
         }
       },
@@ -5747,13 +5757,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 19
         }
       },
@@ -5782,13 +5792,13 @@
         "en": {
           "end": 90,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 79
         },
         "ru": {
           "end": 90,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 79
         }
       },
@@ -5817,13 +5827,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 41
         }
       },
@@ -5852,13 +5862,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 55
         }
       },
@@ -5887,13 +5897,13 @@
         "en": {
           "end": 104,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+          "sha256": "3d03b5cfacd3def3947c1e9233de87d2a006eb125bd2a3a0425cbdd9286f1dba",
           "start": 89
         },
         "ru": {
           "end": 104,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+          "sha256": "e1e49da7c76a894cf47f41f71fd2c4a4061767105e5f01afda41d28e229fd8e1",
           "start": 89
         }
       },
@@ -6147,16 +6157,16 @@
       },
       "locations": {
         "en": {
-          "end": 12,
+          "end": 14,
           "path": "docs/ci/performance.md",
-          "sha256": "42a3eb4d0c95da09533392e1c6907acf2855ca2acc3016e595706494b9e39b8e",
-          "start": 7
+          "sha256": "c7c1d009187ed5bbf8b223f07b6fe0c0aa4a601eb091971951b3b9655154ae02",
+          "start": 9
         },
         "ru": {
-          "end": 12,
+          "end": 14,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "bab5320065e101fa7003431f2fa34477964069256a30b1191dc679aad769d054",
-          "start": 7
+          "sha256": "a5fbcf4df649539b69498e9ae3cf6e4301d03b643db0a92f53446662e141d4a4",
+          "start": 9
         }
       },
       "path": "docs/ci/performance.md",
@@ -6233,7 +6243,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
+            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
             "receipt": "research/results/issue47-compatibility-manifests.json",
             "receipt_sha256": "95766b2a15e17e5d3324ff9692e3f4c7ec2725e6971c0af8b249e1cfc113decb",
             "scope": "Host consistency and declaration boundary only; production-shaped artifacts are non-executable test bytes, not supported modules.",
@@ -6267,13 +6277,13 @@
         "en": {
           "end": 14,
           "path": "docs/architecture/compatibility-manifests.md",
-          "sha256": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
+          "sha256": "0dbd9ee68c5f4e0cd6afd9a250f0705987c947b9bab3caed41b3f38f322362a7",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/architecture/compatibility-manifests.md",
-          "sha256": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3",
+          "sha256": "ce70ba5ac3fbc83ad5315886a6acff5495db4d9b8ce0d8ef058d1d4deda14cfb",
           "start": 7
         }
       },
@@ -6366,7 +6376,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
+            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
             "receipt": "research/results/issue48-manifest-queries.json",
             "receipt_sha256": "c4b07aeddc7c6ae61f463ffbeadfb7b2c65d2ee73871dee39fa2eb1d7294514d",
             "scope": "Bounded host declaration/query consistency with synthetic non-executable production-shaped artifacts only; no observed runtime consumers or costs.",
@@ -6393,13 +6403,13 @@
         "en": {
           "end": 29,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
+          "sha256": "7ba2ae6aaa7d09b79f2ee36f6f5847d36c585357940d043f191b7323e8ed0cf9",
           "start": 7
         },
         "ru": {
           "end": 29,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "f2f194afe3493b46da2e78baeef2ad2cf7ba0d1b68633b26a89f10e02b2e35c1",
+          "sha256": "6ba8ba0ec2b60303e13d814e4510e6546898b193ddb82edb47627c0db688d6a0",
           "start": 7
         }
       },
@@ -6411,7 +6421,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12379,
+      "estimated_bytes": 12429,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "feature": {
         "acceptance": ["research/results/issue94-dependency-hygiene.json"],
@@ -6455,7 +6465,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
+            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
             "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
@@ -6482,13 +6492,13 @@
         "en": {
           "end": 132,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "8636f32b9ec277da8a92d17480e3fa83b7819655d7e713f79cfd901953fe4fe9",
+          "sha256": "9801390321b0df72092f1cc69610a5feaf4122a17773aff7f40a8bbbd793537b",
           "start": 7
         },
         "ru": {
           "end": 132,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "bf955e6941a4bc8c06bd253d7506fce03bf90b1b8fdb5a8a918dc80bac2cfaf9",
+          "sha256": "bd43404196cef5ea13feda0d2b45872adee9aeda0ffa9f2eff12ee0791478f8f",
           "start": 7
         }
       },
@@ -6866,13 +6876,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 58
         }
       },
@@ -6901,13 +6911,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 66
         }
       },
@@ -6936,13 +6946,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 58
         }
       },
@@ -6971,13 +6981,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 16
         }
       },
@@ -7006,13 +7016,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 34
         }
       },
@@ -7076,13 +7086,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 26
         }
       },
@@ -7111,13 +7121,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 58
         }
       },
@@ -7146,13 +7156,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 34
         }
       },
@@ -7257,13 +7267,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 76
         }
       },
@@ -7292,13 +7302,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 58
         }
       },
@@ -7334,7 +7344,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 23967,
+      "estimated_bytes": 23887,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "feature": {
         "acceptance": [
@@ -7431,7 +7441,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Routing stand run 37389265393 failed in stripped PROD boot after initial EL0 validation; no panic identity was retained. Stripped failures now retain source location and process/IPC check name without data/address disclosure. Full current-source verification is pending; historical complete receipts remain immutable.",
+            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64.",
@@ -7461,13 +7471,13 @@
         "en": {
           "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 4
         },
         "ru": {
           "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 4
         }
       },
@@ -7497,13 +7507,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 66
         }
       },
@@ -7532,13 +7542,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+          "sha256": "a8348dd721dde086b2f715ba7f0f827b1fda8869371e88d7cb07bd7569c28ec0",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+          "sha256": "f6bb15edaf5491a50dcdf6f2d321f3826827648f137287a8d45960a06a2632bc",
           "start": 66
         }
       },
@@ -9596,7 +9606,7 @@
         "acceptance": [],
         "adrs": ["adr.0026"],
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
         "issues": [27],
         "limitations": [
           "Development static manifest/image assurance only; production trust remains #38.",
@@ -9611,6 +9621,8 @@
           "crates/kernel/Cargo.toml",
           "crates/kernel/src/main.rs",
           "crates/kernel/src/process.rs",
+          "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/smp.rs",
           "crates/kernel/src/scheduler/mod.rs",
           "crates/kernel/src/scheduler/task.rs",
           "crates/kernel/src/supervision.rs",
@@ -9633,7 +9645,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Routing stand run 37389265393 failed in stripped PROD boot after initial EL0 validation; no panic identity was retained. Stripped failures now retain source location and process/IPC check name without data/address disclosure. Full current-source verification is pending; historical complete receipts remain immutable.",
+            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust.",
@@ -9660,13 +9672,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
+          "sha256": "ea8315b414be0b5d7e901a4fe1fb249947dcfe271679e7fe0021af184ec6f725",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
+          "sha256": "ed51833485e401dedcbc324c6405d954fc81c29c851b64cd29002c14016e62fd",
           "start": 13
         }
       },

@@ -34,6 +34,8 @@ Pre-created spares do not establish fresh allocation/restart identity or extingu
 
 ## Consequences
 
+Checkpoint publication must have an independent finite coordination deadline even without workload expiry. Timeout is fatal and retains resources; it never manufactures completion or permits reclaim. Workload expiry remains BudgetExpired and is not reused as a join duration. Pending-copy drainage must also have a finite failure bound.
+
 Lifecycle membership changes pause healthy peers at acquired checkpoints. Scope, authority credits and retained transport ownership remain explicit; failed quiescence requires quarantine or global stop, never deadline-based reclaim.
 
 ## Security impact

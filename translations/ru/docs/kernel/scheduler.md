@@ -112,6 +112,8 @@ Phase 3.1 завершает ограниченный внутренний жи�
 
 ## Lifecycle checkpoint Phase 3.6
 
+Публикация checkpoint completion использует обязательный absolute coordination deadline независимо от workload expiry, включая checkpoint(None). Отсутствие публикации — fatal failure с удержанием ресурсов. Drainage pending-copy continuation имеет отдельный bound. Изменение membership допускают только приобретённые completion и root/execution-owner quiescence. Scheduler deadline polling использует relaxed counter reads; context/accounting measurements сохраняют ordered reads и ISB при trap entry.
+
 Экспериментальный [supervisor](supervision.md) использует отдельно scoped checkpoint двух CPU. Exact IPC waits, retry reasons и counters удерживаются; pending copy continuations завершаются до namespace transfer. Каждый CPU восстанавливает native root и освобождает running ownership до изменения membership CPU0. SGI-only traps не расходуют checkpoint timer quantum до исполнения EL0. Saved cursor продолжается только для соответствующей живой process generation. Root detachment blocked peer не разрешает reclaim. Назначение continuous IPC dispatch сохраняется; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) имеет статус proposed, semantic/EN-RU acceptance ещё не завершена.
 
 <!-- knowledge -->
