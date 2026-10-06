@@ -117,10 +117,6 @@ pub fn exercise(
     );
     registry.start(fault).unwrap();
     registry.dispatch(None);
-    #[cfg(feature = "process-exit-negative")]
-    registry
-        .repeat_completion(first)
-        .unwrap_or_else(|error| process::reject(error));
     let old_completion = registry.completion(first).unwrap();
     report(
         "process_normal_exit_and_fault",
@@ -228,12 +224,6 @@ pub fn exercise(
         );
     }
     report("process_slot_generation_reuse", reuse_ok);
-    #[cfg(feature = "kernel-tests")]
-    assert_eq!(
-        registry.repeat_completion(new),
-        Err(Error::Transition),
-        "double exit accepted"
-    );
     let duplicate_start = registry.start(new) == Err(Error::Transition);
     // Completion is single-publication; a second table terminal transition is tested
     // in the shared host protocol, and a completed process is never dispatched again.
@@ -469,8 +459,8 @@ pub fn exercise(
             ),
         );
     }
-    // The mutation must report its deterministic mechanism violation before
-    // a stale translation can fail the dependent functional observation.
+    // Observe actual invalidation counters and same-VA isolation; this is
+    // invariant coverage, not detection of a source mutation.
     report("asid_reuse_requires_invalidation", reuse_invalidation);
     report(
         "asid_reuse_same_va_both_cpus",

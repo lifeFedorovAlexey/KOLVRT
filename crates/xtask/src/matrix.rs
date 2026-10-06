@@ -43,7 +43,6 @@ fn tasks() -> Vec<Task> {
             "--retained-mapping-control" => "retained-mapping-test",
             "--secondary-panic-control" => "secondary-panic-test",
             "--retirement-control" => "retirement-negative",
-            "--asid-reuse-control" => "asid-reuse-negative",
             _ => unreachable!("unknown registered negative control"),
         };
         tasks.push(control(false, flag, feature, Some(marker.to_owned()), None));
@@ -75,6 +74,25 @@ fn tasks() -> Vec<Task> {
 
 pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
     match flag {
+        "--checkpoint-publication-control" => Some(&[
+            "completion_publication_state_inputs",
+            "el0_smp_ownership",
+            "el0_quiescent_reclamation",
+        ]),
+        "--process-exit-control" => Some(&[
+            "process_duplicate_completion_rejected",
+            "process_terminal_rejections",
+            "process_normal_exit_and_fault",
+        ]),
+        "--process-rollback-control" => Some(&[
+            "process_creation_rollback",
+            "elf_creation_failure_is_transactional",
+        ]),
+        "--asid-reuse-control" => Some(&[
+            "asid_reuse_requires_invalidation",
+            "asid_reuse_same_va_both_cpus",
+            "asid_pool_exhaustion_both_cpus",
+        ]),
         "--user-retirement-control" => Some(&[
             "process_live_reclaim_rejected",
             "el0_quiescent_reclamation",
@@ -106,11 +124,22 @@ pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
     }
 }
 fn observable_task(flag: &str, prod: bool) -> Task {
+    let label = match flag {
+        "--shootdown-control" => "shootdown-invariants",
+        "--remote-tlbi-control" => "remote-tlbi-invariants",
+        "--asid-reuse-control" => "asid-reuse-invariants",
+        "--checkpoint-publication-control" => "completion-publication-state-inputs",
+        _ => flag,
+    };
     Task {
-        id: format!("{}-{flag}", if prod { "prod" } else { "dev" }),
+        id: format!("{}-{label}", if prod { "prod" } else { "dev" }),
         prod,
         tests: true,
         flag: Some(match flag {
+            "--checkpoint-publication-control" => "--checkpoint-publication-control",
+            "--process-exit-control" => "--process-exit-control",
+            "--process-rollback-control" => "--process-rollback-control",
+            "--asid-reuse-control" => "--asid-reuse-control",
             "--user-context-control" => "--user-context-control",
             "--user-retirement-control" => "--user-retirement-control",
             "--user-root-control" => "--user-root-control",
@@ -144,6 +173,9 @@ fn control(
     marker: Option<String>,
     ipc_test: Option<&'static str>,
 ) -> Task {
+    if observable_checks(flag).is_some() {
+        return observable_task(flag, prod);
+    }
     Task {
         id: format!("{}-{flag}", if prod { "prod" } else { "dev" }),
         prod,
@@ -155,8 +187,19 @@ fn control(
     }
 }
 
+fn coverage_kind(task: &Task) -> &'static str {
+    match task.flag {
+        None => "ordinary",
+        Some("--shootdown-control" | "--remote-tlbi-control" | "--asid-reuse-control") => {
+            "invariant"
+        }
+        Some(flag) if observable_checks(flag).is_some() => "negative-input",
+        _ => "legacy-failure",
+    }
+}
+
 fn describe(task: &Task) -> Value {
-    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test,"observable_checks":task.flag.and_then(observable_checks),"control_scope":if task.flag.and_then(observable_checks).is_some(){"real invalid inputs / observable invariants; no implementation mutation"}else{"legacy"}})
+    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test,"coverage_kind":coverage_kind(task),"observable_checks":task.flag.and_then(observable_checks),"control_scope":if matches!(task.flag, Some("--shootdown-control"|"--remote-tlbi-control"|"--asid-reuse-control")){"positive invariant coverage; not equivalent to missing ACK or skipped invalidation controls"}else if task.flag == Some("--checkpoint-publication-control"){"production Ownership UNIT invalid inputs; not a withheld remote publication SYSTEM test"}else if task.flag.and_then(observable_checks).is_some(){"real invalid inputs; no implementation mutation"}else{"legacy"}})
 }
 
 pub fn plan_document() -> Result<Value> {
@@ -245,23 +288,6 @@ fn execute_task(task: &Task) -> Result<Value> {
         }
         let witnessed = if task.feature == Some("irq-simd-restore-negative") {
             irq_context_failure(&read_json(format!("{artifact}.results.json"))?)?
-        } else if task.feature == Some("checkpoint-publication-negative") {
-            let events = read_json(format!("{artifact}.results.json"))?;
-            let events = events
-                .as_array()
-                .ok_or("checkpoint control events absent")?;
-            let held = events.iter().any(|event| {
-                event["event"] == "scheduler-reject"
-                    && event["error"] == "CheckpointPublicationHeld"
-                    && event["quiescent"] == true
-                    && event["status"] == "fail"
-            });
-            let bounded_failure = events.iter().any(|event| {
-                event["event"] == "scheduler-reject"
-                    && event["error"] == "CompletionPublicationTimeout"
-                    && event["status"] == "fail"
-            });
-            held && bounded_failure
         } else if let Some(test) = task.ipc_test {
             ipc_failure(&read_json(format!("{artifact}.results.json"))?, test)?
         } else {
@@ -366,7 +392,21 @@ mod tests {
         assert!(!irq_context_failure(&json!([failure,{"event":"irq-context","status":"fail","probe_result":0,"deliveries":0}])).unwrap());
     }
     #[test]
-    fn shards_partition_every_positive_and_negative_task_once() {
+    fn migrated_tasks_have_no_mutation_feature_or_failure_marker() {
+        let plan = tasks();
+        let migrated = plan
+            .iter()
+            .filter(|task| task.flag.and_then(observable_checks).is_some())
+            .collect::<Vec<_>>();
+        assert!(!migrated.is_empty());
+        for task in migrated {
+            assert!(task.feature.is_none());
+            assert!(task.marker.is_none());
+            assert!(task.ipc_test.is_none());
+        }
+    }
+    #[test]
+    fn shards_partition_every_required_task_once() {
         let plan = tasks();
         let expected = 4
             + NEGATIVE_CONTROLS.len()

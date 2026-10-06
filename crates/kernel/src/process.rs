@@ -960,13 +960,6 @@ impl Registry {
         }
         completed
     }
-    #[cfg(feature = "kernel-tests")]
-    pub fn repeat_completion(&mut self, id: ProcessId) -> Result<(), Error> {
-        context_contract()?;
-        let completion = self.table.completion(id)?;
-        self.table
-            .complete(id, completion.reason, scheduler::detached(id))
-    }
     pub fn completion(&self, id: ProcessId) -> Result<Completion, Error> {
         context_contract()?;
         self.table.completion(id)

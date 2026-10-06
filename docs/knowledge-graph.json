@@ -2602,7 +2602,7 @@
     "crates/kernel-core/src/wait.rs": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
-    "crates/kernel/Cargo.toml": "6b0ee13a99ad56f609fcb354cdab96977484d67d1a3d1cec5ef3ac1fb79396f3",
+    "crates/kernel/Cargo.toml": "967793c06c63743bfaef0497d05ade74d5a760d8798884d815ef17f3115c5852",
     "crates/kernel/build.rs": "57afe17f2335680941554dcc379b1b4827540194992c62c4ddef241d0a28ce11",
     "crates/kernel/src/arch/aarch64/context.rs": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c",
     "crates/kernel/src/arch/aarch64/entry.S": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c",
@@ -2630,8 +2630,8 @@
     "crates/kernel/src/memory/mod.rs": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0",
     "crates/kernel/src/native_boot.rs": "3661b97655d8781d34554af4ab5915ff82edf917d7d3320a05e46a35be3955f4",
     "crates/kernel/src/platform/config.rs": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196",
-    "crates/kernel/src/process.rs": "3c0858cf788362ea53838665ca6efa710616f09be8ae59ca0028e7819bcaecb4",
-    "crates/kernel/src/process_workload.rs": "59b7bcf96cd5a9c62bc9ca5b1071d00378e3b9a9b9bbf8dcb66af1aeb78b6b78",
+    "crates/kernel/src/process.rs": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810",
+    "crates/kernel/src/process_workload.rs": "fcf044ac6034d575ef664b953baedbaa2d92af1edab25a6b3925813290bc3b5a",
     "crates/kernel/src/scheduler/local.rs": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429",
     "crates/kernel/src/scheduler/mod.rs": "e0f10b225ca84304e07d78125db6a8655440a6d73bd07ef4df6490aa20dec95b",
     "crates/kernel/src/scheduler/task.rs": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df",
@@ -2644,7 +2644,7 @@
     "crates/kernel/src/sync/mod.rs": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
     "crates/kernel/src/test_support/arch_probes.S": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732",
     "crates/kernel/src/test_support/irq_wait.rs": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2",
-    "crates/kernel/src/tests.rs": "bb04e851d5ccf9fad8dc928baf12ac16dd27f847bef2d7de9ba6cd42714acefd",
+    "crates/kernel/src/tests.rs": "feb1c18e283ab71f8953ea4ff0ed881845d518626fda49b01c83b722359fd297",
     "crates/kernel/src/user_copy.rs": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0",
     "crates/kernel/src/user_copy/testing.rs": "2eba9dc02d0fe703998263017ed55bf04c12f50831f4e6368ede3508dbc1a0d3",
     "crates/migration-advisor/Cargo.toml": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968",
@@ -2676,8 +2676,8 @@
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
-    "crates/xtask/src/main.rs": "08700056a72f77f52d95347a9a00aaf7b2a94dd81e7d00705083993ff0b52af4",
-    "crates/xtask/src/matrix.rs": "13d4d25b20c5378ef729a022e69f6259bf871fb2c180ef90cb7c862b8f5a0c1b",
+    "crates/xtask/src/main.rs": "f7c3e601823f32eb6b03cba3603a02223980d450326b664f60365f33a940e4e5",
+    "crates/xtask/src/matrix.rs": "cd6f96bd5e9cc62610a025029eb54f0fa35415870ccd35094e39d9b72b888609",
     "crates/xtask/src/native_apps.rs": "c38c4edb0612931646a29ad5faa673029ac69afed99c9227511a409c14dccae5",
     "crates/xtask/src/output.rs": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
     "crates/xtask/src/routing_demo.rs": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
@@ -2724,13 +2724,13 @@
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
     "docs/architecture/supervision-phase36-acceptance-review.md": "a992e5e59504abee3970c88313c07bd65675cf022b201b19f7d6b248d5df2d82",
-    "docs/ci/performance.md": "fb1b40bf695c010c365a083f3de407c5a058151414deaf2a38d57b81d61a9da9",
+    "docs/ci/performance.md": "8406eac928ddd6ec449a55e734b8037231d03317865b4ce08275405981437c58",
     "docs/kernel/capabilities.md": "3c7dd3598f57105f9ddce610680d65e7d7fae0ca18778edb873f0903c7e1482e",
     "docs/kernel/domains.md": "201756a8f92c9c08343514171303254684367f75d5182690274a1c0209d3bbcf",
     "docs/kernel/handles.md": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "ad09129f11996560c78ed63c6a663c29b3d151552ed5dc58c76f4794d5eac299",
-    "docs/kernel/native-applications.md": "35890c77f4728c9d928302ae0e23889cd340381d5403db98ef73a844acf004e3",
+    "docs/kernel/native-applications.md": "cff68804e4dd6869e931110fa444136bd1a35c0595d0742b5099c433a3b5aa5f",
     "docs/kernel/processes.md": "be75f579f58fb581792f4cb51c5e415201c0875e6226f43c3ba75585374be632",
     "docs/kernel/scheduler.md": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
     "docs/kernel/supervision.md": "276e39e85e645939298a01257cb545cc57af30ddaf34b7f88ef85e4557d92ab7",
@@ -2823,7 +2823,7 @@
     "tests/native-apps/src/abi_steps.rs": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7",
     "tests/native-apps/src/lifecycle-client.rs": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677",
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
-    "translations/manifest.json": "3a28c5a2a4b55927c79700599645d7ea0b7829d8f433c188256c20b7dd06cb9e",
+    "translations/manifest.json": "eccfc77e59c72998339ba64ea75f1c2f6dc346a1e1e3f70cf3896ec8c926a007",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2864,13 +2864,13 @@
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
     "translations/ru/docs/architecture/supervision-phase36-acceptance-review.md": "b80b0a60b703f507810258768c8c1cfbe5e1c532a7ded4c2045c04bd9edb6861",
-    "translations/ru/docs/ci/performance.md": "0569adbae43ca0f5cae019bd3a5f724ae94a1d8862a2ffdbe8f0811891c67f0f",
+    "translations/ru/docs/ci/performance.md": "ebf667e0d81e69124a23506ff8459a8a34c94ea9c5ecfa8336e597c6ed8ff072",
     "translations/ru/docs/kernel/capabilities.md": "7f385fea7da46da0102ec9f2dca80bf1f11ad6cbf5f41f381e52ed0054707aa7",
     "translations/ru/docs/kernel/domains.md": "a192fa0f0ce29ac324bccc233261b97dd3a126b65585493a6db71eae86c19a7a",
     "translations/ru/docs/kernel/handles.md": "f3f66f391e13a75665c351c505ec0eef51b0176afab84a20bb08a36e30804c37",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "ad46a77f458d0f6569a6dfed065ae1253765d5825285665dd58561c7670293ce",
-    "translations/ru/docs/kernel/native-applications.md": "91e7bdb3a981ea049afc687a8d85dec022073a42586e9a810777a6bfcca6dc46",
+    "translations/ru/docs/kernel/native-applications.md": "2501522cc20470d8dfa26223f2aaef01fc9b4a2d5f3fd734aaf3542625b19578",
     "translations/ru/docs/kernel/processes.md": "b3e7b05910a6bd660aefe804e8bc7697524d0561b4deb12fd56afe08f05fa136",
     "translations/ru/docs/kernel/scheduler.md": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
     "translations/ru/docs/kernel/supervision.md": "4ef58f8855bb2e561ff54bfb7919d169905fd0eb10bb3fa9786bd4089024193e",
@@ -5219,7 +5219,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 18300,
+      "estimated_bytes": 17491,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
@@ -5235,13 +5235,13 @@
         "en": {
           "end": 150,
           "path": "docs/ci/performance.md",
-          "sha256": "fb1b40bf695c010c365a083f3de407c5a058151414deaf2a38d57b81d61a9da9",
+          "sha256": "8406eac928ddd6ec449a55e734b8037231d03317865b4ce08275405981437c58",
           "start": 1
         },
         "ru": {
           "end": 150,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "0569adbae43ca0f5cae019bd3a5f724ae94a1d8862a2ffdbe8f0811891c67f0f",
+          "sha256": "ebf667e0d81e69124a23506ff8459a8a34c94ea9c5ecfa8336e597c6ed8ff072",
           "start": 1
         }
       },
@@ -5635,7 +5635,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 16698,
+      "estimated_bytes": 17980,
       "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5649,15 +5649,15 @@
       },
       "locations": {
         "en": {
-          "end": 195,
+          "end": 199,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "35890c77f4728c9d928302ae0e23889cd340381d5403db98ef73a844acf004e3",
+          "sha256": "cff68804e4dd6869e931110fa444136bd1a35c0595d0742b5099c433a3b5aa5f",
           "start": 1
         },
         "ru": {
-          "end": 195,
+          "end": 199,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "91e7bdb3a981ea049afc687a8d85dec022073a42586e9a810777a6bfcca6dc46",
+          "sha256": "2501522cc20470d8dfa26223f2aaef01fc9b4a2d5f3fd734aaf3542625b19578",
           "start": 1
         }
       },
@@ -6219,13 +6219,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "35890c77f4728c9d928302ae0e23889cd340381d5403db98ef73a844acf004e3",
+          "sha256": "cff68804e4dd6869e931110fa444136bd1a35c0595d0742b5099c433a3b5aa5f",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "91e7bdb3a981ea049afc687a8d85dec022073a42586e9a810777a6bfcca6dc46",
+          "sha256": "2501522cc20470d8dfa26223f2aaef01fc9b4a2d5f3fd734aaf3542625b19578",
           "start": 7
         }
       },
@@ -6777,7 +6777,7 @@
         ],
         "adrs": ["adr.0006"],
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim.",
+        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending. Phase 3.7 adds a mandatory separate native workload for production-method UNIT tests, external ABI/SYSTEM scenarios, actual application smoke/runtime and original-source dependency closure proof. Matrix coverage distinguishes negative inputs, positive invariants and remaining legacy failures; this is correctness integration, not new CI speed acceptance.",
         "issues": [109],
         "limitations": [
           "Hosted cold/warm acceleration, cache service behavior and semantic/EN-RU review remain pending. No compiler-exclusive CPU attribution or retained QEMU observation replay is claimed; conservative impact scheduling cannot prove semantic completeness."
@@ -6837,13 +6837,13 @@
         "en": {
           "end": 14,
           "path": "docs/ci/performance.md",
-          "sha256": "fb1b40bf695c010c365a083f3de407c5a058151414deaf2a38d57b81d61a9da9",
+          "sha256": "8406eac928ddd6ec449a55e734b8037231d03317865b4ce08275405981437c58",
           "start": 9
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "0569adbae43ca0f5cae019bd3a5f724ae94a1d8862a2ffdbe8f0811891c67f0f",
+          "sha256": "ebf667e0d81e69124a23506ff8459a8a34c94ea9c5ecfa8336e597c6ed8ff072",
           "start": 9
         }
       },

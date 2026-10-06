@@ -59,19 +59,11 @@ const FOUNDATION_CONTROLS: &[(&str, &str, &str)] = &[(
 const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--checkpoint-publication-control",
-        "checkpoint-publication-negative",
+        "kernel-tests",
         "CompletionPublicationTimeout",
     ),
-    (
-        "--process-exit-control",
-        "process-exit-negative",
-        "Transition",
-    ),
-    (
-        "--process-rollback-control",
-        "process-rollback-negative",
-        "RollbackLeak",
-    ),
+    ("--process-exit-control", "kernel-tests", "Transition"),
+    ("--process-rollback-control", "kernel-tests", "RollbackLeak"),
     (
         "--process-unlink-control",
         "process-unlink-negative",
@@ -383,6 +375,8 @@ mod platform_config;
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 const TESTS: &[&str] = &[
     "boot_el1",
+    "completion_publication_state_inputs",
+    "process_duplicate_completion_rejected",
     "uart_mmio",
     "exception_vectors",
     "physical_discovery",
@@ -615,10 +609,6 @@ fn run() -> Result<()> {
             }
             for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative")] {
                 if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
-            }
-            if args.iter().any(|arg| arg == "--asid-reuse-control") {
-                let elf = build(false, true, Some("asid-reuse-negative"), true)?;
-                return execute(&elf, true, true);
             }
             if args.iter().any(|a| a == "--negative-control") {
                 let elf = build(false, true, Some("negative-test"), true)?;
@@ -1249,7 +1239,7 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
             }));
         }
     }
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (FOUNDATION_CONTROLS.len() + SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_negative_controls":IPC_CONTROLS.len()*2},"ipc_negative_controls":ipc_mutations,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"required_control_tasks":NEGATIVE_CONTROLS.len() + (FOUNDATION_CONTROLS.len() + SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_negative_controls":IPC_CONTROLS.len()*2,"coverage_kinds":matrix::plan_document()?["tasks"].as_array().unwrap().iter().fold(serde_json::Map::<String,Value>::new(), |mut counts, task| { let kind=task["coverage_kind"].as_str().unwrap(); let count=counts.get(kind).and_then(Value::as_u64).unwrap_or(0); counts.insert(kind.to_owned(), json!(count+1)); counts })},"ipc_negative_controls":ipc_mutations,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {

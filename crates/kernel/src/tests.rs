@@ -415,8 +415,49 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
                 == remote::LOCK_ITERATIONS * (percpu::CPUS.len() as u64 + 1),
     );
 }
+fn state_machine_inputs() {
+    use kernel_core::scheduling::ownership::{Error as OwnerError, Ownership, Phase};
+    let owner = Ownership::new(1, 0);
+    drop(owner.prepare(0, true, 1).unwrap());
+    owner.publish(0, true, 1).unwrap();
+    owner.start(1, true, 1).unwrap();
+    let access = owner.mutate(1, true, 1).unwrap();
+    let borrowed_rejected =
+        owner.complete(1, true, 1, true) == Err(OwnerError::Reentry) && !owner.completed();
+    drop(access);
+    let unquiescent_rejected = owner.complete(1, true, 1, false) == Err(OwnerError::NotQuiescent);
+    let inspection_rejected = owner.inspect(0, true, 1).err() == Some(OwnerError::WrongPhase);
+    let retained = owner.phase() == Phase::Running && owner.generation() == 1 && !owner.completed();
+    owner.complete(1, true, 1, true).unwrap();
+    report(
+        "completion_publication_state_inputs",
+        borrowed_rejected
+            && unquiescent_rejected
+            && inspection_rejected
+            && retained
+            && owner.completed(),
+    );
+    use kernel_core::process::{Error as ProcessError, Reason, State, Table};
+    let mut table = Table::<1>::new();
+    let id = table.reserve(0..1).unwrap();
+    table.prepared(id).unwrap();
+    table.start(id).unwrap();
+    table.complete(id, Reason::Exited(1), true).unwrap();
+    let saved = table.completion(id).unwrap();
+    let duplicate_rejected =
+        table.complete(id, Reason::Exited(2), true) == Err(ProcessError::Transition);
+    report(
+        "process_duplicate_completion_rejected",
+        duplicate_rejected
+            && table.completion(id) == Ok(saved)
+            && table.state(id) == Ok(State::Completed)
+            && table.live() == 1,
+    );
+}
+
 pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     TESTS_REPORTED.store(0, Ordering::Relaxed);
+    state_machine_inputs();
     report("boot_el1", cpu::el() == cpu::CURRENT_EL1);
     let uart = platform::uart(d);
     report(
