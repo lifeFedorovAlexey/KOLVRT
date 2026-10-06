@@ -43,7 +43,6 @@ fn tasks() -> Vec<Task> {
             "--retained-mapping-control" => "retained-mapping-test",
             "--secondary-panic-control" => "secondary-panic-test",
             "--retirement-control" => "retirement-negative",
-            "--user-retirement-control" => "user-retirement-negative",
             "--asid-reuse-control" => "asid-reuse-negative",
             _ => unreachable!("unknown registered negative control"),
         };
@@ -76,6 +75,11 @@ fn tasks() -> Vec<Task> {
 
 pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
     match flag {
+        "--user-retirement-control" => Some(&[
+            "process_live_reclaim_rejected",
+            "el0_quiescent_reclamation",
+            "process_terminal_rejections",
+        ]),
         "--user-context-control" => Some(&[
             "user_context_invalid_states_rejected",
             "el0_context_preservation",
@@ -108,6 +112,7 @@ fn observable_task(flag: &str, prod: bool) -> Task {
         tests: true,
         flag: Some(match flag {
             "--user-context-control" => "--user-context-control",
+            "--user-retirement-control" => "--user-retirement-control",
             "--user-root-control" => "--user-root-control",
             "--shootdown-control" => "--shootdown-control",
             "--remote-tlbi-control" => "--remote-tlbi-control",

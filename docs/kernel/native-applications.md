@@ -38,9 +38,10 @@ CI on exact 7d64fac stopped at user-context (shard 0), retirement (shard 1), sho
 | user-context     | valid_user_context rejects EL1 modes, AArch32 and masked IRQ; ordinary EL0 context preservation and timer switches        | No saved-frame corruption; validator + real round-trip checks        |
 | user-root        | actual EL0 reads of kernel/foreign memory fault; private-memory isolation and clean reclaim                               | Real forbidden accesses; no root-table sabotage                      |
 | shootdown        | live secondary reader keeps retirement pending; frame is not reused before ACK; release/reuse follows ACK                 | Observed retirement ordering; no forced missing ACK or timeout claim |
+| user-retirement  | Registry::reclaim rejects a live process; state and retained frames remain unchanged; eventual reclaim is checked         | Real public ownership API; no extraction of private frame            |
 | remote-tlbi      | acknowledged rejects a future generation; actual TLBI observer precedes ACK; access to retired mapping translation-faults | Instrumented test build; no skipped-TLBI mutation claim              |
 
-These four controls use ordinary kernel-tests builds and require every mapped test exactly once with status pass. Missing, duplicate, failed and unrelated observations are rejected. The task inventory is preserved. The four obsolete corruption features are removed. The ordinary suite now has 127 checks per profile. REMOTE_TLBI_COMPLETED is observation-only instrumentation in kernel-tests; this evidence is not byte-identical production-binary execution. The production supervisor crash-recovery acceptance remains incomplete.
+These controls use ordinary kernel-tests builds and require every mapped test exactly once with status pass. Missing, duplicate, failed and unrelated observations are rejected. The task inventory is preserved. The four obsolete corruption features are removed. The ordinary suite now has 128 checks per profile. REMOTE_TLBI_COMPLETED is observation-only instrumentation in kernel-tests; this evidence is not byte-identical production-binary execution. The production supervisor crash-recovery acceptance remains incomplete.
 
 ## Commands and evidence limits
 

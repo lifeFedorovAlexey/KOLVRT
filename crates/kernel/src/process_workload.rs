@@ -98,6 +98,14 @@ pub fn exercise(
         .reclaim(p, first)
         .unwrap_or_else(|error| process::reject(error));
     registry.start(first).unwrap();
+    let retained_frames = p.available();
+    let retained_state = registry.state(first);
+    report(
+        "process_live_reclaim_rejected",
+        registry.reclaim(p, first) == Err(Error::Transition)
+            && registry.state(first) == retained_state
+            && p.available() == retained_frames,
+    );
     #[cfg(feature = "process-start-negative")]
     registry
         .start(first)

@@ -440,6 +440,7 @@ const TESTS: &[&str] = &[
     "scheduler_generation_reuse",
     "process_registry_and_cpu_ownership",
     "process_preparation_and_admission",
+    "process_live_reclaim_rejected",
     "process_normal_exit_and_fault",
     "process_creation_rollback",
     "process_capacity_exhaustion",
@@ -612,7 +613,7 @@ fn run() -> Result<()> {
                     return execute(&elf, true, true);
                 }
             }
-            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--user-retirement-control", "user-retirement-negative")] {
+            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative")] {
                 if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
             }
             if args.iter().any(|arg| arg == "--asid-reuse-control") {

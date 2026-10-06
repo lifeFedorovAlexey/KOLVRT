@@ -38,9 +38,10 @@ CI на exact 7d64fac остановился на user-context (shard 0), retire
 | user-context         | valid_user_context отвергает режимы EL1, AArch32 и masked IRQ; обычные EL0 context preservation и timer switches                     | Нет повреждения saved frame; validator + реальные round-trip checks              |
 | user-root            | настоящие EL0 reads kernel/foreign memory приводят к fault; private-memory isolation и clean reclaim                                 | Настоящие запрещённые accesses; нет sabotage root tables                         |
 | shootdown            | живой secondary reader сохраняет pending retirement; frame не переиспользуется до ACK; release/reuse следуют за ACK                  | Наблюдаемый retirement ordering; нет намеренно потерянного ACK или timeout claim |
+| user-retirement      | Registry::reclaim отвергает живой process; state и удержанные frames не меняются; окончательное reclamation проверено                | Настоящий public ownership API; private frame не извлекается                     |
 | remote-tlbi          | acknowledged отвергает будущую generation; настоящий TLBI observer предшествует ACK; access к retired mapping даёт translation fault | Instrumented test build; нет skipped-TLBI mutation claim                         |
 
-Эти четыре controls используют обычную kernel-tests сборку и требуют каждую mapped test ровно один раз со status pass. Missing, duplicate, failed и unrelated observations отвергаются. Task inventory сохранён. Четыре старые corruption features удалены. Обычный suite теперь содержит 127 checks на profile. REMOTE_TLBI_COMPLETED — только observation instrumentation в kernel-tests; эта evidence не является byte-identical production-binary execution. Acceptance crash-recovery production supervisor остаётся незавершённой.
+Эти controls используют обычную kernel-tests сборку и требуют каждую mapped test ровно один раз со status pass. Missing, duplicate, failed и unrelated observations отвергаются. Task inventory сохранён. Четыре старые corruption features удалены. Обычный suite теперь содержит 128 checks на profile. REMOTE_TLBI_COMPLETED — только observation instrumentation в kernel-tests; эта evidence не является byte-identical production-binary execution. Acceptance crash-recovery production supervisor остаётся незавершённой.
 
 ## Команды и пределы evidence
 
