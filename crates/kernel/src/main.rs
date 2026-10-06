@@ -154,10 +154,14 @@ pub extern "C" fn kernel_main() -> ! {
         process_workload::exercise(&mut physical, &mut processes, |name, passed| {
             if !passed {
                 event!("{{\"event\":\"test\",\"name\":\"{name}\",\"status\":\"fail\"}}");
+                diagnostics::status("FAIL", "process", format_args!("{name}"));
             }
             assert!(passed, "process workload check failed: {name}");
         });
         ipc_workload::exercise(&mut physical, &mut processes, |name, passed| {
+            if !passed {
+                diagnostics::status("FAIL", "IPC", format_args!("{name}"));
+            }
             assert!(passed, "IPC workload check failed: {name}");
         });
         #[cfg(feature = "ipc-benchmark")]
@@ -284,7 +288,19 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
         "{{\"event\":\"panic\",\"status\":\"fail\",\"line\":{}}}",
         info.location().map_or(0, |location| location.line())
     );
-    diagnostics::status("FAIL", "panic", format_args!("kernel halted"));
+    if let Some(location) = info.location() {
+        diagnostics::status(
+            "FAIL",
+            "panic",
+            format_args!("kernel halted at {}:{}", location.file(), location.line()),
+        );
+    } else {
+        diagnostics::status(
+            "FAIL",
+            "panic",
+            format_args!("kernel halted; location unavailable"),
+        );
+    }
     #[cfg(feature = "diagnostics")]
     if let Some(location) = info.location() {
         diagnostics::status(

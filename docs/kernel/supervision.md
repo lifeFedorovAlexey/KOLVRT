@@ -46,6 +46,8 @@ Under accepted load, the service sends a commit acknowledgement over its exact-i
 
 ## Verification and next gate
 
+The later routing run 37389265393 failed in stripped PROD after initial EL0 validation while all kernel shards passed. Twenty-four exact-ELF replays did not reproduce the panic. Minimal failure identity now remains visible without machine-events/diagnostics: static process/IPC check names and panic source file/line, with no private data or addresses. This improves diagnosis; it does not establish a fix of that intermittent failure. Current-source verification remains STALE until the new stand run.
+
 The retained [exact-source execution receipt](../../research/results/supervision-phase36.json) records 125 DEV and 125 PROD checks, both non-test boots and 136 rejected control runs. Its ten supervisor-specific runs are included in the 56 IPC/supervision controls. The latest source set verifies dependency denial, unpublished quota rollback and a commitment-aware shutdown handshake as well as actual Terminated distinct from BudgetExpired; earlier snapshots remain immutable. Technical QEMU verification does not complete proposed architecture or human EN/RU acceptance.
 
 The real images check eight scenario groups: ordered normal startup; missing dependency and forged grant selector; irreversible seal, unused launch-grant extinction, instance-credit exhaustion, unsupported-version and repeated launch denial; forged readiness denial; crash, fresh restart and stale binding denial; startup timeout; bounded restart storm and healthy peer progress; shutdown under committed load. A bitmap is returned by EL0 control flow and checked together with actual process completion, released CPU owners, zero live domains/processes and restored physical page count. It does not replace source review.
@@ -116,8 +118,8 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Stand run 37386934314 passed all 140 exact-source tasks: 125 checks per DEV/PROD profile, both boots and 136 negative controls, including 56 exact IPC/supervision witnesses. ASID/revocation events and ELF/source digests independently checked. This is bounded run evidence, not proof of general race-freedom or human supervision acceptance.",
+            "state": "STALE",
+            "reason": "Routing stand run 37389265393 failed in stripped PROD boot after initial EL0 validation; no panic identity was retained. Stripped failures now retain source location and process/IPC check name without data/address disclosure. Full current-source verification is pending; historical complete receipts remain immutable.",
             "receipt": "research/results/supervision-phase36.json",
             "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

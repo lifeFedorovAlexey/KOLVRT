@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "75f19210607151edd35b5f0b296187ef9725051c675c8040e62160d410e08c7f",
-        "translation_sha256": "0b6219f9678df657edd29fc926e735df44912734f18b3a0fc733c10c709962d8"
+        "source_sha256": "c4e48e8646a412f723602267b312b93aebd7ab419500c6337aa9d85b8d2f8ab9",
+        "translation_sha256": "b124de147b2532e4662828676ffeddae80f1a2021fa72d7108141bff7ba5307e"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -290,8 +290,8 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "cc5bf616b71f80ebafe1e6975161b2bae89a60a9e56b3e9c48c3c1002b919ae3",
-        "translation_sha256": "1924fd485f683acd9ea466295dda2679a46c4d3ade2b92f8161c504ceb9ec595"
+        "source_sha256": "2f61bf4f9f3bb4539f3f04d2c4fde4f61d2f0b08b3f2872b95b02fd4f8c97325",
+        "translation_sha256": "2721d436af8ec8522fce2de349eb080ff835aed7124954347141da497de9894e"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
@@ -314,8 +314,8 @@
         "translation_sha256": "9ef274dbc4904641b2b4511e475f643a1587f137b6f96e962481c823ac70c5db"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "790da467d55116e74d5cb66479354ed9c7c86ad652c4269d63e20ce0f1ec226a",
-        "translation_sha256": "352916b48563c2ee4e897c1469deb8808afd48e4107463131d645d02c4e27ded"
+        "source_sha256": "5b6faf274a85894ed1663c5cd1d99ad9a4f52d4cfc989008bdd95b4e9e281251",
+        "translation_sha256": "5b345ffae13ce3786d97badfc5d8b02b83bfd56fe2e1b583a7248ddb6f4e608a"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",

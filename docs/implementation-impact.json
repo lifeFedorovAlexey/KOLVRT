@@ -33,7 +33,7 @@
     {
       "path": "crates/kernel/src/main.rs",
       "before_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
-      "after_sha256_lf": "0b135621d47beaf5a63813c2217306b8e2bad89ce5389aca1fea7b6458a726f9",
+      "after_sha256_lf": "61c9f3ec61b10a164b32cb4579ac8015525acfeabb76899b90a4f7e387f51970",
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
