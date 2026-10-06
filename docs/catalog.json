@@ -906,7 +906,7 @@
     {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 9782,
+      "estimated_bytes": 10227,
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "path": "docs/kernel/capabilities.md",
@@ -916,7 +916,7 @@
     {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 14102,
+      "estimated_bytes": 14533,
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
       "path": "docs/kernel/domains.md",
@@ -926,7 +926,7 @@
     {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 19665,
+      "estimated_bytes": 20315,
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
       "path": "docs/kernel/handles.md",
@@ -936,7 +936,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 24286,
+      "estimated_bytes": 25477,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -956,7 +956,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 20037,
+      "estimated_bytes": 21559,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -996,7 +996,7 @@
     {
       "document": "doc.kolvrt.kernel.user-copy",
       "document_status": "CURRENT",
-      "estimated_bytes": 16670,
+      "estimated_bytes": 17305,
       "id": "doc.kolvrt.kernel.user-copy",
       "kind": "subsystem-contract",
       "path": "docs/kernel/user-copy.md",
@@ -1651,7 +1651,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 24173,
+      "estimated_bytes": 25364,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
@@ -1763,7 +1763,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.user-copy",
       "document_status": "CURRENT",
-      "estimated_bytes": 5077,
+      "estimated_bytes": 5712,
       "id": "kolvrt.memory.user-copy.limits",
       "kind": "contract-section",
       "path": "docs/kernel/user-copy.md",
@@ -2141,7 +2141,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6974,
+      "estimated_bytes": 7405,
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
       "path": "docs/kernel/domains.md",
@@ -2160,7 +2160,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 8089,
+      "estimated_bytes": 8534,
       "id": "kolvrt.security.event-revocation",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",

@@ -123,83 +123,83 @@ const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
 const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--handle-generation-control",
-        "handle-generation-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-owner-control",
-        "handle-owner-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-type-control",
-        "handle-type-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-reuse-control",
-        "handle-reuse-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-retirement-control",
-        "handle-retirement-negative",
+        "kernel-tests",
         "\"event\":\"handle-retirement-reject\",\"status\":\"fail\"",
     ),
     (
         "--handle-transfer-rights-control",
-        "handle-transfer-rights-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
 ];
 const SECURITY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--domain-budget-control",
-        "domain-budget-negative",
+        "kernel-tests",
         "\"name\":\"domain_memory_budget_enforced\",\"status\":\"fail\"",
     ),
     (
         "--domain-identity-control",
-        "domain-identity-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
     (
         "--domain-teardown-control",
-        "domain-teardown-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
     (
         "--capability-revoke-control",
-        "capability-revoke-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
     (
         "--capability-scope-control",
-        "capability-scope-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
 ];
 const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--user-copy-snapshot-control",
-        "user-copy-snapshot-negative",
+        "kernel-tests",
         "\"name\":\"user_copy_el0_boundary_and_snapshot\",\"status\":\"fail\"",
     ),
     (
         "--user-copy-recovery-control",
-        "user-copy-recovery-negative",
+        "kernel-tests",
         "\"event\":\"fatal\"",
     ),
 ];
 const IPC_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--supervision-authority-control",
-        "supervision-authority-negative",
+        "kernel-tests",
         "supervision:Scenario",
     ),
     (
         "--supervision-stale-control",
-        "supervision-stale-negative",
+        "kernel-tests",
         "supervision:Scenario",
     ),
     (
@@ -214,122 +214,122 @@ const IPC_CONTROLS: &[(&str, &str, &str)] = &[
     ),
     (
         "--supervision-wait-control",
-        "supervision-wait-negative",
+        "kernel-tests",
         "supervision:WaitIdentityLost",
     ),
     (
         "--ipc-request-generation-control",
-        "ipc-request-generation-negative",
+        "kernel-tests",
         "ipc_payload_snapshot_result_id_and_stress",
     ),
     (
         "--ipc-double-charge-release-control",
-        "ipc-double-charge-release-negative",
+        "kernel-tests",
         "reject:ChargeAlreadyReleased",
     ),
     (
         "--ipc-storage-scope-control",
-        "ipc-storage-scope-negative",
+        "ipc-storage-scope-input",
         "reject:StorageInsideScheduler",
     ),
     (
         "--ipc-duplicate-ready-control",
-        "ipc-duplicate-ready-negative",
+        "ipc-duplicate-ready-input",
         "reject:DuplicateReady",
     ),
     (
         "--ipc-wrong-process-wake-control",
-        "ipc-wrong-process-wake-negative",
+        "ipc-wrong-process-wake-input",
         "reject:WrongProcessWake",
     ),
     (
         "--ipc-blocked-reclaim-control",
-        "ipc-blocked-reclaim-negative",
+        "ipc-blocked-reclaim-input",
         "reject:BlockedTaskReclaim",
     ),
     (
         "--ipc-wake-generation-control",
-        "ipc-wake-generation-negative",
+        "kernel-tests",
         "reject:WakeGenerationAccepted",
     ),
     (
         "--ipc-wait-recheck-control",
-        "ipc-wait-recheck-negative",
+        "kernel-tests",
         "reject:WaitRegistrationLost",
     ),
     (
         "--ipc-wake-publication-control",
-        "ipc-wake-publication-negative",
+        "kernel-tests",
         "reject:WakePublicationLost",
     ),
     (
         "--ipc-service-token-control",
-        "ipc-service-token-negative",
+        "kernel-tests",
         "ipc_el0_cpu0_to_cpu1",
     ),
     (
         "--ipc-charge-release-control",
-        "ipc-charge-release-negative",
+        "kernel-tests",
         "ipc_deadline_before_effect",
     ),
     (
         "--ipc-teardown-control",
-        "ipc-teardown-negative",
-        "reject:EndpointNotQuiescent",
+        "ipc-teardown-input",
+        "assertion:EndpointDrop",
     ),
     (
         "--ipc-cancel-control",
-        "ipc-cancel-negative",
+        "kernel-tests",
         "ipc_cancel_before_commit",
     ),
     (
         "--ipc-service-death-control",
-        "ipc-service-death-negative",
+        "kernel-tests",
         "ipc_service_death_queued",
     ),
     (
         "--ipc-double-terminal-control",
-        "ipc-double-terminal-negative",
+        "kernel-tests",
         "ipc_payload_snapshot_result_id_and_stress",
     ),
     (
         "--ipc-capacity-control",
-        "ipc-capacity-negative",
+        "kernel-tests",
         "ipc_queue_full_fifo_and_reclamation",
     ),
     (
         "--ipc-fifo-control",
-        "ipc-fifo-negative",
+        "kernel-tests",
         "ipc_queue_full_fifo_and_reclamation",
     ),
     (
         "--ipc-id-reuse-control",
-        "ipc-id-reuse-negative",
+        "kernel-tests",
         "ipc_payload_snapshot_result_id_and_stress",
     ),
     (
         "--ipc-receive-copy-control",
-        "ipc-receive-copy-negative",
+        "kernel-tests",
         "ipc_receive_copy_failure_retains_queue",
     ),
     (
         "--ipc-collect-copy-control",
-        "ipc-collect-copy-negative",
+        "kernel-tests",
         "ipc_collect_copy_failure_retains_result",
     ),
     (
         "--ipc-send-rights-control",
-        "ipc-send-rights-negative",
+        "kernel-tests",
         "ipc_authority_denial_revoke_and_retention",
     ),
     (
         "--ipc-revoke-control",
-        "ipc-revoke-negative",
+        "kernel-tests",
         "ipc_authority_denial_revoke_and_retention",
     ),
     (
         "--ipc-deadline-control",
-        "ipc-deadline-negative",
+        "kernel-tests",
         "ipc_deadline_before_effect",
     ),
 ];
@@ -340,6 +340,9 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 const TESTS: &[&str] = &[
     "boot_el1",
     "completion_publication_state_inputs",
+    "ipc_mailbox_publication_and_generation_guards",
+    "ipc_duplicate_terminal_retains_outcome_and_charges",
+    "ipc_service_token_invalid_caller_rejected",
     "scheduler_foreign_cpu_rejected",
     "scheduler_unmasked_access_rejected",
     "scheduler_reentry_rejected",
@@ -441,6 +444,7 @@ const TESTS: &[&str] = &[
     "handle_el0_transfer_transaction_attenuation",
     "handle_el0_identity_type_generation_and_lifetime",
     "handle_exit_fault_cleanup_and_process_reuse",
+    "handle_retirement_invalid_owner_rejected",
     "domain_memory_budget_enforced",
     "domain_el0_request_and_queue_budgets",
     "ipc_el0_cpu0_to_cpu1",
@@ -1188,39 +1192,17 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let mut ipc_mutations = Vec::new();
-    for profile in ["dev", "prod"] {
-        for &(flag, feature, expected) in IPC_CONTROLS {
-            let sidecar = read_json(format!("target/kernel/{profile}-{feature}.results.json"))?;
-            let failures: Vec<_> = sidecar
-                .as_array()
-                .ok_or("IPC sidecar is not an event list")?
-                .iter()
-                .filter(|event| {
-                    event["status"] == "fail"
-                        && ((event["event"] == "test" && event["name"] == expected)
-                            || expected.strip_prefix("reject:").is_some_and(|error| {
-                                event["event"] == "ipc-reject" && event["error"] == error
-                            })
-                            || expected.strip_prefix("supervision:").is_some_and(|error| {
-                                event["event"] == "supervision-reject" && event["error"] == error
-                            }))
-                })
-                .cloned()
-                .collect();
-            if failures.is_empty() {
-                return Err("IPC exact rejection missing during archival".into());
-            }
-            ipc_mutations.push(json!({
-                "profile":profile,"flag":flag,"feature":feature,"expected":expected,
-                "status":"rejected",
-                "exact_rejections":failures,
-                "build":read_json(format!("target/kernel/{profile}-{feature}-build.json"))?,
-                "run":read_json(format!("target/kernel/{profile}-{feature}.run.json"))?
-            }));
-        }
+    let matrix_execution = read_json("target/kernel/matrix-execution.json")?;
+    let expected_plan = matrix::plan_document()?;
+    if matrix_execution["plan"] != expected_plan
+        || matrix_execution["scope"] != "complete serial matrix"
+        || matrix_execution["plan"]["source_files"] != *starting_sources
+        || matrix_execution["completed"].as_array().map(Vec::len)
+            != expected_plan["tasks"].as_array().map(Vec::len)
+    {
+        return Err("current complete matrix execution receipt required for archival".into());
     }
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"required_control_tasks":NEGATIVE_CONTROLS.len() + (FOUNDATION_CONTROLS.len() + SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_negative_controls":IPC_CONTROLS.len()*2,"coverage_kinds":matrix::plan_document()?["tasks"].as_array().unwrap().iter().fold(serde_json::Map::<String,Value>::new(), |mut counts, task| { let kind=task["coverage_kind"].as_str().unwrap(); let count=counts.get(kind).and_then(Value::as_u64).unwrap_or(0); counts.insert(kind.to_owned(), json!(count+1)); counts })},"ipc_negative_controls":ipc_mutations,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"required_control_tasks":NEGATIVE_CONTROLS.len() + (FOUNDATION_CONTROLS.len() + SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_control_tasks":IPC_CONTROLS.len()*2,"coverage_kinds":matrix::plan_document()?["tasks"].as_array().unwrap().iter().fold(serde_json::Map::<String,Value>::new(), |mut counts, task| { let kind=task["coverage_kind"].as_str().unwrap(); let count=counts.get(kind).and_then(Value::as_u64).unwrap_or(0); counts.insert(kind.to_owned(), json!(count+1)); counts })},"matrix_execution":matrix_execution,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {
@@ -1431,54 +1413,6 @@ fn enforce_native_source(source: &str) -> Result<()> {
 
 #[cfg(test)]
 mod native_architecture_tests {
-    use serde_json::json;
-    #[test]
-    fn snapshot_and_handle_controls_require_the_expected_failure_not_a_pass_then_panic() {
-        for &(flag, _, marker) in super::USER_COPY_CONTROLS
-            .iter()
-            .chain(super::HANDLE_CONTROLS.iter())
-        {
-            if flag == "--user-copy-recovery-control" {
-                continue; // Recovery deliberately causes a fatal architectural exception.
-            }
-            let (event, name) = if flag == "--handle-retirement-control" {
-                ("handle-retirement-reject", None)
-            } else if flag == "--user-copy-snapshot-control" {
-                ("test", Some("user_copy_el0_boundary_and_snapshot"))
-            } else {
-                (
-                    "test",
-                    Some("handle_el0_identity_type_generation_and_lifetime"),
-                )
-            };
-            let mut expected = json!({"event":event,"status":"fail"});
-            if let Some(name) = name {
-                expected["name"] = json!(name);
-            }
-            assert!(
-                expected.to_string().contains(marker),
-                "missing precise failure marker: {flag}"
-            );
-            expected["status"] = json!("pass");
-            let unrelated = format!(
-                "{expected}\n{}",
-                json!({"event":"panic","status":"fail","message":"unrelated"})
-            );
-            assert!(
-                !unrelated.contains(marker),
-                "pass then unrelated panic accepted: {flag}"
-            );
-            expected["status"] = json!("fail");
-            expected["event"] = json!("unrelated");
-            if name.is_some() {
-                expected["name"] = json!("unrelated_test");
-            }
-            assert!(
-                !expected.to_string().contains(marker),
-                "unrelated failure accepted: {flag}"
-            );
-        }
-    }
     #[test]
     fn reject_legacy_types_imports_and_conditionals() {
         for code in [

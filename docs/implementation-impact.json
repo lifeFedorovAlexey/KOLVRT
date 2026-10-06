@@ -122,6 +122,13 @@
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
+      "path": "crates/kernel-core/Cargo.toml",
+      "before_sha256_lf": "92332d431593d27f87b094500d28614b79f39567cf8d948b6feea168be270e86",
+      "after_sha256_lf": "dbeb6358918b8a690af305f32609c0879346d041406f6c799467dc082c5ec362",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
+    },
+    {
       "path": "crates/kernel-core/src/domain.rs",
       "before_sha256_lf": "58625f331d38ae932646be0594c50cac9b6efe42aed1bc8b4fa3c20622ca3125",
       "after_sha256_lf": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788",
@@ -173,7 +180,7 @@
     {
       "path": "crates/kernel/Cargo.toml",
       "before_sha256_lf": "f5754d159c067d8fe5b6c4a92048212c97aebe2002cb5583dddd02428bbcb5fb",
-      "after_sha256_lf": "a6056f18142d5f47333521861227113125c5a94884f30976e0f0f3b51b14a087",
+      "after_sha256_lf": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -222,7 +229,7 @@
     {
       "path": "crates/kernel/src/handles/testing.rs",
       "before_sha256_lf": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
-      "after_sha256_lf": "a3860a85609994ccb0d2b8bf8a2fa399cf335b7fda498b70db0d2fcd5ba7b96b",
+      "after_sha256_lf": "10896a336d12aa9b43bdd3d71c0fd48a1a580aa0aa3488fd73be7673e5a96fa4",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -306,7 +313,7 @@
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
       "before_sha256_lf": "6e14830a34ebd3c7af13f6b8911688e959154a4dc353bbdd5bb65cb9ca7443e0",
-      "after_sha256_lf": "c3d7b8fd26234db3755138b9e0534d0c40e2a0d5e9e31cf1366566753189de56",
+      "after_sha256_lf": "f5867cf92fbb257970e2ba7d9de81a6f812b2f398c298e4376912dd57391ed9d",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -367,16 +374,23 @@
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
+      "path": "crates/kernel/src/test_support/ipc_inputs.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f9e598fecb2e6a7034fa9555f71b4c5ad0506f3cf43204dc85b0890f359a1a1b",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
+    },
+    {
       "path": "crates/kernel/src/test_support/scheduler_inputs.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "6bbf34fbb309ad7f2a80ba3782a6156f121b1da2b869e687dd59ac11deeacb96",
+      "after_sha256_lf": "4c18b8edd47062cb0a802690075eade2a64d2ef2bd8d634aa0e991436e8a2ac7",
       "disposition": "new-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
-      "after_sha256_lf": "a0a0090814d33b486c2e1e93d78b0d7d6206315174ed48f49fa706e766a51786",
+      "after_sha256_lf": "1d016609499f75b3e16bc96ba9681251ca35313c5b0866ac6a1de5044753aafb",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -390,21 +404,21 @@
     {
       "path": "crates/kernel/src/user_copy/testing.rs",
       "before_sha256_lf": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a",
-      "after_sha256_lf": "2eba9dc02d0fe703998263017ed55bf04c12f50831f4e6368ede3508dbc1a0d3",
+      "after_sha256_lf": "14eaf4b40767a63e88bdb284dddf24c11fcf0e3c6c33475bf137168e4ca6f61e",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
       "path": "crates/xtask/src/main.rs",
       "before_sha256_lf": "0e39fc6444c73c70bcf36dee77a72c2beb1cf66d4c7789c8c8cc638049047ded",
-      "after_sha256_lf": "21187d7e82acad0cc8519ab8d1d859610878c7b3a7db1757d3b35ccd437c94ab",
+      "after_sha256_lf": "4e74e24b18ec6dd39a50c1f7d590c4349274f126f80c1d80547b7290bc8c1cec",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
       "path": "crates/xtask/src/matrix.rs",
       "before_sha256_lf": "f3934e65d3932afe535f39ee3254424df857c84c3fa43d02a8b5d2e269715718",
-      "after_sha256_lf": "3a3f8c832de395c53a1f4d3f650be159be38e8843c6fc0774e94517f2ba6c91a",
+      "after_sha256_lf": "cc5b59c9d2f7e8bef4cbbdaf35ec9f64f3993c5c6b07427f771b6cce1934a19f",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -425,7 +439,7 @@
     {
       "path": "research/arena/profiles/user-copy-range.json",
       "before_sha256_lf": "a006e04a69408f4b4abeb63170cec5f5abb3578bab80ae8e702bcd73524b1d9c",
-      "after_sha256_lf": "b0c5e3f34d70a798e6298697089dd0be0d51bed53e7450aa0d14951f68ee0477",
+      "after_sha256_lf": "1c083b21c591e394970814186c4ab99f235dcbf32beae2c1ab139583b2abdb1d",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },

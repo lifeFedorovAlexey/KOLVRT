@@ -41,7 +41,7 @@ CI on exact 7d64fac stopped at user-context (shard 0), retirement (shard 1), sho
 | user-retirement  | Registry::reclaim rejects a live process; state and retained frames remain unchanged; eventual reclaim is checked         | Real public ownership API; no extraction of private frame            |
 | remote-tlbi      | acknowledged rejects a future generation; actual TLBI observer precedes ACK; access to retired mapping translation-faults | Instrumented test build; no skipped-TLBI mutation claim              |
 
-These controls use ordinary kernel-tests builds and require every mapped test exactly once with status pass. Missing, duplicate, failed and unrelated observations are rejected. The task inventory is preserved. The four obsolete corruption features are removed. The ordinary suite now has 143 checks per profile. REMOTE_TLBI_COMPLETED is observation-only instrumentation in kernel-tests; this evidence is not byte-identical production-binary execution. The production supervisor crash-recovery acceptance remains incomplete.
+These controls use ordinary kernel-tests builds and require every mapped test exactly once with status pass. Missing, duplicate, failed and unrelated observations are rejected. The task inventory is preserved. The four obsolete corruption features are removed. The ordinary suite now has 147 checks per profile. REMOTE_TLBI_COMPLETED is observation-only instrumentation in kernel-tests; this evidence is not byte-identical production-binary execution. The production supervisor crash-recovery acceptance remains incomplete.
 
 The next obsolete controls are classified explicitly. completion-publication-state-inputs imports the production Ownership state machine and rejects completion while borrowed or not quiescent, rejects inspection before Done and verifies phase/generation retention. This UNIT evidence does not test a withheld remote CPU publication or its liveness/failure handling. process-exit calls the single production Table::complete with a duplicate completion and verifies the terminal record, state and live-slot count remain unchanged; the test-only Registry::repeat_completion wrapper is removed. process-rollback uses real zero-memory-budget creation failures and checks resource rollback. asid-reuse-invariants observes actual same-VA isolation, invalidation counters and pool exhaustion; it is not a skipped-invalidation negative control.
 
@@ -52,6 +52,10 @@ The process transition family now uses explicit production-method negative input
 The scheduler family now separates three levels of evidence. Registry::create rejects AArch32, privileged-mode and masked-user-IRQ input contexts before allocation; process count and available pages remain unchanged. Ownership UNIT tests call the one production protocol with foreign CPU, unmasked access, borrowed/reentrant access, stale generation, duplicate start, live reset and premature inspection; phase/generation remain retained. Adapter UNIT tests construct actual Local/Task/State fixture values and invoke the real methods with a lock held, a lock inside an ownership callback, stale task generation or an already running peer. These four fatal assertions execute in DEV and PROD; the host requires a fresh guest panic at the actual unique production assertion site, because PROD omits the diagnostic message. No implementation body is copied or mutated. The IRQ/SIMD compatibility flag now selects the real interrupt round-trip invariant; it does not establish skipped-restore detection. These tests do not establish complete hardware adapter fault coverage or current Phase 3.7 acceptance.
 
 Exact d33ce92 CI passed static, native, host, kernel DEV/PROD, routing and ASID jobs, but all matrix shards failed: scheduler-user-irq (0), scheduler-context (1), scheduler-inner-lock (2), scheduler-aarch32 (3). The foundation aggregate failed and evidence was skipped. The scheduler migration addresses these obsolete controls and adjacent family controls; a full current matrix is still required.
+
+The remaining no-op user-copy, handle, domain/capability and IPC mutation selectors are now removed. Controls use actual production APIs and existing real EL0 negative inputs/invariants, with new Namespace retirement, Mailbox invalid generation and Endpoint invalid consumer/token/duplicate-terminal UNIT inputs. Five fatal IPC adapter inputs passed through the matrix runner in DEV/PROD (ten executions): storage inside scheduler ownership, publication into READY, wrong-process wake, blocked unlink and dropping a closed endpoint with a retained reference. Public duplicate terminal rejection preserves outcome/accounting; no private second charge-release mutation is claimed. The current plan distinguishes negative inputs, invariants, mixed coverage and still-executed legacy failure/oracle checks. Measurement archival now retains the current complete matrix execution and coverage classes instead of requiring every IPC task to be a failure. ipc-controls selects every registered IPC task, including migrated positive/invariant checks.
+
+Exact 0439387 CI passed scheduler and failed next at user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID passed; evidence was skipped and foundation failed. The broader migration addresses this scope and adjacent families; a full current 144-task execution is running and is not yet a claimed pass.
 
 ## Commands and evidence limits
 
@@ -115,6 +119,7 @@ Full Phase 3.7 is incomplete. Remaining gates: the complete production superviso
           "apps/native-runtime/Cargo.toml",
           "apps/native-runtime/src/lib.rs",
           "apps/native-runtime/tests/counter.rs",
+          "crates/kernel-core/Cargo.toml",
           "crates/kernel-core/src/domain.rs",
           "crates/kernel-core/src/elf.rs",
           "crates/kernel-core/src/handles.rs",
@@ -150,6 +155,7 @@ Full Phase 3.7 is incomplete. Remaining gates: the complete production superviso
           "crates/kernel/src/supervision_workload.rs",
           "crates/kernel/src/sync/mod.rs",
           "crates/kernel/src/test_support/arch_probes.S",
+          "crates/kernel/src/test_support/ipc_inputs.rs",
           "crates/kernel/src/test_support/scheduler_inputs.rs",
           "crates/kernel/src/tests.rs",
           "crates/kernel/src/user_copy.rs",

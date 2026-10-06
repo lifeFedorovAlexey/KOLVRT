@@ -6,7 +6,11 @@ pub(crate) mod task;
     feature = "scheduler-inner-lock-input",
     feature = "scheduler-lock-input",
     feature = "scheduler-task-input",
-    feature = "scheduler-owner-input"
+    feature = "scheduler-owner-input",
+    feature = "ipc-storage-scope-input",
+    feature = "ipc-duplicate-ready-input",
+    feature = "ipc-wrong-process-wake-input",
+    feature = "ipc-blocked-reclaim-input"
 ))]
 #[path = "../test_support/scheduler_inputs.rs"]
 pub(crate) mod testing;

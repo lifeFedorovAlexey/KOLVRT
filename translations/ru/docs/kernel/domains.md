@@ -70,6 +70,8 @@ Exit/fault/budget termination закрывает domain admission на masked sc
 
 [Английский оригинал](../../../../docs/kernel/domains.md)
 
+Текущие aliases matrix Phase 3.7 используют реальные отказы memory/request/queue budget, сохранение принятого notification, reclamation sender и сценарии service fault/rebind. Domain teardown классифицирован как покрытие инвариантов, а не искусственная проверка пропущенного teardown. No-op domain-negative features kernel/core удалены. Исторические receipts сохраняют исходный source scope; полная текущая matrix evidence остаётся обязательной.
+
 <!-- knowledge -->
 
 ```json

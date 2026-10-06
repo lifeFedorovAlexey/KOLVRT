@@ -116,6 +116,8 @@ Handle generation остаётся identity, а SEND/TRANSFER отдельно �
 
 [Английский оригинал](../../../../docs/kernel/handles.md)
 
+Phase 3.7 удаляет no-op selectors повреждения из текущего runner. Проверки поколения, чужого владельца, неверного типа, повторного использования и transfer rights используют существующие реальные EL0 сценарии и production-методы Namespace. Новый UNIT-вход вызывает Namespace::retire с чужим владельцем и проверяет сохранение owner/живого handle и успешного lookup до законного retirement; повторный retirement и lookup после retirement отклоняются. Наблюдения cleanup/reuse отдельно классифицированы как положительные инварианты lifetime. Исторические counts и receipts mutation-controls не доказывают отрицательное mutation coverage текущего исходника.
+
 <!-- knowledge -->
 
 ```json

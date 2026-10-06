@@ -2,6 +2,8 @@
 mod irq_wait;
 // Assembly probes exist only in this separately gated test module.
 core::arch::global_asm!(include_str!("test_support/arch_probes.S"));
+#[path = "test_support/ipc_inputs.rs"]
+mod ipc_inputs;
 use crate::time::Duration;
 use crate::{cpu, event, interrupt, memory, percpu, platform, smp, sync};
 use alloc::{boxed::Box, vec::Vec};
@@ -500,11 +502,18 @@ fn state_machine_inputs() {
 pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     TESTS_REPORTED.store(0, Ordering::Relaxed);
     state_machine_inputs();
+    ipc_inputs::exercise(report);
+    #[cfg(feature = "ipc-teardown-input")]
+    ipc_inputs::retained_endpoint_drop();
     #[cfg(any(
         feature = "scheduler-inner-lock-input",
         feature = "scheduler-lock-input",
         feature = "scheduler-task-input",
-        feature = "scheduler-owner-input"
+        feature = "scheduler-owner-input",
+        feature = "ipc-storage-scope-input",
+        feature = "ipc-duplicate-ready-input",
+        feature = "ipc-wrong-process-wake-input",
+        feature = "ipc-blocked-reclaim-input"
     ))]
     crate::scheduler::testing::forbidden_input();
     report("boot_el1", cpu::el() == cpu::CURRENT_EL1);

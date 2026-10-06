@@ -24,6 +24,8 @@ Current reference: [Границы полномочий](../architecture-decisio
 
 [Английский оригинал](../../../../docs/kernel/capabilities.md)
 
+Controls Phase 3.7 вызывают настоящие операции с запрещёнными, scoped и revoked grants и наблюдают сохранение принятого эффекта и конкурентный revoke/admission. План matrix различает отрицательные входы и положительные инварианты retention/rebind; production-реализация revocation не отключается. No-op capability-negative features удалены. Предыдущие exact-source receipts сохраняют исторический scope и не проверяют мигрированный текущий runner.
+
 <!-- knowledge -->
 
 ```json

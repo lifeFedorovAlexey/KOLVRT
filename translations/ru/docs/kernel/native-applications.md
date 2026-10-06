@@ -41,7 +41,7 @@ CI на exact 7d64fac остановился на user-context (shard 0), retire
 | user-retirement      | Registry::reclaim отвергает живой process; state и удержанные frames не меняются; окончательное reclamation проверено                | Настоящий public ownership API; private frame не извлекается                     |
 | remote-tlbi          | acknowledged отвергает будущую generation; настоящий TLBI observer предшествует ACK; access к retired mapping даёт translation fault | Instrumented test build; нет skipped-TLBI mutation claim                         |
 
-Эти controls используют обычную kernel-tests сборку и требуют каждую mapped test ровно один раз со status pass. Missing, duplicate, failed и unrelated observations отвергаются. Task inventory сохранён. Четыре старые corruption features удалены. Обычный suite теперь содержит 143 checks на profile. REMOTE_TLBI_COMPLETED — только observation instrumentation в kernel-tests; эта evidence не является byte-identical production-binary execution. Acceptance crash-recovery production supervisor остаётся незавершённой.
+Эти controls используют обычную kernel-tests сборку и требуют каждую mapped test ровно один раз со status pass. Missing, duplicate, failed и unrelated observations отвергаются. Task inventory сохранён. Четыре старые corruption features удалены. Обычный suite теперь содержит 147 checks на profile. REMOTE_TLBI_COMPLETED — только observation instrumentation в kernel-tests; эта evidence не является byte-identical production-binary execution. Acceptance crash-recovery production supervisor остаётся незавершённой.
 
 Следующие старые controls классифицированы явно. completion-publication-state-inputs импортирует production Ownership state machine, отвергает completion при удерживаемом access или отсутствии quiescence, отвергает inspection до Done и проверяет сохранение phase/generation. Эта UNIT evidence не проверяет зависшую publication удалённого CPU или её liveness/failure handling. process-exit вызывает единственный production Table::complete с повторным completion и проверяет сохранение terminal record, state и live-slot count; test-only wrapper Registry::repeat_completion удалён. process-rollback использует настоящие creation failures при нулевом memory budget и проверяет resource rollback. asid-reuse-invariants наблюдает настоящие same-VA isolation, invalidation counters и pool exhaustion; это не negative control пропущенного invalidation.
 
@@ -51,6 +51,10 @@ shootdown-invariants и remote-tlbi-invariants являются positive invaria
 Семейство scheduler теперь разделяет три уровня доказательств. Registry::create отвергает входные контексты AArch32, привилегированный режим и замаскированный пользовательский IRQ до выделения памяти; число процессов и доступных страниц не меняется. UNIT-тесты Ownership вызывают единственный production-протокол с чужим CPU, разрешённым IRQ, повторным входом при удержанном доступе, устаревшим поколением, повторным start, сбросом работающего поколения и преждевременной инспекцией; фаза и поколение сохраняются. UNIT-тесты адаптера создают настоящие fixture-значения Local/Task/State и вызывают реальные методы с удержанным lock, lock внутри callback владения, устаревшим поколением задачи либо уже работающей соседней задачей. Эти четыре фатальные проверки выполняются в DEV и PROD; host требует свежий guest panic в месте единственной соответствующей production-проверки, поскольку PROD не выводит диагностическое сообщение. Тела реализации не копируются и не изменяются. Совместимый флаг IRQ/SIMD теперь выбирает инвариант настоящего round-trip через прерывание; он не доказывает обнаружение пропущенного восстановления. Эти тесты не устанавливают полноту аппаратного fault coverage адаптера или текущую приёмку Phase 3.7.
 
 CI на точном d33ce92 прошёл static, native, host, kernel DEV/PROD, routing и ASID, но все matrix shard упали: scheduler-user-irq (0), scheduler-context (1), scheduler-inner-lock (2), scheduler-aarch32 (3). Итоговый foundation упал, evidence был пропущен. Миграция scheduler исправляет эти устаревшие controls и соседние проверки семейства; полная текущая matrix всё ещё обязательна.
+
+Оставшиеся no-op selectors мутации user-copy, handles, domain/capability и IPC удалены. Controls используют настоящие production API и существующие реальные EL0 отрицательные входы/инварианты; добавлены UNIT-входы retirement Namespace, неверного поколения Mailbox и неправильного consumer/token/повторного terminal transition Endpoint. Пять фатальных входов адаптера IPC прошли через matrix runner в DEV/PROD (десять выполнений): storage внутри scheduler ownership, публикация в READY, wake чужого процесса, unlink заблокированной задачи и drop закрытого endpoint с удержанной ссылкой. Отказ публичного повторного terminal transition сохраняет outcome/accounting; мутация приватного второго release charge не заявляется. Текущий plan различает отрицательные входы, инварианты, смешанное покрытие и по-прежнему выполняемые legacy failure/oracle checks. Архив измерений теперь сохраняет текущую полную matrix execution и классы покрытия, а не требует отказа от каждой IPC-задачи. ipc-controls выбирает все зарегистрированные IPC-задачи, включая мигрированные положительные/инвариантные проверки.
+
+CI на точном 0439387 прошёл scheduler и затем упал на user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID прошли; evidence пропущен, итоговый foundation красный. Общая миграция исправляет этот scope и соседние семейства; полное текущее выполнение 144 задач идёт и ещё не объявлено пройденным.
 
 ## Команды и пределы evidence
 
@@ -114,6 +118,7 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "apps/native-runtime/Cargo.toml",
           "apps/native-runtime/src/lib.rs",
           "apps/native-runtime/tests/counter.rs",
+          "crates/kernel-core/Cargo.toml",
           "crates/kernel-core/src/domain.rs",
           "crates/kernel-core/src/elf.rs",
           "crates/kernel-core/src/handles.rs",
@@ -149,6 +154,7 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "crates/kernel/src/supervision_workload.rs",
           "crates/kernel/src/sync/mod.rs",
           "crates/kernel/src/test_support/arch_probes.S",
+          "crates/kernel/src/test_support/ipc_inputs.rs",
           "crates/kernel/src/test_support/scheduler_inputs.rs",
           "crates/kernel/src/tests.rs",
           "crates/kernel/src/user_copy.rs",

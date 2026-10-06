@@ -116,6 +116,8 @@ flowchart TD
 
 [Английский оригинал](../../../../docs/kernel/user-copy.md)
 
+Phase 3.7 выбирает обычную fixture настоящего копирования для snapshot/recovery coverage. Тест импортирует настоящие методы copy/recover, передаёт запрещённые ranges и несовпадающие PC/FAR/direction, проверяет реальный recovery частичного копирования через guard page, отсутствие выдачи частичного Snapshot и сохранение инициализации хвоста. Стабильность snapshot — положительный инвариант; устаревшая тестовая мутация verdict удалена. Прежний recovery feature ничего не менял и удалён; требование fatal marker от исправного suite было ошибкой runner. Названные выше исторические receipts сохраняют исторический scope и не являются current-source acceptance этой миграции.
+
 <!-- knowledge -->
 
 ```json

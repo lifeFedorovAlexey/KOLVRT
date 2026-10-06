@@ -70,6 +70,8 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
 
 [Russian translation](../../translations/ru/docs/kernel/domains.md)
 
+Current Phase 3.7 matrix aliases use real memory/request/queue budget denial, accepted-notification retention, sender reclamation and service-fault/rebind scenarios. Domain teardown is invariant coverage; it is not a synthetic omitted-teardown control. The kernel/core no-op domain-negative features are removed. Historical scoped receipts remain tied to their original source; current complete matrix evidence is still required.
+
 <!-- knowledge -->
 
 ```json

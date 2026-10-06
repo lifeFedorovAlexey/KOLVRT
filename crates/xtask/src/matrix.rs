@@ -70,7 +70,13 @@ fn tasks() -> Vec<Task> {
             tasks.push(control(prod, flag, feature, Some(marker.to_owned()), None));
         }
         for &(flag, feature, test) in IPC_CONTROLS {
-            tasks.push(control(prod, flag, feature, None, Some(test)));
+            tasks.push(control(
+                prod,
+                flag,
+                feature,
+                None,
+                (!test.starts_with("assertion:")).then_some(test),
+            ));
         }
     }
     tasks
@@ -78,6 +84,109 @@ fn tasks() -> Vec<Task> {
 
 pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
     match flag {
+        "--ipc-wake-publication-control" => {
+            Some(&["ipc_mailbox_publication_and_generation_guards"])
+        }
+        "--ipc-wake-generation-control" => Some(&["ipc_mailbox_publication_and_generation_guards"]),
+        "--ipc-wait-recheck-control" => Some(&[
+            "ipc_el0_cpu0_to_cpu1",
+            "ipc_el0_cpu1_to_cpu0",
+            "ipc_queue_full_fifo_and_reclamation",
+        ]),
+        "--ipc-request-generation-control" => Some(&["ipc_payload_snapshot_result_id_and_stress"]),
+        "--ipc-double-charge-release-control" => {
+            Some(&["ipc_duplicate_terminal_retains_outcome_and_charges"])
+        }
+        "--ipc-charge-release-control" => Some(&[
+            "ipc_deadline_before_effect",
+            "ipc_request_quota_failure_has_no_phantom_work",
+        ]),
+        "--ipc-cancel-control" => Some(&[
+            "ipc_cancel_before_commit",
+            "ipc_queued_head_nonhead_cancel_fifo",
+        ]),
+        "--ipc-service-death-control" => Some(&[
+            "ipc_service_death_queued",
+            "ipc_both_peers_die_with_accepted_work",
+            "ipc_empty_service_death_reclamation",
+        ]),
+        "--ipc-double-terminal-control" => Some(&[
+            "ipc_duplicate_terminal_retains_outcome_and_charges",
+            "ipc_payload_snapshot_result_id_and_stress",
+        ]),
+        "--ipc-capacity-control" => Some(&[
+            "ipc_queue_full_fifo_and_reclamation",
+            "ipc_request_quota_failure_has_no_phantom_work",
+        ]),
+        "--ipc-fifo-control" => Some(&[
+            "ipc_queue_full_fifo_and_reclamation",
+            "ipc_concurrent_producers_fifo_and_reclamation",
+        ]),
+        "--ipc-id-reuse-control" => Some(&["ipc_payload_snapshot_result_id_and_stress"]),
+        "--ipc-receive-copy-control" => Some(&["ipc_receive_copy_failure_retains_queue"]),
+        "--ipc-collect-copy-control" => Some(&["ipc_collect_copy_failure_retains_result"]),
+        "--ipc-send-rights-control" => Some(&["ipc_authority_denial_revoke_and_retention"]),
+        "--ipc-revoke-control" => Some(&[
+            "ipc_authority_denial_revoke_and_retention",
+            "ipc_concurrent_revoke_admission_retains_accepted",
+        ]),
+        "--ipc-deadline-control" => {
+            Some(&["ipc_deadline_before_effect", "ipc_deadline_after_commit"])
+        }
+        "--ipc-service-token-control" => Some(&[
+            "ipc_service_token_invalid_caller_rejected",
+            "ipc_el0_cpu0_to_cpu1",
+        ]),
+        "--user-copy-snapshot-control" => Some(&["user_copy_el0_boundary_and_snapshot"]),
+        "--user-copy-recovery-control" => Some(&[
+            "user_copy_el0_boundary_and_snapshot",
+            "user_copy_lifetime_and_reclamation",
+        ]),
+        "--handle-generation-control" => {
+            Some(&["handle_el0_identity_type_generation_and_lifetime"])
+        }
+        "--handle-owner-control" => Some(&[
+            "handle_cross_process_reference_isolation",
+            "handle_el0_identity_type_generation_and_lifetime",
+        ]),
+        "--handle-type-control" => Some(&["handle_el0_identity_type_generation_and_lifetime"]),
+        "--handle-reuse-control" => Some(&[
+            "handle_el0_identity_type_generation_and_lifetime",
+            "handle_exit_fault_cleanup_and_process_reuse",
+        ]),
+        "--handle-transfer-rights-control" => Some(&[
+            "handle_el0_transfer_transaction_attenuation",
+            "handle_el0_identity_type_generation_and_lifetime",
+        ]),
+        "--handle-retirement-control" => Some(&[
+            "handle_retirement_invalid_owner_rejected",
+            "handle_exit_fault_cleanup_and_process_reuse",
+        ]),
+        "--domain-budget-control" => Some(&[
+            "domain_memory_budget_enforced",
+            "domain_el0_request_and_queue_budgets",
+        ]),
+        "--domain-identity-control" => Some(&[
+            "capability_el0_scope_attenuation_and_denial",
+            "domain_rebind_does_not_restore_grants",
+        ]),
+        "--domain-teardown-control" => Some(&[
+            "domain_teardown_retains_accepted_notification",
+            "domain_reclaimed_sender_retains_request_charge",
+            "domain_fault_peer_progress_and_reclamation",
+        ]),
+        "--capability-revoke-control" => Some(&[
+            "capability_el0_scope_attenuation_and_denial",
+            "capability_revocation_retains_admitted_effect",
+            "capability_cross_cpu_revoke_admission",
+        ]),
+        "--capability-scope-control" => Some(&[
+            "capability_el0_scope_attenuation_and_denial",
+            "capability_service_rebind_preserves_scope",
+        ]),
+        "--supervision-authority-control" => Some(&["supervision_el0_lifecycle"]),
+        "--supervision-stale-control" => Some(&["supervision_el0_lifecycle"]),
+        "--supervision-wait-control" => Some(&["supervision_el0_lifecycle"]),
         "--scheduler-aarch32-control" => Some(&["process_aarch32_context_rejected"]),
         "--scheduler-user-irq-control" => Some(&["process_masked_user_irq_rejected"]),
         "--scheduler-context-control" => Some(&["process_privileged_context_rejected"]),
@@ -166,6 +275,13 @@ fn observable_task(flag: &'static str, prod: bool) -> Task {
         "--remote-tlbi-control" => "remote-tlbi-invariants",
         "--asid-reuse-control" => "asid-reuse-invariants",
         "--irq-simd-restore-control" => "irq-simd-roundtrip-invariant",
+        "--ipc-fifo-control" => "ipc-fifo-invariants",
+        "--ipc-wait-recheck-control" => "ipc-wait-progress-invariants",
+        "--ipc-wake-publication-control" => "ipc-wake-publication-invariants",
+        "--ipc-service-death-control" => "ipc-service-death-invariants",
+        "--supervision-wait-control" => "supervision-wait-invariants",
+        "--domain-teardown-control" => "domain-teardown-invariants",
+        "--user-copy-snapshot-control" => "user-copy-snapshot-invariant",
         "--checkpoint-publication-control" => "completion-publication-state-inputs",
         _ => flag,
     };
@@ -227,6 +343,28 @@ fn coverage_kind(task: &Task) -> &'static str {
             | "--asid-reuse-control"
             | "--irq-simd-restore-control",
         ) => "invariant",
+        Some(
+            "--supervision-wait-control"
+            | "--domain-teardown-control"
+            | "--user-copy-snapshot-control",
+        ) => "invariant",
+        Some(
+            "--capability-revoke-control" | "--capability-scope-control" | "--handle-reuse-control",
+        ) => "mixed-input-and-invariant",
+        Some(
+            "--ipc-fifo-control"
+            | "--ipc-wait-recheck-control"
+            | "--ipc-wake-publication-control"
+            | "--ipc-service-death-control"
+            | "--ipc-charge-release-control",
+        ) => "invariant",
+        Some(
+            "--ipc-cancel-control"
+            | "--ipc-revoke-control"
+            | "--ipc-deadline-control"
+            | "--ipc-request-generation-control"
+            | "--ipc-id-reuse-control",
+        ) => "mixed-input-and-invariant",
         Some(flag) if observable_checks(flag).is_some() => "negative-input",
         _ if task.feature.is_some_and(|f| f.ends_with("-input")) => "negative-input",
         _ => "legacy-failure",
@@ -234,7 +372,7 @@ fn coverage_kind(task: &Task) -> &'static str {
 }
 
 fn describe(task: &Task) -> Value {
-    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test,"coverage_kind":coverage_kind(task),"observable_checks":task.flag.and_then(observable_checks),"control_scope":if matches!(task.flag, Some("--shootdown-control"|"--remote-tlbi-control"|"--asid-reuse-control")){"positive invariant coverage; not equivalent to missing ACK or skipped invalidation controls"}else if task.flag == Some("--checkpoint-publication-control"){"production Ownership UNIT invalid inputs; not a withheld remote publication SYSTEM test"}else if task.flag == Some("--irq-simd-restore-control"){"actual IRQ/SIMD round-trip invariant; no skipped-restore detection claim"}else if task.feature.is_some_and(|f| f.ends_with("-input")){"production adapter assertions invoked with forbidden test inputs"}else if task.flag.is_some_and(|f| f.starts_with("--scheduler-")){"production Ownership UNIT guards plus mapped adapter checks; not corrupted runtime storage"}else if task.flag.and_then(observable_checks).is_some(){"real invalid inputs; no implementation mutation"}else{"legacy"}})
+    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test,"coverage_kind":coverage_kind(task),"observable_checks":task.flag.and_then(observable_checks),"control_scope":if matches!(task.flag, Some("--shootdown-control"|"--remote-tlbi-control"|"--asid-reuse-control")){"positive invariant coverage; not equivalent to missing ACK or skipped invalidation controls"}else if task.flag == Some("--checkpoint-publication-control"){"production Ownership UNIT invalid inputs; not a withheld remote publication SYSTEM test"}else if matches!(task.flag, Some("--supervision-wait-control"|"--domain-teardown-control"|"--user-copy-snapshot-control")){"actual lifecycle/snapshot/retention invariant; no mutation-detection equivalence claimed"}else if task.flag == Some("--irq-simd-restore-control"){"actual IRQ/SIMD round-trip invariant; no skipped-restore detection claim"}else if task.feature.is_some_and(|f| f.ends_with("-input")){"production adapter assertions invoked with forbidden test inputs"}else if task.flag.is_some_and(|f| f.starts_with("--scheduler-")){"production Ownership UNIT guards plus mapped adapter checks; not corrupted runtime storage"}else if coverage_kind(task) == "invariant"{"actual production state/EL0/resource invariant; no omitted-implementation detection equivalence"}else if coverage_kind(task) == "mixed-input-and-invariant"{"real negative inputs plus production state/EL0/resource invariants"}else if task.flag.and_then(observable_checks).is_some(){"real invalid inputs; no implementation mutation"}else{"legacy"}})
 }
 
 pub fn plan_document() -> Result<Value> {
@@ -321,15 +459,16 @@ fn execute_task(task: &Task) -> Result<Value> {
             )
             .into());
         }
-        let witnessed = if task.feature.is_some_and(|f| f.ends_with("-input")) {
-            assertion_witness(&text, &read_json(format!("{artifact}.results.json"))?, flag)?
-        } else if let Some(test) = task.ipc_test {
-            ipc_failure(&read_json(format!("{artifact}.results.json"))?, test)?
-        } else {
-            task.marker
-                .as_ref()
-                .is_some_and(|marker| text.contains(marker))
-        };
+        let witnessed =
+            if task.feature.is_some_and(|f| f.ends_with("-input")) && task.ipc_test.is_none() {
+                assertion_witness(&text, &read_json(format!("{artifact}.results.json"))?, flag)?
+            } else if let Some(test) = task.ipc_test {
+                ipc_failure(&read_json(format!("{artifact}.results.json"))?, test)?
+            } else {
+                task.marker
+                    .as_ref()
+                    .is_some_and(|marker| text.contains(marker))
+            };
         if output.status.success() || !witnessed {
             return Err(control_diagnostic(
                 &task.id,
@@ -392,7 +531,10 @@ pub fn run_one(flag: &str, prod: bool) -> Result<()> {
 }
 
 pub fn run_ipc() -> Result<()> {
-    for task in tasks().iter().filter(|task| task.ipc_test.is_some()) {
+    for task in tasks().iter().filter(|task| {
+        task.flag
+            .is_some_and(|flag| IPC_CONTROLS.iter().any(|entry| entry.0 == flag))
+    }) {
         execute_task(task)?;
     }
     Ok(())
@@ -421,6 +563,11 @@ fn assertion_witness(output: &str, events: &Value, flag: &str) -> Result<bool> {
             "crates/kernel/src/scheduler/mod.rs",
             "fn choose(",
             "duplicate running task",
+        ),
+        "--ipc-teardown-control" => (
+            "crates/kernel-core/src/ipc.rs",
+            "fn drop(",
+            "IPC endpoint release requires actual request/reference/wake quiescence",
         ),
         _ => return Err("unregistered assertion input".into()),
     };

@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 52643,
-  "catalog_bytes": 81824,
+  "approximate_tokens": 53021,
+  "catalog_bytes": 81825,
   "catalog_nodes": 202,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "d6f4fb26c806ad9916f4cead8045e36756f255ac18d0a42e6a7b9b07fdf9faff",
+  "catalog_sha256": "41e0717056114d96f4f840a1a53c089951408a336ed2c98e88bdf4f2519dc0e1",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 210570,
+  "context_plus_catalog_bytes": 212082,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 105,
-    "utf8_bytes": 928054
+    "utf8_bytes": 932928
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -67,11 +67,11 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 128746,
+  "rendered_context_bytes": 130257,
   "russian_pilot": {
-    "approximate_tokens": 81083,
-    "catalog_bytes": 81824,
-    "context_plus_navigation_bytes": 324330,
+    "approximate_tokens": 81684,
+    "catalog_bytes": 81825,
+    "context_plus_navigation_bytes": 326736,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
     "localized_navigation_bytes": 46203,
@@ -86,7 +86,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 196303,
+    "rendered_context_bytes": 198708,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -217,7 +217,7 @@
       "location": {
         "end": 37,
         "path": "docs/kernel/handles.md",
-        "sha256": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 13
       }
     },
@@ -226,7 +226,7 @@
       "location": {
         "end": 69,
         "path": "docs/kernel/handles.md",
-        "sha256": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 36
       }
     },
@@ -235,7 +235,7 @@
       "location": {
         "end": 112,
         "path": "docs/kernel/handles.md",
-        "sha256": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 107
       }
     },
@@ -244,7 +244,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/handles.md",
-        "sha256": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 7
       }
     },
@@ -253,7 +253,7 @@
       "location": {
         "end": 86,
         "path": "docs/kernel/handles.md",
-        "sha256": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 68
       }
     },
@@ -262,7 +262,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 7
       }
     },
@@ -271,7 +271,7 @@
       "location": {
         "end": 32,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 13
       }
     },
@@ -280,7 +280,7 @@
       "location": {
         "end": 50,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 31
       }
     },
@@ -289,16 +289,16 @@
       "location": {
         "end": 87,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 65
       }
     },
     {
       "id": "kolvrt.memory.user-copy.limits",
       "location": {
-        "end": 229,
+        "end": 231,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 109
       }
     },
@@ -307,7 +307,7 @@
       "location": {
         "end": 66,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 49
       }
     },
@@ -352,7 +352,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "3c7dd3598f57105f9ddce610680d65e7d7fae0ca18778edb873f0903c7e1482e",
+        "sha256": "3815624f19664d1afa6d97d6794c72d87d1b1582eba6583d00bed56527716eb3",
         "start": 7
       }
     },
@@ -361,7 +361,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "201756a8f92c9c08343514171303254684367f75d5182690274a1c0209d3bbcf",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 11
       }
     },
@@ -370,7 +370,7 @@
       "location": {
         "end": 38,
         "path": "docs/kernel/domains.md",
-        "sha256": "201756a8f92c9c08343514171303254684367f75d5182690274a1c0209d3bbcf",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 29
       }
     },
@@ -379,7 +379,7 @@
       "location": {
         "end": 30,
         "path": "docs/kernel/domains.md",
-        "sha256": "201756a8f92c9c08343514171303254684367f75d5182690274a1c0209d3bbcf",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 17
       }
     },
@@ -388,25 +388,25 @@
       "location": {
         "end": 58,
         "path": "docs/kernel/domains.md",
-        "sha256": "201756a8f92c9c08343514171303254684367f75d5182690274a1c0209d3bbcf",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 37
       }
     },
     {
       "id": "kolvrt.security.domains.teardown",
       "location": {
-        "end": 179,
+        "end": 181,
         "path": "docs/kernel/domains.md",
-        "sha256": "201756a8f92c9c08343514171303254684367f75d5182690274a1c0209d3bbcf",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 57
       }
     },
     {
       "id": "kolvrt.security.event-revocation",
       "location": {
-        "end": 176,
+        "end": 178,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "3c7dd3598f57105f9ddce610680d65e7d7fae0ca18778edb873f0903c7e1482e",
+        "sha256": "3815624f19664d1afa6d97d6794c72d87d1b1582eba6583d00bed56527716eb3",
         "start": 17
       }
     },
@@ -530,7 +530,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 200789
+    "utf8_bytes": 202950
   },
   "source_files": [
     {

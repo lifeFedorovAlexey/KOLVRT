@@ -26,10 +26,7 @@ pub(crate) fn call(task: &mut Task, frame: &mut Context, operation: u16) -> bool
     if operation == SNAPSHOT {
         let later = access.copy_from_user::<8>(address, 8).unwrap();
         let expected = 42u64.to_le_bytes();
-        #[cfg(not(feature = "user-copy-snapshot-negative"))]
         let admitted = task.copy_snapshot;
-        #[cfg(feature = "user-copy-snapshot-negative")]
-        let admitted: [u8; 8] = later.bytes().try_into().unwrap();
         frame.gpr[0] = u64::from(admitted == expected && later.bytes() == 43u64.to_le_bytes());
         return true;
     }

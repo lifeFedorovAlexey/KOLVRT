@@ -7,7 +7,7 @@
     "block_id": "kolvrt.memory.user-copy",
     "contract_id": "kolvrt.memory.user-copy.api",
     "functional_version": "bounded-phase3.2-proposed-arena1",
-    "contract_sha256": "023773737e26dbe897f3854dce5fd6ef97448cb8d212cef1fbbbc856fbd25446"
+    "contract_sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e"
   },
   "workload": {
     "id": "arena.workload.user-copy-range",

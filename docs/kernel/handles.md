@@ -116,6 +116,8 @@ Identity/type/lifetime checks produce a resource reference; they do not authoriz
 
 [Russian translation](../../translations/ru/docs/kernel/handles.md)
 
+Phase 3.7 removes no-op corruption feature selectors from the current runner. Generation, foreign-owner, wrong-type, reuse and transfer-rights checks use the existing real EL0 scenarios and production Namespace methods. A new UNIT input calls Namespace::retire with a foreign owner and verifies unchanged owner/live handle and successful lookup before legitimate retirement; repeated retirement and lookup after retirement are rejected. Cleanup/reuse observations are classified separately where they establish positive lifetime invariants. Historical mutation-control counts and receipts do not establish current-source negative mutation coverage.
+
 <!-- knowledge -->
 
 ```json

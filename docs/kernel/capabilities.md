@@ -24,6 +24,8 @@ Service-private grants cannot expand caller effects, including nested calls. Res
 
 [Russian translation](../../translations/ru/docs/kernel/capabilities.md)
 
+Phase 3.7 controls invoke actual denied/scoped/revoked grant operations and observe accepted-effect retention and concurrent revoke/admission. Negative inputs and positive retention/rebind invariants are distinguished in the matrix plan; no production revocation implementation is disabled. No-op capability-negative features are removed. Prior exact-source receipts retain their historical scope and do not verify the migrated current runner.
+
 <!-- knowledge -->
 
 ```json

@@ -116,6 +116,8 @@ The separately accepted [handle contract](handles.md) uses completed bounded imm
 
 [Russian translation](../../translations/ru/docs/kernel/user-copy.md)
 
+Phase 3.7 selects the ordinary real-copy fixture for snapshot/recovery coverage. The test imports the actual copy/recover methods, uses forbidden ranges and mismatched PC/FAR/direction inputs, and checks genuine guard-page partial-copy recovery, no escaped partial Snapshot and unchanged tail initialization. Snapshot stability is a positive invariant; its obsolete test-only verdict mutation is removed. The former recovery feature was a no-op and is removed; requiring a fatal marker from a valid suite was a runner defect. Named historical receipts above remain historical and are not current-source acceptance for this migration.
+
 <!-- knowledge -->
 
 ```json
