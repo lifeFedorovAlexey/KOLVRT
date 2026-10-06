@@ -102,13 +102,3 @@ ipc-blocked-reclaim-negative = ["kernel-tests"]
 ipc-storage-scope-negative = ["kernel-tests"]
 ipc-request-generation-negative = ["kernel-tests", "kernel-core/ipc-request-generation-negative"]
 ipc-double-charge-release-negative = ["kernel-tests", "kernel-core/ipc-double-charge-release-negative"]
-
-native-auth-negative = ["native-apps"]
-
-native-stale-negative = ["native-apps"]
-
-native-binding-negative = ["native-apps"]
-
-native-ipc-negative = ["native-apps"]
-
-native-reclaim-negative = ["native-apps"]

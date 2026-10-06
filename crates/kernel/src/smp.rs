@@ -45,15 +45,6 @@ static STOP: AtomicBool = AtomicBool::new(false);
 static TLB_REQUEST: AtomicU64 = AtomicU64::new(0);
 static TLB_SIGNAL: AtomicU64 = AtomicU64::new(0);
 #[cfg(feature = "kernel-tests")]
-static REMOTE_TLBI_COMPLETED: AtomicU64 = AtomicU64::new(0);
-
-/// Test-only execution witness, distinct from the secondary's acknowledgement.
-/// A translation fault alone cannot prove TLBI ran: cache eviction can also remove it.
-#[cfg(feature = "kernel-tests")]
-pub fn remote_tlbi_completed(generation: u64) -> bool {
-    generation > 0 && REMOTE_TLBI_COMPLETED.load(Ordering::Acquire) >= generation
-}
-#[cfg(feature = "kernel-tests")]
 pub mod experiment {
     use super::*;
     pub const LOCK: u64 = 1;
@@ -261,7 +252,7 @@ pub extern "C" fn secondary_main(root: u64) -> ! {
             {
                 cpu::local_invalidate();
                 #[cfg(feature = "kernel-tests")]
-                REMOTE_TLBI_COMPLETED.store(requested, Ordering::Release);
+                crate::tests::REMOTE_TLBI_COMPLETED.store(requested, Ordering::Release);
             }
             local.tlb_ack.store(requested, Ordering::Release);
         }

@@ -459,11 +459,6 @@
     },
     {
       "from": "kolvrt.apps.native-elf",
-      "to": "tests/native-apps/src/fault-client.rs",
-      "type": "implemented_by"
-    },
-    {
-      "from": "kolvrt.apps.native-elf",
       "to": "tests/native-apps/src/lifecycle-client.rs",
       "type": "implemented_by"
     },
@@ -2607,7 +2602,7 @@
     "crates/kernel-core/src/wait.rs": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
-    "crates/kernel/Cargo.toml": "2febbf94e3d56a90f6d67a0fd17ec6c14a0c0ef9b5e78df954a8f98f2eeff30d",
+    "crates/kernel/Cargo.toml": "72e8aa4fd0e4919e165bd93f9d4d5450e9e550afc2a66f1f3327afe3d802451e",
     "crates/kernel/build.rs": "57afe17f2335680941554dcc379b1b4827540194992c62c4ddef241d0a28ce11",
     "crates/kernel/src/arch/aarch64/context.rs": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c",
     "crates/kernel/src/arch/aarch64/entry.S": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c",
@@ -2642,14 +2637,14 @@
     "crates/kernel/src/scheduler/task.rs": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df",
     "crates/kernel/src/security.rs": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806",
     "crates/kernel/src/security/testing.rs": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df",
-    "crates/kernel/src/smp.rs": "45df79a7842cfbc3582f3930f7b623872998443ada76c73a5df4058ba93c1131",
+    "crates/kernel/src/smp.rs": "f1d2f59e9b5e3938fda522c73212cdfb5bf5f1b17a6650129a5d5a2cca8d81a2",
     "crates/kernel/src/supervision.rs": "e3b29976dc855426fa0c0c046bb2d9264a41160d590cf493b7de4500bf5b0876",
     "crates/kernel/src/supervision_workload.S": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
     "crates/kernel/src/supervision_workload.rs": "f68e65d34d1a285c9c400ce8cd780fd2d4560e542b403687f3d49acbca3bae54",
     "crates/kernel/src/sync/mod.rs": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
     "crates/kernel/src/test_support/arch_probes.S": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732",
     "crates/kernel/src/test_support/irq_wait.rs": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2",
-    "crates/kernel/src/tests.rs": "bada903ad4f49909ed9d3ae3576031353482724fdedddf7c051b74735d01cddc",
+    "crates/kernel/src/tests.rs": "d08ee7d1c7d5c8f825c5bdb89751c8f632378062bedfa419b9f2bd4b2659b2ac",
     "crates/kernel/src/user_copy.rs": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0",
     "crates/kernel/src/user_copy/testing.rs": "2eba9dc02d0fe703998263017ed55bf04c12f50831f4e6368ede3508dbc1a0d3",
     "crates/migration-advisor/Cargo.toml": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968",
@@ -2735,7 +2730,7 @@
     "docs/kernel/handles.md": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "ad09129f11996560c78ed63c6a663c29b3d151552ed5dc58c76f4794d5eac299",
-    "docs/kernel/native-applications.md": "002144cbe199811294da66b8e7dc72524c98fd3748a860b1b8edd3d094641c16",
+    "docs/kernel/native-applications.md": "aaa35be03dfed4fc751fa1f6d7d8c9c982a179a457f6632d0e3d3a23a6680994",
     "docs/kernel/processes.md": "be75f579f58fb581792f4cb51c5e415201c0875e6226f43c3ba75585374be632",
     "docs/kernel/scheduler.md": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
     "docs/kernel/supervision.md": "276e39e85e645939298a01257cb545cc57af30ddaf34b7f88ef85e4557d92ab7",
@@ -2822,14 +2817,13 @@
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
     "tests/fixtures/native-lifecycle-observations.json": "c96a7557ca5a43c5bf3874d50237e83db8a71edd1ed44f20adfc92a15e6c7801",
-    "tests/native-apps/Cargo.toml": "17195d113f9bbd25df167b50e5c5036c2443931c735499a27326e152c5c933e5",
+    "tests/native-apps/Cargo.toml": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad",
     "tests/native-apps/build.rs": "760e97976b5e52c9af53ef8f49f886da5df904bd4cf1a1271c498f9651355276",
     "tests/native-apps/src/abi-client.rs": "20935d704d12997c1351f2185dea1b77fb6c5a80bdcd7b22e6e31724b0fc9e0b",
     "tests/native-apps/src/abi_steps.rs": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7",
-    "tests/native-apps/src/fault-client.rs": "09ff746cba79acb3e230a708ae1dd154dfb48939afab0a33ce70cb23b1f06349",
     "tests/native-apps/src/lifecycle-client.rs": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677",
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
-    "translations/manifest.json": "1b85ccc56829038dbd2cf6986aa3e78c868f06ea78d6fb4f3f6cc2fd69c4c411",
+    "translations/manifest.json": "2e1d9c63e25323e93590dcffb47a6ea620678ea9547a6d016459283250ed9905",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2876,7 +2870,7 @@
     "translations/ru/docs/kernel/handles.md": "f3f66f391e13a75665c351c505ec0eef51b0176afab84a20bb08a36e30804c37",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "ad46a77f458d0f6569a6dfed065ae1253765d5825285665dd58561c7670293ce",
-    "translations/ru/docs/kernel/native-applications.md": "d4d62ebda08e97f5c612b2c71356a05e30126fbe313e66acb0da0e606e4c1eff",
+    "translations/ru/docs/kernel/native-applications.md": "c93283a205a276fed8df1dac2c6ec4ba888a92dc6979c705ab43864552f16a8c",
     "translations/ru/docs/kernel/processes.md": "b3e7b05910a6bd660aefe804e8bc7697524d0561b4deb12fd56afe08f05fa136",
     "translations/ru/docs/kernel/scheduler.md": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
     "translations/ru/docs/kernel/supervision.md": "4ef58f8855bb2e561ff54bfb7919d169905fd0eb10bb3fa9786bd4089024193e",
@@ -5641,7 +5635,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 14725,
+      "estimated_bytes": 15475,
       "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5655,15 +5649,15 @@
       },
       "locations": {
         "en": {
-          "end": 186,
+          "end": 185,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "002144cbe199811294da66b8e7dc72524c98fd3748a860b1b8edd3d094641c16",
+          "sha256": "aaa35be03dfed4fc751fa1f6d7d8c9c982a179a457f6632d0e3d3a23a6680994",
           "start": 1
         },
         "ru": {
-          "end": 186,
+          "end": 185,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "d4d62ebda08e97f5c612b2c71356a05e30126fbe313e66acb0da0e606e4c1eff",
+          "sha256": "c93283a205a276fed8df1dac2c6ec4ba888a92dc6979c705ab43864552f16a8c",
           "start": 1
         }
       },
@@ -6187,7 +6181,6 @@
           "tests/native-apps/build.rs",
           "tests/native-apps/src/abi-client.rs",
           "tests/native-apps/src/abi_steps.rs",
-          "tests/native-apps/src/fault-client.rs",
           "tests/native-apps/src/lifecycle-client.rs",
           "tests/native-apps/src/lifecycle-peer.rs"
         ],
@@ -6226,13 +6219,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "002144cbe199811294da66b8e7dc72524c98fd3748a860b1b8edd3d094641c16",
+          "sha256": "aaa35be03dfed4fc751fa1f6d7d8c9c982a179a457f6632d0e3d3a23a6680994",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "d4d62ebda08e97f5c612b2c71356a05e30126fbe313e66acb0da0e606e4c1eff",
+          "sha256": "c93283a205a276fed8df1dac2c6ec4ba888a92dc6979c705ab43864552f16a8c",
           "start": 7
         }
       },

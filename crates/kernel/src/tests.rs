@@ -5,8 +5,10 @@ core::arch::global_asm!(include_str!("test_support/arch_probes.S"));
 use crate::time::Duration;
 use crate::{cpu, event, interrupt, memory, percpu, platform, smp, sync};
 use alloc::{boxed::Box, vec::Vec};
-use core::sync::atomic::{AtomicUsize, Ordering};
+use core::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 static TESTS_REPORTED: AtomicUsize = AtomicUsize::new(0);
+// Observation only: published after the real secondary TLBI, before its ACK.
+pub(crate) static REMOTE_TLBI_COMPLETED: AtomicU64 = AtomicU64::new(0);
 const UART_PID0: usize = 0xfe0;
 const UART_PID1: usize = 0xfe4;
 const UART_PID_MASK: u32 = 0xff;
@@ -261,9 +263,12 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
         remote::GATE.store(true, Ordering::Release);
         remote::complete(remote::HOLD);
         drop(retirement);
+        let generation = second.tlb_ack.load(Ordering::Acquire);
         report(
             "smp_remote_ack",
-            p.reclaimable(&a) && smp::remote_tlbi_completed(second.tlb_ack.load(Ordering::Acquire)),
+            p.reclaimable(&a)
+                && generation > 0
+                && REMOTE_TLBI_COMPLETED.load(Ordering::Acquire) >= generation,
         );
         // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.
         unsafe {

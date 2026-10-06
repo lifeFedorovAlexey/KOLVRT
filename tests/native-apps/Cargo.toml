@@ -22,13 +22,6 @@ test = false
 bench = false
 
 [[bin]]
-name = "selftest-fault-client"
-path = "src/fault-client.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
 name = "selftest-lifecycle-client"
 path = "src/lifecycle-client.rs"
 required-features = ["guest"]
