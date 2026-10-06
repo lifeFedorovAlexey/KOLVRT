@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 
-Evidence scope: принятая ограниченная Phase 3.6 после #126, current-source functional QEMU verification и Codex EN/RU semantic review; readiness и performance acceptance отделены.
+Evidence scope: исторически принятая bounded Phase 3.6 после #126; Phase 3.7 меняет source и coordination policy. Current-source acceptance остаётся незавершённой; readiness и performance отдельны.
 
 Current reference: [Предложение lifecycle rendezvous](../architecture-decisions/0026-el0-supervision.md)
 
@@ -32,11 +32,11 @@ Completion observation возвращает event 0 для admitted live instanc
 
 ## Исполнение и освобождение
 
-Истечение бюджета работы и публикация completion имеют разные deadline. У checkpoint нет workload deadline: независимый coordination interval в две секунды начинается до локального исполнения, а отсутствие workload expiry никогда не убирает bound публикации. Dispatch с workload deadline сохраняет строгую семантику BudgetExpired и добавляет только фиксированный coordination interval после этого absolute deadline; повторный join длительностью workload не используется. Отсутствие публикации останавливает kernel с CompletionPublicationTimeout; Registry ownership, namespaces и frames удерживаются до подтверждения обоих приобретённых completion и execution/root quiescence. Drainage pending-copy continuation имеет собственный существующий coordination bound в две секунды и при отказе также останавливается без reclaim. Эти counter-clock bounds предполагают progress timer/CPU; они не гарантируют физическое real-time поведение.
+Workload expiry определяет только BudgetExpired. Публикация completion, drainage pending-copy и quiescence source/ack не имеют произвольного ограничения по прошедшему времени. CPU0 удерживает Registry ownership, namespaces и frames, пока не приобретены оба completion, не отсоединены roots и не освобождены execution owners; pending copies завершаются до namespace transfer. Общий SMP wait также удерживает фактическое состояние boot, rendezvous, retirement и shutdown до выполнения требуемых предикатов. Опубликованный secondary FAILED по-прежнему вызывает fail-stop с удержанием ресурсов. Конечного внутрядерного детектора молча зависшего CPU в этой foundation нет: внешний watchdog теста диагностирует зависание, но не доказывает completion и не разрешает reclaim. Эта явная policy Phase 3.7 заменяет фиксированные coordination deadlines по требованию maintainer; workload deadlines и длительности policy supervisor остаются отдельными.
 
-Детерминированный checkpoint publication control удерживает CPU1 после native-root и execution-owner quiescence, до публикации completion, и вызывает Registry::checkpoint() без workload deadline. Точные witnesses — CheckpointPublicationHeld (quiescent=true) и CompletionPublicationTimeout. До исправления этот control достигал только внешнего QEMU timeout в 30 секунд. Положительные kernel runs принудительно задерживают публикацию на normal checkpoints, затем разрешают её; отдельный dispatch control с zero workload deadline сохранён. WFI fix с проверкой условия при masked IRQ и его deterministic test сохранены.
+Исторический checkpoint publication control #126 удерживал CPU1 после quiescence и требовал CheckpointPublicationHeld вместе с CompletionPublicationTimeout. Эта mutation и принудительный rendezvous удалены. Текущий completion-publication-state-inputs вызывает единственный production Ownership protocol с запрещённым completion при borrow/отсутствии quiescence и преждевременным inspection; проверяет реальный отказ и сохранённые phase/generation. Это UNIT coverage не устанавливает SYSTEM liveness при удержании publication или детектор молча отказавшего CPU. Исторические receipts сохраняют исходные source и control scope.
 
-Чтение counter разделяет ticks_relaxed() для scheduler/coordination deadline polling и ticks_ordered() для ordering относительно observations/context. Существующие callers ticks() сохраняют ordered semantics для measurements и accounting; ISB при trap entry сохранены. Performance results ограничены измеренными QEMU scheduler workloads, с сохранением failures и variability; из них не следует утверждение о physical performance или отсутствии regression.
+Чтение counter разделяет ticks_relaxed() для scheduler workload-deadline polling и ticks_ordered() для ordering относительно observations/context. Существующие callers ticks() сохраняют ordered semantics для measurements и accounting; ISB при trap entry сохранены. Performance results ограничены измеренными QEMU scheduler workloads, с сохранением failures и variability; из них не следует утверждение о physical performance или отсутствии regression.
 
 Lifecycle work выполняется на явном fixed-affinity checkpoint двух CPU. Каждый owner исполняет bounded timer quantum, terminal transition, block или explicit lifecycle yield, восстанавливает native root и освобождает execution ownership. Затем CPU0 приобретает оба completion перед изменением Registry или allocation/reclaim frames. Pending copy transactions завершаются до возвращения namespaces. Saved IPC wait identities, retry reasons и counters сохраняются через barrier и восстанавливаются только для того же ProcessId; endpoint и source/mailbox ownership удерживаются. Отсоединение root blocked процесса само по себе не разрешает reclaim.
 
@@ -100,7 +100,7 @@ Phase 3.7 расширяет механизм immutable image-format grants и o
       ],
       "feature": {
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies.",
         "sources": [
           "crates/kernel-core/src/process.rs",
           "crates/kernel-core/tests/process_protocol.rs",
@@ -133,7 +133,7 @@ Phase 3.7 расширяет механизм immutable image-format grants и o
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
+            "reason": "Phase 3.7 changes coordination policy and removes source-copy mutations/application copies. Prior receipts remain immutable historical evidence; current-source full supervisor crash/recovery and final acceptance are incomplete.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

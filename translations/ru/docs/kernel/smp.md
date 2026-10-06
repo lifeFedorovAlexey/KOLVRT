@@ -37,6 +37,8 @@ CPU1 не очищает BSS и не инициализирует shared resourc
 
 Ownership CPU0 — принудительно проверяемая область milestone, а не постоянное правило будущих allocation/routing. Дополнительные writers требуют review контракта admission и serialization. Global lock не добавлен. Существующий TTAS использует Acquire CAS/Release unlock; IRQ не захватывает locks и не выделяет память. Исполнение shared-pair test на двух CPU в QEMU проверяет publication и exclusion, а не исчерпывающее weak-memory behavior или fairness.
 
+Phase 3.7 убирает неявное двухсекундное ограничение общего coordination wait, включая completion, copy drainage, rendezvous, TLBI acknowledgement, boot и shutdown. Требуемые acquired predicates остаются единственными условиями возврата; фактически опубликованный secondary failure вызывает fail-stop с удержанием ресурсов. Ordinary lock или scheduler borrow не пересекают wait. Это убирает повторные counter reads из synchronization, но не является измеренным performance claim. Конечного детектора молча зависшего hardware в этой foundation нет. Host watchdogs диагностируют зависание теста, никогда не завершают kernel operation и не разрешают reuse ресурсов.
+
 ## Shootdown и retirement
 
 ```text
@@ -66,7 +68,7 @@ Shutdown прекращает mailbox admission, завершает принят
 
 Этот исторический campaign не является текущим matrix plan. Текущие coverage kinds и ограничения missing-ACK/skipped-TLBI описаны в [native application contract](native-applications.md).
 
-[Машинные доказательства](../../../../research/results/kernel-smp.json) сохраняют source hashes и точные результаты; [unsafe register](unsafe.md) задаёт trust boundaries. QEMU TCG подтверждает kernel integration, но не сертифицирует silicon. Busy polling, два фиксированных CPU, один outstanding retirement и fatal progress timeouts — явные ограничения.
+[Машинные доказательства](../../../../research/results/kernel-smp.json) сохраняют source hashes и точные результаты; [unsafe register](unsafe.md) задаёт trust boundaries. QEMU TCG подтверждает kernel integration, но не сертифицирует silicon. Busy polling, два фиксированных CPU, один outstanding retirement и отсутствие конечного детектора молчаливого зависания — явные ограничения.
 
 Более поздний [EL0 routing workload](routing.md) исполняет independent consumers одновременно на обоих CPU. Batch admission использует per-CPU CAS phases; completion и native-root/TLBI quiescence предшествуют CPU0 reset/reclamation. Shared routing writer и routing lock не добавляются.
 

@@ -1,6 +1,6 @@
 # Phase 3.6 acceptance review
 
-Document status: CURRENT
+Document status: HISTORICAL MILESTONE
 Evidence scope: source-grounded Codex review requested by the maintainer on 2026-10-06, over merged main `ddd526cc5a522d97029d0324e6e619f5fd6ec6e5` and independently inspected current-source CI artifacts. No independent human review, production trust, persistent service or physical ARM acceptance is claimed.
 Current reference: [Supervisor contract](../kernel/supervision.md)
 

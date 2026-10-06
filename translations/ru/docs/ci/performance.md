@@ -4,7 +4,7 @@ Document status: CURRENT
 Evidence scope: экспериментальная реализация для issue #109; исторический baseline полного времени трёх CI runs и локальные проверки отделены от приёмки ускорения на hosted runners.
 Current reference: [Система знаний](../knowledge-system.md)
 
-Новые DEV/PROD checkpoint publication controls требуют обоих точных событий: удержание публикации CPU1 после quiescence и bounded CompletionPublicationTimeout. Внешний QEMU timeout или произвольный panic не засчитываются; zero-workload-deadline control остаётся отдельным.
+Исторические publication controls #126 в DEV/PROD требовали удержанной публикации и CompletionPublicationTimeout. По требованию maintainer Phase 3.7 убирает эту mutation и произвольное coordination cutoff. Текущий completion-publication-state-inputs проверяет настоящий отказ Ownership и сохранённое состояние; это не эквивалент SYSTEM coverage удержанной публикации. Внешний timeout диагностирует отказ и никогда не считается успешной операцией или witness отрицательного входа.
 
 <a name="ci-performance"></a>
 

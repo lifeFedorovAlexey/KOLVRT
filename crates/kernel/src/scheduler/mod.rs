@@ -310,13 +310,13 @@ fn dispatch_inner(
         local.publish(generation);
     }
     crate::smp::ping(percpu::SECONDARY_CPU);
-    // Checkpoints have no workload expiry, but their publication bound starts
-    // before either owner runs. Continuous dispatch retains its workload bound.
-    let checkpoint_deadline = (step && continuous).then(|| crate::smp::completion_deadline(None));
     run_local();
-    let publication_deadline =
-        checkpoint_deadline.unwrap_or_else(|| crate::smp::completion_deadline(deadline));
-    crate::smp::wait_completion(|| LOCALS.iter().all(Local::completed), publication_deadline);
+    // Workload expiry governs task outcomes. Returning ownership requires both
+    // acquired completions, independently of elapsed time.
+    crate::smp::wait(
+        || LOCALS.iter().all(Local::completed),
+        "scheduler completion publication",
+    );
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     let owners_released = RUNNING_OWNER
         .iter()
@@ -496,12 +496,12 @@ fn run_local() {
     ARRIVED.fetch_or(1 << percpu::id(), Ordering::AcqRel);
     crate::smp::wait(
         || ARRIVED.load(Ordering::Acquire) == (1 << platform_config::ACTIVE_CPUS) - 1,
-        "EL0 CPU rendezvous timeout",
+        "EL0 CPU rendezvous",
     );
     if percpu::id() == percpu::BOOT_CPU {
         START.store(true, Ordering::Release);
     } else {
-        crate::smp::wait(|| START.load(Ordering::Acquire), "EL0 start timeout");
+        crate::smp::wait(|| START.load(Ordering::Acquire), "EL0 start publication");
     }
     if let Some(first) = first {
         // SAFETY: INV-USER-TTBR: caller retains live immutable roots through acquired
@@ -529,7 +529,7 @@ fn run_local() {
                         state.ipc_pending.iter().all(Option::is_none)
                     })
                 },
-                "checkpoint copy continuation drainage timeout; resources retained",
+                "checkpoint copy continuation drainage",
             );
         } else {
             continuous_local(local, generation);

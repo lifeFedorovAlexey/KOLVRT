@@ -1,7 +1,7 @@
 # Isolated EL0 supervision
 
 Document status: CURRENT
-Evidence scope: accepted bounded Phase 3.6 after #126, current-source functional QEMU verification and Codex EN/RU semantic review; readiness and performance acceptance are separate.
+Evidence scope: historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. Current-source acceptance remains incomplete; readiness and performance are separate.
 Current reference: [Lifecycle rendezvous proposal](../architecture-decisions/0026-el0-supervision.md)
 
 ABI contract: native.lifecycle/1
@@ -30,11 +30,11 @@ Completion observation returns event 0 for an admitted live instance, 1 for Exit
 
 ## Execution and retirement
 
-Workload expiry and completion publication have distinct deadlines. Checkpoint has no workload deadline: its independent two-second coordination interval starts before local execution, and absence of workload expiry never removes the publication bound. Dispatch with a workload deadline retains strict BudgetExpired semantics and adds only the fixed coordination interval after that absolute deadline, never a second workload-duration join. Missing publication halts with CompletionPublicationTimeout; Registry ownership, namespaces and frames stay retained until both acquired completions and execution/root quiescence are confirmed. Pending-copy continuation drainage has its own existing two-second coordination bound and also halts without reclaim on failure. These counter-clock bounds assume timer/CPU progress; they are not physical real-time guarantees.
+Workload expiry governs BudgetExpired only. Completion publication, pending-copy drainage and source/ack quiescence have no arbitrary elapsed-time cutoff. CPU0 retains Registry ownership, namespaces and frames until both acquired completions, detached roots and released execution owners are observed; pending copies finish before namespace transfer. The shared SMP wait also retains actual boot, rendezvous, retirement and shutdown state until their required predicates hold. A published secondary FAILED state still triggers fail-stop with resources retained. A silent stalled CPU has no finite in-kernel detector in this foundation: the external test watchdog diagnoses a hang, and cannot establish completion or authorize reclaim. This explicit Phase 3.7 policy replaces the fixed coordination deadlines at the maintainer’s request; workload deadlines and supervisor policy durations remain separate.
 
-The deterministic checkpoint publication control holds CPU1 after native-root and execution-owner quiescence, before completion publication, and invokes Registry::checkpoint() with no workload deadline. Its exact witnesses are CheckpointPublicationHeld (quiescent=true) and CompletionPublicationTimeout. Before the fix this control reached only the external 30-second QEMU timeout. Positive kernel runs force pending publication on normal checkpoints and then release it; the separate zero-workload-deadline dispatch control remains intact. The WFI masked-condition race fix and its deterministic test remain intact.
+The historical #126 checkpoint publication control held CPU1 after quiescence and required CheckpointPublicationHeld plus CompletionPublicationTimeout. That mutation and forced rendezvous are removed. Current completion-publication-state-inputs invokes the single production Ownership protocol with forbidden borrowed/nonquiescent completion and premature inspection; it checks real rejection and retained phase/generation. This UNIT coverage does not establish withheld-publication SYSTEM liveness or a silent-CPU failure detector. Historical receipts retain their original source and control scope.
 
-Counter reads distinguish ticks_relaxed() for scheduler/coordination deadline polling from ticks_ordered() for observation/context ordering. Existing ticks() callers keep ordered semantics for measurements and accounting; trap-entry ISB instructions remain. Performance results are limited to measured QEMU scheduler workloads, with failures and variability retained; no physical-performance or absence-of-regression claim follows.
+Counter reads distinguish ticks_relaxed() for scheduler workload-deadline polling from ticks_ordered() for observation/context ordering. Existing ticks() callers keep ordered semantics for measurements and accounting; trap-entry ISB instructions remain. Performance results are limited to measured QEMU scheduler workloads, with failures and variability retained; no physical-performance or absence-of-regression claim follows.
 
 Lifecycle work runs at an explicit fixed-affinity two-CPU checkpoint. Each owner executes a bounded timer quantum, terminal transition, block or explicit lifecycle yield, restores its native root and releases execution ownership. CPU0 then acquires both completions before editing Registry or allocating/reclaiming frames. Pending copy transactions finish before namespaces return. Saved IPC wait identities, retry reasons and counters survive the barrier and are restored only to the same ProcessId; endpoint and source/mailbox ownership remain retained. A blocked process has no reclaim authorization merely because its root detached.
 
@@ -98,7 +98,7 @@ Phase 3.7 extends the mechanism with immutable image-format grants and operation
       ],
       "feature": {
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies.",
         "sources": [
           "crates/kernel-core/src/process.rs",
           "crates/kernel-core/tests/process_protocol.rs",
@@ -131,7 +131,7 @@ Phase 3.7 extends the mechanism with immutable image-format grants and operation
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
+            "reason": "Phase 3.7 changes coordination policy and removes source-copy mutations/application copies. Prior receipts remain immutable historical evidence; current-source full supervisor crash/recovery and final acceptance are incomplete.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

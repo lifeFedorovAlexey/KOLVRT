@@ -57,6 +57,8 @@ The remaining no-op user-copy, handle, domain/capability and IPC mutation select
 
 Exact 0439387 CI passed scheduler and failed next at user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID passed; evidence was skipped and foundation failed. The broader migration addresses this scope and adjacent families; a full current 144-task execution is running and is not yet a claimed pass.
 
+Phase 3.7 removes the arbitrary two-second coordination cutoff from the actual SMP wait and scheduler completion/copy-drain paths at the maintainer’s explicit request. Acquired completion, root detachment, owner release and transport drainage remain mandatory; published secondary failure still halts with resources retained. A silent stalled CPU has no finite in-kernel detector in this foundation; the host watchdog diagnoses tests and cannot establish completion or reclaim. Workload expiry and the canonical 1/128-second supervisor restart backoff remain separate policies. Historical #126 timeout evidence is not current-source acceptance.
+
 ## Commands and evidence limits
 
 cargo xtask service-run and app-smoke build actual production ELF artifacts. The supervisor launches the service and ordinary client; the service continues after the client exits. The host observes continuation and then stops QEMU. This is neither graceful shutdown nor a zero-leaked-resources measurement.

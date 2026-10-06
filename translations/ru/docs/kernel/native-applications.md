@@ -56,6 +56,8 @@ CI на точном d33ce92 прошёл static, native, host, kernel DEV/PROD,
 
 CI на точном 0439387 прошёл scheduler и затем упал на user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID прошли; evidence пропущен, итоговый foundation красный. Общая миграция исправляет этот scope и соседние семейства; полное текущее выполнение 144 задач идёт и ещё не объявлено пройденным.
 
+По явному требованию maintainer Phase 3.7 убирает произвольное двухсекундное ограничение из настоящего SMP wait и путей scheduler completion/copy-drain. Acquired completion, detached roots, released owners и transport drainage остаются обязательными; опубликованный secondary failure по-прежнему останавливает работу с удержанием ресурсов. Конечного внутрядерного детектора молча зависшего CPU в этой foundation нет; host watchdog диагностирует тесты и не доказывает completion или reclaim. Workload expiry и canonical supervisor restart backoff 1/128 секунды остаются отдельными policy. Исторический timeout evidence #126 не является current-source acceptance.
+
 ## Команды и пределы evidence
 
 cargo xtask service-run и app-smoke собирают настоящие production ELF. Supervisor запускает сервис и обычный client; после выхода client сервис продолжает работать. Host наблюдает продолжение, затем останавливает QEMU. Это не graceful shutdown и не измерение zero leaked resources.

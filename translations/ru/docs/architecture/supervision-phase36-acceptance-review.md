@@ -1,6 +1,6 @@
 # Проверка приёмки Phase 3.6
 
-Document status: CURRENT
+Document status: HISTORICAL MILESTONE
 Evidence scope: проверка Codex по исходникам, запрошенная maintainer 2026-10-06, для merged main `ddd526cc5a522d97029d0324e6e619f5fd6ec6e5` и независимо изученных CI artifacts с актуальными исходниками. Независимая human review, production trust, persistent service и приёмка physical ARM не заявляются.
 Current reference: [Контракт supervisor](../kernel/supervision.md)
 

@@ -397,11 +397,11 @@
       "aliases": ["ADR-0026"],
       "document": "adr.0026",
       "document_status": "CURRENT",
-      "estimated_bytes": 7208,
+      "estimated_bytes": 7905,
       "id": "adr.0026",
       "kind": "adr",
       "path": "docs/architecture-decisions/0026-el0-supervision.md",
-      "summary": "Accepted bounded isolated EL0 supervision with finite completion publication after #126.",
+      "summary": "Accepted isolated EL0 supervision; acquired quiescence with no arbitrary coordination cutoff.",
       "title": "ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous"
     },
     {
@@ -828,7 +828,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 17491,
+      "estimated_bytes": 17697,
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
       "path": "docs/ci/performance.md",
@@ -956,7 +956,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 21559,
+      "estimated_bytes": 22207,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -966,7 +966,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 26918,
+      "estimated_bytes": 26604,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -976,7 +976,7 @@
     {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 17553,
+      "estimated_bytes": 17636,
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
       "path": "docs/kernel/scheduler.md",
@@ -986,7 +986,7 @@
     {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 18953,
+      "estimated_bytes": 19098,
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "path": "docs/kernel/supervision.md",
@@ -1065,8 +1065,8 @@
     },
     {
       "document": "doc.kolvrt.supervision.acceptance-review",
-      "document_status": "CURRENT",
-      "estimated_bytes": 14407,
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 14420,
       "id": "doc.kolvrt.supervision.acceptance-review",
       "kind": "security-analysis",
       "path": "docs/architecture/supervision-phase36-acceptance-review.md",
@@ -1907,7 +1907,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 6321,
+      "estimated_bytes": 6007,
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",

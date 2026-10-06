@@ -4,7 +4,7 @@ Document status: CURRENT
 Evidence scope: experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.
 Current reference: [Knowledge system](../knowledge-system.md)
 
-The new DEV/PROD checkpoint publication controls require both exact events: CPU1 publication held after quiescence and bounded CompletionPublicationTimeout. External QEMU timeout or arbitrary panic does not count; the zero-workload-deadline control remains separate.
+The historical #126 DEV/PROD publication controls required held publication and CompletionPublicationTimeout. Phase 3.7 removes that mutation and the arbitrary coordination cutoff at the maintainer’s request. Current completion-publication-state-inputs checks actual Ownership rejection and retained state; it is not equivalent withheld-publication SYSTEM coverage. External timeout diagnoses failure and never counts as a successful operation or negative-input witness.
 
 <a name="ci-performance"></a>
 

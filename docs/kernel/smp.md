@@ -18,7 +18,7 @@ CPU1 never clears BSS or initializes shared resources. Cleaning the linked RAM, 
 Kernel-test builds retain a separate completed-TLBI generation, published only after
 the secondary returns from `DSB; TLBI; DSB; ISB`, before its acknowledgement. The
 `smp_remote_ack` check requires that execution witness for the acknowledged generation.
-The omission control therefore fails even if the old translation disappears for another
+The observation records the actual maintenance sequence even if the old translation disappears for another
 reason; a translation fault alone is not evidence that the maintenance sequence ran.
 This witness is absent from non-test builds and does not replace the hardware fault probe.
 
@@ -36,6 +36,8 @@ This witness is absent from non-test builds and does not replace the hardware fa
 | Retirement                      | CPU0 publishes; CPU1 acknowledges at ordinary quiescence | One checked generation; never wraps       |
 
 CPU0 ownership is the enforced milestone scope, not a permanent future allocation/routing rule. Additional writers require a reviewed admission and serialization contract. No global lock was added. Existing TTAS uses Acquire CAS/Release unlock; IRQ takes no locks and allocates nothing. Two-CPU QEMU shared-pair execution checks publication and exclusion, not exhaustive weak-memory behavior or fairness.
+
+Phase 3.7 removes the implicit two-second cutoff from the shared coordination wait, including completion, copy drainage, rendezvous, TLBI acknowledgement, boot and shutdown. Required acquired predicates remain the sole return conditions; actual published secondary failure triggers fail-stop with resources retained. No ordinary lock or scheduler borrow spans a wait. This removes repeated counter reads from synchronization; it is not a measured performance claim. Silent stalled hardware has no finite detector in this foundation. Host watchdogs diagnose test hangs, never complete a kernel operation or authorize resource reuse.
 
 ## Shootdown and retirement
 
@@ -66,7 +68,7 @@ Historical Phase 1.1 evidence: `cargo xtask test` ran 39 named tests in DEV and 
 
 This historical campaign is not the current matrix plan. Current coverage kinds and missing-ACK/skipped-TLBI limits are recorded in the [native application contract](native-applications.md).
 
-[Machine evidence](../../research/results/kernel-smp.json) retains source hashes and exact results; [unsafe register](unsafe.md) states trust boundaries. QEMU TCG is kernel integration evidence, not silicon certification. Busy polling, two fixed CPUs, one outstanding retirement and fatal progress timeouts are explicit limits.
+[Machine evidence](../../research/results/kernel-smp.json) retains source hashes and exact results; [unsafe register](unsafe.md) states trust boundaries. QEMU TCG is kernel integration evidence, not silicon certification. Busy polling, two fixed CPUs, one outstanding retirement and no finite silent-stall detector are explicit limits.
 
 The later [EL0 routing workload](routing.md) runs independent consumers concurrently on both CPUs. Batch admission uses per-CPU CAS phases; completion and native-root/TLBI quiescence precede CPU0 reset/reclamation. No shared routing writer or routing lock is introduced.
 

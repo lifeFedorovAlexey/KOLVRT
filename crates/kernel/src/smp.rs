@@ -1,10 +1,9 @@
 //! Fixed two-CPU coordination, not a scheduler. CPU0 serializes admission and PTE updates.
 //! IRQ never waits or takes locks. CPU1 acknowledges TLBI only between bounded work items.
-use crate::{cpu, percpu, time};
+use crate::{cpu, percpu};
 use core::sync::atomic::{AtomicBool, AtomicU8, AtomicU64, AtomicUsize, Ordering};
 use percpu::SECONDARY_CPU;
 pub const IPI: u8 = 1;
-const COORDINATION_TIMEOUT: time::Duration = time::Duration::from_secs(2);
 static READY: AtomicBool = AtomicBool::new(false);
 const PANIC_FILE_LIMIT: usize = 96;
 static SECONDARY_PANIC_FILE: [AtomicU8; PANIC_FILE_LIMIT] =
@@ -46,6 +45,7 @@ static TLB_REQUEST: AtomicU64 = AtomicU64::new(0);
 #[cfg(feature = "kernel-tests")]
 pub mod experiment {
     use super::*;
+    use crate::time;
     pub const LOCK: u64 = 1;
     pub const READ: u64 = 2;
     pub const HOLD: u64 = 3;
@@ -143,37 +143,10 @@ pub mod experiment {
         }
     }
 }
-pub fn wait(ready: impl FnMut() -> bool, reason: &str) {
-    wait_optional(ready, Some(COORDINATION_TIMEOUT), reason);
-}
-/// Native completion can have no workload deadline. Timeout never authorizes reclaim.
-/// Callers wait without a scheduler borrow/ordinary lock and require admitted work
-/// to eventually terminate for return; existing boot coordination keeps its bound.
-pub fn wait_optional(ready: impl FnMut() -> bool, timeout: Option<time::Duration>, reason: &str) {
-    assert!(
-        wait_until(ready, timeout.map(time::deadline_after)),
-        "{reason}"
-    );
-}
-/// Publication always has its own coordination interval. A workload deadline
-/// governs BudgetExpired only; it is never reused as a join duration.
-pub fn completion_deadline(workload_deadline: Option<u64>) -> u64 {
-    let anchor = workload_deadline.unwrap_or_else(cpu::ticks_ordered);
-    let interval = kernel_core::time::duration_ticks(COORDINATION_TIMEOUT, cpu::frequency())
-        .expect("invalid coordination interval");
-    anchor
-        .checked_add(interval)
-        .expect("completion deadline exhausted")
-}
-pub fn wait_completion(ready: impl FnMut() -> bool, publication_deadline: u64) {
-    if !wait_until(ready, Some(publication_deadline)) {
-        crate::event!(
-            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"CompletionPublicationTimeout\"}}"
-        );
-        panic!("scheduler completion publication timeout; resources retained");
-    }
-}
-fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>) -> bool {
+/// Return only after the caller observes the required publication/quiescence.
+/// Elapsed time cannot establish completion. A published CPU failure stops the
+/// coordinator with resources retained; silent stalls require external diagnosis.
+pub fn wait(mut ready: impl FnMut() -> bool, reason: &str) {
     assert!(
         !percpu::current().scheduler_borrow.load(Ordering::Acquire),
         "scheduler borrow across wait"
@@ -182,13 +155,10 @@ fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>) -> bool {
     loop {
         if percpu::CPUS[SECONDARY_CPU].state.load(Ordering::Acquire) == percpu::FAILED {
             report_secondary_panic();
-            panic!("secondary CPU failure");
+            panic!("secondary CPU failure during {reason}; resources retained");
         }
         if ready() {
-            return true;
-        }
-        if deadline.is_some_and(|limit| cpu::ticks_relaxed() >= limit) {
-            return false;
+            return;
         }
         core::hint::spin_loop();
     }
