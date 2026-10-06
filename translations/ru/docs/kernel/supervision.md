@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 
-Evidence scope: экспериментальная development fixture Phase 3.6 и реализация ограниченного lifecycle; acceptance review, production bootstrap trust и physical ARM64 остаются открытыми.
+Evidence scope: принятая ограниченная Phase 3.6 после #126, current-source functional QEMU verification и Codex EN/RU semantic review; readiness и performance acceptance отделены.
 
 Current reference: [Предложение lifecycle rendezvous](../architecture-decisions/0026-el0-supervision.md)
 
@@ -48,21 +48,21 @@ SGI-only entry не расходует checkpoint quantum до первой ин
 
 Политика EL0 отправляет readiness probe точному endpoint с absolute counter deadline 1/8 секунды и признаёт READY только после completed initialized response с ожидаемым marker. Commit/reply доступен только bound receiver сервиса и accepted service token; requester SEND handle не может подделать ответ. Expired probe не означает READY. Эти длительности QEMU fixture — явные параметры политики, а не real-time guarantees.
 
-Committed crashing service сообщает effect-unknown и exact fault observation. Supervisor запускает fresh instance и проверяет отказ предыдущего token и SEND handle. Silent service получает timeout до commitment и явно останавливается. Crash storm получает три выбранные EL0 replacement attempts с backoff 1/128 секунды по counter clock; затем supervisor прекращает retries, хотя native authority credits ещё остаются. Здоровый peer завершает native probes между сбоями worker.
+Committed crashing service сообщает effect-unknown и exact fault observation. Supervisor запускает fresh instance и проверяет отказ предыдущего token и SEND handle. Silent service получает timeout до commitment и явно останавливается. Crash storm получает три выбранные EL0 replacement attempts с backoff 1/128 секунды по counter clock; затем supervisor прекращает retries, хотя native authority credits ещё остаются. Здоровый peer завершает native probes до и после bounded crash storm.
 
 Сервис отправляет подтверждение commit через feedback endpoint своего точного instance только после успешного COMMIT. Supervisor проверяет и отвечает на подтверждение до cancellation; прошедшие scheduler quanta не доказывают commitment. При accepted load supervisor наблюдает cancellation после commitment как effect-unknown, прекращает admission, запрашивает owner-local termination и ждёт точного terminal event. Он не обещает rollback и не повторяет операции с неизвестным эффектом. Final teardown закрывает все endpoints, завершает pending copies, дренирует source/mailbox ownership, освобождает namespaces/domains/ASIDs и private frames. Внешний test watchdog десять секунд диагностирует неудачный workload; он не доказывает успешный shutdown и не является production policy. Неожиданный отказ supervisor, watchdog expiry или failed quiescence останавливает/карантинирует development fixture без reclaim live resources; deadline никогда не разрешает освобождать reachable state.
 
 ## Проверка и следующий gate
 
-[Receipt исправления checkpoint](../../../../research/results/checkpoint-publication-bound.json) сохраняет точные DEV/PROD события held-publication и bounded-timeout и оба ASID measurements из восьми пар. Медиана tagged-ASID scheduler изменилась с 12 848 759,5 до 13 050 031,5 ticks (+1,57%); ASID-zero — с 12 008 503 до 12 805 975 ticks (+6,64%). Эти последовательные QEMU observations включают lifecycle changes и counter refinement, не выделяют стоимость ISB и не доказывают отсутствие performance regression. Исходный IPC performance run завершился в DEV, но провалил строгий PROD control blocked_requester_wait (block_delta=0); отказ сохранён. Performance attribution и architecture/EN-RU acceptance остаются открытыми; это исправление не закрывает #27.
+[Новая проверка приёмки](../architecture/supervision-phase36-acceptance-review.md) выполнена относительно merged main ddd526cc5a522d97029d0324e6e619f5fd6ec6e5 после #126. Codex повторно проверил полные architecture/code и EN/RU semantic requirements, включая обязательный publication bound для checkpoint(None), отдельный copy-drain bound и различие relaxed/ordered counter reads. Functional implementation — BOUNDED_IMPLEMENTED. Readiness остаётся NOT_READY, без введения нового числового performance gate и без запрета использования функциональной основы в #28.
 
-Последующий routing run 37389265393 упал в stripped PROD после начальной проверки EL0, хотя все kernel shards прошли. Двадцать четыре повтора точного ELF не воспроизвели panic. Минимальная идентификация отказа теперь видна без machine-events/diagnostics: статические process/IPC check names и файл/строка panic, без private data и адресов. При последующем PROD boot CPU1 перешёл в FAILED во время IPC deadline workload; bounded static source file/line теперь сохраняется до Release-publication FAILED и читается primary после Acquire, без UART на CPU1 и private values. Это улучшает диагностику, но не доказывает исправление intermittent failure. Current-source verification остаётся STALE до нового стендового прогона.
+[Fresh current-source receipt](../../../../research/results/supervision-phase36-main126.json) независимо проверяет CI run 37439023443 на final #126 head cceb17e74a7a249d76d0f10905de23205f69b1dd: все source digests совпадают, проверены фактические ELF/result hashes и полный inventory 142 задач — 125 checks в каждом профиле, оба ordinary boots, 138 controls. Все десять supervision controls сохранены. Новые DEV/PROD publication controls требуют одновременно CheckpointPublicationHeld с quiescent=true и CompletionPublicationTimeout; чужой panic не засчитывается.
 
-[Сохранённый exact-source execution receipt](../../../../research/results/supervision-phase36.json) содержит 125 DEV и 125 PROD checks, оба non-test boot и 136 rejected control runs. Десять supervisor-specific runs входят в 56 IPC/supervision controls. Последний source set проверяет dependency denial, unpublished quota rollback и commitment-aware shutdown handshake, а также фактические Terminated отдельно от BudgetExpired; предыдущие snapshots остаются неизменными. Technical QEMU verification не завершает proposed architecture или human EN/RU acceptance.
+[Старый receipt](../../../../research/results/supervision-phase36-current.json) и [предложение до #126](../architecture/supervision-phase36-pre126-review.md) сохранены только для исторического scope 9cf87bc/692b024. Они не подтверждают текущие исходники.
 
-Реальные images проверяют восемь групп сценариев: ordered normal startup; missing dependency и forged grant selector; irreversible seal, прекращение unused launch grant, исчерпание instance credits, отказ unsupported version и repeated launch denial; forged readiness denial; crash, fresh restart и stale binding denial; startup timeout; bounded restart storm и healthy peer progress; shutdown under committed load. Bitmap возвращается control flow EL0 и проверяется вместе с actual process completion, освобождёнными CPU owners, отсутствием live domains/processes и восстановленным числом physical pages. Это не заменяет source review.
+[Исходные performance observations](../../../../research/results/checkpoint-publication-bound.json) показывают median +1.57% с tagged ASID и +6.64% с ASID-zero. Sequential before/after runs при uncontrolled host load объединяют lifecycle correction и counter refinement; attribution к ISB и отсутствие регрессии не доказаны. Строгий первоначальный PROD IPC benchmark также отказал на blocked_requester_wait с block_delta=0. Failure сохранён и control не ослаблен. Performance acceptance не заявляется; это отдельная открытая область, не новый универсальный процентный threshold.
 
-Focused mutations удаляют supervisor provenance, stale service-token rejection retained IPC wait identity или commit перед подтверждением load. Контроль false commit acknowledgement должен давать точный CommitNotProven в обоих профилях. Normal worker launch и launch request с missing dependency используют общую EL0 manifest policy routine; она требует все dependency bits, отвергает отсутствующую зависимость до native launch и инициализирует denial result. Обход этого EL0 guard должен давать точный DependencyNotRejected в обоих профилях. ASID mutation сначала проверяет обязательный invalidation, до зависимого наблюдения same-VA: stale translation не должна скрывать ожидаемый witness. Каждая должна вызвать named exact rejection в DEV и PROD. Все прежние kernel checks и controls остаются обязательными. [Runner](../../../../crates/xtask/src/main.rs) поддерживает `cargo xtask test --positive-only [--prod]` для итераций; эта команда не выполняет и не заменяет full matrix. Exact-source receipts записываются после full matrix. Перед закрытием issue #27 обязательны semantic и complete EN/RU human review. #28 отвечает за persistent service integration; #38 — за production bootstrap trust.
+Восемь real EL0 scenario groups проверяют ordered startup, dependency/authority denial, finite grants/seal, forged readiness, crash/fresh restart/stale binding, startup timeout, bounded storm и committed-load shutdown. Bitmap 255 дополнен actual completion, released CPU owners, zero live processes/domains и restored physical pages. Host tests не заменяют EL0; QEMU не является physical ARM. Старые timer/stripped-PROD failures остаются в истории; universal race-freedom не заявляется. #28 — persistent service integration; #38 — production bootstrap trust.
 
 Исходники: [lifecycle mechanism](../../../../crates/kernel/src/supervision.rs), [EL0 images](../../../../crates/kernel/src/supervision_workload.S), [bootstrap fixture](../../../../crates/kernel/src/supervision_workload.rs), [process ownership](../../../../crates/kernel/src/process.rs), [checkpoint](../../../../crates/kernel/src/scheduler/mod.rs).
 
@@ -70,7 +70,7 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
 
 ## Граница исходников при интеграции CI
 
-Ветка интегрирует reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, включая общий serial/four-shard CI task inventory. Все десять supervisor control runs обязательны, поэтому plan содержит 140 задач. Matrix runner распознаёт точные supervision: failure events, а не любой panic. Предыдущие execution receipts сохраняют свои source scopes. Последний стендовый receipt с совпадающими source hashes фиксирует полную Cortex-A57 matrix и восемь успешных 16-bit QEMU max ASID pairs. Предыдущий timer_rearm failure сохранён и никогда не засчитывался как revocation witness. Актуальный bounded run прошёл после исправления compiler ordering; причина intermittent timeout окончательно не установлена, общая свобода от гонок не заявляется. Human architecture/EN-RU acceptance остаётся открытой.
+Current main после #126 содержит 142 задачи и 138 controls из общего serial/four-shard inventory. Publication failure не возвращает фиктивный success: resources остаются retained до acquired quiescence. Новая verification относится к этому exact source set; historical inventories не переписываются. Performance и readiness остаются отдельными от functional acceptance.
 
 <!-- knowledge -->
 
@@ -97,7 +97,7 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
         "adr.0026"
       ],
       "feature": {
-        "implementation": "EXPERIMENTAL",
+        "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
         "sources": [
           "crates/kernel-core/src/process.rs",
@@ -118,22 +118,22 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
           "crates/xtask/src/output.rs",
           "crates/xtask/src/timing.rs"
         ],
-        "acceptance": [],
+        "acceptance": ["research/results/supervision-phase36-main126.json"],
         "issues": [27],
         "adrs": ["adr.0026"],
         "limitations": [
           "Development static manifest/image assurance only; production trust remains #38.",
           "Fixed affinity and two-CPU lifecycle barrier; generic wait-any, migration, independent live admission and persistent services are excluded.",
-          "Semantic architecture and complete EN/RU human review remain pending; QEMU is not physical ARM64 acceptance."
+          "Codex semantic/EN-RU review completed after #126; performance attribution/admissibility and physical ARM/production acceptance remain open."
         ],
-        "next_gate": "Complete architecture/code semantic and full EN/RU human review before bounded Phase 3.6 acceptance; #28 owns persistence and #38 production bootstrap trust.",
+        "next_gate": "Phase 3.7/#28 persistent ELF integration over the accepted bounded functional foundation; performance readiness and production trust remain separate review scopes.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
-            "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
+            "state": "VERIFIED",
+            "reason": "Independent post-#126 142-task artifact check against all current source digests, actual ELF/result hashes and exact publication/control witnesses; no performance acceptance.",
+            "receipt": "research/results/supervision-phase36-main126.json",
+            "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."
           },
           {
@@ -149,6 +149,12 @@ Focused mutations удаляют supervisor provenance, stale service-token reje
             "to": "EXPERIMENTAL",
             "reason": "Implement isolated EL0 policy with a separately derived lifecycle barrier; acceptance review remains pending.",
             "acceptance": []
+          },
+          {
+            "from": "EXPERIMENTAL",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Post-#126 code/architecture and full EN/RU semantic review with independent current-source 142-task functional verification; readiness/performance acceptance remain separate.",
+            "acceptance": ["research/results/supervision-phase36-main126.json"]
           }
         ]
       }

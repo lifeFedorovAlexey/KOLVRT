@@ -1,92 +1,17 @@
 {
   "schema_version": 1,
-  "base_commit": "9cf87bccff19349d181a1d5a8b09a3ab4033249f",
-  "files": [
-    {
-      "path": "crates/kernel/Cargo.toml",
-      "before_sha256_lf": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
-      "after_sha256_lf": "f5754d159c067d8fe5b6c4a92048212c97aebe2002cb5583dddd02428bbcb5fb",
-      "disposition": "existing-feature",
-      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
-    },
-    {
-      "path": "crates/kernel/src/arch/aarch64/mod.rs",
-      "before_sha256_lf": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648",
-      "after_sha256_lf": "24299caf432b0cebc32434a43d34489f8e3714446fdd95b12f3ecb9f9cea1413",
-      "disposition": "existing-feature",
-      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
-    },
-    {
-      "path": "crates/kernel/src/scheduler/mod.rs",
-      "before_sha256_lf": "0835891513ee6be934eaad49499b479f8e5701ba15a3ba11ac8fab7aaad3fd0a",
-      "after_sha256_lf": "6e14830a34ebd3c7af13f6b8911688e959154a4dc353bbdd5bb65cb9ca7443e0",
-      "disposition": "existing-feature",
-      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
-    },
-    {
-      "path": "crates/kernel/src/smp.rs",
-      "before_sha256_lf": "b421343b4c2a4fab8c6cbce52a20ea56ae35a71a58ddd28732f39b47ca06c21c",
-      "after_sha256_lf": "0f585ca1e2982de66a6b045e271c1b73ed319696a57fa189e0d2ed7b62fa7d36",
-      "disposition": "existing-feature",
-      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
-    },
-    {
-      "path": "crates/kernel/src/supervision_workload.rs",
-      "before_sha256_lf": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599",
-      "after_sha256_lf": "73868af14eeb17328f79bcd6d5c47445316047684cc4f1cc60e3fa088616ec0a",
-      "disposition": "existing-feature",
-      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
-    },
-    {
-      "path": "crates/xtask/src/main.rs",
-      "before_sha256_lf": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1",
-      "after_sha256_lf": "0e39fc6444c73c70bcf36dee77a72c2beb1cf66d4c7789c8c8cc638049047ded",
-      "disposition": "existing-feature",
-      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
-    },
-    {
-      "path": "crates/xtask/src/matrix.rs",
-      "before_sha256_lf": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
-      "after_sha256_lf": "f3934e65d3932afe535f39ee3254424df857c84c3fa43d02a8b5d2e269715718",
-      "disposition": "existing-feature",
-      "reason": "Fix mandatory publication coordination for checkpoint without workload expiry, preserve no-reclaim timeout semantics, bound copy drainage, restrict relaxed timer reads to deadline polling and add exact DEV/PROD native controls."
-    }
-  ],
+  "base_commit": "ddd526cc5a522d97029d0324e6e619f5fd6ec6e5",
+  "files": [],
   "features": [
     {
-      "id": "kolvrt.arena",
-      "disposition": "evidence-change",
-      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
-    },
-    {
-      "id": "kolvrt.ci.performance",
+      "id": "kolvrt.services.supervision",
       "disposition": "semantic-change",
-      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
-    },
-    {
-      "id": "kolvrt.compatibility.manifests",
-      "disposition": "evidence-change",
-      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
-    },
-    {
-      "id": "kolvrt.cost-l.offline-queries",
-      "disposition": "evidence-change",
-      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
-    },
-    {
-      "id": "kolvrt.dependencies.hygiene",
-      "disposition": "evidence-change",
-      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
+      "reason": "Re-review bounded functional architecture and complete EN/RU semantics after merged #126; accept corrected finite publication/drain behavior against fresh 142-task artifacts while leaving performance/readiness separate."
     },
     {
       "id": "kolvrt.ipc.transport",
       "disposition": "evidence-change",
-      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
-    },
-    {
-      "id": "kolvrt.services.supervision",
-      "disposition": "semantic-change",
-      "reason": "Mandatory checkpoint publication coordination and separate copy-drain bounds, explicit counter ordering and exact native failure witnesses change shared source applicability; historical receipts remain immutable and current acceptance is separate."
+      "reason": "Refresh exact-source functional QEMU applicability after #126 using all actual ELF/result hashes and precise negative witnesses, without claiming performance acceptance."
     }
   ]
 }

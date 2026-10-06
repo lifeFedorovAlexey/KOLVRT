@@ -1,0 +1,1837 @@
+{
+  "schema_version": 1,
+  "scope": "Current-source bounded Phase 3.6 technical QEMU verification; semantic review recorded separately; no physical ARM, production trust, persistence or stable ABI.",
+  "reviewed_base_commit": "9cf87bccff19349d181a1d5a8b09a3ab4033249f",
+  "ci_run": "https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37433732057",
+  "ci_head": "692b024968c4a1a6c5c524b73e2978f1e60f4d94",
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035"
+    },
+    {
+      "path": "crates/kernel/assets/minimal-exit.elf",
+      "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "sha256_lf": "349a01fc447f71ef7540728d5782c3667cd5a92a47bf497feb307a99e1c87c89"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+    },
+    {
+      "path": "crates/kernel/src/asid.rs",
+      "sha256_lf": "8ef1f80e78c8a3b95fa429c84484071f51651c8b1b89db02d2ce45f8a7be1003"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.S",
+      "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "sha256_lf": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+    },
+    {
+      "path": "crates/kernel/src/execution.rs",
+      "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "sha256_lf": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed"
+    },
+    {
+      "path": "crates/kernel/src/handles.rs",
+      "sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+    },
+    {
+      "path": "crates/kernel/src/ipc/deferred.rs",
+      "sha256_lf": "5205ed2effd778b45a220e295e3961952af1790ac3f54d857a2b25da304b5cb7"
+    },
+    {
+      "path": "crates/kernel/src/ipc/native.rs",
+      "sha256_lf": "171f940df42bb216af8636b504586dc555b8999833900101e328e57ffd8dd01e"
+    },
+    {
+      "path": "crates/kernel/src/ipc/storage.rs",
+      "sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991"
+    },
+    {
+      "path": "crates/kernel/src/ipc.rs",
+      "sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933"
+    },
+    {
+      "path": "crates/kernel/src/ipc_authority_workload.S",
+      "sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.S",
+      "sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.rs",
+      "sha256_lf": "558fded93ba926105bcb14e03719d52e66dc62ac20148ec6fdbd616eab8710d1"
+    },
+    {
+      "path": "crates/kernel/src/ipc_death_workload.S",
+      "sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3"
+    },
+    {
+      "path": "crates/kernel/src/ipc_multi_workload.S",
+      "sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1"
+    },
+    {
+      "path": "crates/kernel/src/ipc_paths_benchmark.S",
+      "sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606"
+    },
+    {
+      "path": "crates/kernel/src/ipc_payload_workload.S",
+      "sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec"
+    },
+    {
+      "path": "crates/kernel/src/ipc_queue_workload.S",
+      "sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370"
+    },
+    {
+      "path": "crates/kernel/src/ipc_revoke_workload.S",
+      "sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.S",
+      "sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.rs",
+      "sha256_lf": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "fceb8e992ba8f70fbd51de61a02f392e0a1d4915d3f0b9a2db7817d3f6a00183"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "138a815965a33980c33f3f0923c62ce914b02f0b087abffab1236d6e8ada7248"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "0cbe90f9941116bd7dace00ff5a419e783bbfd57eed249ea9d24e4e319b30991"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "sha256_lf": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "sha256_lf": "93d3e9ea7c5981cf86509c64b2a832dec1ca5d53f09ff547c7bbc41bb89e2f5d"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/config.rs",
+      "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "sha256_lf": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "sha256_lf": "0835891513ee6be934eaad49499b479f8e5701ba15a3ba11ac8fab7aaad3fd0a"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "sha256_lf": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.S",
+      "sha256_lf": "d0414f46eadf9bb2b5329aaa06dd6f233c5e070f82ca7d489b12c55f510065c1"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.rs",
+      "sha256_lf": "8153b6402505f0254132a17c2aa91279f4e35562390961519075e0d3d5243fe3"
+    },
+    {
+      "path": "crates/kernel/src/security.rs",
+      "sha256_lf": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "b421343b4c2a4fab8c6cbce52a20ea56ae35a71a58ddd28732f39b47ca06c21c"
+    },
+    {
+      "path": "crates/kernel/src/supervision.rs",
+      "sha256_lf": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401"
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.S",
+      "sha256_lf": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a"
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.rs",
+      "sha256_lf": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "179fc0234b9f93150b24dc9457bdcd783a0bdaf67dc9c4cf3c0dd2c9b152681d"
+    },
+    {
+      "path": "crates/kernel/src/test_support/irq_wait.rs",
+      "sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "sha256_lf": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy.rs",
+      "sha256_lf": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "92332d431593d27f87b094500d28614b79f39567cf8d948b6feea168be270e86"
+    },
+    {
+      "path": "crates/kernel-core/src/domain/pool.rs",
+      "sha256_lf": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05"
+    },
+    {
+      "path": "crates/kernel-core/src/domain.rs",
+      "sha256_lf": "58625f331d38ae932646be0594c50cac9b6efe42aed1bc8b4fa3c20622ca3125"
+    },
+    {
+      "path": "crates/kernel-core/src/elf.rs",
+      "sha256_lf": "875e7ca516a5358688a4b6234d023b5c6ebd91fc36dc2c316bb8cb0b87e06d3e"
+    },
+    {
+      "path": "crates/kernel-core/src/execution.rs",
+      "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "sha256_lf": "7313263daa42cd5709a653fa36d71d595569877d062801de64e201da1b74f9cc"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/identity.rs",
+      "sha256_lf": "2595d0ce4cdf6804a59509651acbd80265a62f88fa5b90af681160860ec3ea6e"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/mailbox.rs",
+      "sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/tests.rs",
+      "sha256_lf": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/wire.rs",
+      "sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc.rs",
+      "sha256_lf": "7eb4a735aafaee2418988d846c221f8c2d3dede409ae1befcdb196e9126e733b"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "3ff7fe9052e7ceab49b0cc14d19cc92b8d50b0d61454f065dfb179c839e612de"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "sha256_lf": "53f19c3658319b5908efdedca44c6b3c5d733f5c523f0ea52bf96f3110c6ed05"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling/ownership.rs",
+      "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling.rs",
+      "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/user_copy.rs",
+      "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+    },
+    {
+      "path": "crates/kernel-core/src/wait.rs",
+      "sha256_lf": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+    },
+    {
+      "path": "crates/kernel-core/tests/elf_contract.rs",
+      "sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5"
+    },
+    {
+      "path": "crates/kernel-core/tests/event_revocation.rs",
+      "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+    },
+    {
+      "path": "crates/kernel-core/tests/handle_contract.rs",
+      "sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c"
+    },
+    {
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447"
+    },
+    {
+      "path": "crates/kernel-core/tests/wait.rs",
+      "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558"
+    },
+    {
+      "path": "crates/routing/build.rs",
+      "sha256_lf": "89c475575801c9877959b4f6856837d52fd51e5290681504b37b521ce0241fc3"
+    },
+    {
+      "path": "crates/routing/src/conformance.rs",
+      "sha256_lf": "44a17a56a4112f570ac6e5932b0a84a827d7332e12fe7acc9fc8577576b5bfa4"
+    },
+    {
+      "path": "crates/routing/src/lib.rs",
+      "sha256_lf": "d4c8e1c0d5b2968f32fcbd6c41de552108ff7ea2232c76d75018db00f2de2322"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c"
+    },
+    {
+      "path": "crates/routing-demo/build.rs",
+      "sha256_lf": "14b3b0b7dc7c3c087fa1b5c630894018dfbb29a0ff2f231edd6775bfe6cf7e18"
+    },
+    {
+      "path": "crates/routing-demo/linker.ld",
+      "sha256_lf": "ac7202177d96d09a00d2a1ac6176d78723ba901d5c11601cda5ff4e07aa27a6f"
+    },
+    {
+      "path": "crates/routing-demo/src/main.rs",
+      "sha256_lf": "f7241ab5b6147051b5439b27162f117b250e368e13e3848f8251b8be01a87a93"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+    },
+    {
+      "path": "crates/window-compat/src/lib.rs",
+      "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+    },
+    {
+      "path": "crates/window-compat/tests/protocols.rs",
+      "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1"
+    },
+    {
+      "path": "crates/xtask/src/matrix.rs",
+      "sha256_lf": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c"
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "sha256_lf": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506"
+    },
+    {
+      "path": "crates/xtask/src/timing.rs",
+      "sha256_lf": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598"
+    },
+    {
+      "path": "crates/xtask/tests/cli.rs",
+      "sha256_lf": "bf0e6aa8bc4eda83006c7babd29ce8d1d157a7510d664b01063a0859f2e41509"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "crates/xtask/tests/native_boundary.rs",
+      "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+    },
+    {
+      "path": "crates/xtask/tests/output_writer.rs",
+      "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+    },
+    {
+      "path": "crates/xtask/tests/scheduler_boundary.rs",
+      "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+    },
+    {
+      "path": "crates/xtask/tests/timer_wait.rs",
+      "sha256_lf": "439b2b70df1d62d70d4ae63bc8f03ea8699cc91d26c863fe30907d943a6a5791"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    }
+  ],
+  "matrix_tasks": 140,
+  "positive": [
+    {
+      "id": "dev-tests",
+      "tests": 125,
+      "supervision": {
+        "coverage": 255,
+        "event": "supervision",
+        "owners_released": true,
+        "reclaimed": true,
+        "status": "pass"
+      },
+      "elf_sha256": "20f031a46a968f5be56589569cf3e8e891a917c52c6e9ee0fd06701937e5648c",
+      "results_sha256": "4fdb5aea148f8a330ff4834a4aff44a64f3dbf686b8cd06ac7c6f6e820154705"
+    },
+    {
+      "id": "dev-boot",
+      "tests": 0,
+      "supervision": {
+        "coverage": 255,
+        "event": "supervision",
+        "owners_released": true,
+        "reclaimed": true,
+        "status": "pass"
+      },
+      "elf_sha256": "79ad8e08890ab63cd0f41e222fa5c99f2e04875a7a92bab92abc599ab4632aef",
+      "results_sha256": "9c417cf13abcdde276be59f75866dd258a8cdd63223e64f99b0f687f46b30329"
+    },
+    {
+      "id": "prod-tests",
+      "tests": 125,
+      "supervision": {
+        "coverage": 255,
+        "event": "supervision",
+        "owners_released": true,
+        "reclaimed": true,
+        "status": "pass"
+      },
+      "elf_sha256": "13ac9b325f05d87595bb7ed4aae0440d94d3c4f46f560d179f71bab765a37d72",
+      "results_sha256": "0920e369016f84ac109cf46c41a517f71768defe49dc6911b7603d1efd94f684"
+    },
+    {
+      "id": "prod-boot",
+      "tests": 0,
+      "supervision": {
+        "coverage": 255,
+        "event": "supervision",
+        "owners_released": true,
+        "reclaimed": true,
+        "status": "pass"
+      },
+      "elf_sha256": "e0cfff9d6571d97bc26b421eaec4c08a05b922858a983e2fcd51ba0575a3a7c5",
+      "results_sha256": "7e9d5963f55f65f2e86924de6e00767c4a3ce1686eb9658b9a006ba96dd3969a"
+    }
+  ],
+  "controls": [
+    {
+      "id": "dev---negative-control",
+      "witness": {
+        "marker": "negative_control"
+      },
+      "elf_sha256": "140e14167117a5f7f56973aedbd14bf045a8cc3b599ae5c7b5833f049066c2d2",
+      "results_sha256": "5a030933280caf82b405f8d3ee42171106d993eb0d8cb476e46d7ba1453059eb"
+    },
+    {
+      "id": "dev---panic-control",
+      "witness": {
+        "marker": "panic reporting negative control"
+      },
+      "elf_sha256": "045dd1d37ebd4b0b5d28a121f3f35a628c11f95893db61c01bea08a00617e1bd",
+      "results_sha256": "18b98b2dab4de3a5387d75bce41049e2d98544ef70afcf5d89c889283df10662"
+    },
+    {
+      "id": "dev---ownership-control",
+      "witness": {
+        "marker": "physical pool already owned"
+      },
+      "elf_sha256": "85b5889f84f1b4516a017090d039108595f5b164fb254e4ca94a50d2cdbdc46d",
+      "results_sha256": "754080f52ae6235e12a5c7ebb845019d257991d6cd82af7a8dfc69b268ef5b94"
+    },
+    {
+      "id": "dev---retained-mapping-control",
+      "witness": {
+        "marker": "mapped frame release"
+      },
+      "elf_sha256": "d24ba090da869b9a77d5bd7054900a13c1547ce1f05b931555555d73d581e3f8",
+      "results_sha256": "51bf8ea8e4639a8f9da28e3e5897b3777902a8956280deee781fd43f07ce4633"
+    },
+    {
+      "id": "dev---secondary-panic-control",
+      "witness": {
+        "marker": "secondary CPU failure"
+      },
+      "elf_sha256": "6095cf568244ecd5d08f3f0cf9bb83daa60f771f00384ee1e385524a86e48880",
+      "results_sha256": "14e8dde0051c534a8f10a270c4a84525596fa2fbc55c7e21886e5b10467b8111"
+    },
+    {
+      "id": "dev---retirement-control",
+      "witness": {
+        "marker": "retiring frame release"
+      },
+      "elf_sha256": "5ee07130907003e4122b50bde37f0b81dc77e1fa99da849e7ea5586dd13399e3",
+      "results_sha256": "ccbbd5ac62171ad05d37db5ba9941ab7615a58a59fc0e2547051e0b9ffa8dec5"
+    },
+    {
+      "id": "dev---shootdown-control",
+      "witness": {
+        "marker": "remote TLB acknowledgement timeout"
+      },
+      "elf_sha256": "baa467595ea48397e5468d987a295284017959bbc5113eacc1d3c99c7c9097db",
+      "results_sha256": "b139e74871666115efa38bf3d8e226d114269cc2b54dda5ef0bb95fb10099a03"
+    },
+    {
+      "id": "dev---remote-tlbi-control",
+      "witness": {
+        "marker": "kernel test failed: smp_remote_ack"
+      },
+      "elf_sha256": "0c60957edbdd03e768d2c1fbb3d1cc7efc7bea6f8c0b163ebdf5a38a527fa55b",
+      "results_sha256": "d38f7aee85b76968df70e7a536b2465c7ded0d1f571996a789249dcdc349c2c2"
+    },
+    {
+      "id": "dev---user-context-control",
+      "witness": {
+        "marker": "user register context lost"
+      },
+      "elf_sha256": "bdddbef0024b96d8627684c887236cddad32cd746040b46c6d4d8fd6a57f7731",
+      "results_sha256": "7b91f80f5d1ba511cb45a2d3b515bb091e9ec84964401513805622d2fefe06af"
+    },
+    {
+      "id": "dev---user-root-control",
+      "witness": {
+        "marker": "user address-space alias leaked"
+      },
+      "elf_sha256": "95f31cfc73c0c03e5f72e012aef562656797ef4b28621df3907ef696dd0d154b",
+      "results_sha256": "b05df96e09ba2ee27092d451f627d78df208f411aa678d0d0173e08b1431c47a"
+    },
+    {
+      "id": "dev---user-retirement-control",
+      "witness": {
+        "marker": "user address space retains frame"
+      },
+      "elf_sha256": "8ef8b3206a4405008f08d832ead1375be9f934b09d4121afd1a951ccf441ff36",
+      "results_sha256": "b5375987034fb5f7ac5cdefd096dfb17daa6fc5e2ef458fd3550000389f88787"
+    },
+    {
+      "id": "dev---asid-reuse-control",
+      "witness": {
+        "marker": "asid_reuse_requires_invalidation"
+      },
+      "elf_sha256": "a5a9e6ee93bfa7828d093ff2b5dcd4396ff10f72924afc15d9c9d7e52ebedef1",
+      "results_sha256": "f6c9c3c33a83bb079b22985e888fb50122d062f9d27bed7ed8e7559064633782"
+    },
+    {
+      "id": "dev---process-exit-control",
+      "witness": {
+        "marker": "\"error\":\"Transition\""
+      },
+      "elf_sha256": "092fb958da049ecdba3a3db2a0b003d5fa9ae9fe2771d2a74d524b0f74a77414",
+      "results_sha256": "a10113ff43d2922c57b017bb237ab7cb664ed99a8d0c1e3be4824f8c1a37c0d1"
+    },
+    {
+      "id": "dev---process-rollback-control",
+      "witness": {
+        "marker": "\"error\":\"RollbackLeak\""
+      },
+      "elf_sha256": "0b77583f6f1e22fc7f635c377af6c6c281ef59ac6854963891aab4da31bcddfe",
+      "results_sha256": "e221246f5eff2eb6e6a26ee4ddd15730182dec76b892972c4af379a97ec6fc99"
+    },
+    {
+      "id": "dev---process-unlink-control",
+      "witness": {
+        "marker": "\"error\":\"NotQuiescent\""
+      },
+      "elf_sha256": "8078de56843907be280bfbe8bb3a07337f441a1aed5e059d02872135d685c105",
+      "results_sha256": "16c337da55e7dcff3edafadbe4597a2d426775706a2bab8419c8e9db37929550"
+    },
+    {
+      "id": "dev---process-start-control",
+      "witness": {
+        "marker": "\"error\":\"Transition\""
+      },
+      "elf_sha256": "0416bc0cb3ccad0b254b881c02b326dc49bf8902a061d8bd4a4c0cb8968b1b5a",
+      "results_sha256": "ea8747c929465dca24d988895aa91e40e81ce90c9ad1cdc72c5d95a61c2bd5be"
+    },
+    {
+      "id": "dev---process-stale-control",
+      "witness": {
+        "marker": "\"error\":\"Stale\""
+      },
+      "elf_sha256": "6770704401caaa55e8b122e4e875fcd5072049ee7f481f25f51702dcb4964480",
+      "results_sha256": "0a188d61ce7d0729e2d73f4ef2e6adcba2613ac5b7248055edfdc554c0cf0ab9"
+    },
+    {
+      "id": "dev---process-reclaim-control",
+      "witness": {
+        "marker": "\"error\":\"Transition\""
+      },
+      "elf_sha256": "dee2a57f400a7de934665a944aa1c4841d092c120098462ee4831a4c11276af4",
+      "results_sha256": "52bc393d515ebe15044839a62e89477727e298181bbebe6b9a6c1e365815d0c3"
+    },
+    {
+      "id": "dev---scheduler-aarch32-control",
+      "witness": {
+        "marker": "\"error\":\"InvalidUserContext\""
+      },
+      "elf_sha256": "e67c280529aa1f6c7eddfe38a6392243317e7a86e8f53eb1d1f818d0e5f7e5ed",
+      "results_sha256": "c354eb7710744b72742a87e0f595894a0509fbd04bb4e942e90b70eb3bbb5829"
+    },
+    {
+      "id": "dev---scheduler-user-irq-control",
+      "witness": {
+        "marker": "\"error\":\"InvalidUserContext\""
+      },
+      "elf_sha256": "78ae585ea7e22c5ad2b948a5caaf7fc19dfd717c14a45b3a75e74d14e12dc311",
+      "results_sha256": "5a7e8fd08a82a0aaae1361b0a7f08abde5027a4aa449a820bbffbf1fae6c8ba0"
+    },
+    {
+      "id": "dev---scheduler-context-control",
+      "witness": {
+        "marker": "\"error\":\"InvalidUserContext\""
+      },
+      "elf_sha256": "575f3c76efa6852a120bf7122aadaedfe4d5a9fd1467e733253934bb20d4e9cf",
+      "results_sha256": "641182232937c66acf2a34433877da75398111cfaf4cb9a5b74e4a2ecb6fa4f9"
+    },
+    {
+      "id": "dev---scheduler-inner-lock-control",
+      "witness": {
+        "marker": "\"error\":\"InnerLock\""
+      },
+      "elf_sha256": "c0b56faad37fa736e5aa899a868d6fb3108528ac25ad523021833978f976fe48",
+      "results_sha256": "bdc5edede1fa15569fd357fe1c6f33c697c9f0ef5f40c850311f9c1072cf0f1a"
+    },
+    {
+      "id": "dev---scheduler-start-control",
+      "witness": {
+        "marker": "\"error\":\"WrongPhase\""
+      },
+      "elf_sha256": "3ea2b3fd0233cce55936c60912140a54fe36bd1a0653c14c0b7e46df37854b0d",
+      "results_sha256": "fa1baf5b609081c998241c4636615732e65e43f157a01c4af49a4641bd03cb96"
+    },
+    {
+      "id": "dev---scheduler-task-control",
+      "witness": {
+        "marker": "\"error\":\"StaleTask\""
+      },
+      "elf_sha256": "d16eb05edb82967b3808b279950a4f86f30ce4374bf5da767fe614f85b3be862",
+      "results_sha256": "96ec17b66cf478b8ec086e2b0d2e970df2f9ff822c891f590dfda42f5d8beb1f"
+    },
+    {
+      "id": "dev---scheduler-owner-control",
+      "witness": {
+        "marker": "\"error\":\"DuplicateOwner\""
+      },
+      "elf_sha256": "79d45a8ba00ff941b5d2dac0672247450991155741fffb8df4b0e41e84656117",
+      "results_sha256": "c0b4e97d76dfe970b1dbbd9fa527560347d348e83331dbed034d2a1b29108dc5"
+    },
+    {
+      "id": "dev---scheduler-foreign-control",
+      "witness": {
+        "marker": "\"error\":\"ForeignCpu\""
+      },
+      "elf_sha256": "14fef8632949470580b1d94203374ea64e072350aeb6977af3731ef6c8c3636d",
+      "results_sha256": "7bb1a64f5b857d93e2cdc35b6b3f8931960425b5448bae96b54b03643b705d74"
+    },
+    {
+      "id": "dev---scheduler-reentry-control",
+      "witness": {
+        "marker": "\"error\":\"Reentry\""
+      },
+      "elf_sha256": "f2d943aa4c3b8b2951faa7c16755dcddd2ca64a1e1c37f7905d961afe37e024b",
+      "results_sha256": "082d98a9956862a6a666fb32ec271e6c3ded2193f273c0a41413d10a94cea893"
+    },
+    {
+      "id": "dev---scheduler-stale-control",
+      "witness": {
+        "marker": "\"error\":\"StaleGeneration\""
+      },
+      "elf_sha256": "03935ce65605a9f58f74c5d1b283685bc4ba248981130cace1e7ca37b5eaac8b",
+      "results_sha256": "edec16f25b1feddaae3be33fac503a31472c4a0c34c36c5ae50451f3498ca599"
+    },
+    {
+      "id": "dev---scheduler-reset-control",
+      "witness": {
+        "marker": "\"error\":\"WrongPhase\""
+      },
+      "elf_sha256": "9226793c70d6777288af3e65edf3a3b7911dfa7a6697cc1f22ec0107b56a2257",
+      "results_sha256": "8bf216d372fded472edded4464663b77f5f7cedd8c0458ac02131339857502db"
+    },
+    {
+      "id": "dev---scheduler-inspect-control",
+      "witness": {
+        "marker": "\"error\":\"WrongPhase\""
+      },
+      "elf_sha256": "942fb6020fa848d457ce95d4908dbcfcccfe52afc653d2f65a49b27fecc8c37f",
+      "results_sha256": "bac11e20af79cf52117151171ceb9b5bb4d221aa2498d5c2c9b326fa7a01f7bb"
+    },
+    {
+      "id": "dev---scheduler-complete-control",
+      "witness": {
+        "marker": "\"error\":\"NotQuiescent\""
+      },
+      "elf_sha256": "824a6211b40078c5f5fbb46e1ac8cacb9c0ce0e28b0c7271297a569050d44e4b",
+      "results_sha256": "3b1b54844133c349f1efc1d1c966a7f5505af9c23a1f7cdd4bfda23bba75e2e5"
+    },
+    {
+      "id": "dev---scheduler-irq-control",
+      "witness": {
+        "marker": "\"error\":\"IrqEnabled\""
+      },
+      "elf_sha256": "f213ba18794220dbc879f5ed58c816a261e573936c88c0194ed69518d19261af",
+      "results_sha256": "34885c60d99e7a25145450ee3c00ca62eeb688df79395bae9c16645d56830594"
+    },
+    {
+      "id": "dev---scheduler-lock-control",
+      "witness": {
+        "marker": "\"error\":\"LockHeld\""
+      },
+      "elf_sha256": "e40594296452dee05efda37910f60434ae2d340ed4fb08f66fd14201b448cf50",
+      "results_sha256": "0b510617979b9621f89e4b125aa885e252ea5feec77d88aca9a09878f0c7922a"
+    },
+    {
+      "id": "dev---user-copy-snapshot-control",
+      "witness": {
+        "marker": "\"name\":\"user_copy_el0_boundary_and_snapshot\",\"status\":\"fail\""
+      },
+      "elf_sha256": "be00d0dae55d2606a7d18c07a6f12135b43f4b33677821630286d0b4fef6f711",
+      "results_sha256": "ea341c786e3922091f116b9b07fd334c137e705e5f67d9061e16d1f7069462ec"
+    },
+    {
+      "id": "dev---user-copy-recovery-control",
+      "witness": {
+        "marker": "\"event\":\"fatal\""
+      },
+      "elf_sha256": "7a2ea143b095604174fe420ac247b6b58043ba73e2220a5aa1dbcdcfa3e05eb9",
+      "results_sha256": "a5a24ca1e9bc5c80c2cf8eef901b17ee8af4e91c194a37c4002c476b11c68747"
+    },
+    {
+      "id": "dev---handle-generation-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "9a4d49475d7b1cccb4291d9ba6c241b5b6bc2f3d9b501a6ff628fbe0c699527e",
+      "results_sha256": "27095e6e844a9930414af92cd5e986d11bfa9241ec9720446ec093d4024e2492"
+    },
+    {
+      "id": "dev---handle-owner-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "076207d48637eb119baa577e7e9ae97c35f121954150e26e29088041d837953a",
+      "results_sha256": "b95d200b19f3ba7e2c62cc63a33ed83b3bd83e4a61df767d7bdb58b39abd1a20"
+    },
+    {
+      "id": "dev---handle-type-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "7f3cc9679b7cba81e819e6317db7c7cfcdc9733828cea06a2012940f6f4248ce",
+      "results_sha256": "292411b80f5d44e2c30bf0cf0da78565a115d3f9655a30d9265b37d1f729f7d9"
+    },
+    {
+      "id": "dev---handle-reuse-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "707e452ce1b58bfb82be4343893f9369d8cb5ed30fbbc9a5958fb97a4520f9d8",
+      "results_sha256": "d66d76f017a3e1ec04a136f5373d551ab4ad0987228b09282765407ba7064819"
+    },
+    {
+      "id": "dev---handle-retirement-control",
+      "witness": {
+        "marker": "\"event\":\"handle-retirement-reject\",\"status\":\"fail\""
+      },
+      "elf_sha256": "e6ebd106800d8326884ce90713a547f5a60b06788a204779d057853512ee34a5",
+      "results_sha256": "73407ed65aa7dbcfa0e1fb2e09e9df570869ee0f8cae3a5ea4b397407d36cf56"
+    },
+    {
+      "id": "dev---handle-transfer-rights-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "8ca0a85fc17dc6f810aa2fcac6621a3bfaecfd0b9e5f8c3975314ea1582b78d9",
+      "results_sha256": "60388f7d1348e33528876ad252b02597db2b7b63df6443d86adcf539fe1a8d30"
+    },
+    {
+      "id": "dev---domain-budget-control",
+      "witness": {
+        "marker": "\"name\":\"domain_memory_budget_enforced\",\"status\":\"fail\""
+      },
+      "elf_sha256": "683f9d55e900acd17c089316379c5c32dbfd197b3335164a6868deb37171f930",
+      "results_sha256": "37352e63583f4be8fc1791e4ee1f935580180b99ec2fce5c5007af6c8682c2bf"
+    },
+    {
+      "id": "dev---domain-identity-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "8e0cd94526156a694abcbdd41a3dcac0f08e0bad16d339622fc3362301fc856a",
+      "results_sha256": "f89c428db1b9e131ce8f5bc41d703cdfda44b72895a3f0e37028d8e76b78b546"
+    },
+    {
+      "id": "dev---domain-teardown-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "f4b3d6a6cd887f4cfdfa51f004560e9146e767cef6277567d3febb8262bd7dee",
+      "results_sha256": "652af9d69bde336d85781a88783e66f04e9bc4bd6577cd101c7decc3ea9a48fb"
+    },
+    {
+      "id": "dev---capability-revoke-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "742bb741a8fc75fd6a5eb44b0b17760cfd17e8f7ef26d318eba47192ba6d5a8e",
+      "results_sha256": "9357642126610ce137848506ee1059a040035805ab4d11e7e4a392ac523f736c"
+    },
+    {
+      "id": "dev---capability-scope-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "d732225aa857b91bea8638643522848550ed75b476f7687748d8c971ba659db2",
+      "results_sha256": "d8883e97da3b7debd63247487b734b0694e755371f798f67c6aeea864b26892f"
+    },
+    {
+      "id": "dev---supervision-authority-control",
+      "witness": {
+        "actual": 8,
+        "coverage": 0,
+        "error": "Scenario",
+        "event": "supervision-reject",
+        "exit": "Exited(1000)",
+        "status": "fail",
+        "value": 0
+      },
+      "elf_sha256": "72161546c72fc431e6aaabc64e1bf33f003f1b278b4636f35c8ca3e4409d0d21",
+      "results_sha256": "afcc5b52d2cbdef1bd54fee76788b075eea56f4d436c2933049f1b0dd1f897bd"
+    },
+    {
+      "id": "dev---supervision-stale-control",
+      "witness": {
+        "actual": 0,
+        "coverage": 15,
+        "error": "Scenario",
+        "event": "supervision-reject",
+        "exit": "Exited(1002)",
+        "status": "fail",
+        "value": 0
+      },
+      "elf_sha256": "800a3d928d9a009b9d3f5accffcada874feb102e5513902c5da33501ec80dba9",
+      "results_sha256": "96634c9a9a119dc07623ca857d2d6085316e3b3d281d032f7193df267a06aa59"
+    },
+    {
+      "id": "dev---supervision-dependency-control",
+      "witness": {
+        "actual": 12,
+        "coverage": 1,
+        "error": "DependencyNotRejected",
+        "event": "supervision-reject",
+        "exit": "Exited(1200)",
+        "status": "fail",
+        "value": 0
+      },
+      "elf_sha256": "d0c0565c290b40687dd6e6b2ad1e862f0e33220e06b8c358f490b5de6a1f73bb",
+      "results_sha256": "095bc0309a9366e6ef31628407a12d00d3e50f37a75eb9a9ecd3486e9bfe06ed"
+    },
+    {
+      "id": "dev---supervision-commit-control",
+      "witness": {
+        "actual": 4,
+        "coverage": 127,
+        "error": "CommitNotProven",
+        "event": "supervision-reject",
+        "exit": "Exited(1100)",
+        "status": "fail",
+        "value": 24
+      },
+      "elf_sha256": "1bcd194461a1942ac267c19734ce0c63d44c2a0343b5a7ea3872d532c5c63d54",
+      "results_sha256": "71af99f9e93150d0e8a271abb60c6c801c185f163621192923564bceae562056"
+    },
+    {
+      "id": "dev---supervision-wait-control",
+      "witness": {
+        "error": "WaitIdentityLost",
+        "event": "supervision-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "e44b73b7f17d5a7f34e62e4e12bd99ac6f71246d217769a15510a1723f1bd06b",
+      "results_sha256": "d7f0066dda683c5aec368802d77343aa10d986331161e1f0051dc16f5033ebea"
+    },
+    {
+      "id": "dev---ipc-request-generation-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_payload_snapshot_result_id_and_stress",
+        "status": "fail"
+      },
+      "elf_sha256": "a1cd30ccc8e303b118df777adde307f5fd8948d553d866f783b0931f3ee3dcfc",
+      "results_sha256": "be74493e537ecc423f7f0ae51463e03d662d810829115d954357b2779ed4c2f6"
+    },
+    {
+      "id": "dev---ipc-double-charge-release-control",
+      "witness": {
+        "error": "ChargeAlreadyReleased",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "31b8b7028671b1828aa40beff5ff19a004329727e662b19151811f642d8c5d84",
+      "results_sha256": "2738686c6d83664647f2aed05acc401b33fa95031a6400d2cc0817213e1d1b1c"
+    },
+    {
+      "id": "dev---ipc-storage-scope-control",
+      "witness": {
+        "error": "StorageInsideScheduler",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "367db9a1f8669e35ada58b9638e2ab55b6f34854df6ff88999e3bde7cb292692",
+      "results_sha256": "cabe58a2dfc69ad3db983d28b4675df5583a920122155cb61f0a35557fb372ab"
+    },
+    {
+      "id": "dev---ipc-duplicate-ready-control",
+      "witness": {
+        "error": "DuplicateReady",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "2b996a47641c9bf2da0a4df4d671468ff518407ff4216eb9a80cedcd2ad12e7d",
+      "results_sha256": "7995d278794e00d5c66bc765d19ddaffe6d8c5193d457feadd83583f903f83c7"
+    },
+    {
+      "id": "dev---ipc-wrong-process-wake-control",
+      "witness": {
+        "error": "WrongProcessWake",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "e247580d3df59332c375ed195c177c026d5d3565a0894309a4d9a80244a790f1",
+      "results_sha256": "f899b24ac3fbc76bf83093e9ddad81bdb322fd1056784d8d3c4ef78ee52e61ae"
+    },
+    {
+      "id": "dev---ipc-blocked-reclaim-control",
+      "witness": {
+        "error": "BlockedTaskReclaim",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "8fed124d17d746988c0ee6f8aec48eed8bb0bf37ce94d2262c282c006cd2b99e",
+      "results_sha256": "3ec5c0170100b1f59f93306ae1568a6ab507fe96bf215df101ee438a038bd51e"
+    },
+    {
+      "id": "dev---ipc-wake-generation-control",
+      "witness": {
+        "error": "WakeGenerationAccepted",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "0436e5763e37e97d2eac1212831a6b4f035acc53c90867f56d4a47935ca8b75a",
+      "results_sha256": "9705d52eb2bca0665b3c30fe87ea563037f5dc390a398438740e70694669e545"
+    },
+    {
+      "id": "dev---ipc-wait-recheck-control",
+      "witness": {
+        "error": "WaitRegistrationLost",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "e60f5b94e3f7f24337a47b9ad92529ec795c1e0c1da6a430ded5c39cf143ce07",
+      "results_sha256": "9054f91e3260f9c35992a0510e96c9e34e67dcb97e40e6de63057339f047fbe6"
+    },
+    {
+      "id": "dev---ipc-wake-publication-control",
+      "witness": {
+        "error": "WakePublicationLost",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "ad39e7bb426a0eb68f5b0ee41d4cfe5ee65351e0b8a683ef6a6b0fe2c9b8c950",
+      "results_sha256": "380e7e49cf7bf14d5e3af0f5a5eaad314e6cbe63ee1fae6989c73cac9419c622"
+    },
+    {
+      "id": "dev---ipc-service-token-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_el0_cpu0_to_cpu1",
+        "status": "fail"
+      },
+      "elf_sha256": "30c98163f89bc52a87a5f99ec726728aaf92cfed66004d05e4d4ba73f7a81ff2",
+      "results_sha256": "94b69886232867b33a90cea1fbb7ddd487a1efec5ea3549db3b8019125634a14"
+    },
+    {
+      "id": "dev---ipc-charge-release-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_deadline_before_effect",
+        "status": "fail"
+      },
+      "elf_sha256": "90bf087f884e832b2f79f29ad86d0b38fb534e7c6dfd52ce35489de73e24bdad",
+      "results_sha256": "86e78cb9376b63ccb80a03db77ddc8ec5c556a4f6c691f049908c9a400bf0788"
+    },
+    {
+      "id": "dev---ipc-teardown-control",
+      "witness": {
+        "error": "EndpointNotQuiescent",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "108b4637139e92ed478cecf5bec466b2273ed9e4a5a815438535deae37c0a54f",
+      "results_sha256": "48be7d0752f2ba9a86ca27fe270ab649d10961665ea8f321f46de8bbdf3fd157"
+    },
+    {
+      "id": "dev---ipc-cancel-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_cancel_before_commit",
+        "status": "fail"
+      },
+      "elf_sha256": "522728e61866a966b266a01e1954fe2e3ff0301597200af9f872c366e1e3a332",
+      "results_sha256": "807cfefc812cffdd4d713760082707c0c02f3c9b5f662853e23d76c000a11dbf"
+    },
+    {
+      "id": "dev---ipc-service-death-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_service_death_queued",
+        "status": "fail"
+      },
+      "elf_sha256": "8bb68fa757750bddc751e249fe90652b1d840c1cccfd8ba7b236a84fd9f4d4c4",
+      "results_sha256": "1e3e2322dc50e7a504d8084818be907ef27a1614b4354c39e12282790065dab0"
+    },
+    {
+      "id": "dev---ipc-double-terminal-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_payload_snapshot_result_id_and_stress",
+        "status": "fail"
+      },
+      "elf_sha256": "64d9a899dbd83f28f10dfc14db1ff3d6300a7cf15f5958cdceed3237595ab3c8",
+      "results_sha256": "c0ac3fca4776f185c6fe7f4eb0000e71c315ea74eb1ee9bc4941e5ce44ea945a"
+    },
+    {
+      "id": "dev---ipc-capacity-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_queue_full_fifo_and_reclamation",
+        "status": "fail"
+      },
+      "elf_sha256": "7ad5a78e85c4ed84173c0da5bef7b292bbb622c77a770200bdfa6f8f0f473958",
+      "results_sha256": "5a6a588e93dffe93fd1fce076011f17b0301de17135ebf0528f8bcc8dbab96b0"
+    },
+    {
+      "id": "dev---ipc-fifo-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_queue_full_fifo_and_reclamation",
+        "status": "fail"
+      },
+      "elf_sha256": "f21bf0ec3e092ef7522b9d5f1cf12e6c2cb1dc5bbf2f5ee8c7e00f0c74202367",
+      "results_sha256": "b78d607665610e1b0561404da020dea3853188b20f193e46ae908c5b5a4f41ad"
+    },
+    {
+      "id": "dev---ipc-id-reuse-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_payload_snapshot_result_id_and_stress",
+        "status": "fail"
+      },
+      "elf_sha256": "8a920e798276a11799661dff54ebfd1fd0b0913020a8c3e4e0dc16e7193d1cfb",
+      "results_sha256": "79aa18d4180c7b2456b6f08cf2743a088a80537d2562936cc78b26d1d7656c30"
+    },
+    {
+      "id": "dev---ipc-receive-copy-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_receive_copy_failure_retains_queue",
+        "status": "fail"
+      },
+      "elf_sha256": "4c22682fd176ed88bd27103b5c53c9d7309883fc7afd078ea2ddebdb6283c647",
+      "results_sha256": "0cac45ec270d5a0fb3fc39882930de445933bc8a39af0d19cef0994fa63423b7"
+    },
+    {
+      "id": "dev---ipc-collect-copy-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_collect_copy_failure_retains_result",
+        "status": "fail"
+      },
+      "elf_sha256": "8c9ffb0bb538b3d8c83e1208e7f6b786171e6538ebfb9f02bdc083f849dce73b",
+      "results_sha256": "4a0acefb754f35e4e221f3f747a11ce1111f9672ebc4c7b8f5283c74327e781d"
+    },
+    {
+      "id": "dev---ipc-send-rights-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_authority_denial_revoke_and_retention",
+        "status": "fail"
+      },
+      "elf_sha256": "4509c9b276019c66be217e02f257c02fa263fd48ee06c8cfbc8f1db71b3a0b68",
+      "results_sha256": "6995b437a104ceda7828680e81681984394f798a1a22f219d2bc5e532488718d"
+    },
+    {
+      "id": "dev---ipc-revoke-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_authority_denial_revoke_and_retention",
+        "status": "fail"
+      },
+      "elf_sha256": "cfdf1b4ff796cce328f1e65705827be5dabad7088a85bffc1f9a7786af47cc51",
+      "results_sha256": "ae5c47777cd92574fb358aea05ae54efe5142b76998b20d3eb635509d1985c45"
+    },
+    {
+      "id": "dev---ipc-deadline-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_deadline_before_effect",
+        "status": "fail"
+      },
+      "elf_sha256": "96b887090383100271664f3158080594c275f1d62afdb92912f36d6412dd1c7a",
+      "results_sha256": "0e3c38366348e8ef4adbc423fb34af236db6a581c1f3a9a402b426d9bc6f23c0"
+    },
+    {
+      "id": "prod---process-exit-control",
+      "witness": {
+        "marker": "\"error\":\"Transition\""
+      },
+      "elf_sha256": "93735f8277e97f32c90d61603a9a1b8a6de6903e556579a2896dc9c755cfaf25",
+      "results_sha256": "c746733c34c9378001f6e1ab86faf158ea5d239b863eea2b311207a67e4c13b5"
+    },
+    {
+      "id": "prod---process-rollback-control",
+      "witness": {
+        "marker": "\"error\":\"RollbackLeak\""
+      },
+      "elf_sha256": "1eae3ab3d1a36f61a27369376ad24b891c34cfd6c2483395459b7b67713dd83d",
+      "results_sha256": "53d8bc343cab235446daccf293acd481823c9684ea092c60d2eb5e1fc140f670"
+    },
+    {
+      "id": "prod---process-unlink-control",
+      "witness": {
+        "marker": "\"error\":\"NotQuiescent\""
+      },
+      "elf_sha256": "c327938f0d719b9f4c6e7bf72061a12ec3442484daec3e82c7cd7c4ed208f146",
+      "results_sha256": "e848a1aeda8c98c63af55a46768d39b781233ad439cacba29241e833dd9d814b"
+    },
+    {
+      "id": "prod---process-start-control",
+      "witness": {
+        "marker": "\"error\":\"Transition\""
+      },
+      "elf_sha256": "792566f2ea6095c2c5e5ffafc885eb16ed3e1a27af72d6ba74ddb02bff8ba34b",
+      "results_sha256": "359fe0787a866f413e6f444da5550afe6585b9242d8404cb8d01895d09b6d631"
+    },
+    {
+      "id": "prod---process-stale-control",
+      "witness": {
+        "marker": "\"error\":\"Stale\""
+      },
+      "elf_sha256": "eb4b02aa23454697998219072ad010b2363c5a904e8d294fdc5326c8244deb34",
+      "results_sha256": "3ce6129919425aac751fdb8659aa6d501840cfd206369a7b83347e83242de07e"
+    },
+    {
+      "id": "prod---process-reclaim-control",
+      "witness": {
+        "marker": "\"error\":\"Transition\""
+      },
+      "elf_sha256": "9cae89bbc83300b6a1036cdb965789456a7577e561ff211a23f36f9a3aac6207",
+      "results_sha256": "cf6e0c4ad4e7bab7920669bc91e852d705031d16e698b14be77c87f1a8f11fa1"
+    },
+    {
+      "id": "prod---scheduler-aarch32-control",
+      "witness": {
+        "marker": "\"error\":\"InvalidUserContext\""
+      },
+      "elf_sha256": "822c6bc9cd51d5d691944c347645eb12d9149cec4fe84971bc733bbd73ff7e32",
+      "results_sha256": "2ee1caf0e0abd3b53b0296735c12924e041cd12d8bc601ba262b90904d126fed"
+    },
+    {
+      "id": "prod---scheduler-user-irq-control",
+      "witness": {
+        "marker": "\"error\":\"InvalidUserContext\""
+      },
+      "elf_sha256": "f42b04752e83c33973dadd7873c2e90635bf5fbc7d13811e997d9119f474e6fd",
+      "results_sha256": "f774fb8c6bea1806c85d5cf4ade2b04ebcc1d7a89a6e63ad9bac469fbca5174e"
+    },
+    {
+      "id": "prod---scheduler-context-control",
+      "witness": {
+        "marker": "\"error\":\"InvalidUserContext\""
+      },
+      "elf_sha256": "064dee85cdff1d31cd2ec5c32a2163b454ae8d82907463b33e3694b11326521c",
+      "results_sha256": "e3ec3876e940addea26c978dbc29eaa00135a93630c166ee030aff74d0e56bbe"
+    },
+    {
+      "id": "prod---scheduler-inner-lock-control",
+      "witness": {
+        "marker": "\"error\":\"InnerLock\""
+      },
+      "elf_sha256": "d688eee1fe88640e5f91f930c6a9398f4ce46ae42fe0f7893f3d2ec389cd04e5",
+      "results_sha256": "7b1fbc0e22f97b12a438290084abf38569f47823dbc19002a0bb7c7ccff9faf1"
+    },
+    {
+      "id": "prod---scheduler-start-control",
+      "witness": {
+        "marker": "\"error\":\"WrongPhase\""
+      },
+      "elf_sha256": "1f773e58b8bb89ec7e6fd8fdcf0bcac9b20d0125ee1c04e45267f1bf236cadb2",
+      "results_sha256": "9b78c83e078347b90e56ac84f4011d03e1c278a1b52648d51944350981c4b132"
+    },
+    {
+      "id": "prod---scheduler-task-control",
+      "witness": {
+        "marker": "\"error\":\"StaleTask\""
+      },
+      "elf_sha256": "d4069c3f0ed55543158b3e630cd68a369763baa20aa644cbbf2eb54ff6d21035",
+      "results_sha256": "2bc0b67c8fa0642efd65a8ad9e41d01583f924741c7da9232127deff1e3c9c34"
+    },
+    {
+      "id": "prod---scheduler-owner-control",
+      "witness": {
+        "marker": "\"error\":\"DuplicateOwner\""
+      },
+      "elf_sha256": "c603109557321a63945c3ac88a8be7caa1c0e752e82d98fab89db30205e83f0b",
+      "results_sha256": "ee8b71ff0eeab49c9d9ac57aa5a6a1949bf18e462828f7033236e75446611fb3"
+    },
+    {
+      "id": "prod---scheduler-foreign-control",
+      "witness": {
+        "marker": "\"error\":\"ForeignCpu\""
+      },
+      "elf_sha256": "39f8e3a2ce670b30eb3906c8b6da74d29432f5e2415a8a46827382f30d083b18",
+      "results_sha256": "958067d0b73eaa9ed85bbcb87b391a73954753a5a357961f3f6b9a8deddd36d6"
+    },
+    {
+      "id": "prod---scheduler-reentry-control",
+      "witness": {
+        "marker": "\"error\":\"Reentry\""
+      },
+      "elf_sha256": "88ebf95a5079e8a552c9ace66fe4acb6126473a02c44d75a119bf77e0e0d5047",
+      "results_sha256": "e56278f71d3d8059a739ea7769e81f54e0d1d17a95f9d5c1d6fcd2da973db412"
+    },
+    {
+      "id": "prod---scheduler-stale-control",
+      "witness": {
+        "marker": "\"error\":\"StaleGeneration\""
+      },
+      "elf_sha256": "b7b2b9245031a9dc9190c0ac194efa405dfeb133e2a0261a0283beca145cf101",
+      "results_sha256": "59adb93efe29512c1779d511a2fa44409f8f0cdbd1c7f540b18fd17444ae9a8f"
+    },
+    {
+      "id": "prod---scheduler-reset-control",
+      "witness": {
+        "marker": "\"error\":\"WrongPhase\""
+      },
+      "elf_sha256": "15965a128904fca2416dad378b431486a5c9aecf8279d40ae5615cbe6fba459b",
+      "results_sha256": "11912bfca7f52e2a6fb00f5e4d319a883080eaacd87682e93d927ea7ca733a15"
+    },
+    {
+      "id": "prod---scheduler-inspect-control",
+      "witness": {
+        "marker": "\"error\":\"WrongPhase\""
+      },
+      "elf_sha256": "73b06c8fb71ddc45c173ff8231c3869f1361b07ca7f00d18240ed0fd6d1cac21",
+      "results_sha256": "3990a742fcda333441b1fae9715379a135bac267af5cf5ad1330603f26dc8d9a"
+    },
+    {
+      "id": "prod---scheduler-complete-control",
+      "witness": {
+        "marker": "\"error\":\"NotQuiescent\""
+      },
+      "elf_sha256": "c66b0f83bc90fb9a91214da3567021c6b82d8e1154621d197b30d376ecfb9c62",
+      "results_sha256": "da5c08d863c00a10b6023e586dfeb37b72cb74bc02b315381e79b63c2302f830"
+    },
+    {
+      "id": "prod---scheduler-irq-control",
+      "witness": {
+        "marker": "\"error\":\"IrqEnabled\""
+      },
+      "elf_sha256": "0dd948ed20f81938d640939585ab4ff375f9770a095e695fbca033f62cf86442",
+      "results_sha256": "1208adc77f1ad9bea76e098ea4bfea7c2da393e48817f5873e603db423ead040"
+    },
+    {
+      "id": "prod---scheduler-lock-control",
+      "witness": {
+        "marker": "\"error\":\"LockHeld\""
+      },
+      "elf_sha256": "76059918a9d20e4a6804d9b59b382bb7dd37a92c8d2c66f6bb2b9928718706a9",
+      "results_sha256": "b3e8cecc20b5d8a4961e7c15cb36bf084120b5a41c1c6561bb5ca8e19efb1f83"
+    },
+    {
+      "id": "prod---user-copy-snapshot-control",
+      "witness": {
+        "marker": "\"name\":\"user_copy_el0_boundary_and_snapshot\",\"status\":\"fail\""
+      },
+      "elf_sha256": "77c133f3bc2bc2cb7cf80c2fb2b6855b63f97154ec7cbfa615b3df50beceeccc",
+      "results_sha256": "31eba4c081033812dd090dcbff2f5cb5482f111011b8fe245fcf6219aba0fd90"
+    },
+    {
+      "id": "prod---user-copy-recovery-control",
+      "witness": {
+        "marker": "\"event\":\"fatal\""
+      },
+      "elf_sha256": "2b22bfae68a0a37620043ab3a2d39a683b10772022853236fe4ba083ecc37d68",
+      "results_sha256": "d27456294b28dfa66cb89f5be21780f216fc07b0932c4fd558c32d73f780c0b7"
+    },
+    {
+      "id": "prod---handle-generation-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "410563ac733e5de621ecf0607d315c4aefe897297e749b782fd7f033f4b0d317",
+      "results_sha256": "be6a9252cb8a4495492747bb36732d852db3f245c153f2abc905ddda6c7f9839"
+    },
+    {
+      "id": "prod---handle-owner-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "285b1711bbb0fd27ce78c47805ad01686e258dc08a81c4eb9da29e4e99089c53",
+      "results_sha256": "40589674bde03cb57c236a0ab5d160f359adb5e6c6a58ecf57db14b4c2c9ec65"
+    },
+    {
+      "id": "prod---handle-type-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "abd8ea6cc9633af369e23efe64bda1ef522e6321ab721cefd1d89604bc9d805b",
+      "results_sha256": "2f1f88ddade18280a68d624c229dd9fd345b764f906d3fb8b27c4a9a00b279d3"
+    },
+    {
+      "id": "prod---handle-reuse-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "a2554ce1ad3fba6319b227436f908e7667332df0a5093585fa19180d3ffd9555",
+      "results_sha256": "531701f38b7fe98f76c311e3f9910e6e842f2163803bc61ede5f2aa635e767eb"
+    },
+    {
+      "id": "prod---handle-retirement-control",
+      "witness": {
+        "marker": "\"event\":\"handle-retirement-reject\",\"status\":\"fail\""
+      },
+      "elf_sha256": "73a51633b269a09f0722c3db05556c5dc72d8259dbd76d3ae46ba9dfc60b01ad",
+      "results_sha256": "5a8ec6129e6a9c64edc5f66f88fa03f6b9cbe58bc9e360cf95a48ad7512362cf"
+    },
+    {
+      "id": "prod---handle-transfer-rights-control",
+      "witness": {
+        "marker": "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\""
+      },
+      "elf_sha256": "f74b4b858ea64a76ed2004a312555a480f2e3bb4544a4db25ceb279a77af8b51",
+      "results_sha256": "ecf2d238ae74b655d1c326dcf1291848e47b7428311ebe179eb88e6612219507"
+    },
+    {
+      "id": "prod---domain-budget-control",
+      "witness": {
+        "marker": "\"name\":\"domain_memory_budget_enforced\",\"status\":\"fail\""
+      },
+      "elf_sha256": "03a416ed1ca79ce058ce6789491ce432b89260d2ada3346669b165361f0c85a7",
+      "results_sha256": "9b9b8f32be81d85a700c852fd0c09d35da2b39f6c7118c12139a0ae2829a8dc3"
+    },
+    {
+      "id": "prod---domain-identity-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "9fda43e7f1d48cfadd13e4fb547b1af0b023d240b634c03e6a3f54a1884a2157",
+      "results_sha256": "016e977ec6eb13655f6b53ffe4c7456d648b2b111a38cb0935eb352128408830"
+    },
+    {
+      "id": "prod---domain-teardown-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "504e360a65075e9534583e738d3db8bcdb0280649d6f9b0623bf094329ae1531",
+      "results_sha256": "29b7ee25a136e938976c9eccf5beca276a342694758c4c5b9e22dfa2764df0da"
+    },
+    {
+      "id": "prod---capability-revoke-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "fabc51857ed2b55a5d10f76f23dd8a07c4ec357de5b46aacc19af729df567de8",
+      "results_sha256": "7c900f60a5b17074517d04f42772be765463e0ef8ca344df35c6a1937d32e94a"
+    },
+    {
+      "id": "prod---capability-scope-control",
+      "witness": {
+        "marker": "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\""
+      },
+      "elf_sha256": "abbd4c57623d83d6b69150d6d6159625ab32957d92a7cf81f723fc974ccadf23",
+      "results_sha256": "a7a94d5f8fbd888c827f28eb8c4d45e4033df871a83dce35a3c304d4e959ccbe"
+    },
+    {
+      "id": "prod---supervision-authority-control",
+      "witness": {
+        "actual": 8,
+        "coverage": 0,
+        "error": "Scenario",
+        "event": "supervision-reject",
+        "exit": "Exited(1000)",
+        "status": "fail",
+        "value": 0
+      },
+      "elf_sha256": "cbd7283e80759a9cb9d63d34247cc1ac61d0ddb9f13238028766c525bb68cd57",
+      "results_sha256": "6f0834d3ce9e0b4675ec8001a07299a7744c78c40c6f91a6623ad788c243a9b6"
+    },
+    {
+      "id": "prod---supervision-stale-control",
+      "witness": {
+        "actual": 0,
+        "coverage": 15,
+        "error": "Scenario",
+        "event": "supervision-reject",
+        "exit": "Exited(1002)",
+        "status": "fail",
+        "value": 0
+      },
+      "elf_sha256": "946b09bf0d6567e9ea7ee6157fb20b6aebb7988d8ebe5c6276ff6f916715654d",
+      "results_sha256": "326c74ff5a917c393fab7dbdc1588382aa3c6f9c61972f9d0d8c77c77e8144fd"
+    },
+    {
+      "id": "prod---supervision-dependency-control",
+      "witness": {
+        "actual": 12,
+        "coverage": 1,
+        "error": "DependencyNotRejected",
+        "event": "supervision-reject",
+        "exit": "Exited(1200)",
+        "status": "fail",
+        "value": 0
+      },
+      "elf_sha256": "6df3a5731407938dfd351c600a9d086b22a1e583f9642adc4332f724aa45b6f9",
+      "results_sha256": "b87c3b27231db8df03db68a142cf27e1c0ac798d9a36a5b2274c4e7c802eb7fb"
+    },
+    {
+      "id": "prod---supervision-commit-control",
+      "witness": {
+        "actual": 4,
+        "coverage": 127,
+        "error": "CommitNotProven",
+        "event": "supervision-reject",
+        "exit": "Exited(1100)",
+        "status": "fail",
+        "value": 24
+      },
+      "elf_sha256": "e118c39a50794095e87db38d07f248714907e52d0df83a42bbf8a0e89016f53c",
+      "results_sha256": "34eb2b14f36cd896a55ccb87f5efda8e41d5c29b7d6a624d1ef009b9441b59ad"
+    },
+    {
+      "id": "prod---supervision-wait-control",
+      "witness": {
+        "error": "WaitIdentityLost",
+        "event": "supervision-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "974699f176aaf33186be7a52d40385cc6f26522a110abbf4abf28b2e933b6833",
+      "results_sha256": "f6a19d3c2be4d6e93661c90e1c0aeadeba38cc01e51dc62ce21006e135ea66ad"
+    },
+    {
+      "id": "prod---ipc-request-generation-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_payload_snapshot_result_id_and_stress",
+        "status": "fail"
+      },
+      "elf_sha256": "f4f1d8aad3b79b14177c191efc789065712fc5b96bf0ab4c561eebcb4b69b381",
+      "results_sha256": "395b55498ccc2be8f3741f540a59ba14cc3f3db47d90d41cfc6a1cadac7e577c"
+    },
+    {
+      "id": "prod---ipc-double-charge-release-control",
+      "witness": {
+        "error": "ChargeAlreadyReleased",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "b6eea927ea9ebeab940a4219f5fc3fb1c500d51ff0a3cf581c145f9f8368145a",
+      "results_sha256": "46d3bc3877da3dc0686b88c675ec602d8d6dbc7055d04fbb8b5164e398ac6464"
+    },
+    {
+      "id": "prod---ipc-storage-scope-control",
+      "witness": {
+        "error": "StorageInsideScheduler",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "9732b38490e7296c30aac72fddbe7154599fd28b8f28bcd1535c07582f53d1ec",
+      "results_sha256": "1d88cc97e6dc5d7b52219beaa1b960412927799a818a797b12d4664df051f77c"
+    },
+    {
+      "id": "prod---ipc-duplicate-ready-control",
+      "witness": {
+        "error": "DuplicateReady",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "9a36d9f33a21d83fd0e2412da42953f1a8a53d1ad2b0839b22fb299a03eb027d",
+      "results_sha256": "69b9fe484dee9a0f43890e9f08a92a2866487654ec6422afc95195711b811000"
+    },
+    {
+      "id": "prod---ipc-wrong-process-wake-control",
+      "witness": {
+        "error": "WrongProcessWake",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "ac8ef31a61b0d410d4137b2436c4426616917c98623ea6dcab64ff0a67cf3330",
+      "results_sha256": "03f9ba8ec13e202ce9c850ef89dea17a5f37244fbf8a5be0891504c1757b9fc5"
+    },
+    {
+      "id": "prod---ipc-blocked-reclaim-control",
+      "witness": {
+        "error": "BlockedTaskReclaim",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "e21fc367cae89bd9eebae03a37197ec717b05c78b97438aed1ed0669e5f141fc",
+      "results_sha256": "416ce82595cb62e064f434eacb2abb11db39fecfe96705e766b304a89e68cd3c"
+    },
+    {
+      "id": "prod---ipc-wake-generation-control",
+      "witness": {
+        "error": "WakeGenerationAccepted",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "c7875b0491b341690a1979463b70d0f7e66fea2706765ffb2bac61fd4142ec19",
+      "results_sha256": "7f6383c026eff5d3ca273e4d643bca17424b37b7ccf6468e55facae68c7c0c3c"
+    },
+    {
+      "id": "prod---ipc-wait-recheck-control",
+      "witness": {
+        "error": "WaitRegistrationLost",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "1e0d81f523b6902d0057468a4069e0fa071673056e6228747042d560732bf179",
+      "results_sha256": "971f29f267d61661456da07b4092a27982ebfcf6e6786e3bb06ec08adeafe687"
+    },
+    {
+      "id": "prod---ipc-wake-publication-control",
+      "witness": {
+        "error": "WakePublicationLost",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "f167cd44c6dc74a12da4ce25ec2488c15faa2df5f049a7c0f67559caa9d06987",
+      "results_sha256": "b6fc55d0dfa4fa1b9f34a1d92028a5ec9acdd3407efd0667f9ac4526c10959f8"
+    },
+    {
+      "id": "prod---ipc-service-token-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_el0_cpu0_to_cpu1",
+        "status": "fail"
+      },
+      "elf_sha256": "f6d8677808867ab228d7395ce2a41515f36cdf6976172047840ecf86a90f8b5e",
+      "results_sha256": "981a87aecd936de3d4f1e0d0d8c58cfb33adf8314756c214a3f17b3ec91cb1fc"
+    },
+    {
+      "id": "prod---ipc-charge-release-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_deadline_before_effect",
+        "status": "fail"
+      },
+      "elf_sha256": "eea5ee53e6cfa941355cb40c1aa8815e83eb7b72a8818b94cc21d26a21c1a892",
+      "results_sha256": "c537fbe4acc5d866d0a5cee91e8dae9df99daf764e4c96bef0ece128d4b1b23e"
+    },
+    {
+      "id": "prod---ipc-teardown-control",
+      "witness": {
+        "error": "EndpointNotQuiescent",
+        "event": "ipc-reject",
+        "status": "fail"
+      },
+      "elf_sha256": "a12efe28fd00f07dfd57cc3e8f41e3dc135e1f04f4c113d1f53678f9e5746be2",
+      "results_sha256": "a89e93a434690e188d914e8b42d09c30de145c92721b788917e8e70f2cd982b9"
+    },
+    {
+      "id": "prod---ipc-cancel-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_cancel_before_commit",
+        "status": "fail"
+      },
+      "elf_sha256": "1911729da164875cc13548a483822dd07465306e0aec7ed492a71a147b60c53e",
+      "results_sha256": "a26b80e942258aeb102e2d9903ab4dc9ba8a8d4126338209edbbb7941892046f"
+    },
+    {
+      "id": "prod---ipc-service-death-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_service_death_queued",
+        "status": "fail"
+      },
+      "elf_sha256": "89dd949b71ddc8faac4d020e06352696e1a872b953dde5888b9db0e5edc0f8be",
+      "results_sha256": "02eac46298516ebf2f2af16d4433b76959788f81daea233783f0b694d97f2a26"
+    },
+    {
+      "id": "prod---ipc-double-terminal-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_payload_snapshot_result_id_and_stress",
+        "status": "fail"
+      },
+      "elf_sha256": "53f4e6b49d81efdddc2d4c74f0fb8cd9df06096fe4422f59473520e9dd0284b5",
+      "results_sha256": "355b169c73df1eed93a626f9e30a4e4240910dbcec9052f648fff0063adcd3e9"
+    },
+    {
+      "id": "prod---ipc-capacity-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_queue_full_fifo_and_reclamation",
+        "status": "fail"
+      },
+      "elf_sha256": "399787de675c3b98cfeccdd91d8d43a0629739f28064c3073fadafb77708c491",
+      "results_sha256": "8ff5297d43d31b2de65e788e736235289baf3f75f601583383d1db70526af81d"
+    },
+    {
+      "id": "prod---ipc-fifo-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_queue_full_fifo_and_reclamation",
+        "status": "fail"
+      },
+      "elf_sha256": "498066a92132b92fa56ccc6a965f17d48f97ef0573fa7fcf6eb54846d79586a4",
+      "results_sha256": "cdcc68041c43de4f12fe46c2b3e44e2a5f277b7740a2029540aaf10e7a8c16dd"
+    },
+    {
+      "id": "prod---ipc-id-reuse-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_payload_snapshot_result_id_and_stress",
+        "status": "fail"
+      },
+      "elf_sha256": "241d2f38d61d33567bdf0e77859fc5c56c0debcc1e889b1ee267d025f60462fd",
+      "results_sha256": "b1ac698b683b40c919d1bdf96ed9f53b6d18e1378afc7a0a0d5ab2876717aa7d"
+    },
+    {
+      "id": "prod---ipc-receive-copy-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_receive_copy_failure_retains_queue",
+        "status": "fail"
+      },
+      "elf_sha256": "b2389dc6a1d1d250a056a37ded852cf3acd3fde44eaf755457a9f71a7c771212",
+      "results_sha256": "34ef7c7f288c1e39dfe120b7d6a9390eebb2e92de2758f95380ff4114c357484"
+    },
+    {
+      "id": "prod---ipc-collect-copy-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_collect_copy_failure_retains_result",
+        "status": "fail"
+      },
+      "elf_sha256": "a13b9cfc468d7903d33cdda1c968621c1f75e8b25b8c2a63fbe6ea471c51cf9a",
+      "results_sha256": "cb06e8679aa4c93579889199a281d7a97af4d142f3138109f99d6945cf92081e"
+    },
+    {
+      "id": "prod---ipc-send-rights-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_authority_denial_revoke_and_retention",
+        "status": "fail"
+      },
+      "elf_sha256": "61e0b97d51a6cf28a486fac522382575cf134b25cab188ac1651ea732c67cfc4",
+      "results_sha256": "e539de52dedfd33459838fe9d8eeb46259d524dc16ee5f5f4ada805879302fdb"
+    },
+    {
+      "id": "prod---ipc-revoke-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_authority_denial_revoke_and_retention",
+        "status": "fail"
+      },
+      "elf_sha256": "add35b363b714763398277d539721f8d5936a0b70f6462f749c7b905228a6afa",
+      "results_sha256": "61d0c55599989870874ec287397ca73908395957579d84c57ec1ee58cab4e9ee"
+    },
+    {
+      "id": "prod---ipc-deadline-control",
+      "witness": {
+        "event": "test",
+        "name": "ipc_deadline_before_effect",
+        "status": "fail"
+      },
+      "elf_sha256": "fb35fea9f8a478d018f41ad324cedf54f2ccc456de33d8c8a3e0ff484a811af8",
+      "results_sha256": "dbfa35c7efe9aa92f848a0a7820f272899521c1427e9aa041f3844f1861be902"
+    }
+  ],
+  "correctness": {
+    "matrix": "passed",
+    "source_digests": "matched",
+    "exact_negative_controls": "passed"
+  },
+  "profiles": {
+    "prod": {
+      "test_build": {
+        "artifact": "target/kernel/prod-tests.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 2626200,
+        "features": ["machine-events", "kernel-tests"],
+        "load_bytes": 697028,
+        "memory_bytes": 1794756,
+        "sha256": "13ac9b325f05d87595bb7ed4aae0440d94d3c4f46f560d179f71bab765a37d72",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "13ac9b325f05d87595bb7ed4aae0440d94d3c4f46f560d179f71bab765a37d72",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    },
+    "dev": {
+      "test_build": {
+        "artifact": "target/kernel/dev-tests.elf",
+        "compiler": "1.99.0",
+        "elf_bytes": 6168232,
+        "features": ["machine-events", "diagnostics", "kernel-tests"],
+        "load_bytes": 1108295,
+        "memory_bytes": 2214207,
+        "sha256": "20f031a46a968f5be56589569cf3e8e891a917c52c6e9ee0fd06701937e5648c",
+        "target": "aarch64-unknown-none"
+      },
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "20f031a46a968f5be56589569cf3e8e891a917c52c6e9ee0fd06701937e5648c",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    }
+  }
+}

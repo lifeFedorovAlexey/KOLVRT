@@ -1,10 +1,10 @@
 # ADR-0026 — Изолированный supervisor EL0 и ограниченный lifecycle rendezvous
 
-Status: **Proposed; экспериментальная реализация, acceptance review ещё не завершён**. Date: 2026-10-05.
+Status: **Accepted for bounded Phase 3.6 after #126; Codex semantic review at the maintainer’s request, readiness separate**. Date: 2026-10-06.
 
-Document status: DESIGN BASELINE
+Document status: CURRENT
 
-Evidence scope: заново выведенная архитектура Phase 3.6 и экспериментальный статический workload; acceptance production trust, persistent service и physical ARM64 отсутствует.
+Evidence scope: принятая ограниченная архитектура Phase 3.6 после #126; current-source QEMU verification отделена от открытого performance-вопроса и production/hardware readiness.
 
 Current reference: [Контракт supervisor](../kernel/supervision.md)
 
@@ -52,7 +52,7 @@ Checkpoint приостанавливает peers во время membership cha
 
 ## Проверка
 
-Выполнить реальные isolated EL0 images на обоих fixed-affinity CPU в DEV и PROD, все прежние controls, focused mutations supervisor authority/stale-token/wait-retention, host Clippy/tests и repository checks. Сохранить exact source и artifact identities. Proposals, host fixtures и QEMU не доказывают production или physical ARM64 acceptance. До acceptance или issue closure завершить semantic architecture и EN/RU human review.
+Выполнить реальные isolated EL0 images на обоих fixed-affinity CPU в DEV и PROD, все прежние controls, focused mutations supervisor authority/stale-token/wait-retention, host Clippy/tests и repository checks. Сохранить exact source и artifact identities. Proposals, host fixtures и QEMU не доказывают production или physical ARM64 acceptance. [Текущая проверка после #126](../architecture/supervision-phase36-acceptance-review.md) фиксирует completed Codex architecture/code и EN/RU semantic review. Performance acceptance и independent human sign-off не заявляются.
 
 ## Обратимость
 
@@ -70,7 +70,7 @@ Checkpoint приостанавливает peers во время membership cha
 
   "kind": "adr",
 
-  "summary": "Proposed isolated EL0 supervision over bounded two-CPU lifecycle rendezvous.",
+  "summary": "Accepted bounded isolated EL0 supervision with finite completion publication after #126.",
 
   "aliases": ["ADR-0026"]
 }

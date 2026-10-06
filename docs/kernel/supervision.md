@@ -1,7 +1,7 @@
 # Isolated EL0 supervision
 
 Document status: CURRENT
-Evidence scope: experimental Phase 3.6 development fixture and bounded lifecycle implementation; acceptance review, production bootstrap trust and physical ARM64 remain pending.
+Evidence scope: accepted bounded Phase 3.6 after #126, current-source functional QEMU verification and Codex EN/RU semantic review; readiness and performance acceptance are separate.
 Current reference: [Lifecycle rendezvous proposal](../architecture-decisions/0026-el0-supervision.md)
 
 ABI contract: native.lifecycle/1
@@ -46,21 +46,21 @@ This bounded checkpoint mechanism pauses healthy peers during lifecycle changes;
 
 The EL0 policy submits an exact endpoint readiness probe with an absolute 1/8-second counter deadline and recognizes READY only after a completed initialized response containing the expected marker. Only the service's bound receiver and accepted service token can commit/reply; a requester SEND handle cannot fabricate that response. An expired probe is not READY. These QEMU fixture durations are explicit policy parameters, not real-time guarantees.
 
-A committed crashing service reports effect-unknown and an exact fault observation. The supervisor starts a fresh instance and checks rejection of its previous token and SEND handle. A silent service times out before commitment and is explicitly stopped. A crash storm receives three EL0-selected replacement attempts separated by 1/128-second counter-clock backoff; the supervisor then stops retrying despite remaining native authority credits. The healthy peer completes native probes between worker failures.
+A committed crashing service reports effect-unknown and an exact fault observation. The supervisor starts a fresh instance and checks rejection of its previous token and SEND handle. A silent service times out before commitment and is explicitly stopped. A crash storm receives three EL0-selected replacement attempts separated by 1/128-second counter-clock backoff; the supervisor then stops retrying despite remaining native authority credits. The healthy peer completes native probes before and after the bounded crash storm.
 
 Under accepted load, the service sends a commit acknowledgement over its exact-instance feedback endpoint only after COMMIT succeeds. The supervisor validates and replies to that acknowledgement before cancellation; elapsed scheduler quanta cannot establish commitment. The supervisor observes cancellation after commitment as effect-unknown, stops admission, requests owner-local termination and waits for its exact terminal event. It never promises rollback or replays unknown effects. Final teardown closes every endpoint, finishes pending copies, drains source/mailbox ownership, retires namespaces/domains/ASIDs and releases private frames. The external ten-second test watchdog diagnoses a failed workload; it is not successful shutdown evidence or production policy. Unexpected supervisor failure, watchdog expiry or failed quiescence halts/quarantines this development fixture without reclaiming live resources; a deadline never authorizes freeing reachable state.
 
 ## Verification and next gate
 
-The [checkpoint correction receipt](../../research/results/checkpoint-publication-bound.json) retains the exact DEV/PROD held-publication and bounded-timeout events and both eight-pair ASID measurements. Tagged-ASID scheduler median changed from 12,848,759.5 to 13,050,031.5 ticks (+1.57%); ASID-zero changed from 12,008,503 to 12,805,975 ticks (+6.64%). These sequential QEMU observations include lifecycle changes and counter refinement, do not isolate ISB cost and do not establish absence of performance regression. The original IPC performance run completed DEV but failed the strict PROD blocked_requester_wait control (block_delta=0); that failure is retained. Performance attribution and architecture/EN-RU acceptance remain open; #27 is not closed by this correction.
+The [new acceptance review](../architecture/supervision-phase36-acceptance-review.md) is against merged main ddd526cc5a522d97029d0324e6e619f5fd6ec6e5 after #126. Codex re-reviewed complete architecture/code and EN/RU semantic requirements, including mandatory publication bounds for checkpoint(None), the separate copy-drain bound and relaxed/ordered counter reads. Functional implementation is BOUNDED_IMPLEMENTED. Readiness remains NOT_READY without introducing a new numeric performance gate or denying the functional foundation for #28.
 
-The later routing run 37389265393 failed in stripped PROD after initial EL0 validation while all kernel shards passed. Twenty-four exact-ELF replays did not reproduce the panic. Minimal failure identity now remains visible without machine-events/diagnostics: static process/IPC check names and panic source file/line, with no private data or addresses. A subsequent PROD boot latched CPU1 FAILED during the IPC deadline workload; bounded static source file/line is now retained before FAILED release-publication and read by the primary after acquire, without CPU1 UART or private values. This improves diagnosis; it does not establish a fix of that intermittent failure. Current-source verification remains STALE until the new stand run.
+The [fresh current-source receipt](../../research/results/supervision-phase36-main126.json) independently checks CI run 37439023443 on final #126 head cceb17e74a7a249d76d0f10905de23205f69b1dd: every source digest matches, actual ELF/result hashes and all 142 tasks were checked — 125 checks per profile, both ordinary boots and 138 controls. All ten supervision controls remain. New DEV/PROD publication controls require both CheckpointPublicationHeld with quiescent=true and CompletionPublicationTimeout; an unrelated panic is not counted.
 
-The retained [exact-source execution receipt](../../research/results/supervision-phase36.json) records 125 DEV and 125 PROD checks, both non-test boots and 136 rejected control runs. Its ten supervisor-specific runs are included in the 56 IPC/supervision controls. The latest source set verifies dependency denial, unpublished quota rollback and a commitment-aware shutdown handshake as well as actual Terminated distinct from BudgetExpired; earlier snapshots remain immutable. Technical QEMU verification does not complete proposed architecture or human EN/RU acceptance.
+The [old receipt](../../research/results/supervision-phase36-current.json) and [pre-#126 proposal](../architecture/supervision-phase36-pre126-review.md) retain only their historical 9cf87bc/692b024 scope. They do not verify current sources.
 
-The real images check eight scenario groups: ordered normal startup; missing dependency and forged grant selector; irreversible seal, unused launch-grant extinction, instance-credit exhaustion, unsupported-version and repeated launch denial; forged readiness denial; crash, fresh restart and stale binding denial; startup timeout; bounded restart storm and healthy peer progress; shutdown under committed load. A bitmap is returned by EL0 control flow and checked together with actual process completion, released CPU owners, zero live domains/processes and restored physical page count. It does not replace source review.
+[Original performance observations](../../research/results/checkpoint-publication-bound.json) show median +1.57% with tagged ASIDs and +6.64% with ASID-zero. Sequential before/after runs under uncontrolled host load combine lifecycle correction and counter refinement; ISB attribution and absence of regression are unproven. The strict original PROD IPC benchmark also failed blocked_requester_wait with block_delta=0. That failure is retained and the control is not weakened. Performance acceptance is not claimed; this is a separate open scope, not a new universal percentage threshold.
 
-Focused mutations remove supervisor provenance, stale service-token rejection retained IPC wait identity or commitment before the load acknowledgement. The false commit acknowledgement control must produce exact CommitNotProven in both profiles. Normal worker launch and the missing-dependency launch request use the same EL0 manifest policy routine; it requires every dependency bit, rejects the absent dependency before invoking native launch and initializes the denial result. Bypassing that EL0 guard must produce exact DependencyNotRejected in both profiles. The ASID mutation checks mandatory invalidation before its dependent same-VA observation, so a stale translation cannot mask the expected witness. Each must produce its named exact rejection in both DEV and PROD. Full existing kernel checks and controls remain mandatory. [Runner](../../crates/xtask/src/main.rs) supports `cargo xtask test --positive-only [--prod]` for iteration; that command does not run or replace the full matrix. Exact-source receipts are recorded after the full matrix. Semantic and complete EN/RU human review are required before issue #27 closes. #28 owns persistent service integration; #38 owns production bootstrap trust.
+Eight real EL0 scenario groups check ordered startup, dependency/authority denial, finite grants/seal, forged readiness, crash/fresh restart/stale binding, startup timeout, bounded storm and committed-load shutdown. Bitmap 255 is supplemented by actual completion, released CPU owners, zero live processes/domains and restored physical pages. Host tests do not replace EL0; QEMU is not physical ARM. Earlier timer/stripped-PROD failures remain historical; universal race-freedom is not claimed. #28 owns persistent service integration and #38 production bootstrap trust.
 
 Sources: [lifecycle mechanism](../../crates/kernel/src/supervision.rs), [EL0 images](../../crates/kernel/src/supervision_workload.S), [bootstrap fixture](../../crates/kernel/src/supervision_workload.rs), [process ownership](../../crates/kernel/src/process.rs), [checkpoint](../../crates/kernel/src/scheduler/mod.rs).
 
@@ -68,7 +68,7 @@ Sources: [lifecycle mechanism](../../crates/kernel/src/supervision.rs), [EL0 ima
 
 ## CI integration source boundary
 
-The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, including the shared serial/four-shard CI task inventory. All ten supervisor control runs remain mandatory, bringing the plan to 140 tasks. The matrix runner recognizes exact supervision: failure events rather than any panic. Earlier execution receipts retain their original source scopes. The latest source-matching stand receipt records a complete Cortex-A57 matrix and eight successful 16-bit QEMU max ASID pairs. The earlier timer_rearm failure is retained and was never counted as a revocation witness. The current bounded run passed after the compiler-ordering correction; the intermittent timeout cause is not conclusively established, and general race-freedom is not claimed. Human architecture/EN-RU acceptance remains open.
+Current main after #126 contains 142 tasks and 138 controls from one shared serial/four-shard inventory. Publication failure fabricates no success: resources remain retained until acquired quiescence. Fresh verification is scoped to this exact source set; historical inventories are not rewritten. Performance and readiness remain separate from functional acceptance.
 
 <!-- knowledge -->
 
@@ -95,7 +95,7 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
         "adr.0026"
       ],
       "feature": {
-        "implementation": "EXPERIMENTAL",
+        "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
         "sources": [
           "crates/kernel-core/src/process.rs",
@@ -116,22 +116,22 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
           "crates/xtask/src/output.rs",
           "crates/xtask/src/timing.rs"
         ],
-        "acceptance": [],
+        "acceptance": ["research/results/supervision-phase36-main126.json"],
         "issues": [27],
         "adrs": ["adr.0026"],
         "limitations": [
           "Development static manifest/image assurance only; production trust remains #38.",
           "Fixed affinity and two-CPU lifecycle barrier; generic wait-any, migration, independent live admission and persistent services are excluded.",
-          "Semantic architecture and complete EN/RU human review remain pending; QEMU is not physical ARM64 acceptance."
+          "Codex semantic/EN-RU review completed after #126; performance attribution/admissibility and physical ARM/production acceptance remain open."
         ],
-        "next_gate": "Complete architecture/code semantic and full EN/RU human review before bounded Phase 3.6 acceptance; #28 owns persistence and #38 production bootstrap trust.",
+        "next_gate": "Phase 3.7/#28 persistent ELF integration over the accepted bounded functional foundation; performance readiness and production trust remain separate review scopes.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
-            "receipt": "research/results/supervision-phase36.json",
-            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
+            "state": "VERIFIED",
+            "reason": "Independent post-#126 142-task artifact check against all current source digests, actual ELF/result hashes and exact publication/control witnesses; no performance acceptance.",
+            "receipt": "research/results/supervision-phase36-main126.json",
+            "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."
           },
           {
@@ -147,6 +147,12 @@ The branch integrates reviewed main `096977f9a434398130b6d18ddbd6cbba20f2116f`, 
             "to": "EXPERIMENTAL",
             "reason": "Implement isolated EL0 policy with a separately derived lifecycle barrier; acceptance review remains pending.",
             "acceptance": []
+          },
+          {
+            "from": "EXPERIMENTAL",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Post-#126 code/architecture and full EN/RU semantic review with independent current-source 142-task functional verification; readiness/performance acceptance remain separate.",
+            "acceptance": ["research/results/supervision-phase36-main126.json"]
           }
         ]
       }

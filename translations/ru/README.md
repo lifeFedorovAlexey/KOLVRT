@@ -31,7 +31,7 @@ Bounded IPC Phase 3.5 реализован и готов для объявлен
 
 Ранний код не определяет архитектуру следующих этапов. Перед расширением решение выводится из действующих инвариантов и принятых решений; мешающий им код перерабатывается или удаляется.
 
-Экспериментальный [supervisor EL0](docs/kernel/supervision.md) реализует bounded static service workload со fresh lifecycle identities, аутентифицированным readiness, конечным restart/backoff и честным shutdown. Human architecture и complete EN/RU acceptance задачи #27 ещё не завершены; #28 отвечает за persistent integration, #38 — за production bootstrap trust. Physical ARM64 и stable ABI остаются отдельными gates.
+[Надзор EL0](docs/kernel/supervision.md) принят для bounded functional foundation после #126 с [повторной Codex architecture/code и EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). Current-source verification покрывает 142 задачи / 138 controls. Performance-вопрос +1.57%/+6.64% и readiness отделены; отсутствие регрессии и production readiness не заявляются. #28 — persistent ELF integration, #38 — production bootstrap trust.
 
 ## Архитектура
 
@@ -120,7 +120,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)              | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                     | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
-| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
+| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                   | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                                 | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.research.host-survey](docs/research/host-survey.md#kolvrt-host-survey)                                | BOUNDED_IMPLEMENTED | host-process: STALE; windows-cim: UNKNOWN; physical-arm64: NOT_APPLICABLE |
@@ -128,7 +128,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)              | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.verifier-time](docs/security/verifier-time.md#kolvrt-verifier-time)                          | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
-| [kolvrt.services.supervision](docs/kernel/supervision.md#isolated-el0-supervision)                            | EXPERIMENTAL        | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
+| [kolvrt.services.supervision](docs/kernel/supervision.md#isolated-el0-supervision)                            | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 
 <!-- feature-summary:end -->
 
