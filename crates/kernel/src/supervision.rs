@@ -41,6 +41,9 @@ pub(crate) fn capture(task: &Task, frame: &mut Context) {
 #[derive(Clone, Copy)]
 pub(crate) struct Grant {
     pub image: &'static [u8],
+    pub image_format: ImageFormat,
+    /// Finite immutable SEND destination; selectors/tokens cannot widen it.
+    pub send_to: Option<usize>,
     pub owner: usize,
     pub limits: Limits,
     /// Maximum total instantiations, not an automatic restart policy.
@@ -58,6 +61,7 @@ struct Entry {
     remaining: usize,
     token: u64,
     instance: Option<Instance>,
+    outbound: Option<Handle>,
 }
 /// Linear CPU0 authority owner. No service selector, caller-supplied image,
 /// manifest, quota or ProcessId can widen these grants through the native entry.
@@ -82,6 +86,12 @@ impl Scope {
                 .iter()
                 .all(|g| !g.image.is_empty() && g.instances > 0 && g.instances <= 8)
         );
+        assert!(
+            grants.iter().enumerate().all(|(index, grant)| grant
+                .send_to
+                .is_none_or(|target| target < grants.len() && target != index)),
+            "invalid immutable SEND grant edge"
+        );
         OWNER_SLOT.store(supervisor.slot(), Ordering::Relaxed);
         OWNER_GENERATION.store(supervisor.generation(), Ordering::Relaxed);
         ACTIVE.store(true, Ordering::Release);
@@ -92,6 +102,7 @@ impl Scope {
                 grant,
                 token: 0,
                 instance: None,
+                outbound: None,
             }),
             sealed: false,
             next_token: 1,
@@ -138,6 +149,9 @@ impl Scope {
         let Ok(index) = usize::try_from(selector) else {
             return [11, 0, 0, 0, 0];
         };
+        if op == 6 {
+            return self.bind_sender(registry, index, token, argument);
+        }
         let Some(entry) = self.entries.get_mut(index) else {
             return [11, 0, 0, 0, 0];
         };
@@ -173,11 +187,16 @@ impl Scope {
                     registry
                         .reclaim(physical, old.id)
                         .expect("detached old instance");
+                    entry.outbound = None; // old namespace retirement consumed its grants
                     drop(old);
                     crate::ipc::deferred::poll(&[]);
                 }
                 let mut context = Context::ZERO;
-                context.pc = memory::USER_CODE as u64;
+                let image_entry = match entry.grant.image_format {
+                    ImageFormat::RawFixture => memory::USER_CODE,
+                    ImageFormat::Elf64Aarch64 => crate::platform::config::USER_PAYLOAD_BASE,
+                };
+                context.pc = image_entry as u64;
                 context.sp = memory::USER_STACK_TOP as u64;
                 context.gpr[23] = argument; // opaque initialized service input, never authority
                 let before_creation = physical.available();
@@ -186,11 +205,11 @@ impl Scope {
                     Origin::Bootstrap,
                     Spec {
                         image: entry.grant.image,
-                        image_format: ImageFormat::RawFixture,
+                        image_format: entry.grant.image_format,
                         limits: entry.grant.limits,
                         context,
                         owner: entry.grant.owner,
-                        entry: memory::USER_CODE,
+                        entry: image_entry,
                         slice_limit: None,
                     },
                     None,
@@ -275,6 +294,57 @@ impl Scope {
                 [0, 0, 0, 0, 0]
             }
             _ => [1, 0, 0, 0, 0],
+        }
+    }
+    fn bind_sender(
+        &mut self,
+        registry: &mut Registry,
+        client: usize,
+        token: u64,
+        target_token: u64,
+    ) -> [u64; 5] {
+        let Some(entry) = self.entries.get(client) else {
+            return [11, 0, 0, 0, 0];
+        };
+        if token == 0 || token != entry.token {
+            return [2, 0, 0, 0, 0];
+        }
+        let Some(target) = entry.grant.send_to else {
+            return [11, 0, 0, 0, 0];
+        };
+        let Some(client_id) = entry.instance.as_ref().map(|instance| instance.id) else {
+            return [2, 0, 0, 0, 0];
+        };
+        if registry.state(client_id) != Ok(State::Admitted) {
+            return [2, 0, 0, 0, 0];
+        }
+        let destination = &self.entries[target];
+        if target_token == 0 || target_token != destination.token {
+            return [2, 0, 0, 0, 0];
+        }
+        let Some(instance) = destination.instance.as_ref() else {
+            return [2, 0, 0, 0, 0];
+        };
+        if registry.state(instance.id) != Ok(State::Admitted) {
+            return [2, 0, 0, 0, 0];
+        }
+        let Ok(endpoint) = instance.endpoint.try_clone() else {
+            return [12, 0, 0, 0, 0];
+        };
+        // Only a sender previously minted by this exact grant may be closed.
+        if let Some(old) = self.entries[client].outbound.take() {
+            match registry.lifecycle_close(client_id, old) {
+                Ok(()) | Err(kernel_core::handles::Error::Stale) => {}
+                Err(_) => return [11, 0, 0, 0, 0],
+            }
+        }
+        match registry.lifecycle_sender(client_id, &endpoint) {
+            Ok(handle) => {
+                self.entries[client].outbound = Some(handle);
+                [0, handle.encode(), target_token, client_id.generation(), 0]
+            }
+            Err(kernel_core::handles::Error::Budget) => [12, 0, 0, 0, 0],
+            Err(_) => [11, 0, 0, 0, 0],
         }
     }
     pub fn retire(mut self, registry: &mut Registry, physical: &mut memory::Physical) {

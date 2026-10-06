@@ -1,17 +1,125 @@
 {
   "schema_version": 1,
-  "base_commit": "ddd526cc5a522d97029d0324e6e619f5fd6ec6e5",
-  "files": [],
+  "base_commit": "bf54960925559d8925c24b6d40e557e98af08f41",
+  "files": [
+    {
+      "path": "Cargo.toml",
+      "before_sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
+      "after_sha256_lf": "3cd6d412f8cf68e0bcbc0f020c4156103d424af66c6cfc8ff513a309691fadde",
+      "disposition": "existing-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "Cargo.lock",
+      "before_sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86",
+      "after_sha256_lf": "1e8268b566f72fefca627685108749eb3949da6de04fa036ef5473f235f3e2cc",
+      "disposition": "existing-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "crates/kernel/src/supervision.rs",
+      "before_sha256_lf": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401",
+      "after_sha256_lf": "bfd8fe9d5e01d11e0e78cf1dcfb88e0905caa7611744437fc5d8331a32969299",
+      "disposition": "existing-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "before_sha256_lf": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
+      "after_sha256_lf": "115597d1fcd1f9d398fccf27ab09b16a6513a1acfa980e8b231d3f524e30c83a",
+      "disposition": "existing-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.rs",
+      "before_sha256_lf": "73868af14eeb17328f79bcd6d5c47445316047684cc4f1cc60e3fa088616ec0a",
+      "after_sha256_lf": "bed834266c58ab58fff2ad66221533b3c3e2c83ac6f9f6c46557d153a6eda0b6",
+      "disposition": "existing-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "apps/native-runtime/Cargo.toml",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "9597f67e385b3486ece0be3c9ac4c18ed86da694bbc56f65110b392e17afb110",
+      "disposition": "new-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "apps/native-runtime/src/lib.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "09783da67b5f2ea4f8223d1fc1edef651e4b89605192b4fd20d704792a226009",
+      "disposition": "new-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "apps/native-apps/Cargo.toml",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "ce31e8576168cbd7eb9b443b9a630253352f5147067312749a0eb2f2c043e771",
+      "disposition": "new-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "apps/native-apps/build.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "6f3491681856d3ca1c2e05f82168cee63a90a3be26433c48554b51caad14998f",
+      "disposition": "new-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "apps/native-apps/linker.ld",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a",
+      "disposition": "new-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    },
+    {
+      "path": "apps/native-apps/src/counter-service.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "54190c35741658270bad518bcdd31aeae5e7e7c3afd2d144d7fe24fabc1b7e28",
+      "disposition": "new-feature",
+      "reason": "Begin the registered Phase 3.7 native ELF slice: original ELF bytes, finite exact-instance client SEND authority and standalone no_std userspace counter/syscall artifacts; no completed EL0 acceptance is claimed."
+    }
+  ],
   "features": [
     {
-      "id": "kolvrt.services.supervision",
-      "disposition": "semantic-change",
-      "reason": "Re-review bounded functional architecture and complete EN/RU semantics after merged #126; accept corrected finite publication/drain behavior against fresh 142-task artifacts while leaving performance/readiness separate."
+      "id": "kolvrt.compatibility.manifests",
+      "disposition": "evidence-change",
+      "reason": "Review applicability of Phase 3.7 image/namespace grant and workspace changes; source verification becomes STALE until matching exact-source execution. Earlier receipts and accepted history remain retained."
+    },
+    {
+      "id": "kolvrt.security.domains",
+      "disposition": "evidence-change",
+      "reason": "Review applicability of Phase 3.7 image/namespace grant and workspace changes; source verification becomes STALE until matching exact-source execution. Earlier receipts and accepted history remain retained."
     },
     {
       "id": "kolvrt.ipc.transport",
       "disposition": "evidence-change",
-      "reason": "Refresh exact-source functional QEMU applicability after #126 using all actual ELF/result hashes and precise negative witnesses, without claiming performance acceptance."
+      "reason": "Review applicability of Phase 3.7 image/namespace grant and workspace changes; source verification becomes STALE until matching exact-source execution. Earlier receipts and accepted history remain retained."
+    },
+    {
+      "id": "kolvrt.process.lifecycle",
+      "disposition": "evidence-change",
+      "reason": "Review applicability of Phase 3.7 image/namespace grant and workspace changes; source verification becomes STALE until matching exact-source execution. Earlier receipts and accepted history remain retained."
+    },
+    {
+      "id": "kolvrt.services.supervision",
+      "disposition": "semantic-change",
+      "reason": "Review applicability of Phase 3.7 image/namespace grant and workspace changes; source verification becomes STALE until matching exact-source execution. Earlier receipts and accepted history remain retained."
+    },
+    {
+      "id": "kolvrt.cost-l.offline-queries",
+      "disposition": "evidence-change",
+      "reason": "Review applicability of Phase 3.7 image/namespace grant and workspace changes; source verification becomes STALE until matching exact-source execution. Earlier receipts and accepted history remain retained."
+    },
+    {
+      "id": "kolvrt.security.verifier-time",
+      "disposition": "evidence-change",
+      "reason": "Review applicability of Phase 3.7 image/namespace grant and workspace changes; source verification becomes STALE until matching exact-source execution. Earlier receipts and accepted history remain retained."
+    },
+    {
+      "id": "kolvrt.apps.native-elf",
+      "disposition": "semantic-change",
+      "reason": "Register experimental standalone native ELF counter/service protocol and finite binding scope; integrated client/supervisor/selftest/QEMU acceptance remains explicitly incomplete."
     }
   ]
 }

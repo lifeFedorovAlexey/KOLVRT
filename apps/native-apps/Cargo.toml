@@ -1,0 +1,20 @@
+[package]
+name = "native-apps"
+version = "0.1.0"
+edition = "2024"
+publish = false
+build = "build.rs"
+
+[dependencies]
+native-userspace = { path = "../native-runtime" }
+
+[features]
+default = []
+guest = []
+
+[[bin]]
+name = "counter-service"
+path = "src/counter-service.rs"
+required-features = ["guest"]
+test = false
+bench = false

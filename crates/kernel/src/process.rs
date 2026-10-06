@@ -727,6 +727,32 @@ impl Registry {
             }
         }
     }
+    /// Exact admitted namespace, acquired checkpoint and finite supervisor grant.
+    pub fn lifecycle_sender(
+        &mut self,
+        client: ProcessId,
+        endpoint: &kernel_core::ipc::Reference,
+    ) -> Result<kernel_core::handles::Handle, kernel_core::handles::Error> {
+        use kernel_core::handles::{CreationError, Error as H, Rights};
+        context_contract().map_err(|_| H::Denied)?;
+        if memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire) != 0
+            || self.table.state(client).ok() != Some(State::Admitted)
+            || !scheduler::detached(client)
+        {
+            return Err(H::Denied);
+        }
+        self.handles[client.slot()]
+            .create_endpoint_sender(
+                client,
+                endpoint.try_clone().map_err(|_| H::ReferenceExhausted)?,
+                Rights::SEND,
+                |_| Ok::<_, ()>(()),
+            )
+            .map_err(|error| match error {
+                CreationError::Handle(error) => error,
+                CreationError::Publication(()) => unreachable!(),
+            })
+    }
     pub fn lifecycle_close(
         &mut self,
         owner: ProcessId,

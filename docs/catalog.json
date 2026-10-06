@@ -766,7 +766,7 @@
     {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12621,
+      "estimated_bytes": 12549,
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
       "path": "docs/architecture/compatibility-manifests.md",
@@ -915,7 +915,7 @@
     {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13979,
+      "estimated_bytes": 13957,
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
       "path": "docs/kernel/domains.md",
@@ -935,7 +935,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 24139,
+      "estimated_bytes": 24141,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -953,9 +953,19 @@
       "title": "Phase 3.5 IPC performance passport"
     },
     {
+      "document": "doc.kolvrt.kernel.native-applications",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 6909,
+      "id": "doc.kolvrt.kernel.native-applications",
+      "kind": "subsystem-contract",
+      "path": "docs/kernel/native-applications.md",
+      "summary": "Phase 3.7 standalone ELF/native IPC application and persistent counter service requirements.",
+      "title": "Native ELF applications and persistent service"
+    },
+    {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 26234,
+      "estimated_bytes": 26212,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -975,7 +985,7 @@
     {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 18145,
+      "estimated_bytes": 18133,
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "path": "docs/kernel/supervision.md",
@@ -1015,7 +1025,7 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 12195,
+      "estimated_bytes": 12123,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",
@@ -1045,7 +1055,7 @@
     {
       "document": "doc.kolvrt.security.verifier-time",
       "document_status": "CURRENT",
-      "estimated_bytes": 8688,
+      "estimated_bytes": 8618,
       "id": "doc.kolvrt.security.verifier-time",
       "kind": "subsystem-contract",
       "path": "docs/security/verifier-time.md",
@@ -1078,6 +1088,30 @@
       "path": "research/linux/memory-allocation.md",
       "summary": "Pinned allocation-context and reclaim research; native service remains proposed.",
       "title": "Linux allocation context research"
+    },
+    {
+      "anchor": "native-elf-applications",
+      "depends_on": [
+        "kolvrt.services.supervision",
+        "kolvrt.ipc.transport",
+        "kolvrt.process.lifecycle",
+        "law.009",
+        "law.013",
+        "law.018",
+        "law.025",
+        "law.041",
+        "law.043",
+        "adr.0026"
+      ],
+      "document": "doc.kolvrt.kernel.native-applications",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1838,
+      "id": "kolvrt.apps.native-elf",
+      "implementation": "EXPERIMENTAL",
+      "kind": "feature",
+      "path": "docs/kernel/native-applications.md",
+      "summary": "Standalone native ELF applications, private persistent counter state and layered userspace acceptance.",
+      "title": "Native application slice"
     },
     {
       "anchor": "kolvrt-arena-scope",
@@ -1615,7 +1649,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 24026,
+      "estimated_bytes": 24028,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
@@ -2105,7 +2139,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6851,
+      "estimated_bytes": 6829,
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
       "path": "docs/kernel/domains.md",

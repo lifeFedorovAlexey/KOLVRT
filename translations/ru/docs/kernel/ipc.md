@@ -215,8 +215,8 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Fresh 142-task post-#126 functional artifact verification matches current sources and exact enforcement witnesses; performance benchmark acceptance is separate.",
+            "state": "STALE",
+            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64."

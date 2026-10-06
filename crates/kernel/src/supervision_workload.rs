@@ -66,18 +66,24 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
     let grants = [
         Grant {
             image: service_image,
+            image_format: ImageFormat::RawFixture,
+            send_to: None,
             owner: 1,
             limits,
             instances: 8,
         },
         Grant {
             image: service_image,
+            image_format: ImageFormat::RawFixture,
+            send_to: None,
             owner: 0,
             limits,
             instances: 1,
         },
         Grant {
             image: service_image,
+            image_format: ImageFormat::RawFixture,
+            send_to: None,
             owner: 1,
             limits,
             instances: 1,

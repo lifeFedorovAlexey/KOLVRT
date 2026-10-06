@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 52126,
-  "catalog_bytes": 80480,
-  "catalog_nodes": 199,
+  "approximate_tokens": 52364,
+  "catalog_bytes": 81457,
+  "catalog_nodes": 201,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "ddd8c2fadc5378c517caff784fe2c2228a6ee6dc89fc2d934e5d05cf42258bc7",
+  "catalog_sha256": "b2d9419086ebba26868518fe8815fc4f4e9d2fdeac61f2d0a9502aeaf3e59f73",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 208501,
+  "context_plus_catalog_bytes": 209456,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 104,
-    "utf8_bytes": 899696
+    "documents": 105,
+    "utf8_bytes": 906337
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -24,6 +24,7 @@
     "affected": [
       "doc.kolvrt.ipc.acceptance-review",
       "doc.kolvrt.supervision.acceptance-review",
+      "kolvrt.apps.native-elf",
       "kolvrt.handles.identity",
       "kolvrt.handles.local",
       "kolvrt.ipc.cancel",
@@ -66,14 +67,14 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 128021,
+  "rendered_context_bytes": 127999,
   "russian_pilot": {
-    "approximate_tokens": 80384,
-    "catalog_bytes": 80480,
-    "context_plus_navigation_bytes": 321534,
+    "approximate_tokens": 80735,
+    "catalog_bytes": 81457,
+    "context_plus_navigation_bytes": 322937,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 45476,
+    "localized_navigation_bytes": 45924,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -85,7 +86,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 195578,
+    "rendered_context_bytes": 195556,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -333,7 +334,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+        "sha256": "7059bf8653d4d2d7c1a8fb28e779958eaf311b62e11a5f7f2b7a7e235fb4d37c",
         "start": 13
       }
     },
@@ -342,7 +343,7 @@
       "location": {
         "end": 85,
         "path": "docs/kernel/processes.md",
-        "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+        "sha256": "7059bf8653d4d2d7c1a8fb28e779958eaf311b62e11a5f7f2b7a7e235fb4d37c",
         "start": 61
       }
     },
@@ -360,7 +361,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "65d673be1cb550177d7e8f1bf945bd06078295ebf77e62ca3f3ebf5e5b43cb70",
         "start": 11
       }
     },
@@ -369,7 +370,7 @@
       "location": {
         "end": 38,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "65d673be1cb550177d7e8f1bf945bd06078295ebf77e62ca3f3ebf5e5b43cb70",
         "start": 29
       }
     },
@@ -378,7 +379,7 @@
       "location": {
         "end": 30,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "65d673be1cb550177d7e8f1bf945bd06078295ebf77e62ca3f3ebf5e5b43cb70",
         "start": 17
       }
     },
@@ -387,7 +388,7 @@
       "location": {
         "end": 58,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "65d673be1cb550177d7e8f1bf945bd06078295ebf77e62ca3f3ebf5e5b43cb70",
         "start": 37
       }
     },
@@ -396,7 +397,7 @@
       "location": {
         "end": 179,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "65d673be1cb550177d7e8f1bf945bd06078295ebf77e62ca3f3ebf5e5b43cb70",
         "start": 57
       }
     },
@@ -529,7 +530,7 @@
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 196966
+    "utf8_bytes": 196922
   },
   "source_files": [
     {

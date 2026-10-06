@@ -47,6 +47,7 @@
     "docs/kernel/handles.md",
     "docs/kernel/ipc-performance.md",
     "docs/kernel/ipc.md",
+    "docs/kernel/native-applications.md",
     "docs/kernel/processes.md",
     "docs/kernel/scheduler.md",
     "docs/kernel/supervision.md",
