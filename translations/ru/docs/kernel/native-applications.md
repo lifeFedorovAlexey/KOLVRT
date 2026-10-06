@@ -14,30 +14,32 @@ Finite client SEND binding использует существующий checkpo
 
 ## Классификация тестов и единственная реализация
 
-| Прежняя проверка                               | Уровень и проверяемый production-код                               | Отдельный ELF и решение                                                          |
-| ---------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| native-userspace tests                         | UNIT: Counter::apply, CounterRequest::decode, frame и reply codecs | Не нужен; apps/native-runtime/tests/counter.rs импортирует настоящие методы      |
-| selftest-process                               | SYSTEM: kernel ELF/process/EXIT/fault containment                  | Нужен только внешний fault/EXIT actor; scenario wiring ещё не завершён           |
-| selftest-ipc                                   | INTEGRATION/SYSTEM: настоящий native IPC через public SDK          | Внешний ABI-клиент допустим; production service и supervisor остаются настоящими |
-| selftest-service                               | E2E: настоящие service, client и supervisor                        | Отдельный дублирующий ELF удалён; restart/stale/shutdown steps ещё не завершены  |
-| selftest-elf                                   | E2E: настоящий loader и application ELF                            | Используется обычный counter-client                                              |
-| smoke-client                                   | E2E: обычные приложения и IPC                                      | Дублирующий ELF удалён; app-smoke выбирает counter-client                        |
-| selftest-counter-service / selftest-supervisor | Копии production-реализаций                                        | Удалены; не считаются test instruments                                           |
-| isolated_build / mutations.json                | Изменение копий kernel source                                      | Удалены; прежние controls не подтверждают production execution                   |
+| Прежняя проверка                               | Уровень и проверяемый production-код                               | Отдельный ELF и решение                                                               |
+| ---------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| native-userspace tests                         | UNIT: Counter::apply, CounterRequest::decode, frame и reply codecs | Не нужен; apps/native-runtime/tests/counter.rs импортирует настоящие методы           |
+| selftest-process                               | SYSTEM: kernel ELF/process/EXIT/fault containment                  | Внешний lifecycle-peer реально падает, а настоящий сервис продолжает отвечать         |
+| selftest-ipc                                   | INTEGRATION/SYSTEM: настоящий native IPC через public SDK          | Внешний ABI-клиент допустим; production service и supervisor остаются настоящими      |
+| selftest-service                               | E2E: настоящие service, client и supervisor                        | Дублирующий ELF удалён; stop/replacement/stale/shutdown проверены через lifecycle ABI |
+| selftest-elf                                   | E2E: настоящий loader и application ELF                            | Используется обычный counter-client                                                   |
+| smoke-client                                   | E2E: обычные приложения и IPC                                      | Дублирующий ELF удалён; app-smoke выбирает counter-client                             |
+| selftest-counter-service / selftest-supervisor | Копии production-реализаций                                        | Удалены; не считаются test instruments                                                |
+| isolated_build / mutations.json                | Изменение копий kernel source                                      | Удалены; прежние controls не подтверждают production execution                        |
 
 В tests/native-apps остаются только внешние ABI/fault actors. Они содержат тестовые входы, последовательности public calls и assertions; не реализуют counter service, обычный client или supervisor. Fault actor содержит собственную illegal instruction. Рабочий SDK не содержит test-only fault helper. Kernel/application source copies не создаются.
+
+Production supervisor теперь проверяет настоящий terminal outcome через lifecycle API перед replacement, сохраняет принятую failure backoff и проверяет readiness новой instance реальным GET(0). После service RPC failure обычный client запрашивает новую binding, требует новую identity и initial value 0, отвергает старый SEND и повторяет бизнес-операции только в новой instance. Effect-unknown ADD не повторяется в прежней instance. needs_replacement и fresh_binding импортируются UNIT-тестами; recover_service импортируется integration actor, а не копируется.
 
 ## Команды и пределы evidence
 
 cargo xtask service-run и app-smoke собирают настоящие production ELF. Supervisor запускает сервис и обычный client; после выхода client сервис продолжает работать. Host наблюдает продолжение, затем останавливает QEMU. Это не graceful shutdown и не измерение zero leaked resources.
 
-cargo xtask selftest запускает production component tests, обычный runtime scenario и внешний ABI-client в DEV/PROD. ABI actor проверяет denied operations, Submit/Wait/Collect, consumed receipt и три counter requests. Полная команда возвращает ошибку, пока обязательные restart/stale/reply/resource/shutdown scenarios не готовы. Частичные passes не выдаются за полную acceptance.
+cargo xtask selftest запускает production component tests, обычный runtime scenario и внешний ABI-client в DEV/PROD. ABI actor проверяет denied operations, Submit/Wait/Collect, consumed receipt и три counter requests. Команда также выполняет lifecycle integration через настоящие kernel и counter-service. Внешний клиент импортирует единственный production recover_service, останавливает сервис через public owner API, вызывает recovery, проверяет новую identity, old token/SEND rejection, fresh state 0 и clean reclamation. Отдельный ABI actor действительно падает; последующий ответ настоящего сервиса подтверждает fault containment. Эти passes не являются проверкой аварийного завершения counter-service внутри полного production supervisor loop.
 
-cargo xtask native-controls сейчас сообщает незавершённость public-interface replacement. Source-copy controls удалены. scripts/native-closure-proof.cjs больше не копирует исходники и не заявляет physical-absence proof; соответствующий gate остаётся pending. Старые receipts сохраняют исторический scope и не переименовываются в current-source evidence.
+cargo xtask native-controls проверяет неверные входы настоящих ELF/parser/policy методов, реальные denied/stale/binding/IPC calls и resource invariants. UNIT изменения observation fixtures проверяют тот же host oracle; это не execution failures ядра. Source mutations запрещены. scripts/native-closure-proof.cjs подключает оригинальные implementation directories через directory references, проверяет их физическую identity, отсутствие несвязанных crates в workspace, отсутствие external native packages и выполняет DEV/PROD runtime/lifecycle. Копируется только build metadata; копий реализации нет. Host runner dependency closure исключена из этого scope. Старые receipts остаются историческими.
 
 L1 проверяет компоненты, L2 — внешние ABI actors, L3 — production QEMU system scenarios. Ни один из этих уровней не доказывает L4 physical ARM: NOT_RUN/UNKNOWN. Filesystem, initramfs, storage, DMA, network, package manager, Linux ABI и dynamic linking остаются вне scope.
 
-Полная Phase 3.7 не завершена. Следующие gates: fault scenario wiring, реальные restart/stale/reply/reclamation/shutdown scenarios, проверка physical absence без копий исходников, актуальная foundation matrix и exact-source EN/RU acceptance. Исторические 144 tasks/140 controls не считаются пройденными после удаления source mutations.
+Полная Phase 3.7 не завершена. Оставшиеся gates: полный production supervisor loop при аварийном завершении именно counter-service, актуальная foundation matrix без source mutations, окончательная exact-source semantic/EN-RU acceptance и CI. Stop/replacement/stale/fresh binding/peer fault/shutdown уже проверены на настоящем kernel/service и импортированном production recover_service. Исторические 144 tasks/140 controls не переименовываются в current-source passes.
 
 [English original](../../../../docs/kernel/native-applications.md)
 
@@ -70,7 +72,7 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Single production ELF service/client/supervisor with original ELF loading and native IPC. Unit tests import production SDK methods; external ABI/fault actors contain no application implementation copies. Source-copy mutation controls are removed. Fault wiring, restart/stale/reply/resource/shutdown scenarios, physical absence and full source-bound acceptance remain incomplete.",
+        "implementation_scope": "Single production ELF service/client/supervisor, original ELF loader and real native IPC. Unit tests import production codecs and recovery/binding policy. Integration imports the same production recover_service and verifies actual stop/replacement/stale identity/fresh binding/fault containment/reclamation. Source-copy mutations and application copies are absent. Native dependency proof references original implementation files. Full production-supervisor service-crash execution, current foundation controls and final source-bound acceptance remain incomplete.",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
           ".github/workflows/kernel.yml",
@@ -82,7 +84,10 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "apps/native-apps/src/client.rs",
           "apps/native-apps/src/counter-client.rs",
           "apps/native-apps/src/counter-service.rs",
+          "apps/native-apps/src/lib.rs",
+          "apps/native-apps/src/supervision.rs",
           "apps/native-apps/src/supervisor.rs",
+          "apps/native-apps/tests/supervision.rs",
           "apps/native-runtime/Cargo.toml",
           "apps/native-runtime/src/lib.rs",
           "apps/native-runtime/tests/counter.rs",
@@ -132,11 +137,14 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "scripts/ci-workload.ps1",
           "scripts/native-closure-proof.cjs",
           "scripts/tests/ci-infrastructure.test.cjs",
+          "tests/fixtures/native-lifecycle-observations.json",
           "tests/native-apps/Cargo.toml",
           "tests/native-apps/build.rs",
           "tests/native-apps/src/abi-client.rs",
           "tests/native-apps/src/abi_steps.rs",
-          "tests/native-apps/src/fault-client.rs"
+          "tests/native-apps/src/fault-client.rs",
+          "tests/native-apps/src/lifecycle-client.rs",
+          "tests/native-apps/src/lifecycle-peer.rs"
         ],
         "acceptance": [],
         "issues": [28],
@@ -145,7 +153,7 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Final exact-source receipts, physical-absence proof review and complete foundation regression acceptance are pending."
         ],
-        "next_gate": "Complete actual production-interface fault/restart/stale/reply/reclamation/shutdown scenarios and physical-absence verification without source copies; then rerun required foundation and exact-source semantic/EN-RU gates. Do not close #28 while pending.",
+        "next_gate": "Complete exact-source semantic/EN-RU acceptance and a current foundation plan without source mutation; demonstrate the full production supervisor service-crash path or explicitly retain its evidence gap. No issue closure while required gates remain pending.",
         "verification": [
           {
             "environment": "qemu-arm64",

@@ -17,9 +17,9 @@ Finite client SEND binding uses the existing supervision checkpoint and exact in
 | Previous check                                 | Level and production code exercised                                  | Separate ELF and disposition                                                                |
 | ---------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | native-userspace tests                         | UNIT: Counter::apply, CounterRequest::decode, frame and reply codecs | None; apps/native-runtime/tests/counter.rs imports actual methods                           |
-| selftest-process                               | SYSTEM: kernel ELF/process/EXIT/fault containment                    | Only an external fault/EXIT actor is needed; scenario wiring is incomplete                  |
+| selftest-process                               | SYSTEM: kernel ELF/process/EXIT/fault containment                    | External lifecycle-peer actually faults while the real service continues replying           |
 | selftest-ipc                                   | INTEGRATION/SYSTEM: actual native IPC through the public SDK         | External ABI client is permitted; production service and supervisor remain actual artifacts |
-| selftest-service                               | E2E: actual service, client and supervisor                           | Duplicate ELF removed; restart/stale/shutdown steps remain incomplete                       |
+| selftest-service                               | E2E: actual service, client and supervisor                           | Duplicate ELF removed; stop/replacement/stale/shutdown exercised through lifecycle ABI      |
 | selftest-elf                                   | E2E: actual loader and application ELF                               | Uses ordinary counter-client                                                                |
 | smoke-client                                   | E2E: ordinary applications and IPC                                   | Duplicate ELF removed; app-smoke selects counter-client                                     |
 | selftest-counter-service / selftest-supervisor | Production implementation copies                                     | Removed; not test instruments                                                               |
@@ -27,17 +27,19 @@ Finite client SEND binding uses the existing supervision checkpoint and exact in
 
 Only external ABI/fault actors remain under tests/native-apps. They contain test inputs, public-call sequences and assertions; they implement neither the counter service, ordinary client nor supervisor. The fault actor contains its own illegal instruction. The ordinary SDK contains no test-only fault helper. Kernel/application source copies are not created.
 
+The production supervisor now checks the actual lifecycle terminal outcome before replacement, retains accepted failure backoff and verifies fresh-instance readiness with a real GET(0). After a service RPC failure, the ordinary client requests a fresh binding, requires a new identity and initial value 0, rejects the old SEND and repeats business operations only in that new instance. An effect-unknown ADD is never retried against the same instance. UNIT tests import needs_replacement and fresh_binding; the integration actor imports recover_service rather than copying it.
+
 ## Commands and evidence limits
 
 cargo xtask service-run and app-smoke build actual production ELF artifacts. The supervisor launches the service and ordinary client; the service continues after the client exits. The host observes continuation and then stops QEMU. This is neither graceful shutdown nor a zero-leaked-resources measurement.
 
-cargo xtask selftest runs production component tests, the ordinary runtime scenario and an external ABI client in DEV/PROD. The ABI actor checks denied operations, Submit/Wait/Collect, a consumed receipt and three counter requests. The full command fails until mandatory restart/stale/reply/resource/shutdown scenarios are ready. Partial passes are not full acceptance.
+cargo xtask selftest runs production component tests, the ordinary runtime scenario and an external ABI client in DEV/PROD. The ABI actor checks denied operations, Submit/Wait/Collect, a consumed receipt and three counter requests. It also runs lifecycle integration through the actual kernel and counter-service. An external client imports the single production recover_service method, stops the service through the public owner API, invokes recovery, verifies fresh identity, old token/SEND rejection, fresh state 0 and clean reclamation. A separate ABI actor actually faults; a subsequent real service response establishes containment. These passes do not test counter-service crashing inside the complete production supervisor loop.
 
-cargo xtask native-controls currently reports the incomplete public-interface replacement. Source-copy controls were removed. scripts/native-closure-proof.cjs no longer copies sources or claims a physical-absence proof; that gate remains pending. Prior receipts retain their historical scope and are not relabeled as current-source evidence.
+cargo xtask native-controls checks invalid inputs to actual ELF/parser/policy methods, real denied/stale/binding/IPC calls and resource invariants. UNIT observation-fixture mutations test the same host oracle; they are not kernel execution failures. Source mutation is forbidden. scripts/native-closure-proof.cjs references the original implementation directories, verifies their physical identity, the absence of unrelated workspace crates and external native packages, and executes DEV/PROD runtime/lifecycle. Only build metadata is copied; there are no implementation copies. Host runner dependency closure is excluded from that scope. Prior receipts remain historical.
 
 L1 exercises components, L2 external ABI actors, and L3 production QEMU system scenarios. None establishes L4 physical ARM: NOT_RUN/UNKNOWN. Filesystem, initramfs, storage, DMA, network, package manager, Linux ABI and dynamic linking remain outside scope.
 
-Full Phase 3.7 is incomplete. Next gates: fault scenario wiring, actual restart/stale/reply/reclamation/shutdown scenarios, physical-absence verification without source copies, a current foundation matrix and exact-source EN/RU acceptance. Historical 144 tasks/140 controls are not claimed to pass after source mutation removal.
+Full Phase 3.7 is incomplete. Remaining gates: the complete production supervisor loop when counter-service itself crashes, a current foundation matrix without source mutation, final exact-source semantic/EN-RU acceptance and CI. Stop/replacement/stale/fresh binding/peer fault/shutdown have been exercised using the actual kernel/service and imported production recover_service. Historical 144 tasks/140 controls are not relabeled as current-source passes.
 
 [Russian translation](../../translations/ru/docs/kernel/native-applications.md)
 
@@ -70,7 +72,7 @@ Full Phase 3.7 is incomplete. Next gates: fault scenario wiring, actual restart/
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Single production ELF service/client/supervisor with original ELF loading and native IPC. Unit tests import production SDK methods; external ABI/fault actors contain no application implementation copies. Source-copy mutation controls are removed. Fault wiring, restart/stale/reply/resource/shutdown scenarios, physical absence and full source-bound acceptance remain incomplete.",
+        "implementation_scope": "Single production ELF service/client/supervisor, original ELF loader and real native IPC. Unit tests import production codecs and recovery/binding policy. Integration imports the same production recover_service and verifies actual stop/replacement/stale identity/fresh binding/fault containment/reclamation. Source-copy mutations and application copies are absent. Native dependency proof references original implementation files. Full production-supervisor service-crash execution, current foundation controls and final source-bound acceptance remain incomplete.",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
           ".github/workflows/kernel.yml",
@@ -82,7 +84,10 @@ Full Phase 3.7 is incomplete. Next gates: fault scenario wiring, actual restart/
           "apps/native-apps/src/client.rs",
           "apps/native-apps/src/counter-client.rs",
           "apps/native-apps/src/counter-service.rs",
+          "apps/native-apps/src/lib.rs",
+          "apps/native-apps/src/supervision.rs",
           "apps/native-apps/src/supervisor.rs",
+          "apps/native-apps/tests/supervision.rs",
           "apps/native-runtime/Cargo.toml",
           "apps/native-runtime/src/lib.rs",
           "apps/native-runtime/tests/counter.rs",
@@ -132,11 +137,14 @@ Full Phase 3.7 is incomplete. Next gates: fault scenario wiring, actual restart/
           "scripts/ci-workload.ps1",
           "scripts/native-closure-proof.cjs",
           "scripts/tests/ci-infrastructure.test.cjs",
+          "tests/fixtures/native-lifecycle-observations.json",
           "tests/native-apps/Cargo.toml",
           "tests/native-apps/build.rs",
           "tests/native-apps/src/abi-client.rs",
           "tests/native-apps/src/abi_steps.rs",
-          "tests/native-apps/src/fault-client.rs"
+          "tests/native-apps/src/fault-client.rs",
+          "tests/native-apps/src/lifecycle-client.rs",
+          "tests/native-apps/src/lifecycle-peer.rs"
         ],
         "acceptance": [],
         "issues": [28],
@@ -145,7 +153,7 @@ Full Phase 3.7 is incomplete. Next gates: fault scenario wiring, actual restart/
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Final exact-source receipts, physical-absence proof review and complete foundation regression acceptance are pending."
         ],
-        "next_gate": "Complete actual production-interface fault/restart/stale/reply/reclamation/shutdown scenarios and physical-absence verification without source copies; then rerun required foundation and exact-source semantic/EN-RU gates. Do not close #28 while pending.",
+        "next_gate": "Complete exact-source semantic/EN-RU acceptance and a current foundation plan without source mutation; demonstrate the full production supervisor service-crash path or explicitly retain its evidence gap. No issue closure while required gates remain pending.",
         "verification": [
           {
             "environment": "qemu-arm64",

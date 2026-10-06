@@ -470,6 +470,7 @@ version = "0.1.0"
 name = "native-selftests"
 version = "0.1.0"
 dependencies = [
+ "native-apps",
  "native-userspace",
 ]
 

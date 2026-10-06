@@ -19,62 +19,10 @@ pub fn validate(events: &[Value]) -> Result<Value> {
     let words = reports[0]["words"]
         .as_array()
         .ok_or("invalid userspace result words")?;
-    if words.len() != 11 || words[0] != MAGIC || words[1] != 1 || words[2] != 0 {
-        return Err("native application reported failure or incompatible result".into());
+    if words.first() == Some(&json!(MAGIC)) && words.get(1) == Some(&json!(3)) {
+        return validate_lifecycle(events, words);
     }
-    let root_loaded = events
-        .iter()
-        .any(|e| e["event"] == "native-root-image" && e["format"] == "elf64");
-    let client_loaded = events
-        .iter()
-        .any(|e| e["event"] == "native-image" && e["selector"] == 1 && e["format"] == "elf64");
-    let services: Vec<_> = events
-        .iter()
-        .filter(|e| e["event"] == "native-image" && e["selector"] == 0 && e["format"] == "elf64")
-        .collect();
-    if !root_loaded
-        || !client_loaded
-        || services.len() != 2
-        || services[0]["generation"] == services[1]["generation"]
-    {
-        return Err("standalone kernel ELF load/fresh process identity missing".into());
-    }
-    if !events.iter().any(|e| {
-        e["event"] == "native-completion"
-            && e["selector"] == 1
-            && e["kind"] == "exit"
-            && e["code"] == 0
-    }) {
-        return Err("client clean exit not observed by kernel".into());
-    }
-    let finished: Vec<_> = events
-        .iter()
-        .filter(|e| e["event"] == "native-boot")
-        .collect();
-    if finished.len() != 1
-        || finished[0]["status"] != "complete"
-        || finished[0]["root_exit"] != 0
-        || finished[0]["owners_released"] != true
-        || finished[0]["frames_restored"] != true
-        || finished[0]["live_processes"] != 0
-        || finished[0]["live_domains"] != 0
-    {
-        return Err("native resource release incomplete".into());
-    }
-    if words[3] != 1
-        || words[4].as_u64().is_none_or(|n| n == 0)
-        || words[5].as_u64().is_none_or(|n| n < 3)
-        || words[6] != 12
-        || words[7] != 1
-        || words[8] != 1
-        || words[9] != 1
-        || words[10] != 0
-    {
-        return Err("native repeated operations/restart/binding/reset evidence missing".into());
-    }
-    Ok(
-        json!({"supervisor_ready":true,"service_instance":words[4],"client_loaded_as_elf":true,"client_exit":"success","requests_completed":words[5],"counter_final":12,"service_restarted":true,"old_binding_rejected":true,"fresh_binding_completed":true,"restart_initial_value":0,"resource_leaks":0,"hardware":"UNKNOWN"}),
-    )
+    Err("unknown completed-native scenario schema".into())
 }
 
 pub fn smoke(args: &[String]) -> Result<()> {
@@ -107,13 +55,78 @@ pub fn selftest(args: &[String]) -> Result<()> {
     controls(args)?;
     Ok(())
 }
-pub fn controls(_args: &[String]) -> Result<()> {
-    Err("source-copy controls removed; production-interface restart/stale/reply/resource scenarios are pending, so full Phase 3.7 acceptance has not passed".into())
+pub fn lifecycle(args: &[String]) -> Result<()> {
+    run_suite(args, "selftest-lifecycle-peer", 6)
+}
+pub fn controls(args: &[String]) -> Result<()> {
+    for options in [
+        vec![
+            "test",
+            "--locked",
+            "-p",
+            "kernel-core",
+            "--test",
+            "elf_contract",
+        ],
+        vec![
+            "test",
+            "--locked",
+            "-p",
+            "native-userspace",
+            "--test",
+            "counter",
+        ],
+        vec![
+            "test",
+            "--locked",
+            "-p",
+            "native-apps",
+            "--test",
+            "supervision",
+        ],
+        vec![
+            "test",
+            "--locked",
+            "-p",
+            "xtask",
+            "--bin",
+            "xtask",
+            "lifecycle_oracle",
+        ],
+    ] {
+        let status = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()))
+            .args(&options)
+            .status()?;
+        if !status.success() {
+            return Err(
+                format!("production-method negative input tests failed: {options:?}").into(),
+            );
+        }
+    }
+    lifecycle(args)?;
+    fs::write(
+        "target/kernel/native-negative-inputs.json",
+        serde_json::to_string_pretty(&json!({
+            "scope":"invalid inputs to actual production methods/public ABI and host oracle; no source mutation or corrupted application implementation",
+            "coverage":[
+                {"name":"elf","level":"UNIT","evidence":"kernel_core::elf::parse malformed image inputs"},
+                {"name":"authorization","level":"SYSTEM","evidence":"actual denied child lifecycle/SEND/reply and root binding calls"},
+                {"name":"stale-instance","level":"SYSTEM","evidence":"old lifecycle token and SEND handle return exact stale errors"},
+                {"name":"readiness-binding","level":"SYSTEM","evidence":"wrong target token denied; correct binding reaches actual service"},
+                {"name":"reply","level":"UNIT/SYSTEM","evidence":"production reply parser malformed inputs; forged public reply rejected"},
+                {"name":"ipc","level":"SYSTEM","evidence":"wrong endpoint kind rejected; actual submit/wait/collect/RPC round trips"},
+                {"name":"resource-release","level":"SYSTEM/UNIT","evidence":"live replacement denied, actual kernel zero charges/frames restored, host oracle rejects retained-resource observations"}
+            ],
+            "source_files":source_inventory()?,"hardware":"UNKNOWN",
+            "limitations":["Not source-mutant detection", "Not production supervisor crash-recovery acceptance", "Fixture mutations are UNIT inputs, not kernel execution"]
+        }))?,
+    )?;
+    Ok(())
 }
 fn run_suite(args: &[String], client_binary: &str, mode: u64) -> Result<()> {
-    run_mode(args, client_binary, mode, None)
+    run_mode(args, client_binary, mode)
 }
-fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&str>) -> Result<()> {
+fn run_mode(args: &[String], client_binary: &str, mode: u64) -> Result<()> {
     if args
         .iter()
         .any(|arg| arg != "--prod" && !(mode == 1 && arg == "--live"))
@@ -160,7 +173,14 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
         let mut apps = serde_json::Map::new();
         let mut images = Vec::new();
         for (role, binary) in [
-            ("root", "native-supervisor"),
+            (
+                "root",
+                if mode == 6 {
+                    "selftest-lifecycle-client"
+                } else {
+                    "native-supervisor"
+                },
+            ),
             ("service", "counter-service"),
             ("client", client_binary),
         ] {
@@ -168,10 +188,7 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
                 "target/aarch64-unknown-none/{}/{binary}",
                 if prod { "release" } else { "debug" }
             ));
-            let mut bytes = fs::read(&original)?;
-            if control == Some("elf") && role == "root" {
-                bytes[0] = 0;
-            }
+            let bytes = fs::read(&original)?;
             let digest = Sha256::digest(&bytes)
                 .iter()
                 .map(|b| format!("{b:02x}"))
@@ -188,17 +205,12 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
             images.push(destination.clone());
             apps.insert(role.into(),json!({"artifact":destination,"original_elf_bytes":bytes.len(),"sha256":Sha256::digest(&bytes).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"host_extracted_raw":false}));
         }
-        let feature = control
-            .filter(|c| !matches!(*c, "elf" | "reply"))
-            .map_or("native-apps".into(), |c| {
-                format!("native-apps,native-{c}-negative")
-            });
         let elf = build_mode(
             prod,
             false,
-            Some(&feature),
+            Some("native-apps"),
             true,
-            mode,
+            if mode == 6 { 1 } else { mode },
             Some(
                 &images
                     .try_into()
@@ -206,8 +218,7 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
             ),
         )?;
         let suite_elf = PathBuf::from(format!(
-            "target/kernel/{profile}-{client_binary}-{mode}-{}.elf",
-            control.unwrap_or("positive")
+            "target/kernel/{profile}-{client_binary}-{mode}-positive.elf"
         ));
         fs::copy(&elf, &suite_elf)?;
         if mode == 1 {
@@ -226,23 +237,10 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
             results.insert(profile.into(), json!({"applications":apps,"result":result}));
             continue;
         }
-        if let Some(control) = control {
-            let execution = execute_validated(&suite_elf, false, true, false, false, false);
-            let events = read_json(suite_elf.with_extension("results.json"))?;
-            let observed = events.as_array().ok_or("negative events absent")?;
-            validate_control(observed, control)?;
-            if validate(observed).is_ok() {
-                return Err("negative control passed positive acceptance".into());
-            }
-            results.insert(profile.into(),json!({"applications":apps,"control":control,"precise_witness":true,"events":events,"run":read_json(suite_elf.with_extension("run.json"))?,"execution_rejected":execution.is_err()}));
-            println!("Native {control} control detected ({profile})");
-            continue;
-        }
         execute_native(&suite_elf)?;
         let events = read_json(suite_elf.with_extension("results.json"))?;
         let observed = events.as_array().ok_or("native events absent")?;
         let result = validate(observed)?;
-        validate_suite(observed, mode)?;
         results.insert(profile.into(),json!({"applications":apps,"result":result,"kernel_build":read_json(elf.with_file_name(format!("{profile}-native-apps-build.json")))?,"run":read_json(suite_elf.with_extension("run.json"))?,"events":events}));
         println!("Native ELF {client_binary} passed ({profile}): {result}");
     }
@@ -250,53 +248,11 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
         return Err("native application sources changed during smoke".into());
     }
     fs::write(
-        format!(
-            "target/kernel/native-{client_binary}-{mode}-{}.json",
-            control.unwrap_or("positive")
-        ),
+        format!("target/kernel/native-{client_binary}-{mode}-positive.json"),
         serde_json::to_string_pretty(
             &json!({"schema_version":1,"source_files":sources,"profiles":results,"scope":"standalone ELF native IPC smoke, not complete Phase 3.7 or hardware acceptance"}),
         )?,
     )?;
-    Ok(())
-}
-
-fn validate_suite(events: &[Value], mode: u64) -> Result<()> {
-    let terminal = |owner: u64, state: u64| {
-        events.iter().any(|e| {
-            e["event"] == "native-process-terminal" && e["owner"] == owner && e["state"] == state
-        })
-    };
-    if !terminal(0, 2) || !terminal(1, 3) {
-        return Err("clean client exit or isolated service fault missing".into());
-    }
-    for owner in [0, 1] {
-        if !events.iter().any(|e| {
-            e["event"] == "native-process-terminal"
-                && e["owner"] == owner
-                && e["ipc_blocks"].as_u64().is_some_and(|n| n > 0)
-                && e["ipc_wakes"].as_u64().is_some_and(|n| n > 0)
-        }) {
-            return Err("real IPC blocking/wakeup across owners missing".into());
-        }
-    }
-    if mode == 2
-        && !events.iter().any(|e| {
-            e["event"] == "native-completion" && e["selector"] == 2 && e["kind"] == "fault"
-        })
-    {
-        return Err("selftest-process auxiliary fault containment absent".into());
-    }
-    if mode == 3
-        && !events.iter().any(|e| {
-            e["event"] == "native-completion"
-                && e["selector"] == 2
-                && e["kind"] == "exit"
-                && e["code"] == 0
-        })
-    {
-        return Err("selftest-ipc denied authority auxiliary did not exit cleanly".into());
-    }
     Ok(())
 }
 
@@ -375,41 +331,187 @@ fn observe_runtime(elf: &Path) -> Result<Value> {
     )
 }
 
-fn validate_control(events: &[Value], control: &str) -> Result<()> {
-    let report = |code: u64| {
-        events
-            .iter()
-            .any(|e| e["event"] == "native-user-report" && e["words"] == json!([MAGIC, 1, code]))
-    };
-    let client_exit = |code: u64| {
-        events.iter().any(|e| {
-            e["event"] == "native-process-terminal"
-                && e["slot"] == 1
-                && e["state"] == 2
-                && e["exit_code"] == code
-        })
-    };
-    let witness = match control {
-        "elf" => events
-            .iter()
-            .any(|e| e["event"] == "native-image-reject" && e["error"] == "InvalidImage"),
-        "auth" => report(121),
-        "stale" => report(76),
-        "binding" | "ipc" => client_exit(42),
-        "reply" => client_exit(45),
-        "reclaim" => events.iter().any(|e| {
-            e["event"] == "native-boot"
-                && e["status"] == "complete"
-                && e["live_processes"] == 1
-                && e["frames_restored"] == false
-        }),
-        _ => false,
-    };
-    if !witness {
-        return Err(format!(
-            "precise {control} negative witness absent; arbitrary panic is insufficient"
-        )
-        .into());
+fn validate_lifecycle(events: &[Value], words: &[Value]) -> Result<Value> {
+    if words.len() != 50 {
+        return Err("lifecycle step ledger incomplete".into());
     }
-    Ok(())
+    let mut steps = std::collections::BTreeMap::new();
+    for row in words[2..].as_chunks::<4>().0 {
+        let id = row[0].as_u64().ok_or("step id absent")?;
+        let values = [
+            row[1].as_u64().ok_or("step value absent")?,
+            row[2].as_u64().ok_or("step value absent")?,
+            row[3].as_u64().ok_or("step value absent")?,
+        ];
+        if steps.insert(id, values).is_some() {
+            return Err("duplicate lifecycle step".into());
+        }
+    }
+    let step = |id: u64| -> Result<[u64; 3]> {
+        steps
+            .get(&id)
+            .copied()
+            .ok_or_else(|| format!("missing step {id}").into())
+    };
+    let old = step(10)?;
+    let fresh = step(15)?;
+    let binding = step(13)?;
+    let rebound = step(17)?;
+    if old[0] == 0
+        || old[1] == 0
+        || step(11)?[0] != 13
+        || step(12)? != [5, 12, 12]
+        || binding[0] != 2
+        || binding[1] != 0
+        || binding[2] == 0
+        || step(14)?[0] != 12
+        || fresh[0] != 3
+        || fresh[1] == 0
+        || fresh[1] == old[0]
+        || fresh[2] == old[1]
+        || step(16)? != [2, 2, 0]
+        || rebound[0] != 0
+        || rebound[1] == 0
+        || rebound[1] == binding[2]
+        || step(18)?[0] != 1
+        || step(18)?[1] != 0
+        || step(19)?[0] != 11
+        || step(19)?[1] != 2
+        || step(20)?[0] != 12
+        || step(21)?[0] != 3
+    {
+        return Err("lifecycle observed step contract violated".into());
+    }
+    if !events
+        .iter()
+        .any(|e| e["event"] == "native-root-image" && e["format"] == "elf64")
+    {
+        return Err("root ELF loader witness absent".into());
+    }
+    let service_images: Vec<_> = events
+        .iter()
+        .filter(|e| e["event"] == "native-image" && e["selector"] == 0 && e["format"] == "elf64")
+        .collect();
+    if service_images.len() != 2
+        || service_images[0]["generation"] == service_images[1]["generation"]
+    {
+        return Err("real service ELF/fresh process generations absent".into());
+    }
+    for (selector, kind, code) in [
+        (1, "exit", Some(0)),
+        (2, "fault", None),
+        (0, "terminated", None),
+    ] {
+        if !events.iter().any(|e| {
+            e["event"] == "native-completion"
+                && e["selector"] == selector
+                && e["kind"] == kind
+                && code.is_none_or(|c| e["code"] == c)
+        }) {
+            return Err(format!("kernel completion witness absent for selector {selector}").into());
+        }
+    }
+    let ends: Vec<_> = events
+        .iter()
+        .filter(|e| e["event"] == "native-boot")
+        .collect();
+    if ends.len() != 1
+        || ends[0]["status"] != "complete"
+        || ends[0]["root_exit"] != 0
+        || ends[0]["owners_released"] != true
+        || ends[0]["frames_restored"] != true
+        || ends[0]["live_processes"] != 0
+        || ends[0]["live_domains"] != 0
+    {
+        return Err("actual lifecycle shutdown/reclamation incomplete".into());
+    }
+    Ok(
+        json!({"scope":"production kernel/counter service through an external lifecycle ABI client; does not test production supervisor recovery policy","production_supervisor_tested":false,"production_recovery_method_tested":true,"service_stop_restarted":true,"service_crash_restarted":false,"fresh_binding_completed":true,"old_binding_rejected":true,"counter_final":step(20)?[0],"restart_initial_value":step(16)?[2],"external_actor_fault_contained":true,"client_exit":"success","resource_leaks":ends[0]["live_processes"],"frames_restored":ends[0]["frames_restored"],"observed_steps":steps,"hardware":"UNKNOWN"}),
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn observed_inputs() -> Vec<Value> {
+        let fixture: Value = serde_json::from_str(include_str!(
+            "../../../tests/fixtures/native-lifecycle-observations.json"
+        ))
+        .unwrap();
+        fixture["events"].as_array().unwrap().clone()
+    }
+    #[test]
+    fn lifecycle_oracle_accepts_observed_steps_and_actual_reclamation() {
+        assert!(validate(&observed_inputs()).is_ok());
+    }
+    #[test]
+    fn lifecycle_oracle_rejects_retained_resources_and_missing_owner_release() {
+        for (key, value) in [
+            ("frames_restored", json!(false)),
+            ("owners_released", json!(false)),
+            ("live_processes", json!(1)),
+            ("live_domains", json!(1)),
+        ] {
+            let mut events = observed_inputs();
+            events
+                .iter_mut()
+                .find(|e| e["event"] == "native-boot")
+                .unwrap()[key] = value;
+            assert!(
+                validate(&events)
+                    .unwrap_err()
+                    .to_string()
+                    .contains("shutdown/reclamation"),
+                "{key}"
+            );
+        }
+    }
+    #[test]
+    fn lifecycle_oracle_rejects_wrong_binding_stale_acceptance_and_fabricated_values() {
+        for (step, column, value) in [
+            (12, 1, 6),
+            (13, 1, 0),
+            (16, 1, 0),
+            (16, 2, 0),
+            (16, 3, 12),
+            (19, 1, 0),
+        ] {
+            let mut events = observed_inputs();
+            let words = events
+                .iter_mut()
+                .find(|e| e["event"] == "native-user-report")
+                .unwrap()["words"]
+                .as_array_mut()
+                .unwrap();
+            let row = words[2..]
+                .as_chunks_mut::<4>()
+                .0
+                .iter_mut()
+                .find(|row| row[0] == step)
+                .unwrap();
+            row[column] = json!(value);
+            assert!(
+                validate(&events)
+                    .unwrap_err()
+                    .to_string()
+                    .contains("step contract")
+            );
+        }
+    }
+    #[test]
+    fn lifecycle_oracle_rejects_unrelated_panic_and_missing_loader_evidence() {
+        let mut events = observed_inputs();
+        events.push(json!({"event":"panic"}));
+        assert!(validate(&events).is_err());
+        let events: Vec<_> = observed_inputs()
+            .into_iter()
+            .filter(|e| e["event"] != "native-root-image")
+            .collect();
+        assert!(
+            validate(&events)
+                .unwrap_err()
+                .to_string()
+                .contains("loader witness")
+        );
+    }
 }

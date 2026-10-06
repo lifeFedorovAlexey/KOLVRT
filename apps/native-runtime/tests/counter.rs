@@ -42,3 +42,25 @@ fn native_frames_are_explicit_initialized_little_endian() {
     assert!(bytes[n..].iter().all(|b| *b == 0));
     assert_eq!(counter_value(&counter_reply(Ok(12))), Ok(12));
 }
+
+#[test]
+fn reply_parser_rejects_malformed_version_reserved_status_and_length() {
+    let good = counter_reply(Ok(12));
+    assert_eq!(counter_value(&good), Ok(12));
+    for length in 0..16 {
+        assert_eq!(counter_value(&good[..length]), Err(Error::Invalid));
+    }
+    for offset in [0, 2, 4] {
+        let mut bad = good;
+        bad[offset] = 99;
+        assert_eq!(counter_value(&bad), Err(Error::Invalid));
+    }
+    assert_eq!(
+        counter_value(&counter_reply(Err(Error::Overflow))),
+        Err(Error::Overflow)
+    );
+    assert_eq!(
+        counter_value(&counter_reply(Err(Error::Invalid))),
+        Err(Error::Invalid)
+    );
+}

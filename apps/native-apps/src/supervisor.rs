@@ -1,5 +1,6 @@
 #![no_std]
 #![no_main]
+use native_apps::supervision::recover_service;
 use native_userspace::{CounterRequest, REPORT_MAGIC, counter_value, native, read32, read64};
 native_userspace::entry!();
 
@@ -49,13 +50,16 @@ fn completion(selector: u64, token: u64, code: u64) -> [u64; 5] {
         }
     }
 }
+fn recover(old: [u64; 5], code: u64) -> [u64; 5] {
+    recover_service(old).unwrap_or_else(|_| fail(code))
+}
 #[unsafe(no_mangle)]
 pub extern "C" fn native_main(_receiver: u64, _feedback: u64, _argument: u64) -> ! {
     run_runtime()
 }
 fn run_runtime() -> ! {
-    // Ordinary static runtime has no injected fault, restart fixture or shutdown.
-    let service = life(1, 0, 0, 0, 140);
+    // Actual lifecycle observations govern recovery; no injected failure path.
+    let mut service = life(1, 0, 0, 0, 140);
     probe(service[2], 1, 0, 141);
     let client = life(1, 1, 0, 0, 143);
     let binding = life(6, 1, client[1], service[1], 144);
@@ -64,11 +68,22 @@ fn run_runtime() -> ! {
         fail(148);
     }
     reply(client[3], hello, [binding[1], service[1], 0, 0], 149);
-    let (done, words) = receive(client[3], 150);
-    if words != [2, 3, 12, 0] {
-        fail(153);
+    loop {
+        let (message, words) = receive(client[3], 150);
+        match words[0] {
+            2 if words[1] >= 3 && words[2] == 12 && words[3] == 0 => {
+                probe(service[2], 2, 12, 157);
+                reply(client[3], message, [0, 0, 0, 0], 154);
+                break;
+            }
+            3 if words[1] == service[1] => {
+                service = recover(service, 170);
+                let binding = life(6, 1, client[1], service[1], 180);
+                reply(client[3], message, [binding[1], service[1], 0, 0], 181);
+            }
+            _ => fail(153),
+        }
     }
-    reply(client[3], done, [0, 0, 0, 0], 154);
     let exited = completion(1, client[1], 155);
     if exited[1] != 1 || exited[2] != 0 {
         fail(156);
@@ -80,8 +95,19 @@ fn run_runtime() -> ! {
     }
     probe(service[2], 3, 12, 160);
     native::report(1);
+    let mut expected = 12;
     loop {
-        probe(service[2], 4, 12, 162);
+        match native::rpc(service[2], 4, &CounterRequest::Get.encode()) {
+            Ok((bytes, n)) => {
+                if counter_value(&bytes[..n]) != Ok(expected) {
+                    fail(163);
+                }
+            }
+            Err(_) => {
+                service = recover(service, 190);
+                expected = 0;
+            }
+        }
         let (now, hz) = native::clock();
         let until = now.checked_add(hz).unwrap_or_else(|| fail(164));
         while native::clock().0 < until {

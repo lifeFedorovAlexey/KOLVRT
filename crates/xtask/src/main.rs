@@ -528,6 +528,7 @@ fn run() -> Result<()> {
         Some("app-smoke") => native_apps::smoke(&args[1..]),
         Some("selftest") => native_apps::selftest(&args[1..]),
         Some("service-run") => native_apps::runtime(&args[1..]),
+        Some("lifecycle-test") => native_apps::lifecycle(&args[1..]),
         Some("native-controls") => native_apps::controls(&args[1..]),
         Some("audit") => audit(),
         Some("ipc-controls") if args.len() == 1 => matrix::run_ipc(),
