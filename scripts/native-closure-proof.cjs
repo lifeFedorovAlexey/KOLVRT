@@ -25,6 +25,7 @@ for (const source of [
   ...members,
   ".cargo",
   "assets",
+  "research/fixtures",
   "Cargo.lock",
   "rust-toolchain.toml",
 ])
@@ -93,10 +94,7 @@ run(["xtask", "audit"]);
 run(["xtask", "selftest"]);
 run(["xtask", "app-smoke"]);
 const sha = (file) =>
-  crypto
-    .createHash("sha256")
-    .update(fs.readFileSync(file).toString().replaceAll("\r\n", "\n"))
-    .digest("hex");
+  crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 const inventory = [];
 function walk(relative) {
   for (const entry of fs.readdirSync(path.join(destination, relative), {
@@ -114,13 +112,13 @@ function walk(relative) {
         throw Error(`native source differs: ${file}`);
       inventory.push({
         path: file,
-        original_sha256_lf: sha(original),
-        proof_sha256_lf: sha(copied),
+        original_sha256: sha(original),
+        proof_sha256: sha(copied),
       });
     }
   }
 }
-for (const source of members) walk(source);
+for (const source of [...members, "research/fixtures"]) walk(source);
 const results = {};
 for (const file of fs.readdirSync(path.join(destination, "target/kernel")))
   if (/^native-.*\.json$/.test(file))
@@ -142,8 +140,8 @@ const receipt = {
   manifest_digests: ["Cargo.toml", "Cargo.lock", "crates/xtask/Cargo.toml"].map(
     (file) => ({
       path: file,
-      original_sha256_lf: sha(path.join(root, file)),
-      proof_sha256_lf: sha(path.join(destination, file)),
+      original_sha256: sha(path.join(root, file)),
+      proof_sha256: sha(path.join(destination, file)),
     }),
   ),
   kernel_external_dependencies: 0,

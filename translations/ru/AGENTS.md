@@ -13,3 +13,7 @@
 Запускайте `cargo xtask docs generate`, `cargo xtask docs pilot`, `cargo run --locked -p repository-checks -- record-translation ru PATH` для каждой проверенной изменённой canonical Markdown пары, `cargo xtask docs check-change BASE` и `npm run check`. Используйте реальную базовую ревизию для review. Не заявляйте завершение issue, пока обязательное смысловое или EN/RU review ещё ожидается.
 
 [Русский перевод](AGENTS.md)
+
+## Performance и целостность тестов
+
+Нельзя ухудшать runtime performance, ослаблять инварианты или менять production semantics только ради прохождения тестов. Тесты должны проверять требуемую архитектуру. Нельзя добавлять произвольные fixed-duration deadlines публикации или copy-drain в обычную runtime synchronization. Завершение и reclaim требуют фактической acquired quiescence, а не истечения времени. Зависания тестов диагностировать явными watchdogs host runner; не скрывать failures увеличением таймаутов, retries или выдуманными performance allowances.

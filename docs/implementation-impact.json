@@ -250,7 +250,7 @@
     {
       "path": "scripts/native-closure-proof.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "99da75eda1d0effba4b606dd6f7e9f056bca8316f9c9ef3d6580df8204355bb5",
+      "after_sha256_lf": "e161182dac8d060f84782750613ff0af1113805f4ebcc672a0f519eadae01726",
       "disposition": "new-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },

@@ -13,3 +13,7 @@ For changed implementation/build files, author [the per-change impact declaratio
 Run `cargo xtask docs generate`, `cargo xtask docs pilot`, `cargo run --locked -p repository-checks -- record-translation ru PATH` for each reviewed changed canonical Markdown pair, `cargo xtask docs check-change BASE` and `npm run check`. Use the actual reviewed base revision. Do not claim issue completion while required semantic or EN/RU review remains pending.
 
 [Russian translation](translations/ru/AGENTS.md)
+
+## Performance and test integrity
+
+Do not reduce runtime performance, weaken invariants or alter production semantics merely to make tests pass. Tests must exercise the intended architecture. Do not add arbitrary fixed-duration publication/copy-drain deadlines to normal runtime synchronization. Completion and reclamation require actual acquired quiescence, never elapsed time. Diagnose test hangs with explicit host-runner watchdogs; do not hide failures by increasing timeouts, adding retries or inventing performance allowances.

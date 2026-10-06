@@ -2,8 +2,8 @@
   "locales": {
     "ru": {
       "AGENTS.md": {
-        "source_sha256": "7780399162944afb196e52b5d1eb58879a48e2bd1bba33de7c3a5c9be9cba774",
-        "translation_sha256": "aa7c3e1cecfaaea4666675a7840efcad484e35f9a76cb96bba8322405d05a19d"
+        "source_sha256": "9649542123239a2e441d03e4f45ac2318d0f6220b47af1d1b712c6f3036342bf",
+        "translation_sha256": "3492f1fd338b5db85addc42eec9221dac26e95f424f9915c1e1e3d470ac80e77"
       },
       "CONTRIBUTING.md": {
         "source_sha256": "7af3945c1eeb2f2f5e44171168f3c0f57b887ff49b8b36dd465312a5b8c0e5f1",
@@ -254,8 +254,8 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "7c101f8bd9e6063874e7f07d0cff808e334790430eceb706e7b1572694aaa2b5",
-        "translation_sha256": "c4f49c608b3ce1a06001e5d88406a02f4146195a337d11c576f9ff70426108c5"
+        "source_sha256": "37e8a2f5fb993fe8a0690848aa83fd107ab037e8afb8ed8bbeec9916265c5327",
+        "translation_sha256": "eceb1f7efbc5e21ec0539169306c242539547d61ced57de27c2662daade5b008"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
