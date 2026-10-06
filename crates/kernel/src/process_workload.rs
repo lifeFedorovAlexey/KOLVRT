@@ -486,7 +486,14 @@ pub fn exercise(
         registry.start(id).unwrap();
         id
     });
+    #[cfg(feature = "kernel-tests")]
+    crate::scheduler::delay_secondary_completion(true);
     registry.dispatch(Some(time::Duration::ZERO));
+    #[cfg(feature = "kernel-tests")]
+    {
+        stress &= crate::scheduler::pending_completion_observed();
+        crate::scheduler::delay_secondary_completion(false);
+    }
     for id in expiry_ids {
         let value = tag(registry, id);
         // An already-expired session may stop before the first EL0 store.

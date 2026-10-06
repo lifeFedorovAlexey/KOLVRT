@@ -298,16 +298,16 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
-        "translation_sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d"
+        "source_sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+        "translation_sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
         "translation_sha256": "855db72b1be05ee90a1946ad145f506c61016591c7e32a6abbe85123a7400acd"
       },
       "docs/kernel/scheduler.md": {
-        "source_sha256": "257b84fec35689b995876a308aecb6f11acf98ad1c3ff84e25bbdd42ed018cce",
-        "translation_sha256": "e3527af3145a5faf78b4d2e7e99ac062ed6efb135c284cb94dbc6a867c0d02b2"
+        "source_sha256": "ac8610919ad6368ad1d8f698a04ab82a105fb6c8a2ab539c3641d49e49ddd10e",
+        "translation_sha256": "83dac5a77051c625992e93a31d23c52ab2f5380da114d243f8121f36f8c8ec65"
       },
       "docs/kernel/smp.md": {
         "source_sha256": "22c007679ccb9956a15ff7f80afab05057b68a77390dd29e6e08262dcd9c375a",

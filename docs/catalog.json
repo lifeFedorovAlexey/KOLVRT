@@ -955,7 +955,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 25064,
+      "estimated_bytes": 26234,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -965,7 +965,7 @@
     {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 15925,
+      "estimated_bytes": 16325,
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
       "path": "docs/kernel/scheduler.md",
@@ -1854,7 +1854,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 5151,
+      "estimated_bytes": 6321,
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",

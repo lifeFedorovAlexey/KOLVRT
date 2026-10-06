@@ -64,6 +64,24 @@ static ARRIVED: AtomicUsize = AtomicUsize::new(0);
 static SESSION: AtomicBool = AtomicBool::new(false);
 static STEP: AtomicBool = AtomicBool::new(false);
 static CONTINUOUS: AtomicBool = AtomicBool::new(false);
+// Test-only rendezvous forces CPU0 to observe CPU1's pending completion after
+// an expired workload deadline. CPU1 is already detached on its native root.
+#[cfg(feature = "kernel-tests")]
+static DELAY_SECONDARY_COMPLETION: AtomicBool = AtomicBool::new(false);
+#[cfg(feature = "kernel-tests")]
+static JOIN_PENDING_SEEN: AtomicU64 = AtomicU64::new(0);
+#[cfg(feature = "kernel-tests")]
+pub(crate) fn delay_secondary_completion(enabled: bool) {
+    percpu::primary_only();
+    assert!(cpu::irq_masked());
+    assert!(!SESSION.load(Ordering::Acquire));
+    DELAY_SECONDARY_COMPLETION.store(enabled, Ordering::Release);
+}
+#[cfg(feature = "kernel-tests")]
+pub(crate) fn pending_completion_observed() -> bool {
+    percpu::primary_only();
+    JOIN_PENDING_SEEN.load(Ordering::Acquire) != 0
+}
 static IPC_FINISHED: AtomicUsize = AtomicUsize::new(0);
 static IPC_BLOCKED_IDLE: AtomicUsize = AtomicUsize::new(0);
 static IPC_ALL_BLOCKED: AtomicU64 = AtomicU64::new(0);
@@ -180,6 +198,11 @@ fn dispatch_inner(
         .generation()
         .checked_add(1)
         .expect("scheduler generation exhausted");
+    #[cfg(feature = "kernel-tests")]
+    JOIN_PENDING_SEEN.store(0, Ordering::Release);
+    // One absolute workload deadline applies to both owners. It governs task
+    // expiry, not permission to return before remote completion publication.
+    let deadline = timeout.map(time::deadline_after);
     START.store(false, Ordering::Release);
     STEP.store(step, Ordering::Release);
     CONTINUOUS.store(continuous, Ordering::Release);
@@ -203,7 +226,7 @@ fn dispatch_inner(
                 cursor
             } else { NO_TASK };
             state.switches = 0;
-            state.deadline = timeout.map(time::deadline_after);
+            state.deadline = deadline;
             for (index, task) in state.tasks.iter_mut().enumerate() {
                 let id = owner * TASKS + index;
                 assert_eq!(
@@ -288,10 +311,17 @@ fn dispatch_inner(
     }
     crate::smp::ping(percpu::SECONDARY_CPU);
     run_local();
-    crate::smp::wait_optional(
-        || LOCALS.iter().all(Local::completed),
-        timeout,
-        "scheduler completion timeout",
+    crate::smp::wait_completion(
+        || {
+            let complete = LOCALS.iter().all(Local::completed);
+            #[cfg(feature = "kernel-tests")]
+            if !complete && DELAY_SECONDARY_COMPLETION.load(Ordering::Acquire) {
+                JOIN_PENDING_SEEN.store(generation, Ordering::Release);
+            }
+            complete
+        },
+        deadline,
+        "scheduler completion publication stalled after workload deadline",
     );
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     let owners_released = RUNNING_OWNER
@@ -544,6 +574,17 @@ fn run_local() {
         && RUNNING_OWNER[percpu::id() * TASKS..(percpu::id() + 1) * TASKS]
             .iter()
             .all(|owner| owner.load(Ordering::Acquire) == NO_CPU);
+    #[cfg(feature = "kernel-tests")]
+    if percpu::is_secondary() && DELAY_SECONDARY_COMPLETION.load(Ordering::Acquire) {
+        assert!(quiescent);
+        // No state borrow, lock, live user root or execution owner spans the
+        // test gate. Completion remains unpublished until CPU0 observes it.
+        crate::smp::wait_optional(
+            || JOIN_PENDING_SEEN.load(Ordering::Acquire) == generation,
+            None,
+            "test coordinator pending-completion observation",
+        );
+    }
     local.complete(generation, quiescent);
 }
 fn continuous_local(local: &Local, generation: u64) {

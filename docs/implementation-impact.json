@@ -49,14 +49,14 @@
       "disposition": "existing-feature",
       "reason": "Separate correct same-VA tags from terminal outcomes after retained two-CPU BudgetExpired failures on 1486519. Keep finite probes bounded by eight actual timer quanta and the external watchdog; require exact exit/fault. Add strict native expired-at-entry and actual two-second unlimited-spinner deadline cases with owner release and frame reclamation. No production deadline or negative-control witness is waived.",
       "before_sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
-      "after_sha256_lf": "dee8ac8895fdbec13f54a4e0bd286dba127d0a18391e62bd4cc91e142f723a3d"
+      "after_sha256_lf": "93d3e9ea7c5981cf86509c64b2a832dec1ca5d53f09ff547c7bbc41bb89e2f5d"
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
       "before_sha256_lf": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
-      "after_sha256_lf": "d530ea58baef2e4019a972437df3b1f3c1ce9a20cb26e26acf8b8bf93a891742",
+      "after_sha256_lf": "0835891513ee6be934eaad49499b479f8e5701ba15a3ba11ac8fab7aaad3fd0a",
       "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+      "reason": "Use one shared absolute workload deadline and an independent existing coordination interval for completion publication. Preserve bounded publication failure and quiescent reclamation. Test-only native rendezvous forces pending CPU1 publication at zero workload deadline; reverting the separation reproduces the exact coordinator panic."
     },
     {
       "path": "crates/kernel/src/scheduler/task.rs",
@@ -69,8 +69,8 @@
       "path": "crates/kernel/src/smp.rs",
       "before_sha256_lf": "08b9a851296995e4db04efea39189d603f1e6fda3e4cc45d3be4a5e96a528628",
       "disposition": "existing-feature",
-      "reason": "Retain bounded static secondary panic identity across FAILED release/acquire without secondary UART, private data or reclamation permission.",
-      "after_sha256_lf": "e74d62a0444bc0e604b72f3ed037334241dccb15e25e0f03fe652ee18d025395"
+      "reason": "Use one shared absolute workload deadline and an independent existing coordination interval for completion publication. Preserve bounded publication failure and quiescent reclamation. Test-only native rendezvous forces pending CPU1 publication at zero workload deadline; reverting the separation reproduces the exact coordinator panic.",
+      "after_sha256_lf": "b421343b4c2a4fab8c6cbce52a20ea56ae35a71a58ddd28732f39b47ca06c21c"
     },
     {
       "path": "crates/kernel/src/supervision.rs",

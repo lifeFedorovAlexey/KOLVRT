@@ -159,17 +159,28 @@ pub fn wait(ready: impl FnMut() -> bool, reason: &str) {
 /// Native completion can have no workload deadline. Timeout never authorizes reclaim.
 /// Callers wait without a scheduler borrow/ordinary lock and require admitted work
 /// to eventually terminate for return; existing boot coordination keeps its bound.
-pub fn wait_optional(
-    mut ready: impl FnMut() -> bool,
-    timeout: Option<time::Duration>,
-    reason: &str,
-) {
+pub fn wait_optional(ready: impl FnMut() -> bool, timeout: Option<time::Duration>, reason: &str) {
+    wait_until(ready, timeout.map(time::deadline_after), reason);
+}
+/// Task expiry and publication progress have different bounds. Allow the
+/// established coordination interval after the common workload deadline;
+/// never derive a zero join interval from an already-expired workload.
+pub fn wait_completion(ready: impl FnMut() -> bool, workload_deadline: Option<u64>, reason: &str) {
+    let publication_deadline = workload_deadline.map(|deadline| {
+        let grace = kernel_core::time::duration_ticks(COORDINATION_TIMEOUT, cpu::frequency())
+            .expect("invalid coordination interval");
+        deadline
+            .checked_add(grace)
+            .expect("completion deadline exhausted")
+    });
+    wait_until(ready, publication_deadline, reason);
+}
+fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>, reason: &str) {
     assert!(
         !percpu::current().scheduler_borrow.load(Ordering::Acquire),
         "scheduler borrow across wait"
     );
     crate::sync::assert_scheduler_unlocked();
-    let deadline = timeout.map(time::deadline_after);
     loop {
         if percpu::CPUS[SECONDARY_CPU].state.load(Ordering::Acquire) == percpu::FAILED {
             report_secondary_panic();
