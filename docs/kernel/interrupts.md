@@ -10,6 +10,10 @@ IRQ mask/unmask wrappers retain a compiler memory clobber, preventing compiler r
 
 The shared idle path completes preceding accesses with DSB SY before WFI. The native rearm check exercises 32 one-shot deliveries, alternating a masked wait after the compare expires with an initially unmasked caller; every iteration requires an actual handler delivery.
 
+## Counter observations
+
+The physical counter read used by deadlines and execution accounting executes ISB before CNTPCT_EL0 and preserves a compiler memory clobber. The trap-entry and SIMD-fixture assembly reads also execute ISB before sampling. CNTPCT_EL0 can otherwise be sampled speculatively before preceding instructions; the pinned Armv8.0 platform does not assume the newer self-synchronizing CNTPCTSS_EL0 register. ISB orders this instruction observation and does not replace memory-publication barriers, establish an IRQ delivery, or prove hardware latency. [Arm Generic Timer, section 4.1](https://documentation-service.arm.com/static/65fac6957bcc0c1c661b36c0) establishes this counter requirement. The missing ordering is an architectural defect independently of whether it caused any retained CI failure; no such causal claim follows from this correction.
+
 ## Locking
 
 The bounded TTAS lock waits through relaxed loads and uses Acquire CAS with Release unlock. Guard lifetimes protect UnsafeCell access; Send/Sync bounds follow the protected type. Host tests exercise publication with four concurrent threads. IRQ never takes this lock, allocates or writes UART. Thus interrupted code cannot deadlock against an IRQ that waits for its own lock. One million spin iterations is a failure bound, not a real-time guarantee or fairness proof. [Review](../architecture/implementation-review.md) records the alternatives.

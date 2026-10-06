@@ -262,12 +262,14 @@ user_sync_vector:
  save_user
  mov x0,sp
  mov x1,xzr
+ isb // INV-TIMER: counter observation follows preceding instructions.
  mrs x2,cntpct_el0
  bl user_trap
  cbnz x0,user_kernel_return
  return_user
 user_irq_vector:
  save_user
+ isb // INV-TIMER: counter observation follows the saved entry frame.
  mrs x19,cntpct_el0
  bl interrupt_entry
  mov x2,x19
@@ -375,6 +377,7 @@ probe_simd_irq:
 1:
  ldar x2,[x3]
  cbnz x2,2f
+ isb // INV-TIMER: counter observation follows preceding instructions.
  mrs x2,cntpct_el0
  cmp x2,x1
  b.lo 1b

@@ -1128,6 +1128,11 @@
     },
     {
       "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/arch/aarch64/entry.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
       "to": "crates/kernel/src/arch/aarch64/mod.rs",
       "type": "implemented_by"
     },
@@ -2158,7 +2163,8 @@
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
     "crates/kernel/Cargo.toml": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
-    "crates/kernel/src/arch/aarch64/mod.rs": "e30cf0ebb626505693860e5e4b44a422c40a649fe8f2fed22aa9fc4f79374b24",
+    "crates/kernel/src/arch/aarch64/entry.S": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e",
+    "crates/kernel/src/arch/aarch64/mod.rs": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648",
     "crates/kernel/src/boot_workload.rs": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6",
     "crates/kernel/src/handles.rs": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2",
     "crates/kernel/src/handles/testing.rs": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
@@ -2273,7 +2279,7 @@
     "docs/kernel/domains.md": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+    "docs/kernel/ipc.md": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
     "docs/kernel/processes.md": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
     "docs/kernel/scheduler.md": "257b84fec35689b995876a308aecb6f11acf98ad1c3ff84e25bbdd42ed018cce",
     "docs/kernel/supervision.md": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
@@ -2358,7 +2364,7 @@
     "scripts/tests/ci-timings.test.cjs": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "696bcd0fb708d96788b1f92130c25f0cb606efa284d6b983f8957f654f8fd665",
+    "translations/manifest.json": "80986c4f87e8f200fdb370e8b37586a1ebe5f943f445acb707e4052396cf7e85",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2403,7 +2409,7 @@
     "translations/ru/docs/kernel/domains.md": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+    "translations/ru/docs/kernel/ipc.md": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
     "translations/ru/docs/kernel/processes.md": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
     "translations/ru/docs/kernel/scheduler.md": "e3527af3145a5faf78b4d2e7e99ac062ed6efb135c284cb94dbc6a867c0d02b2",
     "translations/ru/docs/kernel/supervision.md": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
@@ -5100,7 +5106,7 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 24028,
+      "estimated_bytes": 24080,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
@@ -5114,15 +5120,15 @@
       },
       "locations": {
         "en": {
-          "end": 338,
+          "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 1
         },
         "ru": {
-          "end": 338,
+          "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 1
         }
       },
@@ -6860,13 +6866,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -6895,13 +6901,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 66
         }
       },
@@ -6930,13 +6936,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -6965,13 +6971,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 16
         }
       },
@@ -7000,13 +7006,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 34
         }
       },
@@ -7070,13 +7076,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 26
         }
       },
@@ -7105,13 +7111,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -7140,13 +7146,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 34
         }
       },
@@ -7251,13 +7257,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 76
         }
       },
@@ -7286,13 +7292,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -7328,7 +7334,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 23915,
+      "estimated_bytes": 23967,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "feature": {
         "acceptance": [
@@ -7371,6 +7377,7 @@
           "crates/kernel-core/tests/handle_contract.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/arch/aarch64/entry.S",
           "crates/kernel/src/boot_workload.rs",
           "crates/kernel/src/handles.rs",
           "crates/kernel/src/handles/testing.rs",
@@ -7452,15 +7459,15 @@
       },
       "locations": {
         "en": {
-          "end": 338,
+          "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 4
         },
         "ru": {
-          "end": 338,
+          "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 4
         }
       },
@@ -7490,13 +7497,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 66
         }
       },
@@ -7525,13 +7532,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 66
         }
       },

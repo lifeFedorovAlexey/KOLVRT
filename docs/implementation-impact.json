@@ -28,7 +28,7 @@
       "disposition": "existing-feature",
       "reason": "Close the one-shot IRQ condition-to-WFI lost wakeup with masked observations and masked wait/service; complete preceding accesses before WFI; exercise both native entry modes through 32 actual deliveries and deterministic host interleavings. No timer deadline or expected witness is relaxed.",
       "before_sha256_lf": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc",
-      "after_sha256_lf": "e30cf0ebb626505693860e5e4b44a422c40a649fe8f2fed22aa9fc4f79374b24"
+      "after_sha256_lf": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648"
     },
     {
       "path": "crates/kernel/src/main.rs",
@@ -141,6 +141,13 @@
       "after_sha256_lf": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "before_sha256_lf": "9409ad577dc86cfb3c0581897415e56c99fcbefa6f7d64d97c9c908829ccabce",
+      "disposition": "existing-feature",
+      "reason": "Synchronize counter observations at trap entry and in the SIMD deadline fixture; retain strict completion/IRQ evidence and historical receipts. Arm Generic Timer section 4.1 is the architectural basis; no CI root-cause claim is inferred.",
+      "after_sha256_lf": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e"
     }
   ],
   "features": [

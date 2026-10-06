@@ -67,7 +67,18 @@ macro_rules! read_reg {
     };
 }
 read_reg!(el, "CurrentEL");
-read_reg!(ticks, "cntpct_el0");
+/// Observe the physical counter after preceding instruction/context changes.
+/// CNTPCT_EL0 is not self-synchronizing on the pinned Armv8.0 platform.
+pub fn ticks() -> u64 {
+    let value;
+    // SAFETY: INV-TIMER: privileged counter read; ISB prevents speculative
+    // sampling before prior observations, and the memory clobber preserves
+    // the compiler boundary. This is not a data-publication DMB/DSB.
+    unsafe {
+        asm!("isb", "mrs {}, cntpct_el0", out(reg) value, options(nostack));
+    }
+    value
+}
 read_reg!(frequency, "cntfrq_el0");
 read_reg!(sctlr, "sctlr_el1");
 read_reg!(acknowledge, "S3_0_C12_C12_0");

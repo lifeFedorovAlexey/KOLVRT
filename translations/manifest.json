@@ -282,16 +282,16 @@
         "translation_sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630"
       },
       "docs/kernel/interrupts.md": {
-        "source_sha256": "0a13c148991b32dba6ea21087b8756f13ac0a7242d741f3b584d458c9427cf0c",
-        "translation_sha256": "ec6d98650450e87e2cc0f017f31c366d63fc232d23979395e9d9c73f46458f3b"
+        "source_sha256": "2c10e2a746e9a76ef76c5e5b81819425d099bf7896c84b2854785f74acbaa73d",
+        "translation_sha256": "bf8e799315210a5fb674253a0c4d97660298c60a24004b27660ebf69ea2f8706"
       },
       "docs/kernel/ipc-performance.md": {
         "source_sha256": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
-        "translation_sha256": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e"
+        "source_sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+        "translation_sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",

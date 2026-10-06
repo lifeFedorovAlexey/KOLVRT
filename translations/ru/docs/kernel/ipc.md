@@ -157,6 +157,7 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
           "crates/kernel-core/tests/handle_contract.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/arch/aarch64/entry.S",
           "crates/kernel/src/boot_workload.rs",
           "crates/kernel/src/handles.rs",
           "crates/kernel/src/handles/testing.rs",
