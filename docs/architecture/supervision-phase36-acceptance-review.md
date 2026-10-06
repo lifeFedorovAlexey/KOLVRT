@@ -1,0 +1,57 @@
+# Phase 3.6 acceptance review
+
+Document status: CURRENT
+Evidence scope: source-grounded Codex review requested by the maintainer on 2026-10-06, over merged main `9cf87bccff19349d181a1d5a8b09a3ab4033249f` and independently inspected current-source CI artifacts. No independent human review, production trust, persistent service or physical ARM acceptance is claimed.
+Current reference: [Supervisor contract](../kernel/supervision.md)
+
+## Decision and scope
+
+Accept ADR-0026 and the bounded Phase 3.6 lifecycle foundation for the next Phase 3.7 reader. The feature is BOUNDED_IMPLEMENTED and READY only for the declared development workload: one exact isolated EL0 supervisor, finite static image/CPU/quota grants, authenticated readiness, fresh replacement, bounded restart policy and commitment-aware shutdown. The native.lifecycle/1 publication stage remains EXPERIMENTAL and unfrozen. This review does not accept the larger persistent-service workload or production bootstrap authorization.
+
+The maintainer requested that the outstanding acceptance review be completed rather than leaving the merged implementation behind a pending label. Codex performed this semantic and EN/RU review; no separate human sign-off is invented. The same distinction was used in the [Phase 3.5 review](ipc-phase35-acceptance-review.md).
+
+No implementation source changes in this acceptance update. Historical receipts retain their original review state and source scope. The [current receipt](../../research/results/supervision-phase36-current.json) identifies every reviewed source digest and actual ELF/result digest. The four downloaded shards independently aggregate to the complete 140-task plan against current sources: 125 named positive checks in each profile, both ordinary boots and 136 negative controls. All ten supervision controls contain their registered exact failure rather than an arbitrary panic.
+
+## Requirement-to-evidence review
+
+| Requirement                                  | Enforcement and evidence                                                                                                                                                                                                                                                                                                                                                                                          | Conclusion                                                                                                                                                                                                                    |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Isolated policy and trusted bootstrap        | supervision_workload.S executes startup, dependency guard, readiness probes, three-attempt restart/backoff and shutdown in EL0. Scope::install binds immutable grants and the exact supervisor ProcessId once per boot. capture checks the executing Task slot/generation and active scope before publishing initialized commands. The authority mutation fails the actual supervision scenario in both profiles. | LAW-009/LAW-018: numeric selectors do not create authority; EL1 enforces the finite ceiling and does not interpret manifest policy. Static linked-image assurance is development-only; #38 remains the production trust gate. |
+| Dependency order and truthful readiness      | The shared EL0 launch-definition routine compares every required readiness bit before native launch. Readiness is a completed native IPC reply from the bound receiver; SEND cannot impersonate RECEIVE/COMMIT/REPLY. The dependency mutation yields exact DependencyNotRejected; the scenario rejects forged replies and times out a silent worker.                                                              | LAW-043: creation follows authenticated dependencies. Expiry, a caller-written bit and a healthy-looking process are not readiness evidence.                                                                                  |
+| Restart identity and bounded authority       | Scope requires actual old completion and the current token before replacement, closes old supervisor bindings, reclaims the detached old process, then issues fresh ProcessId and nonwrapping token. Eight worker credits and one peer credit are finite. Seal destroys unused initial grants; retirement disables invocation. Both profiles detect the stale-token mutation.                                     | LAW-013/LAW-025: replacement neither revives an old namespace nor replenishes authority. Initial launch, replacement and failure observation remain exact-instance scoped.                                                    |
+| Owner/root quiescence and retained IPC waits | Registry::checkpoint uses two fixed-affinity acquired owner completions. Saved waits and continuations survive only for the exact ProcessId; endpoints/mailboxes retain separate lifetimes. The wait-identity mutation produces exact WaitIdentityLost. lifecycle_stop records an exact-generation owner-local Terminated transition; ASID retirement precedes frame reuse.                                       | A detached root alone never authorizes freeing reachable IPC state. Healthy peers pause during membership changes; there is no independent live admission, migration or wait-any promise.                                     |
+| Quota failure and unpublished rollback       | lifecycle_bind transactionally installs receiver/SEND/feedback handles and closes installed handles on failure. discard_prepared requires detachment and retires Prepared directly without a fabricated completion. The real third-grant exhaustion scenario checks restored frames, stale identity and later continued workload; process_protocol host tests cover state and identity restrictions.              | Failed creation publishes no runnable partial child and consumes no successful instance credit. Host state tests complement actual EL0 exhaustion; they do not substitute for it.                                             |
+| Fault containment, timeout and restart storm | Real worker fault after COMMIT gives EffectUnknown; completion observation distinguishes Faulted, Exited, Terminated and BudgetExpired. EL0 selects three retries with counter-clock backoff despite remaining native credits. Healthy peer probes complete before and after the bounded storm.                                                                                                                   | Persistent autonomous orchestration and guaranteed peer progress between every failure are not claimed. Silent-service timeout and explicit stop are separate outcomes.                                                       |
+| Shutdown under committed load                | The exact service sends feedback only after successful COMMIT; supervisor validates and replies before cancellation. Removing commitment yields exact CommitNotProven in both profiles. Scope retirement and final empty checkpoint drain source/mailbox ownership; execution validates bitmap 255, actual supervisor exit, released CPU owners, zero live processes/domains and restored physical pages.         | LAW-043: effect-unknown is not rollback. Admission stops before termination; failed quiescence/watchdog quarantines the fixture and never authorizes reclaim.                                                                 |
+
+## EN/RU semantic correspondence
+
+Reviewed the complete supervisor contract and ADR-0026 pair against supervision.rs, supervision_workload.rs, supervision_workload.S, lifecycle binding/retirement in process.rs, scheduler checkpoint/termination, process_protocol tests and the exact failure runner. Both locales preserve initial-grant provenance, selectors/tokens, version/operation values, initialized register replies, finite quotas/credits, seal, actual completion kinds, copy/wait retention, quiescence, backoff/deadlines, commitment outcomes and excluded scope. The claim of peer probes between worker failures is corrected in both locales to the actual before/after-storm probes. This is a Codex semantic review, not a fabricated independent human linguistic assessment.
+
+## Evidence freshness and next gate
+
+CI run [37433732057](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37433732057) executed the final PR head `692b024968c4a1a6c5c524b73e2978f1e60f4d94`, merged as the reviewed base above. All planned runtime source digests match the current tree. The local aggregate verifier checked shard coverage, source digests, profile/features, pinned compiler/QEMU arguments and build/run ELF identity. Independent artifact inspection additionally hashed every ELF, verified both 125-name inventories and both supervision results, and located every registered negative witness. A successful CI job alone was not used as the completion proof.
+
+The older timer and stripped-PROD failures remain historical evidence. The final main separates the shared absolute workload deadline from the existing coordination interval for remote completion publication; the focused deadline-join control remains in the full 140-task matrix. Passing the bounded current-source matrix does not prove universal race-freedom or fix every historical failure by inference.
+
+Physical ARM remains UNKNOWN. Production trust belongs to #38. Persistent counter service, standalone ELF applications, userspace selftests and their system acceptance belong to #28 and are not delivered by this review. Future architecture must be re-derived from current invariants; this acceptance does not freeze the early implementation.
+
+[Russian translation](../../translations/ru/docs/architecture/supervision-phase36-acceptance-review.md)
+
+<!-- knowledge -->
+
+```json
+{
+  "schema_version": 1,
+  "id": "doc.kolvrt.supervision.acceptance-review",
+  "kind": "security-analysis",
+  "summary": "Source-grounded bounded Phase 3.6 acceptance and EN/RU semantic review, separate from persistent services and production trust.",
+  "relationships": [
+    {
+      "type": "related_to",
+      "to": "kolvrt.services.supervision",
+      "scope": "Bounded lifecycle readiness and source-matched QEMU evidence; no physical ARM or stable ABI acceptance."
+    }
+  ]
+}
+```
