@@ -79,6 +79,10 @@ pub fn run(receiver: u64, feedback: u64, argument: u64, suite: u64) -> ! {
     {
         native::exit(45);
     }
+    if suite == 1 {
+        control(feedback, 2, [2, 3, 12, 0]);
+        native::exit(0);
+    }
     // The client remains alive while the supervisor crashes and replaces the service.
     let fresh = control(feedback, 2, [2, 3 + extra, 12, 0]);
     if fresh[0] == 0 || fresh[1] == initial[1] || fresh[2] != 0 {

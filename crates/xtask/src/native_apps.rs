@@ -81,7 +81,7 @@ pub fn smoke(args: &[String]) -> Result<()> {
     run_suite(args, "smoke-client", 0)
 }
 pub fn runtime(args: &[String]) -> Result<()> {
-    run_suite(args, "smoke-client", 1)
+    run_suite(args, "counter-client", 1)
 }
 pub fn selftest(args: &[String]) -> Result<()> {
     let status = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()))
@@ -365,6 +365,24 @@ fn observe_runtime(elf: &Path) -> Result<Value> {
         .any(|e| matches!(e["event"].as_str(), Some("panic" | "fatal" | "native-boot")))
     {
         return Err("persistent runtime failed or terminated".into());
+    }
+    if !observed.iter().any(|e| {
+        e["event"] == "native-completion"
+            && e["selector"] == 1
+            && e["kind"] == "exit"
+            && e["code"] == 0
+    }) || observed
+        .iter()
+        .filter(|e| e["event"] == "native-image" && e["selector"] == 0)
+        .count()
+        != 1
+        || observed
+            .iter()
+            .any(|e| e["event"] == "native-process-terminal" && e["owner"] == 1)
+    {
+        return Err(
+            "ordinary runtime clean client/single nonfaulting service evidence missing".into(),
+        );
     }
     fs::write(
         elf.with_extension("runtime-results.json"),

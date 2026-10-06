@@ -87,6 +87,7 @@ For an ongoing host session, use `cargo xtask service-run --live` (DEV) or `carg
           "apps/native-apps/build.rs",
           "apps/native-apps/linker.ld",
           "apps/native-apps/src/client.rs",
+          "apps/native-apps/src/counter-client.rs",
           "apps/native-apps/src/counter-service.rs",
           "apps/native-apps/src/selftest-elf.rs",
           "apps/native-apps/src/selftest-ipc.rs",

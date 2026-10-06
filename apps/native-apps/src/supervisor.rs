@@ -53,6 +53,9 @@ fn completion(selector: u64, token: u64, code: u64) -> [u64; 5] {
 }
 #[unsafe(no_mangle)]
 pub extern "C" fn native_main(_receiver: u64, _feedback: u64, argument: u64) -> ! {
+    if argument == 1 {
+        run_runtime();
+    }
     // ELF images/placement/quotas are immutable kernel grants. Dependency and
     // readiness policy is EL0, using a completed response from the bound receiver.
     let original = life(1, 0, 0, if argument == 3 { 6 } else { 5 }, 10);
@@ -134,22 +137,6 @@ pub extern "C" fn native_main(_receiver: u64, _feedback: u64, argument: u64) -> 
     }
     probe(fresh[2], 5, 12, 98);
     life(5, 0, 0, 0, 100);
-    if argument == 1 {
-        // Non-test persistent mode: the service outlives the client; no fixture shutdown.
-        for word in [REPORT_MAGIC, 2, 12, fresh[1], 0] {
-            native::report(word);
-        }
-        probe(fresh[2], 6, 12, 101);
-        native::report(1);
-        loop {
-            probe(fresh[2], 6, 12, 101);
-            let (now, hz) = native::clock();
-            let until = now.checked_add(hz).unwrap_or_else(|| fail(103));
-            while native::clock().0 < until {
-                core::hint::spin_loop();
-            }
-        }
-    }
     life(4, 0, fresh[1], 0, 110);
     if completion(0, fresh[1], 111)[1] != 3 {
         fail(112);
@@ -171,4 +158,41 @@ pub extern "C" fn native_main(_receiver: u64, _feedback: u64, argument: u64) -> 
         native::report(word);
     }
     native::exit(0)
+}
+
+fn run_runtime() -> ! {
+    // Ordinary static runtime has no injected fault, restart fixture or shutdown.
+    let service = life(1, 0, 0, 0, 140);
+    probe(service[2], 1, 0, 141);
+    let client = life(1, 1, 0, 0, 143);
+    let binding = life(6, 1, client[1], service[1], 144);
+    let (hello, words) = receive(client[3], 145);
+    if words != [1, 0, 0, 0] {
+        fail(148);
+    }
+    reply(client[3], hello, [binding[1], service[1], 0, 0], 149);
+    let (done, words) = receive(client[3], 150);
+    if words != [2, 3, 12, 0] {
+        fail(153);
+    }
+    reply(client[3], done, [0, 0, 0, 0], 154);
+    let exited = completion(1, client[1], 155);
+    if exited[1] != 1 || exited[2] != 0 {
+        fail(156);
+    }
+    probe(service[2], 2, 12, 157);
+    life(5, 0, 0, 0, 159);
+    for word in [REPORT_MAGIC, 2, 12, service[1], 0] {
+        native::report(word);
+    }
+    probe(service[2], 3, 12, 160);
+    native::report(1);
+    loop {
+        probe(service[2], 4, 12, 162);
+        let (now, hz) = native::clock();
+        let until = now.checked_add(hz).unwrap_or_else(|| fail(164));
+        while native::clock().0 < until {
+            core::hint::spin_loop();
+        }
+    }
 }

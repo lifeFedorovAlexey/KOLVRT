@@ -33,7 +33,7 @@
     {
       "path": "apps/native-apps/Cargo.toml",
       "before_sha256_lf": null,
-      "after_sha256_lf": "9731da598357b5434462e72df8ee446f692e9acc3f804bb353414cd7708423d3",
+      "after_sha256_lf": "ed0b7f128e8cc8dd842f722698544b3b2f3f356a9b45ff3d5c5d8e9b1c40b808",
       "disposition": "new-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },
@@ -54,14 +54,21 @@
     {
       "path": "apps/native-apps/src/client.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "4f8efd0b0c379039b266db3fa252e99e630b4b5ee88e1d1276368cbcc6873b25",
+      "after_sha256_lf": "da53f09f0899f849af48d27a954772c91206b8433cd4c4888157301b7e13d140",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+    },
+    {
+      "path": "apps/native-apps/src/counter-client.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "25e943ecb2f34d88edd700581295b47e23efccc836e62f56f1c31b055c445eac",
       "disposition": "new-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },
     {
       "path": "apps/native-apps/src/counter-service.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "182172a061d1df5e044621b460369cfd815a2fa11bb70572d8bbf61524cd3271",
+      "after_sha256_lf": "80328a3b642a874a666809c3db3dab3aff9c55323f8ce5ceb4800f9318676324",
       "disposition": "new-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },
@@ -103,7 +110,7 @@
     {
       "path": "apps/native-apps/src/supervisor.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "720a0a24ca37914b385756b49ed91ee2c7bccd3dffecffb032a3c45f4723a3c7",
+      "after_sha256_lf": "f4d8b472d7aed27445865e81684390ae3e1c1071bb224c5dab3fa1c5a743808a",
       "disposition": "new-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },
@@ -215,7 +222,7 @@
     {
       "path": "crates/xtask/src/native_apps.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "ccb1ece95b210778b961aeb7d302bd91655166bce4b89bbba36e8443269e98c2",
+      "after_sha256_lf": "a5f4498154d36fdb6254f10ce5f6c87dc443e08c5163fe4b94c23bc823196f5c",
       "disposition": "new-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },

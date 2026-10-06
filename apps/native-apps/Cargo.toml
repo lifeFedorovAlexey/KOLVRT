@@ -61,3 +61,10 @@ path = "src/selftest-elf.rs"
 required-features = ["guest"]
 test = false
 bench = false
+
+[[bin]]
+name = "counter-client"
+path = "src/counter-client.rs"
+required-features = ["guest"]
+test = false
+bench = false
