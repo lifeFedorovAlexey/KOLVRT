@@ -2185,7 +2185,7 @@
     "crates/kernel/src/ipc_workload.rs": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
     "crates/kernel/src/main.rs": "fceb8e992ba8f70fbd51de61a02f392e0a1d4915d3f0b9a2db7817d3f6a00183",
     "crates/kernel/src/process.rs": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
-    "crates/kernel/src/process_workload.rs": "95b506548715e08690c759188049e0778a6d0f422e24848decbe9f4ceac60350",
+    "crates/kernel/src/process_workload.rs": "dee8ac8895fdbec13f54a4e0bd286dba127d0a18391e62bd4cc91e142f723a3d",
     "crates/kernel/src/scheduler/local.rs": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
     "crates/kernel/src/scheduler/mod.rs": "d530ea58baef2e4019a972437df3b1f3c1ce9a20cb26e26acf8b8bf93a891742",
     "crates/kernel/src/scheduler/task.rs": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
@@ -2280,7 +2280,7 @@
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
-    "docs/kernel/processes.md": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+    "docs/kernel/processes.md": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
     "docs/kernel/scheduler.md": "257b84fec35689b995876a308aecb6f11acf98ad1c3ff84e25bbdd42ed018cce",
     "docs/kernel/supervision.md": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
@@ -2364,7 +2364,7 @@
     "scripts/tests/ci-timings.test.cjs": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "80986c4f87e8f200fdb370e8b37586a1ebe5f943f445acb707e4052396cf7e85",
+    "translations/manifest.json": "7f2a72d9b287bc3a5b84521fc46e3f5bc2e3bd57fc903cec1075d01a09703906",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2410,7 +2410,7 @@
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
-    "translations/ru/docs/kernel/processes.md": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+    "translations/ru/docs/kernel/processes.md": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
     "translations/ru/docs/kernel/scheduler.md": "e3527af3145a5faf78b4d2e7e99ac062ed6efb135c284cb94dbc6a867c0d02b2",
     "translations/ru/docs/kernel/supervision.md": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
@@ -5174,7 +5174,7 @@
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 23491,
+      "estimated_bytes": 25064,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
@@ -5188,15 +5188,15 @@
       },
       "locations": {
         "en": {
-          "end": 268,
+          "end": 272,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
           "start": 1
         },
         "ru": {
-          "end": 268,
+          "end": 272,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
           "start": 1
         }
       },
@@ -8105,16 +8105,16 @@
       },
       "locations": {
         "en": {
-          "end": 103,
+          "end": 107,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
-          "start": 96
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
+          "start": 100
         },
         "ru": {
-          "end": 103,
+          "end": 107,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
-          "start": 96
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
+          "start": 100
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8140,16 +8140,16 @@
       },
       "locations": {
         "en": {
-          "end": 127,
+          "end": 131,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
-          "start": 120
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
+          "start": 124
         },
         "ru": {
-          "end": 127,
+          "end": 131,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
-          "start": 120
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
+          "start": 124
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8177,13 +8177,13 @@
         "en": {
           "end": 62,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
           "start": 45
         },
         "ru": {
           "end": 62,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
           "start": 45
         }
       },
@@ -8196,7 +8196,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 3578,
+      "estimated_bytes": 5151,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
@@ -8210,15 +8210,15 @@
       },
       "locations": {
         "en": {
-          "end": 97,
+          "end": 101,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
           "start": 84
         },
         "ru": {
-          "end": 97,
+          "end": 101,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
           "start": 84
         }
       },
@@ -8245,16 +8245,16 @@
       },
       "locations": {
         "en": {
-          "end": 131,
+          "end": 135,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
-          "start": 126
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
+          "start": 130
         },
         "ru": {
-          "end": 131,
+          "end": 135,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
-          "start": 126
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
+          "start": 130
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8282,13 +8282,13 @@
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
           "start": 13
         }
       },
@@ -8366,13 +8366,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
           "start": 7
         }
       },
@@ -8399,16 +8399,16 @@
       },
       "locations": {
         "en": {
-          "end": 109,
+          "end": 113,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
-          "start": 102
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
+          "start": 106
         },
         "ru": {
-          "end": 109,
+          "end": 113,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
-          "start": 102
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
+          "start": 106
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8436,13 +8436,13 @@
         "en": {
           "end": 85,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
           "start": 61
         },
         "ru": {
           "end": 85,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
           "start": 61
         }
       },
@@ -8471,13 +8471,13 @@
         "en": {
           "end": 46,
           "path": "docs/kernel/processes.md",
-          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+          "sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
           "start": 23
         },
         "ru": {
           "end": 46,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
+          "sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d",
           "start": 23
         }
       },

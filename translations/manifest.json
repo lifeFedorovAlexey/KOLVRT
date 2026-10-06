@@ -298,8 +298,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
-        "translation_sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1"
+        "source_sha256": "28cee3b6844e9764d0f977f057a1d1d1614087bed88b7688dd710812391e9670",
+        "translation_sha256": "baa867bb5945ca985451c7a99cca4efe739bb8c547d22c4a42ba1480a8ac0d2d"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",

@@ -10,6 +10,7 @@ const MODE_DENIED_CREATE: u64 = 2;
 const MODE_SPIN: u64 = 3;
 const MODE_WAIT: u64 = 4;
 const SPIN_BUDGET: usize = 8;
+const FINITE_BUDGET: usize = SPIN_BUDGET;
 const TIMER_SLICES: u64 = 1;
 const ENTRY_ARGUMENTS: usize = 5;
 const STRESS_CYCLES: usize = 32;
@@ -19,7 +20,6 @@ const ELF_EXIT_CODE: u64 = 0x4b4f_4c31;
 const ELF_MAX_SLICES: usize = 16;
 #[cfg(feature = "kernel-tests")]
 const MINIMAL_ELF: &[u8] = include_bytes!("../assets/minimal-exit.elf");
-const VERIFY_TIMEOUT: time::Duration = time::Duration::from_secs(2);
 unsafe extern "C" {
     static lifecycle_image_start: u8;
     static lifecycle_image_end: u8;
@@ -49,7 +49,7 @@ fn spec(owner: usize, mode: u64, code: u64) -> Spec<'static> {
         context,
         owner,
         entry: memory::USER_CODE,
-        slice_limit: None,
+        slice_limit: Some(FINITE_BUDGET),
     }
 }
 fn create(registry: &mut Registry, p: &mut memory::Physical, spec: Spec<'_>) -> ProcessId {
@@ -108,7 +108,7 @@ pub fn exercise(
         spec(percpu::SECONDARY_CPU, MODE_FAULT, EXIT_CODE),
     );
     registry.start(fault).unwrap();
-    registry.dispatch(Some(VERIFY_TIMEOUT));
+    registry.dispatch(None);
     #[cfg(feature = "process-exit-negative")]
     registry
         .repeat_completion(first)
@@ -181,7 +181,7 @@ pub fn exercise(
     for id in ids.iter().flatten() {
         registry.start(*id).unwrap();
     }
-    registry.dispatch(Some(VERIFY_TIMEOUT));
+    registry.dispatch(None);
     for id in ids.iter().flatten() {
         registry.reclaim(p, *id).unwrap();
     }
@@ -211,7 +211,7 @@ pub fn exercise(
         && registry.data_address(first) == Err(Error::Stale)
         && registry.validate_completion(old_completion) == Err(Error::Stale);
     registry.start(new).unwrap();
-    registry.dispatch(Some(VERIFY_TIMEOUT));
+    registry.dispatch(None);
     let new_reason = registry.completion(new).unwrap().reason;
     let new_tag = tag(registry, new);
     let reuse_ok = generation_ok
@@ -238,7 +238,7 @@ pub fn exercise(
     // Completion is single-publication; a second table terminal transition is tested
     // in the shared host protocol, and a completed process is never dispatched again.
     let saved = registry.completion(new).unwrap();
-    registry.dispatch(Some(VERIFY_TIMEOUT));
+    registry.dispatch(None);
     let terminal_stable = registry.completion(new) == Ok(saved);
     registry.reclaim(p, new).unwrap();
     report(
@@ -351,22 +351,13 @@ pub fn exercise(
         }
         registry.start(left).unwrap();
         registry.start(right).unwrap();
-        registry.dispatch(Some(VERIFY_TIMEOUT));
+        registry.dispatch(None);
         let left_reason = registry.completion(left).unwrap().reason;
         let right_reason = registry.completion(right).unwrap().reason;
         let left_tag = tag(registry, left);
         let right_tag = tag(registry, right);
-        let left_isolation = left_reason == Reason::Exited(code) && left_tag == code;
+        let left_isolation = left_tag == code;
         let right_isolation = right_tag == code;
-        if (!left_isolation || !right_isolation) && first_stress_failure.is_none() {
-            first_stress_failure =
-                Some((cycle, code, left_reason, right_reason, left_tag, right_tag));
-        }
-        cpu_isolation[0] &= left_isolation;
-        cpu_isolation[1] &= right_isolation;
-        let same_va_isolation = left_isolation && right_isolation;
-        stress &= same_va_isolation;
-        asid_reuse &= same_va_isolation;
         let expected = if cycle % 2 == 0 {
             Reason::Exited(code)
         } else {
@@ -375,7 +366,17 @@ pub fn exercise(
                 address: memory::USER_GUARD,
             }
         };
-        stress &= registry.completion(right).unwrap().reason == expected;
+        let terminals_ok = left_reason == Reason::Exited(code) && right_reason == expected;
+        if (!left_isolation || !right_isolation || !terminals_ok) && first_stress_failure.is_none()
+        {
+            first_stress_failure =
+                Some((cycle, code, left_reason, right_reason, left_tag, right_tag));
+        }
+        cpu_isolation[0] &= left_isolation;
+        cpu_isolation[1] &= right_isolation;
+        let same_va_isolation = left_isolation && right_isolation;
+        stress &= same_va_isolation && terminals_ok;
+        asid_reuse &= same_va_isolation;
         previous_data = [
             registry.data_address(left).unwrap(),
             registry.data_address(right).unwrap(),
@@ -476,7 +477,71 @@ pub fn exercise(
         "asid_reuse_same_va_both_cpus",
         asid_reuse && distinct_backing && asid_reused.into_iter().all(|reused| reused),
     );
-    report("process_bounded_stress", stress);
+    // Reproduce the retained CI symptom deterministically: an expired session
+    // completes both processes with BudgetExpired after they wrote correct tags.
+    // Expiry must remain strict, but it is not evidence of a translation alias.
+    let expiry_tag = EXIT_CODE + STRESS_CYCLES as u64;
+    let expiry_ids: [ProcessId; config::ACTIVE_CPUS] = core::array::from_fn(|owner| {
+        let id = create(registry, p, spec(owner, MODE_EXIT, expiry_tag));
+        registry.start(id).unwrap();
+        id
+    });
+    registry.dispatch(Some(time::Duration::ZERO));
+    for id in expiry_ids {
+        let value = tag(registry, id);
+        // An already-expired session may stop before the first EL0 store.
+        // Zero is the initialized private page; any unrelated tag is invalid.
+        stress &= registry.completion(id).unwrap().reason == Reason::BudgetExpired
+            && (value == 0 || value == expiry_tag);
+        registry.reclaim(p, id).unwrap();
+    }
+    stress &= registry.live() == 0 && p.available() == before;
+    // A real nonzero deadline must stop unbounded spinning on both owners.
+    // Disable the slice cap only for this probe so BudgetExpired cannot come
+    // from the quantum budget instead of the two-second session deadline.
+    let timed_ids: [ProcessId; config::ACTIVE_CPUS] = core::array::from_fn(|owner| {
+        let mut definition = spec(owner, MODE_SPIN, expiry_tag);
+        definition.slice_limit = None;
+        let id = create(registry, p, definition);
+        registry.start(id).unwrap();
+        id
+    });
+    let deadline_duration = time::Duration::from_secs(2);
+    let deadline_ticks =
+        kernel_core::time::duration_ticks(deadline_duration, cpu::frequency()).unwrap();
+    let timed_start = cpu::ticks();
+    let timed = registry.dispatch(Some(deadline_duration));
+    let elapsed = cpu::ticks() - timed_start;
+    let mut deadline_ok = timed.owners_released && elapsed >= deadline_ticks;
+    for id in timed_ids {
+        let result = &timed.tasks[id.slot()];
+        deadline_ok &= registry.completion(id).unwrap().reason == Reason::BudgetExpired
+            && tag(registry, id) == expiry_tag
+            && result.process_generation == id.generation()
+            && result.slices > 0
+            && result.context.gpr[25] > 0;
+        registry.reclaim(p, id).unwrap();
+    }
+    deadline_ok &= registry.live() == 0 && p.available() == before;
+    if !deadline_ok {
+        crate::diagnostics::status(
+            "FAIL",
+            "process deadline",
+            format_args!(
+                "two_cpu_expiry={deadline_ok} elapsed_ticks={elapsed} minimum_ticks={deadline_ticks}"
+            ),
+        );
+    }
+    if deadline_ok {
+        crate::diagnostics::status(
+            "OK",
+            "process deadline",
+            format_args!(
+                "two CPUs expired after {elapsed} ticks (required {deadline_ticks}); executed with timer service, no slice cap, owners released and frames reclaimed"
+            ),
+        );
+    }
+    report("process_bounded_stress", stress && deadline_ok);
     quantum_progress(p, registry, &mut report);
     blocking_progress(p, registry, &mut report);
     #[cfg(feature = "kernel-tests")]
@@ -627,7 +692,7 @@ fn exercise_elf(
         .unwrap_or_else(|failure| process::reject(failure.error));
     registry.start(first).unwrap();
     registry.start(second).unwrap();
-    registry.dispatch(Some(VERIFY_TIMEOUT));
+    registry.dispatch(None);
     let exited = registry
         .completion(first)
         .is_ok_and(|done| done.reason == Reason::Exited(ELF_EXIT_CODE))
