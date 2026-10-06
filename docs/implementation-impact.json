@@ -33,7 +33,7 @@
     {
       "path": "crates/kernel/src/main.rs",
       "before_sha256_lf": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
-      "after_sha256_lf": "61c9f3ec61b10a164b32cb4579ac8015525acfeabb76899b90a4f7e387f51970",
+      "after_sha256_lf": "fceb8e992ba8f70fbd51de61a02f392e0a1d4915d3f0b9a2db7817d3f6a00183",
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
@@ -64,6 +64,13 @@
       "after_sha256_lf": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "before_sha256_lf": "08b9a851296995e4db04efea39189d603f1e6fda3e4cc45d3be4a5e96a528628",
+      "disposition": "existing-feature",
+      "reason": "Retain bounded static secondary panic identity across FAILED release/acquire without secondary UART, private data or reclamation permission.",
+      "after_sha256_lf": "e74d62a0444bc0e604b72f3ed037334241dccb15e25e0f03fe652ee18d025395"
     },
     {
       "path": "crates/kernel/src/supervision.rs",

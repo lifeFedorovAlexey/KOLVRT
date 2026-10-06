@@ -280,6 +280,9 @@ pub extern "C" fn fatal_exception(esr: u64, far: u64, pc: u64) -> ! {
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     if percpu::is_secondary() {
+        if let Some(location) = info.location() {
+            smp::record_secondary_panic(location.file(), location.line());
+        }
         smp::secondary_failure();
     }
     cpu::mask();
