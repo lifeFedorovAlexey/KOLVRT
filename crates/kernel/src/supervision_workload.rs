@@ -105,8 +105,9 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
     let reason = registry.completion(supervisor).unwrap().reason;
     let coverage = completed.tasks[supervisor.slot()].context.gpr[12];
     if reason != Reason::Exited(1) || coverage != 255 {
+        let diagnostic = &completed.tasks[supervisor.slot()].context.gpr;
         crate::event!(
-            "{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"{}\",\"exit\":\"{:?}\",\"coverage\":{},\"actual\":{},\"value\":{}}}",
+            "{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"{}\",\"exit\":\"{:?}\",\"coverage\":{},\"actual\":{},\"value\":{},\"stage\":{},\"operation\":{},\"submitted_at\":{},\"deadline\":{},\"failed_at\":{},\"frequency\":{}}}",
             if reason == Reason::Exited(1100) {
                 "CommitNotProven"
             } else if reason == Reason::Exited(1200) {
@@ -117,7 +118,13 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
             reason,
             coverage,
             completed.tasks[supervisor.slot()].context.gpr[29],
-            completed.tasks[supervisor.slot()].context.gpr[1]
+            completed.tasks[supervisor.slot()].context.gpr[1],
+            diagnostic[20],
+            diagnostic[10],
+            diagnostic[7],
+            diagnostic[6],
+            diagnostic[5],
+            diagnostic[8]
         );
         let peer = completed.tasks[crate::scheduler::TASKS];
         crate::event!(

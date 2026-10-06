@@ -306,8 +306,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "00e9da746283a2428ed8ec1a246a2d079da37f3825d8b0bc34fafe92db6a9f5f",
-        "translation_sha256": "364497273ed90e7b3136d48e438dd0fdfdf55ef50a453380367e24d20e590398"
+        "source_sha256": "0f89581ed4079ab52f41bf3ec34a0484bffcf472bbb2d81d01ae19c4da71ad6f",
+        "translation_sha256": "65940ae4fecac24f9fabd791c6e879845dbff7e52fec4db826c8044bd21411e1"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "3c58bd4e182a46efcce6ecc65a781573b107c99d2916fe27bb1b09402580b1e8",
@@ -326,8 +326,8 @@
         "translation_sha256": "395e7920498d371257573b4fdd8cfa6d91718c1f8aa4447d1353f1327d556790"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "e10f80a42b00ce56bbedca569cf88953262836c43948619840360b656e2c0920",
-        "translation_sha256": "752ce3a7da6e40cb206549a5908dc0fd7b99bc3dcb2fcff9430d8d541bb0c0c4"
+        "source_sha256": "a9e4173151fae4e2872972abc245744f2773ad1d4cde3530cc51691cb20e50da",
+        "translation_sha256": "c3ebd7e187fe42f6022913edaf3a0caac785b82a9c859c4109493dc690039921"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",

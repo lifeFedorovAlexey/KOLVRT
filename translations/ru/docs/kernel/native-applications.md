@@ -68,6 +68,8 @@ Oracle требует реальный completion старого сервиса 
 
 CI на точном 17ac5e9 прошёл все 144 tasks и полный foundation. Более поздний 66b497a упал на shard 2 внутри настоящего supervision cancellation fixture (AlreadyTerminal, coverage 127); остальные shard и обычные workloads прошли. Его load и commit-ack запросы ошибочно использовали короткий deadline readiness probe, разрешая expiry победить до требуемого Cancel. Эти тестовые входы теперь задают максимальный допустимый absolute deadline (zero недопустим/Expired по native ABI); readiness deadlines и canonical restart backoff 1/128 сохранены. Тест по-прежнему требует реальный commitment acknowledgement, успешную явную cancellation и EffectUnknown, не принимая expiry за cancellation. Production IPC transitions и timing policy не меняются. Новые exact-source полный CI/acceptance пока ожидаются.
 
+Последний завершённый CI b037833 упал на matrix shard 1 в supervision_workload во время initial readiness, а не в observable process-stale guards. Остальные три shard, static, host, native, routing, ASID и kernel DEV/PROD прошли; native включает настоящий production crash-recovery SYSTEM-сценарий. Диагностика probe stages/timestamps теперь сохраняет принятый readiness deadline для расследования admission expiry до выбора исправления. Итоговые CI и current-source acceptance пока ожидаются.
+
 ## Команды и пределы evidence
 
 cargo xtask service-run и app-smoke собирают настоящие production ELF. Supervisor запускает сервис и обычный client; после выхода client сервис продолжает работать. Host наблюдает продолжение, затем останавливает QEMU. Это не graceful shutdown и не измерение zero leaked resources.

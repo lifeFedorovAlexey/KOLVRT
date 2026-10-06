@@ -44,6 +44,7 @@ supervisor_image_start:
  mov x28,x2
  str x3,[x19,#1024]
  mov x25,x28
+ mov x20,#1010
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
  mov x11,#2
@@ -52,6 +53,7 @@ supervisor_image_start:
  cbnz x0,.Lsup_fail
  mov x24,x1
  mov x25,x2
+ mov x20,#1020
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
  orr x11,x11,#1
@@ -239,10 +241,15 @@ supervisor_image_start:
  svc #0x4e
 .Lsup_fail:
  mov x29,x0
+ mov x9,x1
+ svc #0x53
+ mov x5,x0
+ mov x1,x9
  mov x0,x20
  svc #0x4e
 .Lsup_submit:
  mov x18,x30
+ mov x10,#1
  mov x17,x0
  sup_header 1
  mov x0,#48
@@ -256,11 +263,16 @@ supervisor_image_start:
  // selects the maximum valid absolute deadline so expiry cannot substitute
  // for the explicit Cancel under test (zero is already expired by the ABI).
  mov x0,#-1
+ mov x6,x0
+ mov x7,#0
  str x0,[x19,#24]
  cmp x17,#3
  b.eq .Lsup_submit_call
  svc #0x53
+ mov x7,x0
+ mov x8,x1
  add x0,x0,x1,lsr #3
+ mov x6,x0
  str x0,[x19,#24]
 .Lsup_submit_call:
  sup_ipc 48
@@ -269,9 +281,11 @@ supervisor_image_start:
  ret
 .Lsup_collect:
  mov x18,x30
+ mov x10,#2
  sup_header 5,x22
  sup_ipc
  cbnz x0,.Lsup_collect_return
+ mov x10,#3
  sup_header 6,x22
  sup_ipc
 .Lsup_collect_return:
@@ -284,6 +298,7 @@ supervisor_image_start:
  cbnz x0,.Lsup_probe_return
  bl .Lsup_collect
  cbnz x0,.Lsup_probe_return
+ mov x10,#4
  ldrh w0,[x19,#514]
  cbnz x0,.Lsup_probe_return
  ldr x0,[x19,#536]

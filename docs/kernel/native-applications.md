@@ -69,6 +69,8 @@ This is selected post-binding, pre-commit crash coverage. It does not establish 
 
 Exact CI 17ac5e9 passed all 144 tasks and complete foundation. Later 66b497a failed shard 2 inside the actual supervision cancellation fixture (AlreadyTerminal, coverage 127); the other shards and ordinary workloads passed. Its load and commit-ack requests accidentally used the short readiness-probe deadline, permitting expiry to win before the requested Cancel. Those test inputs now use the maximum valid absolute deadline (zero is invalid/Expired by the native ABI); readiness deadlines and canonical 1/128 restart backoff remain intact. The test still requires actual commitment acknowledgement, successful explicit cancellation and EffectUnknown, and does not accept an expiry as cancellation. Production IPC state transitions and timing policy are unchanged. New exact-source full CI/acceptance remains pending.
 
+Latest completed b037833 CI failed matrix shard 1 in supervision_workload during initial readiness, not in the observable process-stale guards. The other three shards, static, host, native, routing, ASID and kernel DEV/PROD passed; native includes the actual production crash-recovery SYSTEM scenario. Probe-stage/timestamp diagnostics now preserve the accepted readiness deadline to investigate admission expiry before making a repair. Final CI and current-source acceptance remain pending.
+
 ## Commands and evidence limits
 
 cargo xtask service-run and app-smoke build actual production ELF artifacts. The supervisor launches the service and ordinary client; the service continues after the client exits. The host observes continuation and then stops QEMU. This is neither graceful shutdown nor a zero-leaked-resources measurement.
