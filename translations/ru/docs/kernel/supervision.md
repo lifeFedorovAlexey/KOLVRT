@@ -44,6 +44,8 @@ SGI-only entry не расходует checkpoint quantum до первой ин
 
 Этот bounded checkpoint приостанавливает здоровых peers на время lifecycle changes; он не добавляет migration или independent admission во время исполнения user code на CPU. Death observation использует exact lifecycle queries; generic wait-any и автономная persistent orchestration исключены. Исходный continuous IPC path имеет отдельный scope и проверки. Readiness, effects и failure policy не выводятся из timeout или остановленного CPU.
 
+Исторический cancellation fixture использовал длительность readiness probe для независимых load и commit-ack запросов. Expiry мог сделать любой из них terminal до явного Cancel, для которого AlreadyTerminal является правильным production response. Текущий fixture задаёт максимальный допустимый absolute deadline этим двум тестовым входам, сохраняя проверки настоящего commit acknowledgement, явной cancellation и EffectUnknown. Zero уже expired по native IPC contract. Readiness probes сохраняют canonical deadline, restart сохраняет backoff 1/128 секунды. Исправляется предпосылка теста; production arbiter и performance policy не меняются. [Native-приложения](native-applications.md) добавляют внешний SYSTEM-сценарий настоящих production supervisor/service/client после выбранного crash сервиса.
+
 ## Политика readiness, restart и shutdown
 
 Политика EL0 отправляет readiness probe точному endpoint с absolute counter deadline 1/8 секунды и признаёт READY только после completed initialized response с ожидаемым marker. Commit/reply доступен только bound receiver сервиса и accepted service token; requester SEND handle не может подделать ответ. Expired probe не означает READY. Эти длительности QEMU fixture — явные параметры политики, а не real-time guarantees.

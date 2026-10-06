@@ -353,6 +353,13 @@
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
+      "path": "crates/kernel/src/supervision_workload.S",
+      "before_sha256_lf": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
+      "after_sha256_lf": "4d25cb77c28641966ff8339cff15356b84b88766e5543de2dace6f180d97dea1",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
+    },
+    {
       "path": "crates/kernel/src/supervision_workload.rs",
       "before_sha256_lf": "73868af14eeb17328f79bcd6d5c47445316047684cc4f1cc60e3fa088616ec0a",
       "after_sha256_lf": "f68e65d34d1a285c9c400ce8cd780fd2d4560e542b403687f3d49acbca3bae54",
@@ -411,7 +418,7 @@
     {
       "path": "crates/xtask/src/main.rs",
       "before_sha256_lf": "0e39fc6444c73c70bcf36dee77a72c2beb1cf66d4c7789c8c8cc638049047ded",
-      "after_sha256_lf": "4e74e24b18ec6dd39a50c1f7d590c4349274f126f80c1d80547b7290bc8c1cec",
+      "after_sha256_lf": "508ed1c0a59fcfdf511d6953f36b9b759ccf79edc6b3a15fa2c9eeed3e7ddd44",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -425,14 +432,14 @@
     {
       "path": "crates/xtask/src/native_apps.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "c38c4edb0612931646a29ad5faa673029ac69afed99c9227511a409c14dccae5",
+      "after_sha256_lf": "739460d13cf0e7918c0a81c206e8e609a97e32a03ed0e889c3dfde7f85c648ba",
       "disposition": "new-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
       "path": "package.json",
       "before_sha256_lf": "52f006ec589a437637af166d547e57aba80089c39e9887dd336d446cd0cdb979",
-      "after_sha256_lf": "5e553e13f499682c1536717470bd036509de973141ffb0f9a42e30611df7dad6",
+      "after_sha256_lf": "4aa1ef09651c3c8dff7f6be15e3be80442c794e0edd1e9f92adfeae85ce21f02",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -479,6 +486,13 @@
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
+      "path": "tests/fixtures/native-production-crash-observations.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "ea7ffb30afd673ab62751d5e81bfc967ba2216d6fd442f7f3a2f3bbaa3fb3cdf",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
+    },
+    {
       "path": "tests/native-apps/Cargo.toml",
       "before_sha256_lf": null,
       "after_sha256_lf": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad",
@@ -517,6 +531,20 @@
       "path": "tests/native-apps/src/lifecycle-peer.rs",
       "before_sha256_lf": null,
       "after_sha256_lf": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
+    },
+    {
+      "path": "tests/system/native-crash-recovery.cjs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "69fbfd263a52d57eec286da36a3fef08066f115361660c3fd51d3cc7079ff302",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
+    },
+    {
+      "path": "tests/system/native-crash-recovery.test.cjs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "35cfd433e10e1b8677cf0095130c3ecdde1f547a456b3538659c823f4a6af32b",
       "disposition": "new-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     }

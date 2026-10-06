@@ -58,6 +58,16 @@ CI на точном 0439387 прошёл scheduler и затем упал на 
 
 По явному требованию maintainer Phase 3.7 убирает произвольное двухсекундное ограничение из настоящего SMP wait и путей scheduler completion/copy-drain. Acquired completion, detached roots, released owners и transport drainage остаются обязательными; опубликованный secondary failure по-прежнему останавливает работу с удержанием ресурсов. Конечного внутрядерного детектора молча зависшего CPU в этой foundation нет; host watchdog диагностирует тесты и не доказывает completion или reclaim. Workload expiry и canonical supervisor restart backoff 1/128 секунды остаются отдельными policy. Исторический timeout evidence #126 не является current-source acceptance.
 
+### SYSTEM-сценарий crash-recovery production supervisor
+
+cargo xtask crash-recovery (также обязателен в selftest) собирает настоящие native-supervisor, counter-service и counter-client. tests/system/native-crash-recovery.cjs проверяет digests оригинальных ELF и выбранного kernel, затем использует внешние QEMU GDB hardware breakpoints на публичном IPC SVC сервиса. После ответа readiness и фактической доставки клиентского запроса, перед первым ADD COMMIT, harness меняет только EL0 PC CPU1 на unmapped zero. Исходники и ELF bytes остаются неизменными; test entry point, копия реализации или отдельный test ELF не нужны.
+
+Oracle требует реальный completion старого сервиса с lower-EL instruction abort, свежую ProcessId generation сервиса, успешный exit того же production client и итоговое значение counter 12 с fresh token при продолжении production supervisor. Настоящий client проверяет отказ старого SEND, initial value 0 и ADD(5)/ADD(7)/GET после recovery через настоящий supervisor main loop. DEV/PROD executions прошли локально. Host oracle отдельно отклоняет обычный успех без fault, неверные CPU/EL, остановленный сервис, stale replacement, посторонний panic, неправильный client completion, поддельную report signature и неверный порядок событий. Captured observation fixture — вход HOST oracle, а не SYSTEM evidence.
+
+Это выбранное post-binding, pre-commit crash coverage. Оно не устанавливает startup-crash recovery, post-commit replay, graceful shutdown, отсутствие leaks при принудительном останове VM, performance или physical ARM. Старый lifecycle test root по-прежнему имеет production_supervisor_tested=false; новый отдельный сценарий сообщает true, не переписывая прежний scope.
+
+CI на точном 17ac5e9 прошёл все 144 tasks и полный foundation. Более поздний 66b497a упал на shard 2 внутри настоящего supervision cancellation fixture (AlreadyTerminal, coverage 127); остальные shard и обычные workloads прошли. Его load и commit-ack запросы ошибочно использовали короткий deadline readiness probe, разрешая expiry победить до требуемого Cancel. Эти тестовые входы теперь задают максимальный допустимый absolute deadline (zero недопустим/Expired по native ABI); readiness deadlines и canonical restart backoff 1/128 сохранены. Тест по-прежнему требует реальный commitment acknowledgement, успешную явную cancellation и EffectUnknown, не принимая expiry за cancellation. Production IPC transitions и timing policy не меняются. Новые exact-source полный CI/acceptance пока ожидаются.
+
 ## Команды и пределы evidence
 
 cargo xtask service-run и app-smoke собирают настоящие production ELF. Supervisor запускает сервис и обычный client; после выхода client сервис продолжает работать. Host наблюдает продолжение, затем останавливает QEMU. Это не graceful shutdown и не измерение zero leaked resources.
@@ -68,7 +78,7 @@ cargo xtask native-controls проверяет неверные входы на�
 
 L1 проверяет компоненты, L2 — внешние ABI actors, L3 — production QEMU system scenarios. Ни один из этих уровней не доказывает L4 physical ARM: NOT_RUN/UNKNOWN. Filesystem, initramfs, storage, DMA, network, package manager, Linux ABI и dynamic linking остаются вне scope.
 
-Полная Phase 3.7 не завершена. Оставшиеся gates: полный production supervisor loop при аварийном завершении именно counter-service, актуальная foundation matrix без source mutations, окончательная exact-source semantic/EN-RU acceptance и CI. Stop/replacement/stale/fresh binding/peer fault/shutdown уже проверены на настоящем kernel/service и импортированном production recover_service. Исторические 144 tasks/140 controls не переименовываются в current-source passes.
+Полная acceptance Phase 3.7 остаётся незавершённой до текущего полного foundation и финального exact-source semantic/EN-RU review. Настоящий crash path production supervisor теперь выполняется отдельным внешним post-binding pre-commit SYSTEM-сценарием. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation сохраняют отдельный test-root scope. Ограничения graceful production shutdown, startup-crash и post-commit replay указаны явно. Исторические receipts не переименовываются в current-source passes.
 
 [English original](../../../../docs/kernel/native-applications.md)
 
@@ -101,7 +111,7 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Single production ELF service/client/supervisor, original ELF loader and real native IPC. Unit tests import production codecs and recovery/binding policy. Integration imports the same production recover_service and verifies actual stop/replacement/stale identity/fresh binding/fault containment/reclamation. Source-copy mutations and application copies are absent. Native dependency proof references original implementation files. Full production-supervisor service-crash execution, current foundation controls and final source-bound acceptance remain incomplete.",
+        "implementation_scope": "Single production ELF service/client/supervisor, original ELF loader and actual native IPC. UNIT/INTEGRATION import production methods. Lifecycle ABI clients verify stop/replacement/stale identity/fault containment/reclamation. A separate external QEMU SYSTEM harness exercises the complete production supervisor after a post-binding pre-commit service instruction abort, requiring fresh service/client recovery and continued value 12. No source-copy mutation or implementation copy. Current full foundation, retained evidence and semantic/EN-RU acceptance remain pending.",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
           ".github/workflows/kernel.yml",
@@ -153,6 +163,7 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "crates/kernel/src/security/testing.rs",
           "crates/kernel/src/smp.rs",
           "crates/kernel/src/supervision.rs",
+          "crates/kernel/src/supervision_workload.S",
           "crates/kernel/src/supervision_workload.rs",
           "crates/kernel/src/sync/mod.rs",
           "crates/kernel/src/test_support/arch_probes.S",
@@ -170,12 +181,15 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "scripts/native-closure-proof.cjs",
           "scripts/tests/ci-infrastructure.test.cjs",
           "tests/fixtures/native-lifecycle-observations.json",
+          "tests/fixtures/native-production-crash-observations.json",
           "tests/native-apps/Cargo.toml",
           "tests/native-apps/build.rs",
           "tests/native-apps/src/abi-client.rs",
           "tests/native-apps/src/abi_steps.rs",
           "tests/native-apps/src/lifecycle-client.rs",
-          "tests/native-apps/src/lifecycle-peer.rs"
+          "tests/native-apps/src/lifecycle-peer.rs",
+          "tests/system/native-crash-recovery.cjs",
+          "tests/system/native-crash-recovery.test.cjs"
         ],
         "acceptance": [],
         "issues": [28],
@@ -184,7 +198,7 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Final exact-source receipts, physical-absence proof review and complete foundation regression acceptance are pending."
         ],
-        "next_gate": "Complete exact-source semantic/EN-RU acceptance and a current foundation plan without source mutation; demonstrate the full production supervisor service-crash path or explicitly retain its evidence gap. No issue closure while required gates remain pending.",
+        "next_gate": "Complete exact-source full foundation and retained semantic/EN-RU acceptance. Selected production supervisor crash-recovery is exercised; startup/post-commit crash and graceful production shutdown limits remain explicit. No issue closure while required gates remain pending.",
         "verification": [
           {
             "environment": "qemu-arm64",

@@ -252,9 +252,17 @@ supervisor_image_start:
  str x17,[x19,#40]
  add x0,x20,x17
  str x0,[x19,#16]
+ // Readiness probes keep their policy deadline. The cancellation scenario
+ // selects the maximum valid absolute deadline so expiry cannot substitute
+ // for the explicit Cancel under test (zero is already expired by the ABI).
+ mov x0,#-1
+ str x0,[x19,#24]
+ cmp x17,#3
+ b.eq .Lsup_submit_call
  svc #0x53
  add x0,x0,x1,lsr #3
  str x0,[x19,#24]
+.Lsup_submit_call:
  sup_ipc 48
  mov x22,x1
  mov x30,x18
@@ -387,8 +395,9 @@ supervised_service_start:
  str x0,[x19,#40]
  mov x0,#1
  str x0,[x19,#16]
- svc #0x53
- add x0,x0,x1,lsr #3
+ // This acknowledgement proves actual commit for the cancellation test.
+ // Select the maximum valid absolute deadline for this handshake as well.
+ mov x0,#-1
  str x0,[x19,#24]
  sup_ipc 48
  cbnz x0,.Lservice_fail

@@ -506,6 +506,7 @@ fn run() -> Result<()> {
         Some("app-smoke") => native_apps::smoke(&args[1..]),
         Some("selftest") => native_apps::selftest(&args[1..]),
         Some("service-run") => native_apps::runtime(&args[1..]),
+        Some("crash-recovery") => native_apps::crash_recovery(&args[1..]),
         Some("lifecycle-test") => native_apps::lifecycle(&args[1..]),
         Some("native-controls") => native_apps::controls(&args[1..]),
         Some("audit") => audit(),
@@ -623,7 +624,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
@@ -1006,6 +1007,8 @@ fn source_inventory() -> Result<Value> {
     for directory in [
         "apps",
         "tests/native-apps",
+        "tests/system",
+        "tests/fixtures",
         "crates/kernel",
         "crates/kernel-core",
         "crates/xtask",

@@ -1,0 +1,81 @@
+{
+  "scope": "HOST oracle fixture captured from actual DEV QEMU debug crash on 66b497a; not current SYSTEM acceptance",
+  "source_commit": "66b497a2cded07cfe7914726bccbff14eaec1d61",
+  "kernel_sha256": "a697d2fc9089331080cc1c2320ffa9606af23e3b6a421b41a46808adda4c4c4d",
+  "fault": {
+    "cpu": 1,
+    "exceptionLevel": 0,
+    "operation": 3,
+    "repliesBeforeFault": 1,
+    "originalPc": 537142304,
+    "injectedPc": 0,
+    "frame": "01000300280000000001000000000000030000000000000000000000000000000000000000000000"
+  },
+  "events": [
+    {
+      "event": "native-root-image",
+      "format": "elf64",
+      "generation": 1
+    },
+    {
+      "event": "native-image",
+      "selector": 0,
+      "format": "elf64",
+      "generation": 1
+    },
+    {
+      "event": "native-image",
+      "selector": 1,
+      "format": "elf64",
+      "generation": 1
+    },
+    {
+      "event": "native-process-terminal",
+      "slot": 4,
+      "generation": 1,
+      "owner": 1,
+      "state": 3,
+      "exit_code": 0,
+      "ipc_blocks": 1,
+      "ipc_wakes": 1
+    },
+    {
+      "event": "native-completion",
+      "selector": 0,
+      "generation": 1,
+      "kind": "fault",
+      "code": 32
+    },
+    {
+      "event": "native-image",
+      "selector": 0,
+      "format": "elf64",
+      "generation": 2
+    },
+    {
+      "event": "native-process-terminal",
+      "slot": 1,
+      "generation": 1,
+      "owner": 0,
+      "state": 2,
+      "exit_code": 0,
+      "ipc_blocks": 8,
+      "ipc_wakes": 8
+    },
+    {
+      "event": "native-completion",
+      "selector": 1,
+      "generation": 1,
+      "kind": "exit",
+      "code": 0
+    },
+    {
+      "event": "native-report-progress",
+      "words": ["5426640009636886273", 2, 12, 3, 0]
+    },
+    {
+      "event": "native-report-progress",
+      "words": ["5426640009636886273", 2, 12, 3, 0, 1]
+    }
+  ]
+}

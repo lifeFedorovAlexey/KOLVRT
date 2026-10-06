@@ -51,8 +51,32 @@ pub fn selftest(args: &[String]) -> Result<()> {
     }
     for binary in ["counter-client", "selftest-abi-client"] {
         run_suite(args, binary, 1)?;
+        if binary == "counter-client" {
+            crash_current_runtime()?;
+        }
     }
     controls(args)?;
+    Ok(())
+}
+pub fn crash_recovery(args: &[String]) -> Result<()> {
+    run_suite(args, "counter-client", 1)?;
+    crash_current_runtime()
+}
+fn crash_current_runtime() -> Result<()> {
+    let sources = source_inventory()?;
+    let status = Command::new("node")
+        .env("QEMU_AARCH64", qemu()?)
+        .args([
+            "tests/system/native-crash-recovery.cjs",
+            "target/kernel/native-counter-client-1-positive.json",
+        ])
+        .status()?;
+    if !status.success() {
+        return Err("production supervisor crash-recovery SYSTEM scenario failed".into());
+    }
+    if source_inventory()? != sources {
+        return Err("sources changed during production supervisor crash scenario".into());
+    }
     Ok(())
 }
 pub fn lifecycle(args: &[String]) -> Result<()> {
