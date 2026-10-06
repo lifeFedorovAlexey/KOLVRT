@@ -49,7 +49,7 @@
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison.",
       "before_sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
-      "after_sha256_lf": "59c6c440e068edb27ace525137ab6c0c52a32bd477ccd3799c699751cf937499"
+      "after_sha256_lf": "943c9765a08626827a8f335de018f04465e103ff7a782da155cd7e410be671e2"
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",

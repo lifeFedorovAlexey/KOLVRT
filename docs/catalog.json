@@ -955,7 +955,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 23062,
+      "estimated_bytes": 23305,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -1854,7 +1854,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 3149,
+      "estimated_bytes": 3392,
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",

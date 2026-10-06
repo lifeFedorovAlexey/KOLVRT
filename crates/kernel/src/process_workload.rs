@@ -305,6 +305,7 @@ pub fn exercise(
     let measurement_before = crate::asid::counters();
     let mut stress = true;
     let mut asid_reuse = true;
+    let mut first_stress_failure = None;
     let mut cpu_isolation = [true; config::ACTIVE_CPUS];
     let mut backing_changed = [true; config::ACTIVE_CPUS];
     let mut previous_data = [0; config::ACTIVE_CPUS];
@@ -342,9 +343,16 @@ pub fn exercise(
         registry.start(left).unwrap();
         registry.start(right).unwrap();
         registry.dispatch(Some(VERIFY_TIMEOUT));
-        let left_isolation = registry.completion(left).unwrap().reason == Reason::Exited(code)
-            && tag(registry, left) == code;
-        let right_isolation = tag(registry, right) == code;
+        let left_reason = registry.completion(left).unwrap().reason;
+        let right_reason = registry.completion(right).unwrap().reason;
+        let left_tag = tag(registry, left);
+        let right_tag = tag(registry, right);
+        let left_isolation = left_reason == Reason::Exited(code) && left_tag == code;
+        let right_isolation = right_tag == code;
+        if (!left_isolation || !right_isolation) && first_stress_failure.is_none() {
+            first_stress_failure =
+                Some((cycle, code, left_reason, right_reason, left_tag, right_tag));
+        }
         cpu_isolation[0] &= left_isolation;
         cpu_isolation[1] &= right_isolation;
         let same_va_isolation = left_isolation && right_isolation;
@@ -441,6 +449,17 @@ pub fn exercise(
         delta[1].asid_tlbi,
         delta[1].reuses,
     );
+    if let Some((cycle, expected, left_reason, right_reason, left_tag, right_tag)) =
+        first_stress_failure
+    {
+        crate::diagnostics::status(
+            "FAIL",
+            "process stress",
+            format_args!(
+                "cycle={cycle} expected={expected} cpu0_reason={left_reason:?} cpu1_reason={right_reason:?} cpu0_tag={left_tag} cpu1_tag={right_tag}"
+            ),
+        );
+    }
     // The mutation must report its deterministic mechanism violation before
     // a stale translation can fail the dependent functional observation.
     report("asid_reuse_requires_invalidation", reuse_invalidation);
