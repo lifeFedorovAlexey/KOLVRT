@@ -216,7 +216,7 @@ The experimental [supervisor](supervision.md) adds a distinct lifecycle checkpoi
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable.",
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64."

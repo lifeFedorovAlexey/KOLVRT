@@ -122,6 +122,12 @@ pub(crate) fn prepare(
 }
 pub(crate) fn execute(prepared: &Prepared, now: u64) -> Result<Action, Failure> {
     let input = &prepared.input;
+    if cfg!(feature = "native-ipc-negative")
+        && input.operation == Operation::Submit
+        && input.id >= 10
+    {
+        return Err(Failure::State(Error::Invalid));
+    }
     if let Some(endpoint) = &prepared.endpoint {
         super::storage::with(endpoint, |state| match input.operation {
             Operation::Submit => state

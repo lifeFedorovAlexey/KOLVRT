@@ -73,7 +73,7 @@ Metric sorting принимает cpu, latency, memory, copies, allocations, con
             "receipt": "research/results/issue48-manifest-queries.json",
             "receipt_sha256": "c4b07aeddc7c6ae61f463ffbeadfb7b2c65d2ee73871dee39fa2eb1d7294514d",
             "scope": "Bounded host declaration/query consistency with synthetic non-executable production-shaped artifacts only; no observed runtime consumers or costs.",
-            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable."
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope."
           },
           {
             "environment": "physical-arm64",

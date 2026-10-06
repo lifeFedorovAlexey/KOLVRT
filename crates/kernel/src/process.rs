@@ -13,6 +13,7 @@ const OWNER_CAPACITY: usize = scheduler::TASKS;
 #[derive(Clone, Copy)]
 pub(crate) enum Origin {
     Bootstrap,
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     El0,
 }
 #[derive(Clone, Copy)]
@@ -28,6 +29,7 @@ pub(crate) struct Spec<'a> {
 }
 #[derive(Clone, Copy, Eq, PartialEq)]
 pub(crate) enum ImageFormat {
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     RawFixture,
     Elf64Aarch64,
 }
@@ -134,6 +136,7 @@ impl Registry {
         }
         let payload = spec.entry == config::USER_PAYLOAD_BASE;
         let (image, image_memory_size, image_pages) = match spec.image_format {
+            #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
             ImageFormat::RawFixture => (
                 spec.image,
                 spec.image.len(),
@@ -277,6 +280,7 @@ impl Registry {
         trace(id, State::Prepared, None);
         Ok(id)
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn bootstrap_grant(
         &mut self,
         id: ProcessId,
@@ -370,6 +374,7 @@ impl Registry {
             }
         }
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn bootstrap_sender(
         &mut self,
         client: ProcessId,
@@ -414,6 +419,7 @@ impl Registry {
             .context
             .gpr[22] = handle.encode();
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn ipc_survivor_input(&mut self, id: ProcessId, handle: kernel_core::handles::Handle) {
         context_contract().expect("IPC survivor bootstrap setup");
         assert_eq!(self.table.state(id), Ok(State::Prepared));
@@ -423,6 +429,7 @@ impl Registry {
             .context
             .gpr[23] = handle.encode();
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn ipc_previous_token_input(&mut self, id: ProcessId, token: u64) {
         context_contract().expect("IPC previous token fixture setup");
         assert_eq!(self.table.state(id), Ok(State::Prepared));
@@ -432,6 +439,7 @@ impl Registry {
             .context
             .gpr[23] = token;
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn ipc_queue_input(&mut self, id: ProcessId, capacity: usize) {
         context_contract().expect("IPC queue bootstrap setup");
         assert_eq!(self.table.state(id), Ok(State::Prepared));
@@ -454,6 +462,7 @@ impl Registry {
         context.gpr[23] = payload as u64;
         context.gpr[24] = kind;
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn ipc_authority_input(
         &mut self,
         id: ProcessId,
@@ -575,6 +584,7 @@ impl Registry {
         context_contract().expect("process inspection owner");
         self.table.live()
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn data_address(&self, id: ProcessId) -> Result<usize, Error> {
         context_contract()?;
         self.table.state(id)?;
@@ -584,6 +594,7 @@ impl Registry {
             .space
             .data_address())
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn asid(&self, id: ProcessId) -> Result<u16, Error> {
         context_contract()?;
         self.table.state(id)?;
@@ -618,11 +629,13 @@ impl Registry {
     }
     /// Internal synchronous completion driver, not a public wait ABI. No default
     /// workload deadline. The future service loop may schedule another dispatch.
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn dispatch(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {
         self.dispatch_inner(timeout, false, false)
     }
     /// Preemptible scheduling step: surviving processes stay Admitted and retain
     /// their full context/accounting. No deadline is used to make dispatch return.
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn step(&mut self) -> scheduler::Completed {
         self.dispatch_inner(None, true, false)
     }
@@ -817,11 +830,13 @@ impl Registry {
             .copy_from_slice(&values);
         Ok(())
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn dispatch_ipc(&mut self, timeout: Option<time::Duration>) -> scheduler::Completed {
         self.dispatch_inner(timeout, false, true)
     }
     /// Trusted bootstrap notification, not an EL0 send API. Identity lookup and
     /// coordinator ownership precede touching the retained event of this generation.
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn signal(&mut self, id: ProcessId) -> Result<bool, Error> {
         context_contract()?;
         if self.table.state(id)? != State::Admitted {
@@ -834,6 +849,7 @@ impl Registry {
         }
         Ok(fresh)
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn blocked(&self, id: ProcessId) -> Result<bool, Error> {
         context_contract()?;
         if self.table.state(id)? != State::Admitted {
@@ -950,6 +966,21 @@ impl Registry {
                 CONTEXT_TERMINATED => Reason::Terminated,
                 _ => panic!("nonterminal process completion"),
             };
+            #[cfg(feature = "native-apps")]
+            crate::event!(
+                "{{\"event\":\"native-process-terminal\",\"slot\":{},\"generation\":{},\"owner\":{},\"state\":{},\"exit_code\":{},\"ipc_blocks\":{},\"ipc_wakes\":{}}}",
+                object.id.slot(),
+                object.id.generation(),
+                object.id.slot() / OWNER_CAPACITY,
+                result.state,
+                if matches!(reason, Reason::Exited(_)) {
+                    result.context.gpr[0]
+                } else {
+                    0
+                },
+                result.ipc_blocks,
+                result.ipc_wakes
+            );
             let detached = scheduler::detached(object.id);
             self.table
                 .complete(object.id, reason, detached)
@@ -970,6 +1001,7 @@ impl Registry {
         context_contract()?;
         self.table.completion(id)
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn validate_completion(&self, completion: Completion) -> Result<(), Error> {
         context_contract()?;
         self.table.validate_completion(completion)

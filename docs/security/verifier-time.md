@@ -65,7 +65,7 @@ The Rust constructor API intentionally changes: callers must provide a clock imp
             "receipt_sha256": "fd273b9171688235813dddb0b7e83492b6a63dbd2f405676588bbe7836c68e67",
             "environment": "host-process",
             "receipt": "research/results/issue71-verifier-time.json",
-            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable.",
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
             "state": "STALE"
           },
           {

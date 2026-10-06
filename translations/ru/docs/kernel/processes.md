@@ -141,6 +141,8 @@ Phase 3.1 не добавила IPC, безопасное копирование
 
 Экспериментальный [supervisor](supervision.md) запрашивает свежие процессы через конечные exact-image/placement/quota grants, связанные с его исполняемой identity. Lifecycle work следует после приобретения native-root checkpoints обоих CPU; blocked peers сохраняют IPC ownership и private frames. Replacement требует current service token и фактического завершения прежнего процесса, сохраняет quotas и отвергает stale bindings. Failed publication откатывает unpublished resources. Ранний bootstrap-only milestone остаётся historical; новый API и [ADR-0026](../architecture-decisions/0026-el0-supervision.md) требуют отдельной semantic/EN-RU acceptance.
 
+Phase 3.7 добавляет отдельный профиль приложений с исходными ELF через существующие trusted Registry и exact-supervisor barrier. Обычные клиенты по-прежнему не имеют create authority; lifecycle_sender выдаёт только SEND к immutable permitted service edge в namespace точного живого клиента. Native application builds исключают raw fixtures и синтетический test variant Origin::El0. Полные ELF bytes поступают в существующий проверяемый loader; ограничения fixtures не определяют будущую архитектуру. См. [native applications](native-applications.md).
+
 <!-- knowledge -->
 
 ```json
@@ -183,7 +185,7 @@ Phase 3.1 не добавила IPC, безопасное копирование
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable.",
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"

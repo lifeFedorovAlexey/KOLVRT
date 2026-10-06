@@ -93,7 +93,7 @@ node scripts/host-survey.cjs validate target/host-survey.local.json
           {
             "receipt_sha256": "cc07b61d771e202ca0ffc7025fd3070a3c27d179c40704618b3dccb51b896beb",
             "state": "STALE",
-            "reason": "Dependency audit extends package.json repository check integration; the immutable issue53 receipt retains prior exact-source bytes. Host-survey semantics are unchanged; refresh synthetic exact-source evidence separately.",
+            "reason": "Phase 3.7 extends package.json with native QEMU correctness commands. The immutable issue53 synthetic receipt retains its earlier exact-source package integration; framework semantics and hardware-collection boundaries are unchanged, and current-source synthetic acceptance is not inferred from that old receipt.",
             "scope": "Synthetic fixtures and shadowed CIM providers only; no actual hardware collection or kernel execution.",
             "receipt": "research/results/issue53-host-survey.json",
             "environment": "host-process"

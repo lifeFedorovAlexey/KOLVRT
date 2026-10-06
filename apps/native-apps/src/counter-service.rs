@@ -26,6 +26,12 @@ pub extern "C" fn native_main(receiver: u64, _feedback: u64, argument: u64) -> !
             native::fault();
         }
         let value = request.and_then(|request| state.apply(request));
+        #[cfg(feature = "reply-negative")]
+        let value = if completed == 3 {
+            value.map(|v| v ^ 1)
+        } else {
+            value
+        };
         let payload = counter_reply(value.map_err(|error| match error {
             Error::Overflow => Error::Overflow,
             _ => Error::Invalid,

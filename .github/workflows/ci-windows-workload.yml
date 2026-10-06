@@ -56,7 +56,7 @@ jobs:
             target/aarch64-unknown-none/
             target/route-tools/debug/
             target/cache-integrity.json
-          key: cargo-v1-${{ runner.os }}-1.99.0-x86_64-msvc-aarch64-${{ inputs.workload }}-${{ inputs.shard }}-${{ hashFiles('Cargo.lock', 'Cargo.toml', 'rust-toolchain.toml', '.cargo/**', 'crates/**', 'assets/branding/boot-logo.txt', 'scripts/**', 'package.json', '.github/workflows/ci-windows-workload.yml') }}
+          key: cargo-v1-${{ runner.os }}-1.99.0-x86_64-msvc-aarch64-${{ inputs.workload }}-${{ inputs.shard }}-${{ hashFiles('Cargo.lock', 'Cargo.toml', 'rust-toolchain.toml', '.cargo/**', 'crates/**', 'apps/**', 'assets/branding/boot-logo.txt', 'scripts/**', 'package.json', '.github/workflows/ci-windows-workload.yml') }}
       - name: Verify restored Git dependency objects
         if: inputs.cached
         shell: pwsh
@@ -73,13 +73,13 @@ jobs:
         run: node scripts/cache-integrity.cjs verify target/cache-integrity.json
       - name: QEMU archive cache
         id: qemu-cache
-        if: inputs.cached && contains(fromJSON('["matrix","routing","asid"]'), inputs.workload)
+        if: inputs.cached && contains(fromJSON('["matrix","routing","asid","native"]'), inputs.workload)
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5 (Node 24)
         with:
           path: .toolchains/qemu/setup.exe
           key: qemu-archive-v1-${{ runner.os }}-10.1.0-${{ hashFiles('scripts/setup-qemu.ps1') }}
       - name: Verified pinned emulator
-        if: contains(fromJSON('["matrix","routing","asid"]'), inputs.workload)
+        if: contains(fromJSON('["matrix","routing","asid","native"]'), inputs.workload)
         shell: pwsh
         run: ./scripts/run-timed.ps1 -Kind tool-setup -Label verified-qemu -Command ./scripts/setup-qemu.ps1
       - name: Install Node dependencies

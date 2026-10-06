@@ -137,7 +137,11 @@ impl Local {
     }
     #[cfg(all(
         feature = "machine-events",
-        any(feature = "boot-payload", feature = "ipc-benchmark")
+        any(
+            feature = "boot-payload",
+            feature = "ipc-benchmark",
+            feature = "native-apps"
+        )
     ))]
     pub fn inspect_reports<R>(
         &self,

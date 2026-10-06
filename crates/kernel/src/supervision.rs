@@ -160,6 +160,7 @@ impl Scope {
                 return [11, 0, 0, 0, 0];
             }
         } else if !cfg!(feature = "supervision-stale-negative")
+            && !cfg!(feature = "native-stale-negative")
             && (token == 0 || token != entry.token)
         {
             return [2, 0, 0, 0, 0];
@@ -193,6 +194,7 @@ impl Scope {
                 }
                 let mut context = Context::ZERO;
                 let image_entry = match entry.grant.image_format {
+                    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
                     ImageFormat::RawFixture => memory::USER_CODE,
                     ImageFormat::Elf64Aarch64 => crate::platform::config::USER_PAYLOAD_BASE,
                 };
@@ -240,6 +242,17 @@ impl Scope {
                 entry.token = fresh;
                 entry.remaining -= 1;
                 registry.start(id).expect("prepared authorized instance");
+                #[cfg(feature = "native-apps")]
+                crate::event!(
+                    "{{\"event\":\"native-image\",\"selector\":{},\"format\":\"{}\",\"generation\":{}}}",
+                    index,
+                    if entry.grant.image_format == ImageFormat::Elf64Aarch64 {
+                        "elf64"
+                    } else {
+                        "raw"
+                    },
+                    id.generation()
+                );
                 entry.instance = Some(Instance {
                     id,
                     endpoint,
@@ -265,15 +278,34 @@ impl Scope {
                 match registry.completion(instance.id) {
                     Err(crate::process::Error::Transition) => [0, 0, 0, 0, 0],
                     Err(_) => [2, 0, 0, 0, 0],
-                    Ok(c) => match c.reason {
-                        Reason::Exited(code) => [0, 1, code, 0, instance.id.generation()],
-                        Reason::Faulted { class, address } => {
-                            [0, 2, class, address as u64, instance.id.generation()]
+                    Ok(c) => {
+                        #[cfg(feature = "native-apps")]
+                        {
+                            let (kind, code) = match c.reason {
+                                Reason::Exited(code) => ("exit", code),
+                                Reason::Faulted { class, .. } => ("fault", class),
+                                Reason::Terminated => ("terminated", 0),
+                                Reason::BudgetExpired => ("budget", 0),
+                                Reason::CreationFailed(_) => ("creation", 0),
+                            };
+                            crate::event!(
+                                "{{\"event\":\"native-completion\",\"selector\":{},\"generation\":{},\"kind\":\"{}\",\"code\":{}}}",
+                                index,
+                                instance.id.generation(),
+                                kind,
+                                code
+                            );
                         }
-                        Reason::Terminated => [0, 3, 0, 0, instance.id.generation()],
-                        Reason::BudgetExpired => [0, 4, 0, 0, instance.id.generation()],
-                        Reason::CreationFailed(_) => [2, 0, 0, 0, 0],
-                    },
+                        match c.reason {
+                            Reason::Exited(code) => [0, 1, code, 0, instance.id.generation()],
+                            Reason::Faulted { class, address } => {
+                                [0, 2, class, address as u64, instance.id.generation()]
+                            }
+                            Reason::Terminated => [0, 3, 0, 0, instance.id.generation()],
+                            Reason::BudgetExpired => [0, 4, 0, 0, instance.id.generation()],
+                            Reason::CreationFailed(_) => [2, 0, 0, 0, 0],
+                        }
+                    }
                 }
             }
             4 => {
@@ -309,7 +341,16 @@ impl Scope {
         if token == 0 || token != entry.token {
             return [2, 0, 0, 0, 0];
         }
-        let Some(target) = entry.grant.send_to else {
+        let Some(target) =
+            entry
+                .grant
+                .send_to
+                .or(if cfg!(feature = "native-auth-negative") && client == 2 {
+                    Some(0)
+                } else {
+                    None
+                })
+        else {
             return [11, 0, 0, 0, 0];
         };
         let Some(client_id) = entry.instance.as_ref().map(|instance| instance.id) else {
@@ -328,7 +369,12 @@ impl Scope {
         if registry.state(instance.id) != Ok(State::Admitted) {
             return [2, 0, 0, 0, 0];
         }
-        let Ok(endpoint) = instance.endpoint.try_clone() else {
+        let Ok(endpoint) = (if cfg!(feature = "native-binding-negative") {
+            &instance.feedback
+        } else {
+            &instance.endpoint
+        })
+        .try_clone() else {
             return [12, 0, 0, 0, 0];
         };
         // Only a sender previously minted by this exact grant may be closed.

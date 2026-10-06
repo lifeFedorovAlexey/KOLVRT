@@ -1,4 +1,5 @@
 mod matrix;
+mod native_apps;
 mod output;
 #[cfg(feature = "route-tools")]
 mod routing_demo;
@@ -519,6 +520,10 @@ fn run() -> Result<()> {
                 .args(&args[1..]).status()?;
             if status.success() { Ok(()) } else { Err("repository tooling command failed".into()) }
         }
+        Some("app-smoke") => native_apps::smoke(&args[1..]),
+        Some("selftest") => native_apps::selftest(&args[1..]),
+        Some("service-run") => native_apps::runtime(&args[1..]),
+        Some("native-controls") => native_apps::controls(&args[1..]),
         Some("audit") => audit(),
         Some("ipc-controls") if args.len() == 1 => matrix::run_ipc(),
         Some("matrix-plan") if args.len() == 1 => {
@@ -633,7 +638,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask test [--record LABEL] | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | native-controls [--prod] | test [--record LABEL] | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
@@ -696,6 +701,16 @@ fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
     Ok(())
 }
 fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<PathBuf> {
+    build_mode(prod, tests, extra, machine, 0, None)
+}
+fn build_mode(
+    prod: bool,
+    tests: bool,
+    extra: Option<&str>,
+    machine: bool,
+    argument: u64,
+    native_images: Option<&[PathBuf; 3]>,
+) -> Result<PathBuf> {
     let mut c = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()));
     c.args([
         "build",
@@ -727,6 +742,24 @@ fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<
                 fs::canonicalize("target/kernel/payload.bin")?,
             );
         }
+    }
+    if extra.is_some_and(|f| f.split(',').any(|part| part == "native-apps")) {
+        c.env_remove("CARGO_TARGET_DIR");
+        let images = native_images.ok_or("native build requires immutable original ELF inputs")?;
+        for (index, (name, _role)) in [
+            ("KOLVRT_NATIVE_ROOT_ELF", "root"),
+            ("KOLVRT_NATIVE_SERVICE_ELF", "service"),
+            ("KOLVRT_NATIVE_CLIENT_ELF", "client"),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            c.env(name, fs::canonicalize(&images[index])?);
+        }
+        c.env("KOLVRT_NATIVE_ARGUMENT", argument.to_string()).env(
+            "KOLVRT_NATIVE_WATCHDOG_MS",
+            if argument == 1 { "0" } else { "20000" },
+        );
     }
     if !features.is_empty() {
         c.args(["--features", &features.join(",")]);
@@ -884,6 +917,19 @@ fn execute_mode(
     payload: bool,
     show_console: bool,
 ) -> Result<()> {
+    execute_validated(elf, tests, machine, payload, show_console, false)
+}
+fn execute_native(elf: &Path) -> Result<()> {
+    execute_validated(elf, false, true, false, true, true)
+}
+fn execute_validated(
+    elf: &Path,
+    tests: bool,
+    machine: bool,
+    payload: bool,
+    show_console: bool,
+    native: bool,
+) -> Result<()> {
     let log = elf.with_extension("log");
     let err = elf.with_extension("stderr");
     // Never leave an earlier run's successful evidence beside a failed/human run.
@@ -950,7 +996,11 @@ fn execute_mode(
         })
         .cloned()
         .collect();
-    output::validate(&native_events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
+    if native {
+        native_apps::validate(&native_events)?;
+    } else {
+        output::validate(&native_events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
+    }
 
     Ok(())
 }
@@ -968,6 +1018,7 @@ fn walk(path: &Path, out: &mut Vec<PathBuf>) -> Result<()> {
 fn source_inventory() -> Result<Value> {
     let mut files = Vec::new();
     for directory in [
+        "apps",
         "crates/kernel",
         "crates/kernel-core",
         "crates/xtask",

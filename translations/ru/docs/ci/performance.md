@@ -71,6 +71,8 @@ PR feedback при прогретом кэше менее десяти мину�
 
 [Английский оригинал](../../../../docs/ci/performance.md)
 
+Обязательный native workload отдельно запускает DEV/PROD guest Clippy, L1 и четыре standalone ELF selftests, четырнадцать точных native controls, отдельный app smoke и наблюдение persistent runtime. Неизменяемые ELF inputs с digest предотвращают попадание кэшированной повреждённой image из control в последующие builds. Этот workload отделён от неизменного foundation inventory из 142 задач, входит в итоговый foundation gate и пропускается только по тому же проверенному host-only waiver. Apps включены в compiled-cache source key; emulator observations всегда выполняются заново.
+
 <!-- knowledge -->
 
 ```json
@@ -89,7 +91,7 @@ PR feedback при прогретом кэше менее десяти мину�
       "tags": ["ci", "timing", "cache", "tooling"],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending.",
+        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim.",
         "sources": [
           ".github/workflows/kernel.yml",
           ".github/workflows/dependencies.yml",
@@ -127,7 +129,7 @@ PR feedback при прогретом кэше менее десяти мину�
           {
             "environment": "github-actions",
             "state": "UNKNOWN",
-            "reason": "The reporting workflow has not run on GitHub; local fixture tests cannot establish runner measurements."
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope."
           }
         ],
         "readiness": "NOT_READY",

@@ -141,6 +141,8 @@ Explicit authorized termination now has its own `Reason::Terminated`; `BudgetExp
 
 The experimental [supervisor](supervision.md) requests fresh processes through finite exact-image/placement/quota grants bound to its executing identity. Lifecycle work follows acquired native-root checkpoints on both CPUs; blocked peers retain IPC ownership and private frames. Replacement requires the current service token and actual old completion, preserving quotas and rejecting stale bindings. Failed publication rolls back unpublished resources. The earlier bootstrap-only milestone remains historical; the new API and [ADR-0026](../architecture-decisions/0026-el0-supervision.md) require separate semantic/EN-RU acceptance.
 
+Phase 3.7 adds a separately scoped original-ELF application profile through the existing trusted Registry and exact-supervisor barrier. Ordinary clients still have no create authority; lifecycle_sender mints only SEND to the immutable permitted service edge in the exact live client namespace. Native application builds exclude raw fixtures and the synthetic Origin::El0 test variant. Full ELF bytes reach the existing validated loader; fixture restrictions do not become authority over future architectures. See [native applications](native-applications.md).
+
 <!-- knowledge -->
 
 ```json
@@ -183,7 +185,7 @@ The experimental [supervisor](supervision.md) requests fresh processes through f
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable.",
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"

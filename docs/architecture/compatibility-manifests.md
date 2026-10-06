@@ -114,7 +114,7 @@ Remaining #47 gates include reviewed production module/debt/consumer data when a
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable.",
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
             "state": "STALE",
             "receipt": "research/results/issue47-compatibility-manifests.json",
             "receipt_sha256": "95766b2a15e17e5d3324ff9692e3f4c7ec2725e6971c0af8b249e1cfc113decb",

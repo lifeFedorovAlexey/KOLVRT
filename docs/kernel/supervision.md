@@ -70,6 +70,8 @@ Sources: [lifecycle mechanism](../../crates/kernel/src/supervision.rs), [EL0 ima
 
 Current main after #126 contains 142 tasks and 138 controls from one shared serial/four-shard inventory. Publication failure fabricates no success: resources remain retained until acquired quiescence. Fresh verification is scoped to this exact source set; historical inventories are not rewritten. Performance and readiness remain separate from functional acceptance.
 
+Phase 3.7 extends the mechanism with immutable image-format grants and operation 6 for one finite client SEND edge. Initialized x0=6, x1=client selector, x2=exact client token, x3=exact destination token, x4=1 are processed only for the captured supervisor at acquired quiescence. Success returns status, caller-local client SEND handle, target token and client generation; it replaces only the previous sender minted by that entry. Stale tokens, dead clients/targets and absent edges are denied. This original-ELF profile is described in [native applications](native-applications.md); the older Phase 3.6 fixture limits and historical receipts retain their original scope.
+
 <!-- knowledge -->
 
 ```json
@@ -129,7 +131,7 @@ Current main after #126 contains 142 tasks and 138 controls from one shared seri
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 immutable ELF grants/client SEND binding or workspace inputs changed; matching-source verification must be refreshed. Historical receipts remain immutable.",
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

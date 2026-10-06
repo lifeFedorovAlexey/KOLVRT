@@ -11,6 +11,8 @@ pub const ACTIVE_CPUS: usize = 2;
 pub const PHYSICAL_TIMER_IRQ: u32 = 30;
 // First EL0 foundation workload: fixed affinity, four independent processes per CPU.
 pub const USER_PROCESSES_PER_CPU: usize = 4;
+// Legacy fixture/host-validation count; native application mode does not consume it.
+#[allow(dead_code)]
 pub const USER_PROCESSES: usize = ACTIVE_CPUS * USER_PROCESSES_PER_CPU;
 // Static image/stack budgets for the pinned boot supervisor, not native ABI limits.
 pub const USER_PAYLOAD_BASE: usize = 0x2004_0000;

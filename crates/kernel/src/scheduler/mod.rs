@@ -25,18 +25,30 @@ pub(crate) struct Completed {
     pub owners_released: bool,
     #[cfg(all(
         feature = "machine-events",
-        any(feature = "boot-payload", feature = "ipc-benchmark")
+        any(
+            feature = "boot-payload",
+            feature = "ipc-benchmark",
+            feature = "native-apps"
+        )
     ))]
     generation: u64,
 }
 #[cfg(all(
     feature = "machine-events",
-    any(feature = "boot-payload", feature = "ipc-benchmark")
+    any(
+        feature = "boot-payload",
+        feature = "ipc-benchmark",
+        feature = "native-apps"
+    )
 ))]
 pub(crate) const REPORT_CHUNK_WORDS: usize = 64;
 #[cfg(all(
     feature = "machine-events",
-    any(feature = "boot-payload", feature = "ipc-benchmark")
+    any(
+        feature = "boot-payload",
+        feature = "ipc-benchmark",
+        feature = "native-apps"
+    )
 ))]
 impl Completed {
     pub fn report_chunk(&self, id: usize, offset: usize) -> ([u64; REPORT_CHUNK_WORDS], usize) {
@@ -350,7 +362,11 @@ fn dispatch_inner(
         owners_released,
         #[cfg(all(
             feature = "machine-events",
-            any(feature = "boot-payload", feature = "ipc-benchmark")
+            any(
+                feature = "boot-payload",
+                feature = "ipc-benchmark",
+                feature = "native-apps"
+            )
         ))]
         generation,
     };

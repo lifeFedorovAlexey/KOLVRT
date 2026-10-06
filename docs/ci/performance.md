@@ -71,6 +71,8 @@ Warm PR feedback below ten minutes and cold CI below fifteen minutes remain acce
 
 [Russian translation](../../translations/ru/docs/ci/performance.md)
 
+The mandatory native workload independently runs DEV/PROD guest Clippy, L1 plus four standalone ELF selftests, fourteen precise native controls, separate app smoke and persistent-runtime observations. Its immutable ELF digest inputs prevent cached malformed-image controls from contaminating subsequent builds. This workload is separate from the unchanged 142-task foundation inventory, participates in the final foundation gate and is skipped only under the same validated host-only waiver. Apps enter the compiled-cache source key; emulator observations are always executed again.
+
 <!-- knowledge -->
 
 ```json
@@ -89,7 +91,7 @@ Warm PR feedback below ten minutes and cold CI below fifteen minutes remain acce
       "tags": ["ci", "timing", "cache", "tooling"],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending.",
+        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim. Phase 3.7 adds a mandatory separate native workload for guest lint, L1/four ELF selftests, fourteen controls, standalone smoke and persistent-runtime observation; this is correctness integration, not a new CI speed acceptance claim.",
         "sources": [
           ".github/workflows/kernel.yml",
           ".github/workflows/dependencies.yml",
@@ -127,7 +129,7 @@ Warm PR feedback below ten minutes and cold CI below fifteen minutes remain acce
           {
             "environment": "github-actions",
             "state": "UNKNOWN",
-            "reason": "The reporting workflow has not run on GitHub; local fixture tests cannot establish runner measurements."
+            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope."
           }
         ],
         "readiness": "NOT_READY",
