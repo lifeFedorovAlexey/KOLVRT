@@ -378,11 +378,13 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 **Rationale:** Passing a test is evidence only when the implementation satisfies the intended contract and the test measures it honestly. A fabricated observation or implementation adapted solely to the expected result destroys that evidence.
 
+**Historical evidence:** [KOL-PATH-0008](../../research/cases/KOL-PATH-0008.json) illustrates repairing a demonstrated constructor invariant violation while preserving the useful transfer mechanism. It does not establish test isolation; that obligation records the explicit Phase 3.7 architectural decision.
+
 **Prevents:** False-positive tests, test-induced production behavior, hidden fault-injection APIs and performance sacrificed for green checks.
 
 **Allowed exceptions:** No implicit exceptions. Correcting an independently demonstrated implementation defect is permitted and must retain the evidence establishing the defect; test expectations alone are insufficient justification.
 
-**Enforcement:** Review implementation changes against the contract before interpreting test results. Keep diagnostic/fault injection in isolated test builds, verify production artifacts contain no injected behavior and record why a code or test correction is necessary.
+**Enforcement:** UNIT and INTEGRATION import the single production implementation. E2E uses the actual kernel and applications; an external harness runs the scenario through public interfaces. A separate ELF is allowed only for a necessary external ABI/syscall client without a production counterpart. Production implementation copies and source-copy mutations are forbidden, including isolated builds.
 
 **Testing:** Reject injected false success and unrelated failure; verify negative controls detect the selected real defect and positive execution uses unmodified production behavior.
 

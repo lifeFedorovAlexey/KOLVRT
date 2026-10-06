@@ -467,6 +467,13 @@ name = "native-protocol-model"
 version = "0.1.0"
 
 [[package]]
+name = "native-selftests"
+version = "0.1.0"
+dependencies = [
+ "native-userspace",
+]
+
+[[package]]
 name = "native-state-models"
 version = "0.1.0"
 dependencies = [

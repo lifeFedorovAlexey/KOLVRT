@@ -11,18 +11,10 @@ native-userspace = { path = "../native-runtime" }
 [features]
 default = []
 guest = []
-reply-negative = ["guest"]
 
 [[bin]]
 name = "counter-service"
 path = "src/counter-service.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
-name = "smoke-client"
-path = "selftests/smoke-client.rs"
 required-features = ["guest"]
 test = false
 bench = false
@@ -35,50 +27,8 @@ test = false
 bench = false
 
 [[bin]]
-name = "selftest-process"
-path = "selftests/selftest-process.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
-name = "selftest-ipc"
-path = "selftests/selftest-ipc.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
-name = "selftest-service"
-path = "selftests/selftest-service.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
-name = "selftest-elf"
-path = "selftests/selftest-elf.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
 name = "counter-client"
 path = "src/counter-client.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
-name = "selftest-counter-service"
-path = "selftests/counter-service.rs"
-required-features = ["guest"]
-test = false
-bench = false
-
-[[bin]]
-name = "selftest-supervisor"
-path = "selftests/supervisor.rs"
 required-features = ["guest"]
 test = false
 bench = false

@@ -65,7 +65,7 @@ Rust API конструктора намеренно меняется: вызы�
             "receipt_sha256": "fd273b9171688235813dddb0b7e83492b6a63dbd2f405676588bbe7836c68e67",
             "environment": "host-process",
             "receipt": "research/results/issue71-verifier-time.json",
-            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "state": "STALE"
           },
           {

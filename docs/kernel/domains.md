@@ -125,7 +125,7 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"

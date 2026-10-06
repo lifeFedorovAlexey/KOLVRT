@@ -56,7 +56,7 @@ jobs:
             target/aarch64-unknown-none/
             target/route-tools/debug/
             target/cache-integrity.json
-          key: cargo-v1-${{ runner.os }}-1.99.0-x86_64-msvc-aarch64-${{ inputs.workload }}-${{ inputs.shard }}-${{ hashFiles('Cargo.lock', 'Cargo.toml', 'rust-toolchain.toml', '.cargo/**', 'crates/**', 'apps/**', 'assets/branding/boot-logo.txt', 'scripts/**', 'package.json', '.github/workflows/ci-windows-workload.yml') }}
+          key: cargo-v1-${{ runner.os }}-1.99.0-x86_64-msvc-aarch64-${{ inputs.workload }}-${{ inputs.shard }}-${{ hashFiles('Cargo.lock', 'Cargo.toml', 'rust-toolchain.toml', '.cargo/**', 'crates/**', 'apps/**', 'tests/native-apps/**', 'assets/branding/boot-logo.txt', 'scripts/**', 'package.json', '.github/workflows/ci-windows-workload.yml') }}
       - name: Verify restored Git dependency objects
         if: inputs.cached
         shell: pwsh

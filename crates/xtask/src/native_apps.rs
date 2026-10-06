@@ -78,7 +78,7 @@ pub fn validate(events: &[Value]) -> Result<Value> {
 }
 
 pub fn smoke(args: &[String]) -> Result<()> {
-    run_suite(args, "smoke-client", 0)
+    run_suite(args, "counter-client", 1)
 }
 pub fn runtime(args: &[String]) -> Result<()> {
     run_suite(args, "counter-client", 1)
@@ -101,31 +101,14 @@ pub fn selftest(args: &[String]) -> Result<()> {
     if !status.success() {
         return Err("L1 component tests failed".into());
     }
-    for (binary, mode) in [
-        ("selftest-process", 2),
-        ("selftest-ipc", 3),
-        ("selftest-service", 4),
-        ("selftest-elf", 5),
-    ] {
-        run_suite(args, binary, mode)?;
+    for binary in ["counter-client", "selftest-abi-client"] {
+        run_suite(args, binary, 1)?;
     }
     controls(args)?;
     Ok(())
 }
-pub fn controls(args: &[String]) -> Result<()> {
-    for control in ["elf", "auth", "stale", "binding", "reply", "ipc", "reclaim"] {
-        run_mode(
-            args,
-            if control == "auth" {
-                "selftest-ipc"
-            } else {
-                "smoke-client"
-            },
-            if control == "auth" { 3 } else { 0 },
-            Some(control),
-        )?;
-    }
-    Ok(())
+pub fn controls(_args: &[String]) -> Result<()> {
+    Err("source-copy controls removed; production-interface restart/stale/reply/resource scenarios are pending, so full Phase 3.7 acceptance has not passed".into())
 }
 fn run_suite(args: &[String], client_binary: &str, mode: u64) -> Result<()> {
     run_mode(args, client_binary, mode, None)
@@ -160,15 +143,14 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
                 "-p",
                 "native-apps",
                 "--features",
-                if control == Some("reply") {
-                    "guest,reply-negative"
-                } else {
-                    "guest"
-                },
+                "guest",
                 "--target",
                 "aarch64-unknown-none",
             ])
             .env_remove("CARGO_TARGET_DIR");
+        if client_binary.starts_with("selftest-") {
+            guest.args(["-p", "native-selftests"]);
+        }
         if prod {
             guest.arg("--release");
         }
@@ -178,22 +160,8 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
         let mut apps = serde_json::Map::new();
         let mut images = Vec::new();
         for (role, binary) in [
-            (
-                "root",
-                if mode == 1 {
-                    "native-supervisor"
-                } else {
-                    "selftest-supervisor"
-                },
-            ),
-            (
-                "service",
-                if mode == 1 {
-                    "counter-service"
-                } else {
-                    "selftest-counter-service"
-                },
-            ),
+            ("root", "native-supervisor"),
+            ("service", "counter-service"),
             ("client", client_binary),
         ] {
             let original = PathBuf::from(format!(

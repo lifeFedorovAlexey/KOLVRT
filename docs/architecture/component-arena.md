@@ -169,7 +169,7 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the s
           {
             "environment": "host-process",
             "state": "STALE",
-            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be"

@@ -106,7 +106,7 @@ Issue #109 adds an integrity-checked pinned cargo-deny 0.19.9 tool cache and man
           {
             "environment": "host-process",
             "state": "STALE",
-            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
             "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f"

@@ -16,6 +16,8 @@ switch ($Workload) {
     'native' {
         Invoke-Check 'cargo-clippy' 'native-guests-dev' 'cargo' @('clippy', '--locked', '-p', 'native-apps', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--', '-D', 'warnings')
         Invoke-Check 'cargo-clippy' 'native-guests-prod' 'cargo' @('clippy', '--locked', '-p', 'native-apps', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--release', '--', '-D', 'warnings')
+        Invoke-Check 'cargo-clippy' 'native-selftests-dev' 'cargo' @('clippy', '--locked', '-p', 'native-selftests', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--', '-D', 'warnings')
+        Invoke-Check 'cargo-clippy' 'native-selftests-prod' 'cargo' @('clippy', '--locked', '-p', 'native-selftests', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--release', '--', '-D', 'warnings')
         Invoke-Check 'matrix' 'native-selftest' 'cargo' @('xtask', 'selftest')
         Invoke-Check 'matrix' 'native-app-smoke' 'cargo' @('xtask', 'app-smoke')
         Invoke-Check 'matrix' 'native-persistent-runtime' 'cargo' @('xtask', 'service-run')

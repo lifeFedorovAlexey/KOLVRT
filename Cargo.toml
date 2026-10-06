@@ -1,5 +1,5 @@
 [workspace]
-members = ["apps/native-runtime", "apps/native-apps", "crates/repository-checks", "crates/native-protocol-model", "crates/native-state-models", "crates/kernel-core", "crates/kernel", "crates/xtask", "crates/routing", "crates/routing-demo", "crates/window-compat", "crates/migration-advisor", "crates/host-process-metrics", "crates/migration-workbench"]
+members = ["tests/native-apps", "apps/native-runtime", "apps/native-apps", "crates/repository-checks", "crates/native-protocol-model", "crates/native-state-models", "crates/kernel-core", "crates/kernel", "crates/xtask", "crates/routing", "crates/routing-demo", "crates/window-compat", "crates/migration-advisor", "crates/host-process-metrics", "crates/migration-workbench"]
 default-members = ["apps/native-runtime", "apps/native-apps", "crates/repository-checks", "crates/native-protocol-model", "crates/native-state-models", "crates/kernel-core", "crates/xtask", "crates/routing", "crates/routing-demo", "crates/window-compat", "crates/migration-advisor", "crates/host-process-metrics", "crates/migration-workbench"]
 resolver = "3"
 

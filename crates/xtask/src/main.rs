@@ -1,5 +1,3 @@
-#[path = "test_support/isolated_build.rs"]
-mod isolated_build;
 mod matrix;
 mod native_apps;
 mod output;
@@ -771,13 +769,6 @@ fn build_mode(
     if !features.is_empty() {
         c.args(["--features", &features.join(",")]);
     }
-    let isolated = if extra.is_some_and(isolated_build::supports) {
-        let path = isolated_build::tree(extra.unwrap(), prod)?;
-        c.current_dir(&path).env_remove("CARGO_TARGET_DIR");
-        Some(path)
-    } else {
-        None
-    };
     let observation = timing::Observation::start("cargo-build", format!("{c:?}"));
     let status = c.status();
     observation.finish(if status.as_ref().is_ok_and(|status| status.success()) {
@@ -798,9 +789,7 @@ fn build_mode(
         extra.unwrap_or(if tests { "tests" } else { "boot" })
     );
     let dest = PathBuf::from(format!("target/kernel/{name}.elf"));
-    let source = isolated
-        .as_ref()
-        .map_or_else(|| PathBuf::from(&source), |tree| tree.join(&source));
+    let source = PathBuf::from(&source);
     fs::copy(source, &dest)?;
     let bytes = fs::read(&dest)?;
     let u16at = |o: usize| {
@@ -1036,6 +1025,7 @@ fn source_inventory() -> Result<Value> {
     let mut files = Vec::new();
     for directory in [
         "apps",
+        "tests/native-apps",
         "crates/kernel",
         "crates/kernel-core",
         "crates/xtask",

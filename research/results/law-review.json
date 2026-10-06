@@ -12,6 +12,11 @@
     {
       "id": "LAW-043",
       "reason": "Cross-subsystem publication and shutdown require dependency ordering beyond individual object lifetimes."
+    },
+    {
+      "id": "LAW-044",
+      "reason": "User-directed architectural rule: tests validate independently justified contracts; production contains no test fault injection or false-pass adaptations.",
+      "reason_ru": "Архитектурное правило по прямому указанию пользователя: тесты проверяют независимо обоснованные контракты; production не содержит внедрений тестовых сбоев и подгонки ради ложного прохождения."
     }
   ],
   "previous_ids": [

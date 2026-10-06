@@ -1,0 +1,28 @@
+[package]
+name = "native-selftests"
+version = "0.1.0"
+edition = "2024"
+publish = false
+autobins = false
+build = "build.rs"
+
+[dependencies]
+native-userspace = { path = "../../apps/native-runtime" }
+
+[features]
+default = []
+guest = []
+
+[[bin]]
+name = "selftest-abi-client"
+path = "src/abi-client.rs"
+required-features = ["guest"]
+test = false
+bench = false
+
+[[bin]]
+name = "selftest-fault-client"
+path = "src/fault-client.rs"
+required-features = ["guest"]
+test = false
+bench = false
