@@ -2602,7 +2602,7 @@
     "crates/kernel-core/src/wait.rs": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
-    "crates/kernel/Cargo.toml": "72e8aa4fd0e4919e165bd93f9d4d5450e9e550afc2a66f1f3327afe3d802451e",
+    "crates/kernel/Cargo.toml": "0e63c1f68df2f86325eb2908e2e621783e4e8ef648e6ac367a9e418af0ce2e1d",
     "crates/kernel/build.rs": "57afe17f2335680941554dcc379b1b4827540194992c62c4ddef241d0a28ce11",
     "crates/kernel/src/arch/aarch64/context.rs": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c",
     "crates/kernel/src/arch/aarch64/entry.S": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c",
