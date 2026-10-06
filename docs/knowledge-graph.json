@@ -2730,7 +2730,7 @@
     "docs/kernel/handles.md": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "ad09129f11996560c78ed63c6a663c29b3d151552ed5dc58c76f4794d5eac299",
-    "docs/kernel/native-applications.md": "6ce3cd3f7341354d2fa2955abb21e8b0d0c11bd0268d1b9bd135ba5322bc1758",
+    "docs/kernel/native-applications.md": "35fac18c820bf8016ff8bf892ba26a9b5074bcc644874cfd5d141cfea4889422",
     "docs/kernel/processes.md": "be75f579f58fb581792f4cb51c5e415201c0875e6226f43c3ba75585374be632",
     "docs/kernel/scheduler.md": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
     "docs/kernel/supervision.md": "276e39e85e645939298a01257cb545cc57af30ddaf34b7f88ef85e4557d92ab7",
@@ -2823,7 +2823,7 @@
     "tests/native-apps/src/abi_steps.rs": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7",
     "tests/native-apps/src/lifecycle-client.rs": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677",
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
-    "translations/manifest.json": "0aaa8935de2dad659879b494ed13add0aa751ac63ab03f2809c55e56e2c98a9d",
+    "translations/manifest.json": "2670cf23c1372cb8c6b6bcc0a51aaad351a8c99ed8cc0c1d21bf14395b10b961",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2870,7 +2870,7 @@
     "translations/ru/docs/kernel/handles.md": "f3f66f391e13a75665c351c505ec0eef51b0176afab84a20bb08a36e30804c37",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "ad46a77f458d0f6569a6dfed065ae1253765d5825285665dd58561c7670293ce",
-    "translations/ru/docs/kernel/native-applications.md": "43adccbdd5d5c5ed51ffb2fff20b7c433ca680c693451682841e56aa8e8c08fe",
+    "translations/ru/docs/kernel/native-applications.md": "1e9ae6d9dad2e4fa15971eb4f39ba353e850f624b1db7666d8c94c85f8e3d891",
     "translations/ru/docs/kernel/processes.md": "b3e7b05910a6bd660aefe804e8bc7697524d0561b4deb12fd56afe08f05fa136",
     "translations/ru/docs/kernel/scheduler.md": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
     "translations/ru/docs/kernel/supervision.md": "4ef58f8855bb2e561ff54bfb7919d169905fd0eb10bb3fa9786bd4089024193e",
@@ -5635,7 +5635,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 17302,
+      "estimated_bytes": 16487,
       "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5651,13 +5651,13 @@
         "en": {
           "end": 194,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "6ce3cd3f7341354d2fa2955abb21e8b0d0c11bd0268d1b9bd135ba5322bc1758",
+          "sha256": "35fac18c820bf8016ff8bf892ba26a9b5074bcc644874cfd5d141cfea4889422",
           "start": 1
         },
         "ru": {
           "end": 194,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "43adccbdd5d5c5ed51ffb2fff20b7c433ca680c693451682841e56aa8e8c08fe",
+          "sha256": "1e9ae6d9dad2e4fa15971eb4f39ba353e850f624b1db7666d8c94c85f8e3d891",
           "start": 1
         }
       },
@@ -6219,13 +6219,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "6ce3cd3f7341354d2fa2955abb21e8b0d0c11bd0268d1b9bd135ba5322bc1758",
+          "sha256": "35fac18c820bf8016ff8bf892ba26a9b5074bcc644874cfd5d141cfea4889422",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "43adccbdd5d5c5ed51ffb2fff20b7c433ca680c693451682841e56aa8e8c08fe",
+          "sha256": "1e9ae6d9dad2e4fa15971eb4f39ba353e850f624b1db7666d8c94c85f8e3d891",
           "start": 7
         }
       },
