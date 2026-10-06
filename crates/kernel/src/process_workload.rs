@@ -212,13 +212,22 @@ pub fn exercise(
         && registry.validate_completion(old_completion) == Err(Error::Stale);
     registry.start(new).unwrap();
     registry.dispatch(Some(VERIFY_TIMEOUT));
-    report(
-        "process_slot_generation_reuse",
-        generation_ok
-            && distinct_backing
-            && registry.completion(new).unwrap().reason == Reason::Exited(NEW_EXIT_CODE)
-            && tag(registry, new) == NEW_EXIT_CODE,
-    );
+    let new_reason = registry.completion(new).unwrap().reason;
+    let new_tag = tag(registry, new);
+    let reuse_ok = generation_ok
+        && distinct_backing
+        && new_reason == Reason::Exited(NEW_EXIT_CODE)
+        && new_tag == NEW_EXIT_CODE;
+    if !reuse_ok {
+        crate::diagnostics::status(
+            "FAIL",
+            "process reuse",
+            format_args!(
+                "generation_ok={generation_ok} distinct_backing={distinct_backing} expected={NEW_EXIT_CODE} reason={new_reason:?} tag={new_tag}"
+            ),
+        );
+    }
+    report("process_slot_generation_reuse", reuse_ok);
     #[cfg(feature = "kernel-tests")]
     assert_eq!(
         registry.repeat_completion(new),

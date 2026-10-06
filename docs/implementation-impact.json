@@ -26,9 +26,9 @@
     {
       "path": "crates/kernel/src/arch/aarch64/mod.rs",
       "disposition": "existing-feature",
-      "reason": "Preserve compiler memory ordering at DAIF mask/unmask boundaries; timer failure remains strict and is diagnosed with read-only local timer/GIC state.",
+      "reason": "Close the one-shot IRQ condition-to-WFI lost wakeup with masked observations and masked wait/service; complete preceding accesses before WFI; exercise both native entry modes through 32 actual deliveries and deterministic host interleavings. No timer deadline or expected witness is relaxed.",
       "before_sha256_lf": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc",
-      "after_sha256_lf": "cf4b8e1c9216c750905e46975ad45e34d72fcf9bdd855599fd3a711bc51a18ef"
+      "after_sha256_lf": "e30cf0ebb626505693860e5e4b44a422c40a649fe8f2fed22aa9fc4f79374b24"
     },
     {
       "path": "crates/kernel/src/main.rs",
@@ -49,7 +49,7 @@
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison.",
       "before_sha256_lf": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
-      "after_sha256_lf": "943c9765a08626827a8f335de018f04465e103ff7a782da155cd7e410be671e2"
+      "after_sha256_lf": "95b506548715e08690c759188049e0778a6d0f422e24848decbe9f4ceac60350"
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
@@ -97,15 +97,15 @@
       "path": "crates/kernel/src/test_support/irq_wait.rs",
       "before_sha256_lf": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
       "disposition": "existing-feature",
-      "reason": "Idle the actual IRQ fixture instead of continuously spinning; preserve delivery-first finalization and bounded no-delivery/spurious-wake rejection with the external QEMU watchdog.",
-      "after_sha256_lf": "e694bda59ba6fdaeaefd661fc8814711599efc025da2dd8d4a5210cb24cf8dba"
+      "reason": "Close the one-shot IRQ condition-to-WFI lost wakeup with masked observations and masked wait/service; complete preceding accesses before WFI; exercise both native entry modes through 32 actual deliveries and deterministic host interleavings. No timer deadline or expected witness is relaxed.",
+      "after_sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
     },
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
-      "after_sha256_lf": "557312ab9167b74e12b162e136f6371b8c71fa89794b6db786807e6cfc63b6d7",
+      "after_sha256_lf": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
       "disposition": "existing-feature",
-      "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
+      "reason": "Close the one-shot IRQ condition-to-WFI lost wakeup with masked observations and masked wait/service; complete preceding accesses before WFI; exercise both native entry modes through 32 actual deliveries and deterministic host interleavings. No timer deadline or expected witness is relaxed."
     },
     {
       "path": "crates/xtask/src/main.rs",

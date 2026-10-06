@@ -64,16 +64,8 @@ fn wait_irq(d: &Description) -> bool {
     let delivered = irq_wait::wait_for_delivery(
         || interrupt::delivered().load(Ordering::Acquire) > 0,
         || cpu::ticks() >= end,
-        || {
-            assert!(!cpu::irq_masked());
-            // SAFETY: INV-PROBE: native root/stack; IRQ only records delivery,
-            // no scheduler/object/copy permit or allocation spans the wait.
-            // A missing source is still bounded by the external QEMU watchdog.
-            unsafe {
-                core::arch::asm!("wfi", options(nostack));
-            }
-        },
         cpu::mask,
+        cpu::ipc_idle,
     );
     if !delivered {
         let timer_control: u64;
@@ -547,11 +539,27 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
     cpu::unmask();
     let delivered = wait_irq(d);
     report("interrupt_delivery", delivered);
-    interrupt::delivered().store(0, Ordering::Release);
-    cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));
-    cpu::unmask();
-    let delivered = wait_irq(d);
-    report("timer_rearm", delivered);
+    // Repeated one-shot delivery covers IRQ pending before the masked wait
+    // and an initially unmasked caller. Only the IRQ handler supplies success.
+    let mut rearmed = true;
+    for cycle in 0..32 {
+        cpu::mask();
+        interrupt::delivered().store(0, Ordering::Release);
+        let deadline = crate::time::deadline_after(TEST_TIMER_DELAY);
+        cpu::timer(deadline);
+        if cycle % 2 == 0 {
+            while cpu::ticks() < deadline {
+                core::hint::spin_loop();
+            }
+        } else {
+            cpu::unmask();
+        }
+        rearmed &= wait_irq(d);
+        if !rearmed {
+            break;
+        }
+    }
+    report("timer_rearm", rearmed);
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));
     cpu::unmask();

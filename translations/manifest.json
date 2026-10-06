@@ -282,8 +282,8 @@
         "translation_sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630"
       },
       "docs/kernel/interrupts.md": {
-        "source_sha256": "eb115219623b8e88bb9a5edcfce783871f8e43417fba8a8163b55fc3f1d095af",
-        "translation_sha256": "c89fb396e6259dfeb1635e3f16e1f91ece1ae5fa7e3b30eb691fff688b79fbbc"
+        "source_sha256": "0a13c148991b32dba6ea21087b8756f13ac0a7242d741f3b584d458c9427cf0c",
+        "translation_sha256": "ec6d98650450e87e2cc0f017f31c366d63fc232d23979395e9d9c73f46458f3b"
       },
       "docs/kernel/ipc-performance.md": {
         "source_sha256": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
@@ -298,8 +298,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
-        "translation_sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021"
+        "source_sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
+        "translation_sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",

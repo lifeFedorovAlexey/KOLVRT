@@ -2158,7 +2158,7 @@
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
     "crates/kernel/Cargo.toml": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
-    "crates/kernel/src/arch/aarch64/mod.rs": "cf4b8e1c9216c750905e46975ad45e34d72fcf9bdd855599fd3a711bc51a18ef",
+    "crates/kernel/src/arch/aarch64/mod.rs": "e30cf0ebb626505693860e5e4b44a422c40a649fe8f2fed22aa9fc4f79374b24",
     "crates/kernel/src/boot_workload.rs": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6",
     "crates/kernel/src/handles.rs": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2",
     "crates/kernel/src/handles/testing.rs": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
@@ -2179,7 +2179,7 @@
     "crates/kernel/src/ipc_workload.rs": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
     "crates/kernel/src/main.rs": "fceb8e992ba8f70fbd51de61a02f392e0a1d4915d3f0b9a2db7817d3f6a00183",
     "crates/kernel/src/process.rs": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
-    "crates/kernel/src/process_workload.rs": "943c9765a08626827a8f335de018f04465e103ff7a782da155cd7e410be671e2",
+    "crates/kernel/src/process_workload.rs": "95b506548715e08690c759188049e0778a6d0f422e24848decbe9f4ceac60350",
     "crates/kernel/src/scheduler/local.rs": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
     "crates/kernel/src/scheduler/mod.rs": "d530ea58baef2e4019a972437df3b1f3c1ce9a20cb26e26acf8b8bf93a891742",
     "crates/kernel/src/scheduler/task.rs": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
@@ -2189,8 +2189,8 @@
     "crates/kernel/src/supervision.rs": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401",
     "crates/kernel/src/supervision_workload.S": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
     "crates/kernel/src/supervision_workload.rs": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599",
-    "crates/kernel/src/test_support/irq_wait.rs": "e694bda59ba6fdaeaefd661fc8814711599efc025da2dd8d4a5210cb24cf8dba",
-    "crates/kernel/src/tests.rs": "557312ab9167b74e12b162e136f6371b8c71fa89794b6db786807e6cfc63b6d7",
+    "crates/kernel/src/test_support/irq_wait.rs": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2",
+    "crates/kernel/src/tests.rs": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
     "crates/kernel/src/user_copy/testing.rs": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a",
     "crates/migration-advisor/Cargo.toml": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968",
@@ -2274,7 +2274,7 @@
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "78a98c3ddab89a2604733ef85289ccf9b2c364b6b698a0952baa40cb13d8375c",
-    "docs/kernel/processes.md": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+    "docs/kernel/processes.md": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
     "docs/kernel/scheduler.md": "257b84fec35689b995876a308aecb6f11acf98ad1c3ff84e25bbdd42ed018cce",
     "docs/kernel/supervision.md": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
@@ -2358,7 +2358,7 @@
     "scripts/tests/ci-timings.test.cjs": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "b28c3ae30eb748a68fa864a2225cd530a50156d5a84400223cb21ac5632afdec",
+    "translations/manifest.json": "696bcd0fb708d96788b1f92130c25f0cb606efa284d6b983f8957f654f8fd665",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2404,7 +2404,7 @@
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "5d0aa873cee53164cbd30d8cce2cd8c41ee5cb3e6889864009f4403159d7475e",
-    "translations/ru/docs/kernel/processes.md": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+    "translations/ru/docs/kernel/processes.md": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
     "translations/ru/docs/kernel/scheduler.md": "e3527af3145a5faf78b4d2e7e99ac062ed6efb135c284cb94dbc6a867c0d02b2",
     "translations/ru/docs/kernel/supervision.md": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
@@ -5168,7 +5168,7 @@
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 23305,
+      "estimated_bytes": 23491,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
@@ -5184,13 +5184,13 @@
         "en": {
           "end": 268,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 1
         },
         "ru": {
           "end": 268,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 1
         }
       },
@@ -8100,13 +8100,13 @@
         "en": {
           "end": 103,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 96
         },
         "ru": {
           "end": 103,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 96
         }
       },
@@ -8135,13 +8135,13 @@
         "en": {
           "end": 127,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 120
         },
         "ru": {
           "end": 127,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 120
         }
       },
@@ -8170,13 +8170,13 @@
         "en": {
           "end": 62,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 45
         },
         "ru": {
           "end": 62,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 45
         }
       },
@@ -8189,7 +8189,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 3392,
+      "estimated_bytes": 3578,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
@@ -8205,13 +8205,13 @@
         "en": {
           "end": 97,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 84
         },
         "ru": {
           "end": 97,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 84
         }
       },
@@ -8240,13 +8240,13 @@
         "en": {
           "end": 131,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 126
         },
         "ru": {
           "end": 131,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 126
         }
       },
@@ -8275,13 +8275,13 @@
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 13
         }
       },
@@ -8359,13 +8359,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 7
         }
       },
@@ -8394,13 +8394,13 @@
         "en": {
           "end": 109,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 102
         },
         "ru": {
           "end": 109,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 102
         }
       },
@@ -8429,13 +8429,13 @@
         "en": {
           "end": 85,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 61
         },
         "ru": {
           "end": 85,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 61
         }
       },
@@ -8464,13 +8464,13 @@
         "en": {
           "end": 46,
           "path": "docs/kernel/processes.md",
-          "sha256": "8c3426ecda520ae56438656427a0ef78cb9124a4ce2cf0916ef6c7a9534a275a",
+          "sha256": "1a4b05d093ccbaff966baf9342850eeb6952b9d4fbbdfdf6deeaef20747c877e",
           "start": 23
         },
         "ru": {
           "end": 46,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "efe53c3cf7a8a6931ce740b5417364b8762226546275051b54f787125e1e6021",
+          "sha256": "0e047a65e889293fcbb36392d8320901ae47be4a7f31076fbaf12a72db6b71e1",
           "start": 23
         }
       },

@@ -229,7 +229,7 @@ pub fn ipc_idle() {
     // vectors, no scheduler/object/copy permit spans WFI or IRQ delivery. IRQ
     // only flags timer/SGI work; all endpoint accesses remain deferred/masked.
     unsafe {
-        asm!("wfi", "msr daifclr, #{mask}", "isb", "msr daifset, #{mask}", "isb",
+        asm!("dsb sy", "wfi", "msr daifclr, #{mask}", "isb", "msr daifset, #{mask}", "isb",
             mask=const DAIF_IRQ_MASK, options(nostack));
     }
 }
