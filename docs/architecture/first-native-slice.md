@@ -41,6 +41,10 @@ The later [EL0 foundation](../kernel/el0.md), [versioned routing](../architectur
 
 [Russian translation](../../translations/ru/docs/architecture/first-native-slice.md)
 
+## Experimental supervision integration
+
+The [Phase 3.6 supervisor](../kernel/supervision.md) supplies experimental real isolated EL0 service policy and a bounded lifecycle mechanism. The full native slice remains incomplete: proposed architecture and complete EN/RU human review remain pending, persistent integration belongs to #28 and production bootstrap trust to #38. Current-source receipts are separate from accepted historical Phase 3.5 evidence.
+
 <!-- knowledge -->
 
 ```json

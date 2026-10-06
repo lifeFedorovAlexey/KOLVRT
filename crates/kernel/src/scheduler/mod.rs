@@ -64,6 +64,24 @@ static ARRIVED: AtomicUsize = AtomicUsize::new(0);
 static SESSION: AtomicBool = AtomicBool::new(false);
 static STEP: AtomicBool = AtomicBool::new(false);
 static CONTINUOUS: AtomicBool = AtomicBool::new(false);
+// Test-only rendezvous forces CPU0 to observe CPU1's pending completion after
+// an expired workload deadline. CPU1 is already detached on its native root.
+#[cfg(feature = "kernel-tests")]
+static DELAY_SECONDARY_COMPLETION: AtomicBool = AtomicBool::new(false);
+#[cfg(feature = "kernel-tests")]
+static JOIN_PENDING_SEEN: AtomicU64 = AtomicU64::new(0);
+#[cfg(feature = "kernel-tests")]
+pub(crate) fn delay_secondary_completion(enabled: bool) {
+    percpu::primary_only();
+    assert!(cpu::irq_masked());
+    assert!(!SESSION.load(Ordering::Acquire));
+    DELAY_SECONDARY_COMPLETION.store(enabled, Ordering::Release);
+}
+#[cfg(feature = "kernel-tests")]
+pub(crate) fn pending_completion_observed() -> bool {
+    percpu::primary_only();
+    JOIN_PENDING_SEEN.load(Ordering::Acquire) != 0
+}
 static IPC_FINISHED: AtomicUsize = AtomicUsize::new(0);
 static IPC_BLOCKED_IDLE: AtomicUsize = AtomicUsize::new(0);
 static IPC_ALL_BLOCKED: AtomicU64 = AtomicU64::new(0);
@@ -114,6 +132,12 @@ fn check_ipc_failure() {
 }
 static IPC_IPI: [AtomicBool; platform_config::ACTIVE_CPUS] =
     [const { AtomicBool::new(false) }; platform_config::ACTIVE_CPUS];
+static LIFECYCLE_STOP: [AtomicU64; config::TOTAL_TASKS] =
+    [const { AtomicU64::new(0) }; config::TOTAL_TASKS];
+pub(crate) fn lifecycle_stop(id: kernel_core::process::ProcessId) {
+    assert!(detached(id));
+    LIFECYCLE_STOP[id.slot()].store(id.generation(), Ordering::Release);
+}
 static CURSOR: [AtomicUsize; platform_config::ACTIVE_CPUS] =
     [const { AtomicUsize::new(NO_TASK) }; platform_config::ACTIVE_CPUS];
 const WAIT_OWN_EVENT: u16 = 0x55;
@@ -151,6 +175,11 @@ pub(crate) fn dispatch_ipc(
 ) -> Completed {
     dispatch_inner(tasks, timeout, false, true)
 }
+/// Bounded rendezvous for authorized lifecycle work. IPC ownership survives
+/// the barrier; roots detach before the coordinator may change membership.
+pub(crate) fn checkpoint(tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS]) -> Completed {
+    dispatch_inner(tasks, None, true, true)
+}
 fn dispatch_inner(
     tasks: &mut [Option<Admission<'_>>; config::TOTAL_TASKS],
     timeout: Option<time::Duration>,
@@ -169,6 +198,11 @@ fn dispatch_inner(
         .generation()
         .checked_add(1)
         .expect("scheduler generation exhausted");
+    #[cfg(feature = "kernel-tests")]
+    JOIN_PENDING_SEEN.store(0, Ordering::Release);
+    // One absolute workload deadline applies to both owners. It governs task
+    // expiry, not permission to return before remote completion publication.
+    let deadline = timeout.map(time::deadline_after);
     START.store(false, Ordering::Release);
     STEP.store(step, Ordering::Release);
     CONTINUOUS.store(continuous, Ordering::Release);
@@ -182,16 +216,17 @@ fn dispatch_inner(
         // by-value State would put multiple report/namespace arrays on DEV stacks.
         local.prepare(generation, |state| {
             assert!(
-                state.ipc_pending.iter().all(Option::is_none),
+                (step && continuous) || state.ipc_pending.iter().all(Option::is_none),
                 "IPC continuation survived session retirement"
             );
-            state.current = if step {
-                CURSOR[owner].load(Ordering::Acquire)
-            } else {
-                NO_TASK
-            };
+            let cursor = CURSOR[owner].load(Ordering::Acquire);
+            state.current = if step && cursor < TASKS
+                && tasks[owner * TASKS + cursor].as_ref().is_some_and(|admitted|
+                    state.tasks[cursor].process_generation() == admitted.identity.generation()) {
+                cursor
+            } else { NO_TASK };
             state.switches = 0;
-            state.deadline = timeout.map(time::deadline_after);
+            state.deadline = deadline;
             for (index, task) in state.tasks.iter_mut().enumerate() {
                 let id = owner * TASKS + index;
                 assert_eq!(
@@ -216,6 +251,11 @@ fn dispatch_inner(
                     } else {
                         None
                     };
+                    let retained = (step
+                        && continuous
+                        && task.id() == id
+                        && task.process_generation() == admitted.identity.generation())
+                    .then_some(*task);
                     *task = Task::new(
                         id,
                         admitted.identity.generation(),
@@ -224,13 +264,32 @@ fn dispatch_inner(
                         admitted.context,
                         admitted.slice_budget,
                     );
+                    if let Some(saved) = retained {
+                        task.ipc_wait = if cfg!(feature = "supervision-wait-negative") {
+                            None
+                        } else {
+                            saved.ipc_wait
+                        };
+                        task.ipc_blocks = saved.ipc_blocks;
+                        task.ipc_terminal_blocks = saved.ipc_terminal_blocks;
+                        task.ipc_wakes = saved.ipc_wakes;
+                    }
                     state.handles[index] = core::mem::take(admitted.handles);
                     task.bind_queue(generation);
                     task.slices = admitted.slices;
                     task.el0_residency_ticks = admitted.el0_residency_ticks;
                     task.native_window_service_ticks = admitted.native_window_service_ticks;
                     task.observations = admitted.observations;
-                    if admitted.blocked {
+                    if LIFECYCLE_STOP[id].swap(0, Ordering::AcqRel)
+                        == admitted.identity.generation()
+                    {
+                        task.state = CONTEXT_TERMINATED;
+                        task.ipc_wait = None;
+                    } else if admitted.blocked {
+                        if continuous && task.ipc_wait.is_none() {
+                            crate::event!("{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"WaitIdentityLost\"}}");
+                            panic!("checkpoint lost retained IPC wait identity");
+                        }
                         assert!(step, "blocked processes require step driver");
                         task.state = task::CONTEXT_BLOCKED;
                     }
@@ -252,10 +311,17 @@ fn dispatch_inner(
     }
     crate::smp::ping(percpu::SECONDARY_CPU);
     run_local();
-    crate::smp::wait_optional(
-        || LOCALS.iter().all(Local::completed),
-        timeout,
-        "scheduler completion timeout",
+    crate::smp::wait_completion(
+        || {
+            let complete = LOCALS.iter().all(Local::completed);
+            #[cfg(feature = "kernel-tests")]
+            if !complete && DELAY_SECONDARY_COMPLETION.load(Ordering::Acquire) {
+                JOIN_PENDING_SEEN.store(generation, Ordering::Release);
+            }
+            complete
+        },
+        deadline,
+        "scheduler completion publication stalled after workload deadline",
     );
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     let owners_released = RUNNING_OWNER
@@ -310,7 +376,7 @@ pub(crate) fn unlink(completed: &Completed) {
         local.quiescent(local.generation(), |state| {
             state.current = NO_TASK;
             for task in &mut state.tasks {
-                if CONTINUOUS.load(Ordering::Acquire) {
+                if CONTINUOUS.load(Ordering::Acquire) && !STEP.load(Ordering::Acquire) {
                     task.unlink_ipc();
                 } else {
                     task.unlink();
@@ -428,6 +494,17 @@ fn run_local() {
     if percpu::id() == percpu::BOOT_CPU {
         local.controls(generation);
     }
+    if CONTINUOUS.load(Ordering::Acquire) {
+        local.with(generation, |state| {
+            for (index, task) in state.tasks.iter_mut().enumerate() {
+                if task.state == CONTEXT_TERMINATED {
+                    state.handles[index].begin_teardown();
+                    crate::asid::retire(task.lease());
+                }
+            }
+        });
+        deferred_local(local, generation);
+    }
     let first = local.with(generation, |state| {
         let index = choose(state, generation)?;
         Some((
@@ -472,7 +549,19 @@ fn run_local() {
     }
     assert_eq!(cpu::el(), cpu::CURRENT_EL1);
     if CONTINUOUS.load(Ordering::Acquire) {
-        continuous_local(local, generation);
+        if STEP.load(Ordering::Acquire) {
+            // Finish owned copy reservations before namespaces return to Registry.
+            loop {
+                deferred_local(local, generation);
+                if local.with(generation, |state| {
+                    state.ipc_pending.iter().all(Option::is_none)
+                }) {
+                    break;
+                }
+            }
+        } else {
+            continuous_local(local, generation);
+        }
     }
     memory::USER_EXECUTION_ACTIVE.fetch_sub(1, Ordering::AcqRel);
     let quiescent = cpu::active_root() == NATIVE_ROOT.load(Ordering::Acquire)
@@ -485,6 +574,17 @@ fn run_local() {
         && RUNNING_OWNER[percpu::id() * TASKS..(percpu::id() + 1) * TASKS]
             .iter()
             .all(|owner| owner.load(Ordering::Acquire) == NO_CPU);
+    #[cfg(feature = "kernel-tests")]
+    if percpu::is_secondary() && DELAY_SECONDARY_COMPLETION.load(Ordering::Acquire) {
+        assert!(quiescent);
+        // No state borrow, lock, live user root or execution owner spans the
+        // test gate. Completion remains unpublished until CPU0 observes it.
+        crate::smp::wait_optional(
+            || JOIN_PENDING_SEEN.load(Ordering::Acquire) == generation,
+            None,
+            "test coordinator pending-completion observation",
+        );
+    }
     local.complete(generation, quiescent);
 }
 fn continuous_local(local: &Local, generation: u64) {
@@ -660,7 +760,10 @@ fn trap_owned(
     if matches!(kind, Trap::Irq) {
         let timer = local.preempt.swap(false, Ordering::AcqRel);
         let ipc = IPC_IPI[percpu::id()].swap(false, Ordering::AcqRel);
-        if !timer && !ipc {
+        // An SGI arriving before the first EL0 instruction cannot consume a
+        // checkpoint quantum. Preserve the armed timer and execution progress;
+        // exact wake/death work has already drained outside scheduler storage.
+        if !timer && (!ipc || STEP.load(Ordering::Acquire)) {
             task.entered_at = cpu::ticks();
             return 0;
         }
@@ -689,7 +792,16 @@ fn trap_owned(
         else {
             unreachable!()
         };
-        if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire) {
+        if class == ESR_SVC64 && operation == crate::supervision::CONTROL {
+            if STEP.load(Ordering::Acquire) && CONTINUOUS.load(Ordering::Acquire) {
+                crate::supervision::capture(task, frame);
+            } else {
+                frame.gpr[0] = 11;
+            }
+            task.context = *frame;
+            task.state = CONTEXT_READY;
+        } else if class == ESR_SVC64 && operation == WAIT_OWN_EVENT && STEP.load(Ordering::Acquire)
+        {
             frame.gpr[0] = abi::OK;
             task.context = *frame;
             if !event(task.id()).register() {
@@ -749,7 +861,7 @@ fn reschedule(
     for (index, task) in state.tasks.iter().enumerate() {
         if matches!(
             task.state,
-            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT | CONTEXT_TERMINATED
         ) {
             state.handles[index].begin_teardown();
             // A dying service publishes cancellation before releasing accepted charges.
@@ -761,7 +873,7 @@ fn reschedule(
     for task in &state.tasks {
         if matches!(
             task.state,
-            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+            CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT | CONTEXT_TERMINATED
         ) {
             crate::asid::retire(task.lease());
         }
@@ -982,7 +1094,7 @@ fn deferred_local(local: &Local, generation: u64) -> crate::ipc::deferred::Poll 
         core::array::from_fn::<_, TASKS, _>(|index| {
             matches!(
                 state.tasks[index].state,
-                CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT
+                CONTEXT_EXITED | CONTEXT_FAULTED | CONTEXT_TIMED_OUT | CONTEXT_TERMINATED
             )
             .then(|| state.handles[index].owner())
             .flatten()

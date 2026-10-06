@@ -46,8 +46,13 @@ pub const CREATION_STEPS: [CreationStep; 5] = [
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Reason {
     Exited(u64),
-    Faulted { class: u64, address: usize },
+    Faulted {
+        class: u64,
+        address: usize,
+    },
     BudgetExpired,
+    /// Explicit authorized termination, distinct from timer/budget expiration.
+    Terminated,
     CreationFailed(CreationStep),
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -180,6 +185,14 @@ impl<const N: usize> Table<N> {
             return Err(Error::NotQuiescent);
         }
         self.transition(id, State::Completed, State::Reclaiming)
+    }
+    /// Unpublished prepared state has no runnable owner or waitable completion.
+    /// The caller must acquire detachment before retiring its private resources.
+    pub fn discard_prepared(&mut self, id: ProcessId, detached: bool) -> Result<(), Error> {
+        if !detached {
+            return Err(Error::NotQuiescent);
+        }
+        self.transition(id, State::Prepared, State::Reclaiming)
     }
     pub fn released(&mut self, id: ProcessId) -> Result<(), Error> {
         self.transition(id, State::Reclaiming, State::Free)

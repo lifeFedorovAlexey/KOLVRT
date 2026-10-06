@@ -24,6 +24,8 @@ mod process_workload;
 mod scheduler;
 mod security;
 mod smp;
+mod supervision;
+mod supervision_workload;
 mod sync;
 #[cfg(feature = "kernel-tests")]
 mod tests;
@@ -122,6 +124,10 @@ pub extern "C" fn kernel_main() -> ! {
     tests::run(&d, &mut physical, &mut processes);
     #[cfg(not(feature = "kernel-tests"))]
     {
+        assert!(supervision_workload::exercise(
+            &mut physical,
+            &mut processes
+        ));
         let users = boot_workload::exercise(&mut physical, &mut processes);
         event!(
             "{{\"event\":\"el0\",\"status\":\"pass\",\"processes\":{},\"workers\":{},\"faults\":{},\"switches\":{},\"reclaimed\":{}}}",
@@ -148,10 +154,14 @@ pub extern "C" fn kernel_main() -> ! {
         process_workload::exercise(&mut physical, &mut processes, |name, passed| {
             if !passed {
                 event!("{{\"event\":\"test\",\"name\":\"{name}\",\"status\":\"fail\"}}");
+                diagnostics::status("FAIL", "process", format_args!("{name}"));
             }
             assert!(passed, "process workload check failed: {name}");
         });
         ipc_workload::exercise(&mut physical, &mut processes, |name, passed| {
+            if !passed {
+                diagnostics::status("FAIL", "IPC", format_args!("{name}"));
+            }
             assert!(passed, "IPC workload check failed: {name}");
         });
         #[cfg(feature = "ipc-benchmark")]
@@ -270,6 +280,9 @@ pub extern "C" fn fatal_exception(esr: u64, far: u64, pc: u64) -> ! {
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
     if percpu::is_secondary() {
+        if let Some(location) = info.location() {
+            smp::record_secondary_panic(location.file(), location.line());
+        }
         smp::secondary_failure();
     }
     cpu::mask();
@@ -278,7 +291,19 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
         "{{\"event\":\"panic\",\"status\":\"fail\",\"line\":{}}}",
         info.location().map_or(0, |location| location.line())
     );
-    diagnostics::status("FAIL", "panic", format_args!("kernel halted"));
+    if let Some(location) = info.location() {
+        diagnostics::status(
+            "FAIL",
+            "panic",
+            format_args!("kernel halted at {}:{}", location.file(), location.line()),
+        );
+    } else {
+        diagnostics::status(
+            "FAIL",
+            "panic",
+            format_args!("kernel halted; location unavailable"),
+        );
+    }
     #[cfg(feature = "diagnostics")]
     if let Some(location) = info.location() {
         diagnostics::status(

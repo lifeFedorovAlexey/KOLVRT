@@ -72,7 +72,7 @@ function snapshot(run, jobs) {
     steps,
     cargo_compilation_seconds: null,
     qemu_execution_seconds: null,
-    check_inventory_id: kernelInventory(run, jobs),
+    check_inventory_id: null, // API job names do not attest the source-bound task inventory.
     cache_outcomes:
       "See per-workload job.json artifacts; UNKNOWN in API timestamps",
     declared_dag_seconds: dagDuration(jobs),
@@ -122,47 +122,6 @@ function dagDuration(jobs) {
 }
 
 /**
- * Recognize the authored full kernel-130-v1 comparison mapping; host-only/unknown graphs stay unclassified.
- */
-function kernelInventory(run, jobs) {
-  if (run.name !== "Kernel foundation") return null;
-  const names = jobs.flatMap((job) =>
-    (job.steps || []).map((step) => step.name),
-  );
-  if (
-    [
-      "Run npm run check",
-      "Routing model contracts",
-      "Production model and absent switching",
-      "Architecture lint",
-      "Production architecture lint",
-      "Real kernel matrix and host failure propagation",
-      "Real EL0 routing matrix and failure propagation",
-      "Real 16-bit ASID baseline comparison",
-    ].every((name) => names.includes(name))
-  )
-    return "kernel-130-v1";
-  const prefixes = jobs
-    .filter((job) => job.conclusion !== "skipped")
-    .map((job) => job.name.split(" / ")[0]);
-  if (
-    [
-      "static",
-      "host",
-      "kernel-dev",
-      "kernel-prod",
-      "routing",
-      "asid",
-      "evidence",
-      "foundation",
-    ].every((id) => prefixes.includes(id)) &&
-    [0, 1, 2, 3].every((i) => prefixes.includes(`matrix (${i})`))
-  )
-    return "kernel-130-v1";
-  return null;
-}
-
-/**
  * Describe the exact workflow/event and ordered job-step/runner graph for repeat comparison.
  */
 function signature(run) {
@@ -175,34 +134,19 @@ function signature(run) {
 
 /**
  * Compare against at least three distinct successful compatible baseline runs.
- * Mapped graph comparison is descriptive and explicitly scoped; it is not paired speed inference.
+ * API snapshots do not attest inventories; automatic comparison requires the same source SHA.
  * @param {object} current Completed current-run snapshot.
  * @param {object[]} baselines Retained baseline snapshots.
- * @param {boolean} sameSource Require identical source SHA for repeat runs.
- * @param {boolean} mappedInventory Allow the authored full-inventory graph mapping.
  * @returns {object} Comparison state, baseline identities and median/delta when available.
  */
-function compare(
-  current,
-  baselines,
-  sameSource = false,
-  mappedInventory = false,
-) {
+function compare(current, baselines) {
   const eligible = baselines.filter(
     (run) =>
       run.run_id !== current.run_id &&
       run.conclusion === "success" &&
       run.execution_span_seconds !== null &&
-      (signature(run) === signature(current) ||
-        (mappedInventory &&
-          run.workflow_id === current.workflow_id &&
-          ["push", "pull_request", "workflow_dispatch"].includes(run.event) &&
-          ["push", "pull_request", "workflow_dispatch"].includes(
-            current.event,
-          ) &&
-          run.check_inventory_id === "kernel-130-v1" &&
-          current.check_inventory_id === "kernel-130-v1")) &&
-      (!sameSource || run.head_sha === current.head_sha),
+      signature(run) === signature(current) &&
+      run.head_sha === current.head_sha,
   );
   const unique = [
     ...new Map(eligible.map((run) => [run.run_id, run])).values(),
@@ -220,9 +164,7 @@ function compare(
   return {
     state: current.conclusion === "success" ? "COMPARABLE" : "CURRENT_FAILED",
     baseline_run_ids: unique.map((run) => run.run_id),
-    comparison_mapping: mappedInventory
-      ? "Authored kernel-130-v1 inventory mapping; descriptive wall comparison, not paired inference"
-      : "same job/step graph",
+    comparison_mapping: "same source SHA and job/step graph",
     baseline_head_shas: [...new Set(unique.map((run) => run.head_sha))],
     baseline_median_seconds: median,
     delta_seconds:
@@ -321,7 +263,7 @@ async function collect(repository, runId, token, request = fetch) {
     schema_version: 1,
     current,
     baselines,
-    comparison: compare(current, baselines, true),
+    comparison: compare(current, baselines),
   };
 }
 
@@ -337,12 +279,7 @@ async function main() {
   const report = await collect(repository, runId, process.env.GITHUB_TOKEN);
   if (baselineFile) {
     const baseline = JSON.parse(fs.readFileSync(baselineFile, "utf8"));
-    report.comparison = compare(
-      report.current,
-      baseline.baselines,
-      false,
-      true,
-    );
+    report.comparison = compare(report.current, baseline.baselines);
   }
   fs.mkdirSync(destination, { recursive: true });
   fs.writeFileSync(

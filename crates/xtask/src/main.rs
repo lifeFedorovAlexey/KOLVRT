@@ -226,6 +226,31 @@ const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
 ];
 const IPC_CONTROLS: &[(&str, &str, &str)] = &[
     (
+        "--supervision-authority-control",
+        "supervision-authority-negative",
+        "supervision:Scenario",
+    ),
+    (
+        "--supervision-stale-control",
+        "supervision-stale-negative",
+        "supervision:Scenario",
+    ),
+    (
+        "--supervision-dependency-control",
+        "supervision-dependency-negative",
+        "supervision:DependencyNotRejected",
+    ),
+    (
+        "--supervision-commit-control",
+        "supervision-commit-negative",
+        "supervision:CommitNotProven",
+    ),
+    (
+        "--supervision-wait-control",
+        "supervision-wait-negative",
+        "supervision:WaitIdentityLost",
+    ),
+    (
         "--ipc-request-generation-control",
         "ipc-request-generation-negative",
         "ipc_payload_snapshot_result_id_and_stress",
@@ -434,6 +459,7 @@ const TESTS: &[&str] = &[
     "domain_memory_budget_enforced",
     "domain_el0_request_and_queue_budgets",
     "ipc_el0_cpu0_to_cpu1",
+    "supervision_el0_lifecycle",
     "ipc_el0_cpu1_to_cpu0",
     "ipc_el0_same_cpu0",
     "ipc_el0_same_cpu1",
@@ -544,6 +570,11 @@ fn run() -> Result<()> {
             Ok(())
         }
         Some("test") => {
+            if args.iter().any(|arg| arg == "--positive-only") {
+                if args.iter().skip(1).any(|arg| arg != "--positive-only" && arg != "--prod") { return Err("positive-only accepts only --prod".into()); }
+                let elf = build(args.iter().any(|arg| arg == "--prod"), true, None, true)?;
+                return execute(&elf, true, true);
+            }
             for &(flag, feature, _) in IPC_CONTROLS {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
@@ -1131,6 +1162,9 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
                         && ((event["event"] == "test" && event["name"] == expected)
                             || expected.strip_prefix("reject:").is_some_and(|error| {
                                 event["event"] == "ipc-reject" && event["error"] == error
+                            })
+                            || expected.strip_prefix("supervision:").is_some_and(|error| {
+                                event["event"] == "supervision-reject" && event["error"] == error
                             }))
                 })
                 .cloned()

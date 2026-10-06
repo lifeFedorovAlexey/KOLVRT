@@ -1,11 +1,46 @@
 //! Fixed two-CPU coordination, not a scheduler. CPU0 serializes admission and PTE updates.
 //! IRQ never waits or takes locks. CPU1 acknowledges TLBI only between bounded work items.
 use crate::{cpu, percpu, time};
-use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use core::sync::atomic::{AtomicBool, AtomicU8, AtomicU64, AtomicUsize, Ordering};
 use percpu::SECONDARY_CPU;
 pub const IPI: u8 = 1;
 const COORDINATION_TIMEOUT: time::Duration = time::Duration::from_secs(2);
 static READY: AtomicBool = AtomicBool::new(false);
+const PANIC_FILE_LIMIT: usize = 96;
+static SECONDARY_PANIC_FILE: [AtomicU8; PANIC_FILE_LIMIT] =
+    [const { AtomicU8::new(0) }; PANIC_FILE_LIMIT];
+static SECONDARY_PANIC_LENGTH: AtomicUsize = AtomicUsize::new(0);
+static SECONDARY_PANIC_LINE: AtomicUsize = AtomicUsize::new(0);
+/// CPU1 publishes only bounded source identity before FAILED; no UART or private values.
+pub fn record_secondary_panic(file: &str, line: u32) {
+    let bytes = file.as_bytes();
+    let length = bytes.len().min(PANIC_FILE_LIMIT);
+    for (slot, byte) in SECONDARY_PANIC_FILE.iter().zip(&bytes[..length]) {
+        slot.store(*byte, Ordering::Relaxed);
+    }
+    SECONDARY_PANIC_LINE.store(line as usize, Ordering::Relaxed);
+    SECONDARY_PANIC_LENGTH.store(length, Ordering::Relaxed);
+}
+/// The caller has acquired FAILED, including the preceding immutable panic identity.
+pub fn report_secondary_panic() {
+    if percpu::is_secondary() {
+        return;
+    }
+    let length = SECONDARY_PANIC_LENGTH.load(Ordering::Relaxed);
+    if length == 0 {
+        return;
+    }
+    let mut bytes = [0u8; PANIC_FILE_LIMIT];
+    for (byte, slot) in bytes.iter_mut().zip(&SECONDARY_PANIC_FILE[..length]) {
+        *byte = slot.load(Ordering::Relaxed);
+    }
+    let file = core::str::from_utf8(&bytes[..length]).unwrap_or("truncated source location");
+    crate::diagnostics::status(
+        "FAIL",
+        "secondary panic",
+        format_args!("{}:{}", file, SECONDARY_PANIC_LINE.load(Ordering::Relaxed)),
+    );
+}
 static STOP: AtomicBool = AtomicBool::new(false);
 static TLB_REQUEST: AtomicU64 = AtomicU64::new(0);
 static TLB_SIGNAL: AtomicU64 = AtomicU64::new(0);
@@ -124,23 +159,33 @@ pub fn wait(ready: impl FnMut() -> bool, reason: &str) {
 /// Native completion can have no workload deadline. Timeout never authorizes reclaim.
 /// Callers wait without a scheduler borrow/ordinary lock and require admitted work
 /// to eventually terminate for return; existing boot coordination keeps its bound.
-pub fn wait_optional(
-    mut ready: impl FnMut() -> bool,
-    timeout: Option<time::Duration>,
-    reason: &str,
-) {
+pub fn wait_optional(ready: impl FnMut() -> bool, timeout: Option<time::Duration>, reason: &str) {
+    wait_until(ready, timeout.map(time::deadline_after), reason);
+}
+/// Task expiry and publication progress have different bounds. Allow the
+/// established coordination interval after the common workload deadline;
+/// never derive a zero join interval from an already-expired workload.
+pub fn wait_completion(ready: impl FnMut() -> bool, workload_deadline: Option<u64>, reason: &str) {
+    let publication_deadline = workload_deadline.map(|deadline| {
+        let grace = kernel_core::time::duration_ticks(COORDINATION_TIMEOUT, cpu::frequency())
+            .expect("invalid coordination interval");
+        deadline
+            .checked_add(grace)
+            .expect("completion deadline exhausted")
+    });
+    wait_until(ready, publication_deadline, reason);
+}
+fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>, reason: &str) {
     assert!(
         !percpu::current().scheduler_borrow.load(Ordering::Acquire),
         "scheduler borrow across wait"
     );
     crate::sync::assert_scheduler_unlocked();
-    let deadline = timeout.map(time::deadline_after);
     loop {
-        assert_ne!(
-            percpu::CPUS[SECONDARY_CPU].state.load(Ordering::Acquire),
-            percpu::FAILED,
-            "secondary CPU failure"
-        );
+        if percpu::CPUS[SECONDARY_CPU].state.load(Ordering::Acquire) == percpu::FAILED {
+            report_secondary_panic();
+            panic!("secondary CPU failure");
+        }
         if ready() {
             return;
         }

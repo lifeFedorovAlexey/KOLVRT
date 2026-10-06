@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "dbb2fb4a826c1b84ea1181bb234fd91b54de6ed6f7951b5b13b371c3a5c3b850",
-        "translation_sha256": "007e71fab1a2435c79d74151c745ae2df7dff102ec97ccf19710bc574c3685da"
+        "source_sha256": "c4e48e8646a412f723602267b312b93aebd7ab419500c6337aa9d85b8d2f8ab9",
+        "translation_sha256": "b124de147b2532e4662828676ffeddae80f1a2021fa72d7108141bff7ba5307e"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -121,9 +121,13 @@
         "source_sha256": "1d49df8c7b779bfc0cddb787a858178fd34afffe49698eacced38cf804df4dfd",
         "translation_sha256": "bf0baae8acb076f4ccccbd3c9dfb8b0488a32b3dfead3d0a83be3803935ee76a"
       },
+      "docs/architecture-decisions/0026-el0-supervision.md": {
+        "source_sha256": "b9d36aafae7609438eaa9b8a4d0f2bcb42bda073e50a70e7f31596d93a7d6c2e",
+        "translation_sha256": "2acf355c686558e872c66a43a9df36665fce264906a0747f5e54ddb273a564a1"
+      },
       "docs/architecture-decisions/README.md": {
-        "source_sha256": "196421bf46f807d667ca9adf3fe26ee6f5c5184b5bea57e8896def9b6542f935",
-        "translation_sha256": "6bba979226854f6a7272b5635bd0bcc81f993c93c371bf3f3e0e207ee60b5fc1"
+        "source_sha256": "50f40d3f95cccf7fce8dd40f92f81242aebe25594d9880ca114345c952d723bc",
+        "translation_sha256": "8a1a00af5d1dc2ef9146d58404519ff15e1996640f8905ef7984952e92e645dc"
       },
       "docs/architecture/architecture-audit-2026-10-04.md": {
         "source_sha256": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
@@ -142,20 +146,20 @@
         "translation_sha256": "27099d2860b554c9ff6b7d9b316293108021f9d5965e479a5c02d2fb794fecf1"
       },
       "docs/architecture/compatibility-manifests.md": {
-        "source_sha256": "77449f5c953520cca56a9eb1fb7d9f6c78419886eba0810acc9c59d09c156380",
-        "translation_sha256": "486c7abf22df094f0583c463e2da368ea1ae6961ee231f98331314c1bf598db1"
+        "source_sha256": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
+        "translation_sha256": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3"
       },
       "docs/architecture/compatibility-model.md": {
         "source_sha256": "5026400cd373e9dd33154781669a19acfaa4ddeb308972e6b9c173f3574a3ff9",
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
-        "translation_sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6"
+        "source_sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+        "translation_sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671"
       },
       "docs/architecture/dependency-hygiene.md": {
-        "source_sha256": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
-        "translation_sha256": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3"
+        "source_sha256": "8636f32b9ec277da8a92d17480e3fa83b7819655d7e713f79cfd901953fe4fe9",
+        "translation_sha256": "bf955e6941a4bc8c06bd253d7506fce03bf90b1b8fdb5a8a918dc80bac2cfaf9"
       },
       "docs/architecture/diagnostics.md": {
         "source_sha256": "3f44c453e11556806686aef3ac940cbb47bd700a9127ecb58beca08b41214383",
@@ -166,8 +170,8 @@
         "translation_sha256": "a222b3d38d99589879097d0439cd8aadc21301d88ff08d82506534a806204585"
       },
       "docs/architecture/first-native-slice.md": {
-        "source_sha256": "ca5ca82fe87f0adb59d7bbca7ab8c78b7d08c3b8d85e49680de1fddcb35a9383",
-        "translation_sha256": "257f3b1f05661f5125b3a564642f2a627a510295753208c640e2f881d872a3c0"
+        "source_sha256": "da70ec18f6ea14cd67a35ae001762b801e28c464761eb9704511119fcbe04d3a",
+        "translation_sha256": "20dfab89806ded6d3a50a9b15b4a1d54b9f1116699d9f911186ba0fc48392fc8"
       },
       "docs/architecture/implementation-review.md": {
         "source_sha256": "8d32aebeab5d55f6143945c0b4c949c5439c20c7d6fa01f8524cf651f0d5e367",
@@ -242,8 +246,8 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
-        "translation_sha256": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab"
+        "source_sha256": "42a3eb4d0c95da09533392e1c6907acf2855ca2acc3016e595706494b9e39b8e",
+        "translation_sha256": "bab5320065e101fa7003431f2fa34477964069256a30b1191dc679aad769d054"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
@@ -262,8 +266,8 @@
         "translation_sha256": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded"
       },
       "docs/kernel/domains.md": {
-        "source_sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
-        "translation_sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13"
+        "source_sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "translation_sha256": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1"
       },
       "docs/kernel/el0.md": {
         "source_sha256": "e63f2a44bcfd4f4cb2dfdc409ee5d6c08abfe1b9628ba350722f6b75950162ac",
@@ -278,36 +282,40 @@
         "translation_sha256": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630"
       },
       "docs/kernel/interrupts.md": {
-        "source_sha256": "cf64013f1d3d69352bcbd5cef3d11960c13a3631b906a04d3c769787617b7b2f",
-        "translation_sha256": "4ed4607ca4c2d2aa5f1ad485f539fc736fac13916750c88bb67bd35b7ac66c99"
+        "source_sha256": "2c10e2a746e9a76ef76c5e5b81819425d099bf7896c84b2854785f74acbaa73d",
+        "translation_sha256": "bf8e799315210a5fb674253a0c4d97660298c60a24004b27660ebf69ea2f8706"
       },
       "docs/kernel/ipc-performance.md": {
         "source_sha256": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
-        "translation_sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa"
+        "source_sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+        "translation_sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/processes.md": {
-        "source_sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-        "translation_sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f"
+        "source_sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+        "translation_sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38"
       },
       "docs/kernel/routing.md": {
         "source_sha256": "e63eacd4ed90ccf5e14f707afbc7315ebe3dfbb114b39976a2a92b2115340bbc",
         "translation_sha256": "855db72b1be05ee90a1946ad145f506c61016591c7e32a6abbe85123a7400acd"
       },
       "docs/kernel/scheduler.md": {
-        "source_sha256": "c12ad5f32bb4b21e666897f25ca982c70eecdde6d5dc0dd75e6e941dc2677a0d",
-        "translation_sha256": "75f26986cc053838c76c57c615e43e504c82881d508436d2da0a3f7d8ee7df8b"
+        "source_sha256": "ac8610919ad6368ad1d8f698a04ab82a105fb6c8a2ab539c3641d49e49ddd10e",
+        "translation_sha256": "83dac5a77051c625992e93a31d23c52ab2f5380da114d243f8121f36f8c8ec65"
       },
       "docs/kernel/smp.md": {
         "source_sha256": "22c007679ccb9956a15ff7f80afab05057b68a77390dd29e6e08262dcd9c375a",
         "translation_sha256": "9ef274dbc4904641b2b4511e475f643a1587f137b6f96e962481c823ac70c5db"
+      },
+      "docs/kernel/supervision.md": {
+        "source_sha256": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
+        "translation_sha256": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",
@@ -350,8 +358,8 @@
         "translation_sha256": "a47b17b48533d5613e8e2549f7124a8617253f83409c61bcb9ea53331f604c34"
       },
       "docs/research/cost-l-queries.md": {
-        "source_sha256": "fd75a9a22d7d16c121156f202c8ec2e973ec12179efe3dde277186bd981f7a48",
-        "translation_sha256": "a934c1e482c87b56e3e308e2291a22b1ffdb5b900fe51015949266db7c340543"
+        "source_sha256": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
+        "translation_sha256": "f2f194afe3493b46da2e78baeef2ad2cf7ba0d1b68633b26a89f10e02b2e35c1"
       },
       "docs/research/host-survey.md": {
         "source_sha256": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",

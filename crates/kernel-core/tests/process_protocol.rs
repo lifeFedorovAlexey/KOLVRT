@@ -66,6 +66,7 @@ fn completion_reason_validation_and_reclamation_follow_terminal_state() {
             address: usize::MAX,
         },
         Reason::BudgetExpired,
+        Reason::Terminated,
     ];
 
     for reason in reasons {
@@ -114,4 +115,27 @@ fn process_id_exposes_identity_without_weakening_generation_checks() {
     let id_type_is_copy = |value: ProcessId| value;
     assert_eq!(id_type_is_copy(id), id);
     assert_eq!(table.state(id), Ok(State::Creating));
+}
+
+#[test]
+fn unpublished_prepared_retirement_requires_detachment_and_burns_identity() {
+    let mut table = Table::<1>::new();
+    let id = table.reserve(0..1).unwrap();
+    table.prepared(id).unwrap();
+    assert_eq!(table.discard_prepared(id, false), Err(Error::NotQuiescent));
+    assert_eq!(table.state(id), Ok(State::Prepared));
+    assert_eq!(table.completion(id), Err(Error::Transition));
+    table.discard_prepared(id, true).unwrap();
+    assert_eq!(table.state(id), Ok(State::Reclaiming));
+    assert_eq!(table.start(id), Err(Error::Transition));
+    assert_eq!(table.completion(id), Err(Error::Transition));
+    table.released(id).unwrap();
+    assert_eq!(table.live(), 0);
+    let next = table.reserve(0..1).unwrap();
+    assert!(next.generation() > id.generation());
+    assert_eq!(table.state(id), Err(Error::Stale));
+    table.prepared(next).unwrap();
+    table.start(next).unwrap();
+    assert_eq!(table.discard_prepared(next, true), Err(Error::Transition));
+    assert_eq!(table.state(next), Ok(State::Admitted));
 }

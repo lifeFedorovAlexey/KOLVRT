@@ -67,7 +67,18 @@ macro_rules! read_reg {
     };
 }
 read_reg!(el, "CurrentEL");
-read_reg!(ticks, "cntpct_el0");
+/// Observe the physical counter after preceding instruction/context changes.
+/// CNTPCT_EL0 is not self-synchronizing on the pinned Armv8.0 platform.
+pub fn ticks() -> u64 {
+    let value;
+    // SAFETY: INV-TIMER: privileged counter read; ISB prevents speculative
+    // sampling before prior observations, and the memory clobber preserves
+    // the compiler boundary. This is not a data-publication DMB/DSB.
+    unsafe {
+        asm!("isb", "mrs {}, cntpct_el0", out(reg) value, options(nostack));
+    }
+    value
+}
 read_reg!(frequency, "cntfrq_el0");
 read_reg!(sctlr, "sctlr_el1");
 read_reg!(acknowledge, "S3_0_C12_C12_0");
@@ -202,14 +213,16 @@ pub fn vectors() {
 }
 pub fn mask() {
     // SAFETY: INV-IRQ: affects only the calling CPU; masking cannot release an IRQ-owned resource.
+    // Keep the compiler memory clobber: protected accesses must not cross DAIF changes.
     unsafe {
-        asm!("msr daifset, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nomem, nostack));
+        asm!("msr daifset, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nostack));
     }
 }
 pub fn unmask() {
     // SAFETY: INV-IRQ: called only after GIC, source and vectors are initialized.
+    // Pending handlers can observe memory; this is also a compiler ordering boundary.
     unsafe {
-        asm!("msr daifclr, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nomem, nostack));
+        asm!("msr daifclr, #{mask}", "isb", mask=const DAIF_IRQ_MASK, options(nostack));
     }
 }
 /// Wait with IRQ masked until an interrupt is pending, then service it before
@@ -227,7 +240,7 @@ pub fn ipc_idle() {
     // vectors, no scheduler/object/copy permit spans WFI or IRQ delivery. IRQ
     // only flags timer/SGI work; all endpoint accesses remain deferred/masked.
     unsafe {
-        asm!("wfi", "msr daifclr, #{mask}", "isb", "msr daifset, #{mask}", "isb",
+        asm!("dsb sy", "wfi", "msr daifclr, #{mask}", "isb", "msr daifset, #{mask}", "isb",
             mask=const DAIF_IRQ_MASK, options(nostack));
     }
 }

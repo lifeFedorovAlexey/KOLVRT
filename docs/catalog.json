@@ -25,6 +25,7 @@
     "ADR-0023": "adr.0023",
     "ADR-0024": "adr.0024",
     "ADR-0025": "adr.0025",
+    "ADR-0026": "adr.0026",
     "COST-L-0001": "cost-l.0001",
     "COST-L-0002": "cost-l.0002",
     "COST-L-0003": "cost-l.0003",
@@ -392,6 +393,17 @@
       "title": "ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution"
     },
     {
+      "aliases": ["ADR-0026"],
+      "document": "adr.0026",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 6648,
+      "id": "adr.0026",
+      "kind": "adr",
+      "path": "docs/architecture-decisions/0026-el0-supervision.md",
+      "summary": "Proposed isolated EL0 supervision over bounded two-CPU lifecycle rendezvous.",
+      "title": "ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous"
+    },
+    {
       "aliases": ["KOL-PATH-0001"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0001",
@@ -724,7 +736,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 17604,
+      "estimated_bytes": 17605,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -754,7 +766,7 @@
     {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12909,
+      "estimated_bytes": 12571,
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
       "path": "docs/architecture/compatibility-manifests.md",
@@ -764,7 +776,7 @@
     {
       "document": "doc.kolvrt.architecture.first-native-slice",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5989,
+      "estimated_bytes": 6445,
       "id": "doc.kolvrt.architecture.first-native-slice",
       "kind": "navigation",
       "path": "docs/architecture/first-native-slice.md",
@@ -815,7 +827,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 14340,
+      "estimated_bytes": 15653,
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
       "path": "docs/ci/performance.md",
@@ -825,7 +837,7 @@
     {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12647,
+      "estimated_bytes": 12614,
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
       "path": "docs/architecture/dependency-hygiene.md",
@@ -903,7 +915,7 @@
     {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13987,
+      "estimated_bytes": 13979,
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
       "path": "docs/kernel/domains.md",
@@ -923,7 +935,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22156,
+      "estimated_bytes": 24080,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -943,7 +955,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 21351,
+      "estimated_bytes": 26234,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -953,12 +965,22 @@
     {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 15200,
+      "estimated_bytes": 16325,
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
       "path": "docs/kernel/scheduler.md",
       "summary": "Fixed-affinity scheduler ownership, historical Phase 3 boundaries and experimental continuous IPC execution.",
       "title": "Scheduler ownership foundation"
+    },
+    {
+      "document": "doc.kolvrt.kernel.supervision",
+      "document_status": "CURRENT",
+      "estimated_bytes": 16783,
+      "id": "doc.kolvrt.kernel.supervision",
+      "kind": "subsystem-contract",
+      "path": "docs/kernel/supervision.md",
+      "summary": "Isolated EL0 supervision with bounded exact-authority lifecycle rendezvous.",
+      "title": "Isolated EL0 supervision"
     },
     {
       "document": "doc.kolvrt.kernel.user-copy",
@@ -993,7 +1015,7 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 12066,
+      "estimated_bytes": 12145,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",
@@ -1217,14 +1239,14 @@
       "anchor": "ci-performance",
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 2165,
+      "estimated_bytes": 521,
       "id": "kolvrt.ci.performance",
       "implementation": "EXPERIMENTAL",
       "kind": "feature",
       "path": "docs/ci/performance.md",
       "summary": "Measured legacy baseline, integrity-checked caches, parallel checks and complete four-shard QEMU matrix aggregation.",
       "tags": ["ci", "timing", "cache", "tooling"],
-      "title": "CI timing and optimization"
+      "title": "Supervisor integration and workload equivalence"
     },
     {
       "anchor": "kolvrt-compatibility-manifests",
@@ -1281,7 +1303,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12412,
+      "estimated_bytes": 12379,
       "id": "kolvrt.dependencies.hygiene",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
@@ -1576,7 +1598,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22043,
+      "estimated_bytes": 23967,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
@@ -1796,7 +1818,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1115,
+      "estimated_bytes": 1266,
       "id": "kolvrt.process.asid",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -1832,7 +1854,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 3149,
+      "estimated_bytes": 6321,
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -1844,7 +1866,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 4875,
+      "estimated_bytes": 440,
       "id": "kolvrt.process.handle-boundary",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -1914,7 +1936,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1681,
+      "estimated_bytes": 2288,
       "id": "kolvrt.process.state",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -2066,7 +2088,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6859,
+      "estimated_bytes": 6851,
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
       "path": "docs/kernel/domains.md",
@@ -2261,6 +2283,28 @@
       "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
       "tags": ["trust", "clock", "freshness", "session", "migration"],
       "title": "Temporal boundary"
+    },
+    {
+      "anchor": "isolated-el0-supervision",
+      "depends_on": [
+        "kolvrt.ipc.transport",
+        "kolvrt.process.lifecycle",
+        "kolvrt.security.domains",
+        "law.013",
+        "law.025",
+        "law.043",
+        "adr.0026"
+      ],
+      "document": "doc.kolvrt.kernel.supervision",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1063,
+      "id": "kolvrt.services.supervision",
+      "implementation": "EXPERIMENTAL",
+      "kind": "feature",
+      "path": "docs/kernel/supervision.md",
+      "summary": "EL0 readiness, finite restart and shutdown over privileged lifecycle mechanisms.",
+      "tags": ["supervisor", "service", "lifecycle", "bootstrap", "el0"],
+      "title": "Bounded service lifecycle"
     },
     {
       "aliases": ["LAW-001"],

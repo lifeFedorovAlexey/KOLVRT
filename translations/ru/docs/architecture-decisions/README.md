@@ -40,3 +40,5 @@
 [Английский оригинал](../../../../docs/architecture-decisions/README.md)
 
 - [ADR-0024 — Навигация знаний документации и актуальность функций](0024-documentation-knowledge.md) — Принят для автономной навигации.
+
+- [ADR-0026 — Изолированный supervisor EL0 и ограниченный lifecycle rendezvous](0026-el0-supervision.md) — Proposed; human acceptance ещё не завершена.

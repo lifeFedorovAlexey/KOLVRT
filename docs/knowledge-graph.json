@@ -1128,6 +1128,11 @@
     },
     {
       "from": "kolvrt.ipc.transport",
+      "to": "crates/kernel/src/arch/aarch64/entry.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.ipc.transport",
       "to": "crates/kernel/src/arch/aarch64/mod.rs",
       "type": "implemented_by"
     },
@@ -2020,6 +2025,116 @@
       "from": "kolvrt.security.verifier-time",
       "to": "rust-toolchain.toml",
       "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "adr.0026",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel-core/src/process.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel-core/tests/process_protocol.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/Cargo.toml",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/process.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/scheduler/mod.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/scheduler/task.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/supervision.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/supervision_workload.S",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/supervision_workload.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel/src/tests.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/xtask/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/xtask/src/matrix.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/xtask/src/output.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/xtask/src/timing.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "kolvrt.process.lifecycle",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "kolvrt.security.domains",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "law.013",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "law.025",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "law.043",
+      "type": "depends_on"
     }
   ],
   "inputs": {
@@ -2042,12 +2157,14 @@
     "crates/kernel-core/src/ipc/tests.rs": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0",
     "crates/kernel-core/src/ipc/wire.rs": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178",
     "crates/kernel-core/src/lib.rs": "3ff7fe9052e7ceab49b0cc14d19cc92b8d50b0d61454f065dfb179c839e612de",
-    "crates/kernel-core/src/process.rs": "522208c30360401b3b54c9163743f5a5d80a39e68ec0c02163e515018c66aa73",
+    "crates/kernel-core/src/process.rs": "53f19c3658319b5908efdedca44c6b3c5d733f5c523f0ea52bf96f3110c6ed05",
     "crates/kernel-core/src/user_copy.rs": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da",
     "crates/kernel-core/src/wait.rs": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
-    "crates/kernel/Cargo.toml": "8c7842669d2fbf06bd1dedd442ac2ad86e0cbbee5a64888e8d77a45fddbe0b50",
-    "crates/kernel/src/arch/aarch64/mod.rs": "1794cd9fa9b52c675a633d5fc14908dff7d015b4bafc7d7790f3e354b20805bc",
+    "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
+    "crates/kernel/Cargo.toml": "3316a5d573b8214aa7c643cae2cede5a2e2ef3488eb2b9bc335a68ef03b6b035",
+    "crates/kernel/src/arch/aarch64/entry.S": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e",
+    "crates/kernel/src/arch/aarch64/mod.rs": "b1ad2089b32303c2c925c907eef7a07e0eddcd683eb1d4721dd1a77916931648",
     "crates/kernel/src/boot_workload.rs": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6",
     "crates/kernel/src/handles.rs": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2",
     "crates/kernel/src/handles/testing.rs": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
@@ -2066,17 +2183,20 @@
     "crates/kernel/src/ipc_revoke_workload.S": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb",
     "crates/kernel/src/ipc_workload.S": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465",
     "crates/kernel/src/ipc_workload.rs": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
-    "crates/kernel/src/main.rs": "7e65febde624020b7264a5b8a9f1b1f34496894293a603f36f400de4e1d45a60",
-    "crates/kernel/src/process.rs": "03684e721519ddc27bead508f8b91a3cd0ee8d271b2890bf66a129e2ff77b1a2",
-    "crates/kernel/src/process_workload.rs": "aed9712de7c748e36f55ef643f5df04c569cff27b06a32c479acf81cb2e0e85a",
+    "crates/kernel/src/main.rs": "fceb8e992ba8f70fbd51de61a02f392e0a1d4915d3f0b9a2db7817d3f6a00183",
+    "crates/kernel/src/process.rs": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
+    "crates/kernel/src/process_workload.rs": "93d3e9ea7c5981cf86509c64b2a832dec1ca5d53f09ff547c7bbc41bb89e2f5d",
     "crates/kernel/src/scheduler/local.rs": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
-    "crates/kernel/src/scheduler/mod.rs": "6ebd0b518b19763eb6bce35757d100e313e0a08638d5728c71ca5246f67dd207",
-    "crates/kernel/src/scheduler/task.rs": "dcbd60a3016101e36a09bcadce268096d323b7903c71f6f4891fd980179bc0e5",
+    "crates/kernel/src/scheduler/mod.rs": "0835891513ee6be934eaad49499b479f8e5701ba15a3ba11ac8fab7aaad3fd0a",
+    "crates/kernel/src/scheduler/task.rs": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
     "crates/kernel/src/security.rs": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
     "crates/kernel/src/security/testing.rs": "8153b6402505f0254132a17c2aa91279f4e35562390961519075e0d3d5243fe3",
-    "crates/kernel/src/smp.rs": "08b9a851296995e4db04efea39189d603f1e6fda3e4cc45d3be4a5e96a528628",
-    "crates/kernel/src/test_support/irq_wait.rs": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
-    "crates/kernel/src/tests.rs": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
+    "crates/kernel/src/smp.rs": "b421343b4c2a4fab8c6cbce52a20ea56ae35a71a58ddd28732f39b47ca06c21c",
+    "crates/kernel/src/supervision.rs": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401",
+    "crates/kernel/src/supervision_workload.S": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
+    "crates/kernel/src/supervision_workload.rs": "cc1989ee128de7142bb45568ea27f95a7e8bf832ce5c768af8efeca64d06e599",
+    "crates/kernel/src/test_support/irq_wait.rs": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2",
+    "crates/kernel/src/tests.rs": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
     "crates/kernel/src/user_copy.rs": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
     "crates/kernel/src/user_copy/testing.rs": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a",
     "crates/migration-advisor/Cargo.toml": "7342446384637733347a8ed867eea33b366dbaed1f21b3563370868fe056c968",
@@ -2108,9 +2228,9 @@
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
-    "crates/xtask/src/main.rs": "caa349117180e8ccd204747695933dc8a6e1a424ea78b891339be6ece403c885",
-    "crates/xtask/src/matrix.rs": "f74e946dbc3ed3de56d5155501f7fc35a0a812398076a3bc0803fb0e1c36e161",
-    "crates/xtask/src/output.rs": "48e38b909e41e57d76f4ce87247b67f20716d0078312aaae3bdf5c452525dcff",
+    "crates/xtask/src/main.rs": "74644795c2bb11a67add23414a2041dbd4e1129e1ef74502de3d3a893ca62af1",
+    "crates/xtask/src/matrix.rs": "c836726b8009bd2e57fb2d0871669fcfeb67995bfedaa68b3c7426b1f0de0959",
+    "crates/xtask/src/output.rs": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
     "crates/xtask/src/routing_demo.rs": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
     "crates/xtask/src/timing.rs": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598",
     "deny.toml": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
@@ -2140,32 +2260,34 @@
     "docs/architecture-decisions/0023-domains-and-scoped-grants.md": "27f0b4fc316646eef6bc148cf2032f8b1ee4177368d67b2d838897dc69a297b8",
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture-decisions/0025-bounded-native-ipc.md": "1d49df8c7b779bfc0cddb787a858178fd34afffe49698eacced38cf804df4dfd",
+    "docs/architecture-decisions/0026-el0-supervision.md": "b9d36aafae7609438eaa9b8a4d0f2bcb42bda073e50a70e7f31596d93a7d6c2e",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
     "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
-    "docs/architecture/compatibility-manifests.md": "77449f5c953520cca56a9eb1fb7d9f6c78419886eba0810acc9c59d09c156380",
-    "docs/architecture/component-arena.md": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
-    "docs/architecture/dependency-hygiene.md": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
-    "docs/architecture/first-native-slice.md": "ca5ca82fe87f0adb59d7bbca7ab8c78b7d08c3b8d85e49680de1fddcb35a9383",
+    "docs/architecture/compatibility-manifests.md": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
+    "docs/architecture/component-arena.md": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
+    "docs/architecture/dependency-hygiene.md": "8636f32b9ec277da8a92d17480e3fa83b7819655d7e713f79cfd901953fe4fe9",
+    "docs/architecture/first-native-slice.md": "da70ec18f6ea14cd67a35ae001762b801e28c464761eb9704511119fcbe04d3a",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
     "docs/architecture/ipc-phase35-review.md": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
     "docs/architecture/kernel-laws.md": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
-    "docs/ci/performance.md": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
+    "docs/ci/performance.md": "42a3eb4d0c95da09533392e1c6907acf2855ca2acc3016e595706494b9e39b8e",
     "docs/kernel/capabilities.md": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
-    "docs/kernel/domains.md": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+    "docs/kernel/domains.md": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
     "docs/kernel/handles.md": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
-    "docs/kernel/processes.md": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-    "docs/kernel/scheduler.md": "c12ad5f32bb4b21e666897f25ca982c70eecdde6d5dc0dd75e6e941dc2677a0d",
+    "docs/kernel/ipc.md": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
+    "docs/kernel/processes.md": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+    "docs/kernel/scheduler.md": "ac8610919ad6368ad1d8f698a04ab82a105fb6c8a2ab539c3641d49e49ddd10e",
+    "docs/kernel/supervision.md": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
     "docs/kernel/user-copy.md": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
-    "docs/knowledge-enrollment.json": "73f21921430c0c9ac0d283e9584d12abcd5cdd0619f91e0c36cf554e2dc69f43",
+    "docs/knowledge-enrollment.json": "d0883b3680410178d89a81907db2bd5b123ebc5678d1a1a14b7a6f1475a19fc0",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
-    "docs/research/cost-l-queries.md": "fd75a9a22d7d16c121156f202c8ec2e973ec12179efe3dde277186bd981f7a48",
+    "docs/research/cost-l-queries.md": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
     "docs/research/host-survey.md": "1fb7cc78022fb5e389ce51f6ecd5a4798ede733455f9d021a399dfa3e4427a22",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
@@ -2229,7 +2351,7 @@
     "scripts/ci-gate.cjs": "e431f322b9fedcf3e2363ee7518eeb98e3994180294fc0a14f0629923c6614f0",
     "scripts/ci-impact.cjs": "76df8cacf98947a359352930d67b50a61c456eb0442b08482e3f89933cb577a5",
     "scripts/ci-observations.cjs": "83175acd9e5b11910e2a4d7d38fbd12f5df14b5d68fbc528e62a2f81ec9d37fb",
-    "scripts/ci-timings.cjs": "fe5a1d32bd128db3bd79fd5e77d60c66f9f8fd7658ede3a7fc6b50bc38a26d80",
+    "scripts/ci-timings.cjs": "25a235b21da2994d8423b997967ce4bf4eeb207c0c2aaf0b69afcb54b4926caf",
     "scripts/ci-workload.ps1": "cee27cf1b576a78b37836f8a0cc9e123e64bed3e3407e5c515f1364d972f3f5b",
     "scripts/collect-host-survey.ps1": "4df8bc50cfee3bedd45a112c7146a69e1d3662c44f027ff953b99776afeb7fe9",
     "scripts/dependency-audit.cjs": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee",
@@ -2239,10 +2361,10 @@
     "scripts/run-timed.ps1": "533fa2fbf8b3a69794ace806175597e1475226e745f3a3730183da37d428b4e7",
     "scripts/setup-qemu.ps1": "b77e6ebeeb391cf931340193927e99b8f9e51b46ed30e86ef5e0d4b2defe4bae",
     "scripts/tests/ci-infrastructure.test.cjs": "03c1f623a8ae4e14254a998be8e47334e092db895114b46d0be2a968a70bdefc",
-    "scripts/tests/ci-timings.test.cjs": "4baed018104f477e91157fb29abe2486a09c64bc3e51c3c9a053c5cd56ab4877",
+    "scripts/tests/ci-timings.test.cjs": "861a5753782b0e30dc82bf21a96b7cef7684cf1a90028d0b9e065ccf4cec2cf7",
     "scripts/tests/dependency-audit.test.cjs": "5af62ec7ab990c67b3b30a6c51e7b389dd78ae0e1b3eca66eb457787252985d1",
     "scripts/tests/host-survey.test.cjs": "acea75d65a19a06b0f3a593b0f0900d4e38c57c050f38474759ceed7091fae3a",
-    "translations/manifest.json": "35149c1995bfb884b2ccf794d961d7f2007b86b3ec06b16bc79040c5de4a7531",
+    "translations/manifest.json": "71bb12f82ba0db9a6ee5ada9c29e2568c1ecfbb84eaa55c67c810d8769a7b098",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2268,31 +2390,33 @@
     "translations/ru/docs/architecture-decisions/0023-domains-and-scoped-grants.md": "2b855700426ffe25fcba9c8b7eb543843b03a2a1be8c2ed582a2d22dd234559f",
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture-decisions/0025-bounded-native-ipc.md": "bf0baae8acb076f4ccccbd3c9dfb8b0488a32b3dfead3d0a83be3803935ee76a",
+    "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "2acf355c686558e872c66a43a9df36665fce264906a0747f5e54ddb273a564a1",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
     "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
-    "translations/ru/docs/architecture/compatibility-manifests.md": "486c7abf22df094f0583c463e2da368ea1ae6961ee231f98331314c1bf598db1",
-    "translations/ru/docs/architecture/component-arena.md": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
-    "translations/ru/docs/architecture/dependency-hygiene.md": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3",
-    "translations/ru/docs/architecture/first-native-slice.md": "257f3b1f05661f5125b3a564642f2a627a510295753208c640e2f881d872a3c0",
+    "translations/ru/docs/architecture/compatibility-manifests.md": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3",
+    "translations/ru/docs/architecture/component-arena.md": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
+    "translations/ru/docs/architecture/dependency-hygiene.md": "bf955e6941a4bc8c06bd253d7506fce03bf90b1b8fdb5a8a918dc80bac2cfaf9",
+    "translations/ru/docs/architecture/first-native-slice.md": "20dfab89806ded6d3a50a9b15b4a1d54b9f1116699d9f911186ba0fc48392fc8",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
     "translations/ru/docs/architecture/ipc-phase35-review.md": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074",
     "translations/ru/docs/architecture/kernel-laws.md": "8508ce681ab0eede290b9b7db41984e109166b877da09f111125e8ec9c75048a",
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
-    "translations/ru/docs/ci/performance.md": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab",
+    "translations/ru/docs/ci/performance.md": "bab5320065e101fa7003431f2fa34477964069256a30b1191dc679aad769d054",
     "translations/ru/docs/kernel/capabilities.md": "dc50c914b89f2441a14cd315b4f2c6e7025b374c3e39ec0b36438b63a1b68ded",
-    "translations/ru/docs/kernel/domains.md": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+    "translations/ru/docs/kernel/domains.md": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
     "translations/ru/docs/kernel/handles.md": "f2a4e169bf2c45ff1d566bdeb91be0c5ab83f4a1aa3c819450b8bb6dd3fdd630",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
-    "translations/ru/docs/kernel/processes.md": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-    "translations/ru/docs/kernel/scheduler.md": "75f26986cc053838c76c57c615e43e504c82881d508436d2da0a3f7d8ee7df8b",
+    "translations/ru/docs/kernel/ipc.md": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
+    "translations/ru/docs/kernel/processes.md": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+    "translations/ru/docs/kernel/scheduler.md": "83dac5a77051c625992e93a31d23c52ab2f5380da114d243f8121f36f8c8ec65",
+    "translations/ru/docs/kernel/supervision.md": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
     "translations/ru/docs/kernel/user-copy.md": "f898a7e40dd90eb32aff79e8e9b3ce82503902f0ced4d92c71bb4ad94c83fad1",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
-    "translations/ru/docs/research/cost-l-queries.md": "a934c1e482c87b56e3e308e2291a22b1ffdb5b900fe51015949266db7c340543",
+    "translations/ru/docs/research/cost-l-queries.md": "f2f194afe3493b46da2e78baeef2ad2cf7ba0d1b68633b26a89f10e02b2e35c1",
     "translations/ru/docs/research/host-survey.md": "d854f1f25a9cdf81f91a5e943ba250d8707daca13a759db3f197ea94013ddfe7",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
@@ -3209,6 +3333,41 @@
       "schema_version": 1,
       "summary": "Bounded native endpoint IPC and retained continuous fixed-affinity execution.",
       "title": "ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution"
+    },
+    "adr.0026": {
+      "aliases": ["ADR-0026"],
+      "document": "adr.0026",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 6648,
+      "evidence_scope": "re-derived Phase 3.6 architecture and experimental static workload; no production trust, persistent service or physical ARM64 acceptance.",
+      "id": "adr.0026",
+      "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Proposed isolated EL0 supervision over bounded two-CPU lifecycle rendezvous.",
+          "tags": null,
+          "title": "ADR-0026 — Изолированный supervisor EL0 и ограниченный lifecycle rendezvous"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 75,
+          "path": "docs/architecture-decisions/0026-el0-supervision.md",
+          "sha256": "b9d36aafae7609438eaa9b8a4d0f2bcb42bda073e50a70e7f31596d93a7d6c2e",
+          "start": 1
+        },
+        "ru": {
+          "end": 75,
+          "path": "translations/ru/docs/architecture-decisions/0026-el0-supervision.md",
+          "sha256": "2acf355c686558e872c66a43a9df36665fce264906a0747f5e54ddb273a564a1",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture-decisions/0026-el0-supervision.md",
+      "schema_version": 1,
+      "summary": "Proposed isolated EL0 supervision over bounded two-CPU lifecycle rendezvous.",
+      "title": "ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous"
     },
     "case.kol-path.0001": {
       "aliases": ["KOL-PATH-0001"],
@@ -4316,7 +4475,7 @@
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 17604,
+      "estimated_bytes": 17605,
       "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
@@ -4332,13 +4491,13 @@
         "en": {
           "end": 252,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 1
         },
         "ru": {
           "end": 252,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 1
         }
       },
@@ -4418,7 +4577,7 @@
     "doc.kolvrt.architecture.compatibility-manifests": {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12909,
+      "estimated_bytes": 12571,
       "evidence_scope": "bounded host/CI declarations and synthetic regression fixtures; no loader, Linux driver support or deployed module acceptance.",
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
@@ -4434,13 +4593,13 @@
         "en": {
           "end": 151,
           "path": "docs/architecture/compatibility-manifests.md",
-          "sha256": "77449f5c953520cca56a9eb1fb7d9f6c78419886eba0810acc9c59d09c156380",
+          "sha256": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
           "start": 1
         },
         "ru": {
           "end": 151,
           "path": "translations/ru/docs/architecture/compatibility-manifests.md",
-          "sha256": "486c7abf22df094f0583c463e2da368ea1ae6961ee231f98331314c1bf598db1",
+          "sha256": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3",
           "start": 1
         }
       },
@@ -4452,7 +4611,7 @@
     "doc.kolvrt.architecture.first-native-slice": {
       "document": "doc.kolvrt.architecture.first-native-slice",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 5989,
+      "estimated_bytes": 6445,
       "evidence_scope": "complete isolated-task workload defined here (IPC, handles, cancellation, and failure containment); bounded EL0, scheduler, and routing milestones have separate implementation evidence.",
       "id": "doc.kolvrt.architecture.first-native-slice",
       "kind": "navigation",
@@ -4466,15 +4625,15 @@
       },
       "locations": {
         "en": {
-          "end": 53,
+          "end": 57,
           "path": "docs/architecture/first-native-slice.md",
-          "sha256": "ca5ca82fe87f0adb59d7bbca7ab8c78b7d08c3b8d85e49680de1fddcb35a9383",
+          "sha256": "da70ec18f6ea14cd67a35ae001762b801e28c464761eb9704511119fcbe04d3a",
           "start": 1
         },
         "ru": {
-          "end": 53,
+          "end": 57,
           "path": "translations/ru/docs/architecture/first-native-slice.md",
-          "sha256": "257f3b1f05661f5125b3a564642f2a627a510295753208c640e2f881d872a3c0",
+          "sha256": "20dfab89806ded6d3a50a9b15b4a1d54b9f1116699d9f911186ba0fc48392fc8",
           "start": 1
         }
       },
@@ -4599,7 +4758,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 14340,
+      "estimated_bytes": 15653,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
@@ -4613,15 +4772,15 @@
       },
       "locations": {
         "en": {
-          "end": 140,
+          "end": 144,
           "path": "docs/ci/performance.md",
-          "sha256": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
+          "sha256": "42a3eb4d0c95da09533392e1c6907acf2855ca2acc3016e595706494b9e39b8e",
           "start": 1
         },
         "ru": {
-          "end": 140,
+          "end": 144,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab",
+          "sha256": "bab5320065e101fa7003431f2fa34477964069256a30b1191dc679aad769d054",
           "start": 1
         }
       },
@@ -4633,7 +4792,7 @@
     "doc.kolvrt.dependencies.hygiene": {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12647,
+      "estimated_bytes": 12614,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
@@ -4649,13 +4808,13 @@
         "en": {
           "end": 132,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
+          "sha256": "8636f32b9ec277da8a92d17480e3fa83b7819655d7e713f79cfd901953fe4fe9",
           "start": 1
         },
         "ru": {
           "end": 132,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3",
+          "sha256": "bf955e6941a4bc8c06bd253d7506fce03bf90b1b8fdb5a8a918dc80bac2cfaf9",
           "start": 1
         }
       },
@@ -4879,7 +5038,7 @@
     "doc.kolvrt.kernel.domains": {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 13987,
+      "estimated_bytes": 13979,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
@@ -4895,13 +5054,13 @@
         "en": {
           "end": 179,
           "path": "docs/kernel/domains.md",
-          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
           "start": 1
         },
         "ru": {
           "end": 179,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "sha256": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
           "start": 1
         }
       },
@@ -4947,8 +5106,8 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22156,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "estimated_bytes": 24080,
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "localized": {
@@ -4961,15 +5120,15 @@
       },
       "locations": {
         "en": {
-          "end": 334,
+          "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 1
         },
         "ru": {
-          "end": 334,
+          "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 1
         }
       },
@@ -5015,7 +5174,7 @@
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 21351,
+      "estimated_bytes": 26234,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
@@ -5029,15 +5188,15 @@
       },
       "locations": {
         "en": {
-          "end": 259,
+          "end": 274,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
           "start": 1
         },
         "ru": {
-          "end": 259,
+          "end": 274,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
           "start": 1
         }
       },
@@ -5049,7 +5208,7 @@
     "doc.kolvrt.kernel.scheduler": {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 15200,
+      "estimated_bytes": 16325,
       "evidence_scope": "Phase 3.0 ownership and Phase 3.1 bounded two-CPU process lifecycle; fixed affinity.",
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
@@ -5063,15 +5222,15 @@
       },
       "locations": {
         "en": {
-          "end": 122,
+          "end": 126,
           "path": "docs/kernel/scheduler.md",
-          "sha256": "c12ad5f32bb4b21e666897f25ca982c70eecdde6d5dc0dd75e6e941dc2677a0d",
+          "sha256": "ac8610919ad6368ad1d8f698a04ab82a105fb6c8a2ab539c3641d49e49ddd10e",
           "start": 1
         },
         "ru": {
-          "end": 122,
+          "end": 126,
           "path": "translations/ru/docs/kernel/scheduler.md",
-          "sha256": "75f26986cc053838c76c57c615e43e504c82881d508436d2da0a3f7d8ee7df8b",
+          "sha256": "83dac5a77051c625992e93a31d23c52ab2f5380da114d243f8121f36f8c8ec65",
           "start": 1
         }
       },
@@ -5079,6 +5238,40 @@
       "schema_version": 1,
       "summary": "Fixed-affinity scheduler ownership, historical Phase 3 boundaries and experimental continuous IPC execution.",
       "title": "Scheduler ownership foundation"
+    },
+    "doc.kolvrt.kernel.supervision": {
+      "document": "doc.kolvrt.kernel.supervision",
+      "document_status": "CURRENT",
+      "estimated_bytes": 16783,
+      "evidence_scope": "experimental Phase 3.6 development fixture and bounded lifecycle implementation; acceptance review, production bootstrap trust and physical ARM64 remain pending.",
+      "id": "doc.kolvrt.kernel.supervision",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Изолированный supervisor EL0 с ограниченным lifecycle rendezvous и точной authority.",
+          "tags": null,
+          "title": "Изолированный supervisor EL0"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 146,
+          "path": "docs/kernel/supervision.md",
+          "sha256": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
+          "start": 1
+        },
+        "ru": {
+          "end": 148,
+          "path": "translations/ru/docs/kernel/supervision.md",
+          "sha256": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
+          "start": 1
+        }
+      },
+      "path": "docs/kernel/supervision.md",
+      "schema_version": 1,
+      "summary": "Isolated EL0 supervision with bounded exact-authority lifecycle rendezvous.",
+      "title": "Isolated EL0 supervision"
     },
     "doc.kolvrt.kernel.user-copy": {
       "document": "doc.kolvrt.kernel.user-copy",
@@ -5185,7 +5378,7 @@
     "doc.kolvrt.research.cost-l-queries": {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 12066,
+      "estimated_bytes": 12145,
       "evidence_scope": "bounded host queries over reciprocal registry/module declarations; production data, completeness and human acceptance remain open.",
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
@@ -5201,13 +5394,13 @@
         "en": {
           "end": 151,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "fd75a9a22d7d16c121156f202c8ec2e973ec12179efe3dde277186bd981f7a48",
+          "sha256": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
           "start": 1
         },
         "ru": {
           "end": 151,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "a934c1e482c87b56e3e308e2291a22b1ffdb5b900fe51015949266db7c340543",
+          "sha256": "f2f194afe3493b46da2e78baeef2ad2cf7ba0d1b68633b26a89f10e02b2e35c1",
           "start": 1
         }
       },
@@ -5417,7 +5610,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Historical receipt retained; shared repository-checks dispatcher/library/COST-L source bytes changed for #47. Revalidated exact-source evidence for this separate feature remains pending.",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
@@ -5447,13 +5640,13 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 7
         }
       },
@@ -5484,13 +5677,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 33
         }
       },
@@ -5519,13 +5712,13 @@
         "en": {
           "end": 80,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 63
         },
         "ru": {
           "end": 80,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 63
         }
       },
@@ -5554,13 +5747,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 19
         }
       },
@@ -5589,13 +5782,13 @@
         "en": {
           "end": 90,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 79
         },
         "ru": {
           "end": 90,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 79
         }
       },
@@ -5624,13 +5817,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 41
         }
       },
@@ -5659,13 +5852,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 55
         }
       },
@@ -5694,13 +5887,13 @@
         "en": {
           "end": 104,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "dfa55ea28f0d559707fbd4617362cf8ef17d0785a0405f06e7c0ea2aa4efd5cc",
+          "sha256": "010c2dceb27c331c69c9e2e8d1dbe43e9c5b3590a9084491b5acc60ac290c8b5",
           "start": 89
         },
         "ru": {
           "end": 104,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "7be094f740e2b33e3bb6a6927860802e9e61e4881ec1443d3b767e054f5d3bc6",
+          "sha256": "f12e27117e80f1a563b1759ed3126cabd8406a44d8c75b17f8f5870b6e4d7671",
           "start": 89
         }
       },
@@ -5887,7 +6080,7 @@
       "anchor": "ci-performance",
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 2165,
+      "estimated_bytes": 521,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "feature": {
         "acceptance": [
@@ -5949,27 +6142,27 @@
           "read_when": null,
           "summary": "Измеренный старый baseline, проверка целостности кэшей, параллельные проверки и полная агрегация четырёх QEMU shards.",
           "tags": ["ci", "timing", "cache", "tooling"],
-          "title": "Измерение времени CI и оптимизация"
+          "title": "Интеграция supervisor и сопоставимость workload"
         }
       },
       "locations": {
         "en": {
-          "end": 16,
+          "end": 12,
           "path": "docs/ci/performance.md",
-          "sha256": "f26f4460ac447ed4ce485d1c03077f2a4e764d5480b7bf80a4fa979d3484fb9d",
+          "sha256": "42a3eb4d0c95da09533392e1c6907acf2855ca2acc3016e595706494b9e39b8e",
           "start": 7
         },
         "ru": {
-          "end": 16,
+          "end": 12,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "288fb4461287f676a5b93edb7dc83bdcf216b381ab7521d93ece4f701ce4c2ab",
+          "sha256": "bab5320065e101fa7003431f2fa34477964069256a30b1191dc679aad769d054",
           "start": 7
         }
       },
       "path": "docs/ci/performance.md",
       "summary": "Measured legacy baseline, integrity-checked caches, parallel checks and complete four-shard QEMU matrix aggregation.",
       "tags": ["ci", "timing", "cache", "tooling"],
-      "title": "CI timing and optimization"
+      "title": "Supervisor integration and workload equivalence"
     },
     "kolvrt.compatibility.manifests": {
       "anchor": "kolvrt-compatibility-manifests",
@@ -6040,7 +6233,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Historical receipt retained after consolidated IPC/dependency integration; current-source revalidation is required for changed declared inputs: Cargo.lock, crates/host-process-metrics/Cargo.toml, crates/kernel-core/Cargo.toml, crates/kernel/Cargo.toml, crates/migration-advisor/Cargo.toml, crates/migration-workbench/Cargo.toml, crates/repository-checks/Cargo.toml, crates/repository-checks/src/cost_l.rs, crates/repository-checks/src/lib.rs, crates/routing-demo/Cargo.toml, crates/routing/Cargo.toml, crates/xtask/Cargo.toml",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "receipt": "research/results/issue47-compatibility-manifests.json",
             "receipt_sha256": "95766b2a15e17e5d3324ff9692e3f4c7ec2725e6971c0af8b249e1cfc113decb",
             "scope": "Host consistency and declaration boundary only; production-shaped artifacts are non-executable test bytes, not supported modules.",
@@ -6074,13 +6267,13 @@
         "en": {
           "end": 14,
           "path": "docs/architecture/compatibility-manifests.md",
-          "sha256": "77449f5c953520cca56a9eb1fb7d9f6c78419886eba0810acc9c59d09c156380",
+          "sha256": "5b03a5639fe729c815015303ed364e3bd80ad106886c7c4cc0808fdd8ed18bea",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/architecture/compatibility-manifests.md",
-          "sha256": "486c7abf22df094f0583c463e2da368ea1ae6961ee231f98331314c1bf598db1",
+          "sha256": "8c359c4d32fc583127491038d6afae1646856d866d37ee213b651826ae5f4fe3",
           "start": 7
         }
       },
@@ -6173,11 +6366,11 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Executed seven query and thirteen manifest tests with exact source digests; historical receipts retained.",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "receipt": "research/results/issue48-manifest-queries.json",
             "receipt_sha256": "c4b07aeddc7c6ae61f463ffbeadfb7b2c65d2ee73871dee39fa2eb1d7294514d",
             "scope": "Bounded host declaration/query consistency with synthetic non-executable production-shaped artifacts only; no observed runtime consumers or costs.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -6200,13 +6393,13 @@
         "en": {
           "end": 29,
           "path": "docs/research/cost-l-queries.md",
-          "sha256": "fd75a9a22d7d16c121156f202c8ec2e973ec12179efe3dde277186bd981f7a48",
+          "sha256": "b04b3ee9c9926621ccf50d838ac5a3d7739561964c241d472d0f21b1a6ceac55",
           "start": 7
         },
         "ru": {
           "end": 29,
           "path": "translations/ru/docs/research/cost-l-queries.md",
-          "sha256": "a934c1e482c87b56e3e308e2291a22b1ffdb5b900fe51015949266db7c340543",
+          "sha256": "f2f194afe3493b46da2e78baeef2ad2cf7ba0d1b68633b26a89f10e02b2e35c1",
           "start": 7
         }
       },
@@ -6218,7 +6411,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12412,
+      "estimated_bytes": 12379,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "feature": {
         "acceptance": ["research/results/issue94-dependency-hygiene.json"],
@@ -6262,7 +6455,7 @@
         "verification": [
           {
             "environment": "host-process",
-            "reason": "Historical dependency receipt retained. CI/Node inputs changed, and #47 adds a compatibility marker to window-compat Cargo metadata; dependency graph semantics are unchanged, but fresh exact-source acceptance is pending.",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
             "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
@@ -6289,13 +6482,13 @@
         "en": {
           "end": 132,
           "path": "docs/architecture/dependency-hygiene.md",
-          "sha256": "634098d5fcb2fb1547d7839bf728efefda2f631ebad588dfe0ea5528366608c4",
+          "sha256": "8636f32b9ec277da8a92d17480e3fa83b7819655d7e713f79cfd901953fe4fe9",
           "start": 7
         },
         "ru": {
           "end": 132,
           "path": "translations/ru/docs/architecture/dependency-hygiene.md",
-          "sha256": "c7d75463b0c2f125152494360548d5ae5fce62e67e24a844c14ce93a59b560f3",
+          "sha256": "bf955e6941a4bc8c06bd253d7506fce03bf90b1b8fdb5a8a918dc80bac2cfaf9",
           "start": 7
         }
       },
@@ -6658,7 +6851,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.cancel",
       "kind": "contract-section",
       "localized": {
@@ -6673,13 +6866,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -6693,7 +6886,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.cross-cpu",
       "kind": "contract-section",
       "localized": {
@@ -6708,13 +6901,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 66
         }
       },
@@ -6728,7 +6921,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.deadline",
       "kind": "contract-section",
       "localized": {
@@ -6743,13 +6936,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -6763,7 +6956,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1371,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.endpoint",
       "kind": "contract-section",
       "localized": {
@@ -6778,13 +6971,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 16
         }
       },
@@ -6798,7 +6991,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 2223,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.payload",
       "kind": "contract-section",
       "localized": {
@@ -6813,13 +7006,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 34
         }
       },
@@ -6868,7 +7061,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1150,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.queue",
       "kind": "contract-section",
       "localized": {
@@ -6883,13 +7076,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 26
         }
       },
@@ -6903,7 +7096,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.receive",
       "kind": "contract-section",
       "localized": {
@@ -6918,13 +7111,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -6938,7 +7131,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 2223,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.request",
       "kind": "contract-section",
       "localized": {
@@ -6953,13 +7146,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 34
         }
       },
@@ -7049,7 +7242,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 894,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.teardown",
       "kind": "contract-section",
       "localized": {
@@ -7064,13 +7257,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 76
         }
       },
@@ -7084,7 +7277,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.terminal",
       "kind": "contract-section",
       "localized": {
@@ -7099,13 +7292,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 58
         }
       },
@@ -7141,8 +7334,8 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 22043,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "estimated_bytes": 23967,
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "feature": {
         "acceptance": [
           "research/results/ipc-phase35-acceptance.json",
@@ -7184,6 +7377,7 @@
           "crates/kernel-core/tests/handle_contract.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/arch/aarch64/entry.S",
           "crates/kernel/src/boot_workload.rs",
           "crates/kernel/src/handles.rs",
           "crates/kernel/src/handles/testing.rs",
@@ -7237,10 +7431,10 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Issue #109 changes the host matrix runner and shared serial/sharded inventory, and makes failed non-test process checks emit their exact name in PROD machine evidence. Failure predicates and native IPC behavior remain unchanged; historical receipts remain immutable, but current-source runner verification and semantic review are pending.",
-            "receipt": "research/results/ipc-phase35-readiness.json",
-            "receipt_sha256": "f3a34e38f84c8f9f776b23e8b513b21ae8f1b59df04958657cecbef82f4f77e9",
-            "scope": "Two fixed-affinity QEMU CPUs, current bounded IPC mechanism, fresh enforcement controls and explicit semantic EN/RU review. No physical ARM or stable ABI claim.",
+            "reason": "Routing stand run 37389265393 failed in stripped PROD boot after initial EL0 validation; no panic identity was retained. Stripped failures now retain source location and process/IPC check name without data/address disclosure. Full current-source verification is pending; historical complete receipts remain immutable.",
+            "receipt": "research/results/supervision-phase36.json",
+            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
+            "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64.",
             "state": "STALE"
           },
           {
@@ -7265,15 +7459,15 @@
       },
       "locations": {
         "en": {
-          "end": 334,
+          "end": 339,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 4
         },
         "ru": {
-          "end": 334,
+          "end": 339,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 4
         }
       },
@@ -7288,7 +7482,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.wait",
       "kind": "contract-section",
       "localized": {
@@ -7303,13 +7497,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 66
         }
       },
@@ -7323,7 +7517,7 @@
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
-      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.",
+      "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.",
       "id": "kolvrt.ipc.wakeup",
       "kind": "contract-section",
       "localized": {
@@ -7338,13 +7532,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ada97d53fe55da1d60c07a876bfd80df14cae9e556ba7de17a8ed01ce722886f",
+          "sha256": "5650d2f7b02fc1aef324de6c7b57968e96c59fc991cd7f824c22749506988101",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "cb3d175af9fb66d0727dc6f4c589796509a4abe7daad87ebef2b2bdf7a44ecfa",
+          "sha256": "fd68a94bd5661b2e1e1d3bed42c9073055511bdaf8a748dad78f7420bb309f0e",
           "start": 66
         }
       },
@@ -7897,7 +8091,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1115,
+      "estimated_bytes": 1266,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.asid",
       "kind": "contract-section",
@@ -7911,16 +8105,16 @@
       },
       "locations": {
         "en": {
-          "end": 100,
+          "end": 109,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-          "start": 93
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+          "start": 102
         },
         "ru": {
-          "end": 100,
+          "end": 109,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-          "start": 93
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+          "start": 102
         }
       },
       "path": "docs/kernel/processes.md",
@@ -7946,16 +8140,16 @@
       },
       "locations": {
         "en": {
-          "end": 124,
+          "end": 133,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-          "start": 117
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+          "start": 126
         },
         "ru": {
-          "end": 124,
+          "end": 133,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-          "start": 117
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+          "start": 126
         }
       },
       "path": "docs/kernel/processes.md",
@@ -7981,16 +8175,16 @@
       },
       "locations": {
         "en": {
-          "end": 59,
+          "end": 62,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-          "start": 42
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+          "start": 45
         },
         "ru": {
-          "end": 59,
+          "end": 62,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-          "start": 42
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+          "start": 45
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8002,7 +8196,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 3149,
+      "estimated_bytes": 6321,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.evidence",
       "kind": "contract-section",
@@ -8016,16 +8210,16 @@
       },
       "locations": {
         "en": {
-          "end": 94,
+          "end": 103,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-          "start": 81
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+          "start": 84
         },
         "ru": {
-          "end": 94,
+          "end": 103,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-          "start": 81
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+          "start": 84
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8037,7 +8231,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 4875,
+      "estimated_bytes": 440,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.handle-boundary",
       "kind": "contract-section",
@@ -8051,16 +8245,16 @@
       },
       "locations": {
         "en": {
-          "end": 259,
+          "end": 137,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-          "start": 123
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+          "start": 132
         },
         "ru": {
-          "end": 259,
+          "end": 137,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-          "start": 123
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+          "start": 132
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8088,13 +8282,13 @@
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
           "start": 13
         }
       },
@@ -8145,7 +8339,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
@@ -8172,13 +8366,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
           "start": 7
         }
       },
@@ -8205,16 +8399,16 @@
       },
       "locations": {
         "en": {
-          "end": 106,
+          "end": 115,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-          "start": 99
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+          "start": 108
         },
         "ru": {
-          "end": 106,
+          "end": 115,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-          "start": 99
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+          "start": 108
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8240,16 +8434,16 @@
       },
       "locations": {
         "en": {
-          "end": 82,
+          "end": 85,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
-          "start": 58
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+          "start": 61
         },
         "ru": {
-          "end": 82,
+          "end": 85,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
-          "start": 58
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
+          "start": 61
         }
       },
       "path": "docs/kernel/processes.md",
@@ -8261,7 +8455,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1681,
+      "estimated_bytes": 2288,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "kolvrt.process.state",
       "kind": "contract-section",
@@ -8275,15 +8469,15 @@
       },
       "locations": {
         "en": {
-          "end": 43,
+          "end": 46,
           "path": "docs/kernel/processes.md",
-          "sha256": "b42b9cf44bb13027e396911fb13b7953d7d0ed53b7ed39b5bf32391d788b2131",
+          "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
           "start": 23
         },
         "ru": {
-          "end": 43,
+          "end": 46,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "863c1af4fc644e31399b1d785c65d6c797ee542ad2c1aa16cedf55c2d6fe011f",
+          "sha256": "1975dc9f566660e5fe6babd9219ebbf4d13ebb945cbfc934e4d1b1fac3243d38",
           "start": 23
         }
       },
@@ -8596,7 +8790,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
@@ -8626,13 +8820,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/domains.md",
-          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
           "start": 11
         },
         "ru": {
           "end": 18,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "sha256": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
           "start": 11
         }
       },
@@ -8661,13 +8855,13 @@
         "en": {
           "end": 38,
           "path": "docs/kernel/domains.md",
-          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
           "start": 29
         },
         "ru": {
           "end": 38,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "sha256": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
           "start": 29
         }
       },
@@ -8695,13 +8889,13 @@
         "en": {
           "end": 30,
           "path": "docs/kernel/domains.md",
-          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
           "start": 17
         },
         "ru": {
           "end": 30,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "sha256": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
           "start": 17
         }
       },
@@ -8729,13 +8923,13 @@
         "en": {
           "end": 58,
           "path": "docs/kernel/domains.md",
-          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
           "start": 37
         },
         "ru": {
           "end": 58,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "sha256": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
           "start": 37
         }
       },
@@ -8747,7 +8941,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 6859,
+      "estimated_bytes": 6851,
       "evidence_scope": "bounded Phase 3.4, one process per domain, two fixed-affinity CPUs, Event-notification requests.",
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
@@ -8763,13 +8957,13 @@
         "en": {
           "end": 179,
           "path": "docs/kernel/domains.md",
-          "sha256": "6ed048d6b7eb0fccb519b84c6ad0a92d4a13393f18e772d698cceb22a9fc86f1",
+          "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
           "start": 57
         },
         "ru": {
           "end": 179,
           "path": "translations/ru/docs/kernel/domains.md",
-          "sha256": "69b23ea7338f7733046c9348b1e65c8bae6c9fd070210fa777395ef5cdbb3c13",
+          "sha256": "78ef5a738640c1fb8a9a1199c23417c4288980d54e99c6fc396412788edbe7f1",
           "start": 57
         }
       },
@@ -9382,6 +9576,104 @@
       "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
       "tags": ["trust", "clock", "freshness", "session", "migration"],
       "title": "Temporal boundary"
+    },
+    "kolvrt.services.supervision": {
+      "anchor": "isolated-el0-supervision",
+      "depends_on": [
+        "kolvrt.ipc.transport",
+        "kolvrt.process.lifecycle",
+        "kolvrt.security.domains",
+        "law.013",
+        "law.025",
+        "law.043",
+        "adr.0026"
+      ],
+      "document": "doc.kolvrt.kernel.supervision",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1063,
+      "evidence_scope": "experimental Phase 3.6 development fixture and bounded lifecycle implementation; acceptance review, production bootstrap trust and physical ARM64 remain pending.",
+      "feature": {
+        "acceptance": [],
+        "adrs": ["adr.0026"],
+        "implementation": "EXPERIMENTAL",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
+        "issues": [27],
+        "limitations": [
+          "Development static manifest/image assurance only; production trust remains #38.",
+          "Fixed affinity and two-CPU lifecycle barrier; generic wait-any, migration, independent live admission and persistent services are excluded.",
+          "Semantic architecture and complete EN/RU human review remain pending; QEMU is not physical ARM64 acceptance."
+        ],
+        "next_gate": "Complete architecture/code semantic and full EN/RU human review before bounded Phase 3.6 acceptance; #28 owns persistence and #38 production bootstrap trust.",
+        "readiness": "NOT_READY",
+        "sources": [
+          "crates/kernel-core/src/process.rs",
+          "crates/kernel-core/tests/process_protocol.rs",
+          "crates/kernel/Cargo.toml",
+          "crates/kernel/src/main.rs",
+          "crates/kernel/src/process.rs",
+          "crates/kernel/src/scheduler/mod.rs",
+          "crates/kernel/src/scheduler/task.rs",
+          "crates/kernel/src/supervision.rs",
+          "crates/kernel/src/supervision_workload.S",
+          "crates/kernel/src/supervision_workload.rs",
+          "crates/kernel/src/tests.rs",
+          "crates/xtask/src/main.rs",
+          "crates/xtask/src/matrix.rs",
+          "crates/xtask/src/output.rs",
+          "crates/xtask/src/timing.rs"
+        ],
+        "transitions": [
+          {
+            "acceptance": [],
+            "from": "UNRECORDED",
+            "reason": "Implement isolated EL0 policy with a separately derived lifecycle barrier; acceptance review remains pending.",
+            "to": "EXPERIMENTAL"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "reason": "Routing stand run 37389265393 failed in stripped PROD boot after initial EL0 validation; no panic identity was retained. Stripped failures now retain source location and process/IPC check name without data/address disclosure. Full current-source verification is pending; historical complete receipts remain immutable.",
+            "receipt": "research/results/supervision-phase36.json",
+            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
+            "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust.",
+            "state": "STALE"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "No physical ARM64 receipt.",
+            "state": "UNKNOWN"
+          }
+        ]
+      },
+      "id": "kolvrt.services.supervision",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Readiness EL0, конечный restart и shutdown поверх privileged lifecycle mechanisms.",
+          "tags": ["supervisor", "service", "lifecycle", "bootstrap", "el0"],
+          "title": "Ограниченный жизненный цикл сервисов"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 18,
+          "path": "docs/kernel/supervision.md",
+          "sha256": "6fd2566115c605d15b662b31e37514f906e96fe41a263d6fee130a58ef5a5908",
+          "start": 11
+        },
+        "ru": {
+          "end": 20,
+          "path": "translations/ru/docs/kernel/supervision.md",
+          "sha256": "3c27007d3b0852c7f805ab7bc2f28680c4e6b6287ef57c548f091bbd843f3d68",
+          "start": 13
+        }
+      },
+      "path": "docs/kernel/supervision.md",
+      "summary": "EL0 readiness, finite restart and shutdown over privileged lifecycle mechanisms.",
+      "tags": ["supervisor", "service", "lifecycle", "bootstrap", "el0"],
+      "title": "Bounded service lifecycle"
     },
     "law.001": {
       "aliases": ["LAW-001"],

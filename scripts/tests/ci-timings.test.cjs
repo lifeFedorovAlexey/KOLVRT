@@ -46,7 +46,7 @@ test("retains step timings and unknown nested observations", () => {
 test("three unique compatible successful runs required; failed and changed runs excluded", () => {
   const current = fixture();
   const baselines = [fixture(1), fixture(2), fixture(3)];
-  assert.equal(compare(current, baselines, true).state, "COMPARABLE");
+  assert.equal(compare(current, baselines).state, "COMPARABLE");
   assert.equal(
     compare(current, [baselines[0], baselines[0], baselines[1]]).state,
     "INSUFFICIENT_BASELINE",
@@ -54,19 +54,19 @@ test("three unique compatible successful runs required; failed and changed runs 
   baselines[0].conclusion = "failure";
   baselines[1].steps[0].runner_labels = ["ubuntu-24.04"];
   baselines[2].head_sha = "changed";
-  assert.equal(compare(current, baselines, true).runs, 0);
+  assert.equal(compare(current, baselines).runs, 0);
 });
 
-test("explicit before/after comparison admits changed source and retains identities", () => {
+test("API comparison rejects different sources even with authored inventory IDs", () => {
   const current = fixture(4, "after");
-  const comparison = compare(current, [fixture(1), fixture(2), fixture(3)]);
-  assert.deepEqual(comparison.baseline_head_shas, ["abc"]);
-  assert.equal(comparison.delta_seconds, 0);
+  const baselines = [fixture(1), fixture(2), fixture(3)];
+  current.check_inventory_id = "claimed-inventory";
+  for (const baseline of baselines)
+    baseline.check_inventory_id = current.check_inventory_id;
+  assert.equal(compare(current, baselines).state, "INSUFFICIENT_BASELINE");
+  current.head_sha = "abc";
   current.conclusion = "failure";
-  assert.equal(
-    compare(current, [fixture(1), fixture(2), fixture(3)]).state,
-    "CURRENT_FAILED",
-  );
+  assert.equal(compare(current, baselines).state, "CURRENT_FAILED");
 });
 
 test("summary escapes API-provided names", () => {
@@ -102,4 +102,69 @@ test("critical path uses the longest parallel branch and rejects cycles or missi
     /cycle/,
   );
   assert.throws(() => criticalPath({ a: 1 }, { a: ["missing"] }), /Missing/);
+});
+
+test("matching shard topology cannot certify historical workload equivalence", () => {
+  const job = (name, steps = []) => ({
+    name,
+    labels: ["windows-2022"],
+    conclusion: "success",
+    started_at: "2026-10-05T10:00:00Z",
+    completed_at: "2026-10-05T10:01:00Z",
+    steps: steps.map((name) => ({ name, conclusion: "success" })),
+  });
+  const run = (id) => ({
+    id,
+    name: "Kernel foundation",
+    head_sha: `source-${id}`,
+    workflow_id: 1,
+    run_attempt: 1,
+    event: "push",
+    status: "completed",
+    conclusion: "success",
+  });
+  const oldSteps = [
+    "Run npm run check",
+    "Routing model contracts",
+    "Production model and absent switching",
+    "Architecture lint",
+    "Production architecture lint",
+    "Real kernel matrix and host failure propagation",
+    "Real EL0 routing matrix and failure propagation",
+    "Real 16-bit ASID baseline comparison",
+  ];
+  const baselines = [1, 2, 3].map((id) =>
+    snapshot(run(id), [job("foundation", oldSteps)]),
+  );
+  const current = snapshot(
+    run(4),
+    [
+      "static",
+      "host",
+      "kernel-dev",
+      "kernel-prod",
+      "routing",
+      "asid",
+      "evidence",
+      "foundation",
+      "matrix (0)",
+      "matrix (1)",
+      "matrix (2)",
+      "matrix (3)",
+    ].map((name) => job(`${name} / run`, ["Execute required workload"])),
+  );
+  assert.equal(current.check_inventory_id, null);
+  assert.equal(compare(current, baselines).state, "INSUFFICIENT_BASELINE");
+});
+
+test("identical graph across sources cannot pass automatic comparison", () => {
+  const current = fixture(4, "after");
+  const baselines = [fixture(1), fixture(2), fixture(3)];
+  assert.equal(compare(current, baselines).state, "INSUFFICIENT_BASELINE");
+  current.check_inventory_id = "kernel-136-v1";
+  for (const baseline of baselines)
+    baseline.check_inventory_id = "kernel-130-v1";
+  assert.equal(compare(current, baselines).state, "INSUFFICIENT_BASELINE");
+  current.head_sha = "abc";
+  assert.equal(compare(current, baselines).state, "COMPARABLE");
 });

@@ -61,7 +61,7 @@ CPU0 setup is the existing bounded allocator/coordinator role, not a permanent s
 
 Timer IRQ stops/deasserts the source, acquires only the local nonblocking access permit to record preemption, then ends the GIC interrupt. The lower-EL trap uses a separate short permit for accounting/selection. Re-entry fails immediately; no spin waiting, allocation, UART output or ordinary lock exists on the successful path. All storage scopes end before ERET and all rendezvous/completion waits occur without a scope.
 
-An ordinary lock held by the current CPU prohibits scheduler access; a scheduler storage scope prohibits acquiring an ordinary lock, including the heap lock. Guards cannot move to another CPU/thread. This has no global scheduler lock or nested lock order. It does not claim to detect arbitrary external wait dependencies or support nested IRQ. Fixed affinity, full context preservation, per-CPU ASIDs with ASID-zero/full-flush fallback, typed 1 ms quantum and timer-delivery assumptions remain. A process ASID is locally invalidated on terminal completion before its lease can be reused; migration and multi-CPU residency are unsupported. Fixture limits remain sixteen slices/two seconds; the opaque payload retains its separate budget. Timeout never proves quiescence.
+An ordinary lock held by the current CPU prohibits scheduler access; a scheduler storage scope prohibits acquiring an ordinary lock, including the heap lock. Guards cannot move to another CPU/thread. This has no global scheduler lock or nested lock order. It does not claim to detect arbitrary external wait dependencies or support nested IRQ. Fixed affinity, full context preservation, per-CPU ASIDs with ASID-zero/full-flush fallback, typed 1 ms quantum and timer-delivery assumptions remain. A process ASID is locally invalidated on terminal completion before its lease can be reused; migration and multi-CPU residency are unsupported. Historical foundation fixtures use sixteen slices/two seconds; current finite lifecycle probes use the independently documented quantum cap and dedicated deadline cases. The opaque payload retains its separate budget. A bounded dispatch has one absolute workload deadline shared by both queues and a separate two-second publication guard after that deadline. Task expiry does not authorize returning before acquired completion and root detachment; an unbounded dispatch retains no hidden deadline. Timeout never proves quiescence.
 
 ## Unsafe and mechanical checks
 
@@ -109,6 +109,10 @@ The [dynamic lifecycle](processes.md) extends this foundation with vacant slots 
 ## Phase 3.3 namespace ownership
 
 [Handle ownership](handles.md) uses existing publication/mutation/quiescent permits. Admission exclusively borrows each Registry namespace; a move places it into the indexed CPU state and acquired two-CPU completion returns it exactly once. The namespace remains linear across nonterminal steps. No new global lock or unsafe storage is introduced; retained resource borrows end inside the masked current-task callback.
+
+## Phase 3.6 lifecycle checkpoint
+
+The experimental [supervisor](supervision.md) uses a separately scoped two-CPU checkpoint. Exact IPC waits, retry reasons and counters remain retained; pending copy continuations finish before namespace transfer. Each CPU restores its native root and releases running ownership before CPU0 changes membership. SGI-only traps cannot spend the checkpoint timer quantum before EL0 executes. A saved cursor continues only for its matching live process generation. Root detachment of a blocked peer does not authorize reclaim. The purpose of continuous IPC dispatch is preserved; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) is proposed with semantic/EN-RU acceptance pending.
 
 <!-- knowledge -->
 

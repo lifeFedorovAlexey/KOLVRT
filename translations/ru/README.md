@@ -29,6 +29,8 @@ Bounded IPC Phase 3.5 реализован и готов для объявлен
 
 Ранний код не определяет архитектуру следующих этапов. Перед расширением решение выводится из действующих инвариантов и принятых решений; мешающий им код перерабатывается или удаляется.
 
+Экспериментальный [supervisor EL0](docs/kernel/supervision.md) реализует bounded static service workload со fresh lifecycle identities, аутентифицированным readiness, конечным restart/backoff и честным shutdown. Human architecture и complete EN/RU acceptance задачи #27 ещё не завершены; #28 отвечает за persistent integration, #38 — за production bootstrap trust. Physical ARM64 и stable ABI остаются отдельными gates.
+
 ## Архитектура
 
 - Поведение ядра определяется действующими контрактами и не зависит от совместимости.
@@ -75,9 +77,9 @@ cargo xtask debug
 cargo run --locked -p repository-checks -- cost-l list --json
 ```
 
-Программа проверки ядра требует **97 тестов в каждом профиле DEV/PROD**, обе обычные загрузки и **82 отрицательных контроля**. Контроли намеренно нарушают защиту и должны завершаться ожидаемым отказом. Пропущенные события, неожиданные паники, ошибки эмулятора и тайм-ауты завершают проверку ошибкой.
+Программа проверки ядра требует **125 тестов в каждом профиле DEV/PROD**, обе обычные загрузки и **136 отрицательных контроля**. Контроли намеренно нарушают защиту и должны завершаться ожидаемым отказом. Пропущенные события, неожиданные паники, ошибки эмулятора и тайм-ауты завершают проверку ошибкой.
 
-Сохранённый [прогон проверки выравнивания ELF](../../research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) фиксирует эти числа для конкретных хешей исходников. Он не подтверждает более поздние версии или работу на физическом оборудовании. В `target/kernel/` сохраняются ELF-образы, хеши, события UART, настройки QEMU, размеры сборок, перечень участков unsafe и выборки измерений. Подробнее — в [руководстве по проверкам и GDB](docs/kernel/testing.md).
+Сохранённый [прогон проверки выравнивания ELF](../../research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) фиксирует **97 тестов на профиль DEV/PROD и 82 отрицательных контроля** для конкретных хешей исходников. Он не подтверждает более поздние версии или работу на физическом оборудовании. В `target/kernel/` сохраняются ELF-образы, хеши, события UART, настройки QEMU, размеры сборок, перечень участков unsafe и выборки измерений. Подробнее — в [руководстве по проверкам и GDB](docs/kernel/testing.md).
 
 ## Документация и исследования
 
@@ -112,7 +114,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                       | EXPERIMENTAL        | host-process: STALE; physical-arm64: UNKNOWN                              |
 | [kolvrt.ci.performance](docs/ci/performance.md#ci-performance)                                                | EXPERIMENTAL        | github-actions: UNKNOWN                                                   |
 | [kolvrt.compatibility.manifests](docs/architecture/compatibility-manifests.md#kolvrt-compatibility-manifests) | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
-| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)                | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
+| [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)                | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)              | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                     | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
@@ -124,6 +126,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)              | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.verifier-time](docs/security/verifier-time.md#kolvrt-verifier-time)                          | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
+| [kolvrt.services.supervision](docs/kernel/supervision.md#isolated-el0-supervision)                            | EXPERIMENTAL        | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 
 <!-- feature-summary:end -->
 

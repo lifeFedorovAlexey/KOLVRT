@@ -6,7 +6,7 @@
 # Bounded native EL0 IPC
 
 Document status: CURRENT
-Evidence scope: accepted bounded Phase 3.5 on main 9b4687a source: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. Current host-runner verification is STALE after #109; READY is limited to this milestone; physical ARM is unverified.
+Evidence scope: accepted bounded Phase 3.5 on main 9b4687a: 124 DEV/124 PROD checks and 46 focused mutations at that retained snapshot. The latest exact-source Cortex-A57 stand verifies 125 DEV/125 PROD checks and 56 IPC/supervision controls. Machine-readable READY applies only to accepted IPC Phase 3.5; supervision NOT_READY and human acceptance remain separate. Physical ARM is unverified.
 Current reference: [Architecture re-derivation](../architecture/ipc-phase35-review.md)
 
 ABI contract: native.request/1
@@ -89,11 +89,15 @@ Current real EL0 fixtures cover both cross-CPU directions and each same-CPU plac
 
 Twenty-three focused mutation controls cover authority, queue bounds/FIFO, client-ID and internal request generation, service-token substitution, wait recheck, wake generation/publication, duplicate READY, wrong-process wake, blocked reclaim, storage scope, terminal arbitration, cancel/commit, deadlines, missing and duplicate charge release, endpoint teardown, copy transactions and service death. All 46 DEV/PROD runs were rejected by their exact expected event or named failing test; an arbitrary panic is insufficient. A CPU1 kernel failure retains its exact cause in a bounded atomic record for CPU0, which stops the continuous session without authorizing reclamation.
 
-Retained source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records positive checks of its named source snapshot and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. The [acceptance review](../architecture/ipc-phase35-acceptance-review.md) records code/EN-RU semantic correspondence and the scoped readiness decision. Controls and readiness receipts supplement the historical records at their named snapshots. Issue #109 changes only the host execution/verification inventory: current runner-source verification is STALE pending a fresh scoped receipt and semantic review. Native IPC implementation and its prior bounded readiness acceptance remain unchanged; historical receipts do not verify the new runner. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
+Retained source-bound artifacts are [kernel acceptance](../../research/results/ipc-phase35-acceptance.json), [physical package-removal](../../research/results/native-compat-removal-phase35.json), [six-configuration routing regression](../../research/results/routing-phase35-regression.json) and [unsafe inventory](../../research/results/kernel-phase35-unsafe-audit.json). The original receipts retain their source snapshots. The [main integration receipt](../../research/results/ipc-phase35-main-integration.json) records positive checks of its named source snapshot and the exact unchanged-enforcement review; package metadata and test-only IRQ finalization changed. The [acceptance review](../architecture/ipc-phase35-acceptance-review.md) records code/EN-RU semantic correspondence and the scoped readiness decision. Controls and readiness receipts supplement the historical records at their named snapshots. Issue #109 changes only the host execution/verification inventory: the current combined snapshot is verified by a Cortex-A57 stand receipt with 125 checks per DEV/PROD profile and 56 IPC/supervision controls. Supervision architecture and EN/RU acceptance remain open. Native IPC implementation and its prior bounded readiness acceptance remain unchanged; historical receipts do not verify the new runner. The stand timer_rearm timeout remains in history: IRQ wrappers now preserve compiler memory ordering, and read-only timer/GIC diagnostics preserve the unchanged strict failure bound. The timeout was not accepted as a revocation-control witness. The retained complete stand run passed, while the intermittent timeout cause remains unproven; bounded execution evidence does not establish general race-freedom. A later stripped routing boot failed without a panic identity after its initial EL0 check. Static failing process/IPC names and panic source location now survive stripping; no private data or addresses are logged. Current-source verification is STALE pending a new stand run. The next timer diagnostic showed an enabled expired compare with ISTATUS/GIC pending clear, consistent with delayed QEMU timer-callback processing. Basic timer verification now idles with IRQ enabled instead of occupying the emulated CPU continuously; it still requires actual delivery and keeps the independent external watchdog. This is fixture scheduling, not a fabricated IRQ or a production IPC deadline change. The next gate is #27; the ABI remains EXPERIMENTAL and unfrozen.
 
 Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](../../crates/kernel-core/src/ipc/identity.rs), [wire](../../crates/kernel-core/src/ipc/wire.rs), [mailbox](../../crates/kernel-core/src/ipc/mailbox.rs), [native continuation](../../crates/kernel/src/ipc/native.rs), [storage](../../crates/kernel/src/ipc/storage.rs), [deferred work](../../crates/kernel/src/ipc/deferred.rs), [scheduler](../../crates/kernel/src/scheduler/mod.rs), [EL0 fixtures](../../crates/kernel/src/ipc_workload.rs), [runner](../../crates/xtask/src/main.rs).
 
 [Russian translation](../../translations/ru/docs/kernel/ipc.md)
+
+## Phase 3.6 checkpoint extension
+
+The experimental [supervisor](supervision.md) adds a distinct lifecycle checkpoint over the same native.request/1 state. Exact IPC wait identities and source/mailbox ownership survive acquired two-CPU root detachment. The original continuous transport, arbiter and scoped Phase 3.5 acceptance remain separate; proposed [ADR-0026](../architecture-decisions/0026-el0-supervision.md) has not passed human architecture/EN-RU acceptance. Current exact-source regression applicability is recorded separately from historical receipts.
 
 <!-- knowledge -->
 
@@ -153,6 +157,7 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           "crates/kernel-core/tests/handle_contract.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/arch/aarch64/entry.S",
           "crates/kernel/src/boot_workload.rs",
           "crates/kernel/src/handles.rs",
           "crates/kernel/src/handles/testing.rs",
@@ -211,10 +216,10 @@ Sources: [core endpoint state](../../crates/kernel-core/src/ipc.rs), [identity](
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Issue #109 changes the host matrix runner and shared serial/sharded inventory, and makes failed non-test process checks emit their exact name in PROD machine evidence. Failure predicates and native IPC behavior remain unchanged; historical receipts remain immutable, but current-source runner verification and semantic review are pending.",
-            "receipt": "research/results/ipc-phase35-readiness.json",
-            "receipt_sha256": "f3a34e38f84c8f9f776b23e8b513b21ae8f1b59df04958657cecbef82f4f77e9",
-            "scope": "Two fixed-affinity QEMU CPUs, current bounded IPC mechanism, fresh enforcement controls and explicit semantic EN/RU review. No physical ARM or stable ABI claim."
+            "reason": "Routing stand run 37389265393 failed in stripped PROD boot after initial EL0 validation; no panic identity was retained. Stripped failures now retain source location and process/IPC check name without data/address disclosure. Full current-source verification is pending; historical complete receipts remain immutable.",
+            "receipt": "research/results/supervision-phase36.json",
+            "receipt_sha256": "e23ec0cab4f9ed442cb9136ced9f0a435c903ef7ad91f2cbebc9623f3c97917c",
+            "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64."
           },
           {
             "environment": "physical-arm64",

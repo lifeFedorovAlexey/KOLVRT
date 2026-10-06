@@ -114,7 +114,10 @@ fn ipc_failure(events: &Value, test: &str) -> Result<bool> {
             ((event["event"] == "test" && event["name"] == test)
                 || test
                     .strip_prefix("reject:")
-                    .is_some_and(|error| event["event"] == "ipc-reject" && event["error"] == error))
+                    .is_some_and(|error| event["event"] == "ipc-reject" && event["error"] == error)
+                || test.strip_prefix("supervision:").is_some_and(|error| {
+                    event["event"] == "supervision-reject" && event["error"] == error
+                }))
                 && event["status"] == "fail"
         }))
 }
@@ -263,5 +266,20 @@ mod tests {
             )
             .unwrap()
         );
+    }
+    #[test]
+    fn supervision_requires_its_exact_failure_kind_and_error() {
+        let exact =
+            json!([{"event":"supervision-reject","error":"WaitIdentityLost","status":"fail"}]);
+        assert!(ipc_failure(&exact, "supervision:WaitIdentityLost").unwrap());
+        for event in [
+            json!({"event":"supervision-reject","error":"Other","status":"fail"}),
+            json!({"event":"ipc-reject","error":"WaitIdentityLost","status":"fail"}),
+            json!({"event":"supervision-reject","error":"WaitIdentityLost","status":"pass"}),
+            json!({"event":"panic","status":"fail"}),
+        ] {
+            assert!(!ipc_failure(&json!([event]), "supervision:WaitIdentityLost").unwrap());
+        }
+        assert!(ipc_failure(&json!({}), "supervision:WaitIdentityLost").is_err());
     }
 }

@@ -61,7 +61,7 @@ SESSION исключает перекрывающиеся ограниченны
 
 Timer IRQ останавливает/deasserts source, получает только локальный nonblocking access permit для записи preemption и завершает GIC interrupt. Lower-EL trap использует отдельный краткий permit для accounting/selection. Re-entry немедленно отклоняется; успешный путь не содержит spin waiting, allocation, UART output или ordinary lock. Все storage scopes заканчиваются до ERET, а rendezvous/completion waits происходят без scope.
 
-Ordinary lock, удерживаемый текущим CPU, запрещает scheduler access; scheduler storage scope запрещает получение ordinary lock, включая heap lock. Guards нельзя переносить на другой CPU/thread. Global scheduler lock и nested lock order отсутствуют. Не заявляется обнаружение произвольных внешних wait dependencies или поддержка nested IRQ. Сохраняются fixed affinity, полное сохранение context, per-CPU ASID с ASID-zero/full-flush fallback, типизированный quantum 1 ms и допущения timer delivery. ASID процесса локально инвалидируется при terminal completion до повторного использования lease; migration и multi-CPU residency не поддерживаются. Fixture limits остаются sixteen slices/two seconds; opaque payload сохраняет отдельный budget. Timeout не доказывает quiescence.
+Ordinary lock, удерживаемый текущим CPU, запрещает scheduler access; scheduler storage scope запрещает получение ordinary lock, включая heap lock. Guards нельзя переносить на другой CPU/thread. Global scheduler lock и nested lock order отсутствуют. Не заявляется обнаружение произвольных внешних wait dependencies или поддержка nested IRQ. Сохраняются fixed affinity, полное сохранение context, per-CPU ASID с ASID-zero/full-flush fallback, типизированный quantum 1 ms и допущения timer delivery. ASID процесса локально инвалидируется при terminal completion до повторного использования lease; migration и multi-CPU residency не поддерживаются. Исторические foundation fixtures используют sixteen slices/two seconds; текущие конечные проверки жизненного цикла используют отдельно описанный предел квантов и специальные случаи дедлайна. Opaque payload сохраняет отдельный budget. Ограниченный dispatch имеет один абсолютный дедлайн нагрузки, общий для обеих очередей, и отдельное двухсекундное ограничение публикации после этого дедлайна. Истечение срока задачи не разрешает возврат до acquired completion и root detachment; неограниченный dispatch сохраняет отсутствие скрытого дедлайна. Timeout не доказывает quiescence.
 
 ## Unsafe и механические проверки
 
@@ -109,6 +109,10 @@ Phase 3.1 завершает ограниченный внутренний жи�
 ## Владение namespace в Phase 3.3
 
 [Владение handles](handles.md) использует existing publication/mutation/quiescent permits. Admission исключительно заимствует Registry namespace; move помещает его в indexed CPU state, а acquired completion двух CPU возвращает ровно один раз. Namespace остаётся линейным в nonterminal steps. Global lock и unsafe storage не добавлены; retained resource borrows заканчиваются внутри masked current-task callback.
+
+## Lifecycle checkpoint Phase 3.6
+
+Экспериментальный [supervisor](supervision.md) использует отдельно scoped checkpoint двух CPU. Exact IPC waits, retry reasons и counters удерживаются; pending copy continuations завершаются до namespace transfer. Каждый CPU восстанавливает native root и освобождает running ownership до изменения membership CPU0. SGI-only traps не расходуют checkpoint timer quantum до исполнения EL0. Saved cursor продолжается только для соответствующей живой process generation. Root detachment blocked peer не разрешает reclaim. Назначение continuous IPC dispatch сохраняется; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) имеет статус proposed, semantic/EN-RU acceptance ещё не завершена.
 
 <!-- knowledge -->
 

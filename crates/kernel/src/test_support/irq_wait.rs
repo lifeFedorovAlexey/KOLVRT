@@ -1,77 +1,125 @@
-//! Bounded fixture polling; success requires an observed IRQ delivery.
-//! Finalize with IRQs masked so delivery cannot race the returned result.
+//! Wait for an IRQ without a check-to-sleep lost wakeup.
+//! Inspect the condition with IRQs masked; pending IRQs must wake the masked
+//! wait, then be serviced before the next observation. Return masked.
 pub fn wait_for_delivery(
     mut delivered: impl FnMut() -> bool,
     mut expired: impl FnMut() -> bool,
-    quiesce: impl FnOnce(),
+    mut mask: impl FnMut(),
+    mut wait_and_service: impl FnMut(),
 ) -> bool {
-    let observed = loop {
+    loop {
+        mask();
         if delivered() {
-            break true;
+            return true;
         }
         if expired() {
-            break false;
+            return false;
         }
-        core::hint::spin_loop();
-    };
-    // The caller masks IRQs before the final observation. This closes both the
-    // deadline-check race and the previous poll-return-to-mask window.
-    quiesce();
-    observed || delivered()
+        wait_and_service();
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::wait_for_delivery;
+    use core::cell::Cell;
+
     #[test]
-    fn already_delivered_irq_survives_an_expired_polling_deadline() {
+    fn delivery_before_masking_does_not_enter_sleep() {
+        let delivered = Cell::new(false);
+        let masked = Cell::new(false);
         assert!(wait_for_delivery(
-            || true,
-            || panic!("delivery must be checked first"),
-            || {},
-        ));
-    }
-    #[test]
-    fn delivery_published_during_deadline_check_is_observed() {
-        let delivery = core::cell::Cell::new(false);
-        assert!(wait_for_delivery(
-            || delivery.get(),
             || {
-                delivery.set(true);
-                true
+                assert!(masked.get());
+                delivered.get()
             },
-            || {},
-        ));
-    }
-    #[test]
-    fn expired_without_delivery_is_rejected() {
-        assert!(!wait_for_delivery(|| false, || true, || {}));
-    }
-    #[test]
-    fn waiting_requires_actual_delivery_and_stops_at_expiration() {
-        let polls = core::cell::Cell::new(0);
-        assert!(!wait_for_delivery(
-            || false,
+            || panic!("delivery takes precedence over deadline"),
             || {
-                polls.set(polls.get() + 1);
-                polls.get() == 3
+                delivered.set(true);
+                masked.set(true);
             },
-            || {},
+            || panic!("already serviced IRQ must not sleep"),
         ));
-        assert_eq!(polls.get(), 3);
+        assert!(masked.get());
     }
+
     #[test]
-    fn delivery_between_expiration_and_irq_mask_is_not_discarded() {
-        let delivery = core::cell::Cell::new(false);
-        let masked = core::cell::Cell::new(false);
+    fn single_irq_between_condition_and_sleep_remains_pending() {
+        let masked = Cell::new(false);
+        let pending = Cell::new(false);
+        let delivered = Cell::new(false);
+        let sleeps = Cell::new(0);
         assert!(wait_for_delivery(
-            || delivery.get(),
-            || true,
             || {
-                delivery.set(true); // IRQ runs after the last poll, before masking.
+                assert!(masked.get());
+                delivered.get()
+            },
+            || {
+                assert!(masked.get());
+                // Inject the only source event after the negative condition
+                // observation. Masking prevents its handler from consuming it
+                // and disabling the one-shot source before WFI.
+                pending.set(true);
+                false
+            },
+            || masked.set(true),
+            || {
+                assert!(masked.get());
+                assert!(pending.replace(false), "sleep lost its only wakeup");
+                sleeps.set(sleeps.get() + 1);
+                masked.set(false);
+                delivered.set(true); // service the pending IRQ after wake
                 masked.set(true);
             },
         ));
+        assert_eq!(sleeps.get(), 1);
         assert!(masked.get());
+    }
+
+    #[test]
+    fn already_delivered_irq_survives_expired_deadline() {
+        assert!(wait_for_delivery(
+            || true,
+            || panic!("checked too late"),
+            || {},
+            || panic!("sleep")
+        ));
+    }
+
+    #[test]
+    fn expired_without_delivery_is_rejected_without_sleep() {
+        assert!(!wait_for_delivery(
+            || false,
+            || true,
+            || {},
+            || panic!("sleep after expiry")
+        ));
+    }
+
+    #[test]
+    fn spurious_wakes_do_not_establish_delivery() {
+        let wakes = Cell::new(0);
+        assert!(!wait_for_delivery(
+            || false,
+            || wakes.get() == 3,
+            || {},
+            || wakes.set(wakes.get() + 1),
+        ));
+        assert_eq!(wakes.get(), 3);
+    }
+
+    #[test]
+    fn pending_irq_at_deadline_is_not_reported_as_delivered() {
+        let pending = Cell::new(false);
+        assert!(!wait_for_delivery(
+            || false,
+            || {
+                pending.set(true);
+                true
+            },
+            || {},
+            || panic!("expired wait must not service a pending source as success"),
+        ));
+        assert!(pending.get());
     }
 }
