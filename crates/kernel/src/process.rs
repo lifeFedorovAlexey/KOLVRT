@@ -104,19 +104,17 @@ impl Registry {
         physical: &mut memory::Physical,
         origin: Origin,
         spec: Spec<'_>,
-        fail_at: Option<CreationStep>,
     ) -> Result<ProcessId, CreationFailure> {
-        self.create_bounded(physical, origin, spec, fail_at, spec.limits)
+        self.create_bounded(physical, origin, spec, spec.limits)
     }
     pub fn create_bounded(
         &mut self,
         physical: &mut memory::Physical,
         origin: Origin,
         spec: Spec<'_>,
-        fail_at: Option<CreationStep>,
         limits: kernel_core::domain::Limits,
     ) -> Result<ProcessId, CreationFailure> {
-        self.create_inner(physical, origin, spec, fail_at, limits)
+        self.create_inner(physical, origin, spec, limits)
             .map_err(|(error, completion)| CreationFailure { error, completion })
     }
     fn create_inner(
@@ -124,7 +122,6 @@ impl Registry {
         physical: &mut memory::Physical,
         origin: Origin,
         spec: Spec<'_>,
-        fail_at: Option<CreationStep>,
         limits: kernel_core::domain::Limits,
     ) -> Result<ProcessId, (Error, Option<Completion>)> {
         context_contract().map_err(|e| (e, None))?;
@@ -198,9 +195,6 @@ impl Registry {
         let mut domain = None;
         let mut memory_charge = None;
         let transaction = (|| {
-            if fail_at == Some(CreationStep::Slot) {
-                return Err((Error::Allocation, CreationStep::Slot));
-            }
             let (owner, charge) = kernel_core::domain::Owner::new(
                 id,
                 limits,
@@ -217,9 +211,6 @@ impl Registry {
                     )
                     .ok_or((Error::Allocation, CreationStep::Frames))?,
             );
-            if fail_at == Some(CreationStep::Frames) {
-                return Err((Error::Allocation, CreationStep::Frames));
-            }
             space = Some(memory::OwnedUserSpace::new(
                 frame.take().unwrap(),
                 id,
@@ -227,16 +218,7 @@ impl Registry {
                 spec.entry,
                 image_memory_size,
             ));
-            if fail_at == Some(CreationStep::Space) {
-                return Err((Error::Allocation, CreationStep::Space));
-            }
             let context = spec.context;
-            if fail_at == Some(CreationStep::Context) {
-                return Err((Error::Allocation, CreationStep::Context));
-            }
-            if fail_at == Some(CreationStep::Commit) {
-                return Err((Error::Allocation, CreationStep::Commit));
-            }
             self.objects[id.slot()] = Some(Object {
                 id,
                 space: space.take().unwrap(),
@@ -262,10 +244,7 @@ impl Registry {
         })();
         if let Err((error, step)) = transaction {
             if let Some(space) = space {
-                #[cfg(not(feature = "process-rollback-negative"))]
                 space.rollback(physical);
-                #[cfg(feature = "process-rollback-negative")]
-                core::mem::forget(space);
             }
             if let Some(frame) = frame {
                 physical.release(frame);
@@ -805,13 +784,7 @@ impl Registry {
             .map_err(|_| Error::Transition)?;
         self.table.discard_prepared(id, true)?;
         let object = self.objects[id.slot()].take().ok_or(Error::Stale)?;
-        #[cfg(not(feature = "process-rollback-negative"))]
         object.space.rollback(physical);
-        #[cfg(feature = "process-rollback-negative")]
-        {
-            let _ = physical;
-            core::mem::forget(object);
-        }
         self.table.released(id)
     }
     pub fn checkpoint(&mut self) -> scheduler::Completed {
@@ -950,12 +923,9 @@ impl Registry {
                 }
             }
             object.domain.close();
-            if !cfg!(feature = "handle-retirement-negative") || self.handles[result.id].live() == 0
-            {
-                self.handles[result.id]
-                    .retire(object.id)
-                    .expect("terminal namespace owner");
-            }
+            self.handles[result.id]
+                .retire(object.id)
+                .expect("terminal namespace owner");
             let reason = match result.state {
                 CONTEXT_EXITED => Reason::Exited(result.context.gpr[0]),
                 CONTEXT_FAULTED => Reason::Faulted {
@@ -1025,11 +995,6 @@ impl Registry {
     }
 }
 pub(crate) fn reject(error: Error) -> ! {
-    #[cfg(feature = "process-contract-negative")]
-    crate::event!(
-        "{{\"event\":\"process-reject\",\"status\":\"fail\",\"error\":\"{:?}\"}}",
-        error
-    );
     panic!("process contract rejection: {error:?}")
 }
 

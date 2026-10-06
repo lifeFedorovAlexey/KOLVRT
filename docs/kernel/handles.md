@@ -161,7 +161,7 @@ Identity/type/lifetime checks produce a resource reference; they do not authoriz
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
             "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8"

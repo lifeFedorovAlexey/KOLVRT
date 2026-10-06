@@ -54,7 +54,7 @@ fn spec(owner: usize, mode: u64, code: u64) -> Spec<'static> {
 }
 fn create(registry: &mut Registry, p: &mut memory::Physical, spec: Spec<'_>) -> ProcessId {
     registry
-        .create(p, Origin::Bootstrap, spec, None)
+        .create(p, Origin::Bootstrap, spec)
         .unwrap_or_else(|f| process::reject(f.error))
 }
 fn tag(registry: &Registry, id: ProcessId) -> u64 {
@@ -128,26 +128,23 @@ pub fn exercise(
     let live_pages = p.available();
     let mut rollback = true;
     for owner in 0..config::ACTIVE_CPUS {
-        for step in kernel_core::process::CREATION_STEPS {
-            let failure = registry
-                .create(
-                    p,
-                    Origin::Bootstrap,
-                    spec(owner, MODE_EXIT, EXIT_CODE),
-                    Some(step),
-                )
-                .expect_err("injected creation failure");
-            if p.available() != live_pages {
-                process::reject(Error::RollbackLeak);
-            }
-            rollback &= failure.error == Error::Allocation
-                && failure.completion.is_some_and(|c| {
-                    c.reason == Reason::CreationFailed(step)
-                        && registry.state(c.id) == Err(Error::Stale)
-                })
-                && p.available() == live_pages
-                && registry.live() == 2;
+        let definition = spec(owner, MODE_EXIT, EXIT_CODE);
+        let mut denied_limits = definition.limits;
+        denied_limits.memory_pages = 0;
+        let failure = registry
+            .create_bounded(p, Origin::Bootstrap, definition, denied_limits)
+            .expect_err("real memory budget rejection");
+        rollback &= failure.error == Error::Allocation
+            && failure.completion.is_some_and(|c| {
+                c.reason == Reason::CreationFailed(process::CreationStep::Frames)
+                    && registry.state(c.id) == Err(Error::Stale)
+            });
+        let unpublished = create(registry, p, definition);
+        registry.discard_prepared(p, unpublished).unwrap();
+        if p.available() != live_pages {
+            process::reject(Error::RollbackLeak);
         }
+        rollback &= registry.live() == 2;
     }
     report("process_creation_rollback", rollback);
     let mut ids: [Option<ProcessId>; config::USER_PROCESSES] = [None; config::USER_PROCESSES];
@@ -160,12 +157,7 @@ pub fn exercise(
     let full_pages = p.available();
     let exhausted = (0..config::ACTIVE_CPUS).all(|owner| {
         registry
-            .create(
-                p,
-                Origin::Bootstrap,
-                spec(owner, MODE_EXIT, EXIT_CODE),
-                None,
-            )
+            .create(p, Origin::Bootstrap, spec(owner, MODE_EXIT, EXIT_CODE))
             .err()
             .is_some_and(|f| f.error == Error::Capacity && f.completion.is_none())
     });
@@ -246,7 +238,7 @@ pub fn exercise(
         duplicate_start && terminal_stable && registry.reclaim(p, new) == Err(Error::Stale),
     );
     let denied = registry
-        .create(p, Origin::El0, spec(0, MODE_EXIT, EXIT_CODE), None)
+        .create(p, Origin::El0, spec(0, MODE_EXIT, EXIT_CODE))
         .err()
         .is_some_and(|f| f.error == Error::Unauthorized && f.completion.is_none());
     let invalid = registry
@@ -257,7 +249,6 @@ pub fn exercise(
                 image: &[],
                 ..spec(0, MODE_EXIT, EXIT_CODE)
             },
-            None,
         )
         .err()
         .is_some_and(|f| f.error == Error::InvalidImage);
@@ -486,14 +477,7 @@ pub fn exercise(
         registry.start(id).unwrap();
         id
     });
-    #[cfg(feature = "kernel-tests")]
-    crate::scheduler::delay_secondary_completion(true);
     registry.dispatch(Some(time::Duration::ZERO));
-    #[cfg(feature = "kernel-tests")]
-    {
-        stress &= crate::scheduler::pending_completion_observed();
-        crate::scheduler::delay_secondary_completion(false);
-    }
     for id in expiry_ids {
         let value = tag(registry, id);
         // An already-expired session may stop before the first EL0 store.
@@ -627,7 +611,6 @@ fn exercise_elf(
                 entry: requested_entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
-            None,
         );
         rejected &= result.is_err_and(|failure| {
             failure.error == Error::InvalidImage && failure.completion.is_none()
@@ -636,34 +619,31 @@ fn exercise_elf(
     }
     report("elf_invalid_images_are_transactional", rejected);
 
-    let mut injection_rollback = true;
-    for step in kernel_core::process::CREATION_STEPS {
-        let available = p.available();
-        let live = registry.live();
-        let result = registry.create(
-            p,
-            Origin::Bootstrap,
-            Spec {
-                image: MINIMAL_ELF,
-                image_format: process::ImageFormat::Elf64Aarch64,
-                limits: limits(),
-                context,
-                owner: 0,
-                entry: image.entry,
-                slice_limit: Some(ELF_MAX_SLICES),
-            },
-            Some(step),
-        );
-        injection_rollback &= result.is_err_and(|failure| {
-            failure.error == Error::Allocation
-                && failure.completion.is_some_and(|completion| {
-                    completion.reason == Reason::CreationFailed(step)
-                        && registry.state(completion.id) == Err(Error::Stale)
-                })
+    let definition = Spec {
+        image: MINIMAL_ELF,
+        image_format: process::ImageFormat::Elf64Aarch64,
+        limits: limits(),
+        context,
+        owner: 0,
+        entry: image.entry,
+        slice_limit: Some(ELF_MAX_SLICES),
+    };
+    let mut denied_limits = definition.limits;
+    denied_limits.memory_pages = 0;
+    let failure = registry
+        .create_bounded(p, Origin::Bootstrap, definition, denied_limits)
+        .expect_err("real ELF memory budget rejection");
+    let rejected = failure.error == Error::Allocation
+        && failure.completion.is_some_and(|c| {
+            c.reason == Reason::CreationFailed(process::CreationStep::Frames)
+                && registry.state(c.id) == Err(Error::Stale)
         });
-        injection_rollback &= p.available() == available && registry.live() == live;
-    }
-    report("elf_creation_failure_is_transactional", injection_rollback);
+    let unpublished = create(registry, p, definition);
+    registry.discard_prepared(p, unpublished).unwrap();
+    report(
+        "elf_creation_failure_is_transactional",
+        rejected && p.available() == pages_before && registry.live() == live_before,
+    );
 
     let first = registry
         .create(
@@ -678,7 +658,6 @@ fn exercise_elf(
                 entry: image.entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
-            None,
         )
         .unwrap_or_else(|failure| process::reject(failure.error));
     let second = registry
@@ -694,7 +673,6 @@ fn exercise_elf(
                 entry: image.entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
-            None,
         )
         .unwrap_or_else(|failure| process::reject(failure.error));
     registry.start(first).unwrap();

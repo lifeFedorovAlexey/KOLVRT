@@ -17,10 +17,9 @@ static PENDING: AtomicBool = AtomicBool::new(false);
 static WORDS: [AtomicU64; 4] = [const { AtomicU64::new(0) }; 4];
 /// Capturing registers never creates authority. The executing Task is provenance.
 pub(crate) fn capture(task: &Task, frame: &mut Context) {
-    if !cfg!(feature = "supervision-authority-negative")
-        && (!ACTIVE.load(Ordering::Acquire)
-            || task.id() != OWNER_SLOT.load(Ordering::Acquire)
-            || task.process_generation() != OWNER_GENERATION.load(Ordering::Acquire))
+    if !ACTIVE.load(Ordering::Acquire)
+        || task.id() != OWNER_SLOT.load(Ordering::Acquire)
+        || task.process_generation() != OWNER_GENERATION.load(Ordering::Acquire)
     {
         frame.gpr[..5].copy_from_slice(&[11, 0, 0, 0, 0]);
         return;
@@ -159,10 +158,7 @@ impl Scope {
             if self.sealed || token != 0 || entry.token != 0 {
                 return [11, 0, 0, 0, 0];
             }
-        } else if !cfg!(feature = "supervision-stale-negative")
-            && !cfg!(feature = "native-stale-negative")
-            && (token == 0 || token != entry.token)
-        {
+        } else if token == 0 || token != entry.token {
             return [2, 0, 0, 0, 0];
         }
         match op {
@@ -214,7 +210,6 @@ impl Scope {
                         entry: image_entry,
                         slice_limit: None,
                     },
-                    None,
                 );
                 let Ok(id) = created else {
                     return [12, 0, 0, 0, 0];
@@ -341,16 +336,7 @@ impl Scope {
         if token == 0 || token != entry.token {
             return [2, 0, 0, 0, 0];
         }
-        let Some(target) =
-            entry
-                .grant
-                .send_to
-                .or(if cfg!(feature = "native-auth-negative") && client == 2 {
-                    Some(0)
-                } else {
-                    None
-                })
-        else {
+        let Some(target) = entry.grant.send_to else {
             return [11, 0, 0, 0, 0];
         };
         let Some(client_id) = entry.instance.as_ref().map(|instance| instance.id) else {
@@ -369,12 +355,7 @@ impl Scope {
         if registry.state(instance.id) != Ok(State::Admitted) {
             return [2, 0, 0, 0, 0];
         }
-        let Ok(endpoint) = (if cfg!(feature = "native-binding-negative") {
-            &instance.feedback
-        } else {
-            &instance.endpoint
-        })
-        .try_clone() else {
+        let Ok(endpoint) = instance.endpoint.try_clone() else {
             return [12, 0, 0, 0, 0];
         };
         // Only a sender previously minted by this exact grant may be closed.

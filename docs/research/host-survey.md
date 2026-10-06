@@ -101,7 +101,7 @@ The design follows the [native contracts](../architecture/native-model.md), [sec
           {
             "state": "UNKNOWN",
             "environment": "windows-cim",
-            "reason": "No real provider collection has been run; deterministic provider shadows do not establish production hardware observations."
+            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate."
           },
           {
             "state": "NOT_APPLICABLE",

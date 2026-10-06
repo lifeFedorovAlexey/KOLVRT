@@ -45,7 +45,6 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
                 entry: config::USER_PAYLOAD_BASE,
                 slice_limit: None,
             },
-            None,
         )
         .unwrap_or_else(|failure| {
             crate::event!(
@@ -171,11 +170,9 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
         cpu::poweroff();
     }
     scope.retire(registry, physical);
-    if !cfg!(feature = "native-reclaim-negative") {
-        registry
-            .reclaim(physical, supervisor)
-            .expect("root retirement");
-    }
+    registry
+        .reclaim(physical, supervisor)
+        .expect("root retirement");
     registry.checkpoint();
     crate::ipc::deferred::poll(&[]);
     crate::ipc::reap();

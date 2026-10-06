@@ -11,11 +11,6 @@ use core::{
 use kernel_core::execution as abi;
 use kernel_core::scheduling::ownership::{Error, Ownership, Phase};
 fn reject(error: Error) -> ! {
-    #[cfg(feature = "scheduler-contract-negative")]
-    crate::event!(
-        "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"{:?}\"}}",
-        error
-    );
     panic!("scheduler ownership rejection: {error:?}");
 }
 
@@ -179,47 +174,5 @@ impl Local {
         self.ownership
             .complete(percpu::id(), cpu::irq_masked(), generation, quiescent)
             .unwrap_or_else(|error| reject(error));
-    }
-    #[cfg(feature = "scheduler-contract-negative")]
-    pub fn controls(&self, generation: u64) {
-        // The parent feature and owner-only probe have no generation-dependent
-        // local mutation; the other selected probes use this exact argument.
-        let _ = generation;
-        #[cfg(feature = "scheduler-context-negative")]
-        self.with(generation, |state| {
-            crate::cpu::context::corrupt_mode(&mut state.tasks[0].context)
-        });
-        #[cfg(feature = "scheduler-start-negative")]
-        self.start(generation).unwrap_or_else(|error| reject(error));
-        #[cfg(feature = "scheduler-task-negative")]
-        self.with(generation, |state| state.tasks[0].corrupt_generation());
-        #[cfg(feature = "scheduler-foreign-negative")]
-        super::LOCALS[percpu::SECONDARY_CPU].with(generation, |_| ());
-        #[cfg(feature = "scheduler-reentry-negative")]
-        self.with(generation, |_| super::on_timer());
-        #[cfg(feature = "scheduler-stale-negative")]
-        self.with(generation - 1, |_| ());
-        #[cfg(feature = "scheduler-reset-negative")]
-        self.prepare(generation + 1, |_| ());
-        #[cfg(feature = "scheduler-inspect-negative")]
-        self.inspect(generation, |_| ());
-        #[cfg(feature = "scheduler-complete-negative")]
-        self.complete(generation, false);
-        #[cfg(feature = "scheduler-lock-negative")]
-        {
-            let lock = crate::sync::Lock::new(());
-            let _held = lock.lock();
-            self.with(generation, |_| ());
-        }
-        #[cfg(feature = "scheduler-inner-lock-negative")]
-        self.with(generation, |_| {
-            let lock = crate::sync::Lock::new(());
-            let _held = lock.lock();
-        });
-        #[cfg(feature = "scheduler-irq-negative")]
-        {
-            crate::cpu::unmask();
-            self.with(generation, |_| ());
-        }
     }
 }

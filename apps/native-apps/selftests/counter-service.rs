@@ -6,8 +6,9 @@ use native_userspace::{
 native_userspace::entry!();
 
 #[unsafe(no_mangle)]
-pub extern "C" fn native_main(receiver: u64, _feedback: u64, _argument: u64) -> ! {
+pub extern "C" fn native_main(receiver: u64, _feedback: u64, argument: u64) -> ! {
     let mut state = Counter::new();
+    let mut completed = 0u64;
     loop {
         let (delivery, _) =
             native::call(2, receiver, 0, 0, &[]).unwrap_or_else(|_| native::exit(10));
@@ -18,7 +19,21 @@ pub extern "C" fn native_main(receiver: u64, _feedback: u64, _argument: u64) -> 
         }
         let request = CounterRequest::decode(&delivery[HEADER_BYTES..HEADER_BYTES + length]);
         native::call(3, receiver, token, 0, &[]).unwrap_or_else(|_| native::exit(12));
+        // A development launch argument injects a genuine process fault after commitment.
+        // The normal service has no crash RPC or reset operation and runs indefinitely.
+        if argument != 0 {
+            completed = completed.checked_add(1).unwrap_or_else(|| native::exit(13));
+            if completed == argument {
+                native::fault();
+            }
+        }
         let value = request.and_then(|request| state.apply(request));
+        #[cfg(feature = "reply-negative")]
+        let value = if completed == 3 {
+            value.map(|v| v ^ 1)
+        } else {
+            value
+        };
         let payload = counter_reply(value.map_err(|error| match error {
             Error::Overflow => Error::Overflow,
             _ => Error::Invalid,

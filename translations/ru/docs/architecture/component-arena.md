@@ -169,7 +169,7 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
           {
             "environment": "host-process",
             "state": "STALE",
-            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
+            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate.",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be"

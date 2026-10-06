@@ -431,7 +431,6 @@ impl OwnedUserSpace {
         physical.release(self.frame);
     }
     /// Roll back a fully constructed but never published root.
-    #[cfg(not(feature = "process-rollback-negative"))]
     pub fn rollback(self, physical: &mut Physical) {
         drop(UserSpace {
             frame: &self.frame,
@@ -449,10 +448,6 @@ pub struct UserSpace<'a> {
     id: usize,
 }
 impl<'a> UserSpace<'a> {
-    #[cfg(feature = "user-retirement-negative")]
-    pub fn new(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
-        Self::image(frame, id, image, USER_CODE, image.len())
-    }
     fn image(frame: &'a Frame, id: usize, image: &[u8], entry: usize, memory_size: usize) -> Self {
         crate::percpu::primary_only();
         assert_eq!(USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);

@@ -109,13 +109,6 @@ impl WaitKey {
     pub fn sequence(self) -> u64 {
         self.sequence
     }
-    #[cfg(feature = "ipc-wake-generation-negative")]
-    pub fn with_generation(self, generation: u64) -> Self {
-        Self {
-            process: self.process.with_generation_for_test(generation),
-            sequence: self.sequence,
-        }
-    }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum WaitTarget {
@@ -256,20 +249,15 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         self.requests
             .iter()
             .flatten()
-            .find(|r| {
-                (cfg!(feature = "ipc-request-generation-negative") || r.identity.receipt() == value)
-                    && r.consumer == caller
-                    && r.alive
-            })
+            .find(|r| r.identity.receipt() == value && r.consumer == caller && r.alive)
             .map(|r| r.identity)
             .ok_or(Error::Stale)
     }
     pub fn reclaimable(&self) -> bool {
-        (cfg!(feature = "ipc-teardown-negative") && self.reference.closed())
-            || (self.reference.closed()
-                && self.outstanding() == 0
-                && self.waiter_count() == 0
-                && self.reference.references() == 1)
+        self.reference.closed()
+            && self.outstanding() == 0
+            && self.waiter_count() == 0
+            && self.reference.references() == 1
     }
     fn request(&self, id: RequestId) -> Result<&Request, Error> {
         self.requests
@@ -331,18 +319,15 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         if deadline <= now {
             return Err(Error::Expired);
         }
-        if !cfg!(feature = "ipc-id-reuse-negative")
-            && self
-                .requests
-                .iter()
-                .flatten()
-                .any(|r| r.consumer == consumer.owner() && r.client_id == client_id)
+        if self
+            .requests
+            .iter()
+            .flatten()
+            .any(|r| r.consumer == consumer.owner() && r.client_id == client_id)
         {
             return Err(Error::Busy);
         }
-        if self.queued == self.capacity
-            && !(cfg!(feature = "ipc-capacity-negative") && self.capacity < Q)
-        {
+        if self.queued == self.capacity {
             return Err(Error::Exhausted);
         }
         let slot = self
@@ -386,11 +371,7 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
     pub fn reserve_receive(&mut self, caller: ProcessId, now: u64) -> Result<Delivery, Error> {
         self.service(caller)?;
         self.expire(now);
-        let head = if cfg!(feature = "ipc-fifo-negative") && self.queued > 1 {
-            self.queued - 1
-        } else {
-            0
-        };
+        let head = 0;
         let id = self.queue[head].ok_or(if self.reference.closed() {
             Error::Denied
         } else {
@@ -405,11 +386,7 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         Ok(Delivery {
             endpoint,
             identity: id,
-            token: ServiceToken(if cfg!(feature = "ipc-service-token-negative") {
-                id.generation.wrapping_add(1)
-            } else {
-                id.generation
-            }),
+            token: ServiceToken(id.generation),
             client_id: r.client_id,
             deadline: r.deadline,
             payload: r.payload.clone(),
@@ -427,7 +404,7 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         if r.phase != Phase::Queued {
             return Err(Error::AlreadyTerminal);
         }
-        if copied || cfg!(feature = "ipc-receive-copy-negative") {
+        if copied {
             r.phase = Phase::Delivered;
             r.queue = None;
             self.remove_queue(delivery.identity);
@@ -455,16 +432,11 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
     /// The ONLY transition to terminal state. Endpoint exclusion linearizes all causes.
     fn terminal(&mut self, id: RequestId, cause: Cause<'_>) -> Result<Outcome, Error> {
         let r = self.request_mut(id)?;
-        if !cfg!(feature = "ipc-double-terminal-negative") && matches!(r.phase, Phase::Terminal(_))
-        {
+        if matches!(r.phase, Phase::Terminal(_)) {
             return Err(Error::AlreadyTerminal);
         }
         let committed = r.phase == Phase::Committed;
         let outcome = match cause {
-            Cause::Cancel if cfg!(feature = "ipc-cancel-negative") => Outcome::Completed,
-            Cause::ServiceDeath if cfg!(feature = "ipc-service-death-negative") => {
-                Outcome::Completed
-            }
             Cause::Complete(payload) => {
                 r.response = payload.clone();
                 Outcome::Completed
@@ -476,8 +448,6 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         r.phase = Phase::Terminal(outcome);
         r.queue = None;
         let released = release_active(r);
-        #[cfg(feature = "ipc-double-charge-release-negative")]
-        let released = released.and_then(|()| release_active(r));
         let wait = r.wait.take();
         let alive = r.alive;
         self.remove_queue(id);
@@ -491,9 +461,6 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         Ok(outcome)
     }
     fn expire_request(&mut self, id: RequestId, now: u64) -> bool {
-        if cfg!(feature = "ipc-deadline-negative") {
-            return false;
-        }
         if self
             .request(id)
             .is_ok_and(|r| !matches!(r.phase, Phase::Terminal(_)) && r.deadline <= now)
@@ -615,28 +582,8 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
             return Err(Error::Stale);
         }
         r.collect_reserved = false;
-        if copied || cfg!(feature = "ipc-collect-copy-negative") {
-            if cfg!(feature = "ipc-charge-release-negative") {
-                let request = self.requests[collection.identity.slot]
-                    .take()
-                    .expect("reserved request remains present");
-                let Request {
-                    _consumer,
-                    queue,
-                    active,
-                    ..
-                } = request;
-                core::mem::forget(_consumer);
-                if let Some(charge) = queue {
-                    core::mem::forget(charge);
-                }
-                if let Some(charge) = active {
-                    core::mem::forget(charge);
-                }
-            }
-            if !cfg!(feature = "ipc-charge-release-negative") {
-                self.requests[collection.identity.slot] = None;
-            }
+        if copied {
+            self.requests[collection.identity.slot] = None;
         }
         Ok(())
     }
@@ -731,14 +678,6 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         if self.receive_wait.is_some() {
             return Err(Error::Busy);
         }
-        // Deliberately omit publication for the focused lost-wake mutation.
-        // The native scheduler will still block, allowing the QEMU control to
-        // prove that unregistered waiters lose progress.
-        #[cfg(feature = "ipc-wait-recheck-negative")]
-        {
-            return Ok(false);
-        }
-        #[cfg(not(feature = "ipc-wait-recheck-negative"))]
         {
             let index = self.reserve_wait(key, WaitTarget::Readable(self.reference.id()))?;
             self.receive_wait = Some(index);
@@ -768,11 +707,6 @@ impl<const Q: usize, const R: usize> Endpoint<Q, R> {
         if r.wait.is_some() {
             return Err(Error::Busy);
         }
-        #[cfg(feature = "ipc-wait-recheck-negative")]
-        {
-            return Ok(false);
-        }
-        #[cfg(not(feature = "ipc-wait-recheck-negative"))]
         {
             let index = self.reserve_wait(key, WaitTarget::Terminal(self.reference.id(), id))?;
             self.request_mut(id)?.wait = Some(index);

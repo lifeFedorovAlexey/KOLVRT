@@ -16,4 +16,8 @@ Run `cargo xtask docs generate`, `cargo xtask docs pilot`, `cargo run --locked -
 
 ## Performance and test integrity
 
-Do not reduce runtime performance, weaken invariants or alter production semantics merely to make tests pass. Tests must exercise the intended architecture. Do not add arbitrary fixed-duration publication/copy-drain deadlines to normal runtime synchronization. Completion and reclamation require actual acquired quiescence, never elapsed time. Diagnose test hangs with explicit host-runner watchdogs; do not hide failures by increasing timeouts, adding retries or inventing performance allowances.
+Do not reduce runtime performance, weaken invariants or alter production semantics merely to make tests pass. Tests must exercise the intended architecture. Do not add arbitrary fixed-duration publication/copy-drain deadlines to normal runtime synchronization. Completion and reclamation require actual acquired quiescence, never elapsed time. Test watchdogs provide diagnostics and do not replace required kernel failure handling. Do not hide failures by increasing timeouts, adding retries or inventing performance allowances.
+
+## Architecture: tests do not define implementation
+
+Production behavior must follow independently justified invariants and accepted contracts, never a test's expected output. When a test fails, establish whether there is a proven implementation defect or an incorrect test, and repair that defect. Do not add workarounds, special cases, synthetic results, weakened checks, delays or performance regressions to make a test falsely pass. Production source must not contain test-specific corruption, forced rendezvous or fault-injection entry points. Keep test logic and mutations in separate test artifacts; positive tests exercise the ordinary implementation through its actual interfaces.

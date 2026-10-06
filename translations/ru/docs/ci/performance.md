@@ -131,7 +131,7 @@ PR feedback при прогретом кэше менее десяти мину�
           {
             "environment": "github-actions",
             "state": "UNKNOWN",
-            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope."
+            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate."
           }
         ],
         "readiness": "NOT_READY",

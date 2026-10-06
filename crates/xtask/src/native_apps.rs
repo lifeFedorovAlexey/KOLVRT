@@ -178,8 +178,22 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64, control: Option<&st
         let mut apps = serde_json::Map::new();
         let mut images = Vec::new();
         for (role, binary) in [
-            ("root", "native-supervisor"),
-            ("service", "counter-service"),
+            (
+                "root",
+                if mode == 1 {
+                    "native-supervisor"
+                } else {
+                    "selftest-supervisor"
+                },
+            ),
+            (
+                "service",
+                if mode == 1 {
+                    "counter-service"
+                } else {
+                    "selftest-counter-service"
+                },
+            ),
             ("client", client_binary),
         ] {
             let original = PathBuf::from(format!(

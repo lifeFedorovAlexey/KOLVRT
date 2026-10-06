@@ -370,6 +370,22 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
 
 [Russian translation](../../translations/ru/docs/architecture/kernel-laws.md)
 
+<a name="law-044"></a>
+
+## LAW-044 — Tests validate architecture; they do not define it
+
+**Rule:** Production semantics follow independently justified invariants and accepted contracts. A test failure requires establishing either a proven implementation defect or an incorrect test and repairing the faulty side. Never add workarounds, special cases, synthetic results, weaker validation, delays or performance regressions merely to make tests falsely pass. Production source contains no test-specific corruption, forced rendezvous or fault-injection entry points; test logic and mutations live in separate test artifacts. Positive tests exercise the ordinary implementation through its actual interfaces.
+
+**Rationale:** Passing a test is evidence only when the implementation satisfies the intended contract and the test measures it honestly. A fabricated observation or implementation adapted solely to the expected result destroys that evidence.
+
+**Prevents:** False-positive tests, test-induced production behavior, hidden fault-injection APIs and performance sacrificed for green checks.
+
+**Allowed exceptions:** No implicit exceptions. Correcting an independently demonstrated implementation defect is permitted and must retain the evidence establishing the defect; test expectations alone are insufficient justification.
+
+**Enforcement:** Review implementation changes against the contract before interpreting test results. Keep diagnostic/fault injection in isolated test builds, verify production artifacts contain no injected behavior and record why a code or test correction is necessary.
+
+**Testing:** Reject injected false success and unrelated failure; verify negative controls detect the selected real defect and positive execution uses unmodified production behavior.
+
 <!-- knowledge -->
 
 ```json
@@ -538,6 +554,14 @@ Each law addresses a distinct review obligation. Consolidated requirements and i
       "summary": "Publication and shutdown follow dependency order",
       "depends_on": [],
       "aliases": ["LAW-043"]
+    },
+    {
+      "id": "law.044",
+      "anchor": "law-044",
+      "kind": "law",
+      "summary": "Tests validate architecture; they do not define it.",
+      "depends_on": [],
+      "aliases": ["LAW-044"]
     }
   ]
 }

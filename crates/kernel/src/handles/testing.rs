@@ -347,7 +347,6 @@ pub(crate) fn exercise(
                     entry: memory::USER_CODE,
                     slice_limit: None,
                 },
-                None,
             )
             .unwrap()
     });
@@ -397,7 +396,6 @@ pub(crate) fn exercise(
                 entry: memory::USER_CODE,
                 slice_limit: None,
             },
-            None,
         )
         .unwrap();
     let transfer_receiver = registry
@@ -417,7 +415,6 @@ pub(crate) fn exercise(
                 entry: memory::USER_CODE,
                 slice_limit: None,
             },
-            None,
         )
         .unwrap();
     registry.transfer_target_input(transfer_sender, transfer_receiver);
@@ -477,7 +474,6 @@ pub(crate) fn exercise(
                         entry: memory::USER_CODE,
                         slice_limit: None,
                     },
-                    None,
                 )
                 .unwrap();
             registry.start(id).unwrap();

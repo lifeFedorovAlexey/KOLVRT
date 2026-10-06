@@ -142,7 +142,6 @@ pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence 
                     entry: memory::USER_CODE,
                     slice_limit: Some(MAX_SLICES),
                 },
-                None,
             )
             .unwrap_or_else(|failure| crate::process::reject(failure.error));
         assert_eq!(identity.slot(), id);
@@ -266,7 +265,6 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
                     entry: config::USER_PAYLOAD_BASE,
                     slice_limit: Some(PAYLOAD_MAX_SLICES),
                 },
-                None,
             )
             .unwrap_or_else(|failure| crate::process::reject(failure.error));
         assert_eq!(identity.slot(), id);

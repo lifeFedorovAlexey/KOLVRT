@@ -39,7 +39,7 @@ Host runner должен предоставить команды selftest и app
 
 `cargo xtask service-run` наблюдает отдельный persistent runtime в обоих профилях. Guest lifecycle не имеет workload deadline или fixture shutdown: после выхода клиента supervisor закрывает bootstrap authority и продолжает опрашивать живой сервис. Host завершает наблюдение остановкой QEMU после непрозрачного userspace witness продолжения. Эта внешняя остановка явно записывается и не подтверждает отсутствие утечек при shutdown. Полученный kernel ELF можно запустить напрямую с записанными QEMU arguments для продолжения runtime.
 
-`cargo xtask native-controls` изолирует семь отказов в каждом профиле: повреждённый исходный ELF, расширенная immutable SEND authority, принятый stale instance, binding к неверному feedback endpoint, испорченное значение reply, сломанный native Submit и пропущенный reclaim root. Acceptance требует выбранный loader error, application assertion/exit либо реальные счётчики удержанных процессов и frames; произвольный panic не подтверждает control. Controls выбираются отдельными build features и отсутствуют в обычном runtime.
+`cargo xtask native-controls` изолирует семь отказов в каждом профиле: повреждённый исходный ELF, расширенная immutable SEND authority, принятый stale instance, binding к неверному feedback endpoint, испорченное значение reply, сломанный native Submit и пропущенный reclaim root. Acceptance требует выбранный loader error, application assertion/exit либо реальные счётчики удержанных процессов и frames; произвольный panic не подтверждает control. Host runner создаёт отдельные изменённые source/build copies для kernel controls; reply mutation находится только в отдельном selftest service.
 
 `node scripts/native-closure-proof.cjs` создаёт новый native-only workspace, физически исключает несвязанные component crates и host routing implementation, удаляет только их workspace/path-dependency declarations, сохраняет выбранные версии зависимостей, проверяет kernel dependency closure и выполняет полный selftest вместе с app smoke в DEV и PROD. Digests исходных kernel/app/model sources сравниваются с копиями; proof directory сохраняется для проверки.
 
@@ -49,7 +49,7 @@ Host runner должен предоставить команды selftest и app
 
 [English original](../../../../docs/kernel/native-applications.md)
 
-Foundation SIMD IRQ probe теперь маскирует IRQ перед инициализацией проверяемого vector/FP state и обслуживает pending interrupt внутри инициализированного assembly scope. Прежний порядок мог доставить единственный timer до инициализации, допуская ложное наблюдение либо failure до достижения цели другого control. Test-only mutation повреждает настоящий saved q0 frame; DEV/PROD требуют именованный failure irq_simd_context при наблюдаемой delivery. Инструкции обычного IRQ vector не изменяются при выключенной mutation feature. Текущий foundation inventory — 144 задачи/140 controls; исторический inventory #126 остаётся 142/138.
+Обычные counter-service, counter-client и native-supervisor физически отделены от ELF-программ в apps/native-apps/selftests. Рабочий сервис не содержит аргумента намеренного падения, счётчика тестовых запросов или повреждения reply. Selftests используют отдельные service и supervisor artifacts. IRQ probes находятся в test_support; повреждение сохранённого q0 и другие negative mutations применяются host runner только к отдельным копиям исходников и сборок. Обычные entry.S, scheduler, IPC, ASID и код защиты копирования не содержат этих вмешательств. API создания процесса больше не принимает fail_at; проверки отката используют настоящий отказ memory quota и освобождение созданного, ещё не опубликованного процесса. Перенос остальных тестовых вспомогательных частей и окончательная exact-source acceptance ещё не завершены. Текущий foundation inventory — 144 задачи/140 controls; исторический inventory #126 остаётся 142/138.
 
 <!-- knowledge -->
 
@@ -75,11 +75,12 @@ Foundation SIMD IRQ probe теперь маскирует IRQ перед ини�
         "law.025",
         "law.041",
         "law.043",
-        "adr.0026"
+        "adr.0026",
+        "law.044"
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Separately built original AArch64 ELF supervisor, counter service, client and four EL0 selftest binaries; private checked counter state, exact-instance finite SEND rebinding, observed blocking/wakeup across CPU owners, bounded clean shutdown and separate persistent runtime. Host selftest runs L1 models and DEV/PROD QEMU with seven precise controls. Acceptance receipts and complete foundation regression review are being finalized.",
+        "implementation_scope": "Separately built original AArch64 ELF supervisor, counter service, client and four EL0 selftest binaries; private checked counter state, exact-instance finite SEND rebinding, observed blocking/wakeup across CPU owners, bounded clean shutdown and separate persistent runtime. Host selftest runs L1 models and DEV/PROD QEMU with seven precise controls. Acceptance receipts and complete foundation regression review are being finalized. Ordinary ELF programs are physically separated from selftest programs; external mutation trees replace production fault injection, and process creation has no fail_at argument. Remaining helper separation and final acceptance remain pending.",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
           ".github/workflows/kernel.yml",
@@ -88,35 +89,64 @@ Foundation SIMD IRQ probe теперь маскирует IRQ перед ини�
           "apps/native-apps/Cargo.toml",
           "apps/native-apps/build.rs",
           "apps/native-apps/linker.ld",
+          "apps/native-apps/selftests/client.rs",
+          "apps/native-apps/selftests/counter-service.rs",
+          "apps/native-apps/selftests/selftest-elf.rs",
+          "apps/native-apps/selftests/selftest-ipc.rs",
+          "apps/native-apps/selftests/selftest-process.rs",
+          "apps/native-apps/selftests/selftest-service.rs",
+          "apps/native-apps/selftests/smoke-client.rs",
+          "apps/native-apps/selftests/supervisor.rs",
           "apps/native-apps/src/client.rs",
           "apps/native-apps/src/counter-client.rs",
           "apps/native-apps/src/counter-service.rs",
-          "apps/native-apps/src/selftest-elf.rs",
-          "apps/native-apps/src/selftest-ipc.rs",
-          "apps/native-apps/src/selftest-process.rs",
-          "apps/native-apps/src/selftest-service.rs",
-          "apps/native-apps/src/smoke-client.rs",
           "apps/native-apps/src/supervisor.rs",
           "apps/native-runtime/Cargo.toml",
           "apps/native-runtime/src/lib.rs",
+          "crates/kernel-core/src/domain.rs",
+          "crates/kernel-core/src/elf.rs",
+          "crates/kernel-core/src/handles.rs",
+          "crates/kernel-core/src/ipc.rs",
+          "crates/kernel-core/src/ipc/identity.rs",
+          "crates/kernel-core/src/process.rs",
+          "crates/kernel-core/src/wait.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/build.rs",
+          "crates/kernel/src/arch/aarch64/context.rs",
           "crates/kernel/src/arch/aarch64/entry.S",
           "crates/kernel/src/arch/aarch64/mod.rs",
+          "crates/kernel/src/asid.rs",
+          "crates/kernel/src/boot_workload.rs",
+          "crates/kernel/src/handles/testing.rs",
+          "crates/kernel/src/ipc/deferred.rs",
           "crates/kernel/src/ipc/native.rs",
+          "crates/kernel/src/ipc_benchmark.rs",
+          "crates/kernel/src/ipc_workload.rs",
           "crates/kernel/src/main.rs",
           "crates/kernel/src/memory/mod.rs",
           "crates/kernel/src/native_boot.rs",
           "crates/kernel/src/platform/config.rs",
           "crates/kernel/src/process.rs",
+          "crates/kernel/src/process_workload.rs",
           "crates/kernel/src/scheduler/local.rs",
           "crates/kernel/src/scheduler/mod.rs",
+          "crates/kernel/src/scheduler/task.rs",
+          "crates/kernel/src/security.rs",
+          "crates/kernel/src/security/testing.rs",
+          "crates/kernel/src/smp.rs",
           "crates/kernel/src/supervision.rs",
           "crates/kernel/src/supervision_workload.rs",
+          "crates/kernel/src/sync/mod.rs",
+          "crates/kernel/src/test_support/arch_probes.S",
           "crates/kernel/src/tests.rs",
+          "crates/kernel/src/user_copy.rs",
+          "crates/kernel/src/user_copy/testing.rs",
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/native_apps.rs",
+          "crates/xtask/src/test_support/irq_corruption.S",
+          "crates/xtask/src/test_support/isolated_build.rs",
+          "crates/xtask/src/test_support/mutations.json",
           "package.json",
           "scripts/ci-gate.cjs",
           "scripts/ci-workload.ps1",
@@ -135,7 +165,7 @@ Foundation SIMD IRQ probe теперь маскирует IRQ перед ини�
           {
             "environment": "qemu-arm64",
             "state": "UNKNOWN",
-            "reason": "No integrated current-source EL0 execution receipt yet."
+            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate."
           },
           {
             "environment": "physical-arm64",

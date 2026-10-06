@@ -183,9 +183,6 @@ impl Drop for CopyGuard {
 }
 /// Recovery cannot admit arbitrary EL1 faults, instruction aborts or kernel-side accesses.
 pub(crate) fn recover(esr: u64, far: u64, pc: u64) -> Option<u64> {
-    if cfg!(feature = "user-copy-recovery-negative") {
-        return None;
-    }
     const DATA_ABORT_CURRENT: u64 = 0x25;
     const FAULT_STATUS_MASK: u64 = 0x3f;
     const WRITE: u64 = 1 << 6;

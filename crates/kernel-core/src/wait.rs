@@ -166,16 +166,14 @@ impl SharedEvent {
     }
     /// Admission and revocation share one CAS word. Accepted work owns a reference.
     pub fn admit(&self) -> Option<AcceptedSignal> {
-        self.admit_checked(!cfg!(feature = "capability-revoke-negative"))
+        self.admit_checked()
     }
-    fn admit_checked(&self, enforce_revocation: bool) -> Option<AcceptedSignal> {
+    fn admit_checked(&self) -> Option<AcceptedSignal> {
         let event = self.try_clone()?;
         let gate = &self.storage().admissions;
         let mut s = gate.load(Ordering::Acquire);
         loop {
-            if s & REVOKED_GATE != 0 && enforce_revocation
-                || s & !REVOKED_GATE >= MAX_SHARED_REFERENCES as u64
-            {
+            if s & REVOKED_GATE != 0 || s & !REVOKED_GATE >= MAX_SHARED_REFERENCES as u64 {
                 return None;
             }
             match gate.compare_exchange_weak(s, s + 1, Ordering::AcqRel, Ordering::Acquire) {
@@ -198,7 +196,7 @@ impl SharedEvent {
         self.admit_signal().unwrap_or(false)
     }
     pub fn admit_signal(&self) -> Result<bool, SignalError> {
-        self.admit_checked(true)
+        self.admit_checked()
             .map(AcceptedSignal::finish)
             .ok_or(SignalError::Revoked)
     }

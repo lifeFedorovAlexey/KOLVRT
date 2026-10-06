@@ -1,5 +1,7 @@
 #[path = "test_support/irq_wait.rs"]
 mod irq_wait;
+// Assembly probes exist only in this separately gated test module.
+core::arch::global_asm!(include_str!("test_support/arch_probes.S"));
 use crate::time::Duration;
 use crate::{cpu, event, interrupt, memory, percpu, platform, smp, sync};
 use alloc::{boxed::Box, vec::Vec};
@@ -605,7 +607,7 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
     );
     multicore(p, processes);
     #[cfg(feature = "negative-test")]
-    report("negative_control", cpu::el() == cpu::CURRENT_EL2);
+    report("negative_control", cpu::el() == 2 << cpu::CURRENT_EL_SHIFT);
     #[cfg(feature = "panic-test")]
     panic!("panic reporting negative control");
     #[cfg(not(any(feature = "negative-test", feature = "panic-test")))]

@@ -106,7 +106,7 @@ Issue #109 добавляет кэш закреплённого cargo-deny 0.19.
           {
             "environment": "host-process",
             "state": "STALE",
-            "reason": "Phase 3.7 native ELF runtime, finite client binding or shared build/owner inputs changed; current-source applicability is being refreshed. Historical receipts retain their original scope.",
+            "reason": "Phase 3.7 separates ordinary implementation from isolated mutation builds and standalone ELF selftests. Prior receipts retain their original source scope; the changed source set requires fresh reviewed exact-source acceptance. Local partial passes do not establish the full declared gate.",
             "scope": "Host dependency policy and compile checks only; no kernel runtime or physical-hardware claim.",
             "receipt": "research/results/issue94-dependency-hygiene.json",
             "receipt_sha256": "a27a01010ef49bbfcb545513c59d932849f91901e562fee57752786d95789b2f"

@@ -204,7 +204,6 @@ pub(crate) fn exercise(
                     entry: memory::USER_CODE,
                     slice_limit: None,
                 },
-                None,
             )
             .unwrap();
         registry.start(id).unwrap();

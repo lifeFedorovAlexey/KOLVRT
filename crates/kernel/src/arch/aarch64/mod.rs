@@ -5,8 +5,6 @@ pub mod page;
 pub const INSTRUCTION_BYTES: usize = 4;
 pub const CURRENT_EL_SHIFT: u32 = 2;
 pub const CURRENT_EL1: u64 = 1 << 2;
-#[cfg(feature = "negative-test")]
-pub const CURRENT_EL2: u64 = 2 << 2;
 pub const SCTLR_MMU_ENABLE: u64 = 1;
 const SCTLR_DATA_CACHE_ENABLE: u64 = 1 << 2;
 const SCTLR_INSTRUCTION_CACHE_ENABLE: u64 = 1 << 12;
@@ -56,7 +54,7 @@ pub const ESR_TRANSLATION_FAULT_L3: u64 = 7;
 #[cfg(feature = "kernel-tests")]
 pub const ESR_PERMISSION_FAULT_L3: u64 = 15;
 // SAFETY: INV-ENTRY and INV-VECTOR, reviewed assembly owns startup and exception ABI.
-global_asm!(include_str!("entry.S"),irq_simd_restore_negative=const cfg!(feature="irq-simd-restore-negative") as u8);
+global_asm!(include_str!("entry.S"));
 
 macro_rules! read_reg {
     ($name:ident, $reg:literal) => {
@@ -363,12 +361,9 @@ pub unsafe fn activate_native_root(root: u64) {
 pub fn local_invalidate_asid(asid: u16) {
     let operand = (u64::from(asid)) << 48;
     // SAFETY: INV-ASID-RETIRE: pinned owner CPU has stopped using this lease; local TLBI completes before retirement acknowledgement.
-    #[cfg(not(feature = "asid-reuse-negative"))]
     unsafe {
         asm!("dsb ish", "tlbi aside1, {}", "dsb ish", "isb", in(reg) operand, options(nostack));
     }
-    #[cfg(feature = "asid-reuse-negative")]
-    let _ = operand;
 }
 pub fn publish_instructions(start: usize, end: usize) {
     clean_boot(start, end);

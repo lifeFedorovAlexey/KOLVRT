@@ -22,7 +22,7 @@ bench = false
 
 [[bin]]
 name = "smoke-client"
-path = "src/smoke-client.rs"
+path = "selftests/smoke-client.rs"
 required-features = ["guest"]
 test = false
 bench = false
@@ -36,28 +36,28 @@ bench = false
 
 [[bin]]
 name = "selftest-process"
-path = "src/selftest-process.rs"
+path = "selftests/selftest-process.rs"
 required-features = ["guest"]
 test = false
 bench = false
 
 [[bin]]
 name = "selftest-ipc"
-path = "src/selftest-ipc.rs"
+path = "selftests/selftest-ipc.rs"
 required-features = ["guest"]
 test = false
 bench = false
 
 [[bin]]
 name = "selftest-service"
-path = "src/selftest-service.rs"
+path = "selftests/selftest-service.rs"
 required-features = ["guest"]
 test = false
 bench = false
 
 [[bin]]
 name = "selftest-elf"
-path = "src/selftest-elf.rs"
+path = "selftests/selftest-elf.rs"
 required-features = ["guest"]
 test = false
 bench = false
@@ -65,6 +65,20 @@ bench = false
 [[bin]]
 name = "counter-client"
 path = "src/counter-client.rs"
+required-features = ["guest"]
+test = false
+bench = false
+
+[[bin]]
+name = "selftest-counter-service"
+path = "selftests/counter-service.rs"
+required-features = ["guest"]
+test = false
+bench = false
+
+[[bin]]
+name = "selftest-supervisor"
+path = "selftests/supervisor.rs"
 required-features = ["guest"]
 test = false
 bench = false

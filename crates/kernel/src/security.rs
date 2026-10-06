@@ -124,9 +124,7 @@ pub(crate) fn call(
         if word(0) != 1 {
             return Err(Error::Invalid);
         }
-        if (word(3) != 0 || word(4) != 0 || word(5) != 0)
-            && !cfg!(feature = "capability-scope-negative")
-        {
+        if word(3) != 0 || word(4) != 0 || word(5) != 0 {
             return Err(Error::Denied);
         }
         match word(1) {

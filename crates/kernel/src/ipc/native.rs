@@ -1,7 +1,6 @@
 //! Owned split-syscall continuation. Preparation/copy requires scheduler scope;
 //! endpoint execution and reservation completion require that scope to be gone.
 use crate::{cpu::context::Context, handles::Namespace, scheduler::task::Task, user_copy::Access};
-use core::sync::atomic::{AtomicBool, Ordering};
 use kernel_core::{
     domain,
     handles::{Handle, Kind},
@@ -11,12 +10,6 @@ use kernel_core::{
     },
     process::ProcessId,
 };
-
-static WAIT_REGISTRATION_OMITTED: AtomicBool = AtomicBool::new(false);
-#[cfg(feature = "ipc-wait-recheck-negative")]
-pub(crate) fn wait_registration_omitted() -> bool {
-    WAIT_REGISTRATION_OMITTED.load(Ordering::Acquire)
-}
 
 pub(crate) const REQUEST: u16 = 0xa0;
 pub(crate) struct Prepared {
@@ -122,12 +115,6 @@ pub(crate) fn prepare(
 }
 pub(crate) fn execute(prepared: &Prepared, now: u64) -> Result<Action, Failure> {
     let input = &prepared.input;
-    if cfg!(feature = "native-ipc-negative")
-        && input.operation == Operation::Submit
-        && input.id >= 10
-    {
-        return Err(Failure::State(Error::Invalid));
-    }
     if let Some(endpoint) = &prepared.endpoint {
         super::storage::with(endpoint, |state| match input.operation {
             Operation::Submit => state
@@ -146,9 +133,6 @@ pub(crate) fn execute(prepared: &Prepared, now: u64) -> Result<Action, Failure> 
                     let key = prepared.wait.expect("receive wait identity prepared");
                     if state.wait_readable(prepared.caller, key)? {
                         return Err(Error::Busy);
-                    }
-                    if cfg!(feature = "ipc-wait-recheck-negative") {
-                        WAIT_REGISTRATION_OMITTED.store(true, Ordering::Release);
                     }
                     Ok(Action::Blocked {
                         key,
@@ -196,9 +180,6 @@ pub(crate) fn execute(prepared: &Prepared, now: u64) -> Result<Action, Failure> 
                     if state.wait_terminal(prepared.caller, id, key)? {
                         Ok(Action::Returned(0))
                     } else {
-                        if cfg!(feature = "ipc-wait-recheck-negative") {
-                            WAIT_REGISTRATION_OMITTED.store(true, Ordering::Release);
-                        }
                         Ok(Action::Blocked {
                             key,
                             target: ipc::WaitTarget::Terminal(endpoint.id(), id),

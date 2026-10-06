@@ -15,35 +15,8 @@ pub(crate) const ESR_SYSREG_TRAP: u64 = 0x18;
 pub(crate) const ESR_UNKNOWN: u64 = 0;
 pub(crate) const SVC_IMMEDIATE_MASK: u64 = u16::MAX as u64;
 const TRAP_IRQ: u64 = 1;
-#[cfg(feature = "user-context-negative")]
-const NEGATIVE_SAVED_REGISTER: usize = 20;
-#[cfg(feature = "user-context-negative")]
-pub(crate) fn corrupt_saved(context: &mut Context) {
-    // One-way corruption cannot cancel itself across an even number of preemptions.
-    context.gpr[NEGATIVE_SAVED_REGISTER] = 0;
-}
-#[cfg(feature = "scheduler-context-negative")]
-const NEGATIVE_EL1H_MODE: u64 = 5;
-#[cfg(feature = "scheduler-context-negative")]
-const NEGATIVE_AARCH32_MODE: u64 = 1 << 4;
-#[cfg(feature = "scheduler-context-negative")]
-pub(crate) fn corrupt_mode(context: &mut Context) {
-    context.pstate = if cfg!(feature = "scheduler-aarch32-negative") {
-        NEGATIVE_AARCH32_MODE
-    } else if cfg!(feature = "scheduler-user-irq-negative") {
-        super::PSTATE_IRQ_MASK
-    } else {
-        NEGATIVE_EL1H_MODE
-    };
-}
 fn require_user_context(context: &Context) {
     let valid = valid_user_context(context);
-    #[cfg(feature = "scheduler-context-negative")]
-    if !valid {
-        crate::event!(
-            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"InvalidUserContext\"}}"
-        );
-    }
     assert!(valid, "invalid AArch64 EL0 context or masked user IRQ");
 }
 pub(crate) fn valid_user_context(context: &Context) -> bool {

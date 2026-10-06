@@ -76,26 +76,6 @@ static ARRIVED: AtomicUsize = AtomicUsize::new(0);
 static SESSION: AtomicBool = AtomicBool::new(false);
 static STEP: AtomicBool = AtomicBool::new(false);
 static CONTINUOUS: AtomicBool = AtomicBool::new(false);
-// Test-only rendezvous forces CPU0 to observe CPU1's pending completion after
-// an expired workload deadline. CPU1 is already detached on its native root.
-#[cfg(feature = "kernel-tests")]
-static DELAY_SECONDARY_COMPLETION: AtomicBool = AtomicBool::new(false);
-#[cfg(feature = "kernel-tests")]
-static JOIN_PENDING_SEEN: AtomicU64 = AtomicU64::new(0);
-#[cfg(feature = "checkpoint-publication-negative")]
-static SECONDARY_PUBLICATION_HELD: AtomicBool = AtomicBool::new(false);
-#[cfg(feature = "kernel-tests")]
-pub(crate) fn delay_secondary_completion(enabled: bool) {
-    percpu::primary_only();
-    assert!(cpu::irq_masked());
-    assert!(!SESSION.load(Ordering::Acquire));
-    DELAY_SECONDARY_COMPLETION.store(enabled, Ordering::Release);
-}
-#[cfg(feature = "kernel-tests")]
-pub(crate) fn pending_completion_observed() -> bool {
-    percpu::primary_only();
-    JOIN_PENDING_SEEN.load(Ordering::Acquire) != 0
-}
 static IPC_FINISHED: AtomicUsize = AtomicUsize::new(0);
 static IPC_BLOCKED_IDLE: AtomicUsize = AtomicUsize::new(0);
 static IPC_ALL_BLOCKED: AtomicU64 = AtomicU64::new(0);
@@ -212,8 +192,6 @@ fn dispatch_inner(
         .generation()
         .checked_add(1)
         .expect("scheduler generation exhausted");
-    #[cfg(feature = "kernel-tests")]
-    JOIN_PENDING_SEEN.store(0, Ordering::Release);
     // One absolute workload deadline applies to both owners. It governs task
     // expiry, not permission to return before remote completion publication.
     let deadline = timeout.map(time::deadline_after);
@@ -279,11 +257,7 @@ fn dispatch_inner(
                         admitted.slice_budget,
                     );
                     if let Some(saved) = retained {
-                        task.ipc_wait = if cfg!(feature = "supervision-wait-negative") {
-                            None
-                        } else {
-                            saved.ipc_wait
-                        };
+                        task.ipc_wait = saved.ipc_wait;
                         task.ipc_blocks = saved.ipc_blocks;
                         task.ipc_terminal_blocks = saved.ipc_terminal_blocks;
                         task.ipc_wakes = saved.ipc_wakes;
@@ -330,26 +304,7 @@ fn dispatch_inner(
     run_local();
     let publication_deadline =
         checkpoint_deadline.unwrap_or_else(|| crate::smp::completion_deadline(deadline));
-    #[cfg(feature = "checkpoint-publication-negative")]
-    let mut held_reported = false;
-    crate::smp::wait_completion(
-        || {
-            let complete = LOCALS.iter().all(Local::completed);
-            #[cfg(feature = "checkpoint-publication-negative")]
-            if SECONDARY_PUBLICATION_HELD.load(Ordering::Acquire) && !held_reported {
-                crate::event!(
-                    "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"CheckpointPublicationHeld\",\"quiescent\":true}}"
-                );
-                held_reported = true;
-            }
-            #[cfg(feature = "kernel-tests")]
-            if !complete && DELAY_SECONDARY_COMPLETION.load(Ordering::Acquire) {
-                JOIN_PENDING_SEEN.store(generation, Ordering::Release);
-            }
-            complete
-        },
-        publication_deadline,
-    );
+    crate::smp::wait_completion(|| LOCALS.iter().all(Local::completed), publication_deadline);
     assert_eq!(memory::USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
     let owners_released = RUNNING_OWNER
         .iter()
@@ -392,14 +347,12 @@ fn dispatch_inner(
             }
         }
     }
-    #[cfg(not(feature = "process-unlink-negative"))]
     unlink(&completed);
     SESSION.store(false, Ordering::Release);
     completed
 }
 /// Unlink scheduler references before publishing process completion. Reports and
 /// copied frame evidence remain diagnostic data; roots can no longer be dispatched.
-#[cfg(not(feature = "process-unlink-negative"))]
 pub(crate) fn unlink(completed: &Completed) {
     assert!(completed.owners_released);
     for local in &LOCALS {
@@ -435,12 +388,6 @@ fn acquire_process(id: usize) {
         Ordering::AcqRel,
         Ordering::Acquire,
     );
-    #[cfg(feature = "scheduler-owner-negative")]
-    if result.is_err() {
-        crate::event!(
-            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"DuplicateOwner\"}}"
-        );
-    }
     assert_eq!(result, Ok(NO_CPU), "process already running");
 }
 fn release_process(id: usize) {
@@ -452,11 +399,6 @@ fn release_process(id: usize) {
 /// # Safety
 /// Same retained live-root contract as activate_root; used only for pinned user roots.
 unsafe fn activate(root: u64, asid: u16) {
-    #[cfg(feature = "user-root-negative")]
-    let root = {
-        let _ = root;
-        NATIVE_ROOT.load(Ordering::Acquire)
-    };
     // SAFETY: INV-USER-TTBR: caller retains the root and mask/stack preconditions.
     unsafe {
         cpu::activate_user_root(root, asid);
@@ -484,12 +426,6 @@ pub fn poll_secondary() {
     }
 }
 fn validate_task(task: &Task, index: usize, generation: u64) {
-    #[cfg(feature = "scheduler-task-negative")]
-    if task.generation() != generation {
-        crate::event!(
-            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"StaleTask\"}}"
-        );
-    }
     assert_eq!(task.generation(), generation, "stale scheduler task");
     assert_eq!(
         task.id(),
@@ -521,10 +457,6 @@ fn run_local() {
     if local.start(generation).is_err() {
         return;
     }
-    #[cfg(feature = "scheduler-contract-negative")]
-    if percpu::id() == percpu::BOOT_CPU {
-        local.controls(generation);
-    }
     if CONTINUOUS.load(Ordering::Acquire) {
         local.with(generation, |state| {
             for (index, task) in state.tasks.iter_mut().enumerate() {
@@ -547,10 +479,6 @@ fn run_local() {
     });
     if let Some(first) = first {
         acquire_process(first.3);
-    }
-    #[cfg(feature = "scheduler-owner-negative")]
-    if percpu::id() == percpu::BOOT_CPU {
-        acquire_process(first.expect("control needs task").3);
     }
     // Both CPUs rendezvous before first EL0 entry, so the test covers concurrent queues.
     ARRIVED.fetch_or(1 << percpu::id(), Ordering::AcqRel);
@@ -606,28 +534,6 @@ fn run_local() {
         && RUNNING_OWNER[percpu::id() * TASKS..(percpu::id() + 1) * TASKS]
             .iter()
             .all(|owner| owner.load(Ordering::Acquire) == NO_CPU);
-    #[cfg(feature = "kernel-tests")]
-    if percpu::is_secondary() && DELAY_SECONDARY_COMPLETION.load(Ordering::Acquire) {
-        assert!(quiescent);
-        // No state borrow, lock, live user root or execution owner spans the
-        // test gate. Completion remains unpublished until CPU0 observes it.
-        crate::smp::wait_optional(
-            || JOIN_PENDING_SEEN.load(Ordering::Acquire) == generation,
-            None,
-            "test coordinator pending-completion observation",
-        );
-    }
-    #[cfg(feature = "checkpoint-publication-negative")]
-    if percpu::is_secondary() && STEP.load(Ordering::Acquire) && CONTINUOUS.load(Ordering::Acquire)
-    {
-        assert!(quiescent);
-        SECONDARY_PUBLICATION_HELD.store(true, Ordering::Release);
-        // Hold only publication, after native-root/owner quiescence. CPU0 must
-        // fail its checkpoint coordination bound without reclaiming anything.
-        loop {
-            core::hint::spin_loop();
-        }
-    }
     local.complete(generation, quiescent);
 }
 fn continuous_local(local: &Local, generation: u64) {
@@ -669,14 +575,6 @@ fn continuous_local(local: &Local, generation: u64) {
             });
             (live, pending, state.deadline, next)
         });
-        #[cfg(feature = "ipc-wait-recheck-negative")]
-        if !live
-            && !pending
-            && session_deadline.is_some_and(|limit| cpu::ticks_relaxed() >= limit)
-            && crate::ipc::native::wait_registration_omitted()
-        {
-            reject_ipc("WaitRegistrationLost");
-        }
         if let Some(next) = next {
             acquire_process(next.3);
             // SAFETY: INV-USER-TTBR: continuous admitted session retains the
@@ -698,14 +596,6 @@ fn continuous_local(local: &Local, generation: u64) {
         }
         if !live && !pending && work.complete {
             IPC_FINISHED.fetch_or(1 << percpu::id(), Ordering::AcqRel);
-        }
-        #[cfg(feature = "ipc-wake-publication-negative")]
-        if !live
-            && !pending
-            && session_deadline.is_some_and(|limit| cpu::ticks_relaxed() >= limit)
-            && !work.quiescent
-        {
-            reject_ipc("WakePublicationLost");
         }
         if IPC_FINISHED.load(Ordering::Acquire) == (1 << platform_config::ACTIVE_CPUS) - 1
             && work.quiescent
@@ -825,10 +715,6 @@ fn trap_owned(
         } else {
             CONTEXT_READY
         };
-        #[cfg(feature = "user-context-negative")]
-        {
-            cpu::context::corrupt_saved(&mut task.context);
-        }
     } else {
         let Trap::Sync {
             class,
@@ -980,8 +866,6 @@ fn ipc_trap(local: &Local, generation: u64, frame: &mut Context, entry_ticks: u6
             return Err(13);
         }
         let prepared = crate::ipc::native::prepare(task, &state.handles[current], frame)?;
-        #[cfg(feature = "ipc-storage-scope-negative")]
-        let _ = crate::ipc::native::execute(&prepared, cpu::ticks());
         Ok(prepared)
     });
     let prepared = match prepared {
@@ -990,10 +874,6 @@ fn ipc_trap(local: &Local, generation: u64, frame: &mut Context, entry_ticks: u6
     };
     let action = match crate::ipc::native::execute(&prepared, cpu::ticks()) {
         Ok(action) => action,
-        #[cfg(feature = "ipc-double-charge-release-negative")]
-        Err(crate::ipc::native::Failure::State(kernel_core::ipc::Error::ChargeAlreadyReleased)) => {
-            reject_ipc("ChargeAlreadyReleased");
-        }
         Err(error) if error.retry(prepared.blocking()) => {
             return local.with(generation, |state| {
                 let current = state.current;
@@ -1015,13 +895,6 @@ fn ipc_trap(local: &Local, generation: u64, frame: &mut Context, entry_ticks: u6
             // Restart this finite syscall once its registered condition wakes.
             // Only architectural registers persist, never a user-memory borrow.
             task.context.pc = task.context.pc.checked_sub(4).expect("SVC restart address");
-            #[cfg(feature = "ipc-wake-generation-negative")]
-            let key = key.with_generation(
-                key.process()
-                    .generation()
-                    .checked_add(1)
-                    .expect("test generation mutation has room"),
-            );
             task.ipc_wait = Some(IpcWait::Wake { key, target });
             task.ipc_blocks = task
                 .ipc_blocks
@@ -1034,8 +907,6 @@ fn ipc_trap(local: &Local, generation: u64, frame: &mut Context, entry_ticks: u6
                     .expect("IPC terminal block counter exhausted");
             }
             task.state = CONTEXT_BLOCKED;
-            #[cfg(feature = "ipc-blocked-reclaim-negative")]
-            task.unlink_ipc();
             reschedule(state, frame, local, generation, current)
         });
         deferred_local(local, generation);
@@ -1113,24 +984,12 @@ fn deferred_local(local: &Local, generation: u64) -> crate::ipc::deferred::Poll 
             if let Some(sequence) = mailbox.pending() {
                 let exact = matches!(task.ipc_wait, Some(IpcWait::Wake { key, .. })
                     if key.sequence() == sequence && key.process().slot() == task.id()
-                        && (cfg!(feature = "ipc-wake-generation-negative")
-                            || key.process().generation() == task.process_generation()));
+                        && key.process().generation() == task.process_generation());
                 if exact && task.state == CONTEXT_BLOCKED {
-                    #[cfg(feature = "ipc-wake-generation-negative")]
-                    if let Some(IpcWait::Wake { key, .. }) = task.ipc_wait {
-                        if key.process().generation() != task.process_generation() {
-                            reject_ipc("WakeGenerationAccepted");
-                        }
-                    }
                     let Some(IpcWait::Wake { key, .. }) = task.ipc_wait else {
                         unreachable!("exact IPC wake requires saved wait");
                     };
-                    #[cfg(feature = "ipc-wrong-process-wake-negative")]
-                    let destination = (index + 1) % TASKS;
-                    #[cfg(not(feature = "ipc-wrong-process-wake-negative"))]
                     let destination = index;
-                    state.tasks[destination].publish_ipc_ready(key);
-                    #[cfg(feature = "ipc-duplicate-ready-negative")]
                     state.tasks[destination].publish_ipc_ready(key);
                 }
                 // A stale task/slot never becomes READY, but the retained source

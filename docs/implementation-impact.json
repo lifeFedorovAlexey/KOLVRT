@@ -7,287 +7,490 @@
       "before_sha256_lf": "846a0a8a287e7f8e5b1ce2ba522a0acd0785a64327fbd4661741770a7cf2f705",
       "after_sha256_lf": "ef2199e9463648f52ae9bfb54e3a06afbebddff3518f4cc47bc843b796b282e9",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": ".github/workflows/kernel.yml",
       "before_sha256_lf": "3f5b7a9485a30ac2f67632d37f1c20f318dd119cdb5e347f63281f635e97251a",
       "after_sha256_lf": "d9b5c1f583ca13892449d5a15a3c28ac7d5c74dc002eb27eb2767b2bd9aa4ffc",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "Cargo.lock",
       "before_sha256_lf": "1b4087f384107ff3d9a387b075985307ffcc28b1081740e504685a18b9381c86",
       "after_sha256_lf": "1e8268b566f72fefca627685108749eb3949da6de04fa036ef5473f235f3e2cc",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "Cargo.toml",
       "before_sha256_lf": "4dbe7c99b44bf1ea9a54e08c70e536a33a2199b214b1b1a4da0e416ef04a71da",
       "after_sha256_lf": "3cd6d412f8cf68e0bcbc0f020c4156103d424af66c6cfc8ff513a309691fadde",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-apps/Cargo.toml",
       "before_sha256_lf": null,
-      "after_sha256_lf": "ed0b7f128e8cc8dd842f722698544b3b2f3f356a9b45ff3d5c5d8e9b1c40b808",
+      "after_sha256_lf": "084f5af288c449a73bd5bb9ed115c638030061284f6076a7f404897f021987ed",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-apps/build.rs",
       "before_sha256_lf": null,
       "after_sha256_lf": "6f3491681856d3ca1c2e05f82168cee63a90a3be26433c48554b51caad14998f",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-apps/linker.ld",
       "before_sha256_lf": null,
       "after_sha256_lf": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/client.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "da53f09f0899f849af48d27a954772c91206b8433cd4c4888157301b7e13d140",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/counter-service.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "80328a3b642a874a666809c3db3dab3aff9c55323f8ce5ceb4800f9318676324",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/selftest-elf.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "239daee5b680e5ff6a48f1c78dee97fd575cda9a3667f8000fde9179c68a4f53",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/selftest-ipc.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "55a72d9268fc64916f644c07f0984e0f7cafbdf6a481650fe3ca81c5fe2cad77",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/selftest-process.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f217a990312c99958098ec0fac9a5f291021ead13a198650e9de9ee35cb7cc80",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/selftest-service.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a6184f061250aa83cba0461f6c42e50772d6df3aff6f1aaabcc7ea4dbb10f903",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/smoke-client.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "7b5f28ced601c891b2aa991adf368125607fdccd7ef489d0464b10b3d490c7bf",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "apps/native-apps/selftests/supervisor.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f4d8b472d7aed27445865e81684390ae3e1c1071bb224c5dab3fa1c5a743808a",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-apps/src/client.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "da53f09f0899f849af48d27a954772c91206b8433cd4c4888157301b7e13d140",
+      "after_sha256_lf": "839234a0c6cd9c555e309538fa611fb37433c37e0e1ddfd2ae0cb3bb7ee57a10",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-apps/src/counter-client.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "25e943ecb2f34d88edd700581295b47e23efccc836e62f56f1c31b055c445eac",
+      "after_sha256_lf": "9646416fb9270a53fc6dd85293495f686078b520471628688d8395f938195d37",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-apps/src/counter-service.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "80328a3b642a874a666809c3db3dab3aff9c55323f8ce5ceb4800f9318676324",
+      "after_sha256_lf": "635fca7cd71c649dd20a773e214ed49f3752ccc0a0f5b9241d82c39ebcb9ee1c",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
-    },
-    {
-      "path": "apps/native-apps/src/selftest-elf.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "239daee5b680e5ff6a48f1c78dee97fd575cda9a3667f8000fde9179c68a4f53",
-      "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
-    },
-    {
-      "path": "apps/native-apps/src/selftest-ipc.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "55a72d9268fc64916f644c07f0984e0f7cafbdf6a481650fe3ca81c5fe2cad77",
-      "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
-    },
-    {
-      "path": "apps/native-apps/src/selftest-process.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "f217a990312c99958098ec0fac9a5f291021ead13a198650e9de9ee35cb7cc80",
-      "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
-    },
-    {
-      "path": "apps/native-apps/src/selftest-service.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "a6184f061250aa83cba0461f6c42e50772d6df3aff6f1aaabcc7ea4dbb10f903",
-      "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
-    },
-    {
-      "path": "apps/native-apps/src/smoke-client.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "7b5f28ced601c891b2aa991adf368125607fdccd7ef489d0464b10b3d490c7bf",
-      "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-apps/src/supervisor.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "f4d8b472d7aed27445865e81684390ae3e1c1071bb224c5dab3fa1c5a743808a",
+      "after_sha256_lf": "02e2c5c5cece606bcce2688d20b9ac92c5864f090f71364b22533d6739e60dc1",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-runtime/Cargo.toml",
       "before_sha256_lf": null,
       "after_sha256_lf": "9597f67e385b3486ece0be3c9ac4c18ed86da694bbc56f65110b392e17afb110",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "apps/native-runtime/src/lib.rs",
       "before_sha256_lf": null,
       "after_sha256_lf": "09783da67b5f2ea4f8223d1fc1edef651e4b89605192b4fd20d704792a226009",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel-core/src/domain.rs",
+      "before_sha256_lf": "58625f331d38ae932646be0594c50cac9b6efe42aed1bc8b4fa3c20622ca3125",
+      "after_sha256_lf": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel-core/src/elf.rs",
+      "before_sha256_lf": "875e7ca516a5358688a4b6234d023b5c6ebd91fc36dc2c316bb8cb0b87e06d3e",
+      "after_sha256_lf": "faa97534ec072f53c773012af327345dde9a35cece294ac1e436dd7399a79e58",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "before_sha256_lf": "7313263daa42cd5709a653fa36d71d595569877d062801de64e201da1b74f9cc",
+      "after_sha256_lf": "6effe77cfae8e5b64f35e7d2eeb4a4052d2dbe01666204bad06cd64a9af43cd2",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel-core/src/ipc.rs",
+      "before_sha256_lf": "7eb4a735aafaee2418988d846c221f8c2d3dede409ae1befcdb196e9126e733b",
+      "after_sha256_lf": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/identity.rs",
+      "before_sha256_lf": "2595d0ce4cdf6804a59509651acbd80265a62f88fa5b90af681160860ec3ea6e",
+      "after_sha256_lf": "0eb329df587f27963d3ba71ad3e939ef59d84c4175b542216b15315e2a250327",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "before_sha256_lf": "53f19c3658319b5908efdedca44c6b3c5d733f5c523f0ea52bf96f3110c6ed05",
+      "after_sha256_lf": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel-core/src/wait.rs",
+      "before_sha256_lf": "516d0c31dc900ad7f003cb58059c026e7c8e6cad2e1368a765866259f782bc2a",
+      "after_sha256_lf": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/Cargo.toml",
       "before_sha256_lf": "f5754d159c067d8fe5b6c4a92048212c97aebe2002cb5583dddd02428bbcb5fb",
       "after_sha256_lf": "2febbf94e3d56a90f6d67a0fd17ec6c14a0c0ef9b5e78df954a8f98f2eeff30d",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/build.rs",
       "before_sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61",
       "after_sha256_lf": "57afe17f2335680941554dcc379b1b4827540194992c62c4ddef241d0a28ce11",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "before_sha256_lf": "349a01fc447f71ef7540728d5782c3667cd5a92a47bf497feb307a99e1c87c89",
+      "after_sha256_lf": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/arch/aarch64/entry.S",
       "before_sha256_lf": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e",
-      "after_sha256_lf": "240b7e2eb26f0acbec0170dc3b684ecadc31c143487ffd40a28693dd3628ce32",
+      "after_sha256_lf": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/arch/aarch64/mod.rs",
       "before_sha256_lf": "24299caf432b0cebc32434a43d34489f8e3714446fdd95b12f3ecb9f9cea1413",
-      "after_sha256_lf": "44ccb7b6dfe340db92a1c1f28e18986fc584880aa61cb5d5c85f4e9ec7db2da5",
+      "after_sha256_lf": "e54606a21a0152921041ddab5fef0ede92fbcc6f436026acac4770b1455e5e2e",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/asid.rs",
+      "before_sha256_lf": "8ef1f80e78c8a3b95fa429c84484071f51651c8b1b89db02d2ce45f8a7be1003",
+      "after_sha256_lf": "7216e67ee636e5df1679728ee0911b90fd77bc0a76371dd090b300d8d205cd7e",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "before_sha256_lf": "6d3160c1bc19d6e05000aa88470e4d2ebf755e530c6c3781aa91ff2fd41b62f6",
+      "after_sha256_lf": "f62ef559cffe6dd0c9555a73af5aec0d54b3865a6fbd2ad41bcddbec2b6fd1ae",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "before_sha256_lf": "e4a2d3c0cccf1f442c1710fb2081d74a6bf4e4be8658668646aa94b00db0a7ed",
+      "after_sha256_lf": "a3860a85609994ccb0d2b8bf8a2fa399cf335b7fda498b70db0d2fcd5ba7b96b",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/ipc/deferred.rs",
+      "before_sha256_lf": "5205ed2effd778b45a220e295e3961952af1790ac3f54d857a2b25da304b5cb7",
+      "after_sha256_lf": "2dd4e5bddd94a02e05d743508c4e453fe175d990e5550f40ab21d70138d91ba4",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/ipc/native.rs",
       "before_sha256_lf": "171f940df42bb216af8636b504586dc555b8999833900101e328e57ffd8dd01e",
-      "after_sha256_lf": "bc3ec04268ae11edc5386c29bf9d071c6505b1230059bb5d17da58497d2e5cd7",
+      "after_sha256_lf": "bcf6931bd66b9648110bd35be16d6358eda9478a901328c49c7ce42b089d87ac",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.rs",
+      "before_sha256_lf": "558fded93ba926105bcb14e03719d52e66dc62ac20148ec6fdbd616eab8710d1",
+      "after_sha256_lf": "9f02333e41c00ae18e7bd5eeb87a49ec07606e2b496ea87ab736b99372d902cc",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.rs",
+      "before_sha256_lf": "38f5a2b14d666afc7c9de3cc599fb25a6e528241e73ad003fcbf118a8093bea9",
+      "after_sha256_lf": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/main.rs",
       "before_sha256_lf": "fceb8e992ba8f70fbd51de61a02f392e0a1d4915d3f0b9a2db7817d3f6a00183",
       "after_sha256_lf": "cf8fc5fe7cee5f5d72d176db877abdf128b379962beb3f58736fc33e9f61c32e",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/memory/mod.rs",
       "before_sha256_lf": "138a815965a33980c33f3f0923c62ce914b02f0b087abffab1236d6e8ada7248",
-      "after_sha256_lf": "932548fb6302dab9a3379cdce4663c45fbacd10c305f63201c516f6d1644e199",
+      "after_sha256_lf": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/native_boot.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "5555e4bb07d74d53bb7e08927c049a3fb426fed301af382490ad005e6f1b0e23",
+      "after_sha256_lf": "3661b97655d8781d34554af4ab5915ff82edf917d7d3320a05e46a35be3955f4",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/platform/config.rs",
       "before_sha256_lf": "0cbe90f9941116bd7dace00ff5a419e783bbfd57eed249ea9d24e4e319b30991",
       "after_sha256_lf": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/process.rs",
       "before_sha256_lf": "abf9e959c4f86a4add4d8a0d5bb15aed2fc70bf6adcb64823151141374b18340",
-      "after_sha256_lf": "19c4361e09eca06a451019b8c51d751cb9722cd7947eb13402cf72098ccf131f",
+      "after_sha256_lf": "3c0858cf788362ea53838665ca6efa710616f09be8ae59ca0028e7819bcaecb4",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "before_sha256_lf": "93d3e9ea7c5981cf86509c64b2a832dec1ca5d53f09ff547c7bbc41bb89e2f5d",
+      "after_sha256_lf": "4f99da63ebb011c98916a2ea0d5d0d90626ffb300b2b5e041f514c9b7e874363",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/scheduler/local.rs",
       "before_sha256_lf": "06aea6e398566960f8c3f1bfc0009369cd9bad7468ec107be90b2610ada33cd5",
-      "after_sha256_lf": "11e5087637803e82081638d29c781b1d388d930d0c11d3970a97fa9ac42fd298",
+      "after_sha256_lf": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/scheduler/mod.rs",
       "before_sha256_lf": "6e14830a34ebd3c7af13f6b8911688e959154a4dc353bbdd5bb65cb9ca7443e0",
-      "after_sha256_lf": "9e9fafae2f58f447ac451341c3e2d0680939fd5e9f7af7863eb6286515516a90",
+      "after_sha256_lf": "e0f10b225ca84304e07d78125db6a8655440a6d73bd07ef4df6490aa20dec95b",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "before_sha256_lf": "609ac840f1d72ce8ddb50f789f84f36440494ea975b136db024019548e90f653",
+      "after_sha256_lf": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/security.rs",
+      "before_sha256_lf": "d0d258c0bcfe61088e1465398b720aeae555d99454732e2e1f9167c63c31a5f3",
+      "after_sha256_lf": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/security/testing.rs",
+      "before_sha256_lf": "8153b6402505f0254132a17c2aa91279f4e35562390961519075e0d3d5243fe3",
+      "after_sha256_lf": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "before_sha256_lf": "0f585ca1e2982de66a6b045e271c1b73ed319696a57fa189e0d2ed7b62fa7d36",
+      "after_sha256_lf": "45df79a7842cfbc3582f3930f7b623872998443ada76c73a5df4058ba93c1131",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/supervision.rs",
       "before_sha256_lf": "ffad23c4ca6b6c355ec6d9cb81260aa7b5f5993a156a04b928882e8eb97ee401",
-      "after_sha256_lf": "045e3b637ca9f241e5ebf1720bd6bab8be89464587e58deb51856db15afd58d7",
+      "after_sha256_lf": "e3b29976dc855426fa0c0c046bb2d9264a41160d590cf493b7de4500bf5b0876",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/supervision_workload.rs",
       "before_sha256_lf": "73868af14eeb17328f79bcd6d5c47445316047684cc4f1cc60e3fa088616ec0a",
-      "after_sha256_lf": "bed834266c58ab58fff2ad66221533b3c3e2c83ac6f9f6c46557d153a6eda0b6",
+      "after_sha256_lf": "f68e65d34d1a285c9c400ce8cd780fd2d4560e542b403687f3d49acbca3bae54",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "before_sha256_lf": "179fc0234b9f93150b24dc9457bdcd783a0bdaf67dc9c4cf3c0dd2c9b152681d",
+      "after_sha256_lf": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/test_support/arch_probes.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
-      "after_sha256_lf": "f41fc6ff46c6b85faa5c17b471d824a0317f31285285460b729aeb2d89e1fe5f",
+      "after_sha256_lf": "bada903ad4f49909ed9d3ae3576031353482724fdedddf7c051b74735d01cddc",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/user_copy.rs",
+      "before_sha256_lf": "644c859a3fd8b35f309d2a31d0ffbfd9e416d8d459f81f2debcea4b2abfc0cbf",
+      "after_sha256_lf": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "before_sha256_lf": "ae3d1e80fcb1079b2b75c47ac7a419f76ddfa23838d02c5cf9fa415d333daa6a",
+      "after_sha256_lf": "2eba9dc02d0fe703998263017ed55bf04c12f50831f4e6368ede3508dbc1a0d3",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/xtask/src/main.rs",
       "before_sha256_lf": "0e39fc6444c73c70bcf36dee77a72c2beb1cf66d4c7789c8c8cc638049047ded",
-      "after_sha256_lf": "4ee6bb27c9b059807f0a75721d88062f05f03ff0429668799dac932d105bc424",
+      "after_sha256_lf": "ae57a706ed703bc018a611e2b755aa09de51b78937994fc4825eb8aa79857b23",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/xtask/src/matrix.rs",
       "before_sha256_lf": "f3934e65d3932afe535f39ee3254424df857c84c3fa43d02a8b5d2e269715718",
-      "after_sha256_lf": "762c42ad4a7058361b74a641330984fdaaccf70620e275f81e2647dea1bc1a13",
+      "after_sha256_lf": "14ae526672fe222c66b9eb872e4c84648b817a453c742061dfed75a001c24304",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "crates/xtask/src/native_apps.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "a5f4498154d36fdb6254f10ce5f6c87dc443e08c5163fe4b94c23bc823196f5c",
+      "after_sha256_lf": "74dd061afd039391429d541c1364ba6dfa8fa2294d092c3c93c196a0beefcb33",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/xtask/src/test_support/irq_corruption.S",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f497f3545d7bc5037d1fed8dc938e8b467cb9769139e1f73877ec8fb3d45222a",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/xtask/src/test_support/isolated_build.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f87752dcd8e4e5d718b47e60cb7d3972f6f66139f8cb4de5b2ae8eb8458de276",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
+    },
+    {
+      "path": "crates/xtask/src/test_support/mutations.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "ef661c5b0b1c39daf24b7d61fdecba6739469a7c7b673c5b4654090aeebcfdbb",
+      "disposition": "new-feature",
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "package.json",
       "before_sha256_lf": "52f006ec589a437637af166d547e57aba80089c39e9887dd336d446cd0cdb979",
       "after_sha256_lf": "5e553e13f499682c1536717470bd036509de973141ffb0f9a42e30611df7dad6",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "scripts/ci-gate.cjs",
       "before_sha256_lf": "e431f322b9fedcf3e2363ee7518eeb98e3994180294fc0a14f0629923c6614f0",
       "after_sha256_lf": "fb8d081a6b345261d4904b18097b16c11c09216eca9fbb64cab9816f917e4dbe",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "scripts/ci-workload.ps1",
       "before_sha256_lf": "cee27cf1b576a78b37836f8a0cc9e123e64bed3e3407e5c515f1364d972f3f5b",
       "after_sha256_lf": "d0a8d748ca2a76c7a3ca493ec9a670dfaa7aa2d644cf11f1ffb98a3e335b55ca",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "scripts/native-closure-proof.cjs",
       "before_sha256_lf": null,
       "after_sha256_lf": "e161182dac8d060f84782750613ff0af1113805f4ebcc672a0f519eadae01726",
       "disposition": "new-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     },
     {
       "path": "scripts/tests/ci-infrastructure.test.cjs",
       "before_sha256_lf": "03c1f623a8ae4e14254a998be8e47334e092db895114b46d0be2a968a70bdefc",
       "after_sha256_lf": "e82a3ed037d8d06796ce0dd1c13c01c88fb285b425971df6e006cc95324fd987",
       "disposition": "existing-feature",
-      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+      "reason": "Phase 3.7 native ELF/IPC slice and separation of fault injection from ordinary implementation. Test artifacts use isolated source/build copies; process creation has no failure-injection API. Canonical owners retain prior evidence as historical and require exact-source verification."
     }
   ],
   "features": [
@@ -312,7 +515,22 @@
       "reason": "Review Phase 3.7 semantic scope and changed source/build/CI evidence applicability. Preserve prior receipts and append-only feature transitions; no old receipt is relabeled as current-source."
     },
     {
+      "id": "kolvrt.security.capability-revocation",
+      "disposition": "evidence-change",
+      "reason": "Review Phase 3.7 semantic scope and changed source/build/CI evidence applicability. Preserve prior receipts and append-only feature transitions; no old receipt is relabeled as current-source."
+    },
+    {
+      "id": "kolvrt.security.event-revocation",
+      "disposition": "evidence-change",
+      "reason": "Review Phase 3.7 semantic scope and changed source/build/CI evidence applicability. Preserve prior receipts and append-only feature transitions; no old receipt is relabeled as current-source."
+    },
+    {
       "id": "kolvrt.security.domains",
+      "disposition": "evidence-change",
+      "reason": "Review Phase 3.7 semantic scope and changed source/build/CI evidence applicability. Preserve prior receipts and append-only feature transitions; no old receipt is relabeled as current-source."
+    },
+    {
+      "id": "kolvrt.handles.local",
       "disposition": "evidence-change",
       "reason": "Review Phase 3.7 semantic scope and changed source/build/CI evidence applicability. Preserve prior receipts and append-only feature transitions; no old receipt is relabeled as current-source."
     },
@@ -334,6 +552,11 @@
     {
       "id": "kolvrt.services.supervision",
       "disposition": "semantic-change",
+      "reason": "Review Phase 3.7 semantic scope and changed source/build/CI evidence applicability. Preserve prior receipts and append-only feature transitions; no old receipt is relabeled as current-source."
+    },
+    {
+      "id": "kolvrt.memory.user-copy",
+      "disposition": "evidence-change",
       "reason": "Review Phase 3.7 semantic scope and changed source/build/CI evidence applicability. Preserve prior receipts and append-only feature transitions; no old receipt is relabeled as current-source."
     },
     {

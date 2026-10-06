@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 52366,
-  "catalog_bytes": 81442,
-  "catalog_nodes": 201,
+  "approximate_tokens": 52616,
+  "catalog_bytes": 81825,
+  "catalog_nodes": 202,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "ac01c95663d2de63bceb191e937eb42cd8f17fd765dabeb8ef63034bc7fe89f7",
+  "catalog_sha256": "e1573be07aa6f6f2b48fb29cf6c65c839272aec05bd93a841d81d3c38c74efe3",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 209463,
+  "context_plus_catalog_bytes": 210461,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 105,
-    "utf8_bytes": 915984
+    "utf8_bytes": 921893
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -67,14 +67,14 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 128021,
+  "rendered_context_bytes": 128636,
   "russian_pilot": {
-    "approximate_tokens": 80736,
-    "catalog_bytes": 81442,
-    "context_plus_navigation_bytes": 322944,
+    "approximate_tokens": 81049,
+    "catalog_bytes": 81825,
+    "context_plus_navigation_bytes": 324194,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 45924,
+    "localized_navigation_bytes": 46176,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -86,7 +86,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 195578,
+    "rendered_context_bytes": 196193,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -217,7 +217,7 @@
       "location": {
         "end": 37,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "c213a6774b7c3d5ae721e4423078d2503eac8aebd9b9feb5d2d7d4306301fe56",
         "start": 13
       }
     },
@@ -226,7 +226,7 @@
       "location": {
         "end": 69,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "c213a6774b7c3d5ae721e4423078d2503eac8aebd9b9feb5d2d7d4306301fe56",
         "start": 36
       }
     },
@@ -235,7 +235,7 @@
       "location": {
         "end": 112,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "c213a6774b7c3d5ae721e4423078d2503eac8aebd9b9feb5d2d7d4306301fe56",
         "start": 107
       }
     },
@@ -244,7 +244,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "c213a6774b7c3d5ae721e4423078d2503eac8aebd9b9feb5d2d7d4306301fe56",
         "start": 7
       }
     },
@@ -253,7 +253,7 @@
       "location": {
         "end": 86,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "c213a6774b7c3d5ae721e4423078d2503eac8aebd9b9feb5d2d7d4306301fe56",
         "start": 68
       }
     },
@@ -262,7 +262,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "62cdfde93817116574d9ad9d187a36e9c6b2d3f6ab1a0927592760a2fd51479b",
         "start": 7
       }
     },
@@ -271,7 +271,7 @@
       "location": {
         "end": 32,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "62cdfde93817116574d9ad9d187a36e9c6b2d3f6ab1a0927592760a2fd51479b",
         "start": 13
       }
     },
@@ -280,7 +280,7 @@
       "location": {
         "end": 50,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "62cdfde93817116574d9ad9d187a36e9c6b2d3f6ab1a0927592760a2fd51479b",
         "start": 31
       }
     },
@@ -289,7 +289,7 @@
       "location": {
         "end": 87,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "62cdfde93817116574d9ad9d187a36e9c6b2d3f6ab1a0927592760a2fd51479b",
         "start": 65
       }
     },
@@ -298,7 +298,7 @@
       "location": {
         "end": 229,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "62cdfde93817116574d9ad9d187a36e9c6b2d3f6ab1a0927592760a2fd51479b",
         "start": 109
       }
     },
@@ -307,7 +307,7 @@
       "location": {
         "end": 66,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "62cdfde93817116574d9ad9d187a36e9c6b2d3f6ab1a0927592760a2fd51479b",
         "start": 49
       }
     },
@@ -334,7 +334,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "d5dad422b77bdb4a374be93dff656e7b0e344b78fe2412cbfa70c40f1f58fbca",
+        "sha256": "a023b49ea5303ec2bcf8130a0eeccb60ad6d8bc6ba2bd8ad4e0960b4bbbe64fe",
         "start": 13
       }
     },
@@ -343,7 +343,7 @@
       "location": {
         "end": 85,
         "path": "docs/kernel/processes.md",
-        "sha256": "d5dad422b77bdb4a374be93dff656e7b0e344b78fe2412cbfa70c40f1f58fbca",
+        "sha256": "a023b49ea5303ec2bcf8130a0eeccb60ad6d8bc6ba2bd8ad4e0960b4bbbe64fe",
         "start": 61
       }
     },
@@ -352,7 +352,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
+        "sha256": "1dec07eac1d7fb0383e2e1227ea7a473781dc262174ba26c6043b984effd0bb7",
         "start": 7
       }
     },
@@ -361,7 +361,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "164fa8efc2fd04dfce82c2fbc4b3f489ae5ef2c02a2068f6a67cc88efd94e39f",
+        "sha256": "0a26cc54251eb74976e17d546b9d2d6bbdc46c59928724245a0d370eb3563909",
         "start": 11
       }
     },
@@ -370,7 +370,7 @@
       "location": {
         "end": 38,
         "path": "docs/kernel/domains.md",
-        "sha256": "164fa8efc2fd04dfce82c2fbc4b3f489ae5ef2c02a2068f6a67cc88efd94e39f",
+        "sha256": "0a26cc54251eb74976e17d546b9d2d6bbdc46c59928724245a0d370eb3563909",
         "start": 29
       }
     },
@@ -379,7 +379,7 @@
       "location": {
         "end": 30,
         "path": "docs/kernel/domains.md",
-        "sha256": "164fa8efc2fd04dfce82c2fbc4b3f489ae5ef2c02a2068f6a67cc88efd94e39f",
+        "sha256": "0a26cc54251eb74976e17d546b9d2d6bbdc46c59928724245a0d370eb3563909",
         "start": 17
       }
     },
@@ -388,7 +388,7 @@
       "location": {
         "end": 58,
         "path": "docs/kernel/domains.md",
-        "sha256": "164fa8efc2fd04dfce82c2fbc4b3f489ae5ef2c02a2068f6a67cc88efd94e39f",
+        "sha256": "0a26cc54251eb74976e17d546b9d2d6bbdc46c59928724245a0d370eb3563909",
         "start": 37
       }
     },
@@ -397,7 +397,7 @@
       "location": {
         "end": 179,
         "path": "docs/kernel/domains.md",
-        "sha256": "164fa8efc2fd04dfce82c2fbc4b3f489ae5ef2c02a2068f6a67cc88efd94e39f",
+        "sha256": "0a26cc54251eb74976e17d546b9d2d6bbdc46c59928724245a0d370eb3563909",
         "start": 57
       }
     },
@@ -406,7 +406,7 @@
       "location": {
         "end": 176,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
+        "sha256": "1dec07eac1d7fb0383e2e1227ea7a473781dc262174ba26c6043b984effd0bb7",
         "start": 17
       }
     },
@@ -460,7 +460,7 @@
       "location": {
         "end": 120,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 101
       }
     },
@@ -469,7 +469,7 @@
       "location": {
         "end": 138,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 119
       }
     },
@@ -478,7 +478,7 @@
       "location": {
         "end": 156,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 137
       }
     },
@@ -487,7 +487,7 @@
       "location": {
         "end": 192,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 173
       }
     },
@@ -496,7 +496,7 @@
       "location": {
         "end": 318,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 299
       }
     },
@@ -505,7 +505,7 @@
       "location": {
         "end": 336,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 317
       }
     },
@@ -514,23 +514,23 @@
       "location": {
         "end": 354,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 335
       }
     },
     {
       "id": "law.043",
       "location": {
-        "end": 544,
+        "end": 374,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5e9dd5bb9090576542666c4cad72c4072d5fcb8107b5ebdc0fda1df1f31aaa11",
         "start": 353
       }
     }
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 197527
+    "utf8_bytes": 200216
   },
   "source_files": [
     {

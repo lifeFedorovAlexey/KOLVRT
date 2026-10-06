@@ -91,7 +91,7 @@ pub fn record_switch() {
 pub fn record_full_tlbi() {
     FULL_TLBI[percpu::id()].fetch_add(1, Ordering::Relaxed);
 }
-#[cfg(all(feature = "kernel-tests", not(feature = "asid-reuse-negative")))]
+#[cfg(feature = "kernel-tests")]
 pub fn record_asid_tlbi(owner: usize) {
     ASID_TLBI[owner].fetch_add(1, Ordering::Relaxed);
 }
@@ -182,7 +182,7 @@ pub fn retire(lease: Lease) {
         return;
     }
     crate::cpu::local_invalidate_asid(lease.asid);
-    #[cfg(all(feature = "kernel-tests", not(feature = "asid-reuse-negative")))]
+    #[cfg(feature = "kernel-tests")]
     record_asid_tlbi(lease.owner);
     cell.retired.store(true, Ordering::Release);
 }

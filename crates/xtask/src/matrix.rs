@@ -151,7 +151,9 @@ fn execute_task(task: &Task) -> Result<Value> {
             String::from_utf8_lossy(&output.stderr)
         );
         fs::write(format!("target/kernel/{}.host.log", task.id), &text)?;
-        let witnessed = if task.feature == Some("checkpoint-publication-negative") {
+        let witnessed = if task.feature == Some("irq-simd-restore-negative") {
+            irq_context_failure(&read_json(format!("{artifact}.results.json"))?)?
+        } else if task.feature == Some("checkpoint-publication-negative") {
             let events = read_json(format!("{artifact}.results.json"))?;
             let events = events
                 .as_array()
@@ -225,9 +227,34 @@ pub fn run_ipc() -> Result<()> {
     Ok(())
 }
 
+fn irq_context_failure(events: &Value) -> Result<bool> {
+    let events = events.as_array().ok_or("IRQ control events absent")?;
+    Ok(events
+        .iter()
+        .any(|e| e["event"] == "test" && e["name"] == "irq_simd_context" && e["status"] == "fail")
+        && events.iter().any(|e| {
+            e["event"] == "irq-context"
+                && e["status"] == "fail"
+                && e["probe_result"] == 0
+                && e["deliveries"].as_u64().is_some_and(|n| n > 0)
+        }))
+}
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn irq_control_requires_named_failure_and_real_delivery() {
+        let failure = json!({"event":"test","name":"irq_simd_context","status":"fail"});
+        let evidence =
+            json!({"event":"irq-context","status":"fail","probe_result":0,"deliveries":1});
+        assert!(irq_context_failure(&json!([failure.clone(), evidence.clone()])).unwrap());
+        assert!(!irq_context_failure(&json!([failure.clone()])).unwrap());
+        assert!(
+            !irq_context_failure(&json!([evidence.clone(),{"event":"panic","status":"fail"}]))
+                .unwrap()
+        );
+        assert!(!irq_context_failure(&json!([failure,{"event":"irq-context","status":"fail","probe_result":0,"deliveries":0}])).unwrap());
+    }
     #[test]
     fn shards_partition_every_positive_and_negative_task_once() {
         let plan = tasks();
