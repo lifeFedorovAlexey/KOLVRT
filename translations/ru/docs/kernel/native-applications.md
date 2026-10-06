@@ -49,6 +49,8 @@ Host runner должен предоставить команды selftest и app
 
 [English original](../../../../docs/kernel/native-applications.md)
 
+Foundation SIMD IRQ probe теперь маскирует IRQ перед инициализацией проверяемого vector/FP state и обслуживает pending interrupt внутри инициализированного assembly scope. Прежний порядок мог доставить единственный timer до инициализации, допуская ложное наблюдение либо failure до достижения цели другого control. Test-only mutation повреждает настоящий saved q0 frame; DEV/PROD требуют именованный failure irq_simd_context при наблюдаемой delivery. Инструкции обычного IRQ vector не изменяются при выключенной mutation feature. Текущий foundation inventory — 144 задачи/140 controls; исторический inventory #126 остаётся 142/138.
+
 <!-- knowledge -->
 
 ```json
@@ -99,6 +101,8 @@ Host runner должен предоставить команды selftest и app
           "apps/native-runtime/src/lib.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/build.rs",
+          "crates/kernel/src/arch/aarch64/entry.S",
+          "crates/kernel/src/arch/aarch64/mod.rs",
           "crates/kernel/src/ipc/native.rs",
           "crates/kernel/src/main.rs",
           "crates/kernel/src/memory/mod.rs",
@@ -109,7 +113,9 @@ Host runner должен предоставить команды selftest и app
           "crates/kernel/src/scheduler/mod.rs",
           "crates/kernel/src/supervision.rs",
           "crates/kernel/src/supervision_workload.rs",
+          "crates/kernel/src/tests.rs",
           "crates/xtask/src/main.rs",
+          "crates/xtask/src/matrix.rs",
           "crates/xtask/src/native_apps.rs",
           "package.json",
           "scripts/ci-gate.cjs",

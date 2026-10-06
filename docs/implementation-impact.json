@@ -131,7 +131,7 @@
     {
       "path": "crates/kernel/Cargo.toml",
       "before_sha256_lf": "f5754d159c067d8fe5b6c4a92048212c97aebe2002cb5583dddd02428bbcb5fb",
-      "after_sha256_lf": "01e4a32d5cd626564c7bd80e2d90288f64645e847dcb694c416ea9a84ba1123c",
+      "after_sha256_lf": "2febbf94e3d56a90f6d67a0fd17ec6c14a0c0ef9b5e78df954a8f98f2eeff30d",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },
@@ -139,6 +139,20 @@
       "path": "crates/kernel/build.rs",
       "before_sha256_lf": "480bed730f4c07acbf117eb2073446107a45ea582dc1d657799cf0044451fc61",
       "after_sha256_lf": "57afe17f2335680941554dcc379b1b4827540194992c62c4ddef241d0a28ce11",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "before_sha256_lf": "360611a7e7c50f69b890a23b2212062d0c9d432c3a70ccebfcddeb46def8b75e",
+      "after_sha256_lf": "240b7e2eb26f0acbec0170dc3b684ecadc31c143487ffd40a28693dd3628ce32",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "before_sha256_lf": "24299caf432b0cebc32434a43d34489f8e3714446fdd95b12f3ecb9f9cea1413",
+      "after_sha256_lf": "44ccb7b6dfe340db92a1c1f28e18986fc584880aa61cb5d5c85f4e9ec7db2da5",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },
@@ -213,9 +227,23 @@
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },
     {
+      "path": "crates/kernel/src/tests.rs",
+      "before_sha256_lf": "1abc9eb7ee701101d7871012d7755d69b16d28c22b4b368e3c3101ae6be018fd",
+      "after_sha256_lf": "f41fc6ff46c6b85faa5c17b471d824a0317f31285285460b729aeb2d89e1fe5f",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+    },
+    {
       "path": "crates/xtask/src/main.rs",
       "before_sha256_lf": "0e39fc6444c73c70bcf36dee77a72c2beb1cf66d4c7789c8c8cc638049047ded",
-      "after_sha256_lf": "0ca826bfdbe012afcbdcd446e522a4b5bee1e2f94264e493946240bdc87a1c4e",
+      "after_sha256_lf": "4ee6bb27c9b059807f0a75721d88062f05f03ff0429668799dac932d105bc424",
+      "disposition": "existing-feature",
+      "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
+    },
+    {
+      "path": "crates/xtask/src/matrix.rs",
+      "before_sha256_lf": "f3934e65d3932afe535f39ee3254424df857c84c3fa43d02a8b5d2e269715718",
+      "after_sha256_lf": "762c42ad4a7058361b74a641330984fdaaccf70620e275f81e2647dea1bc1a13",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 standalone original ELF/native IPC application, exact finite client binding, generic boot/observations and mandatory host/CI validation. Canonical native applications and affected existing owners declare the implementation and source applicability."
     },

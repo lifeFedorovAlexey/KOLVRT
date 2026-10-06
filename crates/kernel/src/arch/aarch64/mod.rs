@@ -56,7 +56,7 @@ pub const ESR_TRANSLATION_FAULT_L3: u64 = 7;
 #[cfg(feature = "kernel-tests")]
 pub const ESR_PERMISSION_FAULT_L3: u64 = 15;
 // SAFETY: INV-ENTRY and INV-VECTOR, reviewed assembly owns startup and exception ABI.
-global_asm!(include_str!("entry.S"));
+global_asm!(include_str!("entry.S"),irq_simd_restore_negative=const cfg!(feature="irq-simd-restore-negative") as u8);
 
 macro_rules! read_reg {
     ($name:ident, $reg:literal) => {

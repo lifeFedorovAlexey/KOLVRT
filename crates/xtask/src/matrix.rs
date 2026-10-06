@@ -59,8 +59,9 @@ fn tasks() -> Vec<Task> {
                 None,
             ));
         }
-        for &(flag, feature, marker) in USER_COPY_CONTROLS
+        for &(flag, feature, marker) in FOUNDATION_CONTROLS
             .iter()
+            .chain(USER_COPY_CONTROLS)
             .chain(HANDLE_CONTROLS)
             .chain(SECURITY_CONTROLS)
         {
@@ -232,7 +233,8 @@ mod tests {
         let plan = tasks();
         let expected = 4
             + NEGATIVE_CONTROLS.len()
-            + 2 * (SCHEDULER_CONTROLS.len()
+            + 2 * (FOUNDATION_CONTROLS.len()
+                + SCHEDULER_CONTROLS.len()
                 + USER_COPY_CONTROLS.len()
                 + HANDLE_CONTROLS.len()
                 + SECURITY_CONTROLS.len()

@@ -560,10 +560,11 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
         }
     }
     report("timer_rearm", rearmed);
+    cpu::mask();
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));
-    cpu::unmask();
-    // SAFETY: INV-PROBE: aligned AtomicU64 loaded with LDAR, bounded physical-counter wait; vector must undo IRQ-side SIMD/FP clobber.
+    // SAFETY: INV-PROBE: IRQ-masked initialization precedes timer service;
+    // the pending IRQ survives check-to-WFI and tests the initialized SIMD/FP context.
     let context = unsafe {
         probe_simd_irq(
             interrupt::delivered().as_ptr(),
@@ -571,6 +572,13 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
         )
     };
     cpu::mask();
+    if context != 1 {
+        event!(
+            "{{\"event\":\"irq-context\",\"status\":\"fail\",\"probe_result\":{},\"deliveries\":{}}}",
+            context,
+            interrupt::delivered().load(Ordering::Acquire)
+        );
+    }
     report("irq_simd_context", context == 1);
     let mut samples = [0u64; LOCK_MEASUREMENT_SAMPLES];
     for i in 0..LOCK_MEASUREMENT_WARMUP + LOCK_MEASUREMENT_SAMPLES {

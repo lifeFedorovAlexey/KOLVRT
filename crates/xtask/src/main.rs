@@ -51,6 +51,11 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
     ),
     ("--asid-reuse-control", "asid_reuse_requires_invalidation"),
 ];
+const FOUNDATION_CONTROLS: &[(&str, &str, &str)] = &[(
+    "--irq-simd-restore-control",
+    "irq-simd-restore-negative",
+    "\"name\":\"irq_simd_context\",\"status\":\"fail\"",
+)];
 const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--checkpoint-publication-control",
@@ -591,7 +596,7 @@ fn run() -> Result<()> {
                     return execute(&elf, true, true);
                 }
             }
-            for &(flag, feature, _) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
+            for &(flag, feature, _) in FOUNDATION_CONTROLS.iter().chain(USER_COPY_CONTROLS.iter()).chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
                     return execute(&elf, true, true);
@@ -1237,7 +1242,7 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
             }));
         }
     }
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_negative_controls":IPC_CONTROLS.len()*2},"ipc_negative_controls":ipc_mutations,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (FOUNDATION_CONTROLS.len() + SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_negative_controls":IPC_CONTROLS.len()*2},"ipc_negative_controls":ipc_mutations,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {

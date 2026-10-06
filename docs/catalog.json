@@ -827,7 +827,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 17521,
+      "estimated_bytes": 18177,
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
       "path": "docs/ci/performance.md",
@@ -955,7 +955,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 12083,
+      "estimated_bytes": 12918,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",

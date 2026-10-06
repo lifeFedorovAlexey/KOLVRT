@@ -226,6 +226,11 @@ sync_vector:
 irq_vector:
  save
  bl interrupt_entry
+ .if {irq_simd_restore_negative}
+ // Test mutation: corrupt the actual saved IRQ context, not the probe verdict.
+ movi v0.16b,#0
+ str q0,[sp,#CONTEXT_SIMD_BASE]
+ .endif
  restore
 fatal_vector:
  save
@@ -362,6 +367,10 @@ probe_execute_resume:
  ret
 .global probe_simd_irq
 probe_simd_irq:
+ // INV-PROBE: enter IRQ-masked; initialize every tested value before service.
+ // A timer pending before this call must still interrupt the initialized probe.
+ msr daifset,#2
+ isb
  sub sp,sp,#32
  stp x29,x30,[sp]
  mrs x4,fpcr
@@ -380,7 +389,16 @@ probe_simd_irq:
  isb // INV-TIMER: counter observation follows preceding instructions.
  mrs x2,cntpct_el0
  cmp x2,x1
- b.lo 1b
+ b.hs 4f
+ // IRQ-masked check-to-WFI preserves a pending wake; idle yields to QEMU
+ // timer callbacks without consuming the only IRQ before sleeping.
+ wfi
+ msr daifclr,#2
+ isb
+ msr daifset,#2
+ isb
+ b 1b
+4:
  mov x0,#0
  b 3f
 2:

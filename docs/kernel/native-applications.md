@@ -49,6 +49,8 @@ For an ongoing host session, use `cargo xtask service-run --live` (DEV) or `carg
 
 [Russian translation](../../translations/ru/docs/kernel/native-applications.md)
 
+The foundation SIMD IRQ probe now masks IRQs before initializing its tested vector/FP state and services the pending interrupt within that initialized assembly scope. The previous ordering could deliver the only timer before initialization, allowing a false observation or failure before an unrelated control reached its target. A test-only mutation corrupts the actual saved q0 frame; DEV/PROD require the named irq_simd_context failure with an observed delivery. Normal IRQ vector instructions are unchanged when the mutation feature is off. The current foundation inventory is 144 tasks/140 controls; the historical #126 inventory remains 142/138.
+
 <!-- knowledge -->
 
 ```json
@@ -99,6 +101,8 @@ For an ongoing host session, use `cargo xtask service-run --live` (DEV) or `carg
           "apps/native-runtime/src/lib.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/build.rs",
+          "crates/kernel/src/arch/aarch64/entry.S",
+          "crates/kernel/src/arch/aarch64/mod.rs",
           "crates/kernel/src/ipc/native.rs",
           "crates/kernel/src/main.rs",
           "crates/kernel/src/memory/mod.rs",
@@ -109,7 +113,9 @@ For an ongoing host session, use `cargo xtask service-run --live` (DEV) or `carg
           "crates/kernel/src/scheduler/mod.rs",
           "crates/kernel/src/supervision.rs",
           "crates/kernel/src/supervision_workload.rs",
+          "crates/kernel/src/tests.rs",
           "crates/xtask/src/main.rs",
+          "crates/xtask/src/matrix.rs",
           "crates/xtask/src/native_apps.rs",
           "package.json",
           "scripts/ci-gate.cjs",
