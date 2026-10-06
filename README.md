@@ -27,7 +27,7 @@ The kernel boots on QEMU `virt` and runs isolated EL0 processes on two CPUs. It 
 | Host tools                    | Migration planner, documentation queries and offline COST-L registry queries                                |
 | Build quality                 | AArch64 builds reject warnings in DEV, PROD and negative-control configurations                             |
 
-Bounded Phase 3.5 IPC is implemented and ready for its declared contract: isolated EL0 request/response, blocking/wakeup, cancellation, deadlines, death/shutdown arbitration and retained ownership. Supervision policy (#27) and persistent isolated services (#28) remain the next gates; physical ARM and stable ABI are separate scopes.
+Bounded Phase 3.5 IPC is implemented and ready for its declared contract: isolated EL0 request/response, blocking/wakeup, cancellation, deadlines, death/shutdown arbitration and retained ownership. After Phase 3.5, supervision policy (#27) and persistent isolated services (#28) were the next gates; physical ARM and stable ABI remain separate scopes.
 
 An earlier implementation does not settle later architecture. Before extending it, derive the design from current invariants and accepted decisions; refactor or remove code that constrains them.
 
