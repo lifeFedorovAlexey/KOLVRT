@@ -93,11 +93,15 @@ pub fn exercise(
         registry.state(first) == Ok(State::Prepared)
             && registry.completion(first) == Err(Error::Transition),
     );
-    #[cfg(feature = "process-reclaim-negative")]
-    registry
-        .reclaim(p, first)
-        .unwrap_or_else(|error| process::reject(error));
     registry.start(first).unwrap();
+    let started_state = registry.state(first);
+    let started_frames = p.available();
+    report(
+        "process_duplicate_start_rejected",
+        registry.start(first) == Err(Error::Transition)
+            && registry.state(first) == started_state
+            && p.available() == started_frames,
+    );
     let retained_frames = p.available();
     let retained_state = registry.state(first);
     report(
@@ -106,10 +110,6 @@ pub fn exercise(
             && registry.state(first) == retained_state
             && p.available() == retained_frames,
     );
-    #[cfg(feature = "process-start-negative")]
-    registry
-        .start(first)
-        .unwrap_or_else(|error| process::reject(error));
     let fault = create(
         registry,
         p,
@@ -197,10 +197,6 @@ pub fn exercise(
     );
     let distinct_backing = registry.data_address(new).unwrap() != first_data;
     p.release(retired_extent);
-    #[cfg(feature = "process-stale-negative")]
-    registry
-        .start(first)
-        .unwrap_or_else(|error| process::reject(error));
     let generation_ok = new.slot() == first.slot()
         && new.generation() > first.generation()
         && registry.start(first) == Err(Error::Stale)

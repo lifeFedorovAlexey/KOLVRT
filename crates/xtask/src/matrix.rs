@@ -74,6 +74,21 @@ fn tasks() -> Vec<Task> {
 
 pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
     match flag {
+        "--process-unlink-control" => Some(&[
+            "process_unlinked_reclaim_rejected",
+            "el0_quiescent_reclamation",
+        ]),
+        "--process-start-control" => Some(&[
+            "process_duplicate_start_rejected",
+            "process_terminal_rejections",
+        ]),
+        "--process-stale-control" => Some(&[
+            "process_slot_generation_reuse",
+            "process_terminal_rejections",
+        ]),
+        "--process-reclaim-control" => {
+            Some(&["process_live_reclaim_rejected", "el0_quiescent_reclamation"])
+        }
         "--checkpoint-publication-control" => Some(&[
             "completion_publication_state_inputs",
             "el0_smp_ownership",
@@ -136,6 +151,10 @@ fn observable_task(flag: &str, prod: bool) -> Task {
         prod,
         tests: true,
         flag: Some(match flag {
+            "--process-unlink-control" => "--process-unlink-control",
+            "--process-start-control" => "--process-start-control",
+            "--process-stale-control" => "--process-stale-control",
+            "--process-reclaim-control" => "--process-reclaim-control",
             "--checkpoint-publication-control" => "--checkpoint-publication-control",
             "--process-exit-control" => "--process-exit-control",
             "--process-rollback-control" => "--process-rollback-control",

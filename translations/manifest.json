@@ -306,8 +306,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "cff68804e4dd6869e931110fa444136bd1a35c0595d0742b5099c433a3b5aa5f",
-        "translation_sha256": "2501522cc20470d8dfa26223f2aaef01fc9b4a2d5f3fd734aaf3542625b19578"
+        "source_sha256": "99538c940200e1dcbc4fbe83a2bd65ff63b6f4450ba95f3c3d27eda59a91f153",
+        "translation_sha256": "9879ff0e55c13b47be3617067c1b8c328b5f9d00eb9bc1ab86d59b3eb81dfe49"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "be75f579f58fb581792f4cb51c5e415201c0875e6226f43c3ba75585374be632",

@@ -444,6 +444,14 @@ fn state_machine_inputs() {
     table.start(id).unwrap();
     table.complete(id, Reason::Exited(1), true).unwrap();
     let saved = table.completion(id).unwrap();
+    let unlink_rejected = table.reclaim(id, false) == Err(ProcessError::NotQuiescent);
+    report(
+        "process_unlinked_reclaim_rejected",
+        unlink_rejected
+            && table.state(id) == Ok(State::Completed)
+            && table.completion(id) == Ok(saved)
+            && table.live() == 1,
+    );
     let duplicate_rejected =
         table.complete(id, Reason::Exited(2), true) == Err(ProcessError::Transition);
     report(
