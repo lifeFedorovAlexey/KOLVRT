@@ -2735,7 +2735,7 @@
     "docs/kernel/handles.md": "2a55e2f7a8a42bab9eeed57661dc1f0913f20b5d0641ed00381a6f0f7d4389f1",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "ad09129f11996560c78ed63c6a663c29b3d151552ed5dc58c76f4794d5eac299",
-    "docs/kernel/native-applications.md": "f6bc93c3d4e83b8ca3db396790aa25e9eced59fc7d297b464815adf4bdb325d4",
+    "docs/kernel/native-applications.md": "5ceaa96894a0d8046edefb63f7670a5d6e9073b20058d78f46a86940a521ad95",
     "docs/kernel/processes.md": "be75f579f58fb581792f4cb51c5e415201c0875e6226f43c3ba75585374be632",
     "docs/kernel/scheduler.md": "f69411414b82f995e3240f7417de48dabc29499015631565fa89fcbb45ad911d",
     "docs/kernel/supervision.md": "276e39e85e645939298a01257cb545cc57af30ddaf34b7f88ef85e4557d92ab7",
@@ -2829,7 +2829,7 @@
     "tests/native-apps/src/fault-client.rs": "09ff746cba79acb3e230a708ae1dd154dfb48939afab0a33ce70cb23b1f06349",
     "tests/native-apps/src/lifecycle-client.rs": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677",
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
-    "translations/manifest.json": "abebbdb5a17705abf957509250bf5fcfc09354d57aa475f1fb4c033a1b033275",
+    "translations/manifest.json": "033405e74f5e51af77c6e70a86c080b9066af3a3f2de7b1029b93de5a0cbff17",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2876,7 +2876,7 @@
     "translations/ru/docs/kernel/handles.md": "f3f66f391e13a75665c351c505ec0eef51b0176afab84a20bb08a36e30804c37",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "ad46a77f458d0f6569a6dfed065ae1253765d5825285665dd58561c7670293ce",
-    "translations/ru/docs/kernel/native-applications.md": "9329df026a8d529efe2cf8c4378550c64a79ec35936f18d46a6c6d76c5be4e5f",
+    "translations/ru/docs/kernel/native-applications.md": "bb988b8c6f1dc6ea1b6616ffab869fcc91b61d90033a3f1e7c1a12c3b1d8414b",
     "translations/ru/docs/kernel/processes.md": "b3e7b05910a6bd660aefe804e8bc7697524d0561b4deb12fd56afe08f05fa136",
     "translations/ru/docs/kernel/scheduler.md": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf",
     "translations/ru/docs/kernel/supervision.md": "4ef58f8855bb2e561ff54bfb7919d169905fd0eb10bb3fa9786bd4089024193e",
@@ -5641,7 +5641,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 13249,
+      "estimated_bytes": 14444,
       "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5655,15 +5655,15 @@
       },
       "locations": {
         "en": {
-          "end": 182,
+          "end": 186,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "f6bc93c3d4e83b8ca3db396790aa25e9eced59fc7d297b464815adf4bdb325d4",
+          "sha256": "5ceaa96894a0d8046edefb63f7670a5d6e9073b20058d78f46a86940a521ad95",
           "start": 1
         },
         "ru": {
-          "end": 182,
+          "end": 186,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "9329df026a8d529efe2cf8c4378550c64a79ec35936f18d46a6c6d76c5be4e5f",
+          "sha256": "bb988b8c6f1dc6ea1b6616ffab869fcc91b61d90033a3f1e7c1a12c3b1d8414b",
           "start": 1
         }
       },
@@ -6226,13 +6226,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "f6bc93c3d4e83b8ca3db396790aa25e9eced59fc7d297b464815adf4bdb325d4",
+          "sha256": "5ceaa96894a0d8046edefb63f7670a5d6e9073b20058d78f46a86940a521ad95",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "9329df026a8d529efe2cf8c4378550c64a79ec35936f18d46a6c6d76c5be4e5f",
+          "sha256": "bb988b8c6f1dc6ea1b6616ffab869fcc91b61d90033a3f1e7c1a12c3b1d8414b",
           "start": 7
         }
       },

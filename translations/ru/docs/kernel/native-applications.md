@@ -29,6 +29,10 @@ Finite client SEND binding использует существующий checkpo
 
 Production supervisor теперь проверяет настоящий terminal outcome через lifecycle API перед replacement, сохраняет принятую failure backoff и проверяет readiness новой instance реальным GET(0). После service RPC failure обычный client запрашивает новую binding, требует новую identity и initial value 0, отвергает старый SEND и повторяет бизнес-операции только в новой instance. Effect-unknown ADD не повторяется в прежней instance. needs_replacement и fresh_binding импортируются UNIT-тестами; recover_service импортируется integration actor, а не копируется.
 
+Текущий список внешних ELF указан явно: selftest-abi-client вызывает настоящий native-userspace IPC API с production service/supervisor; selftest-fault-client добавляет настоящую illegal instruction после этой ABI-последовательности; selftest-lifecycle-client вызывает public lifecycle/IPC API и импортирует native-apps::supervision::recover_service; selftest-lifecycle-peer проверяет binding, stale SEND и fault containment. Каждый является тестовым клиентом без production-аналога. Production counter-service и native-supervisor никогда не заменяются тестовыми реализациями. Host UNIT-тесты apps/native-apps/tests/supervision.rs импортируют needs_replacement и fresh_binding без ELF.
+
+Текущий foundation CI падает: старый user-context-control по-прежнему запрашивает build feature user-context-negative и ожидает намеренного повреждения регистров, хотя эта production mutation удалена. IRQ/SIMD control имеет такую же проблему миграции. Успешный запуск обычного kernel не подтверждает ни один из этих controls. Удаление обязательных проверок или сокращение matrix до четырёх обычных запусков не доказывает равнозначного покрытия; замены и их coverage mapping ещё необходимы.
+
 ## Команды и пределы evidence
 
 cargo xtask service-run и app-smoke собирают настоящие production ELF. Supervisor запускает сервис и обычный client; после выхода client сервис продолжает работать. Host наблюдает продолжение, затем останавливает QEMU. Это не graceful shutdown и не измерение zero leaked resources.
