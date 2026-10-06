@@ -3,6 +3,7 @@
 pub fn wait_for_delivery(
     mut delivered: impl FnMut() -> bool,
     mut expired: impl FnMut() -> bool,
+    mut idle: impl FnMut(),
     quiesce: impl FnOnce(),
 ) -> bool {
     let observed = loop {
@@ -12,7 +13,7 @@ pub fn wait_for_delivery(
         if expired() {
             break false;
         }
-        core::hint::spin_loop();
+        idle();
     };
     // The caller masks IRQs before the final observation. This closes both the
     // deadline-check race and the previous poll-return-to-mask window.
@@ -24,10 +25,29 @@ pub fn wait_for_delivery(
 mod tests {
     use super::wait_for_delivery;
     #[test]
+    fn idle_progress_requires_delivery_and_spurious_wakes_do_not_pass() {
+        let wakes = core::cell::Cell::new(0);
+        assert!(!wait_for_delivery(
+            || false,
+            || wakes.get() == 3,
+            || wakes.set(wakes.get() + 1),
+            || {}
+        ));
+        assert_eq!(wakes.get(), 3);
+        let delivered = core::cell::Cell::new(false);
+        assert!(wait_for_delivery(
+            || delivered.get(),
+            || false,
+            || delivered.set(true),
+            || {}
+        ));
+    }
+    #[test]
     fn already_delivered_irq_survives_an_expired_polling_deadline() {
         assert!(wait_for_delivery(
             || true,
             || panic!("delivery must be checked first"),
+            || {},
             || {},
         ));
     }
@@ -41,11 +61,12 @@ mod tests {
                 true
             },
             || {},
+            || {},
         ));
     }
     #[test]
     fn expired_without_delivery_is_rejected() {
-        assert!(!wait_for_delivery(|| false, || true, || {}));
+        assert!(!wait_for_delivery(|| false, || true, || {}, || {}));
     }
     #[test]
     fn waiting_requires_actual_delivery_and_stops_at_expiration() {
@@ -57,6 +78,7 @@ mod tests {
                 polls.get() == 3
             },
             || {},
+            || {},
         ));
         assert_eq!(polls.get(), 3);
     }
@@ -67,6 +89,7 @@ mod tests {
         assert!(wait_for_delivery(
             || delivery.get(),
             || true,
+            || {},
             || {
                 delivery.set(true); // IRQ runs after the last poll, before masking.
                 masked.set(true);

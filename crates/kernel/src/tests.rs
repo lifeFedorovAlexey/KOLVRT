@@ -64,6 +64,15 @@ fn wait_irq(d: &Description) -> bool {
     let delivered = irq_wait::wait_for_delivery(
         || interrupt::delivered().load(Ordering::Acquire) > 0,
         || cpu::ticks() >= end,
+        || {
+            assert!(!cpu::irq_masked());
+            // SAFETY: INV-PROBE: native root/stack; IRQ only records delivery,
+            // no scheduler/object/copy permit or allocation spans the wait.
+            // A missing source is still bounded by the external QEMU watchdog.
+            unsafe {
+                core::arch::asm!("wfi", options(nostack));
+            }
+        },
         cpu::mask,
     );
     if !delivered {

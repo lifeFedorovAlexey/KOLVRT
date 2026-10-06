@@ -87,9 +87,16 @@
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
     {
+      "path": "crates/kernel/src/test_support/irq_wait.rs",
+      "before_sha256_lf": "e578e3e97c15d9a0dde6a869d38281dd0ab8a7158842dc131feedcbb7e6c238c",
+      "disposition": "existing-feature",
+      "reason": "Idle the actual IRQ fixture instead of continuously spinning; preserve delivery-first finalization and bounded no-delivery/spurious-wake rejection with the external QEMU watchdog.",
+      "after_sha256_lf": "e694bda59ba6fdaeaefd661fc8814711599efc025da2dd8d4a5210cb24cf8dba"
+    },
+    {
       "path": "crates/kernel/src/tests.rs",
       "before_sha256_lf": "6d7b81e7df90d7a80e307633090cc8da1a7c5f6df897c445761e59e6e4e0731e",
-      "after_sha256_lf": "031329651b16d1b23828c6a0c11f48644415fad42970d8b70d188cbfda5e32aa",
+      "after_sha256_lf": "557312ab9167b74e12b162e136f6371b8c71fa89794b6db786807e6cfc63b6d7",
       "disposition": "existing-feature",
       "reason": "Bounded EL0 supervision with shared dependency policy and exact COMMIT/dependency mutation witnesses; rollback unpublished prepared state without fictitious admission/completion; preserve deterministic ASID invalidation failure and source-only API timing comparison."
     },
