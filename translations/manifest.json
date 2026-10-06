@@ -322,8 +322,8 @@
         "translation_sha256": "02298e795373cac70579e6e24710778187383c1dcf3add65da2d2563577369cf"
       },
       "docs/kernel/smp.md": {
-        "source_sha256": "22c007679ccb9956a15ff7f80afab05057b68a77390dd29e6e08262dcd9c375a",
-        "translation_sha256": "9ef274dbc4904641b2b4511e475f643a1587f137b6f96e962481c823ac70c5db"
+        "source_sha256": "9cedbf942071d36133794dd48d7e461440eb5db921d6770210d18938c12a4470",
+        "translation_sha256": "5235f168c0d649720345636fcea0e50f4a29b785d8819824f54d5ba67697109d"
       },
       "docs/kernel/supervision.md": {
         "source_sha256": "276e39e85e645939298a01257cb545cc57af30ddaf34b7f88ef85e4557d92ab7",

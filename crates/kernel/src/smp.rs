@@ -43,7 +43,6 @@ pub fn report_secondary_panic() {
 }
 static STOP: AtomicBool = AtomicBool::new(false);
 static TLB_REQUEST: AtomicU64 = AtomicU64::new(0);
-static TLB_SIGNAL: AtomicU64 = AtomicU64::new(0);
 #[cfg(feature = "kernel-tests")]
 pub mod experiment {
     use super::*;
@@ -199,11 +198,7 @@ pub fn ping(id: usize) {
 }
 pub fn on_ipi() {
     crate::scheduler::on_ipi();
-    let id = percpu::id();
     percpu::current().ipis.fetch_add(1, Ordering::Release);
-    if id == SECONDARY_CPU {
-        TLB_SIGNAL.store(TLB_REQUEST.load(Ordering::Acquire), Ordering::Release);
-    }
 }
 pub fn start(root: u64) {
     percpu::primary_only();
@@ -246,8 +241,13 @@ pub extern "C" fn secondary_main(root: u64) -> ! {
     local.state.store(percpu::ONLINE, Ordering::Release);
     cpu::unmask();
     loop {
-        // IRQ only publishes the requested generation; no active reader is acknowledged from IRQ.
-        let requested = TLB_SIGNAL.load(Ordering::Acquire);
+        // CPU0 serializes admission before release-publishing STOP. Observe STOP
+        // before draining: seeing it acquires all preceding admitted work. A late
+        // STOP is handled next iteration, after re-reading the mailboxes.
+        let stopping = STOP.load(Ordering::Acquire);
+        // The admitted request is authoritative; an IPI is only a notification.
+        // A delayed IRQ must not hide accepted retirement during shutdown.
+        let requested = TLB_REQUEST.load(Ordering::Acquire);
         if local.tlb_ack.load(Ordering::Acquire) < requested {
             {
                 cpu::local_invalidate();
@@ -268,7 +268,7 @@ pub extern "C" fn secondary_main(root: u64) -> ! {
             }
         }
         crate::scheduler::poll_secondary();
-        if STOP.load(Ordering::Acquire) {
+        if stopping {
             cpu::mask();
             cpu::timer_stop();
             cpu::local_invalidate();

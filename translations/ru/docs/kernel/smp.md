@@ -62,10 +62,14 @@ Shutdown прекращает mailbox admission, завершает принят
 
 ## Проверки и ограничения
 
-`cargo xtask test` запускает 39 именованных tests в DEV и оптимизированном PROD, загружает оба образа без tests и требует восемь failing host controls. Шестнадцать SMP tests покрывают execution/IDs/stacks, независимое per-CPU state, оба направления IPI, 32 повторных IPI, фактическую publication общего lock, remote mapping reads, задержанное acknowledgement, запрещённый reuse, remote translation fault, безопасный reuse, оба timer и корректный CPU_OFF. SMP controls добавляют secondary panic, release retiring frame, отсутствие acknowledgement и пропуск remote TLBI. Последний приводит к ошибке после настоящего remote read, исключая boolean-only shootdown test.
+Историческая evidence Phase 1.1: `cargo xtask test` запускал 39 именованных tests в DEV и оптимизированном PROD, загружает оба образа без tests и требует восемь failing host controls. Шестнадцать SMP tests покрывают execution/IDs/stacks, независимое per-CPU state, оба направления IPI, 32 повторных IPI, фактическую publication общего lock, remote mapping reads, задержанное acknowledgement, запрещённый reuse, remote translation fault, безопасный reuse, оба timer и корректный CPU_OFF. SMP controls добавляют secondary panic, release retiring frame, отсутствие acknowledgement и пропуск remote TLBI. Последний приводит к ошибке после настоящего remote read, исключая boolean-only shootdown test.
+
+Этот исторический campaign не является текущим matrix plan. Текущие coverage kinds и ограничения missing-ACK/skipped-TLBI описаны в [native application contract](native-applications.md).
 
 [Машинные доказательства](../../../../research/results/kernel-smp.json) сохраняют source hashes и точные результаты; [unsafe register](unsafe.md) задаёт trust boundaries. QEMU TCG подтверждает kernel integration, но не сертифицирует silicon. Busy polling, два фиксированных CPU, один outstanding retirement и fatal progress timeouts — явные ограничения.
 
 Более поздний [EL0 routing workload](routing.md) исполняет independent consumers одновременно на обоих CPU. Batch admission использует per-CPU CAS phases; completion и native-root/TLBI quiescence предшествуют CPU0 reset/reclamation. Shared routing writer и routing lock не добавляются.
 
 [English source](../../../../docs/kernel/smp.md)
+
+CPU1 читает STOP с Acquire до чтения admitted mailboxes. Если STOP появился после этого snapshot, shutdown выполняется на следующей итерации после повторного чтения work; accepted command не теряется между пустым mailbox snapshot и STOP. TLB_REQUEST является authoritative mailbox, IPI — уведомлением. Actual local TLBI предшествует release ACK; задержка IRQ не скрывает принятый retirement request.

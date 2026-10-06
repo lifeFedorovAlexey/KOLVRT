@@ -334,7 +334,7 @@
     {
       "path": "crates/kernel/src/smp.rs",
       "before_sha256_lf": "0f585ca1e2982de66a6b045e271c1b73ed319696a57fa189e0d2ed7b62fa7d36",
-      "after_sha256_lf": "f1d2f59e9b5e3938fda522c73212cdfb5bf5f1b17a6650129a5d5a2cca8d81a2",
+      "after_sha256_lf": "8353c54283a438e4e35545cb5a5eb60ad9fdcfffbe8d58813a8e50bb0d735c2e",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },

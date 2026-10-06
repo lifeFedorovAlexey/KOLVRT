@@ -62,10 +62,14 @@ Shutdown stops mailbox admission, drains accepted work, masks CPU1 IRQs, stops i
 
 ## Checks and limits
 
-`cargo xtask test` runs 39 named tests in DEV and optimized PROD, boots both non-test images and requires eight failing host controls. Sixteen SMP tests cover execution/IDs/stacks, independent per-CPU state, both IPI directions, 32 repeated IPIs, actual shared-lock publication, remote mapping reads, delayed acknowledgement, blocked reuse, remote translation fault, safe reuse, both timers and orderly CPU_OFF. SMP controls add secondary panic, retiring-frame release, missing acknowledgement and omitted remote TLBI. The last fails after a real remote read, preventing a boolean-only shootdown test.
+Historical Phase 1.1 evidence: `cargo xtask test` ran 39 named tests in DEV and optimized PROD, boots both non-test images and requires eight failing host controls. Sixteen SMP tests cover execution/IDs/stacks, independent per-CPU state, both IPI directions, 32 repeated IPIs, actual shared-lock publication, remote mapping reads, delayed acknowledgement, blocked reuse, remote translation fault, safe reuse, both timers and orderly CPU_OFF. SMP controls add secondary panic, retiring-frame release, missing acknowledgement and omitted remote TLBI. The last fails after a real remote read, preventing a boolean-only shootdown test.
+
+This historical campaign is not the current matrix plan. Current coverage kinds and missing-ACK/skipped-TLBI limits are recorded in the [native application contract](native-applications.md).
 
 [Machine evidence](../../research/results/kernel-smp.json) retains source hashes and exact results; [unsafe register](unsafe.md) states trust boundaries. QEMU TCG is kernel integration evidence, not silicon certification. Busy polling, two fixed CPUs, one outstanding retirement and fatal progress timeouts are explicit limits.
 
 The later [EL0 routing workload](routing.md) runs independent consumers concurrently on both CPUs. Batch admission uses per-CPU CAS phases; completion and native-root/TLBI quiescence precede CPU0 reset/reclamation. No shared routing writer or routing lock is introduced.
 
 [Russian translation](../../translations/ru/docs/kernel/smp.md)
+
+CPU1 acquires STOP before reading admitted mailboxes. If STOP arrives after that snapshot, shutdown runs on the next iteration after re-reading work; an accepted command cannot be lost between an empty mailbox snapshot and STOP. TLB_REQUEST is the authoritative mailbox and IPI is a notification. Actual local TLBI precedes release ACK; IRQ delay cannot hide an accepted retirement request.
