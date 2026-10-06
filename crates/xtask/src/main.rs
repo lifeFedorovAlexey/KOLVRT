@@ -416,6 +416,7 @@ const TESTS: &[&str] = &[
     "smp_retirement_pending",
     "smp_no_premature_reuse",
     "smp_remote_ack",
+    "smp_future_ack_rejected",
     "smp_remote_tlb_invalidation",
     "smp_safe_reuse",
     "smp_simultaneous_timers",
@@ -428,6 +429,7 @@ const TESTS: &[&str] = &[
     "el0_fault_containment",
     "el0_quiescent_reclamation",
     "el0_context_preservation",
+    "user_context_invalid_states_rejected",
     "el0_smp_ownership",
     "el0_kernel_memory_rejected",
     "el0_foreign_memory_rejected",
@@ -591,6 +593,7 @@ fn run() -> Result<()> {
                 let elf = build(args.iter().any(|arg| arg == "--prod"), true, None, true)?;
                 return execute(&elf, true, true);
             }
+            if let Some(flag) = args.iter().find(|flag| matrix::observable_checks(flag).is_some()) { return matrix::run_observable(flag, args.iter().any(|arg| arg == "--prod")); }
             for &(flag, feature, _) in IPC_CONTROLS {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
@@ -609,7 +612,7 @@ fn run() -> Result<()> {
                     return execute(&elf, true, true);
                 }
             }
-            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative"), ("--user-context-control", "user-context-negative"), ("--user-root-control", "user-root-negative"), ("--user-retirement-control", "user-retirement-negative")] {
+            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--user-retirement-control", "user-retirement-negative")] {
                 if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
             }
             if args.iter().any(|arg| arg == "--asid-reuse-control") {

@@ -32,6 +32,10 @@ fn tasks() -> Vec<Task> {
         }
     }
     for &(flag, marker) in NEGATIVE_CONTROLS {
+        if observable_checks(flag).is_some() {
+            tasks.push(observable_task(flag, false));
+            continue;
+        }
         let feature = match flag {
             "--negative-control" => "negative-test",
             "--panic-control" => "panic-test",
@@ -39,10 +43,6 @@ fn tasks() -> Vec<Task> {
             "--retained-mapping-control" => "retained-mapping-test",
             "--secondary-panic-control" => "secondary-panic-test",
             "--retirement-control" => "retirement-negative",
-            "--shootdown-control" => "shootdown-negative",
-            "--remote-tlbi-control" => "remote-tlbi-negative",
-            "--user-context-control" => "user-context-negative",
-            "--user-root-control" => "user-root-negative",
             "--user-retirement-control" => "user-retirement-negative",
             "--asid-reuse-control" => "asid-reuse-negative",
             _ => unreachable!("unknown registered negative control"),
@@ -74,6 +74,64 @@ fn tasks() -> Vec<Task> {
     tasks
 }
 
+pub(super) fn observable_checks(flag: &str) -> Option<&'static [&'static str]> {
+    match flag {
+        "--user-context-control" => Some(&[
+            "user_context_invalid_states_rejected",
+            "el0_context_preservation",
+            "el0_timer_switches",
+        ]),
+        "--user-root-control" => Some(&[
+            "el0_memory_isolation",
+            "el0_kernel_memory_rejected",
+            "el0_foreign_memory_rejected",
+            "el0_quiescent_reclamation",
+        ]),
+        "--shootdown-control" => Some(&[
+            "smp_retirement_pending",
+            "smp_no_premature_reuse",
+            "smp_remote_ack",
+            "smp_safe_reuse",
+        ]),
+        "--remote-tlbi-control" => Some(&[
+            "smp_future_ack_rejected",
+            "smp_remote_ack",
+            "smp_remote_tlb_invalidation",
+        ]),
+        _ => None,
+    }
+}
+fn observable_task(flag: &str, prod: bool) -> Task {
+    Task {
+        id: format!("{}-{flag}", if prod { "prod" } else { "dev" }),
+        prod,
+        tests: true,
+        flag: Some(match flag {
+            "--user-context-control" => "--user-context-control",
+            "--user-root-control" => "--user-root-control",
+            "--shootdown-control" => "--shootdown-control",
+            "--remote-tlbi-control" => "--remote-tlbi-control",
+            _ => unreachable!(),
+        }),
+        feature: None,
+        marker: None,
+        ipc_test: None,
+    }
+}
+pub(super) fn run_observable(flag: &str, prod: bool) -> Result<()> {
+    execute_task(&observable_task(flag, prod)).map(|_| ())
+}
+fn required_observations(events: &Value, names: &[&str]) -> Result<bool> {
+    let events = events.as_array().ok_or("control observations absent")?;
+    Ok(names.iter().all(|name| {
+        let found = events
+            .iter()
+            .filter(|e| e["event"] == "test" && e["name"] == *name)
+            .collect::<Vec<_>>();
+        found.len() == 1 && found[0]["status"] == "pass"
+    }))
+}
+
 fn control(
     prod: bool,
     flag: &'static str,
@@ -93,7 +151,7 @@ fn control(
 }
 
 fn describe(task: &Task) -> Value {
-    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test})
+    json!({"id":task.id,"profile":if task.prod {"prod"} else {"dev"},"tests":task.tests,"flag":task.flag,"feature":task.feature,"expected_marker":task.marker,"expected_ipc_test":task.ipc_test,"observable_checks":task.flag.and_then(observable_checks),"control_scope":if task.flag.and_then(observable_checks).is_some(){"real invalid inputs / observable invariants; no implementation mutation"}else{"legacy"}})
 }
 
 pub fn plan_document() -> Result<Value> {
@@ -144,7 +202,13 @@ fn execute_task(task: &Task) -> Result<Value> {
             Err(error) => return Err(error.into()),
         }
     }
-    if let Some(flag) = task.flag {
+    if let Some(checks) = task.flag.and_then(observable_checks) {
+        let elf = build(task.prod, true, None, true)?;
+        execute(&elf, true, true)?;
+        if !required_observations(&read_json(format!("{artifact}.results.json"))?, checks)? {
+            return Err(format!("required invariant observations absent: {}", task.id).into());
+        }
+    } else if let Some(flag) = task.flag {
         let mut command = Command::new(env::current_exe()?);
         command.args(["test", flag]);
         if task.prod {
@@ -270,6 +334,19 @@ fn irq_context_failure(events: &Value) -> Result<bool> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn invariant_controls_reject_missing_failed_and_duplicate_observations() {
+        let pass = json!({"event":"test","name":"guard","status":"pass"});
+        assert!(required_observations(&json!([pass.clone()]), &["guard"]).unwrap());
+        for events in [
+            json!([]),
+            json!([{"event":"test","name":"guard","status":"fail"}]),
+            json!([pass.clone(), pass]),
+            json!([{"event":"panic","status":"fail"}]),
+        ] {
+            assert!(!required_observations(&events, &["guard"]).unwrap());
+        }
+    }
     #[test]
     fn irq_control_requires_named_failure_and_real_delivery() {
         let failure = json!({"event":"test","name":"irq_simd_context","status":"fail"});

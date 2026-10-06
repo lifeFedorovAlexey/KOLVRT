@@ -956,7 +956,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 15475,
+      "estimated_bytes": 17302,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",

@@ -265,6 +265,12 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
         drop(retirement);
         let generation = second.tlb_ack.load(Ordering::Acquire);
         report(
+            "smp_future_ack_rejected",
+            generation > 0
+                && smp::acknowledged(generation)
+                && !smp::acknowledged(generation.checked_add(1).unwrap()),
+        );
+        report(
             "smp_remote_ack",
             p.reclaimable(&a)
                 && generation > 0
@@ -314,6 +320,17 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
     );
     #[cfg(feature = "secondary-panic-test")]
     secondary_panic_control();
+    let initial_context = cpu::context::Context::ZERO;
+    let invalid_states = [1, 4, 0x10, 0x80];
+    report(
+        "user_context_invalid_states_rejected",
+        cpu::context::valid_user_context(&initial_context)
+            && invalid_states.into_iter().all(|state| {
+                let mut input = initial_context;
+                input.pstate = state;
+                !cpu::context::valid_user_context(&input)
+            }),
+    );
     let users = crate::boot_workload::exercise(p, processes);
     let repeated_users = crate::boot_workload::exercise(p, processes);
     report(
