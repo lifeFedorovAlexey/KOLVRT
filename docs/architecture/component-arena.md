@@ -108,6 +108,10 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the s
 
 Fresh machine-mode evidence execution through the shared xtask runner requires exactly one validated [boot device observation](../kernel/devices.md). A missing inventory event fails the current execution gate even when other workload events pass. Historical receipt reading remains separate and accepts pre-descriptor streams; that compatibility cannot admit a new run without the observation. This changes evidence admission, not kernel performance, measurement methodology or Arena record eligibility.
 
+## CLOCK pilot integration
+
+The CLOCK pilot adds a real-kernel campaign producer through the existing xtask/native executor, with separate DEV/PROD profiles, frozen protocol, checked report oracle and matched recorder observations. Its bounded passport is documented separately in the CLOCK pilot contract. Existing offline admission remains structural and record eligibility remains false; this producer does not implement records/history, hardware performance, IPC passports or REL/fuzz campaigns. Execution acceptance and current evidence belong to the pilot feature, not an inferred acceptance of the entire Arena.
+
 <!-- knowledge -->
 
 ```json

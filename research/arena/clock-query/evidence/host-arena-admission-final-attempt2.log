@@ -1,0 +1,37 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.09s
+     Running tests\arena.rs (target\debug\deps\arena-6bb28181497215b5.exe)
+
+running 17 tests
+test published_standard_cannot_be_superseded_by_draft_or_cycles ... ok
+test malformed_registry_and_fake_standard_classification_are_rejected ... ok
+test missing_observation_keeps_reason_and_never_becomes_zero ... ok
+test prod_forbids_internal_attribution_even_for_shared_metric ... ok
+test warmup_failure_and_whitespace_units_cannot_admit ... ok
+test same_version_labels_cannot_hide_methodology_change ... ok
+test metrics_need_sources_units_and_explicit_custom_origin ... ok
+test evidence_corruption_escape_and_unlinked_assertions_are_rejected ... ok
+test accepted_authorship_requires_links_and_fixture_never_becomes_kernel_evidence ... ok
+test implementation_changes_do_not_freeze_class_but_require_fresh_artifacts ... ok
+test changed_current_registry_does_not_rewrite_old_snapshots ... ok
+test overhead_is_matched_versioned_and_not_subtracted ... ok
+test broken_oracle_or_missing_sar_cannot_admit_fastest_result ... ok
+test dropped_unfinished_and_bad_sample_plan_remain_ineligible ... ok
+test cli_enforces_nonzero_rejections_without_publishing_records ... ok
+test semantic_environment_and_protocol_changes_never_share_class ... ok
+test checked_registry_and_example_resolve_canonical_targets ... FAILED
+
+failures:
+
+---- checked_registry_and_example_resolve_canonical_targets stdout ----
+
+thread 'checked_registry_and_example_resolve_canonical_targets' (40212) panicked at crates\repository-checks\tests\arena.rs:57:27:
+called `Result::unwrap()` on an `Err` value: "kolvrt.devices.observations: VERIFIED source mismatch: crates/xtask/src/main.rs; record STALE or provide a new exact-source receipt"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    checked_registry_and_example_resolve_canonical_targets
+
+test result: FAILED. 16 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+
+error: test failed, to rerun pass `-p repository-checks --test arena`

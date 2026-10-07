@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "arena.profile.clock-query-prod",
   "version": "1",
-  "review_state": "PROPOSED",
+  "review_state": "REVIEWED",
   "target": {
     "block_id": "kolvrt.clock.query",
     "contract_id": "kolvrt.clock.query.api",
@@ -19,7 +19,7 @@
     "oracle": {
       "id": "arena.oracle.clock-query",
       "version": "1",
-      "sha256": "c0a5890812914514d11e8a243432ba22249e4fe8129e6f735ab7f31b4e18dde4"
+      "sha256": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194"
     }
   },
   "environment": {

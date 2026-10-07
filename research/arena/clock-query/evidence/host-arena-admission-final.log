@@ -1,0 +1,24 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running tests\arena.rs (target\debug\deps\arena-6bb28181497215b5.exe)
+
+running 17 tests
+test published_standard_cannot_be_superseded_by_draft_or_cycles ... ok
+test malformed_registry_and_fake_standard_classification_are_rejected ... ok
+test missing_observation_keeps_reason_and_never_becomes_zero ... ok
+test prod_forbids_internal_attribution_even_for_shared_metric ... ok
+test warmup_failure_and_whitespace_units_cannot_admit ... ok
+test same_version_labels_cannot_hide_methodology_change ... ok
+test metrics_need_sources_units_and_explicit_custom_origin ... ok
+test overhead_is_matched_versioned_and_not_subtracted ... ok
+test evidence_corruption_escape_and_unlinked_assertions_are_rejected ... ok
+test accepted_authorship_requires_links_and_fixture_never_becomes_kernel_evidence ... ok
+test changed_current_registry_does_not_rewrite_old_snapshots ... ok
+test implementation_changes_do_not_freeze_class_but_require_fresh_artifacts ... ok
+test broken_oracle_or_missing_sar_cannot_admit_fastest_result ... ok
+test dropped_unfinished_and_bad_sample_plan_remain_ineligible ... ok
+test cli_enforces_nonzero_rejections_without_publishing_records ... ok
+test semantic_environment_and_protocol_changes_never_share_class ... ok
+test checked_registry_and_example_resolve_canonical_targets ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.84s
+

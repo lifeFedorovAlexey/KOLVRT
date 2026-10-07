@@ -27,6 +27,10 @@ pub(super) fn snapshot() -> Result<Value> {
             json!({"sha256":digest(&bytes),"value":serde_json::from_slice::<Value>(&bytes)?}),
         );
     }
+    for path in ["docs/kernel/clock.md", "crates/xtask/src/arena_clock.rs"] {
+        let text = fs::read_to_string(path)?.replace("\r\n", "\n");
+        files.insert(path.into(), json!({"sha256_lf":digest(text.as_bytes())}));
+    }
     Ok(Value::Object(files))
 }
 fn repository_path(path: &str) -> Result<PathBuf> {
@@ -241,7 +245,22 @@ pub(super) fn write(root: &Path, campaign: &Value) -> Result<()> {
                 summaries.push(summary);
                 continue;
             };
-            let valid = campaign["status"] == "passed"
+            let pins_valid = profile["target"]["contract_sha256"]
+                == frozen["docs/kernel/clock.md"]["sha256_lf"]
+                && profile["workload"]["oracle"]["sha256"]
+                    == frozen["crates/xtask/src/arena_clock.rs"]["sha256_lf"]
+                && profile["workload"]["semantics_sha256"]
+                    == frozen["research/arena/clock-query/protocol.json"]["sha256"]
+                && profile["overhead"]["matched_workload_sha256"]
+                    == frozen["research/arena/clock-query/protocol.json"]["sha256"]
+                && profile["workload"]["input_sha256"]
+                    == frozen["research/arena/clock-query/input.json"]["sha256"]
+                && profile["environment"]["configuration_sha256"]
+                    == frozen[&manifest_path]["sha256"]
+                && profile["environment"]["resource_policy_sha256"]
+                    == frozen["research/arena/clock-query/resources.json"]["sha256"];
+            let valid = pins_valid
+                && campaign["status"] == "passed"
                 && campaign["compiler_version"]
                     .as_str()
                     .and_then(|s| s.split_whitespace().nth(1))
@@ -249,6 +268,12 @@ pub(super) fn write(root: &Path, campaign: &Value) -> Result<()> {
                 && manifest_matches(off, manifest)
                 && manifest_matches(on, manifest);
             let mut artifacts = Vec::new();
+            artifact(
+                &bundle,
+                "protocol.json",
+                Path::new("research/arena/clock-query/protocol.json"),
+                &mut artifacts,
+            )?;
             artifact(
                 &bundle,
                 "pair.json",
@@ -387,10 +412,23 @@ pub(super) fn write(root: &Path, campaign: &Value) -> Result<()> {
             );
         }
     }
+    let rejected: Vec<_> = summaries
+        .iter()
+        .filter(|entry| entry["assessment"]["admission_state"] != "STRUCTURALLY_ADMISSIBLE")
+        .cloned()
+        .collect();
     write_json(
         root.join("passport-summary.json"),
-        &json!({"schema_version":1,"record_eligible":false,"pairs":summaries}),
+        &json!({"schema_version":1,"record_eligible":false,"admission_state":if rejected.is_empty(){"STRUCTURALLY_ADMISSIBLE"}else{"INELIGIBLE"},"pairs":summaries}),
     )?;
+    if !rejected.is_empty() {
+        return Err(format!(
+            "clock admission INELIGIBLE; all pairs retained at {}: {}",
+            root.display(),
+            serde_json::to_string(&rejected)?
+        )
+        .into());
+    }
     Ok(())
 }
 fn qualify_paths(value: &mut Value, paths: &[String], prefix: &str) {

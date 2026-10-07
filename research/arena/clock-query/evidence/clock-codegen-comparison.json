@@ -1,0 +1,80 @@
+{
+  "old": {
+    "instructions": [
+      "sub\tsp, sp, #32",
+      "stp\tx29, x30, [sp, #16]",
+      "add\tx29, sp, #16",
+      "svc\t#0x53",
+      "str\tx0, [sp]",
+      "str\tx1, [sp, #8]",
+      "ldr\tx0, [sp]",
+      "ldr\tx1, [sp, #8]",
+      "ldp\tx29, x30, [sp, #16]",
+      "add\tsp, sp, #32",
+      "ret"
+    ],
+    "count": 11
+  },
+  "new": {
+    "instructions": [
+      "sub\tsp, sp, #80",
+      "stp\tx29, x30, [sp, #64]",
+      "add\tx29, sp, #64",
+      "svc\t#0x53",
+      "str\tx0, [sp, #32]",
+      "stur\tx1, [x29, #-24]",
+      "stur\tx2, [x29, #-16]",
+      "stur\tx3, [x29, #-8]",
+      "ldr\tx11, [sp, #32]",
+      "ldur\tx10, [x29, #-24]",
+      "ldur\tx9, [x29, #-16]",
+      "ldur\tx8, [x29, #-8]",
+      "str\tx11, [sp]",
+      "str\tx10, [sp, #8]",
+      "str\tx9, [sp, #16]",
+      "str\tx8, [sp, #24]",
+      "ldr\tx0, [sp]",
+      "ldr\tx1, [sp, #8]",
+      "ldp\tx29, x30, [sp, #64]",
+      "add\tsp, sp, #80",
+      "ret"
+    ],
+    "count": 21
+  },
+  "fixed": {
+    "instructions": [
+      "sub\tsp, sp, #32",
+      "stp\tx29, x30, [sp, #16]",
+      "add\tx29, sp, #16",
+      "svc\t#0x53",
+      "str\tx0, [sp]",
+      "str\tx1, [sp, #8]",
+      "ldr\tx0, [sp]",
+      "ldr\tx1, [sp, #8]",
+      "ldp\tx29, x30, [sp, #16]",
+      "add\tsp, sp, #32",
+      "ret"
+    ],
+    "count": 11,
+    "identical_to_old": true
+  },
+  "method": {
+    "compiler": "rustc 1.99.0",
+    "target": "aarch64-unknown-none",
+    "options": [
+      "--crate-type",
+      "lib",
+      "--edition",
+      "2024",
+      "-C",
+      "opt-level=0",
+      "-C",
+      "force-frame-pointers=yes",
+      "--emit",
+      "asm"
+    ],
+    "scope": "Emitted instruction-body comparison, not runtime timing or full binary identity",
+    "old_source_sha256": "765beb9ceca178e6cd8365103da2e9310343aaf31a1e0c5d802b39dc815c0d71",
+    "fixed_source_sha256": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1"
+  }
+}

@@ -1,7 +1,7 @@
 # Clock-query Arena pilot
 
 Document status: CURRENT
-Evidence scope: proposed bounded issue #32 measurement protocol; implementation review and real execution receipts are pending.
+Evidence scope: reviewed bounded issue #32 measurement protocol; real execution acceptance remains pending.
 Current reference: [Native CLOCK contract](../kernel/clock.md); [Arena measurement contract](../architecture/arena-measurement-contract.md)
 
 <a name="kolvrt-arena-clock-passport"></a>
@@ -36,7 +36,7 @@ Retain wall, execution-window and READ_WINDOW differences plus the checked unatt
 
 The frozen [protocol artifact](../../research/arena/clock-query/protocol.json) defines the versioned workload semantics and recorder comparison. Profiles pin its bytes independently of this feature's evolving acceptance metadata; the normative CLOCK document supplies the separately pinned API contract. Any change to the protocol requires a profile revision and applicability review.
 
-Use the existing Arena profile/run schemas, registry and xtask evidence pipeline. The [DEV profile](../../research/arena/profiles/clock-query-dev.json) and [PROD profile](../../research/arena/profiles/clock-query-prod.json) begin PROPOSED. Each pair keeps source/image/config/toolchain/QEMU identities, frozen profile/registry snapshots, marked warmups, raw observations and artifact digests; an immutable campaign manifest links the three pairs. No second registry or universal score is introduced. A standalone mechanism needs no fabricated alternative implementation. Existing admission remains at most STRUCTURALLY_ADMISSIBLE; `record_eligible=false` is preserved and contribution ownership stays UNATTRIBUTED without separate accepted evidence.
+Use the existing Arena profile/run schemas, registry and xtask evidence pipeline. The [DEV profile](../../research/arena/profiles/clock-query-dev.json) and [PROD profile](../../research/arena/profiles/clock-query-prod.json) are REVIEWED for the declared protocol after independent Codex review; this status does not assert execution. Each pair keeps source/image/config/toolchain/QEMU identities, frozen profile/registry snapshots, marked warmups, raw observations and artifact digests; an immutable campaign manifest links the three pairs. No second registry or universal score is introduced. A standalone mechanism needs no fabricated alternative implementation. Existing admission remains at most STRUCTURALLY_ADMISSIBLE; `record_eligible=false` is preserved and contribution ownership stays UNATTRIBUTED without separate accepted evidence.
 
 The security target covers CLOCK's read-only current-process observation boundary, the external oracle and retained-result admission. Trusted boot input, timer operation and existing process isolation are assumptions, not newly proven properties. Custom SFRs require truthful complete observations, no inferred authority or cross-process selector, and normal bounded termination/reclamation. Required SAR evidence combines actual execution, source-bound review and negative host inputs. An omitted operation reported as an incomplete useful-query count, broken oracle, missing/duplicate/truncated observations, mandatory SFR failure or missing SAR must reject the record. These controls mutate external inputs or evidence, never kernel implementation. They do not prove protection against a malicious kernel or a producer able to forge the entire custody chain.
 

@@ -3,21 +3,26 @@
   "issue": 32,
   "reviewer": "independent Codex audit_acceptance subagent",
   "review_date": "2026-10-08",
-  "reviewed_base": "d9d41c73e03fd9597668325fb76db704d914483b",
-  "status": "pending",
+  "reviewed_base": "bc8222a54f2e88d40b4958273c1b7666a59dc804",
+  "status": "accepted",
   "scope": [
-    "SDK CLOCK macro/snapshot, external actor, generic image helper and current runner/oracle; passport writer not yet present and not accepted. No execution or human review attestation."
+    "Independent source review of SDK CLOCK macro/snapshot, external actor, unchanged production CLOCK accounting, native image helper, runner/oracle and final passport writer.",
+    "Source-bound protocol/evidence admission review only; no claim of actual guest execution, certification, cryptographic attestation or human review."
   ],
   "source_files": {
     "apps/native-runtime/src/lib.rs": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1",
-    "tests/native-apps/Cargo.toml": "4c886eeac9484f0920a46ad6e2f33ebc02b2abb0cacc8b9b84900cd94b9c4944",
+    "tests/native-apps/Cargo.toml": "fc2f40a299cc163ae623d97d4a25b0491674f5f8192087ceab6ec4ba763c1338",
     "tests/native-apps/src/clock-client.rs": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b",
-    "crates/xtask/src/main.rs": "29c0cc1610c3c621bea1e28e1d939322bbc994f781542a0282d083b5a1cb1e27",
-    "crates/xtask/src/native_apps.rs": "58e6feb4431355d89c559f0a2c3e778a759445bdcc1b1d2222a684037b445894",
-    "crates/xtask/src/arena_clock.rs": "0eb3c3b6b97150c964cb249525a608dfdc583eecf7b3b406e1ec862bed86b545",
+    "crates/xtask/src/main.rs": "e0b0bcc5196064637284b8ee2299968c59345a596bf5948c5f17d044bee83746",
+    "crates/xtask/src/native_apps.rs": "20617866ae4cf00dc6e6d987edbd8c215e5dc42c16516ae5f5662c8333041c11",
+    "crates/xtask/src/arena_clock.rs": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194",
     "crates/kernel/src/scheduler/mod.rs": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43",
     "crates/kernel/src/scheduler/task.rs": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df",
-    "crates/kernel/src/arch/aarch64/entry.S": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c"
+    "crates/kernel/src/arch/aarch64/entry.S": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c",
+    "crates/xtask/src/arena_clock/passport.rs": "9ca4cdc068132564de33da07ea303d1e9fc9975611c14352865172d2bd3d9029",
+    ".cargo/config.toml": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41",
+    "Cargo.toml": "aec6de3fa55776f811d26ee1c095b0ea26ba0952b1de6592d1ebc08fcafd6db6",
+    "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
   },
   "accepted_findings": [
     "Shared clock_abi macro preserves legacy output-discard behavior; snapshot names existing x0 through x3 and never exposes x4.",
@@ -25,12 +30,14 @@
     "Actor performs three real CLOCK calls per envelope; mandatory oracle executes after the end snapshot in both modes; ON adds actor-private volatile recorder stores only.",
     "Checked monotonic counters, stable nonzero frequency, zero READ_WINDOW differences and nonnegative residual are required; reports occur outside measured intervals.",
     "Exact 64-word report, unique loader/report/completion, own root exit and complete reclamation are required by the host oracle.",
-    "Fixed three OFF/ON pairs per DEV/PROD profile retain attempted failures; no retry or historical sample reuse is introduced."
+    "Fixed three OFF/ON pairs per DEV/PROD profile retain attempted failures; no retry or historical sample reuse is introduced.",
+    "Passport writer checks immutable definition snapshots, actual declared QEMU/frequency/compiler/features and protocol/input/resource/contract/oracle pins.",
+    "Absent or stale source/negative-review evidence leaves SAR NOT_RUN and makes admission ineligible; producer execution success does not fabricate review PASS.",
+    "Bundle artifacts preserve exact ELF bytes, sources, logs, raw reports, protocol, environment and evidence; shared-image paths resolve under campaign root.",
+    "All six pair assessments are retained; failed structural admission returns an error and record_eligible remains false."
   ],
   "pending": [
-    "Passport writer and configuration-frequency enforcement require review after implementation freeze.",
-    "Real execution and negative-test results are not asserted by this source review.",
-    "Final digest refresh and applicability review required after source changes."
+    "Actual guest campaign and negative-test execution are separate required evidence, not assertions of this source review."
   ],
   "limits": [
     "Execution-window accounting is not exclusive CPU time; unattributed residual does not localize kernel or host delay.",
@@ -38,13 +45,15 @@
     "Reported incomplete query counts can be rejected; host evidence cannot detect an adversary forging the entire actor and custody chain."
   ],
   "en_ru_review": {
-    "status": "PAIRED_MEANING_REVIEWED_NOT_INDEPENDENT_AUTHOR_REVIEW",
+    "status": "paired_meaning_reviewed",
     "paths": [
       "docs/kernel/clock.md",
       "docs/research/clock-passport.md",
       "docs/architecture/arena-measurement-contract.md"
     ],
-    "note": "Complete pairs checked for meaning and scope by their author; parent independent review of authored contracts/profiles remains required."
+    "author": "audit_acceptance",
+    "independent_reviewers": ["audit_code", "parent Codex agent"],
+    "scope": "Complete normative/protocol EN/RU meaning checked; independent audit_code and parent accepted the authored bounded protocol/profile before REVIEWED state. No execution acceptance implied."
   },
   "reviewers": [
     {
@@ -53,5 +62,6 @@
       "human": false
     }
   ],
-  "digest_format": "sha256 of exact file bytes"
+  "digest_format": "sha256 of exact file bytes",
+  "reviewed_head": "0542a5be22663b377975dadcac7bcf53f3f431cb"
 }

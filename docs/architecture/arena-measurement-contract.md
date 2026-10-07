@@ -10,7 +10,7 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the s
 
 The [range profile](../../research/arena/profiles/user-copy-range.json) is a PROPOSED synthetic host profile for an existing kernel-core range-validation contract. It is not an accepted SafeCopy PERF/SEC passport or a measured kernel run. Its custom measure and SFR/SAR are KOLVRT_DEFINED. Current canonical text bytes are pinned conservatively as the contract digest; a later semantic-subset revision requires reviewed rules, not automatic compatibility.
 
-The [CLOCK pilot](../research/clock-passport.md) now specifies a bounded real-kernel pipeline using this same schema and registry. Its proposed DEV/PROD profiles measure a three-CLOCK envelope with one useful query and matched intermediate-recorder ON/OFF observations. Existing public execution-window counters provide partial attribution, not exclusive processor cost. Twelve fresh boots are prescribed; execution acceptance remains pending. It does not change offline record eligibility or claim the full cost of timestamp probes.
+The [CLOCK pilot](../research/clock-passport.md) now specifies a bounded real-kernel pipeline using this same schema and registry. Its reviewed DEV/PROD profiles measure a three-CLOCK envelope with one useful query and matched intermediate-recorder ON/OFF observations. Existing public execution-window counters provide partial attribution, not exclusive processor cost. Twelve fresh boots are prescribed; execution acceptance remains pending. It does not change offline record eligibility or claim the full cost of timestamp probes.
 
 ## Standards registry
 

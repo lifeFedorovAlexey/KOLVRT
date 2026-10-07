@@ -32,6 +32,10 @@ Host-тесты вызывают настоящие методы обнаруж�
 
 Runner теперь требует ровно одно корректное наблюдение перед приёмкой свежего выполнения с машинным evidence, включая streaming native runtime. Отсутствие, повтор или некорректные поля вызывают отказ; совместимость исторического reader не ослабляет эту проверку. [Первоначальная приёмка](../../../../research/results/device-phase40.json) сохранена с прежними исходниками.
 
+## Интеграция пилота CLOCK
+
+Паспорт CLOCK повторно использует executor свежего machine-mode запуска, поэтому до успешного завершения собственного oracle обязан опубликовать то же проверенное наблюдение устройства. Выбор другого внешнего root не обходит discovery и не создаёт device grant. Изменение исходников общего runner делает предыдущий receipt историческим для той ревизии runner; реализация descriptor и принятый ограниченный scope не меняются.
+
 <!-- knowledge -->
 
 ```json
@@ -75,8 +79,8 @@ Runner теперь требует ровно одно корректное на
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Final-source full matrix passed after requiring a unique inventory for every fresh machine-mode execution; historical reader compatibility remains separate.",
+            "state": "STALE",
+            "reason": "The CLOCK pilot changes shared execution/SDK sources; retained receipts remain historical until exact-source applicability is renewed. Production mechanism guarantees and historical acceptance are preserved.",
             "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
             "receipt": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
             "receipt_sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032"

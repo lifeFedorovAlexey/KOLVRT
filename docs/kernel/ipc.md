@@ -112,6 +112,11 @@ Issue #109 B5 changes only host-side consumption of equivalent ordinary suite ev
 Phase 4.0 boot obtains the console address from the immutable validated [PL011 descriptor](devices.md), with explicit boot-console reservation. This publishes an observation identity, not an application MMIO/IRQ grant. Native application, IPC and supervision execution therefore retain the existing console ownership; no driver binding or device access is added to their authority. The runner requires exactly one validated inventory event for every fresh machine-mode evidence execution; the historical reader separately preserves readability of older receipts without that event. Prior feature receipts retain their source scope and do not establish current device validation.
 
 The process quantum regression accepts zero as the first counter snapshot when a pending timer IRQ precedes the actor's first instruction. It still requires later counter growth on both CPUs, preserved context, peer progress before spinner termination, the unchanged slice budget and final reclamation. This repairs an invalid test assumption; it changes neither scheduling policy nor runtime deadlines.
+
+## CLOCK pilot integration
+
+The shared host executor now accepts a scenario-specific oracle for the external CLOCK pilot. The ordinary IPC and native validators remain selected by their existing commands; the mandatory fresh device observation is checked before any scenario oracle. CLOCK is read-only observation, adds no IPC grant or endpoint operation, and does not replace IPC correctness or performance evidence.
+
 <!-- knowledge -->
 
 ```json

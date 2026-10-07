@@ -32,6 +32,10 @@ Host tests call the real discovery and identity methods with valid and invalid i
 
 The runner now requires exactly one valid observation before accepting fresh machine-mode execution, including streaming native runtime. Missing, duplicate or malformed events fail; historical reader compatibility does not weaken this gate. [Initial acceptance](../../research/results/device-phase40.json) retains its earlier source scope.
 
+## CLOCK pilot integration
+
+The CLOCK passport reuses the fresh machine-mode executor and therefore must publish the same validated device observation before its own oracle can pass. Selecting a different external root does not bypass discovery or create a device grant. The shared-runner source change makes the previous receipt historical for that runner revision; descriptor implementation and accepted bounded scope remain unchanged.
+
 <!-- knowledge -->
 
 ```json
@@ -75,8 +79,8 @@ The runner now requires exactly one valid observation before accepting fresh mac
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Final-source full matrix passed after requiring a unique inventory for every fresh machine-mode execution; historical reader compatibility remains separate.",
+            "state": "STALE",
+            "reason": "The CLOCK pilot changes shared execution/SDK sources; retained receipts remain historical until exact-source applicability is renewed. Production mechanism guarantees and historical acceptance are preserved.",
             "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
             "receipt": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
             "receipt_sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032"
