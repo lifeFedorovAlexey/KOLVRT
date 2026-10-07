@@ -1,46 +1,18 @@
 {
   "schema_version": 1,
-  "base_commit": "cbdaf7304954e9c1d08f9986d0cff58a38f291d1",
+  "base_commit": "459a2fcbf3b84ddeb98c000ff7ca09c66276c932",
   "files": [
     {
-      "path": "crates/kernel-core/src/ipc/tests.rs",
-      "before_sha256_lf": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0",
-      "after_sha256_lf": "3414e71e1cadfd20183d78c52f3b77e9afabf311c2398e5c2b29bfec98271a1f",
-      "disposition": "existing-feature",
-      "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
-    },
-    {
       "path": "crates/kernel/src/supervision_workload.S",
-      "before_sha256_lf": "5c13e46c80d85407ea13b0b6f6a14a143a73cedc76bbcebeda7050f471def80c",
-      "after_sha256_lf": "447557cda721ce1bc565689484a1f865e2246eb60e18ec5eb76ba36a26d6ecc9",
-      "disposition": "existing-feature",
-      "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
-    },
-    {
-      "path": "crates/kernel/src/supervision_workload.rs",
-      "before_sha256_lf": "5a8d267ef4bb87002fd0ce0061adba7b53f98822c54c09dbeae8ec51b9088ddc",
-      "after_sha256_lf": "1c42cee5b0d1e36c8962705556f95618d23cada5589cf74e67928e44310879c3",
-      "disposition": "existing-feature",
-      "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
-    },
-    {
-      "path": "tests/system/native-crash-recovery.cjs",
-      "before_sha256_lf": "53a09a2d6ce23c0133de51022bef3153c1beb856fcc3608c1ecb88f9e7cf71a8",
-      "after_sha256_lf": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
+      "before_sha256_lf": "447557cda721ce1bc565689484a1f865e2246eb60e18ec5eb76ba36a26d6ecc9",
+      "after_sha256_lf": "dd23d1db3daadb5e6271e206a5f3bddb65463bab483b5fed28c4b48cf5eb2bd5",
       "disposition": "existing-feature",
       "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
     },
     {
       "path": "tests/system/supervision-host-stall.cjs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "e85ae7747e8670c94d0e257a49bbd0e6d1ff5297506802385c86a079d1c9df14",
-      "disposition": "existing-feature",
-      "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
-    },
-    {
-      "path": "tests/system/hold-qemu-thread.ps1",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "5b66c5ea25ce4360c722cc6d8b63b4f2c87ad9747416f4357ef692d19caf0633",
+      "before_sha256_lf": "e85ae7747e8670c94d0e257a49bbd0e6d1ff5297506802385c86a079d1c9df14",
+      "after_sha256_lf": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
       "disposition": "existing-feature",
       "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
     }
@@ -48,18 +20,13 @@
   "features": [
     {
       "id": "kolvrt.apps.native-elf",
-      "disposition": "evidence-change",
-      "reason": "Describe exact diagnostic/test scope and evidence limits for readiness admission expiry. Preserve historical receipts; modified native test inputs are STALE pending renewed exact-source acceptance. Host starvation reproduction is not original CI attribution or successful readiness."
-    },
-    {
-      "id": "kolvrt.ipc.transport",
       "disposition": "semantic-change",
-      "reason": "Describe exact diagnostic/test scope and evidence limits for readiness admission expiry. Preserve historical receipts; modified native test inputs are STALE pending renewed exact-source acceptance. Host starvation reproduction is not original CI attribution or successful readiness."
+      "reason": "Correct direct lifecycle diagnostic classification and preserve original plus cleanup failures. Canonical EN/RU scope explains the reporting repair; current native verification remains STALE and historical receipts remain unchanged."
     },
     {
       "id": "kolvrt.services.supervision",
       "disposition": "semantic-change",
-      "reason": "Describe exact diagnostic/test scope and evidence limits for readiness admission expiry. Preserve historical receipts; modified native test inputs are STALE pending renewed exact-source acceptance. Host starvation reproduction is not original CI attribution or successful readiness."
+      "reason": "Correct direct lifecycle diagnostic classification and preserve original plus cleanup failures. Canonical EN/RU scope explains the reporting repair; current native verification remains STALE and historical receipts remain unchanged."
     }
   ]
 }

@@ -352,9 +352,12 @@ supervisor_image_start:
  ret
 // The same EL0 policy path handles a launch request with satisfied or absent dependencies.
 .Lsup_launch_definition:
+ // This direct lifecycle path must discard the preceding IPC probe marker.
+ mov x17,#0
  ldr x8,[x9,#8]
  and x10,x8,x11
  cmp x10,x8
+ mov x10,#0 // Preserve comparison flags while clearing the IPC operation.
  .if !{dependency_negative}
  b.ne .Lsup_dependency_denied
  .endif
