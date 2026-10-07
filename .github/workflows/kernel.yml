@@ -62,6 +62,13 @@ jobs:
     with:
       workload: asid
       cached: true
+  native:
+    needs: static
+    if: needs.static.outputs.kernel_required == 'true'
+    uses: ./.github/workflows/ci-windows-workload.yml
+    with:
+      workload: native
+      cached: true
   evidence:
     needs: matrix
     uses: ./.github/workflows/ci-windows-workload.yml
@@ -71,7 +78,17 @@ jobs:
   foundation:
     if: always()
     needs:
-      [static, host, kernel-dev, kernel-prod, matrix, routing, asid, evidence]
+      [
+        static,
+        host,
+        kernel-dev,
+        kernel-prod,
+        matrix,
+        routing,
+        asid,
+        native,
+        evidence,
+      ]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1

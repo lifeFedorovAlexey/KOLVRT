@@ -1,10 +1,16 @@
 #[path = "test_support/irq_wait.rs"]
 mod irq_wait;
+// Assembly probes exist only in this separately gated test module.
+core::arch::global_asm!(include_str!("test_support/arch_probes.S"));
+#[path = "test_support/ipc_inputs.rs"]
+mod ipc_inputs;
 use crate::time::Duration;
 use crate::{cpu, event, interrupt, memory, percpu, platform, smp, sync};
 use alloc::{boxed::Box, vec::Vec};
-use core::sync::atomic::{AtomicUsize, Ordering};
+use core::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 static TESTS_REPORTED: AtomicUsize = AtomicUsize::new(0);
+// Observation only: published after the real secondary TLBI, before its ACK.
+pub(crate) static REMOTE_TLBI_COMPLETED: AtomicU64 = AtomicU64::new(0);
 const UART_PID0: usize = 0xfe0;
 const UART_PID1: usize = 0xfe4;
 const UART_PID_MASK: u32 = 0xff;
@@ -259,9 +265,18 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
         remote::GATE.store(true, Ordering::Release);
         remote::complete(remote::HOLD);
         drop(retirement);
+        let generation = second.tlb_ack.load(Ordering::Acquire);
+        report(
+            "smp_future_ack_rejected",
+            generation > 0
+                && smp::acknowledged(generation)
+                && !smp::acknowledged(generation.checked_add(1).unwrap()),
+        );
         report(
             "smp_remote_ack",
-            p.reclaimable(&a) && smp::remote_tlbi_completed(second.tlb_ack.load(Ordering::Acquire)),
+            p.reclaimable(&a)
+                && generation > 0
+                && REMOTE_TLBI_COMPLETED.load(Ordering::Acquire) >= generation,
         );
         // SAFETY: INV-REMOTE-READER: CPU0 test retains mapped immutable data through completion/retirement; FAULT is an exact registered probe, control commands carry zero.
         unsafe {
@@ -307,6 +322,17 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
     );
     #[cfg(feature = "secondary-panic-test")]
     secondary_panic_control();
+    let initial_context = cpu::context::Context::ZERO;
+    let invalid_states = [1, 4, 0x10, 0x80];
+    report(
+        "user_context_invalid_states_rejected",
+        cpu::context::valid_user_context(&initial_context)
+            && invalid_states.into_iter().all(|state| {
+                let mut input = initial_context;
+                input.pstate = state;
+                !cpu::context::valid_user_context(&input)
+            }),
+    );
     let users = crate::boot_workload::exercise(p, processes);
     let repeated_users = crate::boot_workload::exercise(p, processes);
     report(
@@ -391,8 +417,105 @@ fn multicore(p: &mut memory::Physical, processes: &mut crate::process::Registry)
                 == remote::LOCK_ITERATIONS * (percpu::CPUS.len() as u64 + 1),
     );
 }
+fn state_machine_inputs() {
+    use kernel_core::scheduling::ownership::{Error as OwnerError, Ownership, Phase};
+    let owner = Ownership::new(1, 0);
+    drop(owner.prepare(0, true, 1).unwrap());
+    owner.publish(0, true, 1).unwrap();
+    owner.start(1, true, 1).unwrap();
+
+    let retained =
+        || owner.phase() == Phase::Running && owner.generation() == 1 && !owner.completed();
+    report(
+        "scheduler_foreign_cpu_rejected",
+        owner.mutate(0, true, 1).err() == Some(OwnerError::ForeignCpu) && retained(),
+    );
+    report(
+        "scheduler_unmasked_access_rejected",
+        owner.mutate(1, false, 1).err() == Some(OwnerError::IrqEnabled) && retained(),
+    );
+    report(
+        "scheduler_stale_generation_rejected",
+        owner.mutate(1, true, 0).err() == Some(OwnerError::StaleGeneration) && retained(),
+    );
+    report(
+        "scheduler_duplicate_start_rejected",
+        owner.start(1, true, 1) == Err(OwnerError::WrongPhase) && retained(),
+    );
+    report(
+        "scheduler_live_reset_rejected",
+        owner.prepare(0, true, 2).err() == Some(OwnerError::WrongPhase) && retained(),
+    );
+    report(
+        "scheduler_early_inspection_rejected",
+        owner.inspect(0, true, 1).err() == Some(OwnerError::WrongPhase) && retained(),
+    );
+    let borrowed = owner.mutate(1, true, 1).unwrap();
+    report(
+        "scheduler_reentry_rejected",
+        owner.mutate(1, true, 1).err() == Some(OwnerError::Reentry) && retained(),
+    );
+    drop(borrowed);
+
+    let access = owner.mutate(1, true, 1).unwrap();
+    let borrowed_rejected =
+        owner.complete(1, true, 1, true) == Err(OwnerError::Reentry) && !owner.completed();
+    drop(access);
+    let unquiescent_rejected = owner.complete(1, true, 1, false) == Err(OwnerError::NotQuiescent);
+    let inspection_rejected = owner.inspect(0, true, 1).err() == Some(OwnerError::WrongPhase);
+    let retained = owner.phase() == Phase::Running && owner.generation() == 1 && !owner.completed();
+    owner.complete(1, true, 1, true).unwrap();
+    report(
+        "completion_publication_state_inputs",
+        borrowed_rejected
+            && unquiescent_rejected
+            && inspection_rejected
+            && retained
+            && owner.completed(),
+    );
+    use kernel_core::process::{Error as ProcessError, Reason, State, Table};
+    let mut table = Table::<1>::new();
+    let id = table.reserve(0..1).unwrap();
+    table.prepared(id).unwrap();
+    table.start(id).unwrap();
+    table.complete(id, Reason::Exited(1), true).unwrap();
+    let saved = table.completion(id).unwrap();
+    let unlink_rejected = table.reclaim(id, false) == Err(ProcessError::NotQuiescent);
+    report(
+        "process_unlinked_reclaim_rejected",
+        unlink_rejected
+            && table.state(id) == Ok(State::Completed)
+            && table.completion(id) == Ok(saved)
+            && table.live() == 1,
+    );
+    let duplicate_rejected =
+        table.complete(id, Reason::Exited(2), true) == Err(ProcessError::Transition);
+    report(
+        "process_duplicate_completion_rejected",
+        duplicate_rejected
+            && table.completion(id) == Ok(saved)
+            && table.state(id) == Ok(State::Completed)
+            && table.live() == 1,
+    );
+}
+
 pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::process::Registry) {
     TESTS_REPORTED.store(0, Ordering::Relaxed);
+    state_machine_inputs();
+    ipc_inputs::exercise(report);
+    #[cfg(feature = "ipc-teardown-input")]
+    ipc_inputs::retained_endpoint_drop();
+    #[cfg(any(
+        feature = "scheduler-inner-lock-input",
+        feature = "scheduler-lock-input",
+        feature = "scheduler-task-input",
+        feature = "scheduler-owner-input",
+        feature = "ipc-storage-scope-input",
+        feature = "ipc-duplicate-ready-input",
+        feature = "ipc-wrong-process-wake-input",
+        feature = "ipc-blocked-reclaim-input"
+    ))]
+    crate::scheduler::testing::forbidden_input();
     report("boot_el1", cpu::el() == cpu::CURRENT_EL1);
     let uart = platform::uart(d);
     report(
@@ -560,10 +683,11 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
         }
     }
     report("timer_rearm", rearmed);
+    cpu::mask();
     interrupt::delivered().store(0, Ordering::Release);
     cpu::timer(crate::time::deadline_after(TEST_TIMER_DELAY));
-    cpu::unmask();
-    // SAFETY: INV-PROBE: aligned AtomicU64 loaded with LDAR, bounded physical-counter wait; vector must undo IRQ-side SIMD/FP clobber.
+    // SAFETY: INV-PROBE: IRQ-masked initialization precedes timer service;
+    // the pending IRQ survives check-to-WFI and tests the initialized SIMD/FP context.
     let context = unsafe {
         probe_simd_irq(
             interrupt::delivered().as_ptr(),
@@ -571,6 +695,13 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
         )
     };
     cpu::mask();
+    if context != 1 {
+        event!(
+            "{{\"event\":\"irq-context\",\"status\":\"fail\",\"probe_result\":{},\"deliveries\":{}}}",
+            context,
+            interrupt::delivered().load(Ordering::Acquire)
+        );
+    }
     report("irq_simd_context", context == 1);
     let mut samples = [0u64; LOCK_MEASUREMENT_SAMPLES];
     for i in 0..LOCK_MEASUREMENT_WARMUP + LOCK_MEASUREMENT_SAMPLES {
@@ -597,7 +728,7 @@ pub fn run(d: &Description, p: &mut memory::Physical, processes: &mut crate::pro
     );
     multicore(p, processes);
     #[cfg(feature = "negative-test")]
-    report("negative_control", cpu::el() == cpu::CURRENT_EL2);
+    report("negative_control", cpu::el() == 2 << cpu::CURRENT_EL_SHIFT);
     #[cfg(feature = "panic-test")]
     panic!("panic reporting negative control");
     #[cfg(not(any(feature = "negative-test", feature = "panic-test")))]

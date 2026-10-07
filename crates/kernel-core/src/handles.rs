@@ -180,9 +180,7 @@ impl Retained<'_> {
     }
     /// SEND only: receiver bindings cannot be substituted for consumer grants.
     pub fn endpoint_sender(&self) -> Result<&crate::ipc::Reference, Error> {
-        if !cfg!(feature = "ipc-send-rights-negative")
-            && !self.resource.rights.contains(Rights::SEND)
-        {
+        if !self.resource.rights.contains(Rights::SEND) {
             return Err(Error::Rights);
         }
         match &self.resource.value {
@@ -325,9 +323,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
     fn context(&self, caller: ProcessId) -> Result<(), Error> {
         match self.owner {
             None => Err(Error::Inactive),
-            Some(owner) if owner != caller && !cfg!(feature = "handle-owner-negative") => {
-                Err(Error::ForeignProcess)
-            }
+            Some(owner) if owner != caller => Err(Error::ForeignProcess),
             _ => Ok(()),
         }
     }
@@ -350,7 +346,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
             return Err(Error::Invalid);
         }
         let slot = self.slots.get(index).ok_or(Error::Invalid)?;
-        if !cfg!(feature = "handle-generation-negative") && slot.generation != generation {
+        if slot.generation != generation {
             return Err(Error::Stale);
         }
         if slot.resource.is_none() {
@@ -375,7 +371,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
     ) -> Result<Retained<'_>, Error> {
         let index = self.index(caller, handle)?;
         let resource = self.slots[index].resource.as_ref().ok_or(Error::Stale)?;
-        if !cfg!(feature = "handle-type-negative") && resource.kind() != expected {
+        if resource.kind() != expected {
             return Err(Error::WrongType);
         }
         if !resource.rights.contains(required) {
@@ -402,7 +398,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         let unauthorized = Rights::from_bits(requested.bits()).is_none()
             || !source.rights.contains(Rights::TRANSFER)
             || !source.rights.contains(requested);
-        if unauthorized && !cfg!(feature = "handle-transfer-rights-negative") {
+        if unauthorized {
             return Err(Error::Rights);
         }
         receiver.context(receiver_owner)?;
@@ -523,7 +519,7 @@ impl<const N: usize, const LIMIT: u64> Namespace<N, LIMIT> {
         let charge = self.handle_charge().map_err(CreationError::Handle)?;
         let slot = &mut self.slots[index];
         // Reserve/burn identity before publication. Failure never resurrects it.
-        if !cfg!(feature = "handle-reuse-negative") || slot.generation == 0 {
+        {
             slot.generation = slot
                 .generation
                 .checked_add(1)

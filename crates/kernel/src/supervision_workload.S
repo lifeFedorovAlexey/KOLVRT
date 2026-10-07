@@ -44,6 +44,7 @@ supervisor_image_start:
  mov x28,x2
  str x3,[x19,#1024]
  mov x25,x28
+ mov x20,#1010
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
  mov x11,#2
@@ -52,6 +53,7 @@ supervisor_image_start:
  cbnz x0,.Lsup_fail
  mov x24,x1
  mov x25,x2
+ mov x20,#1020
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
  orr x11,x11,#1
@@ -239,10 +241,16 @@ supervisor_image_start:
  svc #0x4e
 .Lsup_fail:
  mov x29,x0
+ mov x9,x1
+ svc #0x53
+ mov x5,x0
+ mov x23,x2
+ mov x1,x9
  mov x0,x20
  svc #0x4e
 .Lsup_submit:
  mov x18,x30
+ mov x10,#1
  mov x17,x0
  sup_header 1
  mov x0,#48
@@ -252,18 +260,37 @@ supervisor_image_start:
  str x17,[x19,#40]
  add x0,x20,x17
  str x0,[x19,#16]
- svc #0x53
- add x0,x0,x1,lsr #3
+ // Only readiness probes exercise the readiness deadline. The committed-crash
+ // and cancellation scenarios select the maximum valid absolute deadline:
+ // expiry must not replace the actual COMMIT/fault or explicit Cancel under test.
+ // Zero is already expired by the ABI.
+ mov x0,#-1
+ mov x6,x0
+ mov x7,#0
  str x0,[x19,#24]
+ cmp x17,#2
+ b.eq .Lsup_submit_call
+ cmp x17,#3
+ b.eq .Lsup_submit_call
+ svc #0x53
+ mov x7,x0
+ mov x8,x1
+ mov x21,x2
+ add x0,x0,x1,lsr #3
+ mov x6,x0
+ str x0,[x19,#24]
+.Lsup_submit_call:
  sup_ipc 48
  mov x22,x1
  mov x30,x18
  ret
 .Lsup_collect:
  mov x18,x30
+ mov x10,#2
  sup_header 5,x22
  sup_ipc
  cbnz x0,.Lsup_collect_return
+ mov x10,#3
  sup_header 6,x22
  sup_ipc
 .Lsup_collect_return:
@@ -276,6 +303,7 @@ supervisor_image_start:
  cbnz x0,.Lsup_probe_return
  bl .Lsup_collect
  cbnz x0,.Lsup_probe_return
+ mov x10,#4
  ldrh w0,[x19,#514]
  cbnz x0,.Lsup_probe_return
  ldr x0,[x19,#536]
@@ -387,8 +415,9 @@ supervised_service_start:
  str x0,[x19,#40]
  mov x0,#1
  str x0,[x19,#16]
- svc #0x53
- add x0,x0,x1,lsr #3
+ // This acknowledgement proves actual commit for the cancellation test.
+ // Select the maximum valid absolute deadline for this handshake as well.
+ mov x0,#-1
  str x0,[x19,#24]
  sup_ipc 48
  cbnz x0,.Lservice_fail

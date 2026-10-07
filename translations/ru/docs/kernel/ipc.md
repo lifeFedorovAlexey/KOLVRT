@@ -99,6 +99,8 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
 
 Экспериментальный [supervisor](supervision.md) добавляет отдельный lifecycle checkpoint поверх native.request/1. Точные IPC wait identities и source/mailbox ownership сохраняются после acquired root detachment двух CPU. Исходный continuous transport и scoped acceptance Phase 3.5 остаются отдельными; [ADR-0026](../architecture-decisions/0026-el0-supervision.md) принят для bounded functional scope после #126 с отдельной readiness. Текущее exact-source regression evidence отделено от historical receipts.
 
+Текущие controls Phase 3.7 импортируют настоящие протоколы Endpoint и Mailbox и выполняют реальный EL0 IPC. Отрицательные входы публичных методов включают неправильный consumer/token, повторный terminal transition, неуспешную публикацию copy, запрещённые grants и устаревшие identities. UNIT-тест повторного terminal transition проверяет, что после отклонённых cancel/reply сохраняются outcome и charge counts обоих domains; он не внедряет второй вызов приватного release helper. UNIT-fixtures адаптера вызывают настоящие publish_ipc_ready, unlink_ipc и storage access с запрещённым состоянием, процессом или scope; удержанная ссылка endpoint проверяет настоящий guard Drop. Наблюдения FIFO, прогресса после service death, wait/publication и освобождения ресурсов классифицированы как инварианты или смешанное покрытие, а не эквивалентные проверки пропущенной реализации через мутацию. Устаревшие no-op features удалены. Сохранённая matrix из 144 задач должна выполниться на финальном исходнике; обычный suite сейчас содержит 147 проверок. Исторические mutation receipts остаются привязанными к собственным snapshots. [Доказательства native applications](native-applications.md) фиксируют текущие ограничения.
+
 <!-- knowledge -->
 
 ```json
@@ -215,8 +217,8 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Fresh 142-task post-#126 functional artifact verification matches current sources and exact enforcement witnesses; performance benchmark acceptance is separate.",
+            "state": "STALE",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Bounded native.request/1 transport regression on two fixed-affinity QEMU CPUs; not acceptance of the new supervisor/checkpoint policy or physical ARM64."

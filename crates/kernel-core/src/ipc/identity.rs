@@ -117,9 +117,6 @@ impl Reference {
     }
     /// Caller-local REVOKE lookup must precede this concrete operation.
     pub fn revoke(&self) -> bool {
-        if cfg!(feature = "ipc-revoke-negative") {
-            return true;
-        }
         self.control().gate.fetch_or(REVOKED, Ordering::AcqRel) & REVOKED == 0
     }
     pub(super) fn close(&self) {

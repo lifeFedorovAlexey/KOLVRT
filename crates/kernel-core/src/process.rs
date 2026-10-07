@@ -11,13 +11,6 @@ impl ProcessId {
     pub fn generation(self) -> u64 {
         self.generation
     }
-    #[cfg(feature = "ipc-wake-generation-negative")]
-    pub fn with_generation_for_test(self, generation: u64) -> Self {
-        Self {
-            slot: self.slot,
-            generation,
-        }
-    }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum State {

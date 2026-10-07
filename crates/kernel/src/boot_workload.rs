@@ -68,14 +68,6 @@ pub struct Evidence {
     pub owners_released: bool,
     pub fault_checks: [bool; config::USER_PROCESSES],
 }
-#[cfg(feature = "user-retirement-negative")]
-fn user_retirement_control(p: &mut memory::Physical, image: &[u8]) {
-    let frame = p.allocate(memory::USER_SPACE_PAGES, 1).unwrap();
-    let space = memory::UserSpace::new(&frame, 0, image);
-    core::mem::forget(space);
-    p.release(frame);
-    panic!("retained user frame release accepted");
-}
 pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence {
     percpu::primary_only();
     cpu::mask();
@@ -87,8 +79,6 @@ pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence 
     // SAFETY: INV-USER-IMAGE: linked immutable position-independent trusted image extent.
     let image =
         unsafe { core::slice::from_raw_parts(image_start as *const u8, image_end - image_start) };
-    #[cfg(feature = "user-retirement-negative")]
-    user_retirement_control(p, image);
     let mut contexts = [Context::ZERO; config::USER_PROCESSES];
     let mut expectations = [(0, 0); config::USER_PROCESSES];
     for owner in 0..config::ACTIVE_CPUS {
@@ -142,7 +132,6 @@ pub fn exercise(p: &mut memory::Physical, processes: &mut Registry) -> Evidence 
                     entry: memory::USER_CODE,
                     slice_limit: Some(MAX_SLICES),
                 },
-                None,
             )
             .unwrap_or_else(|failure| crate::process::reject(failure.error));
         assert_eq!(identity.slot(), id);
@@ -266,7 +255,6 @@ pub fn payload(p: &mut memory::Physical, processes: &mut Registry, image: &[u8])
                     entry: config::USER_PAYLOAD_BASE,
                     slice_limit: Some(PAYLOAD_MAX_SLICES),
                 },
-                None,
             )
             .unwrap_or_else(|failure| crate::process::reject(failure.error));
         assert_eq!(identity.slot(), id);

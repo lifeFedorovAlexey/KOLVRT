@@ -70,6 +70,8 @@ Exit/fault/budget termination закрывает domain admission на masked sc
 
 [Английский оригинал](../../../../docs/kernel/domains.md)
 
+Текущие aliases matrix Phase 3.7 используют реальные отказы memory/request/queue budget, сохранение принятого notification, reclamation sender и сценарии service fault/rebind. Domain teardown классифицирован как покрытие инвариантов, а не искусственная проверка пропущенного teardown. No-op domain-negative features kernel/core удалены. Исторические receipts сохраняют исходный source scope; полная текущая matrix evidence остаётся обязательной.
+
 <!-- knowledge -->
 
 ```json
@@ -125,7 +127,7 @@ Exit/fault/budget termination закрывает domain admission на masked sc
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"

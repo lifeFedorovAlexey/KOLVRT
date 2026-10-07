@@ -93,7 +93,7 @@ The design follows the [native contracts](../architecture/native-model.md), [sec
           {
             "receipt_sha256": "cc07b61d771e202ca0ffc7025fd3070a3c27d179c40704618b3dccb51b896beb",
             "state": "STALE",
-            "reason": "Dependency audit extends package.json repository check integration; the immutable issue53 receipt retains prior exact-source bytes. Host-survey semantics are unchanged; refresh synthetic exact-source evidence separately.",
+            "reason": "Phase 3.7 extends package.json with native QEMU correctness commands. The immutable issue53 synthetic receipt retains its earlier exact-source package integration; framework semantics and hardware-collection boundaries are unchanged, and current-source synthetic acceptance is not inferred from that old receipt.",
             "scope": "Synthetic fixtures and shadowed CIM providers only; no actual hardware collection or kernel execution.",
             "receipt": "research/results/issue53-host-survey.json",
             "environment": "host-process"
@@ -101,7 +101,7 @@ The design follows the [native contracts](../architecture/native-model.md), [sec
           {
             "state": "UNKNOWN",
             "environment": "windows-cim",
-            "reason": "No real provider collection has been run; deterministic provider shadows do not establish production hardware observations."
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance."
           },
           {
             "state": "NOT_APPLICABLE",

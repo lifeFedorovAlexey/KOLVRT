@@ -4,19 +4,19 @@ Document status: CURRENT
 Evidence scope: экспериментальная реализация для issue #109; исторический baseline полного времени трёх CI runs и локальные проверки отделены от приёмки ускорения на hosted runners.
 Current reference: [Система знаний](../knowledge-system.md)
 
-Новые DEV/PROD checkpoint publication controls требуют обоих точных событий: удержание публикации CPU1 после quiescence и bounded CompletionPublicationTimeout. Внешний QEMU timeout или произвольный panic не засчитываются; zero-workload-deadline control остаётся отдельным.
+Исторические publication controls #126 в DEV/PROD требовали удержанной публикации и CompletionPublicationTimeout. По требованию maintainer Phase 3.7 убирает эту mutation и произвольное coordination cutoff. Текущий completion-publication-state-inputs проверяет настоящий отказ Ownership и сохранённое состояние; это не эквивалент SYSTEM coverage удержанной публикации. Внешний timeout диагностирует отказ и никогда не считается успешной операцией или witness отрицательного входа.
 
 <a name="ci-performance"></a>
 
 ## Интеграция supervisor и сопоставимость workload
 
-Historical kernel-130-v1 baseline сохраняется. Job и step names API не доказывают source-bound число задач: supervisor integration расширяет текущий plan до 142 задач (4 positive и 138 negative), не меняя shard topology; historical baseline содержал 126 negative. Automatic collector теперь оставляет check_inventory_id UNKNOWN вместо ложного отнесения нового plan к kernel-130-v1. Cross-inventory comparison требует явного reviewed equivalence evidence; неизвестные graphs, events и workloads не считаются эквивалентными автоматически. Общий serial/sharded runner проверяет named IPC failure event и точные supervision-reject/error для supervision: controls.
+Текущий source-bound plan содержит 144 задачи: четыре ordinary, десять legacy-failure, двадцать один invariant, девяносто три negative-input и шестнадцать mixed input/invariant tasks. Для 140 control slots сохранены разные observed requirements; positive invariants не эквивалентны mutation detection. Сохранённые планы на 130 задач и post-#126 на 142 задачи исторические. API-only reports оставляют check_inventory_id UNKNOWN и требуют отдельного reviewed equivalence для cross-inventory comparison.
 
 ## Измерение времени CI и оптимизация
 
 [Issue #109](https://github.com/lifeFedorovAlexey/KOLVRT/issues/109) находится в работе. [Сохранённый baseline](../../../../research/measurements/ci-legacy-baseline.json) содержит три успешных Windows push runs с одинаковыми Git blob inventories ядра, workspace, scripts, assets, manifests, lockfiles и измеряемого workflow. Документация/evidence различаются; входы сборки — нет. Интервалы выполнения составляют 2002, 1970 и 1829 секунд: медиана 1970 секунд (32 минуты 50 секунд). Существенно более ранний run длительностью 908 секунд исключён, поскольку объём работы ядра отличался. Нагрузка runner не контролируется; это описательные наблюдения полного времени, а не парный вывод об ускорении или измерения CPU компилятора.
 
-Сборщик после завершения workflow сохраняет каждый результат step GitHub и полное время, точные измеренные SHA/run/attempt, пять самых дорогих steps, интервал выполнения и путь объявленного DAG. Он извлекает доверенный код ветки по умолчанию с правами только на чтение и никогда не исполняет артефакты PR, вызвавшего запуск. Workflow измерений становится активным после появления в ветке по умолчанию. Отсутствующие наблюдения остаются недоступными; ошибка API сохраняет недоступность или завершает сбор ошибкой. Сохранённый kernel-130-v1 baseline остаётся historical. Job и step names API не подтверждают source-bound число задач: supervisor integration расширяет plan до 142 задач, не меняя shard topology. Поэтому automatic collector оставляет check_inventory_id UNKNOWN, а не относит новый plan к kernel-130-v1. Automatic comparison ограничен одинаковыми source SHA и job/step graph. Для сравнения разных исходников/inventory нужен независимо reviewed source-bound equivalence evidence, которого API-only collector не предоставляет; вручную добавленные inventory labels не разрешают такое сравнение. Сравнение повторов одинаковых исходников по-прежнему требует трёх различных успешных run IDs.
+Сборщик после завершения workflow сохраняет каждый результат step GitHub и полное время, точные измеренные SHA/run/attempt, пять самых дорогих steps, интервал выполнения и путь объявленного DAG. Он извлекает доверенный код ветки по умолчанию с правами только на чтение и никогда не исполняет артефакты PR, вызвавшего запуск. Workflow измерений становится активным после появления в ветке по умолчанию. Отсутствующие наблюдения остаются недоступными; ошибка API сохраняет недоступность или завершает сбор ошибкой. Сохранённый kernel-130-v1 baseline остаётся historical. Job и step names API не подтверждают source-bound число задач: supervisor integration исторически расширила plan до 142 задач; Phase 3.7 расширила его до 144 задач и переклассифицировала мигрированные controls, не меняя shard topology. Поэтому automatic collector оставляет check_inventory_id UNKNOWN, а не относит новый plan к kernel-130-v1. Automatic comparison ограничен одинаковыми source SHA и job/step graph. Для сравнения разных исходников/inventory нужен независимо reviewed source-bound equivalence evidence, которого API-only collector не предоставляет; вручную добавленные inventory labels не разрешают такое сравнение. Сравнение повторов одинаковых исходников по-прежнему требует трёх различных успешных run IDs.
 
 Shell wrapper записывает полное время настройки/скачивания и команд. Необязательный observer xtask записывает отдельные вызовы Cargo build и время жизни процессов QEMU, включая ошибки и timeout, в JSONL-файлы каждого процесса. Сводки сохраняют вложенные категории отдельно; сложение matrix, build и emulator totals учитывало бы работу дважды. Длительность вызова Cargo включает проверки fingerprints/кэша, а не исключительное CPU time rustc. Исключительное время компилятора и начальное ожидание runner остаются UNKNOWN. Длительность DAG суммирует времена jobs вдоль самого длинного объявленного пути зависимостей без очередей runners; интервал выполнения включает ожидания между jobs. Результаты кэша сохраняются отдельно в каждом job.json.
 
@@ -30,19 +30,19 @@ Shell wrapper записывает полное время настройки/с
 
 ## Inventory проверок и параллельный граф
 
-| Исходная проверка                                                  | Текущая команда/job               | Решение                                                                                                         |
-| ------------------------------------------------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Dependency policy и rejection fixtures                             | check:static                      | Сохранены один раз.                                                                                             |
-| Prettier, форматирование Taplo, cargo fmt, Markdown и Taplo lint   | check:static                      | Сохранены один раз.                                                                                             |
-| Repository validation и impact/history от PR base                  | static                            | Сохранены; требуется настоящий PR base.                                                                         |
-| Workspace Clippy, research tests, cargo test и native-state-models | check:host                        | Сохранены; добавлены rejection tests инфраструктуры CI.                                                         |
-| Подмножество exception registry                                    | Workspace cargo test в host       | Удалена только повторная идентичная команда подмножества; тесты сохранены.                                      |
-| Routing all-features и no-default-features tests                   | check:host                        | Обе конфигурации сохранены.                                                                                     |
-| DEV diagnostics/kernel-tests architecture lint                     | check:kernel-dev                  | Сохранены точные исходные target/features.                                                                      |
-| PROD release/no-default-features architecture lint                 | check:kernel-prod                 | Сохранены точные исходные target/features.                                                                      |
-| Реальный kernel matrix и распространение ошибок на host            | matrix shards 0–3, затем evidence | Текущие 4 positive и 138 negative tasks распределены по одному разу; historical baseline содержал 126 negative. |
-| Реальный EL0 routing matrix и controls                             | routing                           | Полный специализированный matrix сохранён.                                                                      |
-| Восемь парных реальных 16-bit ASID comparisons                     | asid                              | Сохранены все шестнадцать boots и проверки фактических 16 bits.                                                 |
+| Исходная проверка                                                  | Текущая команда/job               | Решение                                                                                                                           |
+| ------------------------------------------------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Dependency policy и rejection fixtures                             | check:static                      | Сохранены один раз.                                                                                                               |
+| Prettier, форматирование Taplo, cargo fmt, Markdown и Taplo lint   | check:static                      | Сохранены один раз.                                                                                                               |
+| Repository validation и impact/history от PR base                  | static                            | Сохранены; требуется настоящий PR base.                                                                                           |
+| Workspace Clippy, research tests, cargo test и native-state-models | check:host                        | Сохранены; добавлены rejection tests инфраструктуры CI.                                                                           |
+| Подмножество exception registry                                    | Workspace cargo test в host       | Удалена только повторная идентичная команда подмножества; тесты сохранены.                                                        |
+| Routing all-features и no-default-features tests                   | check:host                        | Обе конфигурации сохранены.                                                                                                       |
+| DEV diagnostics/kernel-tests architecture lint                     | check:kernel-dev                  | Сохранены точные исходные target/features.                                                                                        |
+| PROD release/no-default-features architecture lint                 | check:kernel-prod                 | Сохранены точные исходные target/features.                                                                                        |
+| Реальный kernel matrix и распространение ошибок на host            | matrix shards 0–3, затем evidence | Текущие 144 задачи / 140 классифицированных control slots распределены по одному разу; historical baseline содержал 126 negative. |
+| Реальный EL0 routing matrix и controls                             | routing                           | Полный специализированный matrix сохранён.                                                                                        |
+| Восемь парных реальных 16-bit ASID comparisons                     | asid                              | Сохранены все шестнадцать boots и проверки фактических 16 bits.                                                                   |
 
 Локальный npm run check выполняет check:static, затем check:host. check:qemu сохраняет все три дорогих runners, а именованные команды kernel lint доступны независимо. Static gate CI предшествует параллельным jobs host, DEV lint, PROD lint, четырём kernel shards, routing и ASID. Для shards отключён fail-fast. Evidence job независимо генерирует текущий план исходников/задач/конфигураций и отклоняет пропущенные/дублированные tasks или shards, устаревшие исходники, неверные profiles/features, различающиеся ELF hashes или аргументы QEMU. Каждая задача помечена executed. Итоговый статус foundation требует успеха каждого обязательного job; ошибка, отмена, отсутствие или skip не могут превратиться в PASS.
 
@@ -71,6 +71,10 @@ PR feedback при прогретом кэше менее десяти мину�
 
 [Английский оригинал](../../../../docs/ci/performance.md)
 
+Обязательный native workload отдельно запускает DEV/PROD guest Clippy, настоящие component methods, три external ABI actors, обычные application sessions, production crash/recovery/shutdown, отдельный app smoke и persistent-runtime observations. Negative inputs вызывают настоящие методы/public ABI или проверяют host oracle; source-copy mutations не используются. Этот workload отделён от foundation plan на 144 задачи и участвует в итоговом gate. Apps включены в compiled-cache source key; emulator observations всегда выполняются заново.
+
+IRQ/SIMD control теперь наблюдает настоящий round trip как positive invariant coverage; saved-frame corruption и skipped-restore detection не заявляются. Текущие counts: четыре ordinary, десять legacy-failure, двадцать один invariant, девяносто три negative-input и шестнадцать mixed tasks. Прежние receipts на 130 задач и post-#126 на 142 задачи сохраняют исходный inventory/source scope.
+
 <!-- knowledge -->
 
 ```json
@@ -89,7 +93,7 @@ PR feedback при прогретом кэше менее десяти мину�
       "tags": ["ci", "timing", "cache", "tooling"],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending.",
+        "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending. Phase 3.7 adds a mandatory separate native workload for production-method UNIT tests, external ABI/SYSTEM scenarios, actual application smoke/runtime and original-source dependency closure proof. Matrix coverage distinguishes negative inputs, positive invariants and remaining legacy failures; this is correctness integration, not new CI speed acceptance.",
         "sources": [
           ".github/workflows/kernel.yml",
           ".github/workflows/dependencies.yml",
@@ -127,7 +131,7 @@ PR feedback при прогретом кэше менее десяти мину�
           {
             "environment": "github-actions",
             "state": "UNKNOWN",
-            "reason": "The reporting workflow has not run on GitHub; local fixture tests cannot establish runner measurements."
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance."
           }
         ],
         "readiness": "NOT_READY",

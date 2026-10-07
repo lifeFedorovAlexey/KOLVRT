@@ -7,16 +7,6 @@ use core::{
 const LOCK_PROGRESS_ATTEMPTS: usize = 1_000_000;
 #[cfg(target_os = "none")]
 pub fn assert_scheduler_unlocked() {
-    #[cfg(feature = "scheduler-lock-negative")]
-    if crate::percpu::current()
-        .ordinary_locks
-        .load(Ordering::Acquire)
-        != 0
-    {
-        crate::event!(
-            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"LockHeld\"}}"
-        );
-    }
     assert_eq!(
         crate::percpu::current()
             .ordinary_locks
@@ -47,15 +37,6 @@ impl<T> Lock<T> {
     pub fn try_lock(&self) -> Option<Guard<'_, T>> {
         #[cfg(target_os = "none")]
         {
-            #[cfg(feature = "scheduler-inner-lock-negative")]
-            if crate::percpu::current()
-                .scheduler_borrow
-                .load(Ordering::Acquire)
-            {
-                crate::event!(
-                    "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"InnerLock\"}}"
-                );
-            }
             assert!(
                 !crate::percpu::current()
                     .scheduler_borrow

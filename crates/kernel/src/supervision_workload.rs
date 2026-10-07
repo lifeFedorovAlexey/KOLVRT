@@ -60,24 +60,29 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
                 entry: memory::USER_CODE,
                 slice_limit: None,
             },
-            None,
         )
         .unwrap();
     let grants = [
         Grant {
             image: service_image,
+            image_format: ImageFormat::RawFixture,
+            send_to: None,
             owner: 1,
             limits,
             instances: 8,
         },
         Grant {
             image: service_image,
+            image_format: ImageFormat::RawFixture,
+            send_to: None,
             owner: 0,
             limits,
             instances: 1,
         },
         Grant {
             image: service_image,
+            image_format: ImageFormat::RawFixture,
+            send_to: None,
             owner: 1,
             limits,
             instances: 1,
@@ -86,31 +91,23 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
     let mut scope = Scope::install(supervisor, grants);
     registry.start(supervisor).unwrap();
     let watchdog = crate::time::deadline_after(crate::time::Duration::from_secs(10));
-    #[cfg(feature = "kernel-tests")]
-    crate::scheduler::delay_secondary_completion(true);
     let completed = loop {
         assert!(
             crate::cpu::ticks() < watchdog,
             "supervision fixture watchdog; not lifecycle acceptance"
         );
         let completed = registry.checkpoint();
-        #[cfg(feature = "kernel-tests")]
-        {
-            assert!(crate::scheduler::pending_completion_observed());
-            crate::scheduler::delay_secondary_completion(false);
-        }
         if registry.completion(supervisor).is_ok() {
             break completed;
         }
         scope.service(registry, physical);
-        #[cfg(feature = "kernel-tests")]
-        crate::scheduler::delay_secondary_completion(true);
     };
     let reason = registry.completion(supervisor).unwrap().reason;
     let coverage = completed.tasks[supervisor.slot()].context.gpr[12];
     if reason != Reason::Exited(1) || coverage != 255 {
+        let diagnostic = &completed.tasks[supervisor.slot()].context.gpr;
         crate::event!(
-            "{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"{}\",\"exit\":\"{:?}\",\"coverage\":{},\"actual\":{},\"value\":{}}}",
+            "{{\"event\":\"supervision-reject\",\"status\":\"fail\",\"error\":\"{}\",\"exit\":\"{:?}\",\"coverage\":{},\"actual\":{},\"value\":{},\"stage\":{},\"operation\":{},\"submitted_at\":{},\"deadline\":{},\"failed_at\":{},\"frequency\":{},\"residency_at_submit_clock\":{},\"residency_at_failure_clock\":{}}}",
             if reason == Reason::Exited(1100) {
                 "CommitNotProven"
             } else if reason == Reason::Exited(1200) {
@@ -121,7 +118,15 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
             reason,
             coverage,
             completed.tasks[supervisor.slot()].context.gpr[29],
-            completed.tasks[supervisor.slot()].context.gpr[1]
+            completed.tasks[supervisor.slot()].context.gpr[1],
+            diagnostic[20],
+            diagnostic[10],
+            diagnostic[7],
+            diagnostic[6],
+            diagnostic[5],
+            diagnostic[8],
+            diagnostic[21],
+            diagnostic[23]
         );
         let peer = completed.tasks[crate::scheduler::TASKS];
         crate::event!(

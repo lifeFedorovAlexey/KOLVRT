@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 
-Evidence scope: принятая ограниченная Phase 3.6 после #126, current-source functional QEMU verification и Codex EN/RU semantic review; readiness и performance acceptance отделены.
+Evidence scope: исторически принятая bounded Phase 3.6 после #126; Phase 3.7 меняет source и coordination policy. Current-source acceptance остаётся незавершённой; readiness и performance отдельны.
 
 Current reference: [Предложение lifecycle rendezvous](../architecture-decisions/0026-el0-supervision.md)
 
@@ -32,17 +32,21 @@ Completion observation возвращает event 0 для admitted live instanc
 
 ## Исполнение и освобождение
 
-Истечение бюджета работы и публикация completion имеют разные deadline. У checkpoint нет workload deadline: независимый coordination interval в две секунды начинается до локального исполнения, а отсутствие workload expiry никогда не убирает bound публикации. Dispatch с workload deadline сохраняет строгую семантику BudgetExpired и добавляет только фиксированный coordination interval после этого absolute deadline; повторный join длительностью workload не используется. Отсутствие публикации останавливает kernel с CompletionPublicationTimeout; Registry ownership, namespaces и frames удерживаются до подтверждения обоих приобретённых completion и execution/root quiescence. Drainage pending-copy continuation имеет собственный существующий coordination bound в две секунды и при отказе также останавливается без reclaim. Эти counter-clock bounds предполагают progress timer/CPU; они не гарантируют физическое real-time поведение.
+Workload expiry определяет только BudgetExpired. Публикация completion, drainage pending-copy и quiescence source/ack не имеют произвольного ограничения по прошедшему времени. CPU0 удерживает Registry ownership, namespaces и frames, пока не приобретены оба completion, не отсоединены roots и не освобождены execution owners; pending copies завершаются до namespace transfer. Общий SMP wait также удерживает фактическое состояние boot, rendezvous, retirement и shutdown до выполнения требуемых предикатов. Опубликованный secondary FAILED по-прежнему вызывает fail-stop с удержанием ресурсов. Конечного внутрядерного детектора молча зависшего CPU в этой foundation нет: внешний watchdog теста диагностирует зависание, но не доказывает completion и не разрешает reclaim. Эта явная policy Phase 3.7 заменяет фиксированные coordination deadlines по требованию maintainer; workload deadlines и длительности policy supervisor остаются отдельными.
 
-Детерминированный checkpoint publication control удерживает CPU1 после native-root и execution-owner quiescence, до публикации completion, и вызывает Registry::checkpoint() без workload deadline. Точные witnesses — CheckpointPublicationHeld (quiescent=true) и CompletionPublicationTimeout. До исправления этот control достигал только внешнего QEMU timeout в 30 секунд. Положительные kernel runs принудительно задерживают публикацию на normal checkpoints, затем разрешают её; отдельный dispatch control с zero workload deadline сохранён. WFI fix с проверкой условия при masked IRQ и его deterministic test сохранены.
+Исторический checkpoint publication control #126 удерживал CPU1 после quiescence и требовал CheckpointPublicationHeld вместе с CompletionPublicationTimeout. Эта mutation и принудительный rendezvous удалены. Текущий completion-publication-state-inputs вызывает единственный production Ownership protocol с запрещённым completion при borrow/отсутствии quiescence и преждевременным inspection; проверяет реальный отказ и сохранённые phase/generation. Это UNIT coverage не устанавливает SYSTEM liveness при удержании publication или детектор молча отказавшего CPU. Исторические receipts сохраняют исходные source и control scope.
 
-Чтение counter разделяет ticks_relaxed() для scheduler/coordination deadline polling и ticks_ordered() для ordering относительно observations/context. Существующие callers ticks() сохраняют ordered semantics для measurements и accounting; ISB при trap entry сохранены. Performance results ограничены измеренными QEMU scheduler workloads, с сохранением failures и variability; из них не следует утверждение о physical performance или отсутствии regression.
+Чтение counter разделяет ticks_relaxed() для scheduler workload-deadline polling и ticks_ordered() для ordering относительно observations/context. Существующие callers ticks() сохраняют ordered semantics для measurements и accounting; ISB при trap entry сохранены. Performance results ограничены измеренными QEMU scheduler workloads, с сохранением failures и variability; из них не следует утверждение о physical performance или отсутствии regression.
 
 Lifecycle work выполняется на явном fixed-affinity checkpoint двух CPU. Каждый owner исполняет bounded timer quantum, terminal transition, block или explicit lifecycle yield, восстанавливает native root и освобождает execution ownership. Затем CPU0 приобретает оба completion перед изменением Registry или allocation/reclaim frames. Pending copy transactions завершаются до возвращения namespaces. Saved IPC wait identities, retry reasons и counters сохраняются через barrier и восстанавливаются только для того же ProcessId; endpoint и source/mailbox ownership удерживаются. Отсоединение root blocked процесса само по себе не разрешает reclaim.
 
 SGI-only entry не расходует checkpoint quantum до первой инструкции EL0; deferred work дренируется, а заведённый timer продолжает обеспечивать progress. Scheduling cursor продолжается только для соответствующей живой process generation. Death/stop очищает blocked ownership точного процесса, прекращает admission и выполняет ASID retirement на owning CPU. Old endpoint requests, terminal results и wake acknowledgements сохраняют независимое ownership до drainage. Reclamation не основывается на истекшем grace period.
 
 Этот bounded checkpoint приостанавливает здоровых peers на время lifecycle changes; он не добавляет migration или independent admission во время исполнения user code на CPU. Death observation использует exact lifecycle queries; generic wait-any и автономная persistent orchestration исключены. Исходный continuous IPC path имеет отдельный scope и проверки. Readiness, effects и failure policy не выводятся из timeout или остановленного CPU.
+
+Исторический cancellation fixture использовал длительность readiness probe для независимых load и commit-ack запросов. Expiry мог сделать любой из них terminal до явного Cancel, для которого AlreadyTerminal является правильным production response. Текущий fixture задаёт максимальный допустимый absolute deadline этим двум тестовым входам, сохраняя проверки настоящего commit acknowledgement, явной cancellation и EffectUnknown. Zero уже expired по native IPC contract. Readiness probes сохраняют canonical deadline, restart сохраняет backoff 1/128 секунды. Исправляется предпосылка теста; production arbiter и performance policy не меняются. [Native-приложения](native-applications.md) добавляют внешний SYSTEM-сценарий настоящих production supervisor/service/client после выбранного crash сервиса.
+
+Исторический CI b037833 упал в ordinary suite, вызванном process-stale-control: Exited(1000), coverage 0, actual status 16. Это не отказ process-stale assertion. Текущий diagnostic fixture сохраняет readiness deadline 1/8 секунды и задаёт первым peer и worker probes stage IDs 1010 и 1020. Operation IDs различают Submit (1), Wait (2), Collect (3) и reply validation (4); при отказе записываются clock при создании запроса, absolute deadline, clock после отказа, frequency и исходный IPC status. Проверка production adapter показывает, что Expired status 16 возвращается при Submit admission, тогда как Wait/Collect сообщают terminal outcomes отдельно. Это сужает расследование, но не доказывает attribution scheduler latency. Зелёный локальный повтор не устраняет падение CI; увеличение timeout, production repair и завершённая acceptance не заявляются.
 
 ## Политика readiness, restart и shutdown
 
@@ -72,6 +76,14 @@ Committed crashing service сообщает effect-unknown и exact fault observ
 
 Current main после #126 содержит 142 задачи и 138 controls из общего serial/four-shard inventory. Publication failure не возвращает фиктивный success: resources остаются retained до acquired quiescence. Новая verification относится к этому exact source set; historical inventories не переписываются. Performance и readiness остаются отдельными от functional acceptance.
 
+Phase 3.7 расширяет механизм immutable image-format grants и operation 6 для одной конечной client SEND edge. Инициализированные x0=6, x1=client selector, x2=точный client token, x3=точный destination token, x4=1 обрабатываются только для захваченного supervisor после acquired quiescence. Успех возвращает status, SEND handle в локальном namespace клиента, target token и client generation; заменяется только previous sender, выданный этой entry. Stale tokens, завершённые clients/targets и отсутствующие edges отвергаются. Этот профиль исходных ELF описан в [native applications](native-applications.md); прежние ограничения fixtures Phase 3.6 и исторические receipts сохраняют свой исходный scope.
+
+Обычный ELF supervisor выбирает время жизни через application SessionPolicy: bootstrap argument 1 сохраняет persistent работу после клиента, argument 2 завершает сессию после настоящего завершения клиента. Недопустимая конфигурация отвергается. Оба режима используют одну production реализацию service/client/recovery. FinishAfterClient закрывает admission, наблюдает успешный client exit, запрашивает точное owner-local termination сервиса, наблюдает Terminated и выходит штатно; затем generic kernel retirement требует настоящую quiescence и освобождение ресурсов. Политика времени жизни приложения не является kernel test switch. Immutable ELF bootstrap больше не содержит workload watchdog; внешний runner ограничивает diagnostic hangs. Отдельный исторический assembly fixture сохраняет явно ограниченные policy/watchdog и readiness deadline 1/8.
+
+Bootstrap grant shape теперь имеет единственную production реализацию в kernel_core::supervision. Kernel Scope::install использует общий тип Grant и вызывает validate_grants до публикации ACTIVE ownership. Быстрые host component tests импортируют ту же функцию и проверяют непустой image input, существующие границы instance credits 1..8 и отказ self/missing SEND destinations. Это проверка immutable bootstrap authority shape, а не интерпретатор EL0 dependency policy или generic package manifest format. Проверки image format/geometry и process/domain quota/placement остаются в настоящих ELF/process/domain методах, проверяемых их component tests; успех grant-shape не доказывает format validity или caller provenance.
+
+CI точного 3873bc8 наблюдал worker readiness stage 1020, Submit operation 1, Expired status 16 до admission. submitted_at=1078757950, deadline=1086570450, failed_at=1086709243 и frequency=62500000 показывают 127.22 ms между clocks против policy 125 ms; запрос не достиг сервиса. Это не устанавливает service reply latency или kernel performance defect. Diagnostics теперь сохраняют public CLOCK residency counters на обоих samples, чтобы различать время caller execution window и off-CPU checkpoint. Принятый deadline /8, строгое требование READY и production scheduling остаются неизменными до attribution.
+
 <!-- knowledge -->
 
 ```json
@@ -98,7 +110,7 @@ Current main после #126 содержит 142 задачи и 138 controls �
       ],
       "feature": {
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with mandatory bounded completion publication independent of workload expiry, bounded copy drainage, ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies. Immutable bootstrap grant shape has one shared kernel-core production type/validator imported directly by host component tests.",
         "sources": [
           "crates/kernel-core/src/process.rs",
           "crates/kernel-core/tests/process_protocol.rs",
@@ -116,7 +128,10 @@ Current main после #126 содержит 142 задачи и 138 controls �
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/output.rs",
-          "crates/xtask/src/timing.rs"
+          "crates/xtask/src/timing.rs",
+          "crates/kernel-core/src/lib.rs",
+          "crates/kernel-core/src/supervision.rs",
+          "crates/kernel-core/tests/bootstrap_grants.rs"
         ],
         "acceptance": ["research/results/supervision-phase36-main126.json"],
         "issues": [27],
@@ -130,8 +145,8 @@ Current main после #126 содержит 142 задачи и 138 controls �
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Independent post-#126 142-task artifact check against all current source digests, actual ELF/result hashes and exact publication/control witnesses; no performance acceptance.",
+            "state": "STALE",
+            "reason": "Phase 3.7 changes coordination policy and removes source-copy mutations/application copies. Prior receipts remain immutable historical evidence; current-source full supervisor crash/recovery and final acceptance are incomplete.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

@@ -32,9 +32,11 @@ Preserve the existing whole-session barrier and pre-create spare services; move 
 
 Pre-created spares do not establish fresh allocation/restart identity or extinguished bootstrap grants. EL1 policy violates privileged necessity. Independent live admission would require a larger asynchronous root/namespace publication and per-object retirement protocol. Checkpoints provide a reviewable bounded extension with acquired owner/root quiescence, actual fresh instances and explicit retained IPC ownership. Their pause overhead and lifecycle query polling are declared limits, not a claim of autonomous persistent supervision.
 
+Policy update 2026-10-07: the maintainer’s explicit Phase 3.7 decision supersedes only #126 finite coordination deadlines. Authority, retained ownership and actual quiescence remain mandatory. This is an architectural decision, not acceptance of the new implementation.
+
 ## Consequences
 
-Checkpoint publication must have an independent finite coordination deadline even without workload expiry. Timeout is fatal and retains resources; it never manufactures completion or permits reclaim. Workload expiry remains BudgetExpired and is not reused as a join duration. Pending-copy drainage must also have a finite failure bound.
+The historical #126 decision required finite publication and copy-drain deadlines. At the maintainer’s explicit Phase 3.7 request on 2026-10-07 this requirement is superseded: ordinary coordination has no arbitrary elapsed-time cutoff. Return requires actual acquired completions, detached roots, released owners and completed copy/source/ack obligations. Workload expiry still yields BudgetExpired; supervisor readiness deadlines and restart backoff remain policy. Published CPU FAILED requires fail-stop with resources retained. Silent CPU stalls have no finite in-kernel detector in this foundation; external test watchdogs diagnose them but establish neither completion nor reclamation. The #126 review/receipts retain their historical source scope.
 
 Lifecycle membership changes pause healthy peers at acquired checkpoints. Scope, authority credits and retained transport ownership remain explicit; failed quiescence requires quarantine or global stop, never deadline-based reclaim.
 
@@ -70,7 +72,7 @@ The experimental entry can be replaced without freezing internal representations
 
   "kind": "adr",
 
-  "summary": "Accepted bounded isolated EL0 supervision with finite completion publication after #126.",
+  "summary": "Accepted isolated EL0 supervision; acquired quiescence with no arbitrary coordination cutoff.",
 
   "aliases": ["ADR-0026"]
 }

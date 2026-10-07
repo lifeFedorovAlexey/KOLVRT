@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][ValidateSet('static', 'host', 'kernel-dev', 'kernel-prod', 'matrix', 'routing', 'asid', 'evidence')][string]$Workload)
+param([Parameter(Mandatory)][ValidateSet('static', 'host', 'kernel-dev', 'kernel-prod', 'matrix', 'routing', 'asid', 'native', 'evidence')][string]$Workload)
 $ErrorActionPreference = 'Stop'
 function Invoke-Check([string]$Kind, [string]$Label, [string]$Command, [string[]]$CommandArguments) {
     & "$PSScriptRoot/run-timed.ps1" -Kind $Kind -Label $Label -Command $Command -CommandArguments $CommandArguments
@@ -12,6 +12,16 @@ switch ($Workload) {
     'matrix' {
         if ($env:CI_MATRIX_SHARD -ne '') { Invoke-Check 'matrix' "kernel-shard-$env:CI_MATRIX_SHARD" 'cargo' @('xtask', 'matrix-shard', $env:CI_MATRIX_SHARD, '4') }
         else { Invoke-Check 'matrix' 'kernel-matrix' 'cargo' @('xtask', 'test') }
+    }
+    'native' {
+        Invoke-Check 'cargo-clippy' 'native-guests-dev' 'cargo' @('clippy', '--locked', '-p', 'native-apps', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--', '-D', 'warnings')
+        Invoke-Check 'cargo-clippy' 'native-guests-prod' 'cargo' @('clippy', '--locked', '-p', 'native-apps', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--release', '--', '-D', 'warnings')
+        Invoke-Check 'cargo-clippy' 'native-selftests-dev' 'cargo' @('clippy', '--locked', '-p', 'native-selftests', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--', '-D', 'warnings')
+        Invoke-Check 'cargo-clippy' 'native-selftests-prod' 'cargo' @('clippy', '--locked', '-p', 'native-selftests', '--features', 'guest', '--bins', '--target', 'aarch64-unknown-none', '--release', '--', '-D', 'warnings')
+        Invoke-Check 'matrix' 'native-selftest' 'cargo' @('xtask', 'selftest')
+        Invoke-Check 'matrix' 'native-app-smoke' 'cargo' @('xtask', 'app-smoke')
+        Invoke-Check 'matrix' 'native-persistent-runtime' 'cargo' @('xtask', 'service-run')
+        Invoke-Check 'matrix' 'native-closure-proof' 'node' @('scripts/native-closure-proof.cjs')
     }
     'evidence' {
         cargo xtask matrix-plan | Set-Content target/kernel/expected-plan.json -Encoding utf8

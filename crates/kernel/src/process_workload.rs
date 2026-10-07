@@ -54,7 +54,7 @@ fn spec(owner: usize, mode: u64, code: u64) -> Spec<'static> {
 }
 fn create(registry: &mut Registry, p: &mut memory::Physical, spec: Spec<'_>) -> ProcessId {
     registry
-        .create(p, Origin::Bootstrap, spec, None)
+        .create(p, Origin::Bootstrap, spec)
         .unwrap_or_else(|f| process::reject(f.error))
 }
 fn tag(registry: &Registry, id: ProcessId) -> u64 {
@@ -86,6 +86,37 @@ pub fn exercise(
                 && crate::smp::experiment::RESULT.load(core::sync::atomic::Ordering::Acquire) == 1,
         );
     }
+
+    #[cfg(feature = "kernel-tests")]
+    {
+        let pages = p.available();
+        let live = registry.live();
+        for (name, states) in [
+            ("process_aarch32_context_rejected", &[0x10, 0x13][..]),
+            ("process_masked_user_irq_rejected", &[0x80][..]),
+            ("process_privileged_context_rejected", &[1, 4, 5][..]),
+        ] {
+            let rejected = states.iter().all(|&state| {
+                let mut input = spec(percpu::BOOT_CPU, MODE_EXIT, EXIT_CODE);
+                input.context.pstate = state;
+                registry
+                    .create(p, Origin::Bootstrap, input)
+                    .err()
+                    .is_some_and(|f| f.error == Error::InvalidImage && f.completion.is_none())
+            });
+            report(
+                name,
+                rejected && p.available() == pages && registry.live() == live,
+            );
+        }
+        cpu::unmask();
+        let rejected = process::context_contract() == Err(Error::IrqEnabled);
+        cpu::mask();
+        report(
+            "process_unmasked_access_rejected",
+            rejected && p.available() == pages && registry.live() == live,
+        );
+    }
     let before = p.available();
     let first = create(registry, p, spec(percpu::BOOT_CPU, MODE_EXIT, EXIT_CODE));
     report(
@@ -93,15 +124,23 @@ pub fn exercise(
         registry.state(first) == Ok(State::Prepared)
             && registry.completion(first) == Err(Error::Transition),
     );
-    #[cfg(feature = "process-reclaim-negative")]
-    registry
-        .reclaim(p, first)
-        .unwrap_or_else(|error| process::reject(error));
     registry.start(first).unwrap();
-    #[cfg(feature = "process-start-negative")]
-    registry
-        .start(first)
-        .unwrap_or_else(|error| process::reject(error));
+    let started_state = registry.state(first);
+    let started_frames = p.available();
+    report(
+        "process_duplicate_start_rejected",
+        registry.start(first) == Err(Error::Transition)
+            && registry.state(first) == started_state
+            && p.available() == started_frames,
+    );
+    let retained_frames = p.available();
+    let retained_state = registry.state(first);
+    report(
+        "process_live_reclaim_rejected",
+        registry.reclaim(p, first) == Err(Error::Transition)
+            && registry.state(first) == retained_state
+            && p.available() == retained_frames,
+    );
     let fault = create(
         registry,
         p,
@@ -109,10 +148,6 @@ pub fn exercise(
     );
     registry.start(fault).unwrap();
     registry.dispatch(None);
-    #[cfg(feature = "process-exit-negative")]
-    registry
-        .repeat_completion(first)
-        .unwrap_or_else(|error| process::reject(error));
     let old_completion = registry.completion(first).unwrap();
     report(
         "process_normal_exit_and_fault",
@@ -128,26 +163,23 @@ pub fn exercise(
     let live_pages = p.available();
     let mut rollback = true;
     for owner in 0..config::ACTIVE_CPUS {
-        for step in kernel_core::process::CREATION_STEPS {
-            let failure = registry
-                .create(
-                    p,
-                    Origin::Bootstrap,
-                    spec(owner, MODE_EXIT, EXIT_CODE),
-                    Some(step),
-                )
-                .expect_err("injected creation failure");
-            if p.available() != live_pages {
-                process::reject(Error::RollbackLeak);
-            }
-            rollback &= failure.error == Error::Allocation
-                && failure.completion.is_some_and(|c| {
-                    c.reason == Reason::CreationFailed(step)
-                        && registry.state(c.id) == Err(Error::Stale)
-                })
-                && p.available() == live_pages
-                && registry.live() == 2;
+        let definition = spec(owner, MODE_EXIT, EXIT_CODE);
+        let mut denied_limits = definition.limits;
+        denied_limits.memory_pages = 0;
+        let failure = registry
+            .create_bounded(p, Origin::Bootstrap, definition, denied_limits)
+            .expect_err("real memory budget rejection");
+        rollback &= failure.error == Error::Allocation
+            && failure.completion.is_some_and(|c| {
+                c.reason == Reason::CreationFailed(process::CreationStep::Frames)
+                    && registry.state(c.id) == Err(Error::Stale)
+            });
+        let unpublished = create(registry, p, definition);
+        registry.discard_prepared(p, unpublished).unwrap();
+        if p.available() != live_pages {
+            process::reject(Error::RollbackLeak);
         }
+        rollback &= registry.live() == 2;
     }
     report("process_creation_rollback", rollback);
     let mut ids: [Option<ProcessId>; config::USER_PROCESSES] = [None; config::USER_PROCESSES];
@@ -160,12 +192,7 @@ pub fn exercise(
     let full_pages = p.available();
     let exhausted = (0..config::ACTIVE_CPUS).all(|owner| {
         registry
-            .create(
-                p,
-                Origin::Bootstrap,
-                spec(owner, MODE_EXIT, EXIT_CODE),
-                None,
-            )
+            .create(p, Origin::Bootstrap, spec(owner, MODE_EXIT, EXIT_CODE))
             .err()
             .is_some_and(|f| f.error == Error::Capacity && f.completion.is_none())
     });
@@ -201,10 +228,6 @@ pub fn exercise(
     );
     let distinct_backing = registry.data_address(new).unwrap() != first_data;
     p.release(retired_extent);
-    #[cfg(feature = "process-stale-negative")]
-    registry
-        .start(first)
-        .unwrap_or_else(|error| process::reject(error));
     let generation_ok = new.slot() == first.slot()
         && new.generation() > first.generation()
         && registry.start(first) == Err(Error::Stale)
@@ -228,12 +251,6 @@ pub fn exercise(
         );
     }
     report("process_slot_generation_reuse", reuse_ok);
-    #[cfg(feature = "kernel-tests")]
-    assert_eq!(
-        registry.repeat_completion(new),
-        Err(Error::Transition),
-        "double exit accepted"
-    );
     let duplicate_start = registry.start(new) == Err(Error::Transition);
     // Completion is single-publication; a second table terminal transition is tested
     // in the shared host protocol, and a completed process is never dispatched again.
@@ -246,7 +263,7 @@ pub fn exercise(
         duplicate_start && terminal_stable && registry.reclaim(p, new) == Err(Error::Stale),
     );
     let denied = registry
-        .create(p, Origin::El0, spec(0, MODE_EXIT, EXIT_CODE), None)
+        .create(p, Origin::El0, spec(0, MODE_EXIT, EXIT_CODE))
         .err()
         .is_some_and(|f| f.error == Error::Unauthorized && f.completion.is_none());
     let invalid = registry
@@ -257,7 +274,6 @@ pub fn exercise(
                 image: &[],
                 ..spec(0, MODE_EXIT, EXIT_CODE)
             },
-            None,
         )
         .err()
         .is_some_and(|f| f.error == Error::InvalidImage);
@@ -470,8 +486,8 @@ pub fn exercise(
             ),
         );
     }
-    // The mutation must report its deterministic mechanism violation before
-    // a stale translation can fail the dependent functional observation.
+    // Observe actual invalidation counters and same-VA isolation; this is
+    // invariant coverage, not detection of a source mutation.
     report("asid_reuse_requires_invalidation", reuse_invalidation);
     report(
         "asid_reuse_same_va_both_cpus",
@@ -486,14 +502,7 @@ pub fn exercise(
         registry.start(id).unwrap();
         id
     });
-    #[cfg(feature = "kernel-tests")]
-    crate::scheduler::delay_secondary_completion(true);
     registry.dispatch(Some(time::Duration::ZERO));
-    #[cfg(feature = "kernel-tests")]
-    {
-        stress &= crate::scheduler::pending_completion_observed();
-        crate::scheduler::delay_secondary_completion(false);
-    }
     for id in expiry_ids {
         let value = tag(registry, id);
         // An already-expired session may stop before the first EL0 store.
@@ -627,7 +636,6 @@ fn exercise_elf(
                 entry: requested_entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
-            None,
         );
         rejected &= result.is_err_and(|failure| {
             failure.error == Error::InvalidImage && failure.completion.is_none()
@@ -636,34 +644,31 @@ fn exercise_elf(
     }
     report("elf_invalid_images_are_transactional", rejected);
 
-    let mut injection_rollback = true;
-    for step in kernel_core::process::CREATION_STEPS {
-        let available = p.available();
-        let live = registry.live();
-        let result = registry.create(
-            p,
-            Origin::Bootstrap,
-            Spec {
-                image: MINIMAL_ELF,
-                image_format: process::ImageFormat::Elf64Aarch64,
-                limits: limits(),
-                context,
-                owner: 0,
-                entry: image.entry,
-                slice_limit: Some(ELF_MAX_SLICES),
-            },
-            Some(step),
-        );
-        injection_rollback &= result.is_err_and(|failure| {
-            failure.error == Error::Allocation
-                && failure.completion.is_some_and(|completion| {
-                    completion.reason == Reason::CreationFailed(step)
-                        && registry.state(completion.id) == Err(Error::Stale)
-                })
+    let definition = Spec {
+        image: MINIMAL_ELF,
+        image_format: process::ImageFormat::Elf64Aarch64,
+        limits: limits(),
+        context,
+        owner: 0,
+        entry: image.entry,
+        slice_limit: Some(ELF_MAX_SLICES),
+    };
+    let mut denied_limits = definition.limits;
+    denied_limits.memory_pages = 0;
+    let failure = registry
+        .create_bounded(p, Origin::Bootstrap, definition, denied_limits)
+        .expect_err("real ELF memory budget rejection");
+    let rejected = failure.error == Error::Allocation
+        && failure.completion.is_some_and(|c| {
+            c.reason == Reason::CreationFailed(process::CreationStep::Frames)
+                && registry.state(c.id) == Err(Error::Stale)
         });
-        injection_rollback &= p.available() == available && registry.live() == live;
-    }
-    report("elf_creation_failure_is_transactional", injection_rollback);
+    let unpublished = create(registry, p, definition);
+    registry.discard_prepared(p, unpublished).unwrap();
+    report(
+        "elf_creation_failure_is_transactional",
+        rejected && p.available() == pages_before && registry.live() == live_before,
+    );
 
     let first = registry
         .create(
@@ -678,7 +683,6 @@ fn exercise_elf(
                 entry: image.entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
-            None,
         )
         .unwrap_or_else(|failure| process::reject(failure.error));
     let second = registry
@@ -694,7 +698,6 @@ fn exercise_elf(
                 entry: image.entry,
                 slice_limit: Some(ELF_MAX_SLICES),
             },
-            None,
         )
         .unwrap_or_else(|failure| process::reject(failure.error));
     registry.start(first).unwrap();
@@ -747,14 +750,28 @@ fn quantum_progress(
             definition.context.fpcr = 1 << 22;
             definition.context.fpsr = 1;
             definition.context.tpidr = EXIT_CODE + index as u64;
+            // Any IRQ may precede the actor's first mov x20,x0. Seed the
+            // invariant in the submitted context, not after assumed progress.
+            definition.context.gpr[20] = definition.context.tpidr;
         }
         let id = create(registry, p, definition);
         registry.start(id).unwrap();
         id
     });
+    let mut failure_bits = 0u64;
+    macro_rules! check {
+        ($bit:literal, $condition:expr) => {{
+            let valid = $condition;
+            if !valid {
+                failure_bits |= 1 << $bit;
+            }
+            valid
+        }};
+    }
     let first = registry.step();
-    let mut passed = first.owners_released;
-    passed &= quantum_context(&first, &ids, registry);
+    let mut passed = check!(0, first.owners_released);
+    passed &= check!(1, quantum_context(&first, &ids, registry));
+    let mut final_counters = [0_u64; config::ACTIVE_CPUS];
     let mut counters = [0_u64; config::ACTIVE_CPUS];
     let mut el0_residency = [0_u64; config::ACTIVE_CPUS];
     let mut first_el0_residency = [0_u64; config::ACTIVE_CPUS];
@@ -766,22 +783,25 @@ fn quantum_progress(
         el0_residency[owner] = task.el0_residency_ticks;
         first_el0_residency[owner] = task.el0_residency_ticks;
         el0_generation_valid &= task.process_generation == id.generation();
-        passed &= registry.state(id) == Ok(State::Admitted)
-            && registry.completion(id) == Err(Error::Transition)
-            && registry.reclaim(p, id) == Err(Error::Transition);
+        passed &= check!(
+            2,
+            registry.state(id) == Ok(State::Admitted)
+                && registry.completion(id) == Err(Error::Transition)
+                && registry.reclaim(p, id) == Err(Error::Transition)
+        );
         assert!(crate::scheduler::detached(id));
         // SAFETY: INV-USER-RETIRE: step restored native roots and all writers are
         // quiescent; the registry still retains the private space across steps.
         *counter = unsafe {
             core::ptr::read_volatile((registry.data_address(id).unwrap() + 8) as *const u64)
         };
-        passed &= *counter > 0;
+        passed &= check!(3, *counter > 0);
     }
     let mut peer_progress = [false; config::ACTIVE_CPUS];
     for _ in 0..SPIN_BUDGET * 3 {
         let result = registry.step();
-        passed &= result.owners_released;
-        passed &= quantum_context(&result, &ids, registry);
+        passed &= check!(4, result.owners_released);
+        passed &= check!(5, quantum_context(&result, &ids, registry));
         for owner in 0..config::ACTIVE_CPUS {
             let spinner = ids[owner * 2];
             let peer = ids[owner * 2 + 1];
@@ -804,15 +824,19 @@ fn quantum_progress(
         } else {
             Reason::Exited(EXIT_CODE + index as u64)
         };
-        passed &= registry.completion(id).is_ok_and(|c| c.reason == expected);
-        passed &= tag(registry, id) == EXIT_CODE + index as u64;
+        passed &= check!(
+            6,
+            registry.completion(id).is_ok_and(|c| c.reason == expected)
+        );
+        passed &= check!(7, tag(registry, id) == EXIT_CODE + index as u64);
         if index % 2 == 0 {
             // SAFETY: INV-USER-RETIRE: terminal retained space, all CPU writers
             // quiescent; this read ends before reclamation below.
             let counter = unsafe {
                 core::ptr::read_volatile((registry.data_address(id).unwrap() + 8) as *const u64)
             };
-            passed &= counter > counters[index / 2];
+            final_counters[index / 2] = counter;
+            passed &= check!(8, counter > counters[index / 2]);
         }
         registry.reclaim(p, id).unwrap();
     }
@@ -828,13 +852,27 @@ fn quantum_progress(
             .zip(first_el0_residency)
             .all(|(final_ticks, initial_ticks)| *final_ticks > initial_ticks),
     );
-    report(
-        "process_quantum_return_and_peer_progress",
-        passed
-            && peer_progress.into_iter().all(|progress| progress)
-            && registry.live() == 0
-            && p.available() == before,
-    );
+    passed &= check!(9, peer_progress.into_iter().all(|progress| progress));
+    passed &= check!(10, registry.live() == 0 && p.available() == before);
+    if !passed {
+        let pcs: [_; config::ACTIVE_CPUS] =
+            core::array::from_fn(|owner| first.tasks[ids[owner * 2].slot()].context.pc);
+        let x20: [_; config::ACTIVE_CPUS] =
+            core::array::from_fn(|owner| first.tasks[ids[owner * 2].slot()].context.gpr[20]);
+        let tpidr: [_; config::ACTIVE_CPUS] =
+            core::array::from_fn(|owner| first.tasks[ids[owner * 2].slot()].context.tpidr);
+        crate::event!(
+            "{{\"event\":\"process-quantum-reject\",\"status\":\"fail\",\"failure_bits\":{},\"first_counters\":{:?},\"final_counters\":{:?},\"first_pc\":{:?},\"first_x20\":{:?},\"first_tpidr\":{:?},\"peer_progress\":{:?}}}",
+            failure_bits,
+            counters,
+            final_counters,
+            pcs,
+            x20,
+            tpidr,
+            peer_progress
+        );
+    }
+    report("process_quantum_return_and_peer_progress", passed);
 }
 
 fn quantum_context(

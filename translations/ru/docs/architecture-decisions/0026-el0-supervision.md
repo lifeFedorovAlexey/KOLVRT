@@ -32,9 +32,11 @@ Manifest и supervisor EL0 выбирают порядок зависимост�
 
 Заранее созданные spares не доказывают fresh allocation/restart identity и прекращение bootstrap grants. Policy в EL1 нарушает privileged necessity. Independent live admission потребовал бы более крупного asynchronous root/namespace publication и per-object retirement protocol. Checkpoints дают проверяемое ограниченное расширение с acquired owner/root quiescence, настоящими fresh instances и явным retained IPC ownership. Pause overhead и polling lifecycle queries обозначены как ограничения, а не автономная persistent supervision.
 
+Policy update 2026-10-07: явное решение maintainer для Phase 3.7 заменяет только finite coordination deadlines #126. Authority, retained ownership и реальная quiescence обязательны. Это архитектурное решение, а не acceptance новой реализации.
+
 ## Последствия
 
-Публикация checkpoint должна иметь независимый конечный coordination deadline даже без workload expiry. Timeout является fatal failure и удерживает ресурсы; он никогда не создаёт completion и не разрешает reclaim. Workload expiry остаётся BudgetExpired и не используется повторно как длительность join. Drainage pending-copy также должен иметь конечный failure bound.
+Историческое решение #126 требовало конечных deadline публикации и copy-drain. По явному требованию maintainer для Phase 3.7 от 2026-10-07 это требование заменено: обычный coordination wait не имеет произвольного ограничения по времени. Возврат требует фактических acquired completion, detached roots, released owners и завершённых copy/source/ack obligations. Workload expiry по-прежнему даёт BudgetExpired; readiness deadline и restart backoff supervisor остаются policy. Опубликованный CPU FAILED требует fail-stop с удержанием ресурсов. Молчаливое зависание CPU не имеет конечного внутрядерного детектора в текущей foundation; внешние watchdogs тестов диагностируют его, но не доказывают completion или reclaim. Исторический review/receipts #126 сохраняют только прежний source scope.
 
 Lifecycle membership changes приостанавливают здоровых peers на acquired checkpoints. Scope, authority credits и retained transport ownership остаются явными; failed quiescence требует quarantine или global stop, но никогда deadline-based reclaim.
 
@@ -70,7 +72,7 @@ Checkpoint приостанавливает peers во время membership cha
 
   "kind": "adr",
 
-  "summary": "Accepted bounded isolated EL0 supervision with finite completion publication after #126.",
+  "summary": "Accepted isolated EL0 supervision; acquired quiescence with no arbitrary coordination cutoff.",
 
   "aliases": ["ADR-0026"]
 }

@@ -43,7 +43,7 @@ The later [EL0 foundation](../kernel/el0.md), [versioned routing](../architectur
 
 ## Experimental supervision integration
 
-The [Phase 3.6 supervisor](../kernel/supervision.md) supplies experimental real isolated EL0 service policy and a bounded lifecycle mechanism. The full native slice remains incomplete: bounded functional architecture/code and EN/RU review are complete after #126, with performance readiness separate, persistent integration belongs to #28 and production bootstrap trust to #38. Current-source receipts are separate from accepted historical Phase 3.5 evidence.
+The [Phase 3.6 supervisor](../kernel/supervision.md) supplies accepted bounded isolated EL0 policy and lifecycle mechanisms. [Phase 3.7 native applications](../kernel/native-applications.md) now add actual standalone ELF, persistent counter state, selected production crash/recovery and normal shutdown/reclamation. The [review](native-phase37-acceptance-review.md) accepts this bounded slice, not the entire future OS runtime. Performance readiness remains separate; production bootstrap trust belongs to #38 and physical ARM remains UNKNOWN. Current-source receipts are separate from historical Phase 3.5/3.6 evidence.
 
 <!-- knowledge -->
 

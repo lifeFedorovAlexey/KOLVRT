@@ -66,7 +66,6 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
                                         endpoints: 1,
                                     },
                                 },
-                                None,
                             )
                             .unwrap(),
                     );

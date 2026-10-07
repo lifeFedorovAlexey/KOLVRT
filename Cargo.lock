@@ -456,8 +456,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "native-apps"
+version = "0.1.0"
+dependencies = [
+ "native-userspace",
+]
+
+[[package]]
 name = "native-protocol-model"
 version = "0.1.0"
+
+[[package]]
+name = "native-selftests"
+version = "0.1.0"
+dependencies = [
+ "native-apps",
+ "native-userspace",
+]
 
 [[package]]
 name = "native-state-models"
@@ -466,6 +481,10 @@ dependencies = [
  "native-protocol-model",
  "serde_json",
 ]
+
+[[package]]
+name = "native-userspace"
+version = "0.1.0"
 
 [[package]]
 name = "num"

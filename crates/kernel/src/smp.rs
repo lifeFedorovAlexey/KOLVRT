@@ -1,10 +1,9 @@
 //! Fixed two-CPU coordination, not a scheduler. CPU0 serializes admission and PTE updates.
 //! IRQ never waits or takes locks. CPU1 acknowledges TLBI only between bounded work items.
-use crate::{cpu, percpu, time};
+use crate::{cpu, percpu};
 use core::sync::atomic::{AtomicBool, AtomicU8, AtomicU64, AtomicUsize, Ordering};
 use percpu::SECONDARY_CPU;
 pub const IPI: u8 = 1;
-const COORDINATION_TIMEOUT: time::Duration = time::Duration::from_secs(2);
 static READY: AtomicBool = AtomicBool::new(false);
 const PANIC_FILE_LIMIT: usize = 96;
 static SECONDARY_PANIC_FILE: [AtomicU8; PANIC_FILE_LIMIT] =
@@ -43,19 +42,10 @@ pub fn report_secondary_panic() {
 }
 static STOP: AtomicBool = AtomicBool::new(false);
 static TLB_REQUEST: AtomicU64 = AtomicU64::new(0);
-static TLB_SIGNAL: AtomicU64 = AtomicU64::new(0);
-#[cfg(all(feature = "kernel-tests", not(feature = "retirement-negative")))]
-static REMOTE_TLBI_COMPLETED: AtomicU64 = AtomicU64::new(0);
-
-/// Test-only execution witness, distinct from the secondary's acknowledgement.
-/// A translation fault alone cannot prove TLBI ran: cache eviction can also remove it.
-#[cfg(all(feature = "kernel-tests", not(feature = "retirement-negative")))]
-pub fn remote_tlbi_completed(generation: u64) -> bool {
-    generation > 0 && REMOTE_TLBI_COMPLETED.load(Ordering::Acquire) >= generation
-}
 #[cfg(feature = "kernel-tests")]
 pub mod experiment {
     use super::*;
+    use crate::time;
     pub const LOCK: u64 = 1;
     pub const READ: u64 = 2;
     pub const HOLD: u64 = 3;
@@ -153,37 +143,10 @@ pub mod experiment {
         }
     }
 }
-pub fn wait(ready: impl FnMut() -> bool, reason: &str) {
-    wait_optional(ready, Some(COORDINATION_TIMEOUT), reason);
-}
-/// Native completion can have no workload deadline. Timeout never authorizes reclaim.
-/// Callers wait without a scheduler borrow/ordinary lock and require admitted work
-/// to eventually terminate for return; existing boot coordination keeps its bound.
-pub fn wait_optional(ready: impl FnMut() -> bool, timeout: Option<time::Duration>, reason: &str) {
-    assert!(
-        wait_until(ready, timeout.map(time::deadline_after)),
-        "{reason}"
-    );
-}
-/// Publication always has its own coordination interval. A workload deadline
-/// governs BudgetExpired only; it is never reused as a join duration.
-pub fn completion_deadline(workload_deadline: Option<u64>) -> u64 {
-    let anchor = workload_deadline.unwrap_or_else(cpu::ticks_ordered);
-    let interval = kernel_core::time::duration_ticks(COORDINATION_TIMEOUT, cpu::frequency())
-        .expect("invalid coordination interval");
-    anchor
-        .checked_add(interval)
-        .expect("completion deadline exhausted")
-}
-pub fn wait_completion(ready: impl FnMut() -> bool, publication_deadline: u64) {
-    if !wait_until(ready, Some(publication_deadline)) {
-        crate::event!(
-            "{{\"event\":\"scheduler-reject\",\"status\":\"fail\",\"error\":\"CompletionPublicationTimeout\"}}"
-        );
-        panic!("scheduler completion publication timeout; resources retained");
-    }
-}
-fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>) -> bool {
+/// Return only after the caller observes the required publication/quiescence.
+/// Elapsed time cannot establish completion. A published CPU failure stops the
+/// coordinator with resources retained; silent stalls require external diagnosis.
+pub fn wait(mut ready: impl FnMut() -> bool, reason: &str) {
     assert!(
         !percpu::current().scheduler_borrow.load(Ordering::Acquire),
         "scheduler borrow across wait"
@@ -192,13 +155,10 @@ fn wait_until(mut ready: impl FnMut() -> bool, deadline: Option<u64>) -> bool {
     loop {
         if percpu::CPUS[SECONDARY_CPU].state.load(Ordering::Acquire) == percpu::FAILED {
             report_secondary_panic();
-            panic!("secondary CPU failure");
+            panic!("secondary CPU failure during {reason}; resources retained");
         }
         if ready() {
-            return true;
-        }
-        if deadline.is_some_and(|limit| cpu::ticks_relaxed() >= limit) {
-            return false;
+            return;
         }
         core::hint::spin_loop();
     }
@@ -208,11 +168,7 @@ pub fn ping(id: usize) {
 }
 pub fn on_ipi() {
     crate::scheduler::on_ipi();
-    let id = percpu::id();
     percpu::current().ipis.fetch_add(1, Ordering::Release);
-    if id == SECONDARY_CPU {
-        TLB_SIGNAL.store(TLB_REQUEST.load(Ordering::Acquire), Ordering::Release);
-    }
 }
 pub fn start(root: u64) {
     percpu::primary_only();
@@ -255,16 +211,19 @@ pub extern "C" fn secondary_main(root: u64) -> ! {
     local.state.store(percpu::ONLINE, Ordering::Release);
     cpu::unmask();
     loop {
-        // IRQ only publishes the requested generation; no active reader is acknowledged from IRQ.
-        let requested = TLB_SIGNAL.load(Ordering::Acquire);
+        // CPU0 serializes admission before release-publishing STOP. Observe STOP
+        // before draining: seeing it acquires all preceding admitted work. A late
+        // STOP is handled next iteration, after re-reading the mailboxes.
+        let stopping = STOP.load(Ordering::Acquire);
+        // The admitted request is authoritative; an IPI is only a notification.
+        // A delayed IRQ must not hide accepted retirement during shutdown.
+        let requested = TLB_REQUEST.load(Ordering::Acquire);
         if local.tlb_ack.load(Ordering::Acquire) < requested {
-            #[cfg(not(feature = "remote-tlbi-negative"))]
             {
                 cpu::local_invalidate();
-                #[cfg(all(feature = "kernel-tests", not(feature = "retirement-negative")))]
-                REMOTE_TLBI_COMPLETED.store(requested, Ordering::Release);
+                #[cfg(feature = "kernel-tests")]
+                crate::tests::REMOTE_TLBI_COMPLETED.store(requested, Ordering::Release);
             }
-            #[cfg(not(feature = "shootdown-negative"))]
             local.tlb_ack.store(requested, Ordering::Release);
         }
         #[cfg(feature = "kernel-tests")]
@@ -279,7 +238,7 @@ pub extern "C" fn secondary_main(root: u64) -> ! {
             }
         }
         crate::scheduler::poll_secondary();
-        if STOP.load(Ordering::Acquire) {
+        if stopping {
             cpu::mask();
             cpu::timer_stop();
             cpu::local_invalidate();

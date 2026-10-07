@@ -70,6 +70,8 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
 
 [Russian translation](../../translations/ru/docs/kernel/domains.md)
 
+Current Phase 3.7 matrix aliases use real memory/request/queue budget denial, accepted-notification retention, sender reclamation and service-fault/rebind scenarios. Domain teardown is invariant coverage; it is not a synthetic omitted-teardown control. The kernel/core no-op domain-negative features are removed. Historical scoped receipts remain tied to their original source; current complete matrix evidence is still required.
+
 <!-- knowledge -->
 
 ```json
@@ -125,7 +127,7 @@ Five controls remove actual budget, identity, teardown, deferred revocation or r
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.6 changes shared lifecycle/build/runner sources; historical receipts remain immutable, and their current exact-source applicability is not asserted before new scoped verification.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"

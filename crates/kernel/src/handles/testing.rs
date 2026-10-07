@@ -314,6 +314,27 @@ pub(crate) fn exercise(
     registry: &mut crate::process::Registry,
     mut report: impl FnMut(&str, bool),
 ) {
+    let mut identities = Processes::<2>::new();
+    let caller = identities.reserve(0..1).unwrap();
+    let foreign = identities.reserve(1..2).unwrap();
+    let mut namespace = Table::<1>::new();
+    namespace.bind(caller).unwrap();
+    let handle = namespace
+        .create_event(caller, SharedEvent::try_new().unwrap(), |_| Ok::<_, ()>(()))
+        .unwrap();
+    let rejected = namespace.retire(foreign) == Err(Error::ForeignProcess)
+        && namespace.owner() == Some(caller)
+        && namespace.live() == 1
+        && namespace.lookup(caller, handle, Kind::Event).is_ok();
+    let retired = namespace.retire(caller) == Ok(1)
+        && namespace.live() == 0
+        && namespace.owner().is_none()
+        && namespace.lookup(caller, handle, Kind::Event).err() == Some(Error::Inactive)
+        && namespace.retire(caller) == Err(Error::Inactive);
+    report(
+        "handle_retirement_invalid_owner_rejected",
+        rejected && retired,
+    );
     let before = physical.available();
     let start = &raw const handle_image_start as usize;
     let end = &raw const handle_image_end as usize;
@@ -347,7 +368,6 @@ pub(crate) fn exercise(
                     entry: memory::USER_CODE,
                     slice_limit: None,
                 },
-                None,
             )
             .unwrap()
     });
@@ -397,7 +417,6 @@ pub(crate) fn exercise(
                 entry: memory::USER_CODE,
                 slice_limit: None,
             },
-            None,
         )
         .unwrap();
     let transfer_receiver = registry
@@ -417,7 +436,6 @@ pub(crate) fn exercise(
                 entry: memory::USER_CODE,
                 slice_limit: None,
             },
-            None,
         )
         .unwrap();
     registry.transfer_target_input(transfer_sender, transfer_receiver);
@@ -477,7 +495,6 @@ pub(crate) fn exercise(
                         entry: memory::USER_CODE,
                         slice_limit: None,
                     },
-                    None,
                 )
                 .unwrap();
             registry.start(id).unwrap();

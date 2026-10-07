@@ -116,6 +116,8 @@ flowchart TD
 
 [Английский оригинал](../../../../docs/kernel/user-copy.md)
 
+Phase 3.7 выбирает обычную fixture настоящего копирования для snapshot/recovery coverage. Тест импортирует настоящие методы copy/recover, передаёт запрещённые ranges и несовпадающие PC/FAR/direction, проверяет реальный recovery частичного копирования через guard page, отсутствие выдачи частичного Snapshot и сохранение инициализации хвоста. Стабильность snapshot — положительный инвариант; устаревшая тестовая мутация verdict удалена. Прежний recovery feature ничего не менял и удалён; требование fatal marker от исправного suite было ошибкой runner. Названные выше исторические receipts сохраняют исторический scope и не являются current-source acceptance этой миграции.
+
 <!-- knowledge -->
 
 ```json
@@ -158,8 +160,8 @@ flowchart TD
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Passing historical receipt; does not establish later-source applicability.",
+            "state": "STALE",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase32.json",
             "receipt_sha256": "6cb605f9ebde34d2af4d0608014911bbcd310336e4540cd829b2d219862a723e"

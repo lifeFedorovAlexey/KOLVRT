@@ -2,10 +2,14 @@
 #![no_main]
 #![deny(unsafe_op_in_unsafe_fn)]
 extern crate alloc;
+#[cfg(all(feature = "kernel-tests", feature = "native-apps"))]
+compile_error!("kernel-tests and native-apps select separate boot drivers; enable one");
+
 mod asid;
 mod arch {
     pub mod aarch64;
 }
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 mod boot_workload;
 mod diagnostics;
 mod execution;
@@ -15,16 +19,21 @@ mod interrupt;
 mod ipc;
 #[cfg(feature = "ipc-benchmark")]
 mod ipc_benchmark;
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 mod ipc_workload;
 mod memory;
+#[cfg(feature = "native-apps")]
+mod native_boot;
 mod percpu;
 mod platform;
 mod process;
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 mod process_workload;
 mod scheduler;
 mod security;
 mod smp;
 mod supervision;
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 mod supervision_workload;
 mod sync;
 #[cfg(feature = "kernel-tests")]
@@ -35,10 +44,11 @@ use arch::aarch64 as cpu;
 const BOOT_MEMORY_PATTERN: u64 = 0x4b4f4c565254; // ASCII "KOLVRT".
 const KIBIBYTE_BYTES: usize = 1024;
 const MEBIBYTE_BYTES: u64 = (KIBIBYTE_BYTES * KIBIBYTE_BYTES) as u64;
-#[cfg(not(feature = "kernel-tests"))]
+#[cfg(all(not(feature = "kernel-tests"), not(feature = "native-apps")))]
 const BOOT_TIMER_DELAY: time::Duration = time::Duration::from_millis(10);
-#[cfg(not(feature = "kernel-tests"))]
+#[cfg(all(not(feature = "kernel-tests"), not(feature = "native-apps")))]
 const BOOT_IRQ_TIMEOUT: time::Duration = time::Duration::from_secs(1);
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 use core::sync::atomic::Ordering;
 // Keep failure probes behind an ordinary call boundary: a probe returning is
 // an explicit failure, while its panic must not make the rest of boot code
@@ -122,7 +132,9 @@ pub extern "C" fn kernel_main() -> ! {
     retained_mapping_control(&mut physical);
     #[cfg(feature = "kernel-tests")]
     tests::run(&d, &mut physical, &mut processes);
-    #[cfg(not(feature = "kernel-tests"))]
+    #[cfg(feature = "native-apps")]
+    native_boot::exercise(&mut physical, &mut processes);
+    #[cfg(all(not(feature = "kernel-tests"), not(feature = "native-apps")))]
     {
         assert!(supervision_workload::exercise(
             &mut physical,

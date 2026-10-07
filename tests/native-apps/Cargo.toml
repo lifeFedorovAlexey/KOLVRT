@@ -1,0 +1,36 @@
+[package]
+name = "native-selftests"
+version = "0.1.0"
+edition = "2024"
+publish = false
+autobins = false
+build = "build.rs"
+
+[dependencies]
+native-userspace = { path = "../../apps/native-runtime" }
+native-apps = { path = "../../apps/native-apps" }
+
+[features]
+default = []
+guest = []
+
+[[bin]]
+name = "selftest-abi-client"
+path = "src/abi-client.rs"
+required-features = ["guest"]
+test = false
+bench = false
+
+[[bin]]
+name = "selftest-lifecycle-client"
+path = "src/lifecycle-client.rs"
+required-features = ["guest"]
+test = false
+bench = false
+
+[[bin]]
+name = "selftest-lifecycle-peer"
+path = "src/lifecycle-peer.rs"
+required-features = ["guest"]
+test = false
+bench = false

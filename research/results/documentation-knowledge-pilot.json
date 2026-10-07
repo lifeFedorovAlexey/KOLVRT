@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 52126,
-  "catalog_bytes": 80480,
-  "catalog_nodes": 199,
+  "approximate_tokens": 53366,
+  "catalog_bytes": 83204,
+  "catalog_nodes": 204,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "ddd8c2fadc5378c517caff784fe2c2228a6ee6dc89fc2d934e5d05cf42258bc7",
+  "catalog_sha256": "d542e4c1e118c4e2ab4087eefed94ce1f314a1d8a1a2bf375c63705dd5ccfe2c",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 208501,
+  "context_plus_catalog_bytes": 213461,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 104,
-    "utf8_bytes": 899696
+    "documents": 107,
+    "utf8_bytes": 967454
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -23,7 +23,10 @@
   "impact": {
     "affected": [
       "doc.kolvrt.ipc.acceptance-review",
+      "doc.kolvrt.native-applications.acceptance-review",
+      "doc.kolvrt.native-applications.fixture-review",
       "doc.kolvrt.supervision.acceptance-review",
+      "kolvrt.apps.native-elf",
       "kolvrt.handles.identity",
       "kolvrt.handles.local",
       "kolvrt.ipc.cancel",
@@ -66,14 +69,14 @@
     "research/results/kernel-phase32.json": 42105
   },
   "query": "review Phase 3.4 capability revocation",
-  "rendered_context_bytes": 128021,
+  "rendered_context_bytes": 130257,
   "russian_pilot": {
-    "approximate_tokens": 80384,
-    "catalog_bytes": 80480,
-    "context_plus_navigation_bytes": 321534,
+    "approximate_tokens": 82223,
+    "catalog_bytes": 83204,
+    "context_plus_navigation_bytes": 328891,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 45476,
+    "localized_navigation_bytes": 46979,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",
@@ -85,7 +88,7 @@
       }
     ],
     "query": "проверь отзыв полномочий",
-    "rendered_context_bytes": 195578,
+    "rendered_context_bytes": 198708,
     "seeds": [
       "kolvrt.security.capability-revocation",
       "kolvrt.security.event-revocation"
@@ -216,7 +219,7 @@
       "location": {
         "end": 37,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 13
       }
     },
@@ -225,7 +228,7 @@
       "location": {
         "end": 69,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 36
       }
     },
@@ -234,7 +237,7 @@
       "location": {
         "end": 112,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 107
       }
     },
@@ -243,7 +246,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 7
       }
     },
@@ -252,7 +255,7 @@
       "location": {
         "end": 86,
         "path": "docs/kernel/handles.md",
-        "sha256": "c00ec011f16852f356a8dd20055c21d00f2e74058b7793c25eacc4f2609cd5f8",
+        "sha256": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
         "start": 68
       }
     },
@@ -261,7 +264,7 @@
       "location": {
         "end": 14,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 7
       }
     },
@@ -270,7 +273,7 @@
       "location": {
         "end": 32,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 13
       }
     },
@@ -279,7 +282,7 @@
       "location": {
         "end": 50,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 31
       }
     },
@@ -288,16 +291,16 @@
       "location": {
         "end": 87,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 65
       }
     },
     {
       "id": "kolvrt.memory.user-copy.limits",
       "location": {
-        "end": 229,
+        "end": 231,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 109
       }
     },
@@ -306,7 +309,7 @@
       "location": {
         "end": 66,
         "path": "docs/kernel/user-copy.md",
-        "sha256": "d4b2a7f13605f88206c78033fbfc11b6cdd38b40c0d217161a76174a2078c563",
+        "sha256": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
         "start": 49
       }
     },
@@ -333,7 +336,7 @@
       "location": {
         "end": 24,
         "path": "docs/kernel/processes.md",
-        "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+        "sha256": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
         "start": 13
       }
     },
@@ -342,7 +345,7 @@
       "location": {
         "end": 85,
         "path": "docs/kernel/processes.md",
-        "sha256": "47eaa92e65fb6b2361daa0d4b0e97bea046ecfb71d2afeee636115c798401402",
+        "sha256": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
         "start": 61
       }
     },
@@ -351,7 +354,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
+        "sha256": "3815624f19664d1afa6d97d6794c72d87d1b1582eba6583d00bed56527716eb3",
         "start": 7
       }
     },
@@ -360,7 +363,7 @@
       "location": {
         "end": 18,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 11
       }
     },
@@ -369,7 +372,7 @@
       "location": {
         "end": 38,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 29
       }
     },
@@ -378,7 +381,7 @@
       "location": {
         "end": 30,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 17
       }
     },
@@ -387,25 +390,25 @@
       "location": {
         "end": 58,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 37
       }
     },
     {
       "id": "kolvrt.security.domains.teardown",
       "location": {
-        "end": 179,
+        "end": 181,
         "path": "docs/kernel/domains.md",
-        "sha256": "55df9930bb1e0f1ecc494fcacd511791f63868291bdac1b7f966032e9535d30c",
+        "sha256": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
         "start": 57
       }
     },
     {
       "id": "kolvrt.security.event-revocation",
       "location": {
-        "end": 176,
+        "end": 178,
         "path": "docs/kernel/capabilities.md",
-        "sha256": "b7e28513857e73d66c2b7a1a58aacde1aa6a934a735df1bf28956e5530e3da83",
+        "sha256": "3815624f19664d1afa6d97d6794c72d87d1b1582eba6583d00bed56527716eb3",
         "start": 17
       }
     },
@@ -459,7 +462,7 @@
       "location": {
         "end": 120,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 101
       }
     },
@@ -468,7 +471,7 @@
       "location": {
         "end": 138,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 119
       }
     },
@@ -477,7 +480,7 @@
       "location": {
         "end": 156,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 137
       }
     },
@@ -486,7 +489,7 @@
       "location": {
         "end": 192,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 173
       }
     },
@@ -495,7 +498,7 @@
       "location": {
         "end": 318,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 299
       }
     },
@@ -504,7 +507,7 @@
       "location": {
         "end": 336,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 317
       }
     },
@@ -513,23 +516,23 @@
       "location": {
         "end": 354,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 335
       }
     },
     {
       "id": "law.043",
       "location": {
-        "end": 544,
+        "end": 374,
         "path": "docs/architecture/kernel-laws.md",
-        "sha256": "208290dff4726f4b775dd1b18b55e675004de0d7a784db2345cb60c2a22a8c91",
+        "sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
         "start": 353
       }
     }
   ],
   "selected_full_documents": {
     "count": 16,
-    "utf8_bytes": 196966
+    "utf8_bytes": 203663
   },
   "source_files": [
     {

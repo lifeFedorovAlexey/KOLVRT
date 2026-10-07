@@ -116,6 +116,8 @@ The separately accepted [handle contract](handles.md) uses completed bounded imm
 
 [Russian translation](../../translations/ru/docs/kernel/user-copy.md)
 
+Phase 3.7 selects the ordinary real-copy fixture for snapshot/recovery coverage. The test imports the actual copy/recover methods, uses forbidden ranges and mismatched PC/FAR/direction inputs, and checks genuine guard-page partial-copy recovery, no escaped partial Snapshot and unchanged tail initialization. Snapshot stability is a positive invariant; its obsolete test-only verdict mutation is removed. The former recovery feature was a no-op and is removed; requiring a fatal marker from a valid suite was a runner defect. Named historical receipts above remain historical and are not current-source acceptance for this migration.
+
 <!-- knowledge -->
 
 ```json
@@ -158,8 +160,8 @@ The separately accepted [handle contract](handles.md) uses completed bounded imm
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Passing historical receipt; does not establish later-source applicability.",
+            "state": "STALE",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase32.json",
             "receipt_sha256": "6cb605f9ebde34d2af4d0608014911bbcd310336e4540cd829b2d219862a723e"

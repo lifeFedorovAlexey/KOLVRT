@@ -64,7 +64,6 @@ fn create_peer(
                     endpoints: 1,
                 },
             },
-            None,
         )
         .unwrap()
 }
@@ -111,7 +110,6 @@ pub(crate) fn exercise(
                                 endpoints: 1,
                             },
                         },
-                        None,
                     )
                     .unwrap()
             };
@@ -203,7 +201,6 @@ pub(crate) fn exercise(
                                 endpoints: 1,
                             },
                         },
-                        None,
                     )
                     .unwrap()
             };
@@ -387,7 +384,6 @@ fn revoke_race(
                                 endpoints: 2,
                             },
                         },
-                        None,
                     )
                     .unwrap(),
             );
@@ -909,7 +905,6 @@ fn request_quota_rollback(
                         endpoints: 0,
                     },
                 },
-                None,
             )
             .unwrap();
         let service = create_peer(registry, physical, image, service_cpu);

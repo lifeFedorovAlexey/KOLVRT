@@ -37,13 +37,17 @@ test("mandatory graph gate rejects failed, cancelled, missing and skipped jobs",
       "matrix",
       "routing",
       "asid",
+      "native",
       "evidence",
     ].map((id) => [id, { result: "success" }]),
   );
   requireSuccess(jobs, true);
   for (const result of ["failure", "cancelled", "skipped", undefined]) {
-    jobs.matrix = { result };
-    assert.throws(() => requireSuccess(jobs, true), /matrix/);
+    for (const id of ["matrix", "native"]) {
+      jobs[id] = { result };
+      assert.throws(() => requireSuccess(jobs, true), new RegExp(id));
+      jobs[id] = { result: "success" };
+    }
   }
   assert.throws(
     () => requireSuccess({ baseline: { result: "success" } }),
@@ -223,6 +227,7 @@ test("host-only final status requires static/host success and explicit skips for
         "matrix",
         "routing",
         "asid",
+        "native",
         "evidence",
       ].map((id) => [id, { result: "skipped" }]),
     ),

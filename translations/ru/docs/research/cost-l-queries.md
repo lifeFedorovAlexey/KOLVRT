@@ -73,7 +73,7 @@ Metric sorting принимает cpu, latency, memory, copies, allocations, con
             "receipt": "research/results/issue48-manifest-queries.json",
             "receipt_sha256": "c4b07aeddc7c6ae61f463ffbeadfb7b2c65d2ee73871dee39fa2eb1d7294514d",
             "scope": "Bounded host declaration/query consistency with synthetic non-executable production-shaped artifacts only; no observed runtime consumers or costs.",
-            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review."
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance."
           },
           {
             "environment": "physical-arm64",

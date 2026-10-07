@@ -1,6 +1,6 @@
 # KOLVRT
 
-Checkpoint без workload deadline теперь имеет независимый bound публикации completion; timeout останавливает kernel с удержанием ресурсов. Performance и lifecycle acceptance требуют отдельной проверки текущих исходников.
+Возврат checkpoint требует acquired completion/root/owner/copy quiescence без произвольного publication cutoff. Published CPU failure удерживает ресурсы; внешние watchdogs диагностируют silent stalls. Performance и lifecycle acceptance имеют отдельные scopes.
 
 ## Kernel Outside Legacy, Versioned Routing & Translation
 
@@ -29,9 +29,13 @@ KOLVRT — экспериментальное ядро операционной 
 
 Bounded IPC Phase 3.5 реализован и готов для объявленного контракта: изолированные EL0 request/response, blocking/wakeup, отмена, deadlines, death/shutdown arbitration и retained ownership. Supervision policy (#27) и persistent isolated services (#28) — следующие gates; physical ARM и stable ABI имеют отдельный scope.
 
+[Native ELF applications Phase 3.7](docs/kernel/native-applications.md) приняты в ограниченном scope: отдельные production supervisor/service/client, persistent counter state, настоящий crash/recovery с fresh binding и штатным освобождением ресурсов. [Обновлённая review и exact-source evidence](docs/architecture/native-phase37-fixture-review.md) подтверждают DEV/PROD и полный CI на 43af402. Physical ARM UNKNOWN, ABI experimental; production trust и performance readiness имеют отдельный scope.
+
+Исторический publication CI 333726b упал в одном matrix shard на expiry тестового committed-crash запроса до admission. Исправлен его fixture input; настоящие readiness probes сохраняют /8. Полный новый CI на 43af402 прошёл все четыре shard и foundation; исходный failure и прежние receipts сохраняются.
+
 Ранний код не определяет архитектуру следующих этапов. Перед расширением решение выводится из действующих инвариантов и принятых решений; мешающий им код перерабатывается или удаляется.
 
-[Надзор EL0](docs/kernel/supervision.md) принят для bounded functional foundation после #126 с [повторной Codex architecture/code и EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). Current-source verification покрывает 142 задачи / 138 controls. Performance-вопрос +1.57%/+6.64% и readiness отделены; отсутствие регрессии и production readiness не заявляются. #28 — persistent ELF integration, #38 — production bootstrap trust.
+[Надзор EL0](docs/kernel/supervision.md) принят для bounded functional foundation после #126 с [повторной Codex architecture/code и EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). Этот исторический post-#126 source содержал 142 задачи / 138 controls. Текущий Phase 3.7 plan содержит 144 задачи и 140 control slots, классифицированных по настоящему coverage. Performance-вопрос +1.57%/+6.64% и readiness отделены; отсутствие регрессии и production readiness не заявляются. #28 — persistent ELF integration, #38 — production bootstrap trust.
 
 ## Архитектура
 
@@ -79,7 +83,7 @@ cargo xtask debug
 cargo run --locked -p repository-checks -- cost-l list --json
 ```
 
-Программа проверки ядра требует **125 тестов в каждом профиле DEV/PROD**, обе обычные загрузки и **138 отрицательных контроля**. Контроли намеренно нарушают защиту и должны завершаться ожидаемым отказом. Пропущенные события, неожиданные паники, ошибки эмулятора и тайм-ауты завершают проверку ошибкой.
+Текущий kernel runner требует **147 checks в каждом профиле DEV/PROD** и полный **inventory из 144 задач**: четыре ordinary tasks, десять legacy-failure checks, двадцать один invariant, девяносто три negative-input checks и шестнадцать mixed input/invariant checks. Эти 140 control slots имеют разные требования evidence; positive invariants не заявляют omitted-implementation detection. Пропущенные события, посторонние panics, ошибки эмулятора и watchdog expiry завершают runner ошибкой.
 
 Сохранённый [прогон проверки выравнивания ELF](../../research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) фиксирует **97 тестов на профиль DEV/PROD и 82 отрицательных контроля** для конкретных хешей исходников. Он не подтверждает более поздние версии или работу на физическом оборудовании. В `target/kernel/` сохраняются ELF-образы, хеши, события UART, настройки QEMU, размеры сборок, перечень участков unsafe и выборки измерений. Подробнее — в [руководстве по проверкам и GDB](docs/kernel/testing.md).
 
@@ -113,6 +117,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 
 | Каноническая функция                                                                                          | Реализация          | Граница доказательств                                                     |
 | ------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
+| [kolvrt.apps.native-elf](docs/kernel/native-applications.md#native-elf-applications)                          | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                       | EXPERIMENTAL        | host-process: STALE; physical-arm64: UNKNOWN                              |
 | [kolvrt.ci.performance](docs/ci/performance.md#ci-performance)                                                | EXPERIMENTAL        | github-actions: UNKNOWN                                                   |
 | [kolvrt.compatibility.manifests](docs/architecture/compatibility-manifests.md#kolvrt-compatibility-manifests) | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
@@ -120,15 +125,15 @@ cargo run --locked -p repository-checks -- cost-l list --json
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)              | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                     | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
-| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
-| [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                   | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
+| [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
+| [kolvrt.memory.user-copy](docs/kernel/user-copy.md#kolvrt-memory-user-copy)                                   | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.process.lifecycle](docs/kernel/processes.md#kolvrt-process-lifecycle)                                 | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.research.host-survey](docs/research/host-survey.md#kolvrt-host-survey)                                | BOUNDED_IMPLEMENTED | host-process: STALE; windows-cim: UNKNOWN; physical-arm64: NOT_APPLICABLE |
 | [kolvrt.security.capability-revocation](docs/kernel/capabilities.md#kolvrt-security-capability-revocation)    | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.domains](docs/kernel/domains.md#kolvrt-domains-scope)                                        | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.event-revocation](docs/kernel/capabilities.md#kolvrt-security-event-revocation)              | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.security.verifier-time](docs/security/verifier-time.md#kolvrt-verifier-time)                          | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
-| [kolvrt.services.supervision](docs/kernel/supervision.md#isolated-el0-supervision)                            | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
+| [kolvrt.services.supervision](docs/kernel/supervision.md#isolated-el0-supervision)                            | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 
 <!-- feature-summary:end -->
 

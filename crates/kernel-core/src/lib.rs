@@ -27,3 +27,5 @@ pub mod handles;
 
 pub mod domain;
 pub mod ipc;
+
+pub mod supervision;

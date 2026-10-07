@@ -111,6 +111,7 @@ impl Physical {
     }
     /// Retain and zero a known free physical extent so a same-VA TLB test can
     /// keep the previous process backing unavailable across ASID reuse.
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn pin_extent_at(&mut self, address: usize, count: usize) -> Option<Frame> {
         crate::percpu::primary_only();
         if count == 0 || address < self.base || !(address - self.base).is_multiple_of(PAGE_SIZE) {
@@ -334,7 +335,9 @@ impl Drop for Retirement<'_> {
 static HEAP_BASE: AtomicUsize = AtomicUsize::new(0);
 pub const USER_BASE: usize = 0x2000_0000;
 pub const USER_CODE: usize = USER_BASE;
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 pub const USER_DATA: usize = USER_BASE + PAGE_SIZE;
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 pub const USER_GUARD: usize = USER_BASE + 2 * PAGE_SIZE;
 const USER_STACK_PAGES: usize = config::USER_STACK_PAGES;
 pub const USER_STACK_TOP: usize = USER_BASE + (USER_STACK_INDEX + USER_STACK_PAGES) * PAGE_SIZE;
@@ -345,6 +348,7 @@ const USER_DEVICES_PAGE: usize = 1;
 const USER_LEAVES_PAGE: usize = 2;
 const USER_CODE_PAGE: usize = 3;
 const USER_DATA_PAGE: usize = 4;
+#[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
 pub const USER_DATA_FRAME_OFFSET: usize = USER_DATA_PAGE * PAGE_SIZE;
 const USER_STACK_PAGE: usize = 5;
 pub const USER_SPACE_PAGES: usize = USER_STACK_PAGE + USER_STACK_PAGES;
@@ -404,6 +408,7 @@ impl OwnedUserSpace {
     pub fn resident_pages(&self) -> usize {
         self.frame.count
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn data_address(&self) -> usize {
         self.frame.address + USER_DATA_PAGE * PAGE_SIZE
     }
@@ -426,7 +431,6 @@ impl OwnedUserSpace {
         physical.release(self.frame);
     }
     /// Roll back a fully constructed but never published root.
-    #[cfg(not(feature = "process-rollback-negative"))]
     pub fn rollback(self, physical: &mut Physical) {
         drop(UserSpace {
             frame: &self.frame,
@@ -444,10 +448,6 @@ pub struct UserSpace<'a> {
     id: usize,
 }
 impl<'a> UserSpace<'a> {
-    #[cfg(feature = "user-retirement-negative")]
-    pub fn new(frame: &'a Frame, id: usize, image: &[u8]) -> Self {
-        Self::image(frame, id, image, USER_CODE, image.len())
-    }
     fn image(frame: &'a Frame, id: usize, image: &[u8], entry: usize, memory_size: usize) -> Self {
         crate::percpu::primary_only();
         assert_eq!(USER_EXECUTION_ACTIVE.load(Ordering::Acquire), 0);
@@ -525,6 +525,7 @@ impl<'a> UserSpace<'a> {
         cpu::publish_instructions(frame.address, frame.address + frame.count * PAGE_SIZE);
         Self { frame, id }
     }
+    #[cfg(any(not(feature = "native-apps"), feature = "kernel-tests"))]
     pub fn alias(id: usize) -> usize {
         USER_BASE + (USER_ALIAS_INDEX + id) * PAGE_SIZE
     }

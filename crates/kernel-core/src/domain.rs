@@ -61,7 +61,7 @@ impl Owner {
         if pages == 0 || limits.endpoints > 0x7fff {
             return Err(Error::Invalid);
         }
-        if pages > limits.memory_pages && !cfg!(feature = "domain-budget-negative") {
+        if pages > limits.memory_pages {
             return Err(Error::Exhausted);
         }
         let r = Reference(Lease::new(process, limits, pages).ok_or(Error::Exhausted)?);
@@ -98,15 +98,13 @@ impl Reference {
         self.0.state.load(Ordering::Acquire) & CLOSING != 0
     }
     pub fn close(&self) {
-        if !cfg!(feature = "domain-teardown-negative") {
-            self.0.state.fetch_or(CLOSING, Ordering::AcqRel);
-        }
+        self.0.state.fetch_or(CLOSING, Ordering::AcqRel);
     }
     pub fn validate(&self, process: ProcessId) -> Result<(), Error> {
-        if self.owner() != process && !cfg!(feature = "domain-identity-negative") {
+        if self.owner() != process {
             return Err(Error::Denied);
         }
-        if self.closing() && !cfg!(feature = "domain-teardown-negative") {
+        if self.closing() {
             return Err(Error::Denied);
         }
         Ok(())
@@ -130,13 +128,11 @@ impl Reference {
         };
         let mut s = self.0.state.load(Ordering::Acquire);
         loop {
-            if s & CLOSING != 0 && !cfg!(feature = "domain-teardown-negative") {
+            if s & CLOSING != 0 {
                 return Err(Error::Denied);
             }
             let used = (s >> shift) & kind.mask();
-            if used == kind.mask()
-                || used >= u64::from(limit) && !cfg!(feature = "domain-budget-negative")
-            {
+            if used == kind.mask() || used >= u64::from(limit) {
                 return Err(Error::Exhausted);
             }
             match self.0.state.compare_exchange_weak(

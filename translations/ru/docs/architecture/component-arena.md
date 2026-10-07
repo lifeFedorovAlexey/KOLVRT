@@ -169,7 +169,7 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
           {
             "environment": "host-process",
             "state": "STALE",
-            "reason": "Checkpoint publication coordination, counter ordering and native control inventory changed shared sources. Historical receipts retain their exact scope; current-source applicability requires new scoped evidence and semantic/EN-RU review.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "Offline registry/profile/import and launch behavior, with synthetic assertions and no record eligibility.",
             "receipt": "research/results/arena-launcher-host.json",
             "receipt_sha256": "db0d6287a61386cddd8fc92673cfa95d2385a11381f83b9b827aeb51a51996be"

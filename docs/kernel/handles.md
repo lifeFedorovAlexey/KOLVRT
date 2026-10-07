@@ -116,6 +116,8 @@ Identity/type/lifetime checks produce a resource reference; they do not authoriz
 
 [Russian translation](../../translations/ru/docs/kernel/handles.md)
 
+Phase 3.7 removes no-op corruption feature selectors from the current runner. Generation, foreign-owner, wrong-type, reuse and transfer-rights checks use the existing real EL0 scenarios and production Namespace methods. A new UNIT input calls Namespace::retire with a foreign owner and verifies unchanged owner/live handle and successful lookup before legitimate retirement; repeated retirement and lookup after retirement are rejected. Cleanup/reuse observations are classified separately where they establish positive lifetime invariants. Historical mutation-control counts and receipts do not establish current-source negative mutation coverage.
+
 <!-- knowledge -->
 
 ```json
@@ -161,7 +163,7 @@ Identity/type/lifetime checks produce a resource reference; they do not authoriz
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
             "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8"

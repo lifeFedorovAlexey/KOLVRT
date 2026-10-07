@@ -24,6 +24,8 @@ Current reference: [Границы полномочий](../architecture-decisio
 
 [Английский оригинал](../../../../docs/kernel/capabilities.md)
 
+Controls Phase 3.7 вызывают настоящие операции с запрещёнными, scoped и revoked grants и наблюдают сохранение принятого эффекта и конкурентный revoke/admission. План matrix различает отрицательные входы и положительные инварианты retention/rebind; production-реализация revocation не отключается. No-op capability-negative features удалены. Предыдущие exact-source receipts сохраняют исторический scope и не проверяют мигрированный текущий runner.
+
 <!-- knowledge -->
 
 ```json
@@ -97,7 +99,7 @@ Current reference: [Границы полномочий](../architecture-decisio
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "Exactly the f3be261c515b source digests and DEV/PROD QEMU profiles recorded by this receipt, including 96 checks and 80 controls; broader IPC/supervisor policy and silicon excluded.",
             "receipt": "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json",
             "receipt_sha256": "f789eddc625e9c8e1fac74a78a011568dc847fd494ef08e8d774c5b4299a35a3"
@@ -163,7 +165,7 @@ Current reference: [Границы полномочий](../architecture-decisio
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "receipt": "research/results/event-revocation-ci.json",
             "receipt_sha256": "b403eab6ca342921cff86c1d48c07395ebe5c2a18d4f4f1a6a331c17cbb8d8bf",
             "scope": "Only synchronous Event SEND/TRANSFER/REVOKE and retained positive DEV/PROD CI profiles at 4313feb82ea345e15d4a309889a3986b3558848a. Actual max/TCG/QEMU configuration is recorded; no issuer/service/domain, async drain, current-host-tool or silicon verification."

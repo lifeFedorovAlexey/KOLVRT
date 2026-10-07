@@ -16,6 +16,7 @@ function requireSuccess(jobs, kernelRequired = true) {
         "matrix",
         "routing",
         "asid",
+        "native",
         "evidence",
       ];
   if (!kernelRequired) {
@@ -25,6 +26,7 @@ function requireSuccess(jobs, kernelRequired = true) {
       "matrix",
       "routing",
       "asid",
+      "native",
       "evidence",
     ])
       if (jobs[id]?.result !== "skipped")

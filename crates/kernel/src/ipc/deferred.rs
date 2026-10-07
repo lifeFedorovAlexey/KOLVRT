@@ -41,11 +41,6 @@ pub(crate) fn poll(deaths: &[Option<ProcessId>]) -> Poll {
         }
         for wake in wakes.into_iter().flatten() {
             let target = wake.key.process().slot();
-            if cfg!(feature = "ipc-wake-publication-negative")
-                && target / crate::scheduler::TASKS != endpoint.reference().cpu()
-            {
-                continue;
-            }
             assert!(
                 target < MAILBOXES.len(),
                 "IPC process outside fixed scheduler capacity"

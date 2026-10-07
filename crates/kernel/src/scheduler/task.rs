@@ -138,10 +138,6 @@ impl Task {
     }
     /// The continuous IPC session cannot transfer a blocked context back to
     /// a coordinator. Its root stays linked until actual terminal quiescence.
-    #[cfg(any(
-        not(feature = "process-unlink-negative"),
-        feature = "ipc-blocked-reclaim-negative"
-    ))]
     pub(super) fn unlink_ipc(&mut self) {
         if !matches!(
             self.state,
@@ -193,10 +189,6 @@ impl Task {
     }
     pub fn slice_budget(&self) -> Option<usize> {
         self.definition.slice_budget
-    }
-    #[cfg(feature = "scheduler-task-negative")]
-    pub fn corrupt_generation(&mut self) {
-        self.definition.generation -= 1;
     }
     pub fn result(&self) -> TaskResult {
         TaskResult {

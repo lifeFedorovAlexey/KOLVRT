@@ -12,10 +12,10 @@
     "check": "npm run check:static && npm run check:host",
     "check:dependencies": "node --test scripts/tests/dependency-audit.test.cjs && node scripts/dependency-audit.cjs check",
     "check:static": "npm run check:dependencies && npm run format:check && markdownlint-cli2 && taplo lint --no-schema && cargo run --locked -p repository-checks -- check",
-    "check:host": "cargo clippy --locked --all-targets -- -D warnings && npm run test:research && node --test scripts/tests/ci-timings.test.cjs scripts/tests/ci-infrastructure.test.cjs && cargo test --locked && cargo run --locked -p native-state-models -- --check && cargo test --locked -p routing --all-features && cargo test --locked -p routing --no-default-features",
+    "check:host": "cargo clippy --locked --all-targets -- -D warnings && npm run test:research && node --test scripts/tests/ci-timings.test.cjs scripts/tests/ci-infrastructure.test.cjs tests/system/native-crash-recovery.test.cjs && cargo test --locked && cargo run --locked -p native-state-models -- --check && cargo test --locked -p routing --all-features && cargo test --locked -p routing --no-default-features",
     "check:kernel-dev": "cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --features diagnostics,kernel-tests -- -D warnings",
     "check:kernel-prod": "cargo clippy --locked -p kolvrt-kernel --target aarch64-unknown-none --release --no-default-features -- -D warnings",
-    "check:qemu": "cargo xtask test && cargo xtask routing test && cargo xtask asid-bench"
+    "check:qemu": "cargo xtask test && cargo xtask routing test && cargo xtask asid-bench && cargo xtask selftest && cargo xtask app-smoke && cargo xtask service-run"
   },
   "devDependencies": {
     "@taplo/cli": "0.7.0",

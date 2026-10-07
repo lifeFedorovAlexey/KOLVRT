@@ -13,3 +13,13 @@ For changed implementation/build files, author [the per-change impact declaratio
 Run `cargo xtask docs generate`, `cargo xtask docs pilot`, `cargo run --locked -p repository-checks -- record-translation ru PATH` for each reviewed changed canonical Markdown pair, `cargo xtask docs check-change BASE` and `npm run check`. Use the actual reviewed base revision. Do not claim issue completion while required semantic or EN/RU review remains pending.
 
 [Russian translation](translations/ru/AGENTS.md)
+
+## Performance and test integrity
+
+Do not reduce runtime performance, weaken invariants or alter production semantics merely to make tests pass. Tests must exercise the intended architecture. Do not add arbitrary fixed-duration publication/copy-drain deadlines to normal runtime synchronization. Completion and reclamation require actual acquired quiescence, never elapsed time. Test watchdogs provide diagnostics and do not replace required kernel failure handling. Do not hide failures by increasing timeouts, adding retries or inventing performance allowances.
+
+## Architecture: tests do not define implementation
+
+Production behavior must follow independently justified invariants and accepted contracts, never a test's expected output. When a test fails, establish whether there is a proven implementation defect or an incorrect test, and repair that defect. Do not add workarounds, special cases, synthetic results, weakened checks, delays or performance regressions to make a test falsely pass. Production source must not contain test-specific corruption, forced rendezvous or fault-injection entry points. Keep test logic and mutations in separate test artifacts; positive tests exercise the ordinary implementation through its actual interfaces.
+
+UNIT and INTEGRATION import the single production implementation. E2E builds the actual kernel and applications; an external harness executes scenarios through public interfaces. A separate ELF is permitted only as a necessary external ABI/syscall client without a production counterpart. Copies of service/supervisor/kernel implementations, modifications of source copies and source-mutating test builds are forbidden.

@@ -68,8 +68,7 @@ fn spec(image: &[u8], owner: usize) -> Spec<'_> {
     }
 }
 fn create(p: &mut memory::Physical, r: &mut Registry, image: &[u8], owner: usize) -> ProcessId {
-    r.create(p, Origin::Bootstrap, spec(image, owner), None)
-        .unwrap()
+    r.create(p, Origin::Bootstrap, spec(image, owner)).unwrap()
 }
 fn passed(r: &Registry, id: ProcessId) -> bool {
     r.completion(id)
@@ -93,7 +92,7 @@ pub(crate) fn exercise(
         requests: 1,
         endpoints: 0,
     };
-    let memory_denied = match r.create_bounded(p, Origin::Bootstrap, spec(image, 0), None, limits) {
+    let memory_denied = match r.create_bounded(p, Origin::Bootstrap, spec(image, 0), limits) {
         Err(_) => p.available() == before,
         Ok(id) => {
             r.start(id).unwrap();
@@ -124,7 +123,6 @@ pub(crate) fn exercise(
                     p,
                     Origin::Bootstrap,
                     spec(image, owner),
-                    None,
                     limits(if request_zero { 0 } else { 1 }, 1),
                 )
                 .unwrap();
@@ -133,7 +131,6 @@ pub(crate) fn exercise(
                     p,
                     Origin::Bootstrap,
                     spec(image, owner),
-                    None,
                     limits(1, if request_zero { 1 } else { 0 }),
                 )
                 .unwrap();
@@ -178,7 +175,6 @@ pub(crate) fn exercise(
                     p,
                     Origin::Bootstrap,
                     spec(image, owner),
-                    None,
                     Limits {
                         memory_pages: memory::USER_SPACE_PAGES,
                         handles: 0,

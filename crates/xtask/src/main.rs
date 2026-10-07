@@ -1,8 +1,10 @@
 mod matrix;
+mod native_apps;
 mod output;
 #[cfg(feature = "route-tools")]
 mod routing_demo;
 mod timing;
+mod workspace;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
@@ -50,194 +52,155 @@ const NEGATIVE_CONTROLS: &[(&str, &str)] = &[
     ),
     ("--asid-reuse-control", "asid_reuse_requires_invalidation"),
 ];
+const FOUNDATION_CONTROLS: &[(&str, &str, &str)] = &[(
+    "--irq-simd-restore-control",
+    "kernel-tests",
+    "\"name\":\"irq_simd_context\",\"status\":\"fail\"",
+)];
 const SCHEDULER_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--checkpoint-publication-control",
-        "checkpoint-publication-negative",
+        "kernel-tests",
         "CompletionPublicationTimeout",
     ),
-    (
-        "--process-exit-control",
-        "process-exit-negative",
-        "Transition",
-    ),
-    (
-        "--process-rollback-control",
-        "process-rollback-negative",
-        "RollbackLeak",
-    ),
-    (
-        "--process-unlink-control",
-        "process-unlink-negative",
-        "NotQuiescent",
-    ),
-    (
-        "--process-start-control",
-        "process-start-negative",
-        "Transition",
-    ),
-    ("--process-stale-control", "process-stale-negative", "Stale"),
-    (
-        "--process-reclaim-control",
-        "process-reclaim-negative",
-        "Transition",
-    ),
+    ("--process-exit-control", "kernel-tests", "Transition"),
+    ("--process-rollback-control", "kernel-tests", "RollbackLeak"),
+    ("--process-unlink-control", "kernel-tests", "NotQuiescent"),
+    ("--process-start-control", "kernel-tests", "Transition"),
+    ("--process-stale-control", "kernel-tests", "Stale"),
+    ("--process-reclaim-control", "kernel-tests", "Transition"),
     (
         "--scheduler-aarch32-control",
-        "scheduler-aarch32-negative",
+        "kernel-tests",
         "InvalidUserContext",
     ),
     (
         "--scheduler-user-irq-control",
-        "scheduler-user-irq-negative",
+        "kernel-tests",
         "InvalidUserContext",
     ),
     (
         "--scheduler-context-control",
-        "scheduler-context-negative",
+        "kernel-tests",
         "InvalidUserContext",
     ),
     (
         "--scheduler-inner-lock-control",
-        "scheduler-inner-lock-negative",
-        "InnerLock",
+        "scheduler-inner-lock-input",
+        "lock inside scheduler ownership contract",
     ),
-    (
-        "--scheduler-start-control",
-        "scheduler-start-negative",
-        "WrongPhase",
-    ),
+    ("--scheduler-start-control", "kernel-tests", "WrongPhase"),
     (
         "--scheduler-task-control",
-        "scheduler-task-negative",
-        "StaleTask",
+        "scheduler-task-input",
+        "stale scheduler task",
     ),
     (
         "--scheduler-owner-control",
-        "scheduler-owner-negative",
-        "DuplicateOwner",
+        "scheduler-owner-input",
+        "duplicate running task",
     ),
-    (
-        "--scheduler-foreign-control",
-        "scheduler-foreign-negative",
-        "ForeignCpu",
-    ),
-    (
-        "--scheduler-reentry-control",
-        "scheduler-reentry-negative",
-        "Reentry",
-    ),
+    ("--scheduler-foreign-control", "kernel-tests", "ForeignCpu"),
+    ("--scheduler-reentry-control", "kernel-tests", "Reentry"),
     (
         "--scheduler-stale-control",
-        "scheduler-stale-negative",
+        "kernel-tests",
         "StaleGeneration",
     ),
-    (
-        "--scheduler-reset-control",
-        "scheduler-reset-negative",
-        "WrongPhase",
-    ),
-    (
-        "--scheduler-inspect-control",
-        "scheduler-inspect-negative",
-        "WrongPhase",
-    ),
+    ("--scheduler-reset-control", "kernel-tests", "WrongPhase"),
+    ("--scheduler-inspect-control", "kernel-tests", "WrongPhase"),
     (
         "--scheduler-complete-control",
-        "scheduler-complete-negative",
+        "kernel-tests",
         "NotQuiescent",
     ),
-    (
-        "--scheduler-irq-control",
-        "scheduler-irq-negative",
-        "IrqEnabled",
-    ),
+    ("--scheduler-irq-control", "kernel-tests", "IrqEnabled"),
     (
         "--scheduler-lock-control",
-        "scheduler-lock-negative",
-        "LockHeld",
+        "scheduler-lock-input",
+        "scheduler lock order contract",
     ),
 ];
 const HANDLE_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--handle-generation-control",
-        "handle-generation-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-owner-control",
-        "handle-owner-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-type-control",
-        "handle-type-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-reuse-control",
-        "handle-reuse-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
     (
         "--handle-retirement-control",
-        "handle-retirement-negative",
+        "kernel-tests",
         "\"event\":\"handle-retirement-reject\",\"status\":\"fail\"",
     ),
     (
         "--handle-transfer-rights-control",
-        "handle-transfer-rights-negative",
+        "kernel-tests",
         "\"name\":\"handle_el0_identity_type_generation_and_lifetime\",\"status\":\"fail\"",
     ),
 ];
 const SECURITY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--domain-budget-control",
-        "domain-budget-negative",
+        "kernel-tests",
         "\"name\":\"domain_memory_budget_enforced\",\"status\":\"fail\"",
     ),
     (
         "--domain-identity-control",
-        "domain-identity-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
     (
         "--domain-teardown-control",
-        "domain-teardown-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
     (
         "--capability-revoke-control",
-        "capability-revoke-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
     (
         "--capability-scope-control",
-        "capability-scope-negative",
+        "kernel-tests",
         "\"name\":\"capability_el0_scope_attenuation_and_denial\",\"status\":\"fail\"",
     ),
 ];
 const USER_COPY_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--user-copy-snapshot-control",
-        "user-copy-snapshot-negative",
+        "kernel-tests",
         "\"name\":\"user_copy_el0_boundary_and_snapshot\",\"status\":\"fail\"",
     ),
     (
         "--user-copy-recovery-control",
-        "user-copy-recovery-negative",
+        "kernel-tests",
         "\"event\":\"fatal\"",
     ),
 ];
 const IPC_CONTROLS: &[(&str, &str, &str)] = &[
     (
         "--supervision-authority-control",
-        "supervision-authority-negative",
+        "kernel-tests",
         "supervision:Scenario",
     ),
     (
         "--supervision-stale-control",
-        "supervision-stale-negative",
+        "kernel-tests",
         "supervision:Scenario",
     ),
     (
@@ -252,122 +215,122 @@ const IPC_CONTROLS: &[(&str, &str, &str)] = &[
     ),
     (
         "--supervision-wait-control",
-        "supervision-wait-negative",
+        "kernel-tests",
         "supervision:WaitIdentityLost",
     ),
     (
         "--ipc-request-generation-control",
-        "ipc-request-generation-negative",
+        "kernel-tests",
         "ipc_payload_snapshot_result_id_and_stress",
     ),
     (
         "--ipc-double-charge-release-control",
-        "ipc-double-charge-release-negative",
+        "kernel-tests",
         "reject:ChargeAlreadyReleased",
     ),
     (
         "--ipc-storage-scope-control",
-        "ipc-storage-scope-negative",
+        "ipc-storage-scope-input",
         "reject:StorageInsideScheduler",
     ),
     (
         "--ipc-duplicate-ready-control",
-        "ipc-duplicate-ready-negative",
+        "ipc-duplicate-ready-input",
         "reject:DuplicateReady",
     ),
     (
         "--ipc-wrong-process-wake-control",
-        "ipc-wrong-process-wake-negative",
+        "ipc-wrong-process-wake-input",
         "reject:WrongProcessWake",
     ),
     (
         "--ipc-blocked-reclaim-control",
-        "ipc-blocked-reclaim-negative",
+        "ipc-blocked-reclaim-input",
         "reject:BlockedTaskReclaim",
     ),
     (
         "--ipc-wake-generation-control",
-        "ipc-wake-generation-negative",
+        "kernel-tests",
         "reject:WakeGenerationAccepted",
     ),
     (
         "--ipc-wait-recheck-control",
-        "ipc-wait-recheck-negative",
+        "kernel-tests",
         "reject:WaitRegistrationLost",
     ),
     (
         "--ipc-wake-publication-control",
-        "ipc-wake-publication-negative",
+        "kernel-tests",
         "reject:WakePublicationLost",
     ),
     (
         "--ipc-service-token-control",
-        "ipc-service-token-negative",
+        "kernel-tests",
         "ipc_el0_cpu0_to_cpu1",
     ),
     (
         "--ipc-charge-release-control",
-        "ipc-charge-release-negative",
+        "kernel-tests",
         "ipc_deadline_before_effect",
     ),
     (
         "--ipc-teardown-control",
-        "ipc-teardown-negative",
-        "reject:EndpointNotQuiescent",
+        "ipc-teardown-input",
+        "assertion:EndpointDrop",
     ),
     (
         "--ipc-cancel-control",
-        "ipc-cancel-negative",
+        "kernel-tests",
         "ipc_cancel_before_commit",
     ),
     (
         "--ipc-service-death-control",
-        "ipc-service-death-negative",
+        "kernel-tests",
         "ipc_service_death_queued",
     ),
     (
         "--ipc-double-terminal-control",
-        "ipc-double-terminal-negative",
+        "kernel-tests",
         "ipc_payload_snapshot_result_id_and_stress",
     ),
     (
         "--ipc-capacity-control",
-        "ipc-capacity-negative",
+        "kernel-tests",
         "ipc_queue_full_fifo_and_reclamation",
     ),
     (
         "--ipc-fifo-control",
-        "ipc-fifo-negative",
+        "kernel-tests",
         "ipc_queue_full_fifo_and_reclamation",
     ),
     (
         "--ipc-id-reuse-control",
-        "ipc-id-reuse-negative",
+        "kernel-tests",
         "ipc_payload_snapshot_result_id_and_stress",
     ),
     (
         "--ipc-receive-copy-control",
-        "ipc-receive-copy-negative",
+        "kernel-tests",
         "ipc_receive_copy_failure_retains_queue",
     ),
     (
         "--ipc-collect-copy-control",
-        "ipc-collect-copy-negative",
+        "kernel-tests",
         "ipc_collect_copy_failure_retains_result",
     ),
     (
         "--ipc-send-rights-control",
-        "ipc-send-rights-negative",
+        "kernel-tests",
         "ipc_authority_denial_revoke_and_retention",
     ),
     (
         "--ipc-revoke-control",
-        "ipc-revoke-negative",
+        "kernel-tests",
         "ipc_authority_denial_revoke_and_retention",
     ),
     (
         "--ipc-deadline-control",
-        "ipc-deadline-negative",
+        "kernel-tests",
         "ipc_deadline_before_effect",
     ),
 ];
@@ -377,6 +340,22 @@ mod platform_config;
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 const TESTS: &[&str] = &[
     "boot_el1",
+    "completion_publication_state_inputs",
+    "ipc_mailbox_publication_and_generation_guards",
+    "ipc_duplicate_terminal_retains_outcome_and_charges",
+    "ipc_service_token_invalid_caller_rejected",
+    "scheduler_foreign_cpu_rejected",
+    "scheduler_unmasked_access_rejected",
+    "scheduler_reentry_rejected",
+    "scheduler_stale_generation_rejected",
+    "scheduler_duplicate_start_rejected",
+    "scheduler_live_reset_rejected",
+    "scheduler_early_inspection_rejected",
+    "process_aarch32_context_rejected",
+    "process_masked_user_irq_rejected",
+    "process_privileged_context_rejected",
+    "process_unmasked_access_rejected",
+    "process_duplicate_completion_rejected",
     "uart_mmio",
     "exception_vectors",
     "physical_discovery",
@@ -410,6 +389,7 @@ const TESTS: &[&str] = &[
     "smp_retirement_pending",
     "smp_no_premature_reuse",
     "smp_remote_ack",
+    "smp_future_ack_rejected",
     "smp_remote_tlb_invalidation",
     "smp_safe_reuse",
     "smp_simultaneous_timers",
@@ -422,6 +402,7 @@ const TESTS: &[&str] = &[
     "el0_fault_containment",
     "el0_quiescent_reclamation",
     "el0_context_preservation",
+    "user_context_invalid_states_rejected",
     "el0_smp_ownership",
     "el0_kernel_memory_rejected",
     "el0_foreign_memory_rejected",
@@ -432,6 +413,9 @@ const TESTS: &[&str] = &[
     "scheduler_generation_reuse",
     "process_registry_and_cpu_ownership",
     "process_preparation_and_admission",
+    "process_live_reclaim_rejected",
+    "process_unlinked_reclaim_rejected",
+    "process_duplicate_start_rejected",
     "process_normal_exit_and_fault",
     "process_creation_rollback",
     "process_capacity_exhaustion",
@@ -461,6 +445,7 @@ const TESTS: &[&str] = &[
     "handle_el0_transfer_transaction_attenuation",
     "handle_el0_identity_type_generation_and_lifetime",
     "handle_exit_fault_cleanup_and_process_reuse",
+    "handle_retirement_invalid_owner_rejected",
     "domain_memory_budget_enforced",
     "domain_el0_request_and_queue_budgets",
     "ipc_el0_cpu0_to_cpu1",
@@ -509,7 +494,7 @@ fn main() {
     }
 }
 fn run() -> Result<()> {
-    env::set_current_dir(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))?;
+    env::set_current_dir(workspace::resolve(&env::current_dir()?)?)?;
     fs::create_dir_all("target/kernel")?;
     let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {
@@ -519,11 +504,21 @@ fn run() -> Result<()> {
                 .args(&args[1..]).status()?;
             if status.success() { Ok(()) } else { Err("repository tooling command failed".into()) }
         }
+        Some("app-smoke") => native_apps::smoke(&args[1..]),
+        Some("selftest") => native_apps::selftest(&args[1..]),
+        Some("service-run") => native_apps::runtime(&args[1..]),
+        Some("crash-recovery") => native_apps::crash_recovery(&args[1..]),
+        Some("lifecycle-test") => native_apps::lifecycle(&args[1..]),
+        Some("native-controls") => native_apps::controls(&args[1..]),
         Some("audit") => audit(),
         Some("ipc-controls") if args.len() == 1 => matrix::run_ipc(),
         Some("matrix-plan") if args.len() == 1 => {
             println!("{}", serde_json::to_string_pretty(&matrix::plan_document()?)?);
             Ok(())
+        }
+        Some("matrix-task") if args.len() == 2 || args.len() == 3 && args[2] == "--prod" => {
+            qemu()?;
+            matrix::run_one(&args[1], args.len() == 3)
         }
         Some("matrix-shard") if args.len() == 3 => {
             let index: usize = args[1].parse()?;
@@ -580,13 +575,14 @@ fn run() -> Result<()> {
                 let elf = build(args.iter().any(|arg| arg == "--prod"), true, None, true)?;
                 return execute(&elf, true, true);
             }
+            if let Some(flag) = args.iter().find(|flag| matrix::observable_checks(flag).is_some()) { return matrix::run_observable(flag, args.iter().any(|arg| arg == "--prod")); }
             for &(flag, feature, _) in IPC_CONTROLS {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
                     return execute(&elf, true, true);
                 }
             }
-            for &(flag, feature, _) in USER_COPY_CONTROLS.iter().chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
+            for &(flag, feature, _) in FOUNDATION_CONTROLS.iter().chain(USER_COPY_CONTROLS.iter()).chain(HANDLE_CONTROLS.iter()).chain(SECURITY_CONTROLS.iter()) {
                 if args.iter().any(|arg| arg == flag) {
                     let elf = build(args.iter().any(|arg| arg == "--prod"), true, Some(feature), true)?;
                     return execute(&elf, true, true);
@@ -598,12 +594,8 @@ fn run() -> Result<()> {
                     return execute(&elf, true, true);
                 }
             }
-            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative"), ("--shootdown-control", "shootdown-negative"), ("--remote-tlbi-control", "remote-tlbi-negative"), ("--user-context-control", "user-context-negative"), ("--user-root-control", "user-root-negative"), ("--user-retirement-control", "user-retirement-negative")] {
+            for (flag, feature) in [("--secondary-panic-control", "secondary-panic-test"), ("--retirement-control", "retirement-negative")] {
                 if args.iter().any(|a| a == flag) { let elf = build(false, true, Some(feature), true)?; return execute(&elf, true, true); }
-            }
-            if args.iter().any(|arg| arg == "--asid-reuse-control") {
-                let elf = build(false, true, Some("asid-reuse-negative"), true)?;
-                return execute(&elf, true, true);
             }
             if args.iter().any(|a| a == "--negative-control") {
                 let elf = build(false, true, Some("negative-test"), true)?;
@@ -633,7 +625,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask test [--record LABEL] | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
@@ -696,6 +688,16 @@ fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
     Ok(())
 }
 fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<PathBuf> {
+    build_mode(prod, tests, extra, machine, 0, None)
+}
+fn build_mode(
+    prod: bool,
+    tests: bool,
+    extra: Option<&str>,
+    machine: bool,
+    argument: u64,
+    native_images: Option<&[PathBuf; 3]>,
+) -> Result<PathBuf> {
     let mut c = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()));
     c.args([
         "build",
@@ -728,6 +730,21 @@ fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<
             );
         }
     }
+    if extra.is_some_and(|f| f.split(',').any(|part| part == "native-apps")) {
+        c.env_remove("CARGO_TARGET_DIR");
+        let images = native_images.ok_or("native build requires immutable original ELF inputs")?;
+        for (index, (name, _role)) in [
+            ("KOLVRT_NATIVE_ROOT_ELF", "root"),
+            ("KOLVRT_NATIVE_SERVICE_ELF", "service"),
+            ("KOLVRT_NATIVE_CLIENT_ELF", "client"),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            c.env(name, fs::canonicalize(&images[index])?);
+        }
+        c.env("KOLVRT_NATIVE_ARGUMENT", argument.to_string());
+    }
     if !features.is_empty() {
         c.args(["--features", &features.join(",")]);
     }
@@ -751,6 +768,7 @@ fn build(prod: bool, tests: bool, extra: Option<&str>, machine: bool) -> Result<
         extra.unwrap_or(if tests { "tests" } else { "boot" })
     );
     let dest = PathBuf::from(format!("target/kernel/{name}.elf"));
+    let source = PathBuf::from(&source);
     fs::copy(source, &dest)?;
     let bytes = fs::read(&dest)?;
     let u16at = |o: usize| {
@@ -884,6 +902,19 @@ fn execute_mode(
     payload: bool,
     show_console: bool,
 ) -> Result<()> {
+    execute_validated(elf, tests, machine, payload, show_console, false)
+}
+fn execute_native(elf: &Path) -> Result<()> {
+    execute_validated(elf, false, true, false, true, true)
+}
+fn execute_validated(
+    elf: &Path,
+    tests: bool,
+    machine: bool,
+    payload: bool,
+    show_console: bool,
+    native: bool,
+) -> Result<()> {
     let log = elf.with_extension("log");
     let err = elf.with_extension("stderr");
     // Never leave an earlier run's successful evidence beside a failed/human run.
@@ -950,7 +981,11 @@ fn execute_mode(
         })
         .cloned()
         .collect();
-    output::validate(&native_events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
+    if native {
+        native_apps::validate(&native_events)?;
+    } else {
+        output::validate(&native_events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
+    }
 
     Ok(())
 }
@@ -968,6 +1003,10 @@ fn walk(path: &Path, out: &mut Vec<PathBuf>) -> Result<()> {
 fn source_inventory() -> Result<Value> {
     let mut files = Vec::new();
     for directory in [
+        "apps",
+        "tests/native-apps",
+        "tests/system",
+        "tests/fixtures",
         "crates/kernel",
         "crates/kernel-core",
         "crates/xtask",
@@ -1154,39 +1193,17 @@ fn archive_measurements(label: Option<&str>, starting_sources: &Value) -> Result
         .args(["status", "--porcelain"])
         .output()?;
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
-    let mut ipc_mutations = Vec::new();
-    for profile in ["dev", "prod"] {
-        for &(flag, feature, expected) in IPC_CONTROLS {
-            let sidecar = read_json(format!("target/kernel/{profile}-{feature}.results.json"))?;
-            let failures: Vec<_> = sidecar
-                .as_array()
-                .ok_or("IPC sidecar is not an event list")?
-                .iter()
-                .filter(|event| {
-                    event["status"] == "fail"
-                        && ((event["event"] == "test" && event["name"] == expected)
-                            || expected.strip_prefix("reject:").is_some_and(|error| {
-                                event["event"] == "ipc-reject" && event["error"] == error
-                            })
-                            || expected.strip_prefix("supervision:").is_some_and(|error| {
-                                event["event"] == "supervision-reject" && event["error"] == error
-                            }))
-                })
-                .cloned()
-                .collect();
-            if failures.is_empty() {
-                return Err("IPC exact rejection missing during archival".into());
-            }
-            ipc_mutations.push(json!({
-                "profile":profile,"flag":flag,"feature":feature,"expected":expected,
-                "status":"rejected",
-                "exact_rejections":failures,
-                "build":read_json(format!("target/kernel/{profile}-{feature}-build.json"))?,
-                "run":read_json(format!("target/kernel/{profile}-{feature}.run.json"))?
-            }));
-        }
+    let matrix_execution = read_json("target/kernel/matrix-execution.json")?;
+    let expected_plan = matrix::plan_document()?;
+    if matrix_execution["plan"] != expected_plan
+        || matrix_execution["scope"] != "complete serial matrix"
+        || matrix_execution["plan"]["source_files"] != *starting_sources
+        || matrix_execution["completed"].as_array().map(Vec::len)
+            != expected_plan["tasks"].as_array().map(Vec::len)
+    {
+        return Err("current complete matrix execution receipt required for archival".into());
     }
-    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"negative_host_controls":NEGATIVE_CONTROLS.len() + (SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_negative_controls":IPC_CONTROLS.len()*2},"ipc_negative_controls":ipc_mutations,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
+    let record = json!({"schema_version":1,"label":label.unwrap_or("latest"),"timestamp_unix_ms":timestamp,"git_commit":String::from_utf8(revision.stdout)?.trim(),"worktree_dirty":!dirty.stdout.is_empty(),"source_files":starting_sources,"profiles":profiles,"correctness":{"matrix":"passed","tests_per_profile":TESTS.len(),"required_control_tasks":NEGATIVE_CONTROLS.len() + (FOUNDATION_CONTROLS.len() + SCHEDULER_CONTROLS.len() + USER_COPY_CONTROLS.len() + HANDLE_CONTROLS.len() + SECURITY_CONTROLS.len() + IPC_CONTROLS.len()) * 2,"ipc_control_tasks":IPC_CONTROLS.len()*2,"coverage_kinds":matrix::plan_document()?["tasks"].as_array().unwrap().iter().fold(serde_json::Map::<String,Value>::new(), |mut counts, task| { let kind=task["coverage_kind"].as_str().unwrap(); let count=counts.get(kind).and_then(Value::as_u64).unwrap_or(0); counts.insert(kind.to_owned(), json!(count+1)); counts })},"matrix_execution":matrix_execution,"claim":"TCG timer observations; not proof of fastest algorithm or hardware throughput","method_review":"docs/architecture/implementation-review.md"});
     let text = serde_json::to_string_pretty(&record)?;
     fs::write("target/kernel/measurement.json", &text)?;
     if let Some(label) = label {
@@ -1397,54 +1414,6 @@ fn enforce_native_source(source: &str) -> Result<()> {
 
 #[cfg(test)]
 mod native_architecture_tests {
-    use serde_json::json;
-    #[test]
-    fn snapshot_and_handle_controls_require_the_expected_failure_not_a_pass_then_panic() {
-        for &(flag, _, marker) in super::USER_COPY_CONTROLS
-            .iter()
-            .chain(super::HANDLE_CONTROLS.iter())
-        {
-            if flag == "--user-copy-recovery-control" {
-                continue; // Recovery deliberately causes a fatal architectural exception.
-            }
-            let (event, name) = if flag == "--handle-retirement-control" {
-                ("handle-retirement-reject", None)
-            } else if flag == "--user-copy-snapshot-control" {
-                ("test", Some("user_copy_el0_boundary_and_snapshot"))
-            } else {
-                (
-                    "test",
-                    Some("handle_el0_identity_type_generation_and_lifetime"),
-                )
-            };
-            let mut expected = json!({"event":event,"status":"fail"});
-            if let Some(name) = name {
-                expected["name"] = json!(name);
-            }
-            assert!(
-                expected.to_string().contains(marker),
-                "missing precise failure marker: {flag}"
-            );
-            expected["status"] = json!("pass");
-            let unrelated = format!(
-                "{expected}\n{}",
-                json!({"event":"panic","status":"fail","message":"unrelated"})
-            );
-            assert!(
-                !unrelated.contains(marker),
-                "pass then unrelated panic accepted: {flag}"
-            );
-            expected["status"] = json!("fail");
-            expected["event"] = json!("unrelated");
-            if name.is_some() {
-                expected["name"] = json!("unrelated_test");
-            }
-            assert!(
-                !expected.to_string().contains(marker),
-                "unrelated failure accepted: {flag}"
-            );
-        }
-    }
     #[test]
     fn reject_legacy_types_imports_and_conditionals() {
         for code in [

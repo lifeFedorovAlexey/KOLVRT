@@ -116,6 +116,8 @@ Handle generation остаётся identity, а SEND/TRANSFER отдельно �
 
 [Английский оригинал](../../../../docs/kernel/handles.md)
 
+Phase 3.7 удаляет no-op selectors повреждения из текущего runner. Проверки поколения, чужого владельца, неверного типа, повторного использования и transfer rights используют существующие реальные EL0 сценарии и production-методы Namespace. Новый UNIT-вход вызывает Namespace::retire с чужим владельцем и проверяет сохранение owner/живого handle и успешного lookup до законного retirement; повторный retirement и lookup после retirement отклоняются. Наблюдения cleanup/reuse отдельно классифицированы как положительные инварианты lifetime. Исторические counts и receipts mutation-controls не доказывают отрицательное mutation coverage текущего исходника.
+
 <!-- knowledge -->
 
 ```json
@@ -161,7 +163,7 @@ Handle generation остаётся identity, а SEND/TRANSFER отдельно �
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "IPC integration changes shared implementation/build inputs; retained historical receipts keep their scope, while current per-feature exact-source applicability is not asserted by the old receipt.",
+            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json",
             "receipt_sha256": "c82eb2b89a4045ae8cd4b0bcc2f32a0baa07a33a9208f111acfcd5ed88574ed8"
