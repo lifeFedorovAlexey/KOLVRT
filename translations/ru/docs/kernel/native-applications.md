@@ -262,12 +262,12 @@ B5 issue #109 меняет только потребление evidence экви
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Resolve Issue #133 readiness regression and renew exact-source acceptance after diagnostic/test changes before master #37 closure. Retain prior bounded implementation acceptance. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness have separate scopes.",
+        "next_gate": "Continue the Phase 4 roadmap after owner disposition of #133 and reviewed closure of master #37. Preserve bounded Phase 3.7 acceptance; renew owner-specific exact-source evidence when claiming current native verification. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness remain separate scopes.",
         "verification": [
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Issue #133 changes fixture diagnostics, deadline-boundary tests and the external host-stall harness after the retained 43af402 source. New exact-source verification and regression disposition are pending; historical passing native evidence is preserved and is not a blanket current-source failure claim.",
+            "reason": "The retained 43af402 receipt predates diagnostic/test and CLOCK shared runner/SDK changes, so this owner-specific verification remains STALE. The owner closed #133 and master #37 closed after reviewed PR #137 and passing merged-main bc8222a checks. Historical latency attribution remains UNKNOWN; those dispositions do not relabel the old receipt as current-source evidence.",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45"

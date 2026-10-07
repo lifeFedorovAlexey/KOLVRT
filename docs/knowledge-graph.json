@@ -3110,7 +3110,7 @@
     "docs/kernel/handles.md": "8d3acea970169fe55763b695bd0fe039d8668c963d06431a32520ca8a0203d5e",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "e8edabcd0268aec1e89a0eab7833d15e7b0e66413de80725dec0563fbd0c5d37",
-    "docs/kernel/native-applications.md": "33a0beb93d45fbfcb8aecdbb4ec0e7203e23744b9e7c71f289140e523b1cb046",
+    "docs/kernel/native-applications.md": "5b803ba32778ec124a82e41ee9afad66ea022553b5559d6a0fe54d58b5fb03bd",
     "docs/kernel/processes.md": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
     "docs/kernel/scheduler.md": "3a7099d5c09a350d2ac8683da945a30f80db9c2397a6bc1e2d63b0d8eb54035e",
     "docs/kernel/supervision.md": "edf965f6d1b02edb7d1956ad04e1ab4a5373672e3d0ef228d5afb860fbb73c83",
@@ -3219,7 +3219,7 @@
     "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
     "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
-    "translations/manifest.json": "99ac4a516cfc5be524019dd7b3665320a0de28691a12c117f895565d37ac28d0",
+    "translations/manifest.json": "df23ba988559f36e5e023ed09119e77afc320f0cb8ff96ea41f4fb3a0838f7fa",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3271,7 +3271,7 @@
     "translations/ru/docs/kernel/handles.md": "28482cf15d598cac06c31c8ad6af32b3721ead26af9fc8d12ddc75a3a723510c",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "6cc41a31a923cc6b255b061130cf767e09cd7537e7f502d51a7dfd828be5315a",
-    "translations/ru/docs/kernel/native-applications.md": "a949c8920e8d5f7d8d6ecccd473752ae2bfef232d4f08f8c3cc410696db1d80e",
+    "translations/ru/docs/kernel/native-applications.md": "47507900a8d183461e520aa5728cc5872e7442a2db3dec6621f05e1f47591569",
     "translations/ru/docs/kernel/processes.md": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
     "translations/ru/docs/kernel/scheduler.md": "06d860224d0b7cb94619c2ed689c71cd911e57b80d33b70991f52b04b36849ed",
     "translations/ru/docs/kernel/supervision.md": "c6d61c21d12b04b2b48f08d2280fe8df24d0c9b2f9b5c940a23c36ada553d41e",
@@ -6141,7 +6141,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 39233,
+      "estimated_bytes": 39349,
       "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is retained under owner-closed #133; master #37 is closed after the reviewed PR #137 and successful merged-main checks. Historical latency attribution remains UNKNOWN.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -6157,13 +6157,13 @@
         "en": {
           "end": 304,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "33a0beb93d45fbfcb8aecdbb4ec0e7203e23744b9e7c71f289140e523b1cb046",
+          "sha256": "5b803ba32778ec124a82e41ee9afad66ea022553b5559d6a0fe54d58b5fb03bd",
           "start": 1
         },
         "ru": {
           "end": 303,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "a949c8920e8d5f7d8d6ecccd473752ae2bfef232d4f08f8c3cc410696db1d80e",
+          "sha256": "47507900a8d183461e520aa5728cc5872e7442a2db3dec6621f05e1f47591569",
           "start": 1
         }
       },
@@ -6737,7 +6737,7 @@
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Resolve Issue #133 readiness regression and renew exact-source acceptance after diagnostic/test changes before master #37 closure. Retain prior bounded implementation acceptance. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness have separate scopes.",
+        "next_gate": "Continue the Phase 4 roadmap after owner disposition of #133 and reviewed closure of master #37. Preserve bounded Phase 3.7 acceptance; renew owner-specific exact-source evidence when claiming current native verification. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness remain separate scopes.",
         "readiness": "NOT_READY",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
@@ -6847,7 +6847,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Issue #133 changes fixture diagnostics, deadline-boundary tests and the external host-stall harness after the retained 43af402 source. New exact-source verification and regression disposition are pending; historical passing native evidence is preserved and is not a blanket current-source failure claim.",
+            "reason": "The retained 43af402 receipt predates diagnostic/test and CLOCK shared runner/SDK changes, so this owner-specific verification remains STALE. The owner closed #133 and master #37 closed after reviewed PR #137 and passing merged-main bc8222a checks. Historical latency attribution remains UNKNOWN; those dispositions do not relabel the old receipt as current-source evidence.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
@@ -6874,13 +6874,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "33a0beb93d45fbfcb8aecdbb4ec0e7203e23744b9e7c71f289140e523b1cb046",
+          "sha256": "5b803ba32778ec124a82e41ee9afad66ea022553b5559d6a0fe54d58b5fb03bd",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "a949c8920e8d5f7d8d6ecccd473752ae2bfef232d4f08f8c3cc410696db1d80e",
+          "sha256": "47507900a8d183461e520aa5728cc5872e7442a2db3dec6621f05e1f47591569",
           "start": 7
         }
       },
