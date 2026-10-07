@@ -2858,7 +2858,7 @@
     "docs/kernel/native-applications.md": "d9fcb3d2bebf5c593b4cea4d36d1f3fc03c1cce169f8bf47ac306fb73165b9e9",
     "docs/kernel/processes.md": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
     "docs/kernel/scheduler.md": "a5848937b2dd27ceb20601bd71eb024b3f452db228d36046d4241464e15d6326",
-    "docs/kernel/supervision.md": "9249606a1fdcc52b900ecf5324b7f79296fcfef436d2ffa021864bc1813b12ec",
+    "docs/kernel/supervision.md": "f307a1b6a6093ef5fd1299ad7404828d6ccf2eed21203dbea4041d2f25907af5",
     "docs/kernel/user-copy.md": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
     "docs/knowledge-enrollment.json": "90057be4e5ee0eba7cf4294b276e07a07fa9c125069c1d490e90f88a803cf651",
@@ -2953,7 +2953,7 @@
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
     "tests/system/native-crash-recovery.cjs": "53a09a2d6ce23c0133de51022bef3153c1beb856fcc3608c1ecb88f9e7cf71a8",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
-    "translations/manifest.json": "a844be8f4c212c01e6d5ec72673fe085df8c3a957182a63fd50b6d712d426208",
+    "translations/manifest.json": "3b5b20a4d140965ca1c9d87396f2529362471a5e119f741535fb53d109a470f4",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3005,7 +3005,7 @@
     "translations/ru/docs/kernel/native-applications.md": "cb1d9c54f3ed3ed2acd7630006900693160e9e087e29c413ca8e4b1f108b224e",
     "translations/ru/docs/kernel/processes.md": "f3e4b7140ddf31dff5dbf277ed1154393e186c67b6012d9d92ebf00cafcaacd0",
     "translations/ru/docs/kernel/scheduler.md": "e25f27bfdc10f7b829dbb17b04da0a9899f3a65a595df8d29f5969c49a982ed4",
-    "translations/ru/docs/kernel/supervision.md": "e60ad7f0c4a8fd6890e284a07e4767aeae79f097b75bb890c7c0fc417d42207f",
+    "translations/ru/docs/kernel/supervision.md": "6e206b7b0ffb266069e62d515359c61f39fa85c8462294b377cfc89884433673",
     "translations/ru/docs/kernel/user-copy.md": "c34a2d6fc2ad1dbfcef6ac2ff555f96219f543bfa9f58b9ebd1bf1c39fbfcf26",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -5869,8 +5869,8 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 23306,
-      "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. Current-source acceptance remains incomplete; readiness and performance are separate.",
+      "estimated_bytes": 24082,
+      "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. The retained Phase 3.6 receipt is stale for these changed sources; bounded Phase 3.7 acceptance is recorded in [native applications](native-applications.md). Readiness and performance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "localized": {
@@ -5885,13 +5885,13 @@
         "en": {
           "end": 177,
           "path": "docs/kernel/supervision.md",
-          "sha256": "9249606a1fdcc52b900ecf5324b7f79296fcfef436d2ffa021864bc1813b12ec",
+          "sha256": "f307a1b6a6093ef5fd1299ad7404828d6ccf2eed21203dbea4041d2f25907af5",
           "start": 1
         },
         "ru": {
           "end": 179,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "e60ad7f0c4a8fd6890e284a07e4767aeae79f097b75bb890c7c0fc417d42207f",
+          "sha256": "6e206b7b0ffb266069e62d515359c61f39fa85c8462294b377cfc89884433673",
           "start": 1
         }
       },
@@ -10524,7 +10524,7 @@
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
       "estimated_bytes": 1063,
-      "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. Current-source acceptance remains incomplete; readiness and performance are separate.",
+      "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. The retained Phase 3.6 receipt is stale for these changed sources; bounded Phase 3.7 acceptance is recorded in [native applications](native-applications.md). Readiness and performance are separate.",
       "feature": {
         "acceptance": ["research/results/supervision-phase36-main126.json"],
         "adrs": ["adr.0026"],
@@ -10536,7 +10536,7 @@
           "Fixed affinity and two-CPU lifecycle barrier; generic wait-any, migration, independent live admission and persistent services are excluded.",
           "Codex semantic/EN-RU review completed after #126; performance attribution/admissibility and physical ARM/production acceptance remain open."
         ],
-        "next_gate": "Phase 3.7/#28 persistent ELF integration over the accepted bounded functional foundation; performance readiness and production trust remain separate review scopes.",
+        "next_gate": "Phase 3.7/#28 bounded persistent ELF integration is accepted under docs/kernel/native-applications.md. Performance readiness, physical ARM and production trust remain separate review scopes.",
         "readiness": "NOT_READY",
         "sources": [
           "crates/kernel-core/src/process.rs",
@@ -10577,7 +10577,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Phase 3.7 changes coordination policy and removes source-copy mutations/application copies. Prior receipts remain immutable historical evidence; current-source full supervisor crash/recovery and final acceptance are incomplete.",
+            "reason": "The retained Phase 3.6/#126 receipt does not match the changed coordination policy and test architecture, so this owner-specific verification remains STALE. Bounded Phase 3.7 production supervisor crash/recovery/shutdown and acceptance are separately verified under docs/kernel/native-applications.md; historical receipts are not relabeled.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust.",
@@ -10604,13 +10604,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "9249606a1fdcc52b900ecf5324b7f79296fcfef436d2ffa021864bc1813b12ec",
+          "sha256": "f307a1b6a6093ef5fd1299ad7404828d6ccf2eed21203dbea4041d2f25907af5",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "e60ad7f0c4a8fd6890e284a07e4767aeae79f097b75bb890c7c0fc417d42207f",
+          "sha256": "6e206b7b0ffb266069e62d515359c61f39fa85c8462294b377cfc89884433673",
           "start": 13
         }
       },
