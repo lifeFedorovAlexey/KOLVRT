@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "issue": 79,
+  "reviewed_base": "d9d41c73e03fd9597668325fb76db704d914483b",
+  "worktree_dirty": true,
+  "source_files": [
+    {
+      "path": "crates/kernel-core/src/device.rs",
+      "sha256_lf": "8e4e073e258ebc0376d169b3b638a5bb2820dc8b2fe2162335a4d895e60e7f66"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "4a68ad9259e1696dec995bc16b9934c45172ed8e4fa802d7f72829b5e581fca8"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "4423248c501cef4d50bc229fc6c97fa13eafbdea3632d037eb2b6a78f3fcd1a9"
+    },
+    {
+      "path": "crates/kernel-core/tests/device_contract.rs",
+      "sha256_lf": "b86a40aa7b781c2488d0e487e3b1aa220cbfaedefe32f693dc429bb5157d0a2c"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "5bc02706a994eee762c1465a8e2c491788678e6962dc839e537810a0543406e1"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "669b1dd09ebf4c69c5412d593ae751f690e661b95a7034bfd1c2bcc469846fac"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "4a4e1313760b677b500758c69d563fb1b82268503a6094d670242b15e31d3702"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "8ee48dc74c3d0f4e6ddef79633f8a32a73d58c885cc3839c7be057cf65a4713a"
+    },
+    {
+      "path": "crates/xtask/src/native_apps.rs",
+      "sha256_lf": "abbfbb40463102a27c5c0a52d41b53fb6f2747afbc133e825f3a9a083334302f"
+    }
+  ],
+  "scope": "Bounded PL011 discovery/observation identity; actual DEV/PROD boot; no driver authority, hotplug, hardware or performance acceptance.",
+  "raw_execution": {
+    "path": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
+    "sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032"
+  },
+  "host": {
+    "kernel_core_tests": 98,
+    "doctests": 1,
+    "device_contract": 4,
+    "generation_exhaustion": 1,
+    "boot_description": 8,
+    "output_validator": 13,
+    "status": "passed"
+  },
+  "matrix": {
+    "obligations": 144,
+    "observations": {
+      "executed": 32,
+      "reused": 112
+    }
+  },
+  "boot_observations": [
+    {
+      "id": "dev-tests",
+      "observation": {
+        "event": "device-observation",
+        "generation": 1,
+        "interrupt_controller": 32771,
+        "irq": 33,
+        "kind": "pl011",
+        "mmio_base": 150994944,
+        "mmio_size": 4096,
+        "reservation": "boot-console",
+        "scope": 1,
+        "status": "pass"
+      },
+      "elf_sha256": "04704e256665adc48d634b74ef5b284f9d0d4be33cd5a07758b3f2148cbb1d7c",
+      "qemu": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "04704e256665adc48d634b74ef5b284f9d0d4be33cd5a07758b3f2148cbb1d7c",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "id": "dev-boot",
+      "observation": {
+        "event": "device-observation",
+        "generation": 1,
+        "interrupt_controller": 32771,
+        "irq": 33,
+        "kind": "pl011",
+        "mmio_base": 150994944,
+        "mmio_size": 4096,
+        "reservation": "boot-console",
+        "scope": 1,
+        "status": "pass"
+      },
+      "elf_sha256": "224fa1b26e2388a4528fc3361ea43ec057539a11d8a2add7ca32825703aa9735",
+      "qemu": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/dev-boot.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "224fa1b26e2388a4528fc3361ea43ec057539a11d8a2add7ca32825703aa9735",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "raw_events": {
+        "path": "research/results/device-phase40-reviewed-dev-boot.json.receipt",
+        "sha256": "3df3afccf4cbd226b3ae764b57fd9c76a7c81869f4f2c7ff7b74d8d68407ced5"
+      }
+    },
+    {
+      "id": "prod-tests",
+      "observation": {
+        "event": "device-observation",
+        "generation": 1,
+        "interrupt_controller": 32771,
+        "irq": 33,
+        "kind": "pl011",
+        "mmio_base": 150994944,
+        "mmio_size": 4096,
+        "reservation": "boot-console",
+        "scope": 1,
+        "status": "pass"
+      },
+      "elf_sha256": "e405454189f98e50ca96b082d0b4002928f1b10818929fe8496009724e79c1c8",
+      "qemu": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-tests.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "e405454189f98e50ca96b082d0b4002928f1b10818929fe8496009724e79c1c8",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "id": "prod-boot",
+      "observation": {
+        "event": "device-observation",
+        "generation": 1,
+        "interrupt_controller": 32771,
+        "irq": 33,
+        "kind": "pl011",
+        "mmio_base": 150994944,
+        "mmio_size": 4096,
+        "reservation": "boot-console",
+        "scope": 1,
+        "status": "pass"
+      },
+      "elf_sha256": "33e49131f6f10e4cb3cd53eb3246dcb7c39a56d9f6d2ae980c78a49ce970dd32",
+      "qemu": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/prod-boot.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "33e49131f6f10e4cb3cd53eb3246dcb7c39a56d9f6d2ae980c78a49ce970dd32",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "raw_events": {
+        "path": "research/results/device-phase40-reviewed-prod-boot.json.receipt",
+        "sha256": "c484135f2a3274d136c078cf23408d0c9c20327eac9b2c55904f9c508df422b7"
+      }
+    }
+  ],
+  "review": {
+    "architecture": "accepted by independent Codex audit_acceptance agent",
+    "en_ru": "complete paired semantic review passed",
+    "not_claimed": "independent human review or physical hardware acceptance"
+  },
+  "related_correction": {
+    "failure": "merged-main d9d41c7 CI37681196959 first counter zero at initial PC; only failure bit3",
+    "change": "Allow zero first snapshot; retain strict final growth, peer progress, contexts, unchanged slice budget and reclamation."
+  },
+  "limitations": [
+    "Owner scopes allocated by trusted caller; no machine-global or persistent allocator.",
+    "Boot console remains reserved; device observations grant no MMIO/IRQ rights.",
+    "Fresh machine-mode execution requires exactly one validated inventory before acceptance; historical receipt reading separately permits old streams."
+  ]
+}

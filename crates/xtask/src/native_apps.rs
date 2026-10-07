@@ -316,6 +316,7 @@ fn observe_runtime(elf: &Path) -> Result<Value> {
                             && w[5] == 1
                     })
             }) {
+                output::require_current_device_observation(&events)?;
                 return Ok(events);
             }
             if start.elapsed() > Duration::from_secs(10) {

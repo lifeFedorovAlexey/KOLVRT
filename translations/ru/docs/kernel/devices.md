@@ -28,7 +28,9 @@ Host-тесты вызывают настоящие методы обнаруж�
 
 [Английский оригинал](../../../../docs/kernel/devices.md)
 
-[Приёмка Phase 4.0](../../../../research/results/device-phase40.json) фиксирует 98 host-тестов kernel-core и один doctest, 13 проверок output validator и полную matrix из 144 обязательств: 32 реальных запуска и 112 использований свежего evidence в том же прогоне. Обе suites DEV/PROD прошли по 147 проверок; в каждой suite и обычной загрузке проверено ровно одно наблюдение PL011 с MMIO 0x09000000/0x1000 и IRQ 33. Независимое архитектурное/code-ревью и полное EN/RU-ревью завершены. READY относится только к ограниченному контракту дескриптора #79, без готовности драйверов или физического оборудования.
+[Приёмка Phase 4.0](../../../../research/results/device-phase40-reviewed.json) фиксирует 98 host-тестов kernel-core и один doctest, 13 проверок output validator и полную matrix из 144 обязательств: 32 реальных запуска и 112 использований свежего evidence в том же прогоне. Обе suites DEV/PROD прошли по 147 проверок; в каждой suite и обычной загрузке проверено ровно одно наблюдение PL011 с MMIO 0x09000000/0x1000 и IRQ 33. Независимое архитектурное/code-ревью и полное EN/RU-ревью завершены. READY относится только к ограниченному контракту дескриптора #79, без готовности драйверов или физического оборудования.
+
+Runner теперь требует ровно одно корректное наблюдение перед приёмкой свежего выполнения с машинным evidence, включая streaming native runtime. Отсутствие, повтор или некорректные поля вызывают отказ; совместимость исторического reader не ослабляет эту проверку. [Первоначальная приёмка](../../../../research/results/device-phase40.json) сохранена с прежними исходниками.
 
 <!-- knowledge -->
 
@@ -56,9 +58,14 @@ Host-тесты вызывают настоящие методы обнаруж�
           "crates/kernel-core/tests/boot_description.rs",
           "crates/kernel/src/main.rs",
           "crates/kernel/src/platform/mod.rs",
-          "crates/xtask/src/output.rs"
+          "crates/xtask/src/output.rs",
+          "crates/xtask/src/main.rs",
+          "crates/xtask/src/native_apps.rs"
         ],
-        "acceptance": ["research/results/device-phase40.json"],
+        "acceptance": [
+          "research/results/device-phase40.json",
+          "research/results/device-phase40-reviewed.json"
+        ],
         "issues": [79],
         "adrs": ["adr.0027"],
         "limitations": [
@@ -69,10 +76,10 @@ Host-тесты вызывают настоящие методы обнаруж�
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "Exact-source full matrix passed; each DEV/PROD suite and ordinary boot independently contains one matching real device observation.",
+            "reason": "Final-source full matrix passed after requiring a unique inventory for every fresh machine-mode execution; historical reader compatibility remains separate.",
             "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
-            "receipt": "research/measurements/runs/1791405637265-phase40-device-observations-487e0fbc18b3.json",
-            "receipt_sha256": "8751d0b7fba24ff44e8fbf640249aa1edad4707040f1d9e916d83f76008e103d"
+            "receipt": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
+            "receipt_sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032"
           },
           {
             "environment": "physical-arm64",
@@ -95,7 +102,9 @@ Host-тесты вызывают настоящие методы обнаруж�
             "acceptance": ["research/results/device-phase40.json"]
           }
         ],
-        "readiness_acceptance": ["research/results/device-phase40.json"]
+        "readiness_acceptance": [
+          "research/results/device-phase40-reviewed.json"
+        ]
       }
     }
   ]

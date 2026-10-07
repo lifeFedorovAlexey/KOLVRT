@@ -750,7 +750,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 17821,
+      "estimated_bytes": 18326,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -841,7 +841,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 20960,
+      "estimated_bytes": 21465,
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
       "path": "docs/ci/performance.md",
@@ -929,7 +929,7 @@
     {
       "document": "doc.kolvrt.kernel.devices",
       "document_status": "CURRENT",
-      "estimated_bytes": 7449,
+      "estimated_bytes": 8011,
       "id": "doc.kolvrt.kernel.devices",
       "kind": "subsystem-contract",
       "path": "docs/kernel/devices.md",
@@ -959,7 +959,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 28496,
+      "estimated_bytes": 28569,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -979,7 +979,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 37915,
+      "estimated_bytes": 37988,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -1009,7 +1009,7 @@
     {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 28617,
+      "estimated_bytes": 28690,
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "path": "docs/kernel/supervision.md",
@@ -1721,7 +1721,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 28383,
+      "estimated_bytes": 28456,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],

@@ -106,6 +106,8 @@ Initial delivery is host tooling and reviewed build-time substitution. Productio
 
 Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the standards-based Arena model A0–A5. The [measurement contract](arena-measurement-contract.md) now implements closed registry/profile/import schemas and offline comparison/admission through cargo xtask arena. This is experimental host tooling, not an executed kernel passport or record service. PERF/SEC/REL/RES remain separate dimensions; SEC uses TOE/SPD/SFR/SAR, not a security score. #32–#36 and #50 own their real pipelines.
 
+Fresh machine-mode evidence execution through the shared xtask runner requires exactly one validated [boot device observation](../kernel/devices.md). A missing inventory event fails the current execution gate even when other workload events pass. Historical receipt reading remains separate and accepts pre-descriptor streams; that compatibility cannot admit a new run without the observation. This changes evidence admission, not kernel performance, measurement methodology or Arena record eligibility.
+
 <!-- knowledge -->
 
 ```json

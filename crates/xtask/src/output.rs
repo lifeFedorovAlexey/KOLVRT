@@ -183,6 +183,44 @@ impl<'de> Deserialize<'de> for UniqueJson {
     }
 }
 
+/// Fresh machine-mode execution must carry its one validated boot inventory.
+/// Historical receipts continue to use `validate`, where inventory is optional.
+pub fn require_current_device_observation(events: &[Value]) -> Result<()> {
+    let mut matching = events
+        .iter()
+        .filter(|event| event["event"] == "device-observation");
+    let event = matching
+        .next()
+        .ok_or("missing current device observation")?;
+    if matching.next().is_some() {
+        return Err("duplicate current device observation".into());
+    }
+    validate_device_observation(event)
+}
+
+fn validate_device_observation(event: &Value) -> Result<()> {
+    // This runner targets the pinned QEMU platform, not arbitrary firmware.
+    let expected = kernel_core::platform::discover(include_bytes!(
+        "../../../research/fixtures/virt-10.1.dtb"
+    ))?
+    .boot_console()
+    .map_err(|_| "validated console descriptor absent")?;
+    if event["status"] != "pass"
+        || event["kind"] != "pl011"
+        || event["reservation"] != "boot-console"
+        || event["scope"].as_u64() != Some(1)
+        || event["generation"].as_u64() != Some(1)
+        || event["mmio_base"].as_u64() != Some(expected.mmio_base())
+        || event["mmio_size"].as_u64() != Some(expected.mmio_size())
+        || event["irq"].as_u64() != Some(u64::from(expected.irq()))
+        || event["interrupt_controller"].as_u64()
+            != Some(u64::from(expected.interrupt_controller()))
+    {
+        return Err("invalid or duplicate device observation".into());
+    }
+    Ok(())
+}
+
 pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -> Result<()> {
     let mut ipc_runs = BTreeSet::new();
     let mut ipc_deadlines = BTreeSet::new();
@@ -215,27 +253,10 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
         }
         match event["event"].as_str() {
             Some("device-observation") => {
-                // This runner targets the pinned QEMU platform. Historical receipts
-                // may omit inventory, but a present observation must match its DTB.
-                let expected = kernel_core::platform::discover(include_bytes!(
-                    "../../../research/fixtures/virt-10.1.dtb"
-                ))?
-                .boot_console()
-                .map_err(|_| "validated console descriptor absent")?;
-                if device_observation
-                    || event["status"] != "pass"
-                    || event["kind"] != "pl011"
-                    || event["reservation"] != "boot-console"
-                    || event["scope"].as_u64() != Some(1)
-                    || event["generation"].as_u64() != Some(1)
-                    || event["mmio_base"].as_u64() != Some(expected.mmio_base())
-                    || event["mmio_size"].as_u64() != Some(expected.mmio_size())
-                    || event["irq"].as_u64() != Some(u64::from(expected.irq()))
-                    || event["interrupt_controller"].as_u64()
-                        != Some(u64::from(expected.interrupt_controller()))
-                {
-                    return Err("invalid or duplicate device observation".into());
+                if device_observation {
+                    return Err("duplicate device observation".into());
                 }
+                validate_device_observation(event)?;
                 device_observation = true;
             }
             Some("ipc-measurement") => {
@@ -1100,6 +1121,11 @@ mod tests {
             "mmio_base":descriptor.mmio_base(),"mmio_size":descriptor.mmio_size(),
             "irq":descriptor.irq(),"interrupt_controller":descriptor.interrupt_controller()});
         validate(&[inventory.clone(), el0(), boot()], false, &[], 2).unwrap();
+        require_current_device_observation(&[inventory.clone(), el0(), boot()]).unwrap();
+        assert!(require_current_device_observation(&[el0(), boot()]).is_err());
+        assert!(
+            require_current_device_observation(&[inventory.clone(), inventory.clone()]).is_err()
+        );
         validate(&[el0(), boot()], false, &[], 2).unwrap();
         assert!(
             validate(
@@ -1127,6 +1153,7 @@ mod tests {
             for value in [bad, Value::Null, json!("wrong-type")] {
                 let mut invalid = inventory.clone();
                 invalid[field] = value;
+                assert!(require_current_device_observation(&[invalid.clone()]).is_err());
                 assert!(
                     validate(&[invalid, el0(), boot()], false, &[], 2).is_err(),
                     "accepted {field}"

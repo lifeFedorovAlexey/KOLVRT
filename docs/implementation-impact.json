@@ -52,9 +52,23 @@
       "reason": "Correct first quantum snapshot assumption: pending architectural IRQ can precede first EL0 instruction; retain actual subsequent progress, fairness and resource assertions."
     },
     {
+      "path": "crates/xtask/src/main.rs",
+      "before_sha256_lf": "c1be15b227ba59f3213f05174e326bdf2570c3341d787362a59127cffac1cfec",
+      "after_sha256_lf": "8ee48dc74c3d0f4e6ddef79633f8a32a73d58c885cc3839c7be057cf65a4713a",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+    },
+    {
+      "path": "crates/xtask/src/native_apps.rs",
+      "before_sha256_lf": "169a2248251de7657d72552d88277319d24bb5a122d5a56ab41b4148d20c9d65",
+      "after_sha256_lf": "abbfbb40463102a27c5c0a52d41b53fb6f2747afbc133e825f3a9a083334302f",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+    },
+    {
       "path": "crates/xtask/src/output.rs",
       "before_sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
-      "after_sha256_lf": "1e56394abf4e82555df303a7ecc207d9c4439c3734a15638d72c035b21f71ecf",
+      "after_sha256_lf": "4a4e1313760b677b500758c69d563fb1b82268503a6094d670242b15e31d3702",
       "disposition": "new-feature",
       "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
     }
@@ -62,6 +76,16 @@
   "features": [
     {
       "id": "kolvrt.apps.native-elf",
+      "disposition": "semantic-change",
+      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
+    },
+    {
+      "id": "kolvrt.arena",
+      "disposition": "semantic-change",
+      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
+    },
+    {
+      "id": "kolvrt.ci.performance",
       "disposition": "semantic-change",
       "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
     },

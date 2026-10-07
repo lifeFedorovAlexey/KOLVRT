@@ -85,6 +85,8 @@ The IRQ/SIMD control now observes the actual round trip as positive invariant co
 
 The [retained B5 measurement](../../research/measurements/ci-b5-reuse.json) records one local reference/optimized shard-0 pair: 309.7595683 s with reuse disabled and 37.077867 s with reuse enabled, with all 36 build/ELF/QEMU identities matched. The four optimized shards passed all 144 obligations with 38 executed and 106 reused observations. This is one ordered local comparison with uncontrolled host/cache state, not a hosted speed guarantee or comparison with the historical 130-task baseline. Full reference and aggregate receipts are retained beside the summary. The timing pair retains its original source plan before a behavior-preserving Clippy guard rewrite. A separate final-source four-shard receipt validates the final runner; the earlier measurement is not relabeled as an exact-final-source timing comparison.
 
+Fresh machine-mode evidence execution through the shared xtask runner requires exactly one validated [boot device observation](../kernel/devices.md). A missing inventory event fails the current execution gate even when other workload events pass. Historical receipt reading remains separate and accepts pre-descriptor streams; that compatibility cannot admit a new run without the observation. This changes evidence admission, not kernel performance, measurement methodology or Arena record eligibility.
+
 <!-- knowledge -->
 
 ```json

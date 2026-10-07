@@ -158,8 +158,8 @@
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "9a8426924ad93b7869e782f0194388c90d6b916a978f78b92c5daf2dd0702400",
-        "translation_sha256": "e36111b8609e732c690b3cb2705a201e219294edbca95e32b4f6db54b85fc9e5"
+        "source_sha256": "76d846301af7c083ff159a5a3127ea36606bd4ccf6b63cbb06a7aad4c8d7d44d",
+        "translation_sha256": "b33d7123ba1d1e6db4e22f204edb4761d5f89257ff12beb5395554512d071678"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
@@ -266,8 +266,8 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "ab17bbd52498ebb0df8b44189aaf5d89a8c2f3d0c5038552fb86b837de802873",
-        "translation_sha256": "85e08b719e4a77e06a614c52d1e3b06cb019cef56a3b7061e95bdd2394529d75"
+        "source_sha256": "34d8f06afc1b94956c85396e41187b912c32f55896dd02e6da61131fd953b0d8",
+        "translation_sha256": "2e9ea1cfea8aaa7d0db5d628377e62753bfd84e33cb961b05fd6036c18309c1f"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
@@ -286,8 +286,8 @@
         "translation_sha256": "482662a55414cf67b61121c09b2f5c1a9660fc2737b4c00f69b7957e52ea454c"
       },
       "docs/kernel/devices.md": {
-        "source_sha256": "1aba6a0dcedf3ae4520e5e094979a97d58e2e9a986aca1a443ce78b622675c53",
-        "translation_sha256": "867bbb0c35d7096d6b0a3f83ce39c32273d24f98efa82258c2cc20746569a4dc"
+        "source_sha256": "a4503c5f6d3306b3ba60b78062ded19490537e4d498fb8f637c8c5cdfc6a76b6",
+        "translation_sha256": "3e9ccd2e18f1d63d0ad9f4d8c53c2819eb2569a9a804ed677604103611b11b38"
       },
       "docs/kernel/domains.md": {
         "source_sha256": "9067c663ffab79544cfb12487ccbd9c7b8ed290e498a96d8a918462d605a58a3",
@@ -314,16 +314,16 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
-        "translation_sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999"
+        "source_sha256": "134235a8159fa7ff24b62b74ad59760a4e6f2fe2ebaa1d5ff8e9caeba192c881",
+        "translation_sha256": "9cca99fb0ac072e362f261fb52fd69484dd614501736f1760305099cebaf4d5c"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "e2faa58ecd9687d8a2ad8a2d32b5c8aaf20fb20234c31d6b17049c2cfe2187ce",
-        "translation_sha256": "7da4cada9ddc908bf5d50563ac32f0b66c6bd49eafc3ebdde379203523fe3186"
+        "source_sha256": "c7194350de63291a0a5ca1cb8ae33f90bf870e7e38eca410c763ecaac496522f",
+        "translation_sha256": "1fe20f4a86f6c6c697505154938d7a0e22493090a5616c10d3fc407ab8e735ec"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
@@ -342,8 +342,8 @@
         "translation_sha256": "395e7920498d371257573b4fdd8cfa6d91718c1f8aa4447d1353f1327d556790"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "be621613e863a59bd100370418de11759d67d6aa1682d3b1a86feafb9f4a32c7",
-        "translation_sha256": "24ea8c792cae7c438d0ac548dc06af412e13cfdf993f31ef6b4797909628d0c9"
+        "source_sha256": "1032c16340fda70a9152619b81dfbb90d102dcbcb4e8641ed3c7003848d2367e",
+        "translation_sha256": "eeb00b6d7b3825ca5fb4471ffe77233dcf18d763a7b71423bd4dfcda7121f16e"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",

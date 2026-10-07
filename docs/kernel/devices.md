@@ -28,7 +28,9 @@ Host tests call the real discovery and identity methods with valid and invalid i
 
 [Russian translation](../../translations/ru/docs/kernel/devices.md)
 
-[Phase 4.0 acceptance](../../research/results/device-phase40.json) records 98 kernel-core host tests and one doctest, 13 output-validator checks and the complete 144-obligation matrix: 32 actual executions and 112 uses of fresh same-run evidence. Both DEV/PROD suites passed 147 checks each; every suite and ordinary boot has exactly one verified PL011 observation with MMIO 0x09000000/0x1000 and IRQ 33. Independent architecture/code and complete EN/RU review are complete. READY applies only to the bounded issue #79 descriptor contract, not driver or physical-hardware readiness.
+[Phase 4.0 acceptance](../../research/results/device-phase40-reviewed.json) records 98 kernel-core host tests and one doctest, 13 output-validator checks and the complete 144-obligation matrix: 32 actual executions and 112 uses of fresh same-run evidence. Both DEV/PROD suites passed 147 checks each; every suite and ordinary boot has exactly one verified PL011 observation with MMIO 0x09000000/0x1000 and IRQ 33. Independent architecture/code and complete EN/RU review are complete. READY applies only to the bounded issue #79 descriptor contract, not driver or physical-hardware readiness.
+
+The runner now requires exactly one valid observation before accepting fresh machine-mode execution, including streaming native runtime. Missing, duplicate or malformed events fail; historical reader compatibility does not weaken this gate. [Initial acceptance](../../research/results/device-phase40.json) retains its earlier source scope.
 
 <!-- knowledge -->
 
@@ -56,9 +58,14 @@ Host tests call the real discovery and identity methods with valid and invalid i
           "crates/kernel-core/tests/boot_description.rs",
           "crates/kernel/src/main.rs",
           "crates/kernel/src/platform/mod.rs",
-          "crates/xtask/src/output.rs"
+          "crates/xtask/src/output.rs",
+          "crates/xtask/src/main.rs",
+          "crates/xtask/src/native_apps.rs"
         ],
-        "acceptance": ["research/results/device-phase40.json"],
+        "acceptance": [
+          "research/results/device-phase40.json",
+          "research/results/device-phase40-reviewed.json"
+        ],
         "issues": [79],
         "adrs": ["adr.0027"],
         "limitations": [
@@ -69,10 +76,10 @@ Host tests call the real discovery and identity methods with valid and invalid i
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "Exact-source full matrix passed; each DEV/PROD suite and ordinary boot independently contains one matching real device observation.",
+            "reason": "Final-source full matrix passed after requiring a unique inventory for every fresh machine-mode execution; historical reader compatibility remains separate.",
             "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
-            "receipt": "research/measurements/runs/1791405637265-phase40-device-observations-487e0fbc18b3.json",
-            "receipt_sha256": "8751d0b7fba24ff44e8fbf640249aa1edad4707040f1d9e916d83f76008e103d"
+            "receipt": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
+            "receipt_sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032"
           },
           {
             "environment": "physical-arm64",
@@ -95,7 +102,9 @@ Host tests call the real discovery and identity methods with valid and invalid i
             "acceptance": ["research/results/device-phase40.json"]
           }
         ],
-        "readiness_acceptance": ["research/results/device-phase40.json"]
+        "readiness_acceptance": [
+          "research/results/device-phase40-reviewed.json"
+        ]
       }
     }
   ]
