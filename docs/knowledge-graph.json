@@ -2742,7 +2742,7 @@
     "crates/kernel/src/security/testing.rs": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df",
     "crates/kernel/src/smp.rs": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3",
     "crates/kernel/src/supervision.rs": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a",
-    "crates/kernel/src/supervision_workload.S": "80ed085fc7495026c1162e53a6dfccb3ad4b64b7bab1f778e00638f1eab71af7",
+    "crates/kernel/src/supervision_workload.S": "5c13e46c80d85407ea13b0b6f6a14a143a73cedc76bbcebeda7050f471def80c",
     "crates/kernel/src/supervision_workload.rs": "5a8d267ef4bb87002fd0ce0061adba7b53f98822c54c09dbeae8ec51b9088ddc",
     "crates/kernel/src/sync/mod.rs": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
     "crates/kernel/src/test_support/arch_probes.S": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732",
@@ -2838,7 +2838,7 @@
     "docs/kernel/handles.md": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "0eff03811c018dd28691f97ef8b7d22481cb2a1899f8d9511e7488877f06d918",
-    "docs/kernel/native-applications.md": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
+    "docs/kernel/native-applications.md": "baeb20264964284ec69a1f2662938001d214d6e863a4d63346d8fe68fd708b11",
     "docs/kernel/processes.md": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
     "docs/kernel/scheduler.md": "a5848937b2dd27ceb20601bd71eb024b3f452db228d36046d4241464e15d6326",
     "docs/kernel/supervision.md": "9249606a1fdcc52b900ecf5324b7f79296fcfef436d2ffa021864bc1813b12ec",
@@ -2936,7 +2936,7 @@
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
     "tests/system/native-crash-recovery.cjs": "53a09a2d6ce23c0133de51022bef3153c1beb856fcc3608c1ecb88f9e7cf71a8",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
-    "translations/manifest.json": "bac595f0786a1e3d5d488557f63f6f92f317a37689baf2daa4cdde40730c6e8f",
+    "translations/manifest.json": "030489eba860dc328aed1828a1e8d6b9d75dfe346574b684cff07b093bdf243e",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2984,7 +2984,7 @@
     "translations/ru/docs/kernel/handles.md": "aa1eed6078d4b58efd17cf2f43b79e7456ec3a7e51be5d474e4aeba22c1b7e11",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "38d3125b798f1855e5c2ac82af76ac8cf8e1a839858f79aba68cb6c9761cd018",
-    "translations/ru/docs/kernel/native-applications.md": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089",
+    "translations/ru/docs/kernel/native-applications.md": "ef1222ababd4c33927294a25f92d7c57e2ca63cd376f0b55883d13b1551b645d",
     "translations/ru/docs/kernel/processes.md": "f3e4b7140ddf31dff5dbf277ed1154393e186c67b6012d9d92ebf00cafcaacd0",
     "translations/ru/docs/kernel/scheduler.md": "e25f27bfdc10f7b829dbb17b04da0a9899f3a65a595df8d29f5969c49a982ed4",
     "translations/ru/docs/kernel/supervision.md": "e60ad7f0c4a8fd6890e284a07e4767aeae79f097b75bb890c7c0fc417d42207f",
@@ -5749,7 +5749,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 32247,
+      "estimated_bytes": 33304,
       "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 7f8dd80: original ELF applications, persistent state, actual production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. Prior copied-implementation and source-mutant runs are not current evidence.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5763,15 +5763,15 @@
       },
       "locations": {
         "en": {
-          "end": 270,
+          "end": 274,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
+          "sha256": "baeb20264964284ec69a1f2662938001d214d6e863a4d63346d8fe68fd708b11",
           "start": 1
         },
         "ru": {
-          "end": 269,
+          "end": 273,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089",
+          "sha256": "ef1222ababd4c33927294a25f92d7c57e2ca63cd376f0b55883d13b1551b645d",
           "start": 1
         }
       },
@@ -6268,7 +6268,7 @@
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Maintain exact-source acceptance when implementation inputs change. Physical ARM and production image trust (#38) require separate evidence; startup/post-commit recovery and performance readiness are outside this bounded slice.",
+        "next_gate": "Complete new-source full foundation after the committed-crash fixture input correction; preserve earlier bounded acceptance and exact source receipts without relabeling the failed publication run. Physical ARM and production trust remain separate.",
         "readiness": "NOT_READY",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
@@ -6376,11 +6376,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Complete 144-task current-source CI, actual native DEV/PROD sessions/crash recovery/reclamation and corrected restricted-workspace execution independently inspected; bounded source and EN/RU semantic review retained.",
+            "reason": "Publication head 333726b failed the committed-crash fixture before Submit admission. The fixture source now changes; the passing 7f8dd80 receipt remains historical and does not verify the corrected source. Fresh complete CI is required.",
             "receipt": "research/results/native-phase37-current.json",
             "receipt_sha256": "be7bd8478ac5e2c98720b3cc14bc00d2aa1898673b47fd13ff79f91a2250a023",
             "scope": "Implementation 7f8dd80f6a322a4654994fc1aa3ed44beaefdd10; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Guest inputs and seven checkout/runner integration inputs distinguished in receipt.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -6403,13 +6403,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
+          "sha256": "baeb20264964284ec69a1f2662938001d214d6e863a4d63346d8fe68fd708b11",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089",
+          "sha256": "ef1222ababd4c33927294a25f92d7c57e2ca63cd376f0b55883d13b1551b645d",
           "start": 7
         }
       },

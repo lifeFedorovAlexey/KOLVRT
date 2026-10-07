@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "git_commit": "333726bb3cb484714a37229926ff687bd28a7a5a",
+  "ci_run": "https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37570526251",
+  "job": "matrix (2) / run",
+  "result": "failed",
+  "failure": {
+    "event": "supervision-reject",
+    "status": "fail",
+    "error": "Scenario",
+    "exit": "Exited(1002)",
+    "coverage": 15,
+    "actual": 16,
+    "value": 0,
+    "stage": 1002,
+    "operation": 1,
+    "submitted_at": 853845506,
+    "deadline": 861658006,
+    "failed_at": 865290456,
+    "frequency": 62500000,
+    "residency_at_submit_clock": 82219,
+    "residency_at_failure_clock": 214565
+  },
+  "scope": "Committed-crash test request (payload operation 2), not readiness: Submit expired before admission, therefore actual COMMIT/fault could not be observed. Native DEV/PROD passed separately; this failure invalidates a green full-publication-head claim.",
+  "artifacts": [
+    {
+      "path": "research/results/native-phase37/supervision-crash-input-333726b.log.receipt",
+      "sha256": "61a2804be7b77780a0e29b5d47c43a3c6c2cb5a35b5e4bac32ceb0e8ebcf3fcb"
+    },
+    {
+      "path": "research/results/native-phase37/supervision-crash-input-333726b.run.json.receipt",
+      "sha256": "e952a89eff28412f55fff578f347a32d9a0c0bf99f03790be40e4d2cf917415a"
+    },
+    {
+      "path": "research/results/native-phase37/supervision-crash-input-333726b-build.json.receipt",
+      "sha256": "d5f1d46e3b3eb6762af95cc7922afba4f2043ad0d87426da07044f30a1896fe9"
+    }
+  ]
+}

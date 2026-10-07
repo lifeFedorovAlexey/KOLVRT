@@ -31,6 +31,8 @@ Bounded Phase 3.5 IPC is implemented and ready for its declared contract: isolat
 
 [Phase 3.7 native ELF applications](docs/kernel/native-applications.md) are accepted within their bounded scope: separate production supervisor/service/client, persistent counter state, actual crash/recovery with fresh binding and normal reclamation. The [review and exact-source evidence](docs/architecture/native-phase37-acceptance-review.md) establish DEV/PROD and full CI at 7f8dd80. Physical ARM remains UNKNOWN and ABI experimental; production trust and performance readiness have separate scope.
 
+Subsequent publication CI 333726b failed one matrix shard when the committed-crash test request expired before admission; the other workload jobs passed. Its fixture input is corrected while actual readiness probes retain /8; QEMU evidence after this source change is STALE until complete new CI. Earlier bounded acceptance retains its exact source scope.
+
 An earlier implementation does not settle later architecture. Before extending it, derive the design from current invariants and accepted decisions; refactor or remove code that constrains them.
 
 [EL0 supervision](docs/kernel/supervision.md) is accepted for its bounded functional foundation after #126 with [renewed Codex architecture/code and EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). That historical post-#126 source had 142 tasks / 138 controls. The current Phase 3.7 plan has 144 tasks and 140 control slots, classified by actual coverage. The +1.57%/+6.64% performance question and readiness are separate; absence of regression and production readiness are not claimed. #28 owns persistent ELF integration and #38 production bootstrap trust.
@@ -115,7 +117,7 @@ This generated registry summary separates implementation from verification. `BOU
 
 | Canonical feature                                                                                             | Implementation      | Evidence limit                                                            |
 | ------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
-| [kolvrt.apps.native-elf](docs/kernel/native-applications.md#native-elf-applications)                          | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
+| [kolvrt.apps.native-elf](docs/kernel/native-applications.md#native-elf-applications)                          | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                       | EXPERIMENTAL        | host-process: STALE; physical-arm64: UNKNOWN                              |
 | [kolvrt.ci.performance](docs/ci/performance.md#ci-performance)                                                | EXPERIMENTAL        | github-actions: UNKNOWN                                                   |
 | [kolvrt.compatibility.manifests](docs/architecture/compatibility-manifests.md#kolvrt-compatibility-manifests) | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |

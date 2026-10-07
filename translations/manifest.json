@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "543aad80cd547d43e9b581b080b261dfd6f33864be351830a227ae81c99de951",
-        "translation_sha256": "b1f98bfd7bb4774bd07951ac8517db4f5fc6cf205162adf883f21655ed4a809f"
+        "source_sha256": "8b987287c630e5d7cccbadd1d7ee3475e6cc7ad205146904666bf272c9990a7f",
+        "translation_sha256": "fe103053cc9d0d7744454771858d55a7155dffabed0d87cbb30812cdecccf604"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -310,8 +310,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
-        "translation_sha256": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089"
+        "source_sha256": "baeb20264964284ec69a1f2662938001d214d6e863a4d63346d8fe68fd708b11",
+        "translation_sha256": "ef1222ababd4c33927294a25f92d7c57e2ca63cd376f0b55883d13b1551b645d"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",

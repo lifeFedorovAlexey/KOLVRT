@@ -1,0 +1,14 @@
+{
+  "artifact": "target/kernel/dev-tests.elf",
+  "compiler": "1.99.0",
+  "elf_bytes": 6422856,
+  "features": [
+    "machine-events",
+    "diagnostics",
+    "kernel-tests"
+  ],
+  "load_bytes": 1153263,
+  "memory_bytes": 2255087,
+  "sha256": "0e8227f4b91321132d501c50b8bb40efe60c67678ae00995a8d6c10199c029aa",
+  "target": "aarch64-unknown-none"
+}

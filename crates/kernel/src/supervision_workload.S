@@ -260,13 +260,16 @@ supervisor_image_start:
  str x17,[x19,#40]
  add x0,x20,x17
  str x0,[x19,#16]
- // Readiness probes keep their policy deadline. The cancellation scenario
- // selects the maximum valid absolute deadline so expiry cannot substitute
- // for the explicit Cancel under test (zero is already expired by the ABI).
+ // Only readiness probes exercise the readiness deadline. The committed-crash
+ // and cancellation scenarios select the maximum valid absolute deadline:
+ // expiry must not replace the actual COMMIT/fault or explicit Cancel under test.
+ // Zero is already expired by the ABI.
  mov x0,#-1
  mov x6,x0
  mov x7,#0
  str x0,[x19,#24]
+ cmp x17,#2
+ b.eq .Lsup_submit_call
  cmp x17,#3
  b.eq .Lsup_submit_call
  svc #0x53

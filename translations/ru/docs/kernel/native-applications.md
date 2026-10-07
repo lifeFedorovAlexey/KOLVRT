@@ -12,6 +12,10 @@ Current reference: [Принятая основа supervision](supervision.md)
 
 Finite client SEND binding использует существующий checkpoint supervision и точные instance tokens. Kernel предоставляет generic process/ELF/IPC/authority/lifetime механизмы. Обычная реализация не должна содержать callbacks приложения или тестовые вмешательства. Hardware, disk durability и stable ABI не заявляются.
 
+## Текущая регрессионная проверка
+
+Publication CI на 333726b повторно выявил failure matrix shard 2: stage 1002 (committed-crash request), Submit=1, Expired=16 до admission. Native DEV/PROD прошли отдельно. [Исходный failure](../../../../research/results/native-phase37-333726b-failure.json) сохранён. Crash-after-COMMIT fixture ошибочно назначал readiness deadline запросу operation 2, поэтому expiry подменял требуемый COMMIT/fault. Его тестовый вход теперь выбирает максимальный допустимый absolute deadline, как отдельный Cancel scenario; настоящие readiness probes operation 1 сохраняют /8, silent-readiness expiry и строгие COMMIT/EffectUnknown/death проверки. Production IPC, supervisor timing и scheduler не меняются. Предыдущая bounded acceptance сохраняет исходный scope; Три локальных повтора DEV и PROD прошли все 147 checks/profile; свежая полная регрессия CI после исправления ещё требуется.
+
 ## Текущая ограниченная приёмка
 
 [Приёмочная review](../architecture/native-phase37-acceptance-review.md) и [точный receipt](../../../../research/results/native-phase37-current.json) принимают первый native application slice. Полный CI 37557806495 на 7f8dd80 прошёл: 144/144 задачи в четырёх shard, native, host, kernel DEV/PROD, routing, ASID и evidence aggregation. Dependency hygiene и CodeRabbit зелёные. Production crash/recovery и обычное завершение прошли в обоих профилях; исправленное доказательство независимости действительно выполняет runtime/lifecycle/smoke внутри restricted workspace. Ниже сохранена история прежних failures; она не описывает текущий статус.
@@ -88,7 +92,7 @@ cargo xtask native-controls проверяет неверные входы на�
 
 L1 проверяет компоненты, L2 — внешние ABI actors, L3 — production QEMU system scenarios. Ни один из этих уровней не доказывает L4 physical ARM: NOT_RUN/UNKNOWN. Filesystem, initramfs, storage, DMA, network, package manager, Linux ABI и dynamic linking остаются вне scope.
 
-Ограниченная функциональная приёмка Phase 3.7 завершена отдельной source/code/architecture и полной EN/RU review с сохранённым current-source CI. Настоящий production supervisor crash path проверен внешним post-binding pre-commit SYSTEM-сценарием. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation сохраняют собственный test-root scope. Штатное завершение production session и reclamation выполнены; startup crash и post-commit replay остаются вне scope. Historical receipts не переименованы в current-source passes.
+Ограниченная функциональная приёмка implementation 7f8dd80 была завершена отдельной source/code/architecture и полной EN/RU review с сохранённым source-bound CI; свежая регрессия после последующего fixture correction ещё требуется. Настоящий production supervisor crash path проверен внешним post-binding pre-commit SYSTEM-сценарием. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation сохраняют собственный test-root scope. Штатное завершение production session и reclamation выполнены; startup crash и post-commit replay остаются вне scope. Historical receipts не переименованы в current-source passes.
 
 [English original](../../../../docs/kernel/native-applications.md)
 
@@ -228,12 +232,12 @@ Restricted-workspace proof привязывает repository-relative путь h
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Maintain exact-source acceptance when implementation inputs change. Physical ARM and production image trust (#38) require separate evidence; startup/post-commit recovery and performance readiness are outside this bounded slice.",
+        "next_gate": "Complete new-source full foundation after the committed-crash fixture input correction; preserve earlier bounded acceptance and exact source receipts without relabeling the failed publication run. Physical ARM and production trust remain separate.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Complete 144-task current-source CI, actual native DEV/PROD sessions/crash recovery/reclamation and corrected restricted-workspace execution independently inspected; bounded source and EN/RU semantic review retained.",
+            "state": "STALE",
+            "reason": "Publication head 333726b failed the committed-crash fixture before Submit admission. The fixture source now changes; the passing 7f8dd80 receipt remains historical and does not verify the corrected source. Fresh complete CI is required.",
             "scope": "Implementation 7f8dd80f6a322a4654994fc1aa3ed44beaefdd10; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Guest inputs and seven checkout/runner integration inputs distinguished in receipt.",
             "receipt": "research/results/native-phase37-current.json",
             "receipt_sha256": "be7bd8478ac5e2c98720b3cc14bc00d2aa1898673b47fd13ff79f91a2250a023"
