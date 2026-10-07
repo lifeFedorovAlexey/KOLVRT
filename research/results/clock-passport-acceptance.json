@@ -1,0 +1,932 @@
+{
+  "schema_version": 1,
+  "issue": 32,
+  "status": "accepted-bounded-execution",
+  "review_date": "2026-10-08",
+  "exact_commit": "2978ad9693b7df1e70487ffbf01d5ffdfe27fe31",
+  "worktree_dirty_at_execution": false,
+  "reviewer": {
+    "identity": "Codex audit_acceptance subagent",
+    "role": "Independent implementation and actual-evidence reviewer; author of initial protocol/docs, independently reviewed by audit_code and parent",
+    "human_review_claimed": false
+  },
+  "scope": "Existing CLOCK useful query inside a three-CLOCK endpoint envelope, twelve real QEMU DEV/PROD boots, partial execution-window accounting, matched incremental recorder cost and bounded PERF/SEC passport custody.",
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "a6544e18c79fd120c9d452d1dafc1a5ee42d649934e46df9e59de3c7370d9a7c"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "aec6de3fa55776f811d26ee1c095b0ea26ba0952b1de6592d1ebc08fcafd6db6"
+    },
+    {
+      "path": "apps/native-apps/Cargo.toml",
+      "sha256_lf": "ecfa79cf6826f62ffe2f67236aefac1cb497f7c2f6d150d0def9713145a9534c"
+    },
+    {
+      "path": "apps/native-apps/build.rs",
+      "sha256_lf": "f3100883829de10842c65edcb5ea332261755e00b88f48766fd1310a02e89e6f"
+    },
+    {
+      "path": "apps/native-apps/linker.ld",
+      "sha256_lf": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a"
+    },
+    {
+      "path": "apps/native-apps/src/client.rs",
+      "sha256_lf": "52278939c70cc466e8046c7eaa0f5c5980105bcaab3ab239b71cd4345a168bb7"
+    },
+    {
+      "path": "apps/native-apps/src/counter-client.rs",
+      "sha256_lf": "9646416fb9270a53fc6dd85293495f686078b520471628688d8395f938195d37"
+    },
+    {
+      "path": "apps/native-apps/src/counter-service.rs",
+      "sha256_lf": "635fca7cd71c649dd20a773e214ed49f3752ccc0a0f5b9241d82c39ebcb9ee1c"
+    },
+    {
+      "path": "apps/native-apps/src/lib.rs",
+      "sha256_lf": "322a8319f94df8d186f33f6edcd71d4f42fad3bb5f0a3f973ef14941f8c29936"
+    },
+    {
+      "path": "apps/native-apps/src/supervision.rs",
+      "sha256_lf": "deababd624234c547c23d5d4d2e1034b401bebaaeb515bea34095a052669dda6"
+    },
+    {
+      "path": "apps/native-apps/src/supervisor.rs",
+      "sha256_lf": "7d65f92ce1283bbecb2dfd5e5a88b13cbeae289fa5ddd2a4b8e44b6fe1cb6c99"
+    },
+    {
+      "path": "apps/native-apps/tests/supervision.rs",
+      "sha256_lf": "9e432c2875e322c7ef32acec0b0fc9f67b4f081c80dce7ebe9e53736e7eb06cb"
+    },
+    {
+      "path": "apps/native-runtime/Cargo.toml",
+      "sha256_lf": "9597f67e385b3486ece0be3c9ac4c18ed86da694bbc56f65110b392e17afb110"
+    },
+    {
+      "path": "apps/native-runtime/src/lib.rs",
+      "sha256_lf": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1"
+    },
+    {
+      "path": "apps/native-runtime/tests/counter.rs",
+      "sha256_lf": "4f1d3d35c19c0a34060294e09ec0dee08b5b2f0bce6fc33c4d91a686459e1e63"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5"
+    },
+    {
+      "path": "crates/kernel/assets/minimal-exit.elf",
+      "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "b918684548caf593126da85f79ac702a917591bbb9d092de9da3e2c8c1df2623"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "sha256_lf": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "e54606a21a0152921041ddab5fef0ede92fbcc6f436026acac4770b1455e5e2e"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+    },
+    {
+      "path": "crates/kernel/src/asid.rs",
+      "sha256_lf": "7216e67ee636e5df1679728ee0911b90fd77bc0a76371dd090b300d8d205cd7e"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.S",
+      "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "sha256_lf": "ec7e1247f19e7e31ec586ddd173ab265437eaf63641460b08965a8a82ee6c2ac"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+    },
+    {
+      "path": "crates/kernel/src/execution.rs",
+      "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "sha256_lf": "10896a336d12aa9b43bdd3d71c0fd48a1a580aa0aa3488fd73be7673e5a96fa4"
+    },
+    {
+      "path": "crates/kernel/src/handles.rs",
+      "sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+    },
+    {
+      "path": "crates/kernel/src/ipc/deferred.rs",
+      "sha256_lf": "2dd4e5bddd94a02e05d743508c4e453fe175d990e5550f40ab21d70138d91ba4"
+    },
+    {
+      "path": "crates/kernel/src/ipc/native.rs",
+      "sha256_lf": "bcf6931bd66b9648110bd35be16d6358eda9478a901328c49c7ce42b089d87ac"
+    },
+    {
+      "path": "crates/kernel/src/ipc/storage.rs",
+      "sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991"
+    },
+    {
+      "path": "crates/kernel/src/ipc.rs",
+      "sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933"
+    },
+    {
+      "path": "crates/kernel/src/ipc_authority_workload.S",
+      "sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.S",
+      "sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.rs",
+      "sha256_lf": "9f02333e41c00ae18e7bd5eeb87a49ec07606e2b496ea87ab736b99372d902cc"
+    },
+    {
+      "path": "crates/kernel/src/ipc_death_workload.S",
+      "sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3"
+    },
+    {
+      "path": "crates/kernel/src/ipc_multi_workload.S",
+      "sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1"
+    },
+    {
+      "path": "crates/kernel/src/ipc_paths_benchmark.S",
+      "sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606"
+    },
+    {
+      "path": "crates/kernel/src/ipc_payload_workload.S",
+      "sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec"
+    },
+    {
+      "path": "crates/kernel/src/ipc_queue_workload.S",
+      "sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370"
+    },
+    {
+      "path": "crates/kernel/src/ipc_revoke_workload.S",
+      "sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.S",
+      "sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.rs",
+      "sha256_lf": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "669b1dd09ebf4c69c5412d593ae751f690e661b95a7034bfd1c2bcc469846fac"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0"
+    },
+    {
+      "path": "crates/kernel/src/native_boot.rs",
+      "sha256_lf": "05e2e2ae4241d73afecaf281d58fdfed3db2f1f9e8f5bbcae1deb2f73642b15f"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "sha256_lf": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "sha256_lf": "792b9eed41612401362e7110dd1beafcd767997a506fc8eeeb9dff06fcbe2944"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/config.rs",
+      "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "sha256_lf": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "sha256_lf": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "sha256_lf": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.S",
+      "sha256_lf": "d0414f46eadf9bb2b5329aaa06dd6f233c5e070f82ca7d489b12c55f510065c1"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.rs",
+      "sha256_lf": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df"
+    },
+    {
+      "path": "crates/kernel/src/security.rs",
+      "sha256_lf": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3"
+    },
+    {
+      "path": "crates/kernel/src/supervision.rs",
+      "sha256_lf": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a"
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.S",
+      "sha256_lf": "dd23d1db3daadb5e6271e206a5f3bddb65463bab483b5fed28c4b48cf5eb2bd5"
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.rs",
+      "sha256_lf": "1c42cee5b0d1e36c8962705556f95618d23cada5589cf74e67928e44310879c3"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da"
+    },
+    {
+      "path": "crates/kernel/src/test_support/arch_probes.S",
+      "sha256_lf": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732"
+    },
+    {
+      "path": "crates/kernel/src/test_support/ipc_inputs.rs",
+      "sha256_lf": "f9e598fecb2e6a7034fa9555f71b4c5ad0506f3cf43204dc85b0890f359a1a1b"
+    },
+    {
+      "path": "crates/kernel/src/test_support/irq_wait.rs",
+      "sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
+    },
+    {
+      "path": "crates/kernel/src/test_support/scheduler_inputs.rs",
+      "sha256_lf": "4c18b8edd47062cb0a802690075eade2a64d2ef2bd8d634aa0e991436e8a2ac7"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "1d016609499f75b3e16bc96ba9681251ca35313c5b0866ac6a1de5044753aafb"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "sha256_lf": "14eaf4b40767a63e88bdb284dddf24c11fcf0e3c6c33475bf137168e4ca6f61e"
+    },
+    {
+      "path": "crates/kernel/src/user_copy.rs",
+      "sha256_lf": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "dbeb6358918b8a690af305f32609c0879346d041406f6c799467dc082c5ec362"
+    },
+    {
+      "path": "crates/kernel-core/src/device.rs",
+      "sha256_lf": "8e4e073e258ebc0376d169b3b638a5bb2820dc8b2fe2162335a4d895e60e7f66"
+    },
+    {
+      "path": "crates/kernel-core/src/domain/pool.rs",
+      "sha256_lf": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05"
+    },
+    {
+      "path": "crates/kernel-core/src/domain.rs",
+      "sha256_lf": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788"
+    },
+    {
+      "path": "crates/kernel-core/src/elf.rs",
+      "sha256_lf": "faa97534ec072f53c773012af327345dde9a35cece294ac1e436dd7399a79e58"
+    },
+    {
+      "path": "crates/kernel-core/src/execution.rs",
+      "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "sha256_lf": "6effe77cfae8e5b64f35e7d2eeb4a4052d2dbe01666204bad06cd64a9af43cd2"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/identity.rs",
+      "sha256_lf": "0eb329df587f27963d3ba71ad3e939ef59d84c4175b542216b15315e2a250327"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/mailbox.rs",
+      "sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/tests.rs",
+      "sha256_lf": "3414e71e1cadfd20183d78c52f3b77e9afabf311c2398e5c2b29bfec98271a1f"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/wire.rs",
+      "sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc.rs",
+      "sha256_lf": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "4a68ad9259e1696dec995bc16b9934c45172ed8e4fa802d7f72829b5e581fca8"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "4423248c501cef4d50bc229fc6c97fa13eafbdea3632d037eb2b6a78f3fcd1a9"
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "sha256_lf": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling/ownership.rs",
+      "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling.rs",
+      "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+    },
+    {
+      "path": "crates/kernel-core/src/supervision.rs",
+      "sha256_lf": "96d0ccd94f13e4d1e47720e01c308b3c9e8dd37c216ed05078fc0c4ecefb7ca6"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/user_copy.rs",
+      "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+    },
+    {
+      "path": "crates/kernel-core/src/wait.rs",
+      "sha256_lf": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "5bc02706a994eee762c1465a8e2c491788678e6962dc839e537810a0543406e1"
+    },
+    {
+      "path": "crates/kernel-core/tests/bootstrap_grants.rs",
+      "sha256_lf": "e7e88c94a1e741bd7677868af0af3183c286ef42c5200aaed38775da7fd425c0"
+    },
+    {
+      "path": "crates/kernel-core/tests/device_contract.rs",
+      "sha256_lf": "b86a40aa7b781c2488d0e487e3b1aa220cbfaedefe32f693dc429bb5157d0a2c"
+    },
+    {
+      "path": "crates/kernel-core/tests/elf_contract.rs",
+      "sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5"
+    },
+    {
+      "path": "crates/kernel-core/tests/event_revocation.rs",
+      "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+    },
+    {
+      "path": "crates/kernel-core/tests/handle_contract.rs",
+      "sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c"
+    },
+    {
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447"
+    },
+    {
+      "path": "crates/kernel-core/tests/wait.rs",
+      "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558"
+    },
+    {
+      "path": "crates/routing/build.rs",
+      "sha256_lf": "89c475575801c9877959b4f6856837d52fd51e5290681504b37b521ce0241fc3"
+    },
+    {
+      "path": "crates/routing/src/conformance.rs",
+      "sha256_lf": "44a17a56a4112f570ac6e5932b0a84a827d7332e12fe7acc9fc8577576b5bfa4"
+    },
+    {
+      "path": "crates/routing/src/lib.rs",
+      "sha256_lf": "d4c8e1c0d5b2968f32fcbd6c41de552108ff7ea2232c76d75018db00f2de2322"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c"
+    },
+    {
+      "path": "crates/routing-demo/build.rs",
+      "sha256_lf": "14b3b0b7dc7c3c087fa1b5c630894018dfbb29a0ff2f231edd6775bfe6cf7e18"
+    },
+    {
+      "path": "crates/routing-demo/linker.ld",
+      "sha256_lf": "ac7202177d96d09a00d2a1ac6176d78723ba901d5c11601cda5ff4e07aa27a6f"
+    },
+    {
+      "path": "crates/routing-demo/src/main.rs",
+      "sha256_lf": "f7241ab5b6147051b5439b27162f117b250e368e13e3848f8251b8be01a87a93"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+    },
+    {
+      "path": "crates/window-compat/src/lib.rs",
+      "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+    },
+    {
+      "path": "crates/window-compat/tests/protocols.rs",
+      "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d"
+    },
+    {
+      "path": "crates/xtask/src/arena_clock/passport.rs",
+      "sha256_lf": "9ca4cdc068132564de33da07ea303d1e9fc9975611c14352865172d2bd3d9029"
+    },
+    {
+      "path": "crates/xtask/src/arena_clock.rs",
+      "sha256_lf": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "e0b0bcc5196064637284b8ee2299968c59345a596bf5948c5f17d044bee83746"
+    },
+    {
+      "path": "crates/xtask/src/matrix.rs",
+      "sha256_lf": "058cecab5631d0b102d320d0460ed262db0d2d1d0a4616b541f25cbdfe2acb4a"
+    },
+    {
+      "path": "crates/xtask/src/native_apps.rs",
+      "sha256_lf": "20617866ae4cf00dc6e6d987edbd8c215e5dc42c16516ae5f5662c8333041c11"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "4a4e1313760b677b500758c69d563fb1b82268503a6094d670242b15e31d3702"
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "sha256_lf": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506"
+    },
+    {
+      "path": "crates/xtask/src/timing.rs",
+      "sha256_lf": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598"
+    },
+    {
+      "path": "crates/xtask/src/workspace.rs",
+      "sha256_lf": "567279b7e34c6360e80a741dcb076ed1c509f7da25660aeafca1545108555196"
+    },
+    {
+      "path": "crates/xtask/tests/cli.rs",
+      "sha256_lf": "809f2f3839e02ec12753829dba8abd126fc32fb2ab766d29dd83fa4fdfc16d05"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "crates/xtask/tests/native_boundary.rs",
+      "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+    },
+    {
+      "path": "crates/xtask/tests/output_writer.rs",
+      "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+    },
+    {
+      "path": "crates/xtask/tests/scheduler_boundary.rs",
+      "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+    },
+    {
+      "path": "crates/xtask/tests/timer_wait.rs",
+      "sha256_lf": "439b2b70df1d62d70d4ae63bc8f03ea8699cc91d26c863fe30907d943a6a5791"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    },
+    {
+      "path": "tests/fixtures/native-lifecycle-observations.json",
+      "sha256_lf": "c96a7557ca5a43c5bf3874d50237e83db8a71edd1ed44f20adfc92a15e6c7801"
+    },
+    {
+      "path": "tests/fixtures/native-production-crash-observations.json",
+      "sha256_lf": "ea7ffb30afd673ab62751d5e81bfc967ba2216d6fd442f7f3a2f3bbaa3fb3cdf"
+    },
+    {
+      "path": "tests/fixtures/native-production-crash-shutdown-observations.json",
+      "sha256_lf": "d7e2cf2836fd018dc4085e8efc6ad034c4b2d1dec22f0acfb13ee0ab0313988d"
+    },
+    {
+      "path": "tests/fixtures/native-production-session-observations.json",
+      "sha256_lf": "0a5e314659bae6898c92fc2f3b7c82f705f828509be8215b053f7533e17aa313"
+    },
+    {
+      "path": "tests/native-apps/Cargo.toml",
+      "sha256_lf": "fc2f40a299cc163ae623d97d4a25b0491674f5f8192087ceab6ec4ba763c1338"
+    },
+    {
+      "path": "tests/native-apps/build.rs",
+      "sha256_lf": "bdc015f0fd2a44f8ac4d4e9330c96e72ce5c66a664d5b5a5f7df1bb240f54815"
+    },
+    {
+      "path": "tests/native-apps/src/abi-client.rs",
+      "sha256_lf": "20935d704d12997c1351f2185dea1b77fb6c5a80bdcd7b22e6e31724b0fc9e0b"
+    },
+    {
+      "path": "tests/native-apps/src/abi_steps.rs",
+      "sha256_lf": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7"
+    },
+    {
+      "path": "tests/native-apps/src/clock-client.rs",
+      "sha256_lf": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b"
+    },
+    {
+      "path": "tests/native-apps/src/lifecycle-client.rs",
+      "sha256_lf": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677"
+    },
+    {
+      "path": "tests/native-apps/src/lifecycle-peer.rs",
+      "sha256_lf": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278"
+    },
+    {
+      "path": "tests/system/hold-qemu-thread.ps1",
+      "sha256_lf": "5b66c5ea25ce4360c722cc6d8b63b4f2c87ad9747416f4357ef692d19caf0633"
+    },
+    {
+      "path": "tests/system/native-crash-recovery.cjs",
+      "sha256_lf": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95"
+    },
+    {
+      "path": "tests/system/native-crash-recovery.test.cjs",
+      "sha256_lf": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38"
+    },
+    {
+      "path": "tests/system/supervision-host-stall.cjs",
+      "sha256_lf": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f"
+    },
+    {
+      "path": "docs/kernel/clock.md",
+      "sha256_lf": "a24703a64f9d1e66ed02b9465400a28667a49f5662184b16d76d7f29cff064de"
+    },
+    {
+      "path": "research/arena/clock-query/dev-environment.json",
+      "sha256_lf": "d52780cfdef469252bcd5aa2b513365e21d505f4062709a39715293e2fa352a7"
+    },
+    {
+      "path": "research/arena/clock-query/input.json",
+      "sha256_lf": "159401618cdf165a384316b379537e792b6a3a73051b7432c3206164e8d60ff9"
+    },
+    {
+      "path": "research/arena/clock-query/prod-environment.json",
+      "sha256_lf": "a9827290c8bdab41bca3a74b4f4bc7c28d1d1847682e64f1f13c4a6a35de0afa"
+    },
+    {
+      "path": "research/arena/clock-query/protocol.json",
+      "sha256_lf": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72"
+    },
+    {
+      "path": "research/arena/clock-query/resources.json",
+      "sha256_lf": "392e03b36dbeb25bed21ef083e3e42ecd20e1e4ce0ce6cf6b1b398e120d1e5e6"
+    },
+    {
+      "path": "research/arena/profiles/clock-query-dev.json",
+      "sha256_lf": "ceaf039fc7e7bd837372a21083e5c0612145930c6c03db034617184e010afa0c"
+    },
+    {
+      "path": "research/arena/profiles/clock-query-prod.json",
+      "sha256_lf": "d347435c39a3c1a84c0e81d39064515c22728c1bf909edeb8279ee927d4c90eb"
+    },
+    {
+      "path": "research/arena/standards.json",
+      "sha256_lf": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351"
+    }
+  ],
+  "campaign": {
+    "path": "research/arena/runs/clock-query-2978ad9/campaign.json",
+    "sha256": "2229b274cba73417650c57fe79cc8636857011eb965f2f23c5c80779a5fd443a"
+  },
+  "passport_summary": {
+    "path": "research/arena/runs/clock-query-2978ad9/passport-summary.json",
+    "sha256": "7211c363f739bb746bc7a9213b22c80043710700707412fff5bc15f467371cbe"
+  },
+  "source_inventory": {
+    "path": "research/arena/runs/clock-query-2978ad9/source-files.json",
+    "sha256": "50fef13347c5a253179679f669eab7f8c9d313d257fd00144e1ea5a813e4995d"
+  },
+  "pairs": [
+    {
+      "profile": "DEV",
+      "pair": 0,
+      "order": ["OFF", "ON"],
+      "run": {
+        "path": "research/arena/runs/clock-query-2978ad9/dev-0-run.json",
+        "sha256": "3d92e3cf06162ee9178ecf6e3e9bfdff6e04b4a23e890696be5ae29319b88521"
+      },
+      "assessment": {
+        "path": "research/arena/runs/clock-query-2978ad9/passports/dev-0/assessment.json",
+        "sha256": "4f0277a5ed5ef55225abec0c9eb051d2afb48e4a3b5a56b582eb904268783871"
+      },
+      "admission_state": "STRUCTURALLY_ADMISSIBLE",
+      "record_eligible": false,
+      "comparison_class": "5aa45b42682dfca0138eff9aaea1d26caac04bd813b5969d8dba349d79e66703",
+      "artifact_count": 27
+    },
+    {
+      "profile": "DEV",
+      "pair": 1,
+      "order": ["ON", "OFF"],
+      "run": {
+        "path": "research/arena/runs/clock-query-2978ad9/dev-1-run.json",
+        "sha256": "44d81e47acdd74da4b323e753f17a54fc0a4d58fafb422b02676a4b45acc1d6f"
+      },
+      "assessment": {
+        "path": "research/arena/runs/clock-query-2978ad9/passports/dev-1/assessment.json",
+        "sha256": "dc8388f128a3d5c567bac0498d1302f442c50ed28e86f3075127d585f7514a83"
+      },
+      "admission_state": "STRUCTURALLY_ADMISSIBLE",
+      "record_eligible": false,
+      "comparison_class": "5aa45b42682dfca0138eff9aaea1d26caac04bd813b5969d8dba349d79e66703",
+      "artifact_count": 27
+    },
+    {
+      "profile": "DEV",
+      "pair": 2,
+      "order": ["OFF", "ON"],
+      "run": {
+        "path": "research/arena/runs/clock-query-2978ad9/dev-2-run.json",
+        "sha256": "a21227d238ac63ee2b4ce0472a6e70826591c7fe307834e92cdc4ebc9551e9a7"
+      },
+      "assessment": {
+        "path": "research/arena/runs/clock-query-2978ad9/passports/dev-2/assessment.json",
+        "sha256": "0c34fcf400d6145e59ad46e9a4bf57941054e2e3e9f4dcc44fea3a7dc2f6e4c1"
+      },
+      "admission_state": "STRUCTURALLY_ADMISSIBLE",
+      "record_eligible": false,
+      "comparison_class": "5aa45b42682dfca0138eff9aaea1d26caac04bd813b5969d8dba349d79e66703",
+      "artifact_count": 27
+    },
+    {
+      "profile": "PROD",
+      "pair": 0,
+      "order": ["OFF", "ON"],
+      "run": {
+        "path": "research/arena/runs/clock-query-2978ad9/prod-0-run.json",
+        "sha256": "1408d32c746dbe4576f8177dce0c258b4129284a55e1d649c902962cc55d8ee7"
+      },
+      "assessment": {
+        "path": "research/arena/runs/clock-query-2978ad9/passports/prod-0/assessment.json",
+        "sha256": "1757ac4c336575b96e222e56c29de5419929ea66b0b3015f0971f16d36df6358"
+      },
+      "admission_state": "STRUCTURALLY_ADMISSIBLE",
+      "record_eligible": false,
+      "comparison_class": "0fc65047a28ae8e761fabe27096c5b4215fdf842d95348ed2f8c2bfd429ded3d",
+      "artifact_count": 27
+    },
+    {
+      "profile": "PROD",
+      "pair": 1,
+      "order": ["ON", "OFF"],
+      "run": {
+        "path": "research/arena/runs/clock-query-2978ad9/prod-1-run.json",
+        "sha256": "5997a9c88f3ce720886135ef195bb9ea298880a6a9f98e2d059a9c39fdadfb19"
+      },
+      "assessment": {
+        "path": "research/arena/runs/clock-query-2978ad9/passports/prod-1/assessment.json",
+        "sha256": "f015326eeda25ce9cb49141fa60daafe0b28b6c7ea6de315b877b138f24772cc"
+      },
+      "admission_state": "STRUCTURALLY_ADMISSIBLE",
+      "record_eligible": false,
+      "comparison_class": "0fc65047a28ae8e761fabe27096c5b4215fdf842d95348ed2f8c2bfd429ded3d",
+      "artifact_count": 27
+    },
+    {
+      "profile": "PROD",
+      "pair": 2,
+      "order": ["OFF", "ON"],
+      "run": {
+        "path": "research/arena/runs/clock-query-2978ad9/prod-2-run.json",
+        "sha256": "0e54c643b6190441d350a1bb9221958459d5f5faaad068eecafe6df57c8e3ebb"
+      },
+      "assessment": {
+        "path": "research/arena/runs/clock-query-2978ad9/passports/prod-2/assessment.json",
+        "sha256": "6f9caeeaf7c55e3245c6a65d5ce8e43950b7f4581d5a3461f1139f58e3051e23"
+      },
+      "admission_state": "STRUCTURALLY_ADMISSIBLE",
+      "record_eligible": false,
+      "comparison_class": "0fc65047a28ae8e761fabe27096c5b4215fdf842d95348ed2f8c2bfd429ded3d",
+      "artifact_count": 27
+    }
+  ],
+  "verified": {
+    "current_source_digests": 151,
+    "attempts": 12,
+    "passed": 12,
+    "pair_count": 6,
+    "guest_boots_per_profile": 6,
+    "warmup_samples_per_boot": 4,
+    "measured_samples_per_boot": 24,
+    "frequency_ticks_per_second": 62500000,
+    "report_words_per_boot": 64,
+    "useful_queries_per_boot": 28,
+    "read_window_delta_each_boot": 0,
+    "pair_order_per_profile": [
+      ["OFF", "ON"],
+      ["ON", "OFF"],
+      ["OFF", "ON"]
+    ],
+    "all_kernel_and_actor_image_hashes_match": true,
+    "all_run_artifacts_resolve_inside_portable_bundle": true,
+    "portable_files_byte_identical_to_original": 169,
+    "all_six_pairs_structurally_admissible": true,
+    "record_eligible": false,
+    "contribution_state": "UNATTRIBUTED",
+    "normal_root_exit": true,
+    "owners_released": true,
+    "frames_restored": true,
+    "live_processes_and_domains": 0,
+    "retained_source_and_definition_digests": 160
+  },
+  "review_checks": [
+    "Compared every retained source digest against the current reviewed implementation, with declared LF normalization or binary bytes.",
+    "Verified each original kernel and root/service/client ELF byte hash, QEMU kernel identity, exact declared arguments/profile/features/compiler version and observed frequency.",
+    "Verified predetermined OFF/ON, ON/OFF, OFF/ON order separately for DEV and PROD; four retained warmups and twenty-four measured samples per invocation.",
+    "Matched each report to its exact 64-word layout, sample arrays, checked nonnegative unattributed residual, unique loader/report/completion/device events and normal reclamation.",
+    "Verified all six run artifact digests and repository-contained portable paths, including retained source/negative reviews and command logs.",
+    "Verified DEV pair comparison classes agree within DEV, PROD classes agree within PROD, and DEV differs from PROD; no class mixing.",
+    "Compared every copied portable file byte-for-byte with the original campaign; original per-attempt paths remain provenance labels while run artifact links resolve within the portable bundle.",
+    "Verified the full-matrix receipt has the same 151-file execution inventory as the CLOCK campaign, every obligation passed, and DEV/PROD suites each reported 147 checks. Matrix source inventory also matches current source."
+  ],
+  "limits": [
+    "Full matrix separately passed all 144 obligations using 32 executed and 112 reused observations; this is not 144 independent guest executions or a substitute for the twelve CLOCK pilot boots.",
+    "QEMU TCG architectural-counter observations are not PMU cycles, exclusive CPU time or physical-hardware throughput.",
+    "Execution-window deltas include transition edges and possible host stalls; residual does not localize kernel, IRQ, scheduler or host cost.",
+    "ON/OFF compares only incremental intermediate recorder stores; endpoint probes remain and no exact observer-cost subtraction is performed.",
+    "Twenty-four correlated within-boot samples and three pairs per profile do not establish adequate p95/p99 tails, uncertainty bounds, stable regression limits or superiority.",
+    "SEC acceptance covers the declared execution/oracle/source/evidence boundary only; no vulnerability certification, malicious-kernel resistance or cryptographic attestation.",
+    "Resource peak, physical-hardware, broad reliability/fuzz and record-holder claims remain unsupported; record_eligible remains false."
+  ],
+  "profiles": {
+    "dev": {
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/arena-clock/1791408485740-34204\\dev/pair-0/off\\kernel.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "7e976ed4d6c8464b315ad16fbfe1c87bbab5509876efa7e7607cd61e3c54f78b",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "source": "First OFF invocation; all three ON/OFF pairs verified separately above."
+    },
+    "prod": {
+      "run": {
+        "accelerator": "TCG",
+        "active_cpus": 2,
+        "arguments": [
+          "-machine",
+          "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+          "-cpu",
+          "cortex-a57",
+          "-accel",
+          "tcg",
+          "-smp",
+          "2",
+          "-m",
+          "256M",
+          "-display",
+          "none",
+          "-serial",
+          "stdio",
+          "-monitor",
+          "none",
+          "-nic",
+          "none",
+          "-no-reboot",
+          "-kernel",
+          "target/kernel/arena-clock/1791408485740-34204\\prod/pair-0/off\\kernel.elf"
+        ],
+        "configured_cpus": 2,
+        "elf_sha256": "25b3eaf21daa850a7602be81807cb87e762e60043ddf9738a32e4ad96693acbd",
+        "measurement_claim": "emulator timer ticks; not hardware throughput",
+        "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+        "timeout_seconds": 30
+      },
+      "source": "First OFF invocation; all three ON/OFF pairs verified separately above."
+    }
+  },
+  "correctness": {
+    "clock_campaign": "passed",
+    "matrix": "passed",
+    "note": "Independent full-matrix receipt verified against the identical 151-file execution source inventory; separate from twelve CLOCK pilot boots."
+  },
+  "portable_assessment_recheck": {
+    "tool": "repository-checks arena assess",
+    "binary_sha256": "b5b5ae26931b81e132e0da36564c5197f4df9313094e7fb6d177f86e7e849e14",
+    "runs": 6,
+    "exit_codes": [0, 0, 0, 0, 0, 0],
+    "admission_state": "STRUCTURALLY_ADMISSIBLE",
+    "record_eligible": false,
+    "scope": "Executed existing assessor against relocated root run files; all referenced artifacts resolve within portable campaign."
+  },
+  "full_matrix": {
+    "receipt": {
+      "path": "research/measurements/runs/1791408804253-phase40-clock-passport-488919492db0.json",
+      "sha256": "1e6b5dfd336c6a36e1aff2e57dcfa5d1d2c3d7601a90ddbcfec198b2a970eb84"
+    },
+    "exact_commit": "2978ad9693b7df1e70487ffbf01d5ffdfe27fe31",
+    "worktree_dirty_at_execution": true,
+    "source_inventory_equals_clock_campaign": true,
+    "obligations": 144,
+    "executed": 32,
+    "reused": 112,
+    "required_control_tasks": 140,
+    "ipc_control_tasks": 56,
+    "tests_per_profile": {
+      "DEV": 147,
+      "PROD": 147
+    },
+    "coverage_kinds": {
+      "invariant": 21,
+      "legacy-failure": 10,
+      "mixed-input-and-invariant": 16,
+      "negative-input": 93,
+      "ordinary": 4
+    },
+    "status": "passed"
+  }
+}

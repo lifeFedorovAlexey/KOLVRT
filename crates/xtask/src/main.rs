@@ -1,3 +1,4 @@
+mod arena_clock;
 mod matrix;
 mod native_apps;
 mod output;
@@ -498,6 +499,7 @@ fn run() -> Result<()> {
     fs::create_dir_all("target/kernel")?;
     let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {
+        Some("arena") if args.get(1).map(String::as_str) == Some("run") => arena_clock::run(&args[2..]),
         Some("docs" | "arena") => {
             let status = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()))
                 .args(["run", "--locked", "-p", "repository-checks", "--", &args[0]])
@@ -625,7 +627,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask arena run clock-query | selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {
@@ -902,18 +904,19 @@ fn execute_mode(
     payload: bool,
     show_console: bool,
 ) -> Result<()> {
-    execute_validated(elf, tests, machine, payload, show_console, false)
+    execute_validated(elf, tests, machine, payload, show_console, None)
 }
 fn execute_native(elf: &Path) -> Result<()> {
-    execute_validated(elf, false, true, false, true, true)
+    execute_validated(elf, false, true, false, true, Some(native_apps::validate))
 }
+type EventValidator = fn(&[Value]) -> Result<Value>;
 fn execute_validated(
     elf: &Path,
     tests: bool,
     machine: bool,
     payload: bool,
     show_console: bool,
-    native: bool,
+    validator: Option<EventValidator>,
 ) -> Result<()> {
     let log = elf.with_extension("log");
     let err = elf.with_extension("stderr");
@@ -982,8 +985,8 @@ fn execute_validated(
         })
         .cloned()
         .collect();
-    if native {
-        native_apps::validate(&native_events)?;
+    if let Some(validate) = validator {
+        validate(&native_events)?;
     } else {
         output::validate(&native_events, tests, TESTS, platform_config::ACTIVE_CPUS)?;
     }

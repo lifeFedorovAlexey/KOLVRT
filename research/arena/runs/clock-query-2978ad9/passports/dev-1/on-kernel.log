@@ -1,0 +1,47 @@
+@KOLVRT/1 {"event":"device-observation","status":"pass","kind":"pl011","reservation":"boot-console","scope":1,"generation":1,"mmio_base":150994944,"mmio_size":4096,"irq":33,"interrupt_controller":32771}
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | DEV | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 63981 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+[DEBUG] process: slot=0 generation=1 owner=0 state=Creating rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Prepared rollback=None
+@KOLVRT/1 {"event":"native-root-image","format":"elf64","generation":1}
+[DEBUG] process: slot=0 generation=1 owner=0 state=Admitted rollback=None
+@KOLVRT/1 {"event":"native-report-progress","words":[1129073409, 1, 2, 62500000, 4, 24, 28, 0, 246044, 5419, 5312, 5219, 5243, 5238, 5257, 5275, 5244, 37263, 5288, 5219, 5225, 5244, 5225, 5250, 5300, 5268, 5563, 5388, 5594, 5250, 5243, 5232, 5218, 5243, 5219, 5219, 20275, 319, 269, 263, 268, 256, 262, 257, 262, 1019, 268, 256, 262, 257, 263, 257, 263, 262, 251, 256, 262, 256]}
+@KOLVRT/1 {"event":"native-process-terminal","slot":0,"generation":1,"owner":0,"state":2,"exit_code":0,"ipc_blocks":0,"ipc_wakes":0}
+[DEBUG] process: slot=0 generation=1 owner=0 state=Completed rollback=None
+@KOLVRT/1 {"event":"native-report-progress","words":[1129073409, 1, 2, 62500000, 4, 24, 28, 0, 246044, 5419, 5312, 5219, 5243, 5238, 5257, 5275, 5244, 37263, 5288, 5219, 5225, 5244, 5225, 5250, 5300, 5268, 5563, 5388, 5594, 5250, 5243, 5232, 5218, 5243, 5219, 5219, 20275, 319, 269, 263, 268, 256, 262, 257, 262, 1019, 268, 256, 262, 257, 263, 257, 263, 262, 251, 256, 262, 256, 256, 256, 256, 256, 256, 257]}
+@KOLVRT/1 {"event":"native-task","generation":1,"state":2,"ipc_blocks":0,"terminal_blocks":0,"ipc_wakes":0,"peer_faults_at_exit":0}
+@KOLVRT/1 {"event":"native-scheduler","all_blocked":0}
+@KOLVRT/1 {"event":"native-user-report","words":[1129073409, 1, 2, 62500000, 4, 24, 28, 0, 246044, 5419, 5312, 5219, 5243, 5238, 5257, 5275, 5244, 37263, 5288, 5219, 5225, 5244, 5225, 5250, 5300, 5268, 5563, 5388, 5594, 5250, 5243, 5232, 5218, 5243, 5219, 5219, 20275, 319, 269, 263, 268, 256, 262, 257, 262, 1019, 268, 256, 262, 257, 263, 257, 263, 262, 251, 256, 262, 256, 256, 256, 256, 256, 256, 257]}
+[DEBUG] process: slot=0 generation=1 owner=0 state=Reclaiming rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Free rollback=None
+@KOLVRT/1 {"event":"native-boot","status":"complete","root_exit":0,"owners_released":true,"frames_restored":true,"live_processes":0,"live_domains":0}
+[OK] boot: validation complete; powering off (not a running system)

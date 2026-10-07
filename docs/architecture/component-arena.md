@@ -1,7 +1,7 @@
 # KOLVRT Arena — Replaceable Component Arena / Performance & Reliability Passports
 
 Document status: CURRENT
-Evidence scope: experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.
+Evidence scope: experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.
 Current reference: [Benchmark methodology](benchmarking.md); [ADR-0006](../architecture-decisions/0006-metrics.md)
 
 <a name="kolvrt-arena-scope"></a>
@@ -90,7 +90,7 @@ Arena evidence supports a migration decision; it does not authorize deployment o
 
 ## Roadmap direction and acceptance gates
 
-Track **Replaceable Component Arena / Performance & Reliability Passports** as a distinct roadmap direction alongside the measurement and reliability work identified as #32–#36. The shared contract is tracked by #93; #32–#36 own real pipelines and remain open. Sequence follows current architectural decisions, not whichever prototype was built first.
+Track **Replaceable Component Arena / Performance & Reliability Passports** as a distinct roadmap direction alongside the measurement and reliability work identified as #32–#36. The shared contract is tracked by #93; The bounded CLOCK pipeline for #32 is accepted separately; #33–#36 retain their IPC, reliability, fuzz and publication scopes. Sequence follows current architectural decisions, not whichever prototype was built first.
 
 1. Define contract and suite ownership/versioning for the first real component family. Review inputs, outputs, authority, lifetime and failures; provide shared correctness and negative controls before admitting candidates.
 2. Design versioned passport and receipt schemas with explicit unknown/status handling. Validate evidence links, units, cohort compatibility and rejected/missing measurements; retain raw artifacts and reproducible recipes.
@@ -104,9 +104,13 @@ Initial delivery is host tooling and reviewed build-time substitution. Productio
 
 ## Measurement contract foundation
 
-Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the standards-based Arena model A0–A5. The [measurement contract](arena-measurement-contract.md) now implements closed registry/profile/import schemas and offline comparison/admission through cargo xtask arena. This is experimental host tooling, not an executed kernel passport or record service. PERF/SEC/REL/RES remain separate dimensions; SEC uses TOE/SPD/SFR/SAR, not a security score. #32–#36 and #50 own their real pipelines.
+Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the standards-based Arena model A0–A5. The [measurement contract](arena-measurement-contract.md) now implements closed registry/profile/import schemas and offline comparison/admission through cargo xtask arena. The shared host foundation remains experimental. The separately accepted [CLOCK pilot](../research/clock-passport.md) supplies a real QEMU passport; no record service is implemented. PERF/SEC/REL/RES remain separate dimensions; SEC uses TOE/SPD/SFR/SAR, not a security score. #32–#36 and #50 own their real pipelines.
 
 Fresh machine-mode evidence execution through the shared xtask runner requires exactly one validated [boot device observation](../kernel/devices.md). A missing inventory event fails the current execution gate even when other workload events pass. Historical receipt reading remains separate and accepts pre-descriptor streams; that compatibility cannot admit a new run without the observation. This changes evidence admission, not kernel performance, measurement methodology or Arena record eligibility.
+
+## CLOCK pilot integration
+
+The CLOCK pilot adds a real-kernel campaign producer through the existing xtask/native executor, with separate DEV/PROD profiles, frozen protocol, checked report oracle and matched recorder observations. Its [accepted bounded passport](../research/clock-passport.md) retains twelve successful DEV/PROD boots and six portable pair receipts; independent admission remains structural. Existing offline admission remains structural and record eligibility remains false; this producer does not implement records/history, hardware performance, IPC passports or REL/fuzz campaigns. Execution acceptance and current evidence belong to the pilot feature, not an inferred acceptance of the entire Arena.
 
 <!-- knowledge -->
 
@@ -121,7 +125,7 @@ Fresh machine-mode evidence execution through the shared xtask runner requires e
       "id": "kolvrt.arena",
       "anchor": "kolvrt-arena-scope",
       "kind": "feature",
-      "summary": "Experimental offline Arena contract validation; real measurement and record gates remain open.",
+      "summary": "Experimental general Arena validation with a separately accepted bounded CLOCK pilot; record publication gates remain open.",
       "depends_on": [
         "kolvrt.arena.contract",
         "kolvrt.arena.admission",
@@ -137,11 +141,11 @@ Fresh machine-mode evidence execution through the shared xtask runner requires e
       "tags": ["arena", "passports", "components"],
       "read_when": ["compare replaceable components Arena"],
       "gaps": [
-        "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates; no kernel benchmark runner or records publication.",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
         "sources": [
           "crates/repository-checks/src/arena.rs",
           "crates/repository-checks/tests/arena.rs",
@@ -166,7 +170,7 @@ Fresh machine-mode evidence execution through the shared xtask runner requires e
         "limitations": [
           "Producer assertions are not attestation; record_eligible is always false. The proposed range profile and synthetic tests do not establish kernel PERF/SEC acceptance, DEV attribution, PROD external outcomes or physical ARM64 performance."
         ],
-        "next_gate": "Review source mappings and implement the first real kernel mechanism pipeline in #32; independently verify execution/applicability before records.",
+        "next_gate": "Extend reviewed pipelines to IPC #33 and REL/fuzz/SAR #34/#35; implement publication/regression #36 and independently verified contribution/custody before records. Preserve the accepted CLOCK pilot scope.",
         "verification": [
           {
             "environment": "host-process",

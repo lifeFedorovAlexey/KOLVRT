@@ -1,7 +1,7 @@
 # Native ELF applications и постоянный сервис
 
 Document status: CURRENT
-Evidence scope: принятый bounded slice Phase 3.7 на implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery и штатное освобождение ресурсов; QEMU DEV/PROD. Сбой 333726b и прежние source-bound receipts сохранены. Последующий readiness regression на 038d960 открыт как #133; закрытие master #37 ожидает его разбора.
+Evidence scope: принятый bounded slice Phase 3.7 на implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery и штатное освобождение ресурсов; QEMU DEV/PROD. Сбой 333726b и прежние source-bound receipts сохранены. Последующий readiness regression на 038d960 сохранён в закрытом владельцем #133; master #37 закрыт после reviewed PR #137 и успешных проверок merged main. Атрибуция исторической задержки остаётся UNKNOWN.
 Current reference: [Принятая основа supervision](supervision.md)
 
 <a name="native-elf-applications"></a>
@@ -18,19 +18,19 @@ Finite client SEND binding использует существующий checkpo
 
 [Сбой 333726b](../../../../research/results/native-phase37-333726b-failure.json) сохранён: stage 1002, Submit=1, Expired=16, coverage 15. Этот stage использовался и для committed-crash payload 2, и для последующего readiness probe payload 1; прежние diagnostics не различают их. Поэтому утверждение, что именно payload 2 вызвал тот сбой, не доказано. Изменение 43af402 отдельно выбирает максимальный допустимый deadline для committed-crash input; readiness сохраняет /8 и все реальные COMMIT/EffectUnknown/death/resource assertions. Три локальных повтора DEV+PROD прошли 147 checks/profile, но они не доказывают причину прежнего сбоя или универсальное исправление readiness expiry.
 
-BOUNDED_IMPLEMENTED сохраняет принятую область реализации. QEMU verification текущих исходников теперь STALE: изменения fixture/harness #133 требуют новой exact-source приёмки. Прежний VERIFIED receipt сохраняет свой source scope; readiness, image trust (#38), physical ARM и performance acceptance отделены. ABI experimental, startup-crash и post-commit replay не заявляются. Ниже сохранена история прежних revisions; это не текущий CI status.
+BOUNDED_IMPLEMENTED сохраняет принятую область реализации. QEMU verification текущих исходников остаётся STALE из-за описанных ниже изменений общего CLOCK runner/SDK; закрытие bounded milestone не обновляет прежние receipts для изменённых исходников. Прежний VERIFIED receipt сохраняет свой source scope; readiness, image trust (#38), physical ARM и performance acceptance отделены. ABI experimental, startup-crash и post-commit replay не заявляются. Ниже сохранена история прежних revisions; это не текущий CI status.
 
 ## Наблюдаемый отказ regression от 2026-10-07
 
 [Issue #133](https://github.com/lifeFedorovAlexey/KOLVRT/issues/133) сохраняет отказ shard 0 в [CI 37576487522](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37576487522) на documentation-only 038d960. После committed crash, создания replacement и отклонения старых token/SEND новый readiness probe payload 1 наследует stage 1002; он получает /8 и отклоняется Submit как Expired до admission. Интервал между clocks равен 131.395008 ms при deadline 125 ms; рост EL0 residency равен 1.499088 ms. Остальные 129.895920 ms не распределены между kernel/checkpoint и host/QEMU scheduling; задержка ответа сервиса этим не измерена.
 
-Native job прошёл независимо; прежние успешные source-bound receipts и bounded acceptance сохраняются. Это новый отказ полного regression, а не доказательство отказа всех native QEMU сценариев. Закрытие master #37 ожидает разбора #133; увеличение timeout, повтор до зелёного результата и автоматическая performance allowance не являются решением.
+Native job прошёл независимо; прежние успешные source-bound receipts и bounded acceptance сохраняются. Это был последующий отказ полного regression, а не доказательство отказа всех native QEMU сценариев. Впоследствии владелец закрыл #133; исходная причина задержки остаётся UNKNOWN. Master #37 закрыт после прохождения всех обязательных проверок PR #137 на 7de095b и [merged main bc8222a](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37688334584). Такой disposition не устанавливает историческую причинность и не делает увеличение timeout, повторы до зелёного или выдуманные performance allowances допустимыми исправлениями.
 
 ## Диагностическое изменение исходников #133
 
 [Диагностика supervision](supervision.md) теперь различает stages 1030/1040/1050/1060/1005 и публикует payload_operation/probe_timing_valid. UNIT boundary checks вызывают единственный production Endpoint::submit. Внешний Windows harness приостановил принадлежащий его QEMU host thread CPU0 на 500 ms и воспроизвёл отказ readiness stage 1030, coverage 15, Expired до admission, сохранив /8 и hash образа. Это диагностическое свидетельство возможного host starvation, не установленная причина прежнего CI и не успешная regression.
 
-Production behavior, timeout и retries не меняются. Новые fixture/harness sources делают прежний QEMU receipt устаревшим для текущего дерева; он сохранён вместе с историей приёмки. Для #133 и закрытия master #37 всё ещё нужны обоснованный разбор и свежие exact-source checks.
+Production behavior, timeout и retries не меняются. Новые fixture/harness sources делают прежний QEMU receipt устаревшим для текущего дерева; он сохранён вместе с историей приёмки. Issues #133 и #37 теперь закрыты в рамках принятого bounded disposition. Внешнее воспроизведение host stall показывает возможный класс причин, а не причину исторического отказа; последующие успешные проверки не меняют этого различия.
 
 ## Классификация тестов и единственная реализация
 
@@ -127,6 +127,11 @@ B5 issue #109 меняет только потребление evidence экви
 При загрузке Phase 4.0 адрес консоли берётся из неизменяемого проверенного [дескриптора PL011](devices.md) с явным резервированием для загрузочной консоли. Это публикует идентичность наблюдения, а не MMIO/IRQ grant приложения. Поэтому выполнение native-приложений, IPC и supervision сохраняет существующее владение консолью; привязка драйвера или доступ к устройству не добавляются к их полномочиям. Runner требует ровно одно проверенное событие инвентаризации для каждого свежего выполнения с машинным evidence; исторический reader отдельно сохраняет возможность чтения старых свидетельств без этого события. Предыдущие свидетельства feature сохраняют свою область исходников и не подтверждают текущую проверку устройств.
 
 Регрессионная проверка кванта процесса допускает ноль в первом снимке счётчика, когда pending timer IRQ предшествует первой инструкции участника. Она по-прежнему требует последующего роста счётчиков на обоих CPU, сохранности контекста, прогресса соседнего процесса до завершения spinner, неизменного бюджета slices и итогового reclaim. Это исправляет неверное предположение теста; политика планирования и runtime deadlines не меняются.
+
+## Интеграция пилота CLOCK
+
+Паспорт CLOCK использует общий сборщик оригинальных ELF с явно выбранным внешним ABI-клиентом в роли root. Он не запускает production-сервис и не заявляет проверку supervisor. Выбор обычных сценариев service, lifecycle и crash-recovery не меняется. Общий executor выбирает oracle сценария, сохраняя обязательную проверку наблюдения устройства для свежего запуска. Снимок SDK открывает существующие результаты CLOCK; прежний вызов с двумя результатами сохраняет исходную последовательность инструкций DEV. Это изменение исходников runner/SDK требует новых доказательств на точных исходниках; исторические native receipts сохраняют исходный scope.
+
 <!-- knowledge -->
 
 ```json
@@ -257,12 +262,12 @@ B5 issue #109 меняет только потребление evidence экви
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Resolve Issue #133 readiness regression and renew exact-source acceptance after diagnostic/test changes before master #37 closure. Retain prior bounded implementation acceptance. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness have separate scopes.",
+        "next_gate": "Continue the Phase 4 roadmap after owner disposition of #133 and reviewed closure of master #37. Preserve bounded Phase 3.7 acceptance; renew owner-specific exact-source evidence when claiming current native verification. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness remain separate scopes.",
         "verification": [
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Issue #133 changes fixture diagnostics, deadline-boundary tests and the external host-stall harness after the retained 43af402 source. New exact-source verification and regression disposition are pending; historical passing native evidence is preserved and is not a blanket current-source failure claim.",
+            "reason": "The retained 43af402 receipt predates diagnostic/test and CLOCK shared runner/SDK changes, so this owner-specific verification remains STALE. The owner closed #133 and master #37 closed after reviewed PR #137 and passing merged-main bc8222a checks. Historical latency attribution remains UNKNOWN; those dispositions do not relabel the old receipt as current-source evidence.",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45"

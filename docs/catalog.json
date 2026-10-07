@@ -750,7 +750,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 18326,
+      "estimated_bytes": 19448,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -826,7 +826,7 @@
       ],
       "document": "doc.kolvrt.arena.measurement-contract",
       "document_status": "CURRENT",
-      "estimated_bytes": 9662,
+      "estimated_bytes": 10618,
       "id": "doc.kolvrt.arena.measurement-contract",
       "kind": "subsystem-contract",
       "path": "docs/architecture/arena-measurement-contract.md",
@@ -841,7 +841,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 21465,
+      "estimated_bytes": 21936,
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
       "path": "docs/ci/performance.md",
@@ -927,9 +927,19 @@
       "title": "Native capability scope and revocation"
     },
     {
+      "document": "doc.kolvrt.kernel.clock",
+      "document_status": "CURRENT",
+      "estimated_bytes": 4619,
+      "id": "doc.kolvrt.kernel.clock",
+      "kind": "subsystem-contract",
+      "path": "docs/kernel/clock.md",
+      "summary": "Read-only current-process clock and partial execution-window observations.",
+      "title": "Native clock observations"
+    },
+    {
       "document": "doc.kolvrt.kernel.devices",
       "document_status": "CURRENT",
-      "estimated_bytes": 8011,
+      "estimated_bytes": 8519,
       "id": "doc.kolvrt.kernel.devices",
       "kind": "subsystem-contract",
       "path": "docs/kernel/devices.md",
@@ -959,7 +969,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 28569,
+      "estimated_bytes": 28989,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -979,7 +989,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 37988,
+      "estimated_bytes": 39349,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -1009,7 +1019,7 @@
     {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 28690,
+      "estimated_bytes": 29404,
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "path": "docs/kernel/supervision.md",
@@ -1079,6 +1089,16 @@
       "path": "docs/architecture/native-model.md",
       "summary": "Native intended authority, capability-type admission and explicit deferral.",
       "title": "Native model"
+    },
+    {
+      "document": "doc.kolvrt.research.clock-passport",
+      "document_status": "CURRENT",
+      "estimated_bytes": 13026,
+      "id": "doc.kolvrt.research.clock-passport",
+      "kind": "subsystem-contract",
+      "path": "docs/research/clock-passport.md",
+      "summary": "Bounded external CLOCK envelope protocol and separate observer/security evidence.",
+      "title": "Clock-query Arena pilot"
     },
     {
       "document": "doc.kolvrt.research.cost-l-queries",
@@ -1190,14 +1210,14 @@
       "document_status": "CURRENT",
       "estimated_bytes": 1237,
       "gaps": [
-        "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "id": "kolvrt.arena",
       "implementation": "EXPERIMENTAL",
       "kind": "feature",
       "path": "docs/architecture/component-arena.md",
       "read_when": ["compare replaceable components Arena"],
-      "summary": "Experimental offline Arena contract validation; real measurement and record gates remain open.",
+      "summary": "Experimental general Arena validation with a separately accepted bounded CLOCK pilot; record publication gates remain open.",
       "tags": ["arena", "passports", "components"],
       "title": "Principle and architectural boundary"
     },
@@ -1212,6 +1232,25 @@
       "path": "docs/architecture/component-arena.md",
       "summary": "Shared correctness, security, reliability and tail-latency admission.",
       "title": "Common test contract and admission"
+    },
+    {
+      "anchor": "kolvrt-arena-clock-passport",
+      "depends_on": [
+        "kolvrt.clock.query.api",
+        "doc.kolvrt.arena.measurement-contract",
+        "adr.0006",
+        "law.036",
+        "law.044"
+      ],
+      "document": "doc.kolvrt.research.clock-passport",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1238,
+      "id": "kolvrt.arena.clock-passport",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/research/clock-passport.md",
+      "summary": "Real mechanism passport pilot with partial accounting and matched recorder protocol.",
+      "title": "Pilot and useful operation"
     },
     {
       "anchor": "kolvrt-arena-comparison",
@@ -1278,7 +1317,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 1978,
+      "estimated_bytes": 2061,
       "id": "kolvrt.arena.roadmap",
       "kind": "contract-section",
       "path": "docs/architecture/component-arena.md",
@@ -1357,6 +1396,30 @@
       "summary": "Measured legacy baseline, integrity-checked caches, parallel checks and complete four-shard QEMU matrix aggregation.",
       "tags": ["ci", "timing", "cache", "tooling"],
       "title": "Supervisor integration and workload equivalence"
+    },
+    {
+      "anchor": "kolvrt-clock-query",
+      "depends_on": ["adr.0015", "law.036"],
+      "document": "doc.kolvrt.kernel.clock",
+      "document_status": "CURRENT",
+      "estimated_bytes": 553,
+      "id": "kolvrt.clock.query",
+      "kind": "subsystem-contract",
+      "path": "docs/kernel/clock.md",
+      "summary": "Existing native CLOCK query and snapshot SDK.",
+      "title": "Clock query"
+    },
+    {
+      "anchor": "kolvrt-clock-query-api",
+      "depends_on": ["kolvrt.clock.query"],
+      "document": "doc.kolvrt.kernel.clock",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1171,
+      "id": "kolvrt.clock.query.api",
+      "kind": "api-contract",
+      "path": "docs/kernel/clock.md",
+      "summary": "CLOCK x0/x1/x2/x3 outputs, checked deltas and attribution limits.",
+      "title": "Register contract"
     },
     {
       "anchor": "kolvrt-compatibility-manifests",
@@ -1721,7 +1784,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 28456,
+      "estimated_bytes": 28876,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],

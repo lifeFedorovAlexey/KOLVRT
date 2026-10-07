@@ -175,75 +175,18 @@ fn run_mode(args: &[String], client_binary: &str, mode: u64) -> Result<()> {
     let mut results = serde_json::Map::new();
     for prod in profiles {
         let profile = if prod { "prod" } else { "dev" };
-        fs::create_dir_all("target/kernel/apps")?;
-        let mut guest = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()));
-        guest
-            .args([
-                "build",
-                "--locked",
-                "-p",
-                "native-apps",
-                "--features",
-                "guest",
-                "--target",
-                "aarch64-unknown-none",
-            ])
-            .env_remove("CARGO_TARGET_DIR");
-        if client_binary.starts_with("selftest-") {
-            guest.args(["-p", "native-selftests"]);
-        }
-        if prod {
-            guest.arg("--release");
-        }
-        if !guest.status()?.success() {
-            return Err("standalone native applications failed to build".into());
-        }
-        let mut apps = serde_json::Map::new();
-        let mut images = Vec::new();
-        for (role, binary) in [
-            (
-                "root",
+        let (elf, apps) = build_images(
+            prod,
+            [
                 if mode == 6 {
                     "selftest-lifecycle-client"
                 } else {
                     "native-supervisor"
                 },
-            ),
-            ("service", "counter-service"),
-            ("client", client_binary),
-        ] {
-            let original = PathBuf::from(format!(
-                "target/aarch64-unknown-none/{}/{binary}",
-                if prod { "release" } else { "debug" }
-            ));
-            let bytes = fs::read(&original)?;
-            let digest = Sha256::digest(&bytes)
-                .iter()
-                .map(|b| format!("{b:02x}"))
-                .collect::<String>();
-            let destination =
-                PathBuf::from(format!("target/kernel/apps/{profile}-{role}-{digest}.elf"));
-            if destination.exists() {
-                if fs::read(&destination)? != bytes {
-                    return Err("immutable ELF digest path content mismatch".into());
-                }
-            } else {
-                fs::write(&destination, &bytes)?;
-            }
-            images.push(destination.clone());
-            apps.insert(role.into(),json!({"artifact":destination,"original_elf_bytes":bytes.len(),"sha256":Sha256::digest(&bytes).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"host_extracted_raw":false}));
-        }
-        let elf = build_mode(
-            prod,
-            false,
-            Some("native-apps"),
-            true,
+                "counter-service",
+                client_binary,
+            ],
             if mode == 6 { 1 } else { mode },
-            Some(
-                &images
-                    .try_into()
-                    .map_err(|_| "three original ELF images required")?,
-            ),
         )?;
         let suite_elf = PathBuf::from(format!(
             "target/kernel/{profile}-{client_binary}-{mode}-positive.elf"
@@ -515,6 +458,78 @@ fn validate_lifecycle(events: &[Value], words: &[Value]) -> Result<Value> {
     Ok(
         json!({"scope":"production kernel/counter service through an external lifecycle ABI client; does not test production supervisor recovery policy","production_supervisor_tested":false,"production_recovery_method_tested":true,"service_stop_restarted":true,"service_crash_restarted":false,"fresh_binding_completed":true,"old_binding_rejected":true,"counter_final":step(20)?[0],"restart_initial_value":step(16)?[2],"external_actor_fault_contained":true,"client_exit":"success","resource_leaks":ends[0]["live_processes"],"frames_restored":ends[0]["frames_restored"],"observed_steps":steps,"hardware":"UNKNOWN"}),
     )
+}
+
+/// Build original ELF images with an explicit root; callers select the public ABI scenario.
+pub(super) fn build_images(
+    prod: bool,
+    binaries: [&str; 3],
+    argument: u64,
+) -> Result<(PathBuf, Value)> {
+    let profile = if prod { "prod" } else { "dev" };
+    fs::create_dir_all("target/kernel/apps")?;
+    let mut guest = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()));
+    guest
+        .args([
+            "build",
+            "--locked",
+            "-p",
+            "native-apps",
+            "--features",
+            "guest",
+            "--target",
+            "aarch64-unknown-none",
+        ])
+        .env_remove("CARGO_TARGET_DIR");
+    if binaries
+        .iter()
+        .any(|binary| binary.starts_with("selftest-"))
+    {
+        guest.args(["-p", "native-selftests"]);
+    }
+    if prod {
+        guest.arg("--release");
+    }
+    if !guest.status()?.success() {
+        return Err("standalone native applications failed to build".into());
+    }
+    let mut apps = serde_json::Map::new();
+    let mut images = Vec::new();
+    for (role, binary) in ["root", "service", "client"].into_iter().zip(binaries) {
+        let original = PathBuf::from(format!(
+            "target/aarch64-unknown-none/{}/{binary}",
+            if prod { "release" } else { "debug" }
+        ));
+        let bytes = fs::read(&original)?;
+        let digest = Sha256::digest(&bytes)
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect::<String>();
+        let destination =
+            PathBuf::from(format!("target/kernel/apps/{profile}-{role}-{digest}.elf"));
+        if destination.exists() {
+            if fs::read(&destination)? != bytes {
+                return Err("immutable ELF digest path content mismatch".into());
+            }
+        } else {
+            fs::write(&destination, &bytes)?;
+        }
+        images.push(destination.clone());
+        apps.insert(role.into(),json!({"artifact":destination,"original_elf_bytes":bytes.len(),"sha256":Sha256::digest(&bytes).iter().map(|byte| format!("{byte:02x}")).collect::<String>(),"host_extracted_raw":false}));
+    }
+    let elf = build_mode(
+        prod,
+        false,
+        Some("native-apps"),
+        true,
+        argument,
+        Some(
+            &images
+                .try_into()
+                .map_err(|_| "three original ELF images required")?,
+        ),
+    )?;
+    Ok((elf, Value::Object(apps)))
 }
 
 #[cfg(test)]

@@ -87,6 +87,10 @@ The [retained B5 measurement](../../research/measurements/ci-b5-reuse.json) reco
 
 Fresh machine-mode evidence execution through the shared xtask runner requires exactly one validated [boot device observation](../kernel/devices.md). A missing inventory event fails the current execution gate even when other workload events pass. Historical receipt reading remains separate and accepts pre-descriptor streams; that compatibility cannot admit a new run without the observation. This changes evidence admission, not kernel performance, measurement methodology or Arena record eligibility.
 
+## CLOCK pilot integration
+
+The separate `cargo xtask arena run clock-query` campaign uses the existing native build/execution path and retains twelve fresh DEV/PROD invocations. Its fixed paired sampling does not replace foundation matrix obligations or introduce CI retries. Scenario-specific validation still requires the shared fresh device observation. An ineligible passport cannot turn into a passing measurement command, and raw failed attempts remain retained.
+
 <!-- knowledge -->
 
 ```json

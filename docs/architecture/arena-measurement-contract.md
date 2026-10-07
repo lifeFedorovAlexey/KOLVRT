@@ -1,7 +1,7 @@
 # Arena measurement contract
 
 Document status: CURRENT
-Evidence scope: experimental offline A0/A1 contracts and import admission checks; no executed Arena kernel benchmark, records service, independent attestation or certification.
+Evidence scope: experimental general offline A0/A1 contracts and import admission plus the accepted bounded QEMU CLOCK pilot; no records service, general independent attestation or certification.
 Current reference: [Arena](component-arena.md); [ADR-0006](../architecture-decisions/0006-metrics.md); [knowledge contract](../knowledge-system.md)
 
 ## Architecture and scope
@@ -9,6 +9,8 @@ Current reference: [Arena](component-arena.md); [ADR-0006](../architecture-decis
 Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) defines the shared Arena model. This first implementation uses the existing repository-checks library and xtask facade. There is no new kernel dependency, instrumentation, architecture registry or score. Canonical Markdown owns block/contract IDs; current profile checks resolve them through the existing knowledge builder. This does not implement versioned runtime graph edges or historical graph reconstruction.
 
 The [range profile](../../research/arena/profiles/user-copy-range.json) is a PROPOSED synthetic host profile for an existing kernel-core range-validation contract. It is not an accepted SafeCopy PERF/SEC passport or a measured kernel run. Its custom measure and SFR/SAR are KOLVRT_DEFINED. Current canonical text bytes are pinned conservatively as the contract digest; a later semantic-subset revision requires reviewed rules, not automatic compatibility.
+
+The [CLOCK pilot](../research/clock-passport.md) now specifies a bounded real-kernel pipeline using this same schema and registry. Its reviewed DEV/PROD profiles measure a three-CLOCK envelope with one useful query and matched intermediate-recorder ON/OFF observations. Existing public execution-window counters provide partial attribution, not exclusive processor cost. The accepted execution retains twelve fresh successful boots and six portable pair passports, with source-bound review and full regression evidence. It does not change offline record eligibility or claim the full cost of timestamp probes.
 
 ## Standards registry
 
@@ -30,7 +32,7 @@ The [run schema](../../schemas/arena-run.schema.json) embeds frozen registry/pro
 
 All declared metrics are required for structural admission in v1; optional-metric admission needs a reviewed policy revision. Every metric occurs exactly once as available raw samples or a typed missing observation with reason/count/evidence. Failures, dropped/unfinished samples, inadequate declared sample/warmup count, failed or absent correctness evidence, unreviewed profile, missing mandatory SFR/SAR and absent matched on/off observer observations yield INELIGIBLE. Unknown/duplicate SFR/SAR/metric IDs, bad digests and unrelated evidence fail validation. A PASS assertion without all required SAR artifacts cannot satisfy the SFR. Matched observer protocol ID/version/workload must agree; overhead is reported as separate evidence and is never subtracted as an exact correction.
 
-The command reports descriptive nearest-rank median/p95/p99, arithmetic mean or raw observation count according to the declared metric. It makes no throughput, PMU, tail-adequacy, repeated-run regression, uncertainty interval or superiority inference. A producer assertion passing these gates is STRUCTURALLY_ADMISSIBLE only. record_eligible is always false in this stage: independent execution/applicability/contribution review, record computation/co-holders and append-only invalidation/history are not implemented. Synthetic fixtures are explicitly ineligible as kernel evidence. Required repeated-run/uncertainty and authenticity policy must be added before publication; supplied REVIEWED/PASS/ACCEPTED labels are not trusted attestations.
+The command reports descriptive nearest-rank median/p95/p99, arithmetic mean or raw observation count according to the declared metric. It makes no throughput, PMU, tail-adequacy, repeated-run regression, uncertainty interval or superiority inference. A producer assertion passing these gates is STRUCTURALLY_ADMISSIBLE only. record_eligible is always false in this stage: general independently verified execution/applicability/contribution admission, record computation/co-holders and append-only invalidation/history are not implemented. The CLOCK pilot retains its own bounded independent source and execution review; that review does not implement the general records workflow. Synthetic fixtures are explicitly ineligible as kernel evidence. Required repeated-run/uncertainty and authenticity policy must be added before publication; supplied REVIEWED/PASS/ACCEPTED labels are not trusted attestations.
 
 ## Commands and verification
 
@@ -54,7 +56,7 @@ The one-command launcher `scripts/run-arena.ps1` supports check/registry/profile
 
 ## Remaining gates
 
-Issue #32 supplies real mechanism PERF/SEC passports, DEV causal attribution, PROD external outcomes, matched observer cost and the first kernel end-to-end run. #33 supplies IPC after #26; #34/#35 supply REL/fuzz/SAR campaigns; #36 integrates publication/regression gates; #50 owns native/compat equivalence and COST-L attribution. This foundation closes none of those issues or the complete #93 acceptance. Reviewed source mappings, signed/independent custody where required, accepted contribution verification, record history and canonical versioned graph projections remain open. Physical ARM64 performance requires its own campaign; QEMU is a separate reproducibility/regression environment.
+The bounded CLOCK pilot for #32 supplies the first accepted real QEMU mechanism passport: DEV/PROD external envelopes, partial execution-window accounting, matched recorder cost and scoped host admission/security evidence. It does not establish exclusive CPU attribution, broad SEC coverage or physical performance. #33 supplies IPC after #26; #34/#35 supply REL/fuzz/SAR campaigns; #36 integrates publication/regression gates; #50 owns native/compat equivalence and COST-L attribution. CLOCK acceptance closes none of those later scopes or the complete #93 acceptance. Reviewed source mappings, signed/independent custody where required, accepted contribution verification, record history and canonical versioned graph projections remain open. Physical ARM64 performance requires its own campaign; QEMU is a separate reproducibility/regression environment.
 
 [Russian translation](../../translations/ru/docs/architecture/arena-measurement-contract.md)
 

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "id": "arena.profile.clock-query-dev",
+  "version": "1",
+  "review_state": "REVIEWED",
+  "target": {
+    "block_id": "kolvrt.clock.query",
+    "contract_id": "kolvrt.clock.query.api",
+    "functional_version": "native-clock-snapshot-1",
+    "contract_sha256": "a24703a64f9d1e66ed02b9465400a28667a49f5662184b16d76d7f29cff064de"
+  },
+  "workload": {
+    "id": "arena.workload.clock-query",
+    "version": "1",
+    "semantics_sha256": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
+    "input_sha256": "159401618cdf165a384316b379537e792b6a3a73051b7432c3206164e8d60ff9",
+    "seed": "fixed-off-on_on-off_off-on-v1",
+    "useful_operation": "One real CLOCK query inside two CLOCK endpoint probes; identical useful operation and oracle in recorder OFF and ON. Interval is not pure syscall latency.",
+    "oracle": {
+      "id": "arena.oracle.clock-query",
+      "version": "1",
+      "sha256": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194"
+    }
+  },
+  "environment": {
+    "architecture": "ARM64",
+    "platform_kind": "QEMU",
+    "hardware_profile": {
+      "id": "arena.hardware.qemu-virt-a57",
+      "version": "10.1.0-two-cpus-256m"
+    },
+    "configuration_sha256": "d52780cfdef469252bcd5aa2b513365e21d505f4062709a39715293e2fa352a7",
+    "execution_profile": "DEV",
+    "toolchain": {
+      "compiler": "rustc",
+      "version": "1.99.0",
+      "flags": ["-C", "force-frame-pointers=yes", "-D", "warnings"]
+    },
+    "measurement": {
+      "id": "arena.mechanism.clock-query-envelope",
+      "version": "1",
+      "clock": "AArch64 generic architectural counter through native CLOCK; QEMU TCG",
+      "resolution_units": "timer_ticks",
+      "instrumentation": "EXTERNAL"
+    },
+    "resource_policy_sha256": "392e03b36dbeb25bed21ef083e3e42ecd20e1e4ce0ce6cf6b1b398e120d1e5e6"
+  },
+  "sampling": {
+    "version": "1",
+    "warmup_samples": 4,
+    "samples": 24,
+    "repeats": 3,
+    "stopping_rule": "Three fresh pairs per profile, OFF/ON then ON/OFF then OFF/ON; four retained warmups and 24 samples per boot. Twelve total DEV/PROD boots. No retry, selective omission, historical reuse or success-dependent stop. Boots are repeat units; within-boot observations may correlate.",
+    "quantile_estimator": "NEAREST_RANK",
+    "analysis_version": "1"
+  },
+  "overhead": {
+    "id": "arena.overhead.clock-recorder",
+    "version": "1",
+    "matched_workload_sha256": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
+    "collection_method": "Same three CLOCK calls and oracle in both modes. ON adds fixed intermediate-snapshot buffer stores inside the envelope; OFF omits only those stores. Retain matched raw arrays; cost is incremental recorder overhead, not all timestamp probes; never subtract an exact correction."
+  },
+  "metrics": [
+    {
+      "id": "arena.metric.clock-query-envelope",
+      "dimension": "PERF",
+      "definition": "Descriptive nearest-rank median of OFF endpoint architectural-counter deltas around one useful CLOCK query and common bookkeeping; oracle checks follow the end snapshot; excludes REPORT export and does not isolate pure syscall or exclusive CPU cost.",
+      "units": "timer_ticks",
+      "denominator": "one useful CLOCK query inside a three-CLOCK envelope",
+      "origin": "KOLVRT_DEFINED",
+      "methodologies": [
+        {
+          "id": "arena.methodology.kolvrt-profile",
+          "version": "1",
+          "section": "Descriptive sampling"
+        },
+        {
+          "id": "arena.standard.spec-run-rules",
+          "version": "CPU2017-6644-2021-09-13",
+          "section": "1.2 and 1.3: validation, disclosure and reproducibility principles"
+        }
+      ],
+      "visibility": "SHARED",
+      "statistic": "MEDIAN",
+      "direction": "MIN",
+      "minimum_samples": 24
+    }
+  ],
+  "security": {
+    "id": "arena.security.clock-query",
+    "version": "1",
+    "definition_origin": "KOLVRT_DEFINED",
+    "methodologies": [
+      {
+        "id": "arena.standard.cc2022",
+        "version": "Release-1-errata-1.2",
+        "section": "TOE/SPD/SFR/SAR conceptual model; no normative component mapping"
+      },
+      {
+        "id": "arena.standard.nist800-55-vol1",
+        "version": "2024",
+        "section": "Data quality and validation of measures"
+      }
+    ],
+    "toe": "Existing read-only current-process CLOCK ABI, external measurement actor/oracle and retained Arena evidence admission.",
+    "spd": {
+      "attacker_model": "Malformed or incomplete actor reports and altered retained evidence are supplied to the host importer; malicious kernel or fully forged custody chain is outside scope.",
+      "threats": [
+        "Invalid, omitted or unfinished useful operation falsely admitted as a successful observation.",
+        "Changed provenance or missing required evidence accepted; observation incorrectly treated as access authority."
+      ],
+      "assumptions": [
+        "Trusted immutable boot inputs and working declared QEMU counter/frequency.",
+        "Existing scheduler exception isolation; exact source/image identity is retained, not cryptographically attested."
+      ],
+      "policies": [
+        "CLOCK is read-only current-process observation and needs no invented device or IPC authorization grant.",
+        "Failed, truncated or unverifiable runs cannot qualify as successful measurements."
+      ],
+      "boundaries": [
+        "No kernel instrumentation or source mutation; actor runs through the existing public ABI.",
+        "No secret noninterference, physical hardware, vulnerability certification, PMU or broad reliability/fuzz claim."
+      ]
+    },
+    "sfr": [
+      {
+        "id": "arena.sfr.clock-execution",
+        "claim": "Actual useful CLOCK observations satisfy fixed frequency, ordering and checked-delta oracle; normal root completion and reclamation are witnessed.",
+        "mandatory": true,
+        "required_sar": ["arena.sar.clock-execution"]
+      },
+      {
+        "id": "arena.sfr.clock-evidence",
+        "claim": "Exact-source review establishes the unchanged read-only current-process boundary; malformed or incomplete observations, failed mandatory requirements and absent evidence cannot qualify for admission.",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.clock-negative",
+          "arena.sar.clock-source-review"
+        ]
+      }
+    ],
+    "sar": [
+      {
+        "id": "arena.sar.clock-execution",
+        "method": "DETERMINISTIC",
+        "scope": "Fresh DEV/PROD actor reports with one useful query per envelope, exact report/exit/reclamation and checked partial attribution; no broad scheduler correctness inference."
+      },
+      {
+        "id": "arena.sar.clock-negative",
+        "method": "NEGATIVE_CONTROL",
+        "scope": "External invalid-input and retained-evidence cases for omitted operation/broken oracle, loss or corruption, mandatory SFR failure and missing SAR; no production corruption."
+      },
+      {
+        "id": "arena.sar.clock-source-review",
+        "method": "DETERMINISTIC",
+        "scope": "Independent exact-source review of CLOCK, SDK, actor and oracle; no new authority, selector, kernel probe or resource-lifetime change."
+      }
+    ],
+    "ava_van_scope": "Not evaluated; bounded oracle/source review is not a vulnerability analysis.",
+    "attack_potential_scope": "Not evaluated; no AP level or certification asserted."
+  }
+}

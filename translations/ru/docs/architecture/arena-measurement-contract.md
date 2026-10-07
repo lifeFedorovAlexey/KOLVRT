@@ -1,7 +1,7 @@
 # Контракт измерений Arena
 
 Document status: CURRENT
-Evidence scope: экспериментальные офлайн-контракты A0/A1 и проверки допуска импортов; без выполненного kernel benchmark Arena, сервиса рекордов, независимой аттестации или сертификации.
+Evidence scope: экспериментальные общие offline-контракты A0/A1 и проверки допуска импортов плюс принятый ограниченный QEMU-пилот CLOCK; без record service, общей независимой аттестации или сертификации.
 Current reference: [Arena](component-arena.md); [ADR-0006](../architecture-decisions/0006-metrics.md); [контракт знаний](../knowledge-system.md)
 
 ## Архитектура и область действия
@@ -9,6 +9,8 @@ Current reference: [Arena](component-arena.md); [ADR-0006](../architecture-decis
 Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) определяет общую модель Arena. Первая реализация использует существующую библиотеку repository-checks и фасад xtask. Новых зависимостей ядра, instrumentation, архитектурного реестра или score нет. Canonical Markdown владеет ID блоков/контрактов; текущие проверки профилей разрешают их существующим сборщиком знаний. Versioned edges runtime-графа и восстановление исторического графа пока не реализованы.
 
 [Профиль диапазонов](../../../../research/arena/profiles/user-copy-range.json) — PROPOSED synthetic host profile существующего контракта проверки диапазонов kernel-core. Он не является принятым PERF/SEC-паспортом SafeCopy или измеренным kernel run. Собственная мера и SFR/SAR помечены KOLVRT_DEFINED. Текущие байты canonical текста консервативно фиксируются digest контракта; будущая версия с семантическим подмножеством требует reviewed rules, а не автоматической совместимости.
+
+[Пилот CLOCK](../research/clock-passport.md) теперь задаёт ограниченный pipeline настоящего ядра с той же схемой и registry. Проверенные профили DEV/PROD измеряют интервал трёх CLOCK-вызовов с одним полезным запросом и парными наблюдениями промежуточного recorder ON/OFF. Существующие публичные счётчики окон исполнения дают частичную атрибуцию, а не исключительную процессорную стоимость. Принятое выполнение сохраняет двенадцать свежих успешных загрузок и шесть переносимых паспортов пар, review точных исходников и полное regression evidence. Это не меняет право на offline record и не заявляет полную стоимость timestamp-проб.
 
 ## Реестр стандартов
 
@@ -30,7 +32,7 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
 
 В версии 1 все заявленные metrics обязательны для structural admission; допуск optional metrics требует рассмотренного изменения policy. Каждая metric встречается ровно один раз как доступные raw samples либо typed missing observation с причиной/count/evidence. Failures, dropped/unfinished samples, недостаточные заявленные sample/warmup counts, failed или отсутствующий correctness evidence, unreviewed profile, отсутствующие mandatory SFR/SAR и matched on/off observer observations дают INELIGIBLE. Неизвестные/повторные SFR/SAR/metric IDs, неверные digests и unrelated evidence не проходят validation. PASS assertion без всех обязательных SAR artifacts не подтверждает SFR. Matched observer protocol ID/version/workload должны совпадать; overhead представлен отдельным evidence и никогда не вычитается как точная поправка.
 
-Команда показывает описательные nearest-rank median/p95/p99, арифметическое среднее или число raw observations по заявленной metric. Она не делает выводов о throughput, PMU, достаточности tails, repeated-run regression, uncertainty interval или superiority. Прошедший эти gates producer assertion получает только STRUCTURALLY_ADMISSIBLE. На этом этапе record_eligible всегда false: независимый review execution/applicability/contribution, вычисление records/co-holders и append-only invalidation/history не реализованы. Synthetic fixtures явно не допускаются как kernel evidence. До публикации необходимо добавить repeated-run/uncertainty и authenticity policy; переданные REVIEWED/PASS/ACCEPTED labels не являются доверенными attestations.
+Команда показывает описательные nearest-rank median/p95/p99, арифметическое среднее или число raw observations по заявленной metric. Она не делает выводов о throughput, PMU, достаточности tails, repeated-run regression, uncertainty interval или superiority. Прошедший эти gates producer assertion получает только STRUCTURALLY_ADMISSIBLE. На этом этапе record_eligible всегда false: общий допуск с независимо проверенными execution/applicability/contribution, вычисление records/co-holders и append-only invalidation/history не реализованы. Пилот CLOCK сохраняет собственное ограниченное независимое review исходников и выполнения; это review не реализует общий процесс публикации records. Synthetic fixtures явно не допускаются как kernel evidence. До публикации необходимо добавить repeated-run/uncertainty и authenticity policy; переданные REVIEWED/PASS/ACCEPTED labels не являются доверенными attestations.
 
 ## Команды и проверка
 
@@ -54,7 +56,7 @@ cargo test --locked -p repository-checks --test arena
 
 ## Оставшиеся gates
 
-Issue #32 предоставляет реальные mechanism PERF/SEC passports, причинную DEV attribution, внешние PROD outcomes, matched observer cost и первый kernel end-to-end run. #33 предоставляет IPC после #26; #34/#35 — REL/fuzz/SAR campaigns; #36 интегрирует publication/regression gates; #50 отвечает за native/compat equivalence и COST-L attribution. Эта основа не закрывает указанные issues или полную acceptance #93. Reviewed source mappings, подписанный/независимый custody где требуется, accepted contribution verification, record history и canonical versioned graph projections остаются открытыми. Physical ARM64 performance требует отдельной campaign; QEMU — отдельная среда воспроизводимости/regression.
+Ограниченный пилот CLOCK для #32 предоставляет первый принятый паспорт настоящего QEMU-механизма: внешние интервалы DEV/PROD, частичный учёт окон исполнения, парную стоимость recorder и ограниченные host-свидетельства допуска и безопасности. Он не устанавливает исключительную CPU-атрибуцию, широкое SEC-покрытие или физическую производительность. #33 предоставляет IPC после #26; #34/#35 — REL/fuzz/SAR campaigns; #36 интегрирует publication/regression gates; #50 отвечает за native/compat equivalence и COST-L attribution. Приёмка CLOCK не закрывает эти последующие области или полную acceptance #93. Reviewed source mappings, подписанный/независимый custody где требуется, accepted contribution verification, record history и canonical versioned graph projections остаются открытыми. Physical ARM64 performance требует отдельной campaign; QEMU — отдельная среда воспроизводимости/regression.
 
 [English original](../../../../docs/architecture/arena-measurement-contract.md)
 

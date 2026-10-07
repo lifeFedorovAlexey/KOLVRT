@@ -34,3 +34,10 @@ path = "src/lifecycle-peer.rs"
 required-features = ["guest"]
 test = false
 bench = false
+
+[[bin]]
+name = "selftest-clock-client"
+path = "src/clock-client.rs"
+required-features = ["guest"]
+test = false
+bench = false

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "source_files": {
+    "crates/xtask/src/arena_clock.rs": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194",
+    "crates/xtask/src/arena_clock/passport.rs": "9ca4cdc068132564de33da07ea303d1e9fc9975611c14352865172d2bd3d9029",
+    "crates/xtask/src/main.rs": "e0b0bcc5196064637284b8ee2299968c59345a596bf5948c5f17d044bee83746",
+    "crates/xtask/src/native_apps.rs": "20617866ae4cf00dc6e6d987edbd8c215e5dc42c16516ae5f5662c8333041c11",
+    "crates/xtask/src/output.rs": "4a4e1313760b677b500758c69d563fb1b82268503a6094d670242b15e31d3702",
+    "crates/repository-checks/src/arena.rs": "39d0d0e635ac92ef03f2e1b031859a3319f932fffd20026385b56c5ec63b0c0b",
+    "crates/repository-checks/src/lib.rs": "321bf155abcd7bf03ebfbd586722f7bc9c32d56d55fa37b62f338c57d4ec804d",
+    "crates/repository-checks/src/knowledge.rs": "3ba76baaac048995468b2441ffcfd825eeffbfd02f0d78d1cdf3d1d4c86cc8e5",
+    "crates/repository-checks/tests/arena.rs": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
+    "schemas/arena-run.schema.json": "7cc1dae715ba4d452319a0a5c20bf8374aafc7277edfb80887beb9249011ad1c",
+    "schemas/arena-profile.schema.json": "a05437b1b9619d601d5826e17bccafee2ab4b6129a0ce6eb4e2795ecca7b6d99",
+    "schemas/arena-standards.schema.json": "dbe8d79baae2db350b914f201d388353305d355a99c76e4cdc707a0c03c687fe",
+    "research/arena/standards.json": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
+    "research/arena/profiles/user-copy-range.json": "d47b52839ddda707c692d2c2d40c0a312a9fd08aee56d5bbb4d48cf29fcd6c41",
+    "research/arena/profiles/clock-query-dev.json": "ceaf039fc7e7bd837372a21083e5c0612145930c6c03db034617184e010afa0c",
+    "research/arena/profiles/clock-query-prod.json": "d347435c39a3c1a84c0e81d39064515c22728c1bf909edeb8279ee927d4c90eb",
+    "docs/kernel/clock.md": "a24703a64f9d1e66ed02b9465400a28667a49f5662184b16d76d7f29cff064de",
+    "docs/research/clock-passport.md": "bf5cb386e05b9cb470eff47b74564f5b82fd40d3b50f0b05fc3612356b5f4dec",
+    "apps/native-runtime/src/lib.rs": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1",
+    "tests/native-apps/src/clock-client.rs": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b",
+    "Cargo.lock": "a6544e18c79fd120c9d452d1dafc1a5ee42d649934e46df9e59de3c7370d9a7c",
+    "Cargo.toml": "aec6de3fa55776f811d26ee1c095b0ea26ba0952b1de6592d1ebc08fcafd6db6",
+    "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
+    "crates/repository-checks/Cargo.toml": "90c543bdaed3980edabb0c9d661f3a31a608888b8b2227f94e919b388b4f35b8",
+    "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+  },
+  "commands": [
+    {
+      "command": "cargo test --locked -p xtask arena_clock",
+      "exit_code": 0,
+      "log_path": "research/arena/clock-query/evidence/host-clock-oracle.log",
+      "log_sha256": "019111cc12d4cd6ff90b35fe006f09cb74abc8c451cb5da5d9084c6b0138d946"
+    },
+    {
+      "command": "cargo test --locked -p repository-checks --test arena",
+      "exit_code": 0,
+      "log_path": "research/arena/clock-query/evidence/host-arena-admission-final.log",
+      "log_sha256": "6d59e26bb3f4e99e63a231da2af34f9acbb32c4cee0fd731cf48cbc790236ecc"
+    }
+  ],
+  "scope": [
+    "HOST: actual CLOCK runner oracle rejects malformed, missing, duplicate and incomplete useful-query counts, failed or unreclaimed root, nonzero READ_WINDOW sum and residual underflow; synthetic external event inputs, no guest execution.",
+    "HOST: actual Arena importer rejects failed correctness, missing SAR, mandatory SFR failure, missing or lost observations, changed environment/methodology, unlinked artifacts and digest corruption; existing synthetic user-copy profile fixtures exercise shared admission implementation, not a kernel workload.",
+    "No production mutation, omitted kernel-operation detection, physical execution, performance result or full security proof is claimed."
+  ],
+  "prior_attempts": [
+    {
+      "command": "cargo test --locked -p repository-checks --test arena",
+      "exit_code": 101,
+      "log_path": "research/arena/clock-query/evidence/host-arena-admission.log",
+      "log_sha256": "47e8f1c6d6490404d79b8ea4ce95be3f9dea7db65aba92b9b9241b62b79e63a3"
+    },
+    {
+      "review_path": "research/arena/clock-query/evidence/negative-review-attempt2.json",
+      "review_sha256": "af0d623b205e415ea75db45246b9caa157bb93de776ded823dc2ae597361d933",
+      "status": "failed",
+      "reason": "Before final metadata freeze, repository profile check rejected stale device source evidence; logs retained in the referenced review."
+    }
+  ]
+}

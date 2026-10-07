@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "arena.protocol.clock-query",
+  "version": "1",
+  "definition_origin": "KOLVRT_DEFINED",
+  "api_contract": "kolvrt.clock.query.api",
+  "useful_operation": "One native CLOCK query between two CLOCK endpoint calls through the same production SDK; read-only current-process observations.",
+  "modes": {
+    "1": "OFF: omit only intermediate recorder stores",
+    "2": "ON: volatile-store useful-query snapshot to fixed actor-private buffer before end CLOCK"
+  },
+  "iteration": [
+    "start CLOCK snapshot",
+    "useful CLOCK query",
+    "ON only: intermediate snapshot recorder write",
+    "end CLOCK snapshot",
+    "same frequency/ordering/zero READ_WINDOW/checked subtraction oracle in both modes after end",
+    "same endpoint result stores outside envelope"
+  ],
+  "envelope": "End x0 minus start x0. Includes useful call, ordinary interval bookkeeping and partial endpoint transitions; does not isolate pure syscall or exclusive CPU time.",
+  "accounting": {
+    "x0": "architectural counter ticks",
+    "x1": "frequency, nonzero and unchanged",
+    "x2": "completed execution-window ticks including transition edges and possible host stalls; not exclusive EL0 CPU time",
+    "x3": "completed READ_WINDOW body ticks; checked delta exactly zero in this workload",
+    "x4": "clobbered and never exposed",
+    "residual": "checked wall minus execution-window minus READ_WINDOW; negative residual rejects, never clamps; kernel/IRQ/scheduler/host remainder remains unattributed"
+  },
+  "sampling": {
+    "warmups": 4,
+    "samples": 24,
+    "pairs_per_profile": 3,
+    "profiles": ["DEV", "PROD"],
+    "order": [
+      ["OFF", "ON"],
+      ["ON", "OFF"],
+      ["OFF", "ON"]
+    ],
+    "total_boots": 12,
+    "repeat_unit": "fresh guest boot, not individual correlated observation",
+    "stopping": "Fixed campaign; no retry, history reuse, selective removal or success-based stopping; failed/unfinished attempts retained",
+    "analysis": "OFF primary nearest-rank descriptive median; retain raw pairs and warmups; p95/p99 adequacy and superiority inconclusive; no exact overhead subtraction"
+  },
+  "report": {
+    "words": 64,
+    "magic": 1129073409,
+    "version": 1,
+    "header": [
+      "magic",
+      "version",
+      "mode",
+      "frequency",
+      "warmups=4",
+      "samples=24",
+      "completed_queries=28",
+      "read_window_delta=0"
+    ],
+    "wall_range_inclusive": [8, 35],
+    "window_range_inclusive": [36, 63],
+    "warmup_prefix": 4,
+    "success": "Export schema 1 only after complete loop, then root exit 0 with acquired ownership release, frames restored and no live processes/domains",
+    "failure": "Partial schema-0 diagnostic after failed sample plus nonzero exit; never performance data",
+    "integer_encoding": "exact unsigned 64-bit words, no floating-point truncation"
+  },
+  "observer_scope": "Incremental intermediate recorder cost only; both modes retain endpoint CLOCK probes and common oracle/result export. OFF is not instrumentation-free.",
+  "security_scope": "Read-only current-process boundary, exact-source independent review, useful-query/report/termination oracle and malformed/missing evidence rejection. No invented CLOCK authorization; no malicious-kernel or fully forged custody-chain protection.",
+  "publication": "Existing Arena schemas and registry; separate DEV/PROD classes; record_eligible=false; no fabricated alternative implementation or PMU/physical/REL/RES claim."
+}

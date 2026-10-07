@@ -32,6 +32,10 @@ Host-тесты вызывают настоящие методы обнаруж�
 
 Runner теперь требует ровно одно корректное наблюдение перед приёмкой свежего выполнения с машинным evidence, включая streaming native runtime. Отсутствие, повтор или некорректные поля вызывают отказ; совместимость исторического reader не ослабляет эту проверку. [Первоначальная приёмка](../../../../research/results/device-phase40.json) сохранена с прежними исходниками.
 
+## Интеграция пилота CLOCK
+
+Паспорт CLOCK повторно использует executor свежего machine-mode запуска, поэтому до успешного завершения собственного oracle обязан опубликовать то же проверенное наблюдение устройства. Выбор другого внешнего root не обходит discovery и не создаёт device grant. Изменение исходников общего runner делает предыдущий receipt историческим для той ревизии runner; реализация descriptor и принятый ограниченный scope не меняются.
+
 <!-- knowledge -->
 
 ```json
@@ -76,10 +80,10 @@ Runner теперь требует ровно одно корректное на
           {
             "environment": "qemu-arm64",
             "state": "VERIFIED",
-            "reason": "Final-source full matrix passed after requiring a unique inventory for every fresh machine-mode execution; historical reader compatibility remains separate.",
-            "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
-            "receipt": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
-            "receipt_sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032"
+            "reason": "Current-source full matrix passed after the shared CLOCK executor refactor; fresh device validation remains mandatory before every scenario oracle. Historical descriptor acceptance is unchanged.",
+            "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG DEV/PROD; descriptor discovery and fresh observation gate, not driver or physical readiness.",
+            "receipt": "research/measurements/runs/1791408804253-phase40-clock-passport-488919492db0.json",
+            "receipt_sha256": "1e6b5dfd336c6a36e1aff2e57dcfa5d1d2c3d7601a90ddbcfec198b2a970eb84"
           },
           {
             "environment": "physical-arm64",

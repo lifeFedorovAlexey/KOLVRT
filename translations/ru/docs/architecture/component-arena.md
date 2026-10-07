@@ -1,7 +1,7 @@
 # KOLVRT Arena — арена заменяемых компонентов / паспорта производительности и надёжности
 
 Document status: CURRENT
-Evidence scope: экспериментальная офлайн-валидация standards/profile/import; реальные kernel runs Arena, attribution, records и graph UI не реализованы.
+Evidence scope: экспериментальная общая валидация Arena и принятый ограниченный QEMU-пилот CLOCK; records/history, универсальная атрибуция и graph UI не реализованы.
 Current reference: [Методика измерений](benchmarking.md); [ADR-0006](../architecture-decisions/0006-metrics.md)
 
 <a name="kolvrt-arena-scope"></a>
@@ -90,7 +90,7 @@ kolvrt arena leaderboard allocator
 
 ## Направление плана и условия приёмки
 
-Ведите **арену заменяемых компонентов / паспорта производительности и надёжности** как отдельное направление плана рядом с работами по измерениям и надёжности, обозначенными #32–#36. Общий контракт отслеживается в #93; #32–#36 отвечают за реальные pipelines и остаются открытыми. Последовательность следует текущим архитектурным решениям, а не тому, какой прототип появился первым.
+Ведите **арену заменяемых компонентов / паспорта производительности и надёжности** как отдельное направление плана рядом с работами по измерениям и надёжности, обозначенными #32–#36. Общий контракт отслеживается в #93; Ограниченный pipeline CLOCK для #32 принят отдельно; #33–#36 сохраняют свои области IPC, надёжности, fuzz и публикации. Последовательность следует текущим архитектурным решениям, а не тому, какой прототип появился первым.
 
 1. Определите владение и версионирование контрактов и наборов для первого реального семейства компонентов. Рассмотрите входы, выходы, полномочия, время жизни и отказы; обеспечьте общие проверки корректности и отрицательные контрольные проверки до допуска кандидатов.
 2. Спроектируйте версионированные схемы паспортов и свидетельств с явной обработкой неизвестных значений и состояний. Проверяйте ссылки на свидетельства, единицы, совместимость групп и отклонённые/отсутствующие измерения; сохраняйте исходные артефакты и воспроизводимые рецепты.
@@ -104,9 +104,13 @@ kolvrt arena leaderboard allocator
 
 ## Основа контракта измерений
 
-Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) определяет основанную на стандартах модель Arena A0–A5. [Контракт измерений](arena-measurement-contract.md) реализует закрытые schemas registry/profile/import и офлайн-сравнение/допуск через cargo xtask arena. Это экспериментальные host tools, а не выполненный kernel passport или record service. PERF/SEC/REL/RES остаются отдельными dimensions; SEC использует TOE/SPD/SFR/SAR, а не security score. #32–#36 и #50 отвечают за реальные pipelines.
+Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) определяет основанную на стандартах модель Arena A0–A5. [Контракт измерений](arena-measurement-contract.md) реализует закрытые schemas registry/profile/import и офлайн-сравнение/допуск через cargo xtask arena. Общая основа host tools остаётся экспериментальной. Отдельно принятый [пилот CLOCK](../research/clock-passport.md) предоставляет настоящий QEMU-паспорт; record service не реализован. PERF/SEC/REL/RES остаются отдельными dimensions; SEC использует TOE/SPD/SFR/SAR, а не security score. #32–#36 и #50 отвечают за реальные pipelines.
 
 Свежее выполнение с машинным evidence через общий runner xtask требует ровно одного проверенного [загрузочного наблюдения устройства](../kernel/devices.md). Отсутствие события инвентаризации приводит к отказу текущей проверки выполнения, даже если остальные события workload успешны. Чтение исторических свидетельств отделено и допускает потоки до появления дескриптора; эта совместимость не разрешает новый запуск без наблюдения. Меняется допуск evidence, а не производительность ядра, методика измерений или право на Arena record.
+
+## Интеграция пилота CLOCK
+
+Пилот CLOCK добавляет producer кампании с настоящим ядром через существующий xtask/native executor: отдельные профили DEV/PROD, зафиксированный протокол, проверяемый oracle отчёта и парные наблюдения recorder. Его [принятый ограниченный паспорт](../research/clock-passport.md) сохраняет двенадцать успешных загрузок DEV/PROD и шесть переносимых свидетельств пар; независимый допуск остаётся структурным. Существующий offline admission остаётся структурным, а record eligibility — false; producer не реализует records/history, аппаратный performance, IPC-паспорта или REL/fuzz-кампании. Приёмка исполнения и текущие доказательства относятся к feature пилота, а не к предполагаемой приёмке всей Arena.
 
 <!-- knowledge -->
 
@@ -121,7 +125,7 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
       "id": "kolvrt.arena",
       "anchor": "kolvrt-arena-scope",
       "kind": "feature",
-      "summary": "Экспериментальная офлайн-валидация контракта Arena; реальные измерения и records остаются открытыми.",
+      "summary": "Экспериментальная общая валидация Arena с отдельно принятым ограниченным пилотом CLOCK; gates публикации records остаются открытыми.",
       "depends_on": [
         "kolvrt.arena.contract",
         "kolvrt.arena.admission",
@@ -137,11 +141,11 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
       "tags": ["arena", "passports", "components"],
       "read_when": ["сравнить заменяемые компоненты Arena"],
       "gaps": [
-        "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates; no kernel benchmark runner or records publication.",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
         "sources": [
           "crates/repository-checks/src/arena.rs",
           "crates/repository-checks/tests/arena.rs",
@@ -166,7 +170,7 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
         "limitations": [
           "Producer assertions are not attestation; record_eligible is always false. The proposed range profile and synthetic tests do not establish kernel PERF/SEC acceptance, DEV attribution, PROD external outcomes or physical ARM64 performance."
         ],
-        "next_gate": "Review source mappings and implement the first real kernel mechanism pipeline in #32; independently verify execution/applicability before records.",
+        "next_gate": "Extend reviewed pipelines to IPC #33 and REL/fuzz/SAR #34/#35; implement publication/regression #36 and independently verified contribution/custody before records. Preserve the accepted CLOCK pilot scope.",
         "verification": [
           {
             "environment": "host-process",

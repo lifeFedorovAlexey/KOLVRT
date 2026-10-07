@@ -1,0 +1,14 @@
+{
+  "artifact": "target/kernel/dev-native-apps.elf",
+  "compiler": "1.99.0",
+  "elf_bytes": 7060952,
+  "features": [
+    "machine-events",
+    "diagnostics",
+    "native-apps"
+  ],
+  "load_bytes": 3166683,
+  "memory_bytes": 4264595,
+  "sha256": "f66b2313f05f364029cc87f2cc91246ca19f31b52b873b221023d97e729416c4",
+  "target": "aarch64-unknown-none"
+}

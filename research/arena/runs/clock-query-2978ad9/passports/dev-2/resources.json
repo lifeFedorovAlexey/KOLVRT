@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "policy": "Existing native root ELF admission and reclamation; no added production quota or deadline.",
+  "report_words": 64,
+  "warmup_samples": 4,
+  "measured_samples": 24,
+  "root_actor": "selftest-clock-client",
+  "children_launched": 0,
+  "memory_bounds": "Fixed actor arrays and existing root stack/image/frame admission; actual image sizes retained per build.",
+  "observer_storage": "Fixed intermediate snapshot recorder; ON writes and OFF omits only that recording.",
+  "termination": "Normal root exit, owners released, original frames restored, no live processes or domains.",
+  "claims_excluded": [
+    "peak resident memory",
+    "exclusive CPU time",
+    "PMU cycles",
+    "performance budget compliance",
+    "physical hardware"
+  ]
+}

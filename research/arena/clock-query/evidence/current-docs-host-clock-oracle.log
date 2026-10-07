@@ -1,0 +1,48 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src\main.rs (target\debug\deps\xtask-991d88c83f68f45e.exe)
+
+running 5 tests
+test arena_clock::passport::tests::clock_manifest_rejects_incomplete_and_wrong_frequency ... ok
+test arena_clock::tests::clock_oracle_rejects_unreclaimed_or_failed_root ... ok
+test arena_clock::tests::clock_oracle_accepts_exact_input_and_preserves_samples ... ok
+test arena_clock::tests::clock_oracle_rejects_missing_duplicate_and_failure_events ... ok
+test arena_clock::tests::clock_oracle_rejects_forged_headers_counts_and_arithmetic ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.00s
+
+     Running tests\cli.rs (target\debug\deps\cli-d1308e95c909c2e0.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests\locking.rs (target\debug\deps\locking-23fbafda9955e522.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests\native_boundary.rs (target\debug\deps\native_boundary-30b39e1dd7287d8d.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests\output_writer.rs (target\debug\deps\output_writer-91395ac0a24f6457.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests\scheduler_boundary.rs (target\debug\deps\scheduler_boundary-dda66bf9222ba43a.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests\timer_wait.rs (target\debug\deps\timer_wait-0ac34f1be1fd411e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+

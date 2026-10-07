@@ -3,3 +3,8 @@
 target/
 node_modules/
 Cargo.lock
+
+# Immutable byte-digested experiment artifacts.
+research/arena/runs/
+research/arena/clock-query/evidence/
+research/measurements/runs/1791408804253-phase40-clock-passport-488919492db0.json

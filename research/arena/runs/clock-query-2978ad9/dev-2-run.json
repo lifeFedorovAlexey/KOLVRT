@@ -1,0 +1,720 @@
+{
+  "artifacts": [
+    {
+      "path": "passports/dev-2/protocol.json",
+      "sha256": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72"
+    },
+    {
+      "path": "passports/dev-2/pair.json",
+      "sha256": "029e479ad18bb1048f7bfa634bca2671a8b52d955e5ce52508a7c28f95206c81"
+    },
+    {
+      "path": "passports/dev-2/source-files.json",
+      "sha256": "50fef13347c5a253179679f669eab7f8c9d313d257fd00144e1ea5a813e4995d"
+    },
+    {
+      "path": "passports/dev-2/environment.json",
+      "sha256": "d52780cfdef469252bcd5aa2b513365e21d505f4062709a39715293e2fa352a7"
+    },
+    {
+      "path": "passports/dev-2/resources.json",
+      "sha256": "392e03b36dbeb25bed21ef083e3e42ecd20e1e4ce0ce6cf6b1b398e120d1e5e6"
+    },
+    {
+      "path": "passports/dev-2/input.json",
+      "sha256": "159401618cdf165a384316b379537e792b6a3a73051b7432c3206164e8d60ff9"
+    },
+    {
+      "path": "images/7e976ed4d6c8464b315ad16fbfe1c87bbab5509876efa7e7607cd61e3c54f78b.elf",
+      "sha256": "7e976ed4d6c8464b315ad16fbfe1c87bbab5509876efa7e7607cd61e3c54f78b"
+    },
+    {
+      "path": "passports/dev-2/off-attempt.json",
+      "sha256": "18105f05396ce0efc52b908d45a4000878588371ddacc0a716e902a7b1f26c0e"
+    },
+    {
+      "path": "passports/dev-2/off-kernel-build.json",
+      "sha256": "4842d6c31d6e33fa306dd7d349780cb5af5c1a0f3b9ed09c01f32cfe2de47ca9"
+    },
+    {
+      "path": "passports/dev-2/off-kernel.run.json",
+      "sha256": "80ad3d92dcc8a4c0db8a20f8ec70710e9c842175bd6f9852d6151fd0309d4df0"
+    },
+    {
+      "path": "passports/dev-2/off-kernel.results.json",
+      "sha256": "e1f5b9e3ffdf2d89d27b9510d87becf39e5253d7a58d2cb2ba125033b3642d89"
+    },
+    {
+      "path": "passports/dev-2/off-kernel.log",
+      "sha256": "eee8cceb420a0c8314cb2eed9ef2768d43f2e978f88e3c19f1d9023bc8ae2ff7"
+    },
+    {
+      "path": "passports/dev-2/off-kernel.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "images/7e9abf4d410bd752ffae2a801ef7612ce36e570b7f45ee0e8ccede2bc134b1b7.elf",
+      "sha256": "7e9abf4d410bd752ffae2a801ef7612ce36e570b7f45ee0e8ccede2bc134b1b7"
+    },
+    {
+      "path": "images/fbe4f11da3ebaf81d98a44cfdb57dfe8d1f375eae0d5054020bbf4b36be1d7c3.elf",
+      "sha256": "fbe4f11da3ebaf81d98a44cfdb57dfe8d1f375eae0d5054020bbf4b36be1d7c3"
+    },
+    {
+      "path": "images/5e50ef21daf1f3d0dfc7bb18e9cb9868eb85f66634fa54d56953964f020143ea.elf",
+      "sha256": "5e50ef21daf1f3d0dfc7bb18e9cb9868eb85f66634fa54d56953964f020143ea"
+    },
+    {
+      "path": "images/f66b2313f05f364029cc87f2cc91246ca19f31b52b873b221023d97e729416c4.elf",
+      "sha256": "f66b2313f05f364029cc87f2cc91246ca19f31b52b873b221023d97e729416c4"
+    },
+    {
+      "path": "passports/dev-2/on-attempt.json",
+      "sha256": "9a3f2f25a25456692577f1902fde3487002982bb704f43280ff0999090d0256f"
+    },
+    {
+      "path": "passports/dev-2/on-kernel-build.json",
+      "sha256": "78968b495f8ec732c2365694e19f9835a0e2e898b61f317dde8d5fd58075ad66"
+    },
+    {
+      "path": "passports/dev-2/on-kernel.run.json",
+      "sha256": "2dbad352de64dd510da92d9fb05768564da99ff3f8c120bf0d50a0105967ca24"
+    },
+    {
+      "path": "passports/dev-2/on-kernel.results.json",
+      "sha256": "c90685ececb298dd9a849007ae98dbd1fe266e719041f275af6fa2bcad8a3c72"
+    },
+    {
+      "path": "passports/dev-2/on-kernel.log",
+      "sha256": "48f4b745684cce77745c0b4241193ed61074fe7fed77368a39da9f087a194317"
+    },
+    {
+      "path": "passports/dev-2/on-kernel.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "passports/dev-2/source-review.json",
+      "sha256": "25850f7f04d437ed18a2eeee734ed9e4b7a1b75182cd065ab48723bf88a37fdd"
+    },
+    {
+      "path": "passports/dev-2/negative-review.json",
+      "sha256": "646765783c3fb2e65dd9198e3d873ea976f9a437565ec254daa4b3a5603a6e54"
+    },
+    {
+      "path": "passports/dev-2/negative-command-0.log",
+      "sha256": "019111cc12d4cd6ff90b35fe006f09cb74abc8c451cb5da5d9084c6b0138d946"
+    },
+    {
+      "path": "passports/dev-2/negative-command-1.log",
+      "sha256": "6d59e26bb3f4e99e63a231da2af34f9acbb32c4cee0fd731cf48cbc790236ecc"
+    }
+  ],
+  "correctness": {
+    "evidence": [
+      "passports/dev-2/pair.json"
+    ],
+    "reason": "Fresh pair passed actor/host oracle and declared environment; no execution attestation",
+    "status": "PASS"
+  },
+  "environment_manifest": {
+    "path": "passports/dev-2/environment.json",
+    "sha256": "d52780cfdef469252bcd5aa2b513365e21d505f4062709a39715293e2fa352a7"
+  },
+  "observations": [
+    {
+      "dropped": 0,
+      "failures": 0,
+      "metric_id": "arena.metric.clock-query-envelope",
+      "samples": [
+        5288,
+        5300,
+        5525,
+        39075,
+        5287,
+        5206,
+        5187,
+        5212,
+        5225,
+        5194,
+        5206,
+        5206,
+        5212,
+        5194,
+        5187,
+        5432,
+        5357,
+        5488,
+        5281,
+        5250,
+        5225,
+        5269,
+        5256,
+        5256
+      ],
+      "state": "AVAILABLE",
+      "unfinished": 0,
+      "warmup_samples": [
+        242706,
+        5650,
+        5356,
+        5312
+      ]
+    }
+  ],
+  "overhead_result": {
+    "evidence": [
+      "passports/dev-2/pair.json"
+    ],
+    "matched_workload_sha256": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
+    "off_samples": [
+      5288,
+      5300,
+      5525,
+      39075,
+      5287,
+      5206,
+      5187,
+      5212,
+      5225,
+      5194,
+      5206,
+      5206,
+      5212,
+      5194,
+      5187,
+      5432,
+      5357,
+      5488,
+      5281,
+      5250,
+      5225,
+      5269,
+      5256,
+      5256
+    ],
+    "on_samples": [
+      5419,
+      5338,
+      5337,
+      5313,
+      5325,
+      5475,
+      5750,
+      5343,
+      5350,
+      5612,
+      5294,
+      5331,
+      5288,
+      5281,
+      5287,
+      79337,
+      5369,
+      5263,
+      5275,
+      5256,
+      5275,
+      5418,
+      5281,
+      5319
+    ],
+    "protocol_id": "arena.overhead.clock-recorder",
+    "protocol_version": "1",
+    "reason": "Incremental intermediate recorder stores; not total timestamp-probe cost",
+    "state": "AVAILABLE"
+  },
+  "profile_sha256": "2cb14a5c55e144b4d99868b516af50878161d1144cc0117d06701e01dfe86c29",
+  "profile_snapshot": {
+    "environment": {
+      "architecture": "ARM64",
+      "configuration_sha256": "d52780cfdef469252bcd5aa2b513365e21d505f4062709a39715293e2fa352a7",
+      "execution_profile": "DEV",
+      "hardware_profile": {
+        "id": "arena.hardware.qemu-virt-a57",
+        "version": "10.1.0-two-cpus-256m"
+      },
+      "measurement": {
+        "clock": "AArch64 generic architectural counter through native CLOCK; QEMU TCG",
+        "id": "arena.mechanism.clock-query-envelope",
+        "instrumentation": "EXTERNAL",
+        "resolution_units": "timer_ticks",
+        "version": "1"
+      },
+      "platform_kind": "QEMU",
+      "resource_policy_sha256": "392e03b36dbeb25bed21ef083e3e42ecd20e1e4ce0ce6cf6b1b398e120d1e5e6",
+      "toolchain": {
+        "compiler": "rustc",
+        "flags": [
+          "-C",
+          "force-frame-pointers=yes",
+          "-D",
+          "warnings"
+        ],
+        "version": "1.99.0"
+      }
+    },
+    "id": "arena.profile.clock-query-dev",
+    "metrics": [
+      {
+        "definition": "Descriptive nearest-rank median of OFF endpoint architectural-counter deltas around one useful CLOCK query and common bookkeeping; oracle checks follow the end snapshot; excludes REPORT export and does not isolate pure syscall or exclusive CPU cost.",
+        "denominator": "one useful CLOCK query inside a three-CLOCK envelope",
+        "dimension": "PERF",
+        "direction": "MIN",
+        "id": "arena.metric.clock-query-envelope",
+        "methodologies": [
+          {
+            "id": "arena.methodology.kolvrt-profile",
+            "section": "Descriptive sampling",
+            "version": "1"
+          },
+          {
+            "id": "arena.standard.spec-run-rules",
+            "section": "1.2 and 1.3: validation, disclosure and reproducibility principles",
+            "version": "CPU2017-6644-2021-09-13"
+          }
+        ],
+        "minimum_samples": 24,
+        "origin": "KOLVRT_DEFINED",
+        "statistic": "MEDIAN",
+        "units": "timer_ticks",
+        "visibility": "SHARED"
+      }
+    ],
+    "overhead": {
+      "collection_method": "Same three CLOCK calls and oracle in both modes. ON adds fixed intermediate-snapshot buffer stores inside the envelope; OFF omits only those stores. Retain matched raw arrays; cost is incremental recorder overhead, not all timestamp probes; never subtract an exact correction.",
+      "id": "arena.overhead.clock-recorder",
+      "matched_workload_sha256": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
+      "version": "1"
+    },
+    "review_state": "REVIEWED",
+    "sampling": {
+      "analysis_version": "1",
+      "quantile_estimator": "NEAREST_RANK",
+      "repeats": 3,
+      "samples": 24,
+      "stopping_rule": "Three fresh pairs per profile, OFF/ON then ON/OFF then OFF/ON; four retained warmups and 24 samples per boot. Twelve total DEV/PROD boots. No retry, selective omission, historical reuse or success-dependent stop. Boots are repeat units; within-boot observations may correlate.",
+      "version": "1",
+      "warmup_samples": 4
+    },
+    "schema_version": 1,
+    "security": {
+      "attack_potential_scope": "Not evaluated; no AP level or certification asserted.",
+      "ava_van_scope": "Not evaluated; bounded oracle/source review is not a vulnerability analysis.",
+      "definition_origin": "KOLVRT_DEFINED",
+      "id": "arena.security.clock-query",
+      "methodologies": [
+        {
+          "id": "arena.standard.cc2022",
+          "section": "TOE/SPD/SFR/SAR conceptual model; no normative component mapping",
+          "version": "Release-1-errata-1.2"
+        },
+        {
+          "id": "arena.standard.nist800-55-vol1",
+          "section": "Data quality and validation of measures",
+          "version": "2024"
+        }
+      ],
+      "sar": [
+        {
+          "id": "arena.sar.clock-execution",
+          "method": "DETERMINISTIC",
+          "scope": "Fresh DEV/PROD actor reports with one useful query per envelope, exact report/exit/reclamation and checked partial attribution; no broad scheduler correctness inference."
+        },
+        {
+          "id": "arena.sar.clock-negative",
+          "method": "NEGATIVE_CONTROL",
+          "scope": "External invalid-input and retained-evidence cases for omitted operation/broken oracle, loss or corruption, mandatory SFR failure and missing SAR; no production corruption."
+        },
+        {
+          "id": "arena.sar.clock-source-review",
+          "method": "DETERMINISTIC",
+          "scope": "Independent exact-source review of CLOCK, SDK, actor and oracle; no new authority, selector, kernel probe or resource-lifetime change."
+        }
+      ],
+      "sfr": [
+        {
+          "claim": "Actual useful CLOCK observations satisfy fixed frequency, ordering and checked-delta oracle; normal root completion and reclamation are witnessed.",
+          "id": "arena.sfr.clock-execution",
+          "mandatory": true,
+          "required_sar": [
+            "arena.sar.clock-execution"
+          ]
+        },
+        {
+          "claim": "Exact-source review establishes the unchanged read-only current-process boundary; malformed or incomplete observations, failed mandatory requirements and absent evidence cannot qualify for admission.",
+          "id": "arena.sfr.clock-evidence",
+          "mandatory": true,
+          "required_sar": [
+            "arena.sar.clock-negative",
+            "arena.sar.clock-source-review"
+          ]
+        }
+      ],
+      "spd": {
+        "assumptions": [
+          "Trusted immutable boot inputs and working declared QEMU counter/frequency.",
+          "Existing scheduler exception isolation; exact source/image identity is retained, not cryptographically attested."
+        ],
+        "attacker_model": "Malformed or incomplete actor reports and altered retained evidence are supplied to the host importer; malicious kernel or fully forged custody chain is outside scope.",
+        "boundaries": [
+          "No kernel instrumentation or source mutation; actor runs through the existing public ABI.",
+          "No secret noninterference, physical hardware, vulnerability certification, PMU or broad reliability/fuzz claim."
+        ],
+        "policies": [
+          "CLOCK is read-only current-process observation and needs no invented device or IPC authorization grant.",
+          "Failed, truncated or unverifiable runs cannot qualify as successful measurements."
+        ],
+        "threats": [
+          "Invalid, omitted or unfinished useful operation falsely admitted as a successful observation.",
+          "Changed provenance or missing required evidence accepted; observation incorrectly treated as access authority."
+        ]
+      },
+      "toe": "Existing read-only current-process CLOCK ABI, external measurement actor/oracle and retained Arena evidence admission.",
+      "version": "1"
+    },
+    "target": {
+      "block_id": "kolvrt.clock.query",
+      "contract_id": "kolvrt.clock.query.api",
+      "contract_sha256": "a24703a64f9d1e66ed02b9465400a28667a49f5662184b16d76d7f29cff064de",
+      "functional_version": "native-clock-snapshot-1"
+    },
+    "version": "1",
+    "workload": {
+      "id": "arena.workload.clock-query",
+      "input_sha256": "159401618cdf165a384316b379537e792b6a3a73051b7432c3206164e8d60ff9",
+      "oracle": {
+        "id": "arena.oracle.clock-query",
+        "sha256": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194",
+        "version": "1"
+      },
+      "seed": "fixed-off-on_on-off_off-on-v1",
+      "semantics_sha256": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
+      "useful_operation": "One real CLOCK query inside two CLOCK endpoint probes; identical useful operation and oracle in recorder OFF and ON. Interval is not pure syscall latency.",
+      "version": "1"
+    }
+  },
+  "provenance": {
+    "contribution_evidence": [],
+    "contribution_state": "UNATTRIBUTED",
+    "contributors": [],
+    "exact_commit": "2978ad9693b7df1e70487ffbf01d5ffdfe27fe31",
+    "image_sha256": "7e976ed4d6c8464b315ad16fbfe1c87bbab5509876efa7e7607cd61e3c54f78b",
+    "source_sha256": "50fef13347c5a253179679f669eab7f8c9d313d257fd00144e1ea5a813e4995d",
+    "submission": "CLOCK pilot; raw source inventory represents compiled working tree; not independent attestation"
+  },
+  "registry_sha256": "e5597383cc8562d6ec9b7f103ab73446503b7baf54452e31117f914a73cca108",
+  "registry_snapshot": {
+    "entries": [
+      {
+        "authoritative_source": "https://www.iso.org/standard/78176.html",
+        "expected_replacement": null,
+        "id": "arena.standard.iso25010",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Quality taxonomy"
+        ],
+        "source_kind": "INTERNATIONAL_STANDARD",
+        "source_revision": "Edition 2, 2023",
+        "superseded_by": null,
+        "title": "ISO/IEC 25010:2023",
+        "version": "2023"
+      },
+      {
+        "authoritative_source": "https://www.iso.org/standard/35747.html",
+        "expected_replacement": "ISO/IEC DIS 25000-23.2 (draft, not a published successor)",
+        "id": "arena.standard.iso25023",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Quantitative quality measures"
+        ],
+        "source_kind": "INTERNATIONAL_STANDARD",
+        "source_revision": "Edition 1, 2016; confirmed 2022",
+        "superseded_by": null,
+        "title": "ISO/IEC 25023:2016",
+        "version": "2016"
+      },
+      {
+        "authoritative_source": "https://www.iso.org/standard/83467.html",
+        "expected_replacement": null,
+        "id": "arena.standard.iso25040",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Quality evaluation framework"
+        ],
+        "source_kind": "INTERNATIONAL_STANDARD",
+        "source_revision": "Edition 2, 2024",
+        "superseded_by": null,
+        "title": "ISO/IEC 25040:2024",
+        "version": "2024"
+      },
+      {
+        "authoritative_source": "https://www.spec.org/cpu2017/Docs/runrules.html",
+        "expected_replacement": null,
+        "id": "arena.standard.spec-run-rules",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "MANDATORY",
+        "scope": [
+          "Comparable conditions, reproducibility, validation, repeated runs and disclosure; no SPEC conformity claim"
+        ],
+        "source_kind": "CONSORTIUM_RULES",
+        "source_revision": "runrules.html Id 6644, 2021-09-13",
+        "superseded_by": null,
+        "title": "SPEC CPU 2017 Run and Reporting Rules",
+        "version": "CPU2017-6644-2021-09-13"
+      },
+      {
+        "authoritative_source": "https://www.commoncriteriaportal.org/cc/index.cfm",
+        "expected_replacement": null,
+        "id": "arena.standard.cc2022",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "TOE, SPD, SFR and SAR; no certification claim"
+        ],
+        "source_kind": "CONSORTIUM_RULES",
+        "source_revision": "CC:2022 Release 1 with CC2022CEM2022Errata_Interpretation v1.2",
+        "superseded_by": null,
+        "title": "CC:2022",
+        "version": "Release-1-errata-1.2"
+      },
+      {
+        "authoritative_source": "https://www.commoncriteriaportal.org/cc/index.cfm",
+        "expected_replacement": null,
+        "id": "arena.standard.cem2022",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Vulnerability analysis and Attack Potential; not a security score"
+        ],
+        "source_kind": "CONSORTIUM_RULES",
+        "source_revision": "CEM:2022 Release 1 with CC2022CEM2022Errata_Interpretation v1.2",
+        "superseded_by": null,
+        "title": "CEM:2022",
+        "version": "Release-1-errata-1.2"
+      },
+      {
+        "authoritative_source": "https://www.iso.org/standard/15408-1",
+        "expected_replacement": null,
+        "id": "arena.standard.iso15408-1",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Security evaluation general model; other family parts require separate entries"
+        ],
+        "source_kind": "INTERNATIONAL_STANDARD",
+        "source_revision": "Edition 5, 2026-05",
+        "superseded_by": null,
+        "title": "ISO/IEC 15408-1:2026",
+        "version": "2026"
+      },
+      {
+        "authoritative_source": "https://www.iso.org/standard/18045",
+        "expected_replacement": null,
+        "id": "arena.standard.iso18045-2026",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "IT security evaluation methodology; not interchangeable with CEM:2022 without review"
+        ],
+        "source_kind": "INTERNATIONAL_STANDARD",
+        "source_revision": "Edition 4, 2026-05",
+        "superseded_by": null,
+        "title": "ISO/IEC 18045:2026",
+        "version": "2026"
+      },
+      {
+        "authoritative_source": "https://csrc.nist.gov/pubs/sp/800/55/v1/final",
+        "expected_replacement": null,
+        "id": "arena.standard.nist800-55-vol1",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Selection, validation and data quality of security measures"
+        ],
+        "source_kind": "GOVERNMENT_GUIDANCE",
+        "source_revision": "Final December 2024",
+        "superseded_by": null,
+        "title": "NIST SP 800-55 Vol.1",
+        "version": "2024"
+      },
+      {
+        "authoritative_source": "https://csrc.nist.gov/pubs/sp/800/55/v2/final",
+        "expected_replacement": null,
+        "id": "arena.standard.nist800-55-vol2",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Security measurement program"
+        ],
+        "source_kind": "GOVERNMENT_GUIDANCE",
+        "source_revision": "Final December 2024",
+        "superseded_by": null,
+        "title": "NIST SP 800-55 Vol.2",
+        "version": "2024"
+      },
+      {
+        "authoritative_source": "https://github.com/torvalds/linux/blob/v6.12/tools/perf/builtin-bench.c",
+        "expected_replacement": null,
+        "id": "arena.reference.linux-perf-bench",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Scheduler, IPC, syscall, memory and futex workload conventions"
+        ],
+        "source_kind": "DE_FACTO",
+        "source_revision": "Linux v6.12 tag",
+        "superseded_by": null,
+        "title": "Linux perf bench",
+        "version": "v6.12"
+      },
+      {
+        "authoritative_source": "https://github.com/axboe/fio/blob/fio-3.42/HOWTO.rst",
+        "expected_replacement": null,
+        "id": "arena.reference.fio",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Storage IOPS, bandwidth and latency distributions"
+        ],
+        "source_kind": "DE_FACTO",
+        "source_revision": "fio-3.42 tag",
+        "superseded_by": null,
+        "title": "fio",
+        "version": "3.42"
+      },
+      {
+        "authoritative_source": "https://www.rfc-editor.org/rfc/rfc2544",
+        "expected_replacement": null,
+        "id": "arena.reference.ietf-benchmarking",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Network interconnect benchmark methodology; isolated test environment"
+        ],
+        "source_kind": "CONSORTIUM_RULES",
+        "source_revision": "RFC 2544, March 1999",
+        "superseded_by": null,
+        "title": "RFC 2544",
+        "version": "RFC2544-1999"
+      },
+      {
+        "authoritative_source": "https://www.rfc-editor.org/rfc/rfc6815",
+        "expected_replacement": null,
+        "id": "arena.reference.ietf-rfc6815",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Applicability restrictions for RFC 2544"
+        ],
+        "source_kind": "CONSORTIUM_RULES",
+        "source_revision": "RFC 6815, November 2012",
+        "superseded_by": null,
+        "title": "RFC 6815",
+        "version": "RFC6815-2012"
+      },
+      {
+        "authoritative_source": "https://www.rfc-editor.org/rfc/rfc9004",
+        "expected_replacement": null,
+        "id": "arena.reference.ietf-rfc9004",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "REFERENCE",
+        "scope": [
+          "Update to RFC 2544 back-to-back benchmarking"
+        ],
+        "source_kind": "CONSORTIUM_RULES",
+        "source_revision": "RFC 9004, May 2021",
+        "superseded_by": null,
+        "title": "RFC 9004",
+        "version": "RFC9004-2021"
+      },
+      {
+        "authoritative_source": "docs/architecture/arena-measurement-contract.md",
+        "expected_replacement": null,
+        "id": "arena.methodology.kolvrt-profile",
+        "last_checked": "2026-10-05",
+        "publication_state": "PUBLISHED",
+        "role": "MANDATORY",
+        "scope": [
+          "Nearest-rank descriptive samples, scoped admission and explicit missing states"
+        ],
+        "source_kind": "KOLVRT_DEFINED",
+        "source_revision": "Experimental schema and analysis version 1",
+        "superseded_by": null,
+        "title": "KOLVRT Arena Measurement Contract",
+        "version": "1"
+      }
+    ],
+    "registry_version": "2026-10-05.1",
+    "schema_version": 1
+  },
+  "run_id": "clock-dev-2-1791408485740-34204",
+  "schema_version": 1,
+  "scope": "KERNEL_QEMU",
+  "security_results": [
+    {
+      "reason": "Bounded evidence only; missing SAR is not inferred from functional success",
+      "sar_results": [
+        {
+          "evidence": [
+            "passports/dev-2/pair.json"
+          ],
+          "reason": "Source-bound evidence retained and validated; not certification",
+          "sar_id": "arena.sar.clock-execution",
+          "status": "PASS"
+        }
+      ],
+      "sfr_id": "arena.sfr.clock-execution",
+      "status": "PASS"
+    },
+    {
+      "reason": "Bounded evidence only; missing SAR is not inferred from functional success",
+      "sar_results": [
+        {
+          "evidence": [
+            "passports/dev-2/negative-review.json",
+            "passports/dev-2/negative-command-0.log",
+            "passports/dev-2/negative-command-1.log"
+          ],
+          "reason": "Source-bound evidence retained and validated; not certification",
+          "sar_id": "arena.sar.clock-negative",
+          "status": "PASS"
+        },
+        {
+          "evidence": [
+            "passports/dev-2/source-review.json"
+          ],
+          "reason": "Source-bound evidence retained and validated; not certification",
+          "sar_id": "arena.sar.clock-source-review",
+          "status": "PASS"
+        }
+      ],
+      "sfr_id": "arena.sfr.clock-evidence",
+      "status": "PASS"
+    }
+  ],
+  "warmup": {
+    "evidence": [
+      "passports/dev-2/pair.json"
+    ],
+    "reason": "Four fixed retained conditioning samples completed; does not assert statistical stabilization",
+    "status": "PASS"
+  }
+}

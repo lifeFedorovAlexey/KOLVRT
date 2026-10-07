@@ -1,0 +1,32 @@
+{
+  "accelerator": "TCG",
+  "active_cpus": 2,
+  "arguments": [
+    "-machine",
+    "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+    "-cpu",
+    "cortex-a57",
+    "-accel",
+    "tcg",
+    "-smp",
+    "2",
+    "-m",
+    "256M",
+    "-display",
+    "none",
+    "-serial",
+    "stdio",
+    "-monitor",
+    "none",
+    "-nic",
+    "none",
+    "-no-reboot",
+    "-kernel",
+    "target/kernel/arena-clock/1791408485740-34204\\prod/pair-0/on\\kernel.elf"
+  ],
+  "configured_cpus": 2,
+  "elf_sha256": "c1a74a58f30f8d68ca082f7c95e44db308d139890c8602e7aa6eaa82e3a4213a",
+  "measurement_claim": "emulator timer ticks; not hardware throughput",
+  "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+  "timeout_seconds": 30
+}

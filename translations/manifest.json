@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "026a8b00766223c3855d785899f318e82152bd778141de5321806e41969ce2d6",
-        "translation_sha256": "dfc1a1b6820d68fc90f4d75354bee0722aed915b9452ecdd4db1cd23fdbc47c3"
+        "source_sha256": "74ac72bc6e5815036e0ff55941b66146f3de454465fe925c74da66def5f1dddf",
+        "translation_sha256": "ea604bcac62e6f52a21754e50bd9ed48c016bdb6605e2b3d81b37f5e78ac940b"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -138,8 +138,8 @@
         "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
       "docs/architecture/arena-measurement-contract.md": {
-        "source_sha256": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
-        "translation_sha256": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d"
+        "source_sha256": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
+        "translation_sha256": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
@@ -158,8 +158,8 @@
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "76d846301af7c083ff159a5a3127ea36606bd4ccf6b63cbb06a7aad4c8d7d44d",
-        "translation_sha256": "b33d7123ba1d1e6db4e22f204edb4761d5f89257ff12beb5395554512d071678"
+        "source_sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
+        "translation_sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
@@ -266,8 +266,8 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "34d8f06afc1b94956c85396e41187b912c32f55896dd02e6da61131fd953b0d8",
-        "translation_sha256": "2e9ea1cfea8aaa7d0db5d628377e62753bfd84e33cb961b05fd6036c18309c1f"
+        "source_sha256": "dbcbe80746a93b92eb906547075a63c44aa072838e9cadd57a907af4530dfaaf",
+        "translation_sha256": "cb27ac993e1da65a06db02c0a6c8ce0f9bded4ee5cd30d5aa31df14d0bbb70d1"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
@@ -285,9 +285,13 @@
         "source_sha256": "b9f545cbc3231a5a0129e0f1a54a3a9bf107dbe537db62822b4eb332a3d7ca85",
         "translation_sha256": "482662a55414cf67b61121c09b2f5c1a9660fc2737b4c00f69b7957e52ea454c"
       },
+      "docs/kernel/clock.md": {
+        "source_sha256": "a24703a64f9d1e66ed02b9465400a28667a49f5662184b16d76d7f29cff064de",
+        "translation_sha256": "9dd206f3d86d9f76d42d027d25e715a13df72a8ad3f7db974c98a5e4cfdfefec"
+      },
       "docs/kernel/devices.md": {
-        "source_sha256": "a4503c5f6d3306b3ba60b78062ded19490537e4d498fb8f637c8c5cdfc6a76b6",
-        "translation_sha256": "3e9ccd2e18f1d63d0ad9f4d8c53c2819eb2569a9a804ed677604103611b11b38"
+        "source_sha256": "b19954e815acc7291aab2b86c88509147cea0c80ce256aa092ccaab1ad4474da",
+        "translation_sha256": "ba0045576ecdeacaa6be702ef68b126e3a3453c00633e50c4db7d0f706d0f1b5"
       },
       "docs/kernel/domains.md": {
         "source_sha256": "9067c663ffab79544cfb12487ccbd9c7b8ed290e498a96d8a918462d605a58a3",
@@ -314,16 +318,16 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "134235a8159fa7ff24b62b74ad59760a4e6f2fe2ebaa1d5ff8e9caeba192c881",
-        "translation_sha256": "9cca99fb0ac072e362f261fb52fd69484dd614501736f1760305099cebaf4d5c"
+        "source_sha256": "e8edabcd0268aec1e89a0eab7833d15e7b0e66413de80725dec0563fbd0c5d37",
+        "translation_sha256": "6cc41a31a923cc6b255b061130cf767e09cd7537e7f502d51a7dfd828be5315a"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "c7194350de63291a0a5ca1cb8ae33f90bf870e7e38eca410c763ecaac496522f",
-        "translation_sha256": "1fe20f4a86f6c6c697505154938d7a0e22493090a5616c10d3fc407ab8e735ec"
+        "source_sha256": "5b803ba32778ec124a82e41ee9afad66ea022553b5559d6a0fe54d58b5fb03bd",
+        "translation_sha256": "47507900a8d183461e520aa5728cc5872e7442a2db3dec6621f05e1f47591569"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
@@ -342,8 +346,8 @@
         "translation_sha256": "395e7920498d371257573b4fdd8cfa6d91718c1f8aa4447d1353f1327d556790"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "1032c16340fda70a9152619b81dfbb90d102dcbcb4e8641ed3c7003848d2367e",
-        "translation_sha256": "eeb00b6d7b3825ca5fb4471ffe77233dcf18d763a7b71423bd4dfcda7121f16e"
+        "source_sha256": "edf965f6d1b02edb7d1956ad04e1ab4a5373672e3d0ef228d5afb860fbb73c83",
+        "translation_sha256": "c6d61c21d12b04b2b48f08d2280fe8df24d0c9b2f9b5c940a23c36ada553d41e"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",
@@ -384,6 +388,10 @@
       "docs/research/case-schema.md": {
         "source_sha256": "3adfce8258430a5f89bda378fe9b4670ddf8e0bc31160735c65d363f8c74820d",
         "translation_sha256": "a47b17b48533d5613e8e2549f7124a8617253f83409c61bcb9ea53331f604c34"
+      },
+      "docs/research/clock-passport.md": {
+        "source_sha256": "2f97139c0cc3aec4efad809d42c1e0185e064f0ceab0a1bd4e35934238058f0b",
+        "translation_sha256": "89071afe53e2ee169a880cb786a496edb94bf9534cdae7e025505d026ccdf0f3"
       },
       "docs/research/cost-l-queries.md": {
         "source_sha256": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
