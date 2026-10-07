@@ -986,7 +986,7 @@
     {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 25678,
+      "estimated_bytes": 26637,
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "path": "docs/kernel/supervision.md",

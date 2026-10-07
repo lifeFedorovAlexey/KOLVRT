@@ -1,0 +1,100 @@
+{
+  "source_commit": "4e37987bcc56957290771010f111b4c44b461085",
+  "worktree_dirty": true,
+  "source_files_sha256_lf": {
+    "crates/kernel-core/src/ipc/tests.rs": "3414e71e1cadfd20183d78c52f3b77e9afabf311c2398e5c2b29bfec98271a1f",
+    "crates/kernel/src/supervision_workload.S": "dd23d1db3daadb5e6271e206a5f3bddb65463bab483b5fed28c4b48cf5eb2bd5",
+    "crates/kernel/src/supervision_workload.rs": "1c42cee5b0d1e36c8962705556f95618d23cada5589cf74e67928e44310879c3",
+    "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
+    "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
+    "tests/system/hold-qemu-thread.ps1": "5b66c5ea25ce4360c722cc6d8b63b4f2c87ad9747416f4357ef692d19caf0633"
+  },
+  "build": {
+    "artifact": "target/kernel/dev-tests.elf",
+    "compiler": "1.99.0",
+    "elf_bytes": 6854296,
+    "features": ["machine-events", "diagnostics", "kernel-tests"],
+    "load_bytes": 1160147,
+    "memory_bytes": 2261971,
+    "sha256": "a7bcdd40d6086a93d8f8d8e7d4f32004c097a5b6ad207b341862c2c218224a7c",
+    "target": "aarch64-unknown-none"
+  },
+  "elf_sha256": "a7bcdd40d6086a93d8f8d8e7d4f32004c097a5b6ad207b341862c2c218224a7c",
+  "arguments": [
+    "-machine",
+    "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+    "-cpu",
+    "cortex-a57",
+    "-accel",
+    "tcg",
+    "-smp",
+    "2",
+    "-m",
+    "256M",
+    "-display",
+    "none",
+    "-serial",
+    "stdio",
+    "-monitor",
+    "none",
+    "-nic",
+    "none",
+    "-no-reboot",
+    "-kernel",
+    "target/kernel/dev-tests.elf",
+    "-S",
+    "-gdb",
+    "tcp:127.0.0.1:50367",
+    "-qmp",
+    "tcp:127.0.0.1:50368,server=on,wait=off"
+  ],
+  "host_fault": "Suspend only owned QEMU CPU0 host thread for500ms while VM clock and CPU1 continue",
+  "acceptance": "diagnostic induced rejection, not normal pass and not proof of original CI scheduling cause",
+  "production_source_or_image_mutation": false,
+  "hits": [
+    {
+      "thread": "01",
+      "stage": 1010,
+      "payload": 1,
+      "pc": 536872652
+    },
+    {
+      "thread": "01",
+      "stage": 1020,
+      "payload": 1,
+      "pc": 536872652
+    },
+    {
+      "thread": "01",
+      "stage": 1002,
+      "payload": 2,
+      "pc": 536872652
+    },
+    {
+      "thread": "01",
+      "stage": 1030,
+      "payload": 1,
+      "pc": 536872652
+    }
+  ],
+  "observed": {
+    "event": "supervision-reject",
+    "status": "fail",
+    "error": "Scenario",
+    "exit": "Exited(1030)",
+    "coverage": 15,
+    "actual": 16,
+    "value": 0,
+    "stage": 1030,
+    "operation": 1,
+    "payload_operation": 1,
+    "probe_timing_valid": true,
+    "submitted_at": 624780675,
+    "deadline": 632593175,
+    "failed_at": 658192987,
+    "frequency": 62500000,
+    "residency_at_submit_clock": 320430,
+    "residency_at_failure_clock": 32648710,
+    "host_experiment_elapsed_ms": 599
+  }
+}

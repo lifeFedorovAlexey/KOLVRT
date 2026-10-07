@@ -2768,7 +2768,7 @@
     "crates/kernel/src/security/testing.rs": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df",
     "crates/kernel/src/smp.rs": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3",
     "crates/kernel/src/supervision.rs": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a",
-    "crates/kernel/src/supervision_workload.S": "447557cda721ce1bc565689484a1f865e2246eb60e18ec5eb76ba36a26d6ecc9",
+    "crates/kernel/src/supervision_workload.S": "dd23d1db3daadb5e6271e206a5f3bddb65463bab483b5fed28c4b48cf5eb2bd5",
     "crates/kernel/src/supervision_workload.rs": "1c42cee5b0d1e36c8962705556f95618d23cada5589cf74e67928e44310879c3",
     "crates/kernel/src/sync/mod.rs": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
     "crates/kernel/src/test_support/arch_probes.S": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732",
@@ -2868,7 +2868,7 @@
     "docs/kernel/native-applications.md": "8cec7590e33470e84c27e6d8e7b911878389ea6cc2270e87ff44b07bb109aa99",
     "docs/kernel/processes.md": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
     "docs/kernel/scheduler.md": "3a7099d5c09a350d2ac8683da945a30f80db9c2397a6bc1e2d63b0d8eb54035e",
-    "docs/kernel/supervision.md": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
+    "docs/kernel/supervision.md": "5585e6b152c4bfc4ef8c415b1997c931a4cfe1042d3b179d6be0136d8d71393f",
     "docs/kernel/user-copy.md": "16941492671fc63f4550421d6592472bd6035e6a4ecf8a67e9282806942fbe4d",
     "docs/kernel/wait.md": "7dd7bf8bef8b3cdff4dc5d41d68ee396410a49362979fa42172b61fc854b65e1",
     "docs/knowledge-enrollment.json": "90057be4e5ee0eba7cf4294b276e07a07fa9c125069c1d490e90f88a803cf651",
@@ -2964,8 +2964,8 @@
     "tests/system/hold-qemu-thread.ps1": "5b66c5ea25ce4360c722cc6d8b63b4f2c87ad9747416f4357ef692d19caf0633",
     "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
-    "tests/system/supervision-host-stall.cjs": "e85ae7747e8670c94d0e257a49bbd0e6d1ff5297506802385c86a079d1c9df14",
-    "translations/manifest.json": "0ce184e2cb3753897e77cae46db208a905b31c4446b64e5a6606931985a27c16",
+    "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
+    "translations/manifest.json": "c962d5464126a7c9df80b4e7ee1db69a594c95cea2b37736c1fb3a18e71aa3d6",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3017,7 +3017,7 @@
     "translations/ru/docs/kernel/native-applications.md": "c9e011abee8ac2534e9a1245d8bf602b6769a12bdc3b321681921ad67c4221c1",
     "translations/ru/docs/kernel/processes.md": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
     "translations/ru/docs/kernel/scheduler.md": "06d860224d0b7cb94619c2ed689c71cd911e57b80d33b70991f52b04b36849ed",
-    "translations/ru/docs/kernel/supervision.md": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293",
+    "translations/ru/docs/kernel/supervision.md": "09079176a15881627478ad6da33cee54d748e2a9a2c6c92bd6e71b078517b55a",
     "translations/ru/docs/kernel/user-copy.md": "72164fc7c526a3b24f2bd50842c01ce2641fee6fee996e162b9a0b47479229b6",
     "translations/ru/docs/kernel/wait.md": "a4f7a1b09e9f032bcddd11e5988e0e0a954cac5f6cd28d7e92ac5ecb60019cf6",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -5881,7 +5881,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 25678,
+      "estimated_bytes": 26637,
       "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. The retained Phase 3.6 receipt is stale for these changed sources; bounded Phase 3.7 acceptance is recorded in [native applications](native-applications.md). Readiness and performance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -5895,15 +5895,15 @@
       },
       "locations": {
         "en": {
-          "end": 183,
+          "end": 185,
           "path": "docs/kernel/supervision.md",
-          "sha256": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
+          "sha256": "5585e6b152c4bfc4ef8c415b1997c931a4cfe1042d3b179d6be0136d8d71393f",
           "start": 1
         },
         "ru": {
-          "end": 185,
+          "end": 187,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293",
+          "sha256": "09079176a15881627478ad6da33cee54d748e2a9a2c6c92bd6e71b078517b55a",
           "start": 1
         }
       },
@@ -10618,13 +10618,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
+          "sha256": "5585e6b152c4bfc4ef8c415b1997c931a4cfe1042d3b179d6be0136d8d71393f",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293",
+          "sha256": "09079176a15881627478ad6da33cee54d748e2a9a2c6c92bd6e71b078517b55a",
           "start": 13
         }
       },

@@ -334,8 +334,8 @@
         "translation_sha256": "395e7920498d371257573b4fdd8cfa6d91718c1f8aa4447d1353f1327d556790"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
-        "translation_sha256": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293"
+        "source_sha256": "5585e6b152c4bfc4ef8c415b1997c931a4cfe1042d3b179d6be0136d8d71393f",
+        "translation_sha256": "09079176a15881627478ad6da33cee54d748e2a9a2c6c92bd6e71b078517b55a"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",
