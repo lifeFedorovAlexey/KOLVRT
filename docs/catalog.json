@@ -737,7 +737,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 17728,
+      "estimated_bytes": 17821,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -767,7 +767,7 @@
     {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12694,
+      "estimated_bytes": 12787,
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
       "path": "docs/architecture/compatibility-manifests.md",
@@ -777,7 +777,7 @@
     {
       "document": "doc.kolvrt.architecture.first-native-slice",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6652,
+      "estimated_bytes": 7238,
       "id": "doc.kolvrt.architecture.first-native-slice",
       "kind": "navigation",
       "path": "docs/architecture/first-native-slice.md",
@@ -797,11 +797,11 @@
     {
       "document": "doc.kolvrt.architecture.production-scheduler",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 11590,
+      "estimated_bytes": 11711,
       "id": "doc.kolvrt.architecture.production-scheduler",
       "kind": "navigation",
       "path": "docs/architecture/production-scheduler.md",
-      "summary": "Historical scheduler milestone order with current bounded IPC implementation status and later supervisor gates.",
+      "summary": "Historical scheduler milestone order with accepted bounded Phase 3 IPC, supervision and native integration.",
       "title": "Production scheduling and request lifecycle: next implementation order"
     },
     {
@@ -828,7 +828,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 17716,
+      "estimated_bytes": 17809,
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
       "path": "docs/ci/performance.md",
@@ -838,7 +838,7 @@
     {
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12737,
+      "estimated_bytes": 12830,
       "id": "doc.kolvrt.dependencies.hygiene",
       "kind": "policy",
       "path": "docs/architecture/dependency-hygiene.md",
@@ -906,7 +906,7 @@
     {
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 10227,
+      "estimated_bytes": 10413,
       "id": "doc.kolvrt.kernel.capabilities",
       "kind": "subsystem-contract",
       "path": "docs/kernel/capabilities.md",
@@ -916,7 +916,7 @@
     {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 14533,
+      "estimated_bytes": 14626,
       "id": "doc.kolvrt.kernel.domains",
       "kind": "subsystem-contract",
       "path": "docs/kernel/domains.md",
@@ -926,7 +926,7 @@
     {
       "document": "doc.kolvrt.kernel.handles",
       "document_status": "CURRENT",
-      "estimated_bytes": 20315,
+      "estimated_bytes": 20408,
       "id": "doc.kolvrt.kernel.handles",
       "kind": "subsystem-contract",
       "path": "docs/kernel/handles.md",
@@ -936,7 +936,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 25477,
+      "estimated_bytes": 25914,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -956,7 +956,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 32878,
+      "estimated_bytes": 34247,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -966,7 +966,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 27631,
+      "estimated_bytes": 28156,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -976,7 +976,7 @@
     {
       "document": "doc.kolvrt.kernel.scheduler",
       "document_status": "CURRENT",
-      "estimated_bytes": 17636,
+      "estimated_bytes": 17996,
       "id": "doc.kolvrt.kernel.scheduler",
       "kind": "subsystem-contract",
       "path": "docs/kernel/scheduler.md",
@@ -986,7 +986,7 @@
     {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 23306,
+      "estimated_bytes": 24082,
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "path": "docs/kernel/supervision.md",
@@ -996,7 +996,7 @@
     {
       "document": "doc.kolvrt.kernel.user-copy",
       "document_status": "CURRENT",
-      "estimated_bytes": 17305,
+      "estimated_bytes": 17398,
       "id": "doc.kolvrt.kernel.user-copy",
       "kind": "subsystem-contract",
       "path": "docs/kernel/user-copy.md",
@@ -1006,7 +1006,7 @@
     {
       "document": "doc.kolvrt.kernel.wait",
       "document_status": "CURRENT",
-      "estimated_bytes": 3252,
+      "estimated_bytes": 3392,
       "id": "doc.kolvrt.kernel.wait",
       "kind": "subsystem-contract",
       "path": "docs/kernel/wait.md",
@@ -1033,7 +1033,7 @@
     {
       "document": "doc.kolvrt.native-applications.fixture-review",
       "document_status": "HISTORICAL MILESTONE",
-      "estimated_bytes": 4501,
+      "estimated_bytes": 5750,
       "id": "doc.kolvrt.native-applications.fixture-review",
       "kind": "security-analysis",
       "path": "docs/architecture/native-phase37-fixture-review.md",
@@ -1060,7 +1060,7 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 12268,
+      "estimated_bytes": 12361,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",
@@ -1070,7 +1070,7 @@
     {
       "document": "doc.kolvrt.research.host-survey",
       "document_status": "CURRENT",
-      "estimated_bytes": 12677,
+      "estimated_bytes": 12770,
       "id": "doc.kolvrt.research.host-survey",
       "kind": "subsystem-contract",
       "path": "docs/research/host-survey.md",
@@ -1090,7 +1090,7 @@
     {
       "document": "doc.kolvrt.security.verifier-time",
       "document_status": "CURRENT",
-      "estimated_bytes": 8763,
+      "estimated_bytes": 8856,
       "id": "doc.kolvrt.security.verifier-time",
       "kind": "subsystem-contract",
       "path": "docs/security/verifier-time.md",
@@ -1390,7 +1390,7 @@
       "anchor": "kolvrt-dependency-hygiene",
       "document": "doc.kolvrt.dependencies.hygiene",
       "document_status": "CURRENT",
-      "estimated_bytes": 12502,
+      "estimated_bytes": 12595,
       "id": "kolvrt.dependencies.hygiene",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",
@@ -1638,7 +1638,7 @@
       "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 894,
+      "estimated_bytes": 1011,
       "id": "kolvrt.ipc.teardown",
       "kind": "contract-section",
       "path": "docs/kernel/ipc.md",
@@ -1685,7 +1685,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 25364,
+      "estimated_bytes": 25801,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],
@@ -1797,7 +1797,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.user-copy",
       "document_status": "CURRENT",
-      "estimated_bytes": 5712,
+      "estimated_bytes": 5805,
       "id": "kolvrt.memory.user-copy.limits",
       "kind": "contract-section",
       "path": "docs/kernel/user-copy.md",
@@ -1905,7 +1905,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 1266,
+      "estimated_bytes": 1219,
       "id": "kolvrt.process.asid",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -1929,7 +1929,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 2076,
+      "estimated_bytes": 2396,
       "id": "kolvrt.process.creation",
       "kind": "contract-section",
       "path": "docs/kernel/processes.md",
@@ -2175,7 +2175,7 @@
       "anchor": "kolvrt-domains-teardown",
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
-      "estimated_bytes": 7405,
+      "estimated_bytes": 7498,
       "id": "kolvrt.security.domains.teardown",
       "kind": "contract-section",
       "path": "docs/kernel/domains.md",
@@ -2194,7 +2194,7 @@
       ],
       "document": "doc.kolvrt.kernel.capabilities",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 8534,
+      "estimated_bytes": 8720,
       "id": "kolvrt.security.event-revocation",
       "implementation": "BOUNDED_IMPLEMENTED",
       "kind": "feature",

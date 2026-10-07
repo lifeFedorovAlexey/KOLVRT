@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 
-Evidence scope: исторически принятая bounded Phase 3.6 после #126; Phase 3.7 меняет source и coordination policy. Current-source acceptance остаётся незавершённой; readiness и performance отдельны.
+Evidence scope: исторически принятая bounded Phase 3.6 после #126; Phase 3.7 меняет source и coordination policy. Сохранённый receipt Phase 3.6 устарел для изменённых исходников; bounded acceptance Phase 3.7 записана в [native-приложениях](native-applications.md). Readiness и performance отдельны.
 
 Current reference: [Предложение lifecycle rendezvous](../architecture-decisions/0026-el0-supervision.md)
 
@@ -46,7 +46,7 @@ SGI-only entry не расходует checkpoint quantum до первой ин
 
 Исторический cancellation fixture использовал длительность readiness probe для независимых load и commit-ack запросов. Expiry мог сделать любой из них terminal до явного Cancel, для которого AlreadyTerminal является правильным production response. Текущий fixture задаёт максимальный допустимый absolute deadline этим двум тестовым входам, сохраняя проверки настоящего commit acknowledgement, явной cancellation и EffectUnknown. Zero уже expired по native IPC contract. Readiness probes сохраняют canonical deadline, restart сохраняет backoff 1/128 секунды. Исправляется предпосылка теста; production arbiter и performance policy не меняются. [Native-приложения](native-applications.md) добавляют внешний SYSTEM-сценарий настоящих production supervisor/service/client после выбранного crash сервиса.
 
-Исторический CI b037833 упал в ordinary suite, вызванном process-stale-control: Exited(1000), coverage 0, actual status 16. Это не отказ process-stale assertion. Текущий diagnostic fixture сохраняет readiness deadline 1/8 секунды и задаёт первым peer и worker probes stage IDs 1010 и 1020. Operation IDs различают Submit (1), Wait (2), Collect (3) и reply validation (4); при отказе записываются clock при создании запроса, absolute deadline, clock после отказа, frequency и исходный IPC status. Проверка production adapter показывает, что Expired status 16 возвращается при Submit admission, тогда как Wait/Collect сообщают terminal outcomes отдельно. Это сужает расследование, но не доказывает attribution scheduler latency. Зелёный локальный повтор не устраняет падение CI; увеличение timeout, production repair и завершённая acceptance не заявляются.
+Исторический CI b037833 упал в ordinary suite, вызванном process-stale-control: Exited(1000), coverage 0, actual status 16. Это не отказ process-stale assertion. Текущий diagnostic fixture сохраняет readiness deadline 1/8 секунды и задаёт первым peer и worker probes stage IDs 1010 и 1020. Operation IDs различают Submit (1), Wait (2), Collect (3) и reply validation (4); при отказе записываются clock при создании запроса, absolute deadline, clock после отказа, frequency и исходный IPC status. Проверка production adapter показывает, что Expired status 16 возвращается при Submit admission, тогда как Wait/Collect сообщают terminal outcomes отдельно. Это сужает расследование, но не доказывает attribution scheduler latency. Один зелёный локальный повтор не устранял тот исторический отказ CI. Более поздняя bounded acceptance записана в [native-приложениях](native-applications.md); она не заявляет универсальное исправление readiness expiry и не обосновывает увеличение readiness deadline.
 
 ## Политика readiness, restart и shutdown
 
@@ -58,9 +58,9 @@ Committed crashing service сообщает effect-unknown и exact fault observ
 
 ## Проверка и следующий gate
 
-[Новая проверка приёмки](../architecture/supervision-phase36-acceptance-review.md) выполнена относительно merged main ddd526cc5a522d97029d0324e6e619f5fd6ec6e5 после #126. Codex повторно проверил полные architecture/code и EN/RU semantic requirements, включая обязательный publication bound для checkpoint(None), отдельный copy-drain bound и различие relaxed/ordered counter reads. Functional implementation — BOUNDED_IMPLEMENTED. Readiness остаётся NOT_READY, без введения нового числового performance gate и без запрета использования функциональной основы в #28.
+[Историческая проверка приёмки Phase 3.6](../architecture/supervision-phase36-acceptance-review.md) выполнена относительно merged main ddd526cc5a522d97029d0324e6e619f5fd6ec6e5 после #126. Codex повторно проверил полные architecture/code и EN/RU semantic requirements, включая обязательный publication bound для checkpoint(None), отдельный copy-drain bound и различие relaxed/ordered counter reads. Functional implementation — BOUNDED_IMPLEMENTED. Readiness остаётся NOT_READY, без введения нового числового performance gate и без запрета использования функциональной основы в #28.
 
-[Fresh current-source receipt](../../../../research/results/supervision-phase36-main126.json) независимо проверяет CI run 37439023443 на final #126 head cceb17e74a7a249d76d0f10905de23205f69b1dd: все source digests совпадают, проверены фактические ELF/result hashes и полный inventory 142 задач — 125 checks в каждом профиле, оба ordinary boots, 138 controls. Все десять supervision controls сохранены. Новые DEV/PROD publication controls требуют одновременно CheckpointPublicationHeld с quiescent=true и CompletionPublicationTimeout; чужой panic не засчитывается.
+[Исторический receipt точных исходников #126](../../../../research/results/supervision-phase36-main126.json) независимо проверяет CI run 37439023443 на final #126 head cceb17e74a7a249d76d0f10905de23205f69b1dd: все source digests совпадают, проверены фактические ELF/result hashes и полный inventory 142 задач — 125 checks в каждом профиле, оба ordinary boots, 138 controls. Тот inventory содержал десять supervision controls. Его DEV/PROD publication controls требовали одновременно CheckpointPublicationHeld с quiescent=true и CompletionPublicationTimeout; чужой panic не засчитывался. Publication mutation и фиксированные coordination bounds с тех пор удалены, как описано выше; этот receipt не подтверждает текущие исходники.
 
 [Старый receipt](../../../../research/results/supervision-phase36-current.json) и [предложение до #126](../architecture/supervision-phase36-pre126-review.md) сохранены только для исторического scope 9cf87bc/692b024. Они не подтверждают текущие исходники.
 
@@ -74,7 +74,7 @@ Committed crashing service сообщает effect-unknown и exact fault observ
 
 ## Граница исходников при интеграции CI
 
-Current main после #126 содержит 142 задачи и 138 controls из общего serial/four-shard inventory. Publication failure не возвращает фиктивный success: resources остаются retained до acquired quiescence. Новая verification относится к этому exact source set; historical inventories не переписываются. Performance и readiness остаются отдельными от functional acceptance.
+Исторический inventory #126 содержал 142 задачи и 138 controls. Принятый [receipt native-приложений](../../../../research/results/native-phase37-43af402.json) Phase 3.7 содержит 144 задачи и 140 control slots с классификацией фактического coverage; [обновлённая проверка](../architecture/native-phase37-fixture-review.md) фиксирует его исходники и scope приёмки. Publication failure не возвращает фиктивный success: resources остаются retained до acquired quiescence. Historical inventories не переписываются. Performance и readiness остаются отдельными от functional acceptance.
 
 Phase 3.7 расширяет механизм immutable image-format grants и operation 6 для одной конечной client SEND edge. Инициализированные x0=6, x1=client selector, x2=точный client token, x3=точный destination token, x4=1 обрабатываются только для захваченного supervisor после acquired quiescence. Успех возвращает status, SEND handle в локальном namespace клиента, target token и client generation; заменяется только previous sender, выданный этой entry. Stale tokens, завершённые clients/targets и отсутствующие edges отвергаются. Этот профиль исходных ELF описан в [native applications](native-applications.md); прежние ограничения fixtures Phase 3.6 и исторические receipts сохраняют свой исходный scope.
 
@@ -141,12 +141,12 @@ CI точного 3873bc8 наблюдал worker readiness stage 1020, Submit o
           "Fixed affinity and two-CPU lifecycle barrier; generic wait-any, migration, independent live admission and persistent services are excluded.",
           "Codex semantic/EN-RU review completed after #126; performance attribution/admissibility and physical ARM/production acceptance remain open."
         ],
-        "next_gate": "Phase 3.7/#28 persistent ELF integration over the accepted bounded functional foundation; performance readiness and production trust remain separate review scopes.",
+        "next_gate": "Phase 3.7/#28 bounded persistent ELF integration is accepted under docs/kernel/native-applications.md. Performance readiness, physical ARM and production trust remain separate review scopes.",
         "verification": [
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 changes coordination policy and removes source-copy mutations/application copies. Prior receipts remain immutable historical evidence; current-source full supervisor crash/recovery and final acceptance are incomplete.",
+            "reason": "The retained Phase 3.6/#126 receipt does not match the changed coordination policy and test architecture, so this owner-specific verification remains STALE. Bounded Phase 3.7 production supervisor crash/recovery/shutdown and acceptance are separately verified under docs/kernel/native-applications.md; historical receipts are not relabeled.",
             "receipt": "research/results/supervision-phase36-main126.json",
             "receipt_sha256": "52a48b8246f516b7d393c1cecb6a7a0a58bac5a9af31822cda15390747c2907f",
             "scope": "Real isolated EL0 supervisor and static worker/peer images on two fixed-affinity QEMU CPUs; ordered readiness, unused grant extinction, finite credits, version rejection, fresh restart, timeout, storm, truthful Terminated/effect-unknown and complete ownership/resource/source drainage. Not physical ARM64 or production trust."

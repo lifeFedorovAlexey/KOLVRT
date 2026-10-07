@@ -2,7 +2,7 @@
 
 Document status: CURRENT
 Evidence scope: защёлка собственного события `0x55` под управлением доверенного загрузочного координатора; отдельное ожидание IPC `native.request/1` имеет собственный контракт удерживаемого источника и свидетельства.
-Current reference: [План развития планировщика](../../../../docs/architecture/production-scheduler.md)
+Current reference: [План развития планировщика](../architecture/production-scheduler.md)
 
 ## Контракт
 
@@ -48,8 +48,7 @@ Current reference: [План развития планировщика](../../..
 `step()`. В отдельном пути Phase 3.5 для IPC есть непрерывный EL0 dispatcher, readable и
 terminal waits, обработка deadline во время блокировки, teardown service/requester и
 cross-CPU wakes с ключом поколения. Эти механизмы относятся к bounded IPC и не превращают
-защёлку `0x55` в универсальный API ожидания. Полная mutation и acceptance coverage Issue #26
-ещё не завершена.
+защёлку `0x55` в универсальный API ожидания. Ограниченная приёмка Issue #26 завершена. [Текущая native integration](native-applications.md) фиксирует последующую source-bound regression отдельно от исторического receipt защёлки и mutation controls.
 
 [Английский оригинал](../../../../docs/kernel/wait.md)
 

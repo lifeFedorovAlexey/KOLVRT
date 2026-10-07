@@ -46,7 +46,7 @@ for this `step()` event path. The Phase 3.5 IPC path separately has an EL0
 continuous dispatcher, readable and terminal waits, deadline processing while
 blocked, service/requester teardown and generation-keyed cross-CPU wakes. Those
 mechanics are specific to bounded IPC and do not turn the `0x55` latch into a
-general wait API. Full Issue #26 mutation and acceptance coverage remains pending.
+general wait API. Bounded Issue #26 acceptance is complete. The [current native integration](native-applications.md) records later source-bound regression separately from the historical latch receipt and mutation controls.
 
 [Russian translation](../../translations/ru/docs/kernel/wait.md)
 

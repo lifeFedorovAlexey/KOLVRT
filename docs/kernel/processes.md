@@ -46,7 +46,7 @@ Completion distinguishes Exited(code), Faulted(class,address), Terminated, Budge
 
 ## Creation transaction
 
-Before reservation, validate bootstrap origin, observed caller/IRQ state, quiescent admission context, owner range, trusted image bounds, entry/stack, AArch64 EL0 PSTATE and nonzero optional slice limit. Five injected boundaries cover Slot, Frames, Space, Context and Commit on both target CPUs.
+Before reservation, validate bootstrap origin, observed caller/IRQ state, quiescent admission context, owner range, trusted image bounds, entry/stack, AArch64 EL0 PSTATE and nonzero optional slice limit. Historical Phase 3.1 evidence injected failures at Slot, Frames, Space, Context and Commit on both target CPUs. Current tests instead pass a real zero-memory budget to the single production create method; they exercise Frames allocation rejection and resource retention without production injection hooks.
 
 | Step    | Owned resource                                              | Rollback                                                                    |
 | ------- | ----------------------------------------------------------- | --------------------------------------------------------------------------- |
@@ -56,7 +56,7 @@ Before reservation, validate bootstrap origin, observed caller/IRQ state, quiesc
 | Context | Valid initial architectural frame                           | Discard unpublished value and undo previous resources                       |
 | Commit  | Prepared object owned by Registry                           | Failure occurs before object insertion/publication; undo previous resources |
 
-No creation step publishes a runnable reference. start changes Prepared to Admitted; dispatch publishes only fully initialized admitted descriptors with release ordering. Capacity is the scheduler's explicit four slots per CPU, independent of fixture count. Exhaustion fails without allocation or overwrite. Image/stack/table resources use one bounded contiguous lease; no fallible heap growth occurs in process creation. The verifier checks physical availability, occupancy and stale failed identities after every injected failure, and subsequently allocates the entire table to expose retained charges.
+No creation step publishes a runnable reference. start changes Prepared to Admitted; dispatch publishes only fully initialized admitted descriptors with release ordering. Capacity is the scheduler's explicit four slots per CPU, independent of fixture count. Exhaustion fails without allocation or overwrite. Image/stack/table resources use one bounded contiguous lease; no fallible heap growth occurs in process creation. The current verifier checks physical availability, occupancy and stale failed identities after real zero-budget creation rejection, and subsequently allocates the entire table to expose retained charges. Historical injected-step coverage is not claimed equivalent to these current inputs.
 
 <a name="kolvrt-process-reclamation"></a>
 
@@ -103,7 +103,7 @@ Bounded stress performs 32 rounds with one process on each CPU: 64 create/start/
 
 ## ASID lifecycle update (#18)
 
-The current scheduler uses hardware-width-checked, fixed-affinity process ASID leases with a monotonic software epoch. Native root uses ASID zero. Ordinary tagged root switches do not issue TLBI; the owning CPU completes `TLBI ASIDE1` before terminal retirement and tag reuse. Both roots and frames remain retained until scheduler detachment and completion. Unsupported width keeps the full-flush mode. The DEV/PROD matrix includes four-ASID-per-CPU forced exhaustion, changed physical backing at the same user VA, same-VA isolation on both CPUs and frame reclamation. The negative `--asid-reuse-control` omits retirement invalidation and must fail `asid_reuse_requires_invalidation`; Omission can expose stale translations in QEMU TCG. The mandatory invalidation witness is checked before the dependent same-VA observation, so either TLB residency outcome preserves the exact expected rejection. Eight counterbalanced QEMU pairs are retained in [issue18-asid-measurements.json](../../research/results/issue18-asid-measurements.json); they are TCG timer observations, not hardware throughput. See [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
+The current scheduler uses hardware-width-checked, fixed-affinity process ASID leases with a monotonic software epoch. Native root uses ASID zero. Ordinary tagged root switches do not issue TLBI; the owning CPU completes `TLBI ASIDE1` before terminal retirement and tag reuse. Both roots and frames remain retained until scheduler detachment and completion. Unsupported width keeps the full-flush mode. The DEV/PROD matrix includes four-ASID-per-CPU forced exhaustion, changed physical backing at the same user VA, same-VA isolation on both CPUs and frame reclamation. The historical `--asid-reuse-control` omitted retirement invalidation. Its current compatibility flag selects ASID reuse invariants: actual invalidation, same-VA isolation and pool exhaustion. It no longer mutates production code and does not prove skipped-invalidation detection. Eight counterbalanced QEMU pairs are retained in [issue18-asid-measurements.json](../../research/results/issue18-asid-measurements.json); they are TCG timer observations, not hardware throughput. See [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
 
 <a name="kolvrt-process-limits"></a>
 
@@ -119,7 +119,7 @@ The accepted issue #22 user-copy boundary builds on exact process identity, priv
 
 ## Phase 3.5 bounded IPC status
 
-[Native IPC](ipc.md) adds an experimental copied EL0 request transport, bounded endpoints, scoped SEND and nondelegable receiver authority, blocking cross-CPU waits, exact terminal arbitration and retained results. It extends process execution without adding EL0 process creation, migration, supervisor policy or persistent-service admission. Issue #26 acceptance is still pending, and this document's Phase 3.1/3.2 lifecycle receipts do not verify the changed current source.
+[Native IPC](ipc.md) adds an experimental copied EL0 request transport, bounded endpoints, scoped SEND and nondelegable receiver authority, blocking cross-CPU waits, exact terminal arbitration and retained results. It extends process execution without adding EL0 process creation, migration, supervisor policy or persistent-service admission. Bounded Issue #26 acceptance is complete. The [current native integration](native-applications.md) records later source-bound regression and selected production recovery/shutdown; this document's Phase 3.1/3.2 lifecycle receipts remain historical and do not verify the changed current source.
 
 [Russian translation](../../translations/ru/docs/kernel/processes.md)
 
@@ -187,7 +187,7 @@ CI cc50a5a failed process_quantum_return_and_peer_progress in shard 0; its other
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
+            "reason": "This feature retains historical receipts from before the Phase 3.7 source changes; its verification remains STALE pending a feature-scoped current-source review. The separately accepted bounded native-application fault/restart/shutdown evidence is recorded in docs/kernel/native-applications.md and research/results/native-phase37-43af402.json; it does not automatically renew this feature verification.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"

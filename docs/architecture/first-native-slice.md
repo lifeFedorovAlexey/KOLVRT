@@ -35,15 +35,17 @@ Start with a single scheduling domain and equal round-robin task shares. A ready
 
 No filesystem, network stack, persistent transactions, DMA-capable driver, hardware hotplug, foreign ABI, live code replacement or compatibility score is required for this slice. Their contracts remain in the architecture; implementation is activated only by a later workload and its acceptance tests. Static task images are selected by the trusted supervisor; arbitrary executable loading and package trust are separate work.
 
-The [threat model](threat-model.md), [candidate ABI](native-abi.md), [platform contract](platform-contract.md) and [law audit](law-audit.md) define the design baseline. Phase 0 established finite host models and encoding. Later accepted milestones provide evidence for privilege separation, faults, interrupts and page tables; the full workload still needs acceptance evidence for IPC, handles, cancellation and failure containment before it can be claimed as implemented in KOLVRT.
+The [threat model](threat-model.md), [candidate ABI](native-abi.md), [platform contract](platform-contract.md) and [law audit](law-audit.md) define the design baseline. Phase 0 established finite host models and encoding. Later accepted milestones provide evidence for privilege separation, faults, interrupts and page tables; the bounded Phase 3 integration now has the separate acceptance linked below; the historical models alone do not establish its execution.
 
-The later [EL0 foundation](../kernel/el0.md), [versioned routing](../architecture-decisions/0015-el0-versioned-routing.md) and [scheduler ownership](../architecture-decisions/0016-scheduler-ownership.md) milestones implement their bounded scopes. Phase 3.5 has a separate experimental IPC implementation; this broad IPC/handles/cancellation/supervisor workload remains unimplemented and needs its own acceptance checks.
+The later [EL0 foundation](../kernel/el0.md), [versioned routing](../architecture-decisions/0015-el0-versioned-routing.md) and [scheduler ownership](../architecture-decisions/0016-scheduler-ownership.md) milestones implement their bounded scopes. The accepted bounded IPC/handles/cancellation/supervisor integration is described below. Broader future runtime properties do not follow from that acceptance.
 
 [Russian translation](../../translations/ru/docs/architecture/first-native-slice.md)
 
-## Experimental supervision integration
+## Accepted bounded integration
 
-The [Phase 3.6 supervisor](../kernel/supervision.md) supplies accepted bounded isolated EL0 policy and lifecycle mechanisms. [Phase 3.7 native applications](../kernel/native-applications.md) now add actual standalone ELF, persistent counter state, selected production crash/recovery and normal shutdown/reclamation. The [review](native-phase37-acceptance-review.md) accepts this bounded slice, not the entire future OS runtime. Performance readiness remains separate; production bootstrap trust belongs to #38 and physical ARM remains UNKNOWN. Current-source receipts are separate from historical Phase 3.5/3.6 evidence.
+The [Phase 3.6 supervisor](../kernel/supervision.md) supplies accepted bounded isolated EL0 policy and lifecycle mechanisms. [Phase 3.7 native applications](../kernel/native-applications.md) now add actual standalone ELF, persistent counter state, selected production crash/recovery and normal shutdown/reclamation. The [renewed review](native-phase37-fixture-review.md) accepts this bounded slice, not the entire future OS runtime. Performance readiness remains separate; production bootstrap trust belongs to #38 and physical ARM remains UNKNOWN. Current-source receipts are separate from historical Phase 3.5/3.6 evidence.
+
+The [current source-bound receipt](../../research/results/native-phase37-43af402.json) retains 144/144 executed tasks and 147 ordinary checks per DEV/PROD profile, including IPC and supervision, plus separate actual ELF application execution. This is combined evidence for bounded scenarios: selected post-binding pre-first-ADD-COMMIT crash, fresh instance/binding and normal reclamation. It does not establish startup-crash recovery, post-commit replay, generic wait-any, omitted-TLBI/ACK detection or physical ARM behavior. The historical starting configuration above freezes neither current budgets nor architecture.
 
 <!-- knowledge -->
 
