@@ -27,7 +27,11 @@ const CPU_ADDRESS_CELLS_NARROW: u32 = 1;
 const CPU_SIZE_CELLS: u32 = 0;
 const CPU_NODE_DEPTH: usize = 2; // /cpus/cpu@... below the root.
 pub const FDT_MAGIC: u32 = 0xd00dfeed;
+const GIC_IRQ_TYPE_SPI: u32 = 0;
 const GIC_IRQ_TYPE_PPI: u32 = 1;
+const GIC_SPI_BASE: u32 = 32;
+const GIC_SPI_END: u32 = 1020;
+const MAX_PHANDLES: usize = 128;
 const GIC_IRQ_TRIGGER_MASK: u32 = 15;
 const GIC_IRQ_LEVEL_HIGH: u32 = 4;
 const GIC_PPI_BASE: u32 = 16;
@@ -51,6 +55,11 @@ impl Region {
 pub struct Description {
     pub ram: Region,
     pub uart: Region,
+    pub(crate) boot_console: Option<crate::device::Descriptor>,
+    /// Validated level-high SPI in the discovered GIC interrupt namespace.
+    pub uart_irq: u32,
+    /// Nonzero DTB phandle of the controller that owns uart_irq. Not authority.
+    pub interrupt_controller: u32,
     pub distributor: Region,
     pub redistributor: Region,
     pub timer_irq: u32,
@@ -105,6 +114,12 @@ struct Node<'a> {
     device_type: &'a [u8],
     address_cells: Option<u32>,
     size_cells: Option<u32>,
+    interrupt_parent: Option<u32>,
+    interrupt_cells: Option<u32>,
+    interrupt_controller: bool,
+    extended_interrupts: bool,
+    phandle: Option<u32>,
+    linux_phandle: Option<u32>,
 }
 
 /// Bounded FDT v17 decoder for the pinned virt topology. Unknown devices are not enabled.
@@ -143,6 +158,9 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
     let mut out = Description {
         ram: Region::default(),
         uart: Region::default(),
+        boot_console: None,
+        uart_irq: 0,
+        interrupt_controller: 0,
         distributor: Region::default(),
         redistributor: Region::default(),
         timer_irq: 0,
@@ -175,6 +193,9 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
     let mut depth = 0;
     let mut p = 0;
     let mut root_seen = false;
+    let mut uart_parent = None;
+    let mut phandles = [0; MAX_PHANDLES];
+    let mut phandle_count = 0;
     let mut address_cells = false;
     let mut size_cells = false;
     while p < structure.len() {
@@ -214,6 +235,18 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
                 depth -= 1;
                 let n = nodes[depth];
                 let matches = |v: &[u8]| n.compatible.split(|&c| c == 0).any(|x| x == v);
+                if n.phandle.is_some() && n.linux_phandle.is_some() && n.phandle != n.linux_phandle
+                {
+                    return Err("conflicting phandle aliases");
+                }
+                let phandle = n.phandle.or(n.linux_phandle);
+                if let Some(id) = phandle {
+                    if phandle_count == MAX_PHANDLES || phandles[..phandle_count].contains(&id) {
+                        return Err("duplicate/excess phandle");
+                    }
+                    phandles[phandle_count] = id;
+                    phandle_count += 1;
+                }
                 if n.name.starts_with(b"cpu@") && !n.disabled {
                     if depth != CPU_NODE_DEPTH {
                         return Err("unsupported CPU topology");
@@ -268,12 +301,39 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
                     if out.uart.size != 0 {
                         return Err("duplicate UART");
                     }
+                    if n.extended_interrupts
+                        || n.reg.len() != REGION_BYTES
+                        || n.irq.len() != IRQ_SPECIFIER_BYTES
+                        || word(n.irq, 0)? != GIC_IRQ_TYPE_SPI
+                        || word(n.irq, 2 * CELL_BYTES)? != GIC_IRQ_LEVEL_HIGH
+                    {
+                        return Err("UART binding");
+                    }
                     out.uart = region(n.reg, 0)?;
+                    if out.uart.size != PL011_REGISTER_SIZE
+                        || !out.uart.base.is_multiple_of(PL011_REGISTER_SIZE)
+                    {
+                        return Err("UART register extent");
+                    }
+                    out.uart_irq = word(n.irq, CELL_BYTES)?
+                        .checked_add(GIC_SPI_BASE)
+                        .ok_or("UART IRQ overflow")?;
+                    if !(GIC_SPI_BASE..GIC_SPI_END).contains(&out.uart_irq) {
+                        return Err("UART IRQ range");
+                    }
+                    uart_parent = n.interrupt_parent.or(nodes[0].interrupt_parent);
                 }
                 if matches(b"arm,gic-v3") {
                     if out.distributor.size != 0 {
                         return Err("duplicate GIC");
                     }
+                    if n.reg.len() != 2 * REGION_BYTES
+                        || !n.interrupt_controller
+                        || n.interrupt_cells != Some(3)
+                    {
+                        return Err("GIC interrupt binding");
+                    }
+                    out.interrupt_controller = phandle.ok_or("missing GIC phandle")?;
                     out.distributor = region(n.reg, 0)?;
                     out.redistributor = region(n.reg, REGION_BYTES)?;
                 }
@@ -363,6 +423,28 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
                             return Err("unsupported cells");
                         }
                     }
+                    b"interrupt-parent" | b"phandle" | b"linux,phandle" | b"#interrupt-cells" => {
+                        if len != CELL_BYTES {
+                            return Err("interrupt identity width");
+                        }
+                        let value = word(data, 0)?;
+                        if name != b"#interrupt-cells" && (value == 0 || value == u32::MAX) {
+                            return Err("reserved phandle");
+                        }
+                        match name {
+                            b"interrupt-parent" => n.interrupt_parent = Some(value),
+                            b"phandle" => n.phandle = Some(value),
+                            b"linux,phandle" => n.linux_phandle = Some(value),
+                            _ => n.interrupt_cells = Some(value),
+                        }
+                    }
+                    b"interrupt-controller" => {
+                        if len != 0 {
+                            return Err("interrupt controller marker");
+                        }
+                        n.interrupt_controller = true;
+                    }
+                    b"interrupts-extended" => n.extended_interrupts = true,
                     b"interrupts" => n.irq = data,
                     _ => (),
                 }
@@ -381,9 +463,27 @@ pub fn discover(input: &[u8]) -> Result<Description, &'static str> {
                 {
                     return Err("incomplete platform");
                 }
+                if uart_parent != Some(out.interrupt_controller) || out.interrupt_controller == 0 {
+                    return Err("UART interrupt parent");
+                }
+                // Discovery must not publish ambiguous ownership of overlapping resources.
+                let regions = [out.ram, out.uart, out.distributor, out.redistributor];
+                for (i, a) in regions.iter().enumerate() {
+                    for b in &regions[i + 1..] {
+                        if a.base < b.end()? && b.base < a.end()? {
+                            return Err("overlapping platform regions");
+                        }
+                    }
+                }
                 if structure[p..].iter().any(|&v| v != 0) {
                     return Err("trailing structure");
                 }
+                out.boot_console = Some(crate::device::Descriptor::validated(
+                    out.uart.base,
+                    out.uart.size,
+                    out.uart_irq,
+                    out.interrupt_controller,
+                ));
                 return Ok(out);
             }
             _ => return Err("unknown token"),

@@ -107,6 +107,11 @@ Issue #133 adds a host UNIT test of the actual Endpoint::submit method in [the e
 
 Issue #109 B5 changes only host-side consumption of equivalent ordinary suite evidence. Schema-2 execution receipts retain schema-1 source plans and all 144 task obligations. A later consumer may use an earlier executed ordinary donor from the same invocation and shard only when source/profile/features/ELF/QEMU identities match; every required named assertion is checked independently from retained events. Fatal controls, different profiles and builds, historical results and reuse chains are excluded. KOLVRT_MATRIX_REUSE=off executes the reference afresh. This does not alter IPC admission, authority, deadlines, completion or resource lifetime. Existing receipts retain their historical scope; owner verification is not promoted by this runner change, and no performance or readiness acceptance follows. [CI reuse contract](../ci/performance.md) defines provenance and expected counts.
 
+## Device discovery dependency
+
+Phase 4.0 boot obtains the console address from the immutable validated [PL011 descriptor](devices.md), with explicit boot-console reservation. This publishes an observation identity, not an application MMIO/IRQ grant. Native application, IPC and supervision execution therefore retain the existing console ownership; no driver binding or device access is added to their authority. The runner validates the new inventory event when present and preserves readability of historical receipts without that event. Prior feature receipts retain their source scope and do not establish current device validation.
+
+The process quantum regression accepts zero as the first counter snapshot when a pending timer IRQ precedes the actor's first instruction. It still requires later counter growth on both CPUs, preserved context, peer progress before spinner termination, the unchanged slice budget and final reclamation. This repairs an invalid test assumption; it changes neither scheduling policy nor runtime deadlines.
 <!-- knowledge -->
 
 ```json

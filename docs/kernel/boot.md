@@ -6,6 +6,8 @@ The current implementation boots a native EL1 kernel with two participating CPUs
 
 QEMU 10.1.0 uses `virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off`, Cortex-A57, TCG, two configured CPUs and 256 MiB RAM. Both CPU0 and CPU1 execute native EL1 code; CPU1 starts through PSCI CPU_ON with a separate stack. Platform discovery is isolated in `crates/kernel/src/platform`; architecture registers and vectors live in `arch/aarch64`. Directory names describe responsibilities and do not import another operating system.
 
+The PL011 boot console uses the immutable [device descriptor](devices.md) produced by validated discovery. Its observation identity and reserved ownership grant no EL0 device access.
+
 ## Sequence
 
 ```text

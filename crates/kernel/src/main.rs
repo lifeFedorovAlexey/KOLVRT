@@ -72,7 +72,23 @@ fn retained_mapping_control(physical: &mut memory::Physical) {
 pub extern "C" fn kernel_main() -> ! {
     let d = platform::discover_boot();
     percpu::initialize(&d);
-    diagnostics::initialize(d.uart.base as usize);
+    // Scope 1 belongs exclusively to this boot's single console observation owner.
+    // Discovery identifies the reserved console; it does not grant driver access.
+    let mut console = kernel_core::device::Console::new(core::num::NonZeroU64::new(1).unwrap());
+    let console_id = console
+        .observe(d.boot_console().expect("validated console"))
+        .unwrap();
+    let console_descriptor = console.resolve(console_id).unwrap();
+    diagnostics::initialize(console_descriptor.mmio_base() as usize);
+    event!(
+        "{{\"event\":\"device-observation\",\"status\":\"pass\",\"kind\":\"pl011\",\"reservation\":\"boot-console\",\"scope\":{},\"generation\":{},\"mmio_base\":{},\"mmio_size\":{},\"irq\":{},\"interrupt_controller\":{}}}",
+        console_id.scope(),
+        console_id.generation(),
+        console_descriptor.mmio_base(),
+        console_descriptor.mmio_size(),
+        console_descriptor.irq(),
+        console_descriptor.interrupt_controller()
+    );
     diagnostics::boot_banner();
     log!(
         "KOLVRT | {} | AArch64 | EL{}\n",

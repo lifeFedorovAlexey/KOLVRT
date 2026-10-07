@@ -21,6 +21,21 @@
       "type": "related_to"
     },
     {
+      "from": "adr.0027",
+      "to": "adr.0008",
+      "type": "depends_on"
+    },
+    {
+      "from": "adr.0027",
+      "to": "law.031",
+      "type": "depends_on"
+    },
+    {
+      "from": "adr.0027",
+      "to": "law.035",
+      "type": "depends_on"
+    },
+    {
       "from": "doc.kolvrt.arena.measurement-contract",
       "to": "adr.0003",
       "type": "depends_on"
@@ -1338,6 +1353,71 @@
       "from": "kolvrt.dependencies.hygiene",
       "to": "scripts/tests/dependency-audit.test.cjs",
       "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "adr.0008",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "adr.0027",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/kernel-core/src/device.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/kernel-core/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/kernel-core/src/platform.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/kernel-core/tests/boot_description.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/kernel-core/tests/device_contract.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/kernel/src/main.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/kernel/src/platform/mod.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "crates/xtask/src/output.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "law.031",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "law.035",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.devices.observations",
+      "to": "research/results/device-phase40.json",
+      "type": "validated_by"
     },
     {
       "from": "kolvrt.docs.navigation",
@@ -2719,6 +2799,7 @@
     "apps/native-runtime/tests/counter.rs": "4f1d3d35c19c0a34060294e09ec0dee08b5b2f0bce6fc33c4d91a686459e1e63",
     "crates/host-process-metrics/Cargo.toml": "36380556d3cea0e454abdd5ae11ccc646ba505e4576e81326d433122a411518f",
     "crates/kernel-core/Cargo.toml": "dbeb6358918b8a690af305f32609c0879346d041406f6c799467dc082c5ec362",
+    "crates/kernel-core/src/device.rs": "8e4e073e258ebc0376d169b3b638a5bb2820dc8b2fe2162335a4d895e60e7f66",
     "crates/kernel-core/src/domain.rs": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788",
     "crates/kernel-core/src/domain/pool.rs": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05",
     "crates/kernel-core/src/elf.rs": "faa97534ec072f53c773012af327345dde9a35cece294ac1e436dd7399a79e58",
@@ -2728,12 +2809,15 @@
     "crates/kernel-core/src/ipc/mailbox.rs": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c",
     "crates/kernel-core/src/ipc/tests.rs": "3414e71e1cadfd20183d78c52f3b77e9afabf311c2398e5c2b29bfec98271a1f",
     "crates/kernel-core/src/ipc/wire.rs": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178",
-    "crates/kernel-core/src/lib.rs": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a",
+    "crates/kernel-core/src/lib.rs": "4a68ad9259e1696dec995bc16b9934c45172ed8e4fa802d7f72829b5e581fca8",
+    "crates/kernel-core/src/platform.rs": "4423248c501cef4d50bc229fc6c97fa13eafbdea3632d037eb2b6a78f3fcd1a9",
     "crates/kernel-core/src/process.rs": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983",
     "crates/kernel-core/src/supervision.rs": "96d0ccd94f13e4d1e47720e01c308b3c9e8dd37c216ed05078fc0c4ecefb7ca6",
     "crates/kernel-core/src/user_copy.rs": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da",
     "crates/kernel-core/src/wait.rs": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332",
+    "crates/kernel-core/tests/boot_description.rs": "5bc02706a994eee762c1465a8e2c491788678e6962dc839e537810a0543406e1",
     "crates/kernel-core/tests/bootstrap_grants.rs": "e7e88c94a1e741bd7677868af0af3183c286ef42c5200aaed38775da7fd425c0",
+    "crates/kernel-core/tests/device_contract.rs": "b86a40aa7b781c2488d0e487e3b1aa220cbfaedefe32f693dc429bb5157d0a2c",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
     "crates/kernel/Cargo.toml": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5",
@@ -2760,12 +2844,13 @@
     "crates/kernel/src/ipc_revoke_workload.S": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb",
     "crates/kernel/src/ipc_workload.S": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465",
     "crates/kernel/src/ipc_workload.rs": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21",
-    "crates/kernel/src/main.rs": "e982449bf1b148b521a011abe566cc9fb17022aa715cbdca33184c9679f09983",
+    "crates/kernel/src/main.rs": "669b1dd09ebf4c69c5412d593ae751f690e661b95a7034bfd1c2bcc469846fac",
     "crates/kernel/src/memory/mod.rs": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0",
     "crates/kernel/src/native_boot.rs": "05e2e2ae4241d73afecaf281d58fdfed3db2f1f9e8f5bbcae1deb2f73642b15f",
     "crates/kernel/src/platform/config.rs": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196",
+    "crates/kernel/src/platform/mod.rs": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4",
     "crates/kernel/src/process.rs": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810",
-    "crates/kernel/src/process_workload.rs": "9f6f63adc2c0727fb415546a2802c7fa7a9bcd1cfb8a1beb69eecaa284f2bf2f",
+    "crates/kernel/src/process_workload.rs": "792b9eed41612401362e7110dd1beafcd767997a506fc8eeeb9dff06fcbe2944",
     "crates/kernel/src/scheduler/local.rs": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429",
     "crates/kernel/src/scheduler/mod.rs": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43",
     "crates/kernel/src/scheduler/task.rs": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df",
@@ -2815,7 +2900,7 @@
     "crates/xtask/src/main.rs": "c1be15b227ba59f3213f05174e326bdf2570c3341d787362a59127cffac1cfec",
     "crates/xtask/src/matrix.rs": "058cecab5631d0b102d320d0460ed262db0d2d1d0a4616b541f25cbdfe2acb4a",
     "crates/xtask/src/native_apps.rs": "169a2248251de7657d72552d88277319d24bb5a122d5a56ab41b4148d20c9d65",
-    "crates/xtask/src/output.rs": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
+    "crates/xtask/src/output.rs": "1e56394abf4e82555df303a7ecc207d9c4439c3734a15638d72c035b21f71ecf",
     "crates/xtask/src/routing_demo.rs": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
     "crates/xtask/src/timing.rs": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598",
     "crates/xtask/src/workspace.rs": "567279b7e34c6360e80a741dcb076ed1c509f7da25660aeafca1545108555196",
@@ -2848,6 +2933,7 @@
     "docs/architecture-decisions/0024-documentation-knowledge.md": "adf0274268ee1dd0f30a5522279d9a6126bb2d87d735cedddd158c0297c1628b",
     "docs/architecture-decisions/0025-bounded-native-ipc.md": "1d49df8c7b779bfc0cddb787a858178fd34afffe49698eacced38cf804df4dfd",
     "docs/architecture-decisions/0026-el0-supervision.md": "f3bf1a0686f11e8b229a74b17ee7be0235873edbe93599a5235376317a0f6cde",
+    "docs/architecture-decisions/0027-device-observations.md": "d80280cfdda884b9c0252aa2b4860ff497932a50205fd509c2c9351609790474",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
     "docs/architecture/arena-measurement-contract.md": "22099f2aa4d948b5209cd571a3a11cc5106ea87622bd1eb99be7bc3cb26ec91a",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
@@ -2866,17 +2952,18 @@
     "docs/architecture/supervision-phase36-acceptance-review.md": "fe65eabe0baf5dc6997c5a86307d12f7aad4e51643f607a62948adad96ac9499",
     "docs/ci/performance.md": "ab17bbd52498ebb0df8b44189aaf5d89a8c2f3d0c5038552fb86b837de802873",
     "docs/kernel/capabilities.md": "b9f545cbc3231a5a0129e0f1a54a3a9bf107dbe537db62822b4eb332a3d7ca85",
+    "docs/kernel/devices.md": "1aba6a0dcedf3ae4520e5e094979a97d58e2e9a986aca1a443ce78b622675c53",
     "docs/kernel/domains.md": "9067c663ffab79544cfb12487ccbd9c7b8ed290e498a96d8a918462d605a58a3",
     "docs/kernel/handles.md": "8d3acea970169fe55763b695bd0fe039d8668c963d06431a32520ca8a0203d5e",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
-    "docs/kernel/native-applications.md": "a3d36f54fdd0f7ca7af4d48545345be5e6bf6245cb037149bdf4d9256f01fb2d",
-    "docs/kernel/processes.md": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+    "docs/kernel/ipc.md": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
+    "docs/kernel/native-applications.md": "e2faa58ecd9687d8a2ad8a2d32b5c8aaf20fb20234c31d6b17049c2cfe2187ce",
+    "docs/kernel/processes.md": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
     "docs/kernel/scheduler.md": "3a7099d5c09a350d2ac8683da945a30f80db9c2397a6bc1e2d63b0d8eb54035e",
-    "docs/kernel/supervision.md": "21a5c7a36218416d385fb35b408716d76cbbb49eb357fa14bbdfe073854e0738",
+    "docs/kernel/supervision.md": "be621613e863a59bd100370418de11759d67d6aa1682d3b1a86feafb9f4a32c7",
     "docs/kernel/user-copy.md": "16941492671fc63f4550421d6592472bd6035e6a4ecf8a67e9282806942fbe4d",
     "docs/kernel/wait.md": "7dd7bf8bef8b3cdff4dc5d41d68ee396410a49362979fa42172b61fc854b65e1",
-    "docs/knowledge-enrollment.json": "90057be4e5ee0eba7cf4294b276e07a07fa9c125069c1d490e90f88a803cf651",
+    "docs/knowledge-enrollment.json": "a241750c3fc2e433ede3ff1e808eca2163d8846dc8935fce6d0efe923ccc145b",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
     "docs/research/cost-l-queries.md": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
     "docs/research/host-survey.md": "f3027d023eb3b9ce3e65c14823bf88bf9bc0be2f1a1eed934d32abf15b8935e2",
@@ -2970,7 +3057,7 @@
     "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
     "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
-    "translations/manifest.json": "0a0d524c9339ffeb9bc1017af3cc5e2a0068310a7e43633efc81ddcf7c0295ad",
+    "translations/manifest.json": "655da5db43a9e4f06805d503fec2bd4efe151aba8a977d200a8a35437005de78",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2997,6 +3084,7 @@
     "translations/ru/docs/architecture-decisions/0024-documentation-knowledge.md": "5478357877c27a60ff1ef0501c5b34270ff0633c60c7aaba6b6f3568452cbd3b",
     "translations/ru/docs/architecture-decisions/0025-bounded-native-ipc.md": "bf0baae8acb076f4ccccbd3c9dfb8b0488a32b3dfead3d0a83be3803935ee76a",
     "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "b418467a1b29450254dd1100873ec87c64dda3892a8ad385eda91ea6098c0a5f",
+    "translations/ru/docs/architecture-decisions/0027-device-observations.md": "bfe65e69852f3fb945665500c0b25980ae5f06ec659c2329a6bdc86032ea5d8d",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
     "translations/ru/docs/architecture/arena-measurement-contract.md": "f809c76f2bac645f153bfaeea604ad6394aba97d4a3857c2f84704987eb7e66d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
@@ -3015,14 +3103,15 @@
     "translations/ru/docs/architecture/supervision-phase36-acceptance-review.md": "7fa1020a11fd9d0cb009350486e30ca219f5f1333615abc95281f996fc4a6195",
     "translations/ru/docs/ci/performance.md": "85e08b719e4a77e06a614c52d1e3b06cb019cef56a3b7061e95bdd2394529d75",
     "translations/ru/docs/kernel/capabilities.md": "482662a55414cf67b61121c09b2f5c1a9660fc2737b4c00f69b7957e52ea454c",
+    "translations/ru/docs/kernel/devices.md": "867bbb0c35d7096d6b0a3f83ce39c32273d24f98efa82258c2cc20746569a4dc",
     "translations/ru/docs/kernel/domains.md": "265cc4e5cca9f7189622cd03bd9aaa2ec9f5f271220f6fd430c73c5206d9296b",
     "translations/ru/docs/kernel/handles.md": "28482cf15d598cac06c31c8ad6af32b3721ead26af9fc8d12ddc75a3a723510c",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
-    "translations/ru/docs/kernel/native-applications.md": "bc827e0dcbf385e760693f389f78347516b837a70bf64cbb956dadfd94365288",
-    "translations/ru/docs/kernel/processes.md": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+    "translations/ru/docs/kernel/ipc.md": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
+    "translations/ru/docs/kernel/native-applications.md": "7da4cada9ddc908bf5d50563ac32f0b66c6bd49eafc3ebdde379203523fe3186",
+    "translations/ru/docs/kernel/processes.md": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
     "translations/ru/docs/kernel/scheduler.md": "06d860224d0b7cb94619c2ed689c71cd911e57b80d33b70991f52b04b36849ed",
-    "translations/ru/docs/kernel/supervision.md": "3c67bc7a92a3b14075a2d1517bc9822db8bfeceebf6b65866269b9d16242221d",
+    "translations/ru/docs/kernel/supervision.md": "24ea8c792cae7c438d0ac548dc06af412e13cfdf993f31ef6b4797909628d0c9",
     "translations/ru/docs/kernel/user-copy.md": "72164fc7c526a3b24f2bd50842c01ce2641fee6fee996e162b9a0b47479229b6",
     "translations/ru/docs/kernel/wait.md": "a4f7a1b09e9f032bcddd11e5988e0e0a954cac5f6cd28d7e92ac5ecb60019cf6",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -3978,6 +4067,42 @@
       "schema_version": 1,
       "summary": "Accepted isolated EL0 supervision; acquired quiescence with no arbitrary coordination cutoff.",
       "title": "ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous"
+    },
+    "adr.0027": {
+      "aliases": ["ADR-0027"],
+      "depends_on": ["adr.0008", "law.031", "law.035"],
+      "document": "adr.0027",
+      "document_status": "CURRENT",
+      "estimated_bytes": 6997,
+      "evidence_scope": "descriptor and observation-identity decision for one QEMU virt PL011; independent acceptance review and exact-source execution evidence remain separate.",
+      "id": "adr.0027",
+      "kind": "adr",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Принятые ограниченные наблюдения PL011 с owner-scoped identity без подразумеваемой device authority.",
+          "tags": null,
+          "title": "ADR-0027 — Ограниченные native-наблюдения устройств"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 72,
+          "path": "docs/architecture-decisions/0027-device-observations.md",
+          "sha256": "d80280cfdda884b9c0252aa2b4860ff497932a50205fd509c2c9351609790474",
+          "start": 1
+        },
+        "ru": {
+          "end": 72,
+          "path": "translations/ru/docs/architecture-decisions/0027-device-observations.md",
+          "sha256": "bfe65e69852f3fb945665500c0b25980ae5f06ec659c2329a6bdc86032ea5d8d",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture-decisions/0027-device-observations.md",
+      "schema_version": 1,
+      "summary": "Accepted bounded PL011 observations with owner-scoped identity and no implied device authority.",
+      "title": "ADR-0027 — Bounded native device observations"
     },
     "case.kol-path.0001": {
       "aliases": ["KOL-PATH-0001"],
@@ -5645,6 +5770,40 @@
       "summary": "Bounded Phase 3.4 grants, domains and revocation; general IPC and supervisor policy remain separate gates.",
       "title": "Native capability scope and revocation"
     },
+    "doc.kolvrt.kernel.devices": {
+      "document": "doc.kolvrt.kernel.devices",
+      "document_status": "CURRENT",
+      "estimated_bytes": 7449,
+      "evidence_scope": "Phase 4.0 descriptor contract; implementation and exact-source execution evidence are recorded separately below.",
+      "id": "doc.kolvrt.kernel.devices",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Ограниченные native-наблюдения PL011 и идентичность без переполнения в области владельца, отдельные от grants устройства.",
+          "tags": null,
+          "title": "Ограниченные наблюдения native-устройств"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 103,
+          "path": "docs/kernel/devices.md",
+          "sha256": "1aba6a0dcedf3ae4520e5e094979a97d58e2e9a986aca1a443ce78b622675c53",
+          "start": 1
+        },
+        "ru": {
+          "end": 103,
+          "path": "translations/ru/docs/kernel/devices.md",
+          "sha256": "867bbb0c35d7096d6b0a3f83ce39c32273d24f98efa82258c2cc20746569a4dc",
+          "start": 1
+        }
+      },
+      "path": "docs/kernel/devices.md",
+      "schema_version": 1,
+      "summary": "Bounded native PL011 observations and owner-scoped nonwrapping identity, separate from device grants.",
+      "title": "Bounded native device observations"
+    },
     "doc.kolvrt.kernel.domains": {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
@@ -5716,7 +5875,7 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 27453,
+      "estimated_bytes": 28496,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a and later source-bound snapshots retain their historical counts. Current Phase 3.7 integration has separate accepted evidence: 144/144 tasks, 147 checks per DEV/PROD profile. READY applies only to the bounded IPC contract; physical ARM, performance readiness and production trust are not established.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
@@ -5730,15 +5889,15 @@
       },
       "locations": {
         "en": {
-          "end": 347,
+          "end": 352,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 1
         },
         "ru": {
-          "end": 347,
+          "end": 352,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 1
         }
       },
@@ -5784,7 +5943,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 36872,
+      "estimated_bytes": 37915,
       "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is open as #133; master #37 closure is pending its disposition.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5798,15 +5957,15 @@
       },
       "locations": {
         "en": {
-          "end": 294,
+          "end": 299,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "a3d36f54fdd0f7ca7af4d48545345be5e6bf6245cb037149bdf4d9256f01fb2d",
+          "sha256": "e2faa58ecd9687d8a2ad8a2d32b5c8aaf20fb20234c31d6b17049c2cfe2187ce",
           "start": 1
         },
         "ru": {
-          "end": 293,
+          "end": 298,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "bc827e0dcbf385e760693f389f78347516b837a70bf64cbb956dadfd94365288",
+          "sha256": "7da4cada9ddc908bf5d50563ac32f0b66c6bd49eafc3ebdde379203523fe3186",
           "start": 1
         }
       },
@@ -5818,7 +5977,7 @@
     "doc.kolvrt.kernel.processes": {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 28156,
+      "estimated_bytes": 28894,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
@@ -5832,15 +5991,15 @@
       },
       "locations": {
         "en": {
-          "end": 278,
+          "end": 280,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 1
         },
         "ru": {
-          "end": 278,
+          "end": 280,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 1
         }
       },
@@ -5886,7 +6045,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 27574,
+      "estimated_bytes": 28617,
       "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. The retained Phase 3.6 receipt is stale for these changed sources; bounded Phase 3.7 acceptance is recorded in [native applications](native-applications.md). Readiness and performance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -5900,15 +6059,15 @@
       },
       "locations": {
         "en": {
-          "end": 189,
+          "end": 194,
           "path": "docs/kernel/supervision.md",
-          "sha256": "21a5c7a36218416d385fb35b408716d76cbbb49eb357fa14bbdfe073854e0738",
+          "sha256": "be621613e863a59bd100370418de11759d67d6aa1682d3b1a86feafb9f4a32c7",
           "start": 1
         },
         "ru": {
-          "end": 191,
+          "end": 196,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "3c67bc7a92a3b14075a2d1517bc9822db8bfeceebf6b65866269b9d16242221d",
+          "sha256": "24ea8c792cae7c438d0ac548dc06af412e13cfdf993f31ef6b4797909628d0c9",
           "start": 1
         }
       },
@@ -6483,13 +6642,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "a3d36f54fdd0f7ca7af4d48545345be5e6bf6245cb037149bdf4d9256f01fb2d",
+          "sha256": "e2faa58ecd9687d8a2ad8a2d32b5c8aaf20fb20234c31d6b17049c2cfe2187ce",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "bc827e0dcbf385e760693f389f78347516b837a70bf64cbb956dadfd94365288",
+          "sha256": "7da4cada9ddc908bf5d50563ac32f0b66c6bd49eafc3ebdde379203523fe3186",
           "start": 7
         }
       },
@@ -7450,6 +7609,93 @@
       "tags": ["dependencies", "supply-chain", "kernel", "tcb"],
       "title": "Policy and implementation"
     },
+    "kolvrt.devices.observations": {
+      "anchor": "kolvrt-devices-observations",
+      "depends_on": ["law.031", "law.035", "adr.0008"],
+      "document": "doc.kolvrt.kernel.devices",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1184,
+      "evidence_scope": "Phase 4.0 descriptor contract; implementation and exact-source execution evidence are recorded separately below.",
+      "feature": {
+        "acceptance": ["research/results/device-phase40.json"],
+        "adrs": ["adr.0027"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "One root-level non-DMA PL011 discovered from the pinned boot DTB, immutable bounded observations, reserved boot-console ownership and owner-local identity validation.",
+        "issues": [79],
+        "limitations": [
+          "No driver binding, MMIO/IRQ grants, DMA, hotplug, global scope allocator or physical ARM64 acceptance; boot console remains reserved."
+        ],
+        "next_gate": "Issue #80 must derive explicit binding/grants and any console handoff; no driver execution is claimed by this completed descriptor slice.",
+        "readiness": "READY",
+        "readiness_acceptance": ["research/results/device-phase40.json"],
+        "roadmap_gate": "Phase 4.0",
+        "sources": [
+          "crates/kernel-core/src/device.rs",
+          "crates/kernel-core/src/lib.rs",
+          "crates/kernel-core/src/platform.rs",
+          "crates/kernel-core/tests/device_contract.rs",
+          "crates/kernel-core/tests/boot_description.rs",
+          "crates/kernel/src/main.rs",
+          "crates/kernel/src/platform/mod.rs",
+          "crates/xtask/src/output.rs"
+        ],
+        "transitions": [
+          {
+            "from": "UNRECORDED",
+            "reason": "Introduce the bounded descriptor implementation; execution acceptance remains separate.",
+            "to": "EXPERIMENTAL"
+          },
+          {
+            "acceptance": ["research/results/device-phase40.json"],
+            "from": "EXPERIMENTAL",
+            "reason": "Independent architecture/code and EN/RU review accepted the bounded contract; real DEV/PROD discovery and full 144-obligation matrix passed.",
+            "to": "BOUNDED_IMPLEMENTED"
+          }
+        ],
+        "verification": [
+          {
+            "environment": "qemu-arm64",
+            "reason": "Exact-source full matrix passed; each DEV/PROD suite and ordinary boot independently contains one matching real device observation.",
+            "receipt": "research/measurements/runs/1791405637265-phase40-device-observations-487e0fbc18b3.json",
+            "receipt_sha256": "8751d0b7fba24ff44e8fbf640249aa1edad4707040f1d9e916d83f76008e103d",
+            "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
+            "state": "VERIFIED"
+          },
+          {
+            "environment": "physical-arm64",
+            "reason": "No physical device execution evidence.",
+            "state": "UNKNOWN"
+          }
+        ]
+      },
+      "id": "kolvrt.devices.observations",
+      "kind": "feature",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Проверенный дескриптор загрузочной консоли и ссылки на наблюдения с безопасными поколениями.",
+          "tags": null,
+          "title": "Наблюдения устройств"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 14,
+          "path": "docs/kernel/devices.md",
+          "sha256": "1aba6a0dcedf3ae4520e5e094979a97d58e2e9a986aca1a443ce78b622675c53",
+          "start": 7
+        },
+        "ru": {
+          "end": 14,
+          "path": "translations/ru/docs/kernel/devices.md",
+          "sha256": "867bbb0c35d7096d6b0a3f83ce39c32273d24f98efa82258c2cc20746569a4dc",
+          "start": 7
+        }
+      },
+      "path": "docs/kernel/devices.md",
+      "summary": "Checked boot-console descriptor and generation-safe observation claims.",
+      "title": "Device observations"
+    },
     "kolvrt.docs.navigation": {
       "anchor": "kolvrt-docs-navigation",
       "document": "doc.kolvrt.docs.knowledge",
@@ -7819,13 +8065,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 58
         }
       },
@@ -7854,13 +8100,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 66
         }
       },
@@ -7889,13 +8135,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 58
         }
       },
@@ -7924,13 +8170,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 16
         }
       },
@@ -7959,13 +8205,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 34
         }
       },
@@ -8029,13 +8275,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 26
         }
       },
@@ -8064,13 +8310,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 58
         }
       },
@@ -8099,13 +8345,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 34
         }
       },
@@ -8210,13 +8456,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 76
         }
       },
@@ -8245,13 +8491,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 58
         }
       },
@@ -8287,7 +8533,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 27340,
+      "estimated_bytes": 28383,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a and later source-bound snapshots retain their historical counts. Current Phase 3.7 integration has separate accepted evidence: 144/144 tasks, 147 checks per DEV/PROD profile. READY applies only to the bounded IPC contract; physical ARM, performance readiness and production trust are not established.",
       "feature": {
         "acceptance": [
@@ -8412,15 +8658,15 @@
       },
       "locations": {
         "en": {
-          "end": 347,
+          "end": 352,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 4
         },
         "ru": {
-          "end": 347,
+          "end": 352,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 4
         }
       },
@@ -8450,13 +8696,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 66
         }
       },
@@ -8485,13 +8731,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+          "sha256": "25c8d3363cfef3003b0f092326be1d431dc33b9c4784e9d8696829dc00830354",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c",
+          "sha256": "80b73f4dde99049e20133f0d218fae0d35b62fa28df36d7618c19cfd8bb03999",
           "start": 66
         }
       },
@@ -9060,13 +9306,13 @@
         "en": {
           "end": 109,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 102
         },
         "ru": {
           "end": 109,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 102
         }
       },
@@ -9095,13 +9341,13 @@
         "en": {
           "end": 133,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 126
         },
         "ru": {
           "end": 133,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 126
         }
       },
@@ -9130,13 +9376,13 @@
         "en": {
           "end": 62,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 45
         },
         "ru": {
           "end": 62,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 45
         }
       },
@@ -9165,13 +9411,13 @@
         "en": {
           "end": 103,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 84
         },
         "ru": {
           "end": 103,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 84
         }
       },
@@ -9200,13 +9446,13 @@
         "en": {
           "end": 137,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 132
         },
         "ru": {
           "end": 137,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 132
         }
       },
@@ -9235,13 +9481,13 @@
         "en": {
           "end": 24,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 13
         },
         "ru": {
           "end": 24,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 13
         }
       },
@@ -9319,13 +9565,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 7
         }
       },
@@ -9354,13 +9600,13 @@
         "en": {
           "end": 115,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 108
         },
         "ru": {
           "end": 115,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 108
         }
       },
@@ -9389,13 +9635,13 @@
         "en": {
           "end": 85,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 61
         },
         "ru": {
           "end": 85,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 61
         }
       },
@@ -9424,13 +9670,13 @@
         "en": {
           "end": 46,
           "path": "docs/kernel/processes.md",
-          "sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
+          "sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
           "start": 23
         },
         "ru": {
           "end": 46,
           "path": "translations/ru/docs/kernel/processes.md",
-          "sha256": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
+          "sha256": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
           "start": 23
         }
       },
@@ -10624,13 +10870,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "21a5c7a36218416d385fb35b408716d76cbbb49eb357fa14bbdfe073854e0738",
+          "sha256": "be621613e863a59bd100370418de11759d67d6aa1682d3b1a86feafb9f4a32c7",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "3c67bc7a92a3b14075a2d1517bc9822db8bfeceebf6b65866269b9d16242221d",
+          "sha256": "24ea8c792cae7c438d0ac548dc06af412e13cfdf993f31ef6b4797909628d0c9",
           "start": 13
         }
       },

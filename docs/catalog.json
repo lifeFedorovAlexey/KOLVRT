@@ -26,6 +26,7 @@
     "ADR-0024": "adr.0024",
     "ADR-0025": "adr.0025",
     "ADR-0026": "adr.0026",
+    "ADR-0027": "adr.0027",
     "COST-L-0001": "cost-l.0001",
     "COST-L-0002": "cost-l.0002",
     "COST-L-0003": "cost-l.0003",
@@ -403,6 +404,18 @@
       "path": "docs/architecture-decisions/0026-el0-supervision.md",
       "summary": "Accepted isolated EL0 supervision; acquired quiescence with no arbitrary coordination cutoff.",
       "title": "ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous"
+    },
+    {
+      "aliases": ["ADR-0027"],
+      "depends_on": ["adr.0008", "law.031", "law.035"],
+      "document": "adr.0027",
+      "document_status": "CURRENT",
+      "estimated_bytes": 6997,
+      "id": "adr.0027",
+      "kind": "adr",
+      "path": "docs/architecture-decisions/0027-device-observations.md",
+      "summary": "Accepted bounded PL011 observations with owner-scoped identity and no implied device authority.",
+      "title": "ADR-0027 — Bounded native device observations"
     },
     {
       "aliases": ["KOL-PATH-0001"],
@@ -914,6 +927,16 @@
       "title": "Native capability scope and revocation"
     },
     {
+      "document": "doc.kolvrt.kernel.devices",
+      "document_status": "CURRENT",
+      "estimated_bytes": 7449,
+      "id": "doc.kolvrt.kernel.devices",
+      "kind": "subsystem-contract",
+      "path": "docs/kernel/devices.md",
+      "summary": "Bounded native PL011 observations and owner-scoped nonwrapping identity, separate from device grants.",
+      "title": "Bounded native device observations"
+    },
+    {
       "document": "doc.kolvrt.kernel.domains",
       "document_status": "CURRENT",
       "estimated_bytes": 14626,
@@ -936,7 +959,7 @@
     {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 27453,
+      "estimated_bytes": 28496,
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
       "path": "docs/kernel/ipc.md",
@@ -956,7 +979,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 36872,
+      "estimated_bytes": 37915,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -966,7 +989,7 @@
     {
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
-      "estimated_bytes": 28156,
+      "estimated_bytes": 28894,
       "id": "doc.kolvrt.kernel.processes",
       "kind": "subsystem-contract",
       "path": "docs/kernel/processes.md",
@@ -986,7 +1009,7 @@
     {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 27574,
+      "estimated_bytes": 28617,
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
       "path": "docs/kernel/supervision.md",
@@ -1400,6 +1423,19 @@
       "title": "Policy and implementation"
     },
     {
+      "anchor": "kolvrt-devices-observations",
+      "depends_on": ["law.031", "law.035", "adr.0008"],
+      "document": "doc.kolvrt.kernel.devices",
+      "document_status": "CURRENT",
+      "estimated_bytes": 1184,
+      "id": "kolvrt.devices.observations",
+      "implementation": "BOUNDED_IMPLEMENTED",
+      "kind": "feature",
+      "path": "docs/kernel/devices.md",
+      "summary": "Checked boot-console descriptor and generation-safe observation claims.",
+      "title": "Device observations"
+    },
+    {
       "anchor": "kolvrt-docs-navigation",
       "document": "doc.kolvrt.docs.knowledge",
       "document_status": "CURRENT",
@@ -1685,7 +1721,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 27340,
+      "estimated_bytes": 28383,
       "gaps": [
         "Physical ARM is unverified; QEMU does not establish silicon behavior."
       ],

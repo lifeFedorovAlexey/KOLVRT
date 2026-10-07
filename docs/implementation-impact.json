@@ -1,56 +1,84 @@
 {
   "schema_version": 1,
-  "base_commit": "d1f47dfd20deec938ef4900eb6a71d5ca5cab65c",
+  "base_commit": "d9d41c73e03fd9597668325fb76db704d914483b",
   "files": [
     {
-      "path": "crates/xtask/src/matrix.rs",
-      "before_sha256_lf": "cc5b59c9d2f7e8bef4cbbdaf35ec9f64f3993c5c6b07427f771b6cce1934a19f",
-      "after_sha256_lf": "058cecab5631d0b102d320d0460ed262db0d2d1d0a4616b541f25cbdfe2acb4a",
-      "disposition": "existing-feature",
-      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
+      "path": "crates/kernel-core/src/device.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "8e4e073e258ebc0376d169b3b638a5bb2820dc8b2fe2162335a4d895e60e7f66",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
     },
     {
-      "path": "scripts/ci-evidence.cjs",
-      "before_sha256_lf": "a74e61a7bfd4c6736a46ebd2b4f15cc7182944ceacd2add41ed9eb0c2e3d9b97",
-      "after_sha256_lf": "2da8ab8536fde789c4701969440a2b4802a156dd801c8f2f14e5a2846323d72a",
-      "disposition": "existing-feature",
-      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
+      "path": "crates/kernel-core/src/lib.rs",
+      "before_sha256_lf": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a",
+      "after_sha256_lf": "4a68ad9259e1696dec995bc16b9934c45172ed8e4fa802d7f72829b5e581fca8",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
     },
     {
-      "path": "scripts/tests/ci-infrastructure.test.cjs",
-      "before_sha256_lf": "e82a3ed037d8d06796ce0dd1c13c01c88fb285b425971df6e006cc95324fd987",
-      "after_sha256_lf": "922413dedbfbbef5c2b626b012d2925b09c021f07b2da0bf1e19a99ab79aaf66",
-      "disposition": "existing-feature",
-      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
+      "path": "crates/kernel-core/src/platform.rs",
+      "before_sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9",
+      "after_sha256_lf": "4423248c501cef4d50bc229fc6c97fa13eafbdea3632d037eb2b6a78f3fcd1a9",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
     },
     {
-      "path": ".github/workflows/ci-windows-workload.yml",
-      "before_sha256_lf": "40a95557b9ccb7e9ed820080908940d3eb6a4d7c9bd44ecfb1891aa80cfc5519",
-      "after_sha256_lf": "d92070d60b434a805c5289aa71b52f9d2912fa254939fd64729bf6dd14bc39d9",
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "before_sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac",
+      "after_sha256_lf": "5bc02706a994eee762c1465a8e2c491788678e6962dc839e537810a0543406e1",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+    },
+    {
+      "path": "crates/kernel-core/tests/device_contract.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "b86a40aa7b781c2488d0e487e3b1aa220cbfaedefe32f693dc429bb5157d0a2c",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "before_sha256_lf": "e982449bf1b148b521a011abe566cc9fb17022aa715cbdca33184c9679f09983",
+      "after_sha256_lf": "669b1dd09ebf4c69c5412d593ae751f690e661b95a7034bfd1c2bcc469846fac",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "before_sha256_lf": "9f6f63adc2c0727fb415546a2802c7fa7a9bcd1cfb8a1beb69eecaa284f2bf2f",
+      "after_sha256_lf": "792b9eed41612401362e7110dd1beafcd767997a506fc8eeeb9dff06fcbe2944",
       "disposition": "existing-feature",
-      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
+      "reason": "Correct first quantum snapshot assumption: pending architectural IRQ can precede first EL0 instruction; retain actual subsequent progress, fairness and resource assertions."
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "before_sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
+      "after_sha256_lf": "1e56394abf4e82555df303a7ecc207d9c4439c3734a15638d72c035b21f71ecf",
+      "disposition": "new-feature",
+      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
     }
   ],
   "features": [
     {
       "id": "kolvrt.apps.native-elf",
       "disposition": "semantic-change",
-      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
-    },
-    {
-      "id": "kolvrt.ci.performance",
-      "disposition": "semantic-change",
-      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
+      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
     },
     {
       "id": "kolvrt.ipc.transport",
       "disposition": "semantic-change",
-      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
+      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
     },
     {
       "id": "kolvrt.services.supervision",
       "disposition": "semantic-change",
-      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
+      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
+    },
+    {
+      "id": "kolvrt.devices.observations",
+      "disposition": "semantic-change",
+      "reason": "Introduce and review the bounded PL011 descriptor contract, ownership, rejection semantics and separately scoped exact-source execution acceptance."
     }
   ]
 }

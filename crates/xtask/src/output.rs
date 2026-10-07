@@ -205,6 +205,7 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
     let mut asid_measurement = false;
     let asid_required = expected.iter().any(|name| name.starts_with("asid_"));
     let mut el0 = false;
+    let mut device_observation = false;
     for event in events {
         if matches!(event["event"].as_str(), Some("fatal" | "panic")) || event["status"] == "fail" {
             return Err(format!("kernel failure: {event}").into());
@@ -213,6 +214,30 @@ pub fn validate(events: &[Value], tests: bool, expected: &[&str], cpus: usize) -
             return Err("event after terminal kernel result".into());
         }
         match event["event"].as_str() {
+            Some("device-observation") => {
+                // This runner targets the pinned QEMU platform. Historical receipts
+                // may omit inventory, but a present observation must match its DTB.
+                let expected = kernel_core::platform::discover(include_bytes!(
+                    "../../../research/fixtures/virt-10.1.dtb"
+                ))?
+                .boot_console()
+                .map_err(|_| "validated console descriptor absent")?;
+                if device_observation
+                    || event["status"] != "pass"
+                    || event["kind"] != "pl011"
+                    || event["reservation"] != "boot-console"
+                    || event["scope"].as_u64() != Some(1)
+                    || event["generation"].as_u64() != Some(1)
+                    || event["mmio_base"].as_u64() != Some(expected.mmio_base())
+                    || event["mmio_size"].as_u64() != Some(expected.mmio_size())
+                    || event["irq"].as_u64() != Some(u64::from(expected.irq()))
+                    || event["interrupt_controller"].as_u64()
+                        != Some(u64::from(expected.interrupt_controller()))
+                {
+                    return Err("invalid or duplicate device observation".into());
+                }
+                device_observation = true;
+            }
             Some("ipc-measurement") => {
                 let scope = event["scope"]
                     .as_str()
@@ -1061,6 +1086,59 @@ mod tests {
         let cpus = crate::platform_config::ACTIVE_CPUS;
         let processes = crate::platform_config::USER_PROCESSES;
         json!({"event":"el0","status":"pass","processes":processes,"workers":cpus,"faults":processes-cpus,"switches":processes * 2,"reclaimed":true})
+    }
+    #[test]
+    fn device_inventory_is_optional_but_present_fields_and_uniqueness_are_checked() {
+        let descriptor = kernel_core::platform::discover(include_bytes!(
+            "../../../research/fixtures/virt-10.1.dtb"
+        ))
+        .unwrap()
+        .boot_console()
+        .unwrap();
+        let inventory = json!({"event":"device-observation","status":"pass",
+            "kind":"pl011","reservation":"boot-console","scope":1,"generation":1,
+            "mmio_base":descriptor.mmio_base(),"mmio_size":descriptor.mmio_size(),
+            "irq":descriptor.irq(),"interrupt_controller":descriptor.interrupt_controller()});
+        validate(&[inventory.clone(), el0(), boot()], false, &[], 2).unwrap();
+        validate(&[el0(), boot()], false, &[], 2).unwrap();
+        assert!(
+            validate(
+                &[inventory.clone(), inventory.clone(), el0(), boot()],
+                false,
+                &[],
+                2
+            )
+            .is_err()
+        );
+        for (field, bad) in [
+            ("status", json!("unknown")),
+            ("kind", json!("virtio")),
+            ("reservation", json!("driver")),
+            ("scope", json!(2)),
+            ("generation", json!(2)),
+            ("mmio_base", json!(descriptor.mmio_base() + 4096)),
+            ("mmio_size", json!(descriptor.mmio_size() + 4096)),
+            ("irq", json!(descriptor.irq() + 1)),
+            (
+                "interrupt_controller",
+                json!(descriptor.interrupt_controller() + 1),
+            ),
+        ] {
+            for value in [bad, Value::Null, json!("wrong-type")] {
+                let mut invalid = inventory.clone();
+                invalid[field] = value;
+                assert!(
+                    validate(&[invalid, el0(), boot()], false, &[], 2).is_err(),
+                    "accepted {field}"
+                );
+            }
+            let mut missing = inventory.clone();
+            missing.as_object_mut().unwrap().remove(field);
+            assert!(validate(&[missing, el0(), boot()], false, &[], 2).is_err());
+        }
+        let stream = format!("[OK] console: UART ready\n{PREFIX}{inventory}\n");
+        assert_eq!(parse(&stream).unwrap(), vec![inventory]);
+        assert_eq!(console_text(&stream, false), "[OK] console: UART ready\n");
     }
     #[test]
     fn framing_rejects_lost_or_malformed_evidence() {
