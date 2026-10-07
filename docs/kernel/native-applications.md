@@ -119,6 +119,10 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
 
 Follow-up review clears stale IPC markers on direct lifecycle launch failures and retains both diagnostic and cleanup errors in the external harness. The separate [review diagnostic receipt](../../research/results/supervision-readiness-host-stall-review.json) preserves the new source hashes; the earlier receipt is unchanged. These reporting repairs do not establish the original CI latency cause or renew native acceptance.
 
+## Matrix evidence consumption
+
+Issue #109 B5 changes only host-side consumption of equivalent ordinary suite evidence. Schema-2 execution receipts retain schema-1 source plans and all 144 task obligations. A later consumer may use an earlier executed ordinary donor from the same invocation and shard only when source/profile/features/ELF/QEMU identities match; every required named assertion is checked independently from retained events. Fatal controls, different profiles and builds, historical results and reuse chains are excluded. KOLVRT_MATRIX_REUSE=off executes the reference afresh. This does not alter production ELF applications, supervisor recovery, shutdown or the separate native SYSTEM workload. Existing receipts retain their historical scope; owner verification is not promoted by this runner change, and no performance or readiness acceptance follows. [CI reuse contract](../ci/performance.md) defines provenance and expected counts.
+
 <!-- knowledge -->
 
 ```json

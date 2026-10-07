@@ -118,6 +118,10 @@ Restricted-workspace proof привязывает repository-relative путь h
 
 Исправления по ревью сбрасывают устаревшие IPC-маркеры при ошибках прямого lifecycle launch и сохраняют исходную ошибку вместе с ошибками очистки внешнего harness. Отдельный [отчёт повторной диагностики](../../../../research/results/supervision-readiness-host-stall-review.json) сохраняет новые хеши исходников; прежний отчёт не изменён. Эти исправления отчётности не устанавливают причину исходной задержки CI и не обновляют native acceptance.
 
+## Использование evidence matrix
+
+B5 issue #109 меняет только потребление evidence эквивалентного обычного suite на host. Receipts выполнения schema 2 сохраняют source plans schema 1 и все 144 обязательные проверки. Последующий consumer может использовать более ранний executed ordinary donor только из того же вызова и shard при совпадении source/profile/features/ELF/QEMU identities; каждый обязательный именованный assertion независимо проверяется по сохранённым events. Fatal controls, другие profiles и сборки, исторические результаты и цепочки reuse исключены. KOLVRT_MATRIX_REUSE=off заново исполняет reference. Это не меняет production ELF applications, supervisor recovery, shutdown или отдельный native SYSTEM workload. Существующие receipts сохраняют исторический scope; это изменение runner не повышает verification владельца и не даёт performance или readiness acceptance. [Контракт CI reuse](../ci/performance.md) определяет provenance и ожидаемые counts.
+
 <!-- knowledge -->
 
 ```json

@@ -1,6 +1,36 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
+const { isDeepStrictEqual } = require("node:util");
+
+function reusable(task) {
+  return (
+    task.tests === true &&
+    task.feature === null &&
+    task.expected_marker === null &&
+    task.expected_ipc_test === null &&
+    (task.flag === null ||
+      (Array.isArray(task.observable_checks) &&
+        task.observable_checks.length > 0))
+  );
+}
+function ordinaryWitness(task, events) {
+  if (
+    !Array.isArray(events) ||
+    events.some((event) => !event || event.status === "fail")
+  )
+    throw new Error("Missing or failed ordinary events");
+  const suites = events.filter((event) => event.event === "suite");
+  if (suites.length !== 1 || suites[0].status !== "pass")
+    throw new Error("Missing, duplicate or failed ordinary suite");
+  for (const name of task.observable_checks || []) {
+    const witnesses = events.filter(
+      (event) => event.event === "test" && event.name === name,
+    );
+    if (witnesses.length !== 1 || witnesses[0].status !== "pass")
+      throw new Error("Missing, duplicate or failed consumer witness: " + name);
+  }
+}
 
 /**
  * Merge only a complete, disjoint partition of the independently generated plan.
@@ -25,7 +55,9 @@ function aggregate(expected, receipts, count = 4) {
     completed = new Map();
   for (const receipt of receipts) {
     if (
-      receipt.schema_version !== 1 ||
+      receipt.schema_version !== 2 ||
+      (receipt.reuse_policy !== undefined &&
+        !["disabled", "same-invocation"].includes(receipt.reuse_policy)) ||
       receipt.shard_count !== count ||
       !Number.isInteger(receipt.shard_index) ||
       receipt.shard_index < 0 ||
@@ -35,6 +67,7 @@ function aggregate(expected, receipts, count = 4) {
     )
       throw new Error("Incompatible source/plan or duplicate shard");
     indices.add(receipt.shard_index);
+    const local = new Map();
     for (const result of receipt.completed) {
       const task = tasks.get(result.id);
       const position = expected.tasks.findIndex(
@@ -45,7 +78,7 @@ function aggregate(expected, receipts, count = 4) {
         position % count !== receipt.shard_index ||
         completed.has(result.id) ||
         result.outcome !== "passed" ||
-        result.observation !== "executed"
+        !["executed", "reused"].includes(result.observation)
       )
         throw new Error(
           "Missing, duplicate, unexpected or failed matrix observation",
@@ -56,7 +89,10 @@ function aggregate(expected, receipts, count = 4) {
         ...(task.tests ? ["kernel-tests"] : []),
         ...(task.feature ? [task.feature] : []),
       ].sort();
+      const artifact = `target/kernel/${task.profile}-${task.feature || (task.tests ? "tests" : "boot")}.elf`;
       if (
+        result.build.artifact !== artifact ||
+        result.run.arguments.at(-1) !== artifact ||
         JSON.stringify([...result.build.features].sort()) !==
           JSON.stringify(features) ||
         !/^[a-f0-9]{64}$/.test(result.build.sha256) ||
@@ -68,18 +104,50 @@ function aggregate(expected, receipts, count = 4) {
           JSON.stringify(expected.qemu_arguments.slice(0, -1))
       )
         throw new Error("Incompatible profile/features/ELF/QEMU configuration");
+      if (reusable(task)) ordinaryWitness(task, result.events);
+      if (result.observation === "reused") {
+        const donor = local.get(result.reused_from);
+        const donorTask = donor && tasks.get(donor.id);
+        if (
+          receipt.reuse_policy === "disabled" ||
+          !reusable(task) ||
+          !donor ||
+          donor.observation !== "executed" ||
+          !reusable(donorTask) ||
+          expected.tasks.findIndex((item) => item.id === donor.id) >=
+            position ||
+          donorTask.profile !== task.profile ||
+          donorTask.tests !== task.tests ||
+          donorTask.feature !== task.feature ||
+          !isDeepStrictEqual(donor.build, result.build) ||
+          !isDeepStrictEqual(donor.run, result.run) ||
+          !isDeepStrictEqual(donor.events, result.events)
+        )
+          throw new Error(
+            "Invalid same-shard executed reuse donor or changed observation",
+          );
+      } else if (result.reused_from != null) {
+        throw new Error("Executed observation cannot name a reuse donor");
+      }
+      local.set(result.id, result);
       completed.set(result.id, result);
     }
   }
   if (completed.size !== tasks.size)
     throw new Error("Incomplete required matrix");
   return {
-    schema_version: 1,
+    schema_version: 2,
     scope:
       "complete exact-source sharded kernel matrix; no physical hardware acceptance",
     plan: expected,
     completed: expected.tasks.map((task) => completed.get(task.id)),
     shards: count,
+    executed: [...completed.values()].filter(
+      (result) => result.observation === "executed",
+    ).length,
+    reused: [...completed.values()].filter(
+      (result) => result.observation === "reused",
+    ).length,
   };
 }
 
@@ -126,7 +194,7 @@ function main() {
   const result = aggregate(expected, findReceipts(directory).map(read));
   fs.writeFileSync(destination, JSON.stringify(result, null, 2) + "\n");
   console.log(
-    `Complete matrix: ${result.completed.length} exact-source executed tasks across ${result.shards} shards`,
+    `Complete matrix: ${result.completed.length} exact-source obligations (${result.executed} executed, ${result.reused} reused) across ${result.shards} shards`,
   );
 }
 module.exports = { aggregate };

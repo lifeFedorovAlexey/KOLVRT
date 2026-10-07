@@ -121,19 +121,25 @@ test("evidence merge rejects missing/duplicate shards, changed sources, features
       profile: "dev",
       tests: true,
       feature: null,
+      expected_marker: null,
+      expected_ipc_test: null,
+      flag: null,
+      observable_checks: null,
     })),
   };
   const receipts = expected.tasks.map((task, i) => ({
-    schema_version: 1,
+    schema_version: 2,
     shard_count: 4,
     shard_index: i,
     plan: expected,
     completed: [
       {
         id: task.id,
+        events: [{ event: "suite", status: "pass" }],
         outcome: "passed",
         observation: "executed",
         build: {
+          artifact: "target/kernel/dev-tests.elf",
           features: ["diagnostics", "kernel-tests", "machine-events"],
           sha256: "a".repeat(64),
           compiler: "1.99.0",
@@ -142,7 +148,7 @@ test("evidence merge rejects missing/duplicate shards, changed sources, features
         run: {
           elf_sha256: "a".repeat(64),
           qemu_version: "QEMU emulator version 10.1.0 test",
-          arguments: ["-kernel", "actual.elf"],
+          arguments: ["-kernel", "target/kernel/dev-tests.elf"],
         },
       },
     ],
@@ -235,4 +241,234 @@ test("host-only final status requires static/host success and explicit skips for
   requireSuccess(jobs, false);
   jobs.asid.result = "failure";
   assert.throws(() => requireSuccess(jobs, false), /Unexpected/);
+});
+
+function reuseMatrixFixture(total = 8, count = 2) {
+  const expected = {
+    schema_version: 1,
+    source_files: [{ path: "source", sha256_lf: "c".repeat(64) }],
+    qemu_arguments: ["-kernel", "<ELF>"],
+    tasks: Array.from({ length: total }, (_, i) => ({
+      id: "task-" + i,
+      profile: i % 2 ? "prod" : "dev",
+      tests: true,
+      feature: null,
+      expected_marker: null,
+      expected_ipc_test: null,
+      flag: i < count ? null : "--guard-control",
+      observable_checks: i < count ? null : ["guard"],
+    })),
+  };
+  const receipts = Array.from({ length: count }, (_, shard_index) => ({
+    schema_version: 2,
+    shard_count: count,
+    shard_index,
+    plan: expected,
+    completed: [],
+  }));
+  expected.tasks.forEach((task, i) => {
+    const donor = receipts[i % count].completed[0];
+    const result = donor
+      ? {
+          ...structuredClone(donor),
+          id: task.id,
+          observation: "reused",
+          reused_from: donor.id,
+        }
+      : {
+          id: task.id,
+          outcome: "passed",
+          observation: "executed",
+          events: [
+            { event: "test", name: "guard", status: "pass" },
+            { event: "suite", status: "pass" },
+          ],
+          build: {
+            artifact: `target/kernel/${task.profile}-tests.elf`,
+            features: [
+              "machine-events",
+              "kernel-tests",
+              ...(task.profile === "dev" ? ["diagnostics"] : []),
+            ],
+            sha256: "a".repeat(64),
+            compiler: "1.99.0",
+            target: "aarch64-unknown-none",
+          },
+          run: {
+            elf_sha256: "a".repeat(64),
+            qemu_version: "QEMU emulator version 10.1.0 test",
+            arguments: ["-kernel", `target/kernel/${task.profile}-tests.elf`],
+          },
+        };
+    receipts[i % count].completed.push(result);
+  });
+  return { expected, receipts, count };
+}
+
+test("matrix schema2 preserves every obligation and reports executed versus reused", () => {
+  const { aggregate } = require("../ci-evidence.cjs");
+  const { expected, receipts } = reuseMatrixFixture(144, 4);
+  const result = aggregate(expected, receipts, 4);
+  assert.equal(result.schema_version, 2);
+  assert.equal(result.completed.length, 144);
+  assert.equal(result.executed, 4);
+  assert.equal(result.reused, 140);
+  assert.deepEqual(
+    result.completed.map((x) => x.id),
+    expected.tasks.map((x) => x.id),
+  );
+});
+
+const invalidReuseCases = {
+  "unknown reuse policy": (f) => {
+    f.receipts[0].reuse_policy = "historical";
+  },
+  "disabled reuse policy": (f) => {
+    f.receipts[0].reuse_policy = "disabled";
+  },
+  "marker consumer": (f) => {
+    f.expected.tasks[2].expected_marker = "failure";
+  },
+  "IPC failure consumer": (f) => {
+    f.expected.tasks[2].expected_ipc_test = "failure";
+  },
+  "wrong executed kernel path": (f) => {
+    f.receipts[0].completed[0].run.arguments[1] = "foreign.elf";
+  },
+  "wrong matching build and run path": (f) => {
+    for (const r of f.receipts[0].completed)
+      r.build.artifact = r.run.arguments[1] = "target/kernel/prod-tests.elf";
+  },
+  "old shard schema": (f) => {
+    f.receipts[0].schema_version = 1;
+  },
+  "missing donor": (f) => {
+    f.receipts[0].completed[1].reused_from = "absent";
+  },
+  "historical donor": (f) => {
+    f.receipts[0].completed[1].reused_from = "historical-task";
+  },
+  "cross-shard donor": (f) => {
+    f.receipts[0].completed[1].reused_from = "task-1";
+  },
+  "future donor": (f) => {
+    f.receipts[0].completed[1].reused_from = "task-4";
+  },
+  "chained donor": (f) => {
+    f.receipts[0].completed[2].reused_from = "task-2";
+  },
+  "self donor": (f) => {
+    f.receipts[0].completed[1].reused_from = "task-2";
+  },
+  "cross-profile": (f) => {
+    f.expected.tasks[2].profile = "prod";
+    f.receipts[0].completed[1].build.features = [
+      "machine-events",
+      "kernel-tests",
+    ];
+  },
+  "changed build": (f) => {
+    f.receipts[0].completed[1].build.artifact = "different.elf";
+  },
+  "changed ELF pair": (f) => {
+    f.receipts[0].completed[1].build.sha256 =
+      f.receipts[0].completed[1].run.elf_sha256 = "b".repeat(64);
+  },
+  "changed run": (f) => {
+    f.receipts[0].completed[1].run.arguments[1] = "different.elf";
+  },
+  "changed events": (f) => {
+    f.receipts[0].completed[1].events.push({ event: "detail", value: 1 });
+  },
+  "missing events": (f) => {
+    delete f.receipts[0].completed[0].events;
+  },
+  "missing consumer witness": (f) => {
+    f.expected.tasks[2].observable_checks = ["absent"];
+  },
+  "duplicate consumer witness": (f) => {
+    for (const r of f.receipts[0].completed)
+      r.events.push({ event: "test", name: "guard", status: "pass" });
+  },
+  "failed witness": (f) => {
+    for (const r of f.receipts[0].completed) r.events[0].status = "fail";
+  },
+  "nonpassing witness": (f) => {
+    for (const r of f.receipts[0].completed) r.events[0].status = "skipped";
+  },
+  "failed donor": (f) => {
+    f.receipts[0].completed[0].outcome = "failed";
+  },
+  "unrelated failed event": (f) => {
+    f.receipts[0].completed[0].events.push({ event: "panic", status: "fail" });
+  },
+  "duplicate suite": (f) => {
+    f.receipts[0].completed[0].events.push({ event: "suite", status: "pass" });
+  },
+  "missing suite": (f) => {
+    f.receipts[0].completed[0].events.pop();
+  },
+  "failed suite": (f) => {
+    f.receipts[0].completed[0].events[1].status = "fail";
+  },
+  "executed names donor": (f) => {
+    f.receipts[0].completed[0].reused_from = "task-1";
+  },
+  "feature-specific consumer": (f) => {
+    f.expected.tasks[2].feature = "fatal-input";
+    f.receipts[0].completed[1].build.features.push("fatal-input");
+  },
+  "fatal consumer without witnesses": (f) => {
+    f.expected.tasks[2].observable_checks = null;
+  },
+  "boot consumer": (f) => {
+    f.expected.tasks[2].tests = false;
+    f.receipts[0].completed[1].build.features = [
+      "machine-events",
+      "diagnostics",
+    ];
+  },
+  "feature-specific donor": (f) => {
+    f.expected.tasks[0].feature = "fatal-input";
+    f.receipts[0].completed[0].build.features.push("fatal-input");
+  },
+  "donor with no positive contract": (f) => {
+    f.expected.tasks[0].flag = "--fatal";
+  },
+  "reordered future executed donor": (f) => {
+    const r = f.receipts[0].completed;
+    r[1].observation = "executed";
+    delete r[1].reused_from;
+    r[0].observation = "reused";
+    r[0].reused_from = r[1].id;
+    [r[0], r[1]] = [r[1], r[0]];
+  },
+  "missing obligation": (f) => {
+    f.receipts[0].completed.pop();
+  },
+};
+for (const [name, mutate] of Object.entries(invalidReuseCases)) {
+  test("matrix reuse rejects " + name, () => {
+    const { aggregate } = require("../ci-evidence.cjs");
+    const fixture = reuseMatrixFixture();
+    mutate(fixture);
+    assert.throws(() =>
+      aggregate(fixture.expected, fixture.receipts, fixture.count),
+    );
+  });
+}
+
+test("schema2 allows executed feature-specific controls without treating them as donors", () => {
+  const { aggregate } = require("../ci-evidence.cjs");
+  const f = reuseMatrixFixture(2, 2);
+  f.expected.tasks[0].feature = "fatal-input";
+  f.expected.tasks[0].flag = "--fatal";
+  f.receipts[0].completed[0].build.features.push("fatal-input");
+  f.receipts[0].completed[0].build.artifact =
+    f.receipts[0].completed[0].run.arguments[1] =
+      "target/kernel/dev-fatal-input.elf";
+  f.receipts[0].completed[0].events = [{ event: "panic", status: "fail" }];
+  const result = aggregate(f.expected, f.receipts, f.count);
+  assert.equal(result.executed, 2);
+  assert.equal(result.reused, 0);
 });

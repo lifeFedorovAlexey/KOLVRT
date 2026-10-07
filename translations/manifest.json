@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "18683115e7b0c64af18d9783b8b70c2409caeb806964dfbb3f251500a6296a40",
-        "translation_sha256": "680c7eccb662d8cc477c99b39f26092ef5c0b41885e8e3b50bb73e3d92a238c0"
+        "source_sha256": "0eae1cc5254749e31230e32b8a79ff46f23ac6e657408efa419d46b5b4087adf",
+        "translation_sha256": "49b998398221709c9d2dbfa1b9747158b45fb6876cce5ff41a1b7af83f73e547"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -262,8 +262,8 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "db9182bcc9316b7d9d62876546f9e12d4806de4e827fcad5fefab99c915f9b9b",
-        "translation_sha256": "39e782eaf756b2281bd7e955856b4b4e2cb950fc74932e452ebb5965460c5fd4"
+        "source_sha256": "ab17bbd52498ebb0df8b44189aaf5d89a8c2f3d0c5038552fb86b837de802873",
+        "translation_sha256": "85e08b719e4a77e06a614c52d1e3b06cb019cef56a3b7061e95bdd2394529d75"
       },
       "docs/documentation-policy.md": {
         "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
@@ -306,16 +306,16 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
-        "translation_sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3"
+        "source_sha256": "614672bc3f4dd9714432f0c5a2c1ff37d2ed29bdaeb4ad65bd345f61300f380c",
+        "translation_sha256": "39b4fcc59c0c7a0d40f095e5ca43ad32632f732a8d255a6cd9e9444fe38e926c"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "e8fa046c9f3edeae1555acb27988f27d8ee41314fba23ec8aafc83e99b81fb1b",
-        "translation_sha256": "8fc4d014232f13ebde040ae3e7ae630f0d7d71d4fa5c0ad7e7b26bab2bfedf73"
+        "source_sha256": "a3d36f54fdd0f7ca7af4d48545345be5e6bf6245cb037149bdf4d9256f01fb2d",
+        "translation_sha256": "bc827e0dcbf385e760693f389f78347516b837a70bf64cbb956dadfd94365288"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
@@ -334,8 +334,8 @@
         "translation_sha256": "395e7920498d371257573b4fdd8cfa6d91718c1f8aa4447d1353f1327d556790"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "5585e6b152c4bfc4ef8c415b1997c931a4cfe1042d3b179d6be0136d8d71393f",
-        "translation_sha256": "09079176a15881627478ad6da33cee54d748e2a9a2c6c92bd6e71b078517b55a"
+        "source_sha256": "21a5c7a36218416d385fb35b408716d76cbbb49eb357fa14bbdfe073854e0738",
+        "translation_sha256": "3c67bc7a92a3b14075a2d1517bc9822db8bfeceebf6b65866269b9d16242221d"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",
