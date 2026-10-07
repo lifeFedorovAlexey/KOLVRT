@@ -1,0 +1,97 @@
+[
+  {
+    "event": "native-root-image",
+    "format": "elf64",
+    "generation": 1
+  },
+  {
+    "event": "native-image",
+    "format": "elf64",
+    "generation": 1,
+    "selector": 0
+  },
+  {
+    "event": "native-image",
+    "format": "elf64",
+    "generation": 1,
+    "selector": 1
+  },
+  {
+    "event": "native-process-terminal",
+    "exit_code": 0,
+    "generation": 1,
+    "ipc_blocks": 5,
+    "ipc_wakes": 5,
+    "owner": 0,
+    "slot": 1,
+    "state": 2
+  },
+  {
+    "code": 0,
+    "event": "native-completion",
+    "generation": 1,
+    "kind": "exit",
+    "selector": 1
+  },
+  {
+    "event": "native-process-terminal",
+    "exit_code": 0,
+    "generation": 1,
+    "ipc_blocks": 6,
+    "ipc_wakes": 5,
+    "owner": 1,
+    "slot": 4,
+    "state": 7
+  },
+  {
+    "code": 0,
+    "event": "native-completion",
+    "generation": 1,
+    "kind": "terminated",
+    "selector": 0
+  },
+  {
+    "event": "native-report-progress",
+    "words": [5426640009636886273, 4, 3, 12, 1]
+  },
+  {
+    "event": "native-process-terminal",
+    "exit_code": 0,
+    "generation": 1,
+    "ipc_blocks": 4,
+    "ipc_wakes": 4,
+    "owner": 0,
+    "slot": 0,
+    "state": 2
+  },
+  {
+    "event": "native-report-progress",
+    "words": [5426640009636886273, 4, 3, 12, 1, 2, 3]
+  },
+  {
+    "event": "native-task",
+    "generation": 1,
+    "ipc_blocks": 4,
+    "ipc_wakes": 4,
+    "peer_faults_at_exit": 0,
+    "state": 2,
+    "terminal_blocks": 3
+  },
+  {
+    "all_blocked": 0,
+    "event": "native-scheduler"
+  },
+  {
+    "event": "native-user-report",
+    "words": [5426640009636886273, 4, 3, 12, 1, 2, 3]
+  },
+  {
+    "event": "native-boot",
+    "frames_restored": true,
+    "live_domains": 0,
+    "live_processes": 0,
+    "owners_released": true,
+    "root_exit": 0,
+    "status": "complete"
+  }
+]

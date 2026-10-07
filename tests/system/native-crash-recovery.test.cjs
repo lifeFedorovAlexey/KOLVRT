@@ -81,3 +81,45 @@ test("replacement preceding actual fault completion cannot pass the oracle", () 
   ];
   assert.throws(() => validateRecovery(events, fault));
 });
+
+test("completed recovery requires actual shutdown and zero retained resources", () => {
+  const complete = require("../fixtures/native-production-crash-shutdown-observations.json");
+  assert.equal(
+    validateRecovery(complete.events, complete.fault, true).resource_leaks,
+    0,
+  );
+  for (const mutate of [
+    (events) =>
+      events.splice(
+        events.findIndex((e) => e.event === "native-boot"),
+        1,
+      ),
+    (events) => {
+      events.find((e) => e.event === "native-boot").live_domains = 1;
+    },
+    (events) => {
+      events.find((e) => e.event === "native-boot").live_processes = 1;
+    },
+    (events) => {
+      events.find((e) => e.event === "native-boot").frames_restored = false;
+    },
+    (events) => {
+      events.find((e) => e.event === "native-boot").owners_released = false;
+    },
+    (events) => {
+      events.find(
+        (e) =>
+          e.event === "native-completion" &&
+          e.selector === 0 &&
+          e.generation === 2,
+      ).kind = "fault";
+    },
+    (events) => {
+      events.find((e) => e.event === "native-boot").root_exit = 1;
+    },
+  ]) {
+    const events = structuredClone(complete.events);
+    mutate(events);
+    assert.throws(() => validateRecovery(events, complete.fault, true));
+  }
+});

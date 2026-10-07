@@ -143,6 +143,8 @@ The experimental [supervisor](supervision.md) requests fresh processes through f
 
 Phase 3.7 adds a separately scoped original-ELF application profile through the existing trusted Registry and exact-supervisor barrier. Ordinary clients still have no create authority; lifecycle_sender mints only SEND to the immutable permitted service edge in the exact live client namespace. Native application builds exclude raw fixtures and the synthetic Origin::El0 test variant. Full ELF bytes reach the existing validated loader; fixture restrictions do not become authority over future architectures. See [native applications](native-applications.md).
 
+CI cc50a5a failed process_quantum_return_and_peer_progress in shard 0; its other shards passed. The quantum fixture submitted a nonzero TPIDR but zero x20 and compared them after the first return, although a timer IRQ may precede the actor’s first mov x20,x0. The fixture now initializes this tested invariant in its submitted Context. It still requires real counter execution/growth, exact peer exits, all SIMD/FP/SP/TPIDR preservation, the unchanged eight-quantum budget, quiescence and reclamation. No production scheduler change or first-slice progress fabrication is introduced. Failed process-quantum-reject records first/final counters, first PC/x20/TPIDR, peer progress and failure_bits: bits 0/4 owner release, 1/5 initial/subsequent context, 2 admitted lifetime/reclaim denial, 3 initial counter, 6 completion reason, 7 tag, 8 counter growth, 9 peer progress, 10 final resources. This repairs an independently demonstrated test input; it does not identify which old CI predicate failed without those observations.
+
 <!-- knowledge -->
 
 ```json

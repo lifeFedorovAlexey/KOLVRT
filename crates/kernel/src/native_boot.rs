@@ -88,21 +88,10 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
         ],
     );
     registry.start(supervisor).expect("root admission");
-    let watchdog_ms: u64 = env!("KOLVRT_NATIVE_WATCHDOG_MS")
-        .parse()
-        .expect("generic boot watchdog");
-    let bounded = watchdog_ms != 0;
-    let watchdog = crate::time::deadline_after(crate::time::Duration::from_millis(watchdog_ms));
     let mut published_words = 0;
     let completed = loop {
-        if bounded && cpu::ticks() >= watchdog {
-            crate::event!(
-                "{{\"event\":\"native-boot\",\"status\":\"watchdog\",\"resources_retained\":true}}"
-            );
-            cpu::poweroff();
-        }
         let completed = registry.checkpoint();
-        if !bounded {
+        {
             let (words, length) = completed.report_chunk(supervisor.slot(), 0);
             if length > published_words {
                 crate::event!(

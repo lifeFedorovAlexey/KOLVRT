@@ -78,6 +78,8 @@ Current main после #126 содержит 142 задачи и 138 controls �
 
 Phase 3.7 расширяет механизм immutable image-format grants и operation 6 для одной конечной client SEND edge. Инициализированные x0=6, x1=client selector, x2=точный client token, x3=точный destination token, x4=1 обрабатываются только для захваченного supervisor после acquired quiescence. Успех возвращает status, SEND handle в локальном namespace клиента, target token и client generation; заменяется только previous sender, выданный этой entry. Stale tokens, завершённые clients/targets и отсутствующие edges отвергаются. Этот профиль исходных ELF описан в [native applications](native-applications.md); прежние ограничения fixtures Phase 3.6 и исторические receipts сохраняют свой исходный scope.
 
+Обычный ELF supervisor выбирает время жизни через application SessionPolicy: bootstrap argument 1 сохраняет persistent работу после клиента, argument 2 завершает сессию после настоящего завершения клиента. Недопустимая конфигурация отвергается. Оба режима используют одну production реализацию service/client/recovery. FinishAfterClient закрывает admission, наблюдает успешный client exit, запрашивает точное owner-local termination сервиса, наблюдает Terminated и выходит штатно; затем generic kernel retirement требует настоящую quiescence и освобождение ресурсов. Политика времени жизни приложения не является kernel test switch. Immutable ELF bootstrap больше не содержит workload watchdog; внешний runner ограничивает diagnostic hangs. Отдельный исторический assembly fixture сохраняет явно ограниченные policy/watchdog и readiness deadline 1/8.
+
 <!-- knowledge -->
 
 ```json

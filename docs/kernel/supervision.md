@@ -76,6 +76,8 @@ Current main after #126 contains 142 tasks and 138 controls from one shared seri
 
 Phase 3.7 extends the mechanism with immutable image-format grants and operation 6 for one finite client SEND edge. Initialized x0=6, x1=client selector, x2=exact client token, x3=exact destination token, x4=1 are processed only for the captured supervisor at acquired quiescence. Success returns status, caller-local client SEND handle, target token and client generation; it replaces only the previous sender minted by that entry. Stale tokens, dead clients/targets and absent edges are denied. This original-ELF profile is described in [native applications](native-applications.md); the older Phase 3.6 fixture limits and historical receipts retain their original scope.
 
+The ordinary ELF supervisor selects its lifetime through application SessionPolicy: bootstrap argument 1 stays persistent after the client, argument 2 finishes the session after the actual client completes. Invalid configuration is rejected. Both modes use the same production service/client/recovery implementation. FinishAfterClient seals admission, observes successful client exit, requests exact owner-local service termination, observes Terminated and exits normally; generic kernel retirement then requires real quiescence and resource release. Application lifetime policy is not a kernel test switch. The immutable ELF bootstrap no longer contains a workload watchdog; the external runner bounds diagnostic hangs. The separate historical assembly fixture retains its explicitly scoped policy/watchdog and 1/8 readiness deadline.
+
 <!-- knowledge -->
 
 ```json

@@ -22,11 +22,14 @@ pub fn validate(events: &[Value]) -> Result<Value> {
     if words.first() == Some(&json!(MAGIC)) && words.get(1) == Some(&json!(3)) {
         return validate_lifecycle(events, words);
     }
+    if words.first() == Some(&json!(MAGIC)) && words.get(1) == Some(&json!(4)) {
+        return validate_session(events, words);
+    }
     Err("unknown completed-native scenario schema".into())
 }
 
 pub fn smoke(args: &[String]) -> Result<()> {
-    run_suite(args, "counter-client", 1)
+    run_suite(args, "counter-client", 2)
 }
 pub fn runtime(args: &[String]) -> Result<()> {
     run_suite(args, "counter-client", 1)
@@ -50,8 +53,9 @@ pub fn selftest(args: &[String]) -> Result<()> {
         return Err("L1 component tests failed".into());
     }
     for binary in ["counter-client", "selftest-abi-client"] {
-        run_suite(args, binary, 1)?;
+        run_suite(args, binary, 2)?;
         if binary == "counter-client" {
+            run_suite(args, binary, 1)?;
             crash_current_runtime()?;
         }
     }
@@ -59,7 +63,7 @@ pub fn selftest(args: &[String]) -> Result<()> {
     Ok(())
 }
 pub fn crash_recovery(args: &[String]) -> Result<()> {
-    run_suite(args, "counter-client", 1)?;
+    run_suite(args, "counter-client", 2)?;
     crash_current_runtime()
 }
 fn crash_current_runtime() -> Result<()> {
@@ -68,7 +72,7 @@ fn crash_current_runtime() -> Result<()> {
         .env("QEMU_AARCH64", qemu()?)
         .args([
             "tests/system/native-crash-recovery.cjs",
-            "target/kernel/native-counter-client-1-positive.json",
+            "target/kernel/native-counter-client-2-positive.json",
         ])
         .status()?;
     if !status.success() {
@@ -355,6 +359,63 @@ fn observe_runtime(elf: &Path) -> Result<Value> {
     )
 }
 
+fn validate_session(events: &[Value], words: &[Value]) -> Result<Value> {
+    if words.len() != 7
+        || words[2].as_u64().is_none_or(|n| n < 3)
+        || words[3] != 12
+        || words[4].as_u64().is_none_or(|n| n == 0)
+        || words[5].as_u64().is_none_or(|n| n == 0)
+        || words[6] != 3
+    {
+        return Err("ordinary supervisor session result invalid".into());
+    }
+    let one = |event: &str| -> Result<&Value> {
+        let found: Vec<_> = events.iter().filter(|e| e["event"] == event).collect();
+        if found.len() != 1 {
+            return Err(format!("missing unique {event}").into());
+        }
+        Ok(found[0])
+    };
+    if one("native-root-image")?["format"] != "elf64" {
+        return Err("root ELF missing".into());
+    }
+    let ended = one("native-boot")?;
+    if ended["status"] != "complete"
+        || ended["root_exit"] != 0
+        || ended["owners_released"] != true
+        || ended["frames_restored"] != true
+        || ended["live_processes"] != 0
+        || ended["live_domains"] != 0
+    {
+        return Err("ordinary session resources retained".into());
+    }
+    for (selector, kind) in [(0, "terminated"), (1, "exit")] {
+        let images: Vec<_> = events
+            .iter()
+            .filter(|e| e["event"] == "native-image" && e["selector"] == selector)
+            .collect();
+        let completions: Vec<_> = events
+            .iter()
+            .filter(|e| e["event"] == "native-completion" && e["selector"] == selector)
+            .collect();
+        if images.len() != 1
+            || images[0]["format"] != "elf64"
+            || completions.len() != 1
+            || completions[0]["kind"] != kind
+            || completions[0]["code"] != 0
+            || completions[0]["generation"] != images[0]["generation"]
+        {
+            return Err("ordinary session actual child completion missing".into());
+        }
+    }
+    Ok(
+        json!({"supervisor_ready":true,"production_supervisor_tested":true,"client_loaded_as_elf":true,
+        "requests_completed":words[2],"counter_final":12,"service_instance":words[4],"client_exit":"success",
+        "guest_shutdown":true,"resource_leaks":0,"frames_restored":true,"owners_released":true,
+        "service_restarted":false,"scope":"ordinary production session finishes after its client; separate persistent and crash scenarios remain required","hardware":"UNKNOWN"}),
+    )
+}
+
 fn validate_lifecycle(events: &[Value], words: &[Value]) -> Result<Value> {
     if words.len() != 50 {
         return Err("lifecycle step ledger incomplete".into());
@@ -464,6 +525,39 @@ mod tests {
         .unwrap();
         fixture["events"].as_array().unwrap().clone()
     }
+    #[test]
+    fn normal_session_oracle_requires_actual_child_exit_and_resource_reclamation() {
+        let sample: Vec<Value> = serde_json::from_str(include_str!(
+            "../../../tests/fixtures/native-production-session-observations.json"
+        ))
+        .unwrap();
+        assert_eq!(validate(&sample).unwrap()["resource_leaks"], 0);
+        for key in [
+            "owners_released",
+            "frames_restored",
+            "live_processes",
+            "live_domains",
+            "root_exit",
+        ] {
+            let mut bad = sample.clone();
+            let end = bad
+                .iter_mut()
+                .find(|e| e["event"] == "native-boot")
+                .unwrap();
+            end[key] = if end[key].is_boolean() {
+                json!(false)
+            } else {
+                json!(1)
+            };
+            assert!(validate(&bad).is_err());
+        }
+        for selector in [0, 1] {
+            let mut bad = sample.clone();
+            bad.retain(|e| !(e["event"] == "native-completion" && e["selector"] == selector));
+            assert!(validate(&bad).is_err());
+        }
+    }
+
     #[test]
     fn lifecycle_oracle_accepts_observed_steps_and_actual_reclamation() {
         assert!(validate(&observed_inputs()).is_ok());

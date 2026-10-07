@@ -742,10 +742,7 @@ fn build_mode(
         {
             c.env(name, fs::canonicalize(&images[index])?);
         }
-        c.env("KOLVRT_NATIVE_ARGUMENT", argument.to_string()).env(
-            "KOLVRT_NATIVE_WATCHDOG_MS",
-            if argument == 1 { "0" } else { "20000" },
-        );
+        c.env("KOLVRT_NATIVE_ARGUMENT", argument.to_string());
     }
     if !features.is_empty() {
         c.args(["--features", &features.join(",")]);

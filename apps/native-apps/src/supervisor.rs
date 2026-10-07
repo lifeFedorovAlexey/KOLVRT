@@ -1,6 +1,6 @@
 #![no_std]
 #![no_main]
-use native_apps::supervision::recover_service;
+use native_apps::supervision::{SessionPolicy, recover_service};
 use native_userspace::{CounterRequest, REPORT_MAGIC, counter_value, native, read32, read64};
 native_userspace::entry!();
 
@@ -54,10 +54,11 @@ fn recover(old: [u64; 5], code: u64) -> [u64; 5] {
     recover_service(old).unwrap_or_else(|_| fail(code))
 }
 #[unsafe(no_mangle)]
-pub extern "C" fn native_main(_receiver: u64, _feedback: u64, _argument: u64) -> ! {
-    run_runtime()
+pub extern "C" fn native_main(_receiver: u64, _feedback: u64, argument: u64) -> ! {
+    let policy = SessionPolicy::decode(argument).unwrap_or_else(|_| fail(139));
+    run_runtime(policy)
 }
-fn run_runtime() -> ! {
+fn run_runtime(policy: SessionPolicy) -> ! {
     // Actual lifecycle observations govern recovery; no injected failure path.
     let mut service = life(1, 0, 0, 0, 140);
     probe(service[2], 1, 0, 141);
@@ -68,13 +69,13 @@ fn run_runtime() -> ! {
         fail(148);
     }
     reply(client[3], hello, [binding[1], service[1], 0, 0], 149);
-    loop {
+    let requests_completed = loop {
         let (message, words) = receive(client[3], 150);
         match words[0] {
             2 if words[1] >= 3 && words[2] == 12 && words[3] == 0 => {
                 probe(service[2], 2, 12, 157);
                 reply(client[3], message, [0, 0, 0, 0], 154);
-                break;
+                break words[1];
             }
             3 if words[1] == service[1] => {
                 service = recover(service, 170);
@@ -83,13 +84,32 @@ fn run_runtime() -> ! {
             }
             _ => fail(153),
         }
-    }
+    };
     let exited = completion(1, client[1], 155);
     if exited[1] != 1 || exited[2] != 0 {
         fail(156);
     }
     probe(service[2], 2, 12, 157);
     life(5, 0, 0, 0, 159);
+    if policy == SessionPolicy::FinishAfterClient {
+        life(4, 0, service[1], 0, 165);
+        let stopped = completion(0, service[1], 166);
+        if stopped[1] != 3 {
+            fail(167);
+        }
+        for word in [
+            REPORT_MAGIC,
+            4,
+            requests_completed,
+            12,
+            service[1],
+            client[1],
+            stopped[1],
+        ] {
+            native::report(word);
+        }
+        native::exit(0);
+    }
     for word in [REPORT_MAGIC, 2, 12, service[1], 0] {
         native::report(word);
     }

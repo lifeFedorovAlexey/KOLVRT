@@ -750,14 +750,28 @@ fn quantum_progress(
             definition.context.fpcr = 1 << 22;
             definition.context.fpsr = 1;
             definition.context.tpidr = EXIT_CODE + index as u64;
+            // Any IRQ may precede the actor's first mov x20,x0. Seed the
+            // invariant in the submitted context, not after assumed progress.
+            definition.context.gpr[20] = definition.context.tpidr;
         }
         let id = create(registry, p, definition);
         registry.start(id).unwrap();
         id
     });
+    let mut failure_bits = 0u64;
+    macro_rules! check {
+        ($bit:literal, $condition:expr) => {{
+            let valid = $condition;
+            if !valid {
+                failure_bits |= 1 << $bit;
+            }
+            valid
+        }};
+    }
     let first = registry.step();
-    let mut passed = first.owners_released;
-    passed &= quantum_context(&first, &ids, registry);
+    let mut passed = check!(0, first.owners_released);
+    passed &= check!(1, quantum_context(&first, &ids, registry));
+    let mut final_counters = [0_u64; config::ACTIVE_CPUS];
     let mut counters = [0_u64; config::ACTIVE_CPUS];
     let mut el0_residency = [0_u64; config::ACTIVE_CPUS];
     let mut first_el0_residency = [0_u64; config::ACTIVE_CPUS];
@@ -769,22 +783,25 @@ fn quantum_progress(
         el0_residency[owner] = task.el0_residency_ticks;
         first_el0_residency[owner] = task.el0_residency_ticks;
         el0_generation_valid &= task.process_generation == id.generation();
-        passed &= registry.state(id) == Ok(State::Admitted)
-            && registry.completion(id) == Err(Error::Transition)
-            && registry.reclaim(p, id) == Err(Error::Transition);
+        passed &= check!(
+            2,
+            registry.state(id) == Ok(State::Admitted)
+                && registry.completion(id) == Err(Error::Transition)
+                && registry.reclaim(p, id) == Err(Error::Transition)
+        );
         assert!(crate::scheduler::detached(id));
         // SAFETY: INV-USER-RETIRE: step restored native roots and all writers are
         // quiescent; the registry still retains the private space across steps.
         *counter = unsafe {
             core::ptr::read_volatile((registry.data_address(id).unwrap() + 8) as *const u64)
         };
-        passed &= *counter > 0;
+        passed &= check!(3, *counter > 0);
     }
     let mut peer_progress = [false; config::ACTIVE_CPUS];
     for _ in 0..SPIN_BUDGET * 3 {
         let result = registry.step();
-        passed &= result.owners_released;
-        passed &= quantum_context(&result, &ids, registry);
+        passed &= check!(4, result.owners_released);
+        passed &= check!(5, quantum_context(&result, &ids, registry));
         for owner in 0..config::ACTIVE_CPUS {
             let spinner = ids[owner * 2];
             let peer = ids[owner * 2 + 1];
@@ -807,15 +824,19 @@ fn quantum_progress(
         } else {
             Reason::Exited(EXIT_CODE + index as u64)
         };
-        passed &= registry.completion(id).is_ok_and(|c| c.reason == expected);
-        passed &= tag(registry, id) == EXIT_CODE + index as u64;
+        passed &= check!(
+            6,
+            registry.completion(id).is_ok_and(|c| c.reason == expected)
+        );
+        passed &= check!(7, tag(registry, id) == EXIT_CODE + index as u64);
         if index % 2 == 0 {
             // SAFETY: INV-USER-RETIRE: terminal retained space, all CPU writers
             // quiescent; this read ends before reclamation below.
             let counter = unsafe {
                 core::ptr::read_volatile((registry.data_address(id).unwrap() + 8) as *const u64)
             };
-            passed &= counter > counters[index / 2];
+            final_counters[index / 2] = counter;
+            passed &= check!(8, counter > counters[index / 2]);
         }
         registry.reclaim(p, id).unwrap();
     }
@@ -831,13 +852,27 @@ fn quantum_progress(
             .zip(first_el0_residency)
             .all(|(final_ticks, initial_ticks)| *final_ticks > initial_ticks),
     );
-    report(
-        "process_quantum_return_and_peer_progress",
-        passed
-            && peer_progress.into_iter().all(|progress| progress)
-            && registry.live() == 0
-            && p.available() == before,
-    );
+    passed &= check!(9, peer_progress.into_iter().all(|progress| progress));
+    passed &= check!(10, registry.live() == 0 && p.available() == before);
+    if !passed {
+        let pcs: [_; config::ACTIVE_CPUS] =
+            core::array::from_fn(|owner| first.tasks[ids[owner * 2].slot()].context.pc);
+        let x20: [_; config::ACTIVE_CPUS] =
+            core::array::from_fn(|owner| first.tasks[ids[owner * 2].slot()].context.gpr[20]);
+        let tpidr: [_; config::ACTIVE_CPUS] =
+            core::array::from_fn(|owner| first.tasks[ids[owner * 2].slot()].context.tpidr);
+        crate::event!(
+            "{{\"event\":\"process-quantum-reject\",\"status\":\"fail\",\"failure_bits\":{},\"first_counters\":{:?},\"final_counters\":{:?},\"first_pc\":{:?},\"first_x20\":{:?},\"first_tpidr\":{:?},\"peer_progress\":{:?}}}",
+            failure_bits,
+            counters,
+            final_counters,
+            pcs,
+            x20,
+            tpidr,
+            peer_progress
+        );
+    }
+    report("process_quantum_return_and_peer_progress", passed);
 }
 
 fn quantum_context(

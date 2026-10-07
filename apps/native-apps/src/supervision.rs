@@ -45,3 +45,19 @@ pub fn recover_service(old: [u64; 5]) -> Result<[u64; 5], u64> {
     }
     Ok(fresh)
 }
+
+/// Supervisor lifetime policy selected by its ordinary bootstrap argument.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SessionPolicy {
+    Persistent,
+    FinishAfterClient,
+}
+impl SessionPolicy {
+    pub fn decode(argument: u64) -> Result<Self, u64> {
+        match argument {
+            1 => Ok(Self::Persistent),
+            2 => Ok(Self::FinishAfterClient),
+            _ => Err(1),
+        }
+    }
+}

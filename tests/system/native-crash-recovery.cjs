@@ -10,7 +10,7 @@ const MAGIC = 0x4b4f4c5652543701n.toString();
 const WATCHDOG_MS = 30000;
 
 /** Check the actual production fault/replacement/client ledger, in order. */
-function validateRecovery(events, fault) {
+function validateRecovery(events, fault, completed = false) {
   assert.equal(fault.cpu, 1);
   assert.equal(fault.exceptionLevel, 0);
   assert.equal(fault.operation, 3);
@@ -19,7 +19,9 @@ function validateRecovery(events, fault) {
   assert(
     !events.some(
       (e) =>
-        ["panic", "fatal", "native-boot"].includes(e.event) ||
+        ["panic", "fatal"].includes(e.event) ||
+        (e.event === "native-boot" &&
+          (!completed || e.status !== "complete")) ||
         e.status === "fail",
     ),
   );
@@ -40,13 +42,17 @@ function validateRecovery(events, fault) {
     ],
   );
   const faulted = matches(
-    (e) => e.event === "native-process-terminal" && e.owner === 1,
+    (e) =>
+      e.event === "native-process-terminal" &&
+      e.owner === 1 &&
+      e.generation === 1,
   );
   assert.equal(faulted.length, 1);
   assert.equal(faulted[0].event.state, 3);
   assert.equal(faulted[0].event.generation, 1);
   const completion = matches(
-    (e) => e.event === "native-completion" && e.selector === 0,
+    (e) =>
+      e.event === "native-completion" && e.selector === 0 && e.generation === 1,
   );
   assert.equal(completion.length, 1);
   assert.equal(completion[0].event.kind, "fault");
@@ -62,13 +68,18 @@ function validateRecovery(events, fault) {
   assert.equal(clients.length, 1);
   assert.equal(clients[0].event.kind, "exit");
   assert.equal(clients[0].event.code, 0);
-  const progress = matches(
-    (e) => e.event === "native-report-progress" && e.words?.length === 6,
+  const progress = matches((e) =>
+    completed
+      ? e.event === "native-user-report" && e.words?.length === 7
+      : e.event === "native-report-progress" && e.words?.length === 6,
   );
   assert.equal(progress.length, 1);
   const words = progress[0].event.words;
   assert.equal(String(words[0]), MAGIC);
-  assert.deepEqual(words.slice(1), [2, 12, 3, 0, 1]);
+  assert.deepEqual(
+    words.slice(1),
+    completed ? [4, 3, 12, 3, 2, 3] : [2, 12, 3, 0, 1],
+  );
   assert(
     images[0].index < faulted[0].index &&
       faulted[0].index < completion[0].index,
@@ -77,6 +88,40 @@ function validateRecovery(events, fault) {
     completion[0].index < images[1].index && images[1].index < clients[0].index,
   );
   assert(clients[0].index < progress[0].index);
+  if (completed) {
+    const stopped = matches(
+      (e) =>
+        e.event === "native-completion" &&
+        e.selector === 0 &&
+        e.generation === 2,
+    );
+    assert.equal(stopped.length, 1);
+    assert.equal(stopped[0].event.kind, "terminated");
+    assert.equal(stopped[0].event.code, 0);
+    assert(
+      clients[0].index < stopped[0].index &&
+        stopped[0].index < progress[0].index,
+    );
+    const ends = matches((e) => e.event === "native-boot");
+    assert.equal(ends.length, 1);
+    const end = ends[0];
+    assert.equal(end.event.status, "complete");
+    assert.equal(end.event.root_exit, 0);
+    assert.equal(end.event.owners_released, true);
+    assert.equal(end.event.frames_restored, true);
+    assert.equal(end.event.live_processes, 0);
+    assert.equal(end.event.live_domains, 0);
+    assert(progress[0].index < end.index);
+  }
+  assert.equal(
+    matches((e) => e.event === "native-completion" && e.selector === 0).length,
+    completed ? 2 : 1,
+  );
+  assert.equal(
+    matches((e) => e.event === "native-process-terminal" && e.owner === 1)
+      .length,
+    completed ? 2 : 1,
+  );
   return {
     production_supervisor_tested: true,
     service_crash_restarted: true,
@@ -86,14 +131,18 @@ function validateRecovery(events, fault) {
     restart_initial_value: 0,
     counter_final: 12,
     client_exit: "success",
-    guest_shutdown: false,
-    resource_leaks: "NOT_MEASURED_ON_FORCED_VM_STOP",
+    guest_shutdown: completed,
+    resource_leaks: completed ? 0 : "NOT_MEASURED_ON_FORCED_VM_STOP",
     scope:
       "post-binding instruction abort before the first client ADD commit; actual production supervisor/client/service",
     limitations: [
       "External QEMU debug fault, not spontaneous hardware failure",
       "No startup-crash or post-commit replay acceptance",
-      "Persistent runtime is stopped by the host, not graceful guest shutdown",
+      ...(completed
+        ? []
+        : [
+            "Persistent runtime is stopped by the host, not graceful guest shutdown",
+          ]),
       "No performance or physical ARM evidence",
     ],
   };
@@ -307,14 +356,17 @@ async function runProfile(profile, record, emulator) {
     original.set(metadata.artifact, metadata.sha256);
     original.set(path, metadata.sha256);
   }
-  const ordinary = record.result.run,
+  const ordinary = record.run || record.result.run,
     args = [...ordinary.arguments];
   const kernel = args[args.indexOf("-kernel") + 1];
   assert(
     kernel && args.includes("-smp") && args[args.indexOf("-smp") + 1] === "2",
   );
-  assert.equal(sha(fs.readFileSync(kernel)), ordinary.kernel_sha256);
-  original.set(kernel, ordinary.kernel_sha256);
+  assert.equal(
+    sha(fs.readFileSync(kernel)),
+    ordinary.kernel_sha256 || ordinary.elf_sha256,
+  );
+  original.set(kernel, ordinary.kernel_sha256 || ordinary.elf_sha256);
   const points = ipcBreakpoints(
     fs.readFileSync(record.applications.service.artifact),
   );
@@ -395,19 +447,26 @@ async function runProfile(profile, record, emulator) {
       assert(
         !events.some(
           (e) =>
-            ["panic", "fatal", "native-boot"].includes(e.event) ||
-            e.status === "fail",
+            ["panic", "fatal"].includes(e.event) ||
+            e.status === "fail" ||
+            (e.event === "native-boot" && e.status !== "complete"),
         ),
       );
       if (
-        events.some(
-          (e) => e.event === "native-report-progress" && e.words?.length === 6,
-        )
+        events.some((e) => e.event === "native-boot" && e.status === "complete")
       ) {
-        const result = validateRecovery(events, fault);
+        const result = validateRecovery(events, fault, true);
+        while (child.exitCode === null) {
+          assert(
+            Date.now() < deadline,
+            "guest did not power off after actual reclamation",
+          );
+          await pause(20);
+        }
+        assert.equal(child.exitCode, 0);
         return {
           applications: record.applications,
-          kernel_sha256: ordinary.kernel_sha256,
+          kernel_sha256: ordinary.kernel_sha256 || ordinary.elf_sha256,
           debugger: {
             arguments: args,
             source: "QEMU GDB remote protocol",
@@ -417,7 +476,10 @@ async function runProfile(profile, record, emulator) {
           events,
         };
       }
-      assert(child.exitCode === null, "guest stopped before recovery result");
+      assert(
+        child.exitCode === null,
+        "guest stopped before recovery/reclamation result",
+      );
       assert(Date.now() < deadline, "external recovery watchdog expired");
       await pause(20);
     }

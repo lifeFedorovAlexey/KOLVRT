@@ -7,7 +7,6 @@ fn main() {
         "KOLVRT_NATIVE_SERVICE_ELF",
         "KOLVRT_NATIVE_CLIENT_ELF",
         "KOLVRT_NATIVE_ARGUMENT",
-        "KOLVRT_NATIVE_WATCHDOG_MS",
     ] {
         println!("cargo:rerun-if-env-changed={name}");
         if let Ok(value) = std::env::var(name) {

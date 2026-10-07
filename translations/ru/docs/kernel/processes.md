@@ -143,6 +143,8 @@ Phase 3.1 не добавила IPC, безопасное копирование
 
 Phase 3.7 добавляет отдельный профиль приложений с исходными ELF через существующие trusted Registry и exact-supervisor barrier. Обычные клиенты по-прежнему не имеют create authority; lifecycle_sender выдаёт только SEND к immutable permitted service edge в namespace точного живого клиента. Native application builds исключают raw fixtures и синтетический test variant Origin::El0. Полные ELF bytes поступают в существующий проверяемый loader; ограничения fixtures не определяют будущую архитектуру. См. [native applications](native-applications.md).
 
+CI cc50a5a упал на process_quantum_return_and_peer_progress в shard 0; остальные shard прошли. Quantum fixture задавал ненулевой TPIDR и нулевой x20, а затем сравнивал их после первого возврата, хотя timer IRQ может предшествовать первой инструкции actor mov x20,x0. Fixture теперь инициализирует этот проверяемый инвариант в переданном Context. Он по-прежнему требует настоящее исполнение/рост counter, точные peer exits, сохранение всех SIMD/FP/SP/TPIDR, неизменный budget восемь quanta, quiescence и reclamation. Production scheduler не меняется, first-slice progress не подделывается. При отказе process-quantum-reject записывает first/final counters, first PC/x20/TPIDR, peer progress и failure_bits: bits 0/4 owner release, 1/5 initial/subsequent context, 2 admitted lifetime/reclaim denial, 3 initial counter, 6 completion reason, 7 tag, 8 counter growth, 9 peer progress, 10 final resources. Это исправление независимо доказанного test input; оно не определяет упавший predicate старого CI без этих observations.
+
 <!-- knowledge -->
 
 ```json

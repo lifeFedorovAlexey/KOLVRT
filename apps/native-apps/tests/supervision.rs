@@ -29,3 +29,16 @@ fn fresh_binding_requires_new_identity_success_and_zero_initial_state() {
         assert!(fresh_binding(1, reply).is_err());
     }
 }
+
+#[test]
+fn session_policy_rejects_unknown_configuration() {
+    use native_apps::supervision::SessionPolicy;
+    assert_eq!(SessionPolicy::decode(1), Ok(SessionPolicy::Persistent));
+    assert_eq!(
+        SessionPolicy::decode(2),
+        Ok(SessionPolicy::FinishAfterClient)
+    );
+    for argument in [0, 3, u64::MAX] {
+        assert_eq!(SessionPolicy::decode(argument), Err(1));
+    }
+}
