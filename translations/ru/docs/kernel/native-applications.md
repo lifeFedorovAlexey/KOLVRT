@@ -1,7 +1,7 @@
 # Native ELF applications и постоянный сервис
 
 Document status: CURRENT
-Evidence scope: принятый bounded slice Phase 3.7 на implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery и штатное освобождение ресурсов; QEMU DEV/PROD. Сбой 333726b и прежние source-bound receipts сохранены.
+Evidence scope: принятый bounded slice Phase 3.7 на implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery и штатное освобождение ресурсов; QEMU DEV/PROD. Сбой 333726b и прежние source-bound receipts сохранены. Последующий readiness regression на 038d960 открыт как #133; закрытие master #37 ожидает его разбора.
 Current reference: [Принятая основа supervision](supervision.md)
 
 <a name="native-elf-applications"></a>
@@ -16,9 +16,15 @@ Finite client SEND binding использует существующий checkpo
 
 [Обновлённая review](../architecture/native-phase37-fixture-review.md) и [свежий receipt](../../../../research/results/native-phase37-43af402.json) принимают исправленный first slice. Полный CI 37571776305 на 43af402 прошёл все четыре shard, 144/144 задачи, native/host/kernel DEV-PROD/routing/ASID/evidence/foundation; dependency hygiene прошёл. Production crash/recovery/normal shutdown и restricted-workspace execution подтверждены в обоих профилях. Прежняя review 7f8dd80 сохраняет свой source scope.
 
-[Сбой 333726b](../../../../research/results/native-phase37-333726b-failure.json) сохранён: committed-crash payload operation 2 ошибочно получал readiness deadline и Submit истекал до admission. Исправлен только этот fixture input; настоящие readiness probes сохраняют /8, все реальные COMMIT/EffectUnknown/death/resource assertions остаются обязательными. Три локальных повтора DEV+PROD прошли 147 checks/profile. Не заявляется универсальное исправление всех historical readiness expiries.
+[Сбой 333726b](../../../../research/results/native-phase37-333726b-failure.json) сохранён: stage 1002, Submit=1, Expired=16, coverage 15. Этот stage использовался и для committed-crash payload 2, и для последующего readiness probe payload 1; прежние diagnostics не различают их. Поэтому утверждение, что именно payload 2 вызвал тот сбой, не доказано. Изменение 43af402 отдельно выбирает максимальный допустимый deadline для committed-crash input; readiness сохраняет /8 и все реальные COMMIT/EffectUnknown/death/resource assertions. Три локальных повтора DEV+PROD прошли 147 checks/profile, но они не доказывают причину прежнего сбоя или универсальное исправление readiness expiry.
 
 BOUNDED_IMPLEMENTED и QEMU VERIFIED относятся к объявленному scope; readiness, image trust (#38), physical ARM и performance acceptance отделены. ABI experimental, startup-crash и post-commit replay не заявляются. Ниже сохранена история прежних revisions; это не текущий CI status.
+
+## Наблюдаемый отказ regression от 2026-10-07
+
+[Issue #133](https://github.com/lifeFedorovAlexey/KOLVRT/issues/133) сохраняет отказ shard 0 в [CI 37576487522](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37576487522) на documentation-only 038d960. После committed crash, создания replacement и отклонения старых token/SEND новый readiness probe payload 1 наследует stage 1002; он получает /8 и отклоняется Submit как Expired до admission. Интервал между clocks равен 131.395008 ms при deadline 125 ms; рост EL0 residency равен 1.499088 ms. Остальные 129.895920 ms не распределены между kernel/checkpoint и host/QEMU scheduling; задержка ответа сервиса этим не измерена.
+
+Native job прошёл независимо; прежние успешные source-bound receipts и bounded acceptance сохраняются. Это новый отказ полного regression, а не доказательство отказа всех native QEMU сценариев. Закрытие master #37 ожидает разбора #133; увеличение timeout, повтор до зелёного результата и автоматическая performance allowance не являются решением.
 
 ## Классификация тестов и единственная реализация
 

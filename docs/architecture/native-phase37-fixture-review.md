@@ -24,6 +24,12 @@ Coverage remains four ordinary, ten legacy-failure, twenty-one invariant, ninety
 
 [Russian translation](../../translations/ru/docs/architecture/native-phase37-fixture-review.md)
 
+## Attribution correction on 2026-10-07
+
+The earlier statement in this historical review that stage 1002 uniquely identifies committed-crash payload 2 was too strong. The stage persists through the subsequent readiness probe payload 1 before sup_event 5; both inputs used /8 at 333726b. The retained old receipt cannot distinguish these sites, so the cause of that particular expiry remains uncertain. Original text and receipts are preserved for traceability; changing the payload 2 input alone does not prove that the cause of the 333726b failure was repaired.
+
+The new [#133](https://github.com/lifeFedorovAlexey/KOLVRT/issues/133) failure at 038d960 in [CI 37576487522](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37576487522) is unambiguously replacement readiness: payload 2 uses the maximum deadline, while payload 1 inherits stage 1002 and /8. Submit rejects expiry before admission after 131.395008 ms with an EL0 residency increase of 1.499088 ms; the remaining 129.895920 ms is unattributed. The native job passed; earlier bounded acceptance and passing source-bound observations retain their scopes. Master #37 closure awaits regression disposition. No runtime repair, timeout increase or successful retry is claimed here.
+
 <!-- knowledge -->
 
 ```json

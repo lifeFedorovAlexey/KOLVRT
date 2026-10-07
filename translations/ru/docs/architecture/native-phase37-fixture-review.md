@@ -24,6 +24,12 @@ Assembly fixture теперь выбирает максимальный допу
 
 [Английский оригинал](../../../../docs/architecture/native-phase37-fixture-review.md)
 
+## Уточнение attribution от 2026-10-07
+
+Предыдущее утверждение этого исторического review, что stage 1002 однозначно определяет committed-crash payload 2, было слишком сильным. Stage сохраняется и при последующем readiness probe payload 1 до sup_event 5; на 333726b оба входа имели /8. Сохранённый старый receipt не различает эти места, поэтому причина того конкретного expiry остаётся неопределённой. Исходный текст и receipts сохранены для прослеживаемости; изменение входа payload 2 само по себе не доказывает устранение причины сбоя 333726b.
+
+Новый отказ [#133](https://github.com/lifeFedorovAlexey/KOLVRT/issues/133) на 038d960 в [CI 37576487522](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37576487522) уже однозначно относится к readiness replacement: payload 2 использует максимальный deadline, тогда как payload 1 наследует stage 1002 и /8. Submit отвергает expiry до admission после 131.395008 ms при росте EL0 residency 1.499088 ms; оставшиеся 129.895920 ms пока не атрибутированы. Native job прошёл; прежняя bounded acceptance и успешные source-bound наблюдения сохраняют свои области. Закрытие master #37 ожидает разбора regression. Исправление runtime, увеличение timeout или успешный повтор здесь не заявляются.
+
 <!-- knowledge -->
 
 ```json

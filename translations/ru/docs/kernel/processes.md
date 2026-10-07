@@ -46,7 +46,7 @@ stateDiagram-v2
 
 ## Транзакция создания
 
-До резервирования проверяются источник запроса загрузки, состояние вызывающего CPU и IRQ, возможность безопасно начать допуск, диапазон слотов владельца, границы доверенного образа, точка входа и стек, регистр состояния AArch64 EL0 PSTATE и ненулевой предел временных срезов, если он задан. Пять точек внедрения отказа — `Slot`, `Frames`, `Space`, `Context` и `Commit` — проверяются для обоих целевых CPU.
+До резервирования проверяются источник запроса загрузки, состояние вызывающего CPU и IRQ, возможность безопасно начать допуск, диапазон слотов владельца, границы доверенного образа, точка входа и стек, регистр состояния AArch64 EL0 PSTATE и ненулевой предел временных срезов, если он задан. Исторические доказательства Phase 3.1 внедряли отказы в `Slot`, `Frames`, `Space`, `Context` и `Commit` для обоих целевых CPU. Текущие тесты передают настоящий нулевой memory budget единственному production-методу create; они проверяют отказ allocation на этапе Frames и сохранность ресурсов без production injection hooks.
 
 | Шаг       | Ресурс во владении                                                            | Откат                                                                              |
 | --------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -56,7 +56,7 @@ stateDiagram-v2
 | `Context` | Корректный исходный архитектурный кадр                                        | Отбросить неопубликованный кадр и освободить предыдущие ресурсы                    |
 | `Commit`  | Подготовленный объект во владении реестра                                     | Отказ происходит до добавления и публикации объекта; освободить предыдущие ресурсы |
 
-Ни один шаг создания не публикует ссылку на исполняемую задачу. Операция `start` переводит `Prepared` в `Admitted`; операция `dispatch` публикует с порядком release только полностью подготовленные дескрипторы. Вместимость явно ограничена четырьмя слотами планировщика на CPU и не зависит от числа тестовых процессов. При исчерпании ресурсов создание завершается без выделения памяти и перезаписи данных. Для образа, стека и таблиц страниц используется один ограниченный непрерывный участок; создание не требует последующего расширения кучи, которое могло бы завершиться отказом. Проверяющий код после каждой внедрённой ошибки сверяет доступную физическую память, занятые слоты и устаревшие идентификаторы, а затем заполняет всю таблицу, чтобы обнаружить удержанные участки памяти.
+Ни один шаг создания не публикует ссылку на исполняемую задачу. Операция `start` переводит `Prepared` в `Admitted`; операция `dispatch` публикует с порядком release только полностью подготовленные дескрипторы. Вместимость явно ограничена четырьмя слотами планировщика на CPU и не зависит от числа тестовых процессов. При исчерпании ресурсов создание завершается без выделения памяти и перезаписи данных. Для образа, стека и таблиц страниц используется один ограниченный непрерывный участок; создание не требует последующего расширения кучи, которое могло бы завершиться отказом. Текущий проверяющий код после настоящего отказа создания с нулевым бюджетом сверяет доступную физическую память, занятые слоты и устаревшие идентификаторы, а затем заполняет всю таблицу, чтобы обнаружить удержанные участки памяти. Эквивалентность историческому покрытию внедрённых отказов по этапам не заявляется.
 
 <a name="kolvrt-process-reclamation"></a>
 
@@ -103,7 +103,7 @@ flowchart TD
 
 ## Обновление ASID lifecycle (#18)
 
-Текущий scheduler использует process ASID leases с проверенной аппаратной шириной, fixed affinity и монотонным software epoch. Native root использует ASID zero. Обычный tagged-root switch не выполняет TLBI; CPU-владелец завершает `TLBI ASIDE1` до terminal retirement и повторной выдачи tag. Roots и frames удерживаются до scheduler detachment и completion. Для неподдерживаемой ширины остаётся full-flush mode. Матрица DEV/PROD проверяет exhaustion с четырьмя ASID на CPU, новую physical backing для того же user VA, same-VA isolation на обоих CPU и frame reclamation. Негативный `--asid-reuse-control` убирает retirement invalidation и обязан провалить `asid_reuse_requires_invalidation`; Без invalidation QEMU TCG может наблюдать stale translations. Обязательный invalidation witness проверяется до зависимого same-VA observation, поэтому точный ожидаемый отказ сохраняется при любом состоянии TLB. Восемь counterbalanced QEMU-пар сохранены в [issue18-asid-measurements.json](../../../../research/results/issue18-asid-measurements.json); это TCG timer observations, не hardware throughput. См. [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
+Текущий scheduler использует process ASID leases с проверенной аппаратной шириной, fixed affinity и монотонным software epoch. Native root использует ASID zero. Обычный tagged-root switch не выполняет TLBI; CPU-владелец завершает `TLBI ASIDE1` до terminal retirement и повторной выдачи tag. Roots и frames удерживаются до scheduler detachment и completion. Для неподдерживаемой ширины остаётся full-flush mode. Матрица DEV/PROD проверяет exhaustion с четырьмя ASID на CPU, новую physical backing для того же user VA, same-VA isolation на обоих CPU и frame reclamation. Исторический `--asid-reuse-control` пропускал retirement invalidation. Теперь этот совместимый флаг выбирает инварианты ASID reuse: настоящую invalidation, same-VA isolation и exhaustion пула. Он больше не мутирует production code и не доказывает обнаружение пропущенной invalidation. Восемь counterbalanced QEMU-пар сохранены в [issue18-asid-measurements.json](../../../../research/results/issue18-asid-measurements.json); это TCG timer observations, не hardware throughput. См. [ADR-0021](../architecture-decisions/0021-asid-lifecycle.md).
 
 <a name="kolvrt-process-limits"></a>
 
@@ -119,7 +119,7 @@ Phase 3.1 не добавила IPC, безопасное копирование
 
 ## Состояние bounded IPC Phase 3.5
 
-[Native IPC](ipc.md) добавляет экспериментальный транспорт EL0-запросов с копированием, bounded endpoints, scoped SEND и nondelegable receiver authority, блокирующее cross-CPU ожидание, точный terminal arbitration и сохранение результатов. Он расширяет исполнение процессов, но не добавляет создание процессов из EL0, migration, supervisor policy или допуск постоянных services. Приемка Issue #26 ещё продолжается; receipts жизненного цикла Phase 3.1/3.2 не подтверждают изменённый текущий код.
+[Native IPC](ipc.md) добавляет экспериментальный транспорт EL0-запросов с копированием, bounded endpoints, scoped SEND и nondelegable receiver authority, блокирующее cross-CPU ожидание, точный terminal arbitration и сохранение результатов. Он расширяет исполнение процессов, но не добавляет создание процессов из EL0, migration, supervisor policy или допуск постоянных services. Ограниченная приёмка Issue #26 завершена. [Текущая native integration](native-applications.md) фиксирует последующую source-bound regression и выбранный production recovery/shutdown; receipts жизненного цикла Phase 3.1/3.2 остаются историческими и не подтверждают изменённый текущий код.
 
 [Английский оригинал](../../../../docs/kernel/processes.md)
 
@@ -187,7 +187,7 @@ CI cc50a5a упал на process_quantum_return_and_peer_progress в shard 0; о
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "Phase 3.7 removes source-copy mutation builds and application implementation copies. Tests use the actual production code; replacement fault/restart/shutdown and related acceptance scenarios remain incomplete. Prior receipts retain their historical scope; partial passes are not full current-source acceptance.",
+            "reason": "This feature retains historical receipts from before the Phase 3.7 source changes; its verification remains STALE pending a feature-scoped current-source review. The separately accepted bounded native-application fault/restart/shutdown evidence is recorded in docs/kernel/native-applications.md and research/results/native-phase37-43af402.json; it does not automatically renew this feature verification.",
             "scope": "The exact source digests, DEV/PROD and QEMU TCG configuration recorded by this receipt; physical ARM64 excluded.",
             "receipt": "research/results/kernel-phase31.json",
             "receipt_sha256": "6150c40258bf1eb5aa2ad7420fb7a958eee4af5ed29afcc7a3d53c341c73b542"
