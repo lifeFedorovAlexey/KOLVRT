@@ -562,7 +562,14 @@ async function main() {
     ) + "\n",
   );
 }
-module.exports = { validateRecovery, ipcBreakpoints, FaultBoundary };
+module.exports = {
+  validateRecovery,
+  ipcBreakpoints,
+  FaultBoundary,
+  Remote,
+  port,
+  connect,
+};
 if (require.main === module)
   main().catch((error) => {
     console.error(error);

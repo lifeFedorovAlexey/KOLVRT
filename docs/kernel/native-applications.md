@@ -18,13 +18,19 @@ The [renewed review](../architecture/native-phase37-fixture-review.md) and [fres
 
 The [333726b failure](../../research/results/native-phase37-333726b-failure.json) is retained: stage 1002, Submit=1, Expired=16, coverage 15. That stage covered both committed-crash payload 2 and the subsequent readiness probe payload 1; the old diagnostics do not distinguish them. The earlier attribution of that failure specifically to payload 2 is therefore unproven. Change 43af402 separately selects the maximum valid deadline for the committed-crash input; readiness retains /8 and all real COMMIT/EffectUnknown/death/resource assertions. Three local DEV+PROD repeats passed 147 checks/profile, but do not prove the earlier failure cause or universal repair of readiness expiry.
 
-BOUNDED_IMPLEMENTED and QEMU VERIFIED apply to the declared scope; readiness, image trust (#38), physical ARM and performance acceptance remain separate. ABI is experimental; startup-crash and post-commit replay are not claimed. Earlier revision history below does not describe current CI status.
+BOUNDED_IMPLEMENTED retains the accepted implementation scope. Current-source QEMU verification is now STALE: the #133 fixture/harness changes require new exact-source acceptance. The earlier VERIFIED receipt retains its source scope; readiness, image trust (#38), physical ARM and performance acceptance remain separate. ABI is experimental; startup-crash and post-commit replay are not claimed. Earlier revision history below does not describe current CI status.
 
 ## Observed regression failure on 2026-10-07
 
 [Issue #133](https://github.com/lifeFedorovAlexey/KOLVRT/issues/133) retains the shard 0 failure in [CI 37576487522](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37576487522) at documentation-only 038d960. After the committed crash, replacement creation and stale token/SEND rejection, the new readiness probe payload 1 inherits stage 1002; it receives /8 and Submit rejects it as Expired before admission. The clock interval is 131.395008 ms against a 125 ms deadline; EL0 residency increases by 1.499088 ms. The remaining 129.895920 ms is not attributed between kernel/checkpoint and host/QEMU scheduling; no service response latency is measured.
 
 The native job passed independently; earlier passing source-bound receipts and bounded acceptance remain retained. This is a new full-regression failure, not evidence that all native QEMU scenarios fail. Master #37 closure awaits disposition of #133; increasing the timeout, retrying until green or inventing a performance allowance is not a resolution.
+
+## Issue #133 diagnostic source change
+
+The [supervision diagnostics](supervision.md) now distinguish stages 1030/1040/1050/1060/1005 and publish payload_operation/probe_timing_valid. UNIT boundary checks call the single production Endpoint::submit. The external Windows harness suspended its owned QEMU CPU0 host thread for 500 ms and reproduced readiness rejection at stage 1030, coverage 15, Expired before admission, preserving /8 and the image hash. This is diagnostic evidence of possible host starvation, not attribution of the earlier CI failure or a passing regression.
+
+Production behavior, timeout and retries remain unchanged. New fixture/harness sources make the earlier QEMU receipt stale for the current tree; it remains retained with acceptance history. Issue #133 and master #37 closure still require justified disposition and fresh exact-source checks.
 
 ## Test classification and single implementation
 
@@ -225,6 +231,8 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
           "tests/native-apps/src/lifecycle-client.rs",
           "tests/native-apps/src/lifecycle-peer.rs",
           "tests/system/native-crash-recovery.cjs",
+          "tests/system/supervision-host-stall.cjs",
+          "tests/system/hold-qemu-thread.ps1",
           "tests/system/native-crash-recovery.test.cjs"
         ],
         "acceptance": [
@@ -239,12 +247,12 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Maintain exact-source acceptance when runtime/test inputs change. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness require their separate scopes; the bounded first native application slice is accepted.",
+        "next_gate": "Resolve Issue #133 readiness regression and renew exact-source acceptance after diagnostic/test changes before master #37 closure. Retain prior bounded implementation acceptance. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness have separate scopes.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Complete new-source 144-task CI, native DEV/PROD persistent/crash/recovery/shutdown and restricted-workspace execution independently checked after committed-crash fixture input correction; scoped source/code/architecture/EN-RU renewal retained.",
+            "state": "STALE",
+            "reason": "Issue #133 changes fixture diagnostics, deadline-boundary tests and the external host-stall harness after the retained 43af402 source. New exact-source verification and regression disposition are pending; historical passing native evidence is preserved and is not a blanket current-source failure claim.",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45"
