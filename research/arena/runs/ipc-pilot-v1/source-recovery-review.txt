@@ -1,0 +1,18 @@
+Independent source recovery review
+
+Successful pilot1791411850163-36492 source inventory matches Git commit
+2eac74d59eb82e4a1f17122716eb4647f138cb4a: all159 recorded source files match after
+its declared CRLF-to-LF normalization; all5 frozen definitions also match
+raw Git blob bytes. Missing paths/digest mismatches:0.
+
+Comparison used git show COMMIT:path bytes, not the working tree. Per-file raw and
+normalized blob hashes are retained in source-recovery.json. This establishes a
+recoverable source snapshot for the observed dirty run; it does not change its
+recorded execution commit1f6980d or worktree_dirty=true, nor claim a clean rebuild
+or rerun at the recovered commit.
+
+Earlier failed actor campaign1791411495355-39236 has different actor source and is
+explicitly excluded from this recovery assertion. Its original raw metadata and
+ELF remain archived. Pilot96/96 functional results remain INELIGIBLE for qualifying
+Arena admission. Descriptive independent analysis is retained byte-identically
+under analysis/ with hashes in index.json.

@@ -1,0 +1,5 @@
+   Compiling xtask v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\xtask)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.15s
+     Running `target\debug\xtask.exe arena run ipc-smoke 0`
+xtask: Cargo configuration differs from IPC declared raw-byte digest
+error: process didn't exit successfully: `target\debug\xtask.exe arena run ipc-smoke 0` (exit code: 1)
