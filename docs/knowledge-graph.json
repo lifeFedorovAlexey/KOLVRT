@@ -394,6 +394,16 @@
     },
     {
       "from": "kolvrt.apps.native-elf",
+      "to": "crates/xtask/src/workspace.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
+      "to": "crates/xtask/tests/cli.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
       "to": "kolvrt.ipc.transport",
       "type": "depends_on"
     },
@@ -2648,7 +2658,7 @@
     "Cargo.lock": "a6544e18c79fd120c9d452d1dafc1a5ee42d649934e46df9e59de3c7370d9a7c",
     "Cargo.toml": "aec6de3fa55776f811d26ee1c095b0ea26ba0952b1de6592d1ebc08fcafd6db6",
     "apps/native-apps/Cargo.toml": "ecfa79cf6826f62ffe2f67236aefac1cb497f7c2f6d150d0def9713145a9534c",
-    "apps/native-apps/build.rs": "6f3491681856d3ca1c2e05f82168cee63a90a3be26433c48554b51caad14998f",
+    "apps/native-apps/build.rs": "f3100883829de10842c65edcb5ea332261755e00b88f48766fd1310a02e89e6f",
     "apps/native-apps/linker.ld": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a",
     "apps/native-apps/src/client.rs": "52278939c70cc466e8046c7eaa0f5c5980105bcaab3ab239b71cd4345a168bb7",
     "apps/native-apps/src/counter-client.rs": "9646416fb9270a53fc6dd85293495f686078b520471628688d8395f938195d37",
@@ -2703,7 +2713,7 @@
     "crates/kernel/src/ipc_revoke_workload.S": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb",
     "crates/kernel/src/ipc_workload.S": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465",
     "crates/kernel/src/ipc_workload.rs": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21",
-    "crates/kernel/src/main.rs": "cf8fc5fe7cee5f5d72d176db877abdf128b379962beb3f58736fc33e9f61c32e",
+    "crates/kernel/src/main.rs": "e982449bf1b148b521a011abe566cc9fb17022aa715cbdca33184c9679f09983",
     "crates/kernel/src/memory/mod.rs": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0",
     "crates/kernel/src/native_boot.rs": "05e2e2ae4241d73afecaf281d58fdfed3db2f1f9e8f5bbcae1deb2f73642b15f",
     "crates/kernel/src/platform/config.rs": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196",
@@ -2755,12 +2765,14 @@
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
-    "crates/xtask/src/main.rs": "f9c1be69e668ca5a4cb0b64d33ca5634c63cacc22aebbe021bedaaa29a4fb59f",
+    "crates/xtask/src/main.rs": "c1be15b227ba59f3213f05174e326bdf2570c3341d787362a59127cffac1cfec",
     "crates/xtask/src/matrix.rs": "cc5b59c9d2f7e8bef4cbbdaf35ec9f64f3993c5c6b07427f771b6cce1934a19f",
-    "crates/xtask/src/native_apps.rs": "1c8c500ea2eec78ae2b1c1192e2073bfbcb3758da665401bcd40344d0ec1aa71",
+    "crates/xtask/src/native_apps.rs": "169a2248251de7657d72552d88277319d24bb5a122d5a56ab41b4148d20c9d65",
     "crates/xtask/src/output.rs": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
     "crates/xtask/src/routing_demo.rs": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506",
     "crates/xtask/src/timing.rs": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598",
+    "crates/xtask/src/workspace.rs": "567279b7e34c6360e80a741dcb076ed1c509f7da25660aeafca1545108555196",
+    "crates/xtask/tests/cli.rs": "809f2f3839e02ec12753829dba8abd126fc32fb2ab766d29dd83fa4fdfc16d05",
     "deny.toml": "5f372ad044fd6f49ee468b544df361b13fc4110d21cb2a4b574fca69d7ca39f3",
     "dependencies/policy.json": "557c5214d437d2ca01516cc0d6cee6ddc3827901080c89a01803838d1c66664c",
     "docs/architecture-decisions/0001-native-authority.md": "624b89615ae6cdc76ab7322eca5c24783ad28d48a07b22aca402547fd4226500",
@@ -2803,16 +2815,16 @@
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
     "docs/architecture/supervision-phase36-acceptance-review.md": "fe65eabe0baf5dc6997c5a86307d12f7aad4e51643f607a62948adad96ac9499",
-    "docs/ci/performance.md": "3c3044be76033c410bcbc8ffd4fe57adce47c10b682cb59f39c756e51a178040",
+    "docs/ci/performance.md": "f24e3be40e6dfd173d29c5a44319ec208741cf0181abf36d2c5c716db1e375bd",
     "docs/kernel/capabilities.md": "3815624f19664d1afa6d97d6794c72d87d1b1582eba6583d00bed56527716eb3",
     "docs/kernel/domains.md": "3044e86421bc28edb40f8a65a09579264806a9f133100c06d972885c763f7a8f",
     "docs/kernel/handles.md": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "0eff03811c018dd28691f97ef8b7d22481cb2a1899f8d9511e7488877f06d918",
-    "docs/kernel/native-applications.md": "e04f6251ac574aeb1faa4e906ce2dc73718248a0e01dde17373ab0641c8cd8f2",
+    "docs/kernel/native-applications.md": "91756f9bf54b0be57fc732204af93388999fb4e48901dc2f6d946d0ce7dbbc53",
     "docs/kernel/processes.md": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
     "docs/kernel/scheduler.md": "a5848937b2dd27ceb20601bd71eb024b3f452db228d36046d4241464e15d6326",
-    "docs/kernel/supervision.md": "ab428681060a434bc9574edd06b486d3aef4585f71c38a67fd38523849d3a89a",
+    "docs/kernel/supervision.md": "7ef31876b5e14e3a7bc99d85a01da33a96c41f53bd9ee52f9f6f604c8ecb799c",
     "docs/kernel/user-copy.md": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
     "docs/knowledge-enrollment.json": "71f7ecdadafd8031a03f66586ce4fe9626138134457b175669deec9231193af5",
@@ -2887,7 +2899,7 @@
     "scripts/dependency-audit.cjs": "fbb7022e05385dea4bbbea0fb3fe32762d7b2faf551d0a089f09ca0803ddecee",
     "scripts/dependency-base.cjs": "46e2343c13a4d6e1f9bcc3a6b54a2d8e1fdeb6508cdd00550de96b3377071f8f",
     "scripts/host-survey.cjs": "9cdfc0a86d6378adab04554ff1ebfda570afe35c6b1926d3306449dc5ab8e8ab",
-    "scripts/native-closure-proof.cjs": "413ee483c20191e1bb2015dfc4f0831a01f03c8b67d29c1b2a41b90a12a6e198",
+    "scripts/native-closure-proof.cjs": "1ef1bb1ad06f7688ce0f3d7ee806a784977fda67c70cf1ebc26d0f20ed4dd75f",
     "scripts/run-arena.ps1": "2dd8af714ba6affb467d36f7d377a6f96dd648f950c9921fa8b1717c8d23b996",
     "scripts/run-timed.ps1": "533fa2fbf8b3a69794ace806175597e1475226e745f3a3730183da37d428b4e7",
     "scripts/setup-qemu.ps1": "b77e6ebeeb391cf931340193927e99b8f9e51b46ed30e86ef5e0d4b2defe4bae",
@@ -2900,14 +2912,14 @@
     "tests/fixtures/native-production-crash-shutdown-observations.json": "d7e2cf2836fd018dc4085e8efc6ad034c4b2d1dec22f0acfb13ee0ab0313988d",
     "tests/fixtures/native-production-session-observations.json": "0a5e314659bae6898c92fc2f3b7c82f705f828509be8215b053f7533e17aa313",
     "tests/native-apps/Cargo.toml": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad",
-    "tests/native-apps/build.rs": "760e97976b5e52c9af53ef8f49f886da5df904bd4cf1a1271c498f9651355276",
+    "tests/native-apps/build.rs": "bdc015f0fd2a44f8ac4d4e9330c96e72ce5c66a664d5b5a5f7df1bb240f54815",
     "tests/native-apps/src/abi-client.rs": "20935d704d12997c1351f2185dea1b77fb6c5a80bdcd7b22e6e31724b0fc9e0b",
     "tests/native-apps/src/abi_steps.rs": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7",
     "tests/native-apps/src/lifecycle-client.rs": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677",
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
-    "tests/system/native-crash-recovery.cjs": "dcd85fc717dc28c89a2973e872bd3a9a40c67ba8ac5abbdd9ad741b69e6e6427",
-    "tests/system/native-crash-recovery.test.cjs": "a017be1c0911cb65e69483b3552db239c1ca64f961cd307b7b4a626101a768bb",
-    "translations/manifest.json": "a17f4d0e661f9435814b0f8ec69e2f7de5d518636370fdd80d7c423ca8089311",
+    "tests/system/native-crash-recovery.cjs": "53a09a2d6ce23c0133de51022bef3153c1beb856fcc3608c1ecb88f9e7cf71a8",
+    "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
+    "translations/manifest.json": "09dc1a9e1b920d6a20ac75fb3767e5459167b64a93134caedb11956661f9bb08",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2948,16 +2960,16 @@
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
     "translations/ru/docs/architecture/supervision-phase36-acceptance-review.md": "7fa1020a11fd9d0cb009350486e30ca219f5f1333615abc95281f996fc4a6195",
-    "translations/ru/docs/ci/performance.md": "62e2ab53fe726fa61cdce83710a64df442859eeb199e95d18c1e90050cd13bb1",
+    "translations/ru/docs/ci/performance.md": "bc8b9153beb2443d84be64c8946a7cd557f836552c2fa2f1e8550170d08bcdd8",
     "translations/ru/docs/kernel/capabilities.md": "e596c9925209565424a653fc2a61e04e3b8381e6b18a216998b13f4479768a8b",
     "translations/ru/docs/kernel/domains.md": "c2f56eef197e1a656899e2729585ac917c990a540c1e1b430a6dc3310b427448",
     "translations/ru/docs/kernel/handles.md": "aa1eed6078d4b58efd17cf2f43b79e7456ec3a7e51be5d474e4aeba22c1b7e11",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "38d3125b798f1855e5c2ac82af76ac8cf8e1a839858f79aba68cb6c9761cd018",
-    "translations/ru/docs/kernel/native-applications.md": "b7c63dc0b8e546b3d5397b679fa41bbd39937804d45d7d84429333f198e7bbfb",
+    "translations/ru/docs/kernel/native-applications.md": "5b29edfb0956eb259ac0216572c537984cb10c75295556d86bff5296a1cf6c12",
     "translations/ru/docs/kernel/processes.md": "f3e4b7140ddf31dff5dbf277ed1154393e186c67b6012d9d92ebf00cafcaacd0",
     "translations/ru/docs/kernel/scheduler.md": "e25f27bfdc10f7b829dbb17b04da0a9899f3a65a595df8d29f5969c49a982ed4",
-    "translations/ru/docs/kernel/supervision.md": "0bcf63e371575f2d1508165a2fce22930a376cbfada180729fb06c97b9c0ae6b",
+    "translations/ru/docs/kernel/supervision.md": "48a38e135a0301bcfef40b1c66115a52697d434a9d1d7dfcba6b86a9a3c4ed24",
     "translations/ru/docs/kernel/user-copy.md": "c34a2d6fc2ad1dbfcef6ac2ff555f96219f543bfa9f58b9ebd1bf1c39fbfcf26",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -5303,7 +5315,7 @@
       "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 17697,
+      "estimated_bytes": 17716,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "id": "doc.kolvrt.ci.performance",
       "kind": "subsystem-contract",
@@ -5319,13 +5331,13 @@
         "en": {
           "end": 150,
           "path": "docs/ci/performance.md",
-          "sha256": "3c3044be76033c410bcbc8ffd4fe57adce47c10b682cb59f39c756e51a178040",
+          "sha256": "f24e3be40e6dfd173d29c5a44319ec208741cf0181abf36d2c5c716db1e375bd",
           "start": 1
         },
         "ru": {
           "end": 150,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "62e2ab53fe726fa61cdce83710a64df442859eeb199e95d18c1e90050cd13bb1",
+          "sha256": "bc8b9153beb2443d84be64c8946a7cd557f836552c2fa2f1e8550170d08bcdd8",
           "start": 1
         }
       },
@@ -5719,7 +5731,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 27620,
+      "estimated_bytes": 29414,
       "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5733,15 +5745,15 @@
       },
       "locations": {
         "en": {
-          "end": 239,
+          "end": 247,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "e04f6251ac574aeb1faa4e906ce2dc73718248a0e01dde17373ab0641c8cd8f2",
+          "sha256": "91756f9bf54b0be57fc732204af93388999fb4e48901dc2f6d946d0ce7dbbc53",
           "start": 1
         },
         "ru": {
-          "end": 238,
+          "end": 246,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "b7c63dc0b8e546b3d5397b679fa41bbd39937804d45d7d84429333f198e7bbfb",
+          "sha256": "5b29edfb0956eb259ac0216572c537984cb10c75295556d86bff5296a1cf6c12",
           "start": 1
         }
       },
@@ -5821,7 +5833,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 22674,
+      "estimated_bytes": 22677,
       "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. Current-source acceptance remains incomplete; readiness and performance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -5837,13 +5849,13 @@
         "en": {
           "end": 175,
           "path": "docs/kernel/supervision.md",
-          "sha256": "ab428681060a434bc9574edd06b486d3aef4585f71c38a67fd38523849d3a89a",
+          "sha256": "7ef31876b5e14e3a7bc99d85a01da33a96c41f53bd9ee52f9f6f604c8ecb799c",
           "start": 1
         },
         "ru": {
           "end": 177,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "0bcf63e371575f2d1508165a2fce22930a376cbfada180729fb06c97b9c0ae6b",
+          "sha256": "48a38e135a0301bcfef40b1c66115a52697d434a9d1d7dfcba6b86a9a3c4ed24",
           "start": 1
         }
       },
@@ -6262,6 +6274,8 @@
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/native_apps.rs",
+          "crates/xtask/src/workspace.rs",
+          "crates/xtask/tests/cli.rs",
           "package.json",
           "scripts/ci-gate.cjs",
           "scripts/ci-workload.ps1",
@@ -6315,13 +6329,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "e04f6251ac574aeb1faa4e906ce2dc73718248a0e01dde17373ab0641c8cd8f2",
+          "sha256": "91756f9bf54b0be57fc732204af93388999fb4e48901dc2f6d946d0ce7dbbc53",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "b7c63dc0b8e546b3d5397b679fa41bbd39937804d45d7d84429333f198e7bbfb",
+          "sha256": "5b29edfb0956eb259ac0216572c537984cb10c75295556d86bff5296a1cf6c12",
           "start": 7
         }
       },
@@ -6864,7 +6878,7 @@
       "anchor": "ci-performance",
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
-      "estimated_bytes": 521,
+      "estimated_bytes": 567,
       "evidence_scope": "experimental implementation for issue #109; a three-run historical CI wall baseline and local checks are distinct from hosted acceleration acceptance.",
       "feature": {
         "acceptance": [
@@ -6933,13 +6947,13 @@
         "en": {
           "end": 14,
           "path": "docs/ci/performance.md",
-          "sha256": "3c3044be76033c410bcbc8ffd4fe57adce47c10b682cb59f39c756e51a178040",
+          "sha256": "f24e3be40e6dfd173d29c5a44319ec208741cf0181abf36d2c5c716db1e375bd",
           "start": 9
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/ci/performance.md",
-          "sha256": "62e2ab53fe726fa61cdce83710a64df442859eeb199e95d18c1e90050cd13bb1",
+          "sha256": "bc8b9153beb2443d84be64c8946a7cd557f836552c2fa2f1e8550170d08bcdd8",
           "start": 9
         }
       },
@@ -10455,13 +10469,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "ab428681060a434bc9574edd06b486d3aef4585f71c38a67fd38523849d3a89a",
+          "sha256": "7ef31876b5e14e3a7bc99d85a01da33a96c41f53bd9ee52f9f6f604c8ecb799c",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "0bcf63e371575f2d1508165a2fce22930a376cbfada180729fb06c97b9c0ae6b",
+          "sha256": "48a38e135a0301bcfef40b1c66115a52697d434a9d1d7dfcba6b86a9a3c4ed24",
           "start": 13
         }
       },

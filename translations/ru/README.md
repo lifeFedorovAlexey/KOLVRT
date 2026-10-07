@@ -1,6 +1,6 @@
 # KOLVRT
 
-Checkpoint без workload deadline теперь имеет независимый bound публикации completion; timeout останавливает kernel с удержанием ресурсов. Performance и lifecycle acceptance требуют отдельной проверки текущих исходников.
+Возврат checkpoint требует acquired completion/root/owner/copy quiescence без произвольного publication cutoff. Published CPU failure удерживает ресурсы; внешние watchdogs диагностируют silent stalls. Performance и lifecycle acceptance имеют отдельные scopes.
 
 ## Kernel Outside Legacy, Versioned Routing & Translation
 
@@ -31,7 +31,7 @@ Bounded IPC Phase 3.5 реализован и готов для объявлен
 
 Ранний код не определяет архитектуру следующих этапов. Перед расширением решение выводится из действующих инвариантов и принятых решений; мешающий им код перерабатывается или удаляется.
 
-[Надзор EL0](docs/kernel/supervision.md) принят для bounded functional foundation после #126 с [повторной Codex architecture/code и EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). Current-source verification покрывает 142 задачи / 138 controls. Performance-вопрос +1.57%/+6.64% и readiness отделены; отсутствие регрессии и production readiness не заявляются. #28 — persistent ELF integration, #38 — production bootstrap trust.
+[Надзор EL0](docs/kernel/supervision.md) принят для bounded functional foundation после #126 с [повторной Codex architecture/code и EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). Этот исторический post-#126 source содержал 142 задачи / 138 controls. Текущий Phase 3.7 plan содержит 144 задачи и 140 control slots, классифицированных по настоящему coverage. Performance-вопрос +1.57%/+6.64% и readiness отделены; отсутствие регрессии и production readiness не заявляются. #28 — persistent ELF integration, #38 — production bootstrap trust.
 
 ## Архитектура
 
@@ -79,7 +79,7 @@ cargo xtask debug
 cargo run --locked -p repository-checks -- cost-l list --json
 ```
 
-Программа проверки ядра требует **125 тестов в каждом профиле DEV/PROD**, обе обычные загрузки и **138 отрицательных контроля**. Контроли намеренно нарушают защиту и должны завершаться ожидаемым отказом. Пропущенные события, неожиданные паники, ошибки эмулятора и тайм-ауты завершают проверку ошибкой.
+Текущий kernel runner требует **147 checks в каждом профиле DEV/PROD** и полный **inventory из 144 задач**: четыре ordinary tasks, десять legacy-failure checks, двадцать один invariant, девяносто три negative-input checks и шестнадцать mixed input/invariant checks. Эти 140 control slots имеют разные требования evidence; positive invariants не заявляют omitted-implementation detection. Пропущенные события, посторонние panics, ошибки эмулятора и watchdog expiry завершают runner ошибкой.
 
 Сохранённый [прогон проверки выравнивания ELF](../../research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) фиксирует **97 тестов на профиль DEV/PROD и 82 отрицательных контроля** для конкретных хешей исходников. Он не подтверждает более поздние версии или работу на физическом оборудовании. В `target/kernel/` сохраняются ELF-образы, хеши, события UART, настройки QEMU, размеры сборок, перечень участков unsafe и выборки измерений. Подробнее — в [руководстве по проверкам и GDB](docs/kernel/testing.md).
 

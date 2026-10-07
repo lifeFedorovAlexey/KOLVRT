@@ -88,6 +88,12 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
 
 Быстрый COMPONENT layer дополнительно импортирует настоящий общий kernel_core::supervision::validate_grants, вызываемый Kernel Scope::install: empty images, zero/excess instance credits и self/missing SEND bindings отвергаются. Единственный production тип Grant заменяет прежнее kernel-local определение и inline validation; модель/копия для этих тестов не создаётся. Отдельные настоящие ELF, lifecycle, domain/quota и application protocol методы сохраняют собственные input tests.
 
+Прежнее execution proof удаления зависимостей было недействительным: готовый xtask возвращал cwd в исходный compiled-in репозиторий, выходя из restricted workspace. Текущий host runner разрешает workspace вызывающего процесса; process test проверяет этот выбор. Proof теперь требует DEV/PROD runtime, lifecycle и обычные completed-session receipts внутри restricted workspace, проверяет наличие выбранных ELF именно там и отвергает unrelated source entries; настоящие receipts включаются в proof. Оригинальные implementation directories подключаются references, а не копируются. Foundation kernel-tests и native-apps являются взаимоисключающими boot-driver configurations, отвергаемыми при компиляции; guest linker flags требуют bare-metal target_os=none, bounded QEMU observation изолирует stdin.
+
+Guest linker scripts применяются только к AArch64 target_os=none, сохраняя обычные host component tests на ARM64 hosts. Native application boot и kernel foundation-test boot являются разными configurations; включение обеих даёт compile-time configuration error, а не второй singleton bootstrap или молчаливый пропуск запрошенного уровня.
+
+Внешний debugger теперь идентифицирует readiness replies по точной паре receiver/service-token, а не числу pre-SVC breakpoint stops. Stop перед той же operation может повторяться; следующий другой COMMIT token устанавливает выбранную post-readiness delivery. HOST tests проверяют, что duplicate stops сохраняют один reply, и отвергают старый commit token либо поздний multi-reply boundary. Debug hit traces сохраняются при успехе/отказе. Наблюдённый обычный W00 completion без выбранного fault остаётся отвергнутым SYSTEM run; fallback, retry-until-green и изменения guest не используются.
+
 <!-- knowledge -->
 
 ```json
@@ -184,6 +190,8 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/native_apps.rs",
+          "crates/xtask/src/workspace.rs",
+          "crates/xtask/tests/cli.rs",
           "package.json",
           "scripts/ci-gate.cjs",
           "scripts/ci-workload.ps1",

@@ -4,6 +4,7 @@ mod output;
 #[cfg(feature = "route-tools")]
 mod routing_demo;
 mod timing;
+mod workspace;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
@@ -493,7 +494,7 @@ fn main() {
     }
 }
 fn run() -> Result<()> {
-    env::set_current_dir(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))?;
+    env::set_current_dir(workspace::resolve(&env::current_dir()?)?)?;
     fs::create_dir_all("target/kernel")?;
     let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {

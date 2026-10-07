@@ -1,6 +1,6 @@
 # KOLVRT
 
-Checkpoint without a workload deadline now has an independent completion publication bound; timeout halts with resources retained. Performance and lifecycle acceptance require separate current-source review.
+Checkpoint return requires acquired completion/root/owner/copy quiescence without an arbitrary publication cutoff. Published CPU failure retains resources; external watchdogs diagnose silent stalls. Performance and lifecycle acceptance have separate scopes.
 
 ## Kernel Outside Legacy, Versioned Routing & Translation
 
@@ -31,7 +31,7 @@ Bounded Phase 3.5 IPC is implemented and ready for its declared contract: isolat
 
 An earlier implementation does not settle later architecture. Before extending it, derive the design from current invariants and accepted decisions; refactor or remove code that constrains them.
 
-[EL0 supervision](docs/kernel/supervision.md) is accepted for its bounded functional foundation after #126 with [renewed Codex architecture/code and EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). Current-source verification covers 142 tasks / 138 controls. The +1.57%/+6.64% performance question and readiness are separate; absence of regression and production readiness are not claimed. #28 owns persistent ELF integration and #38 production bootstrap trust.
+[EL0 supervision](docs/kernel/supervision.md) is accepted for its bounded functional foundation after #126 with [renewed Codex architecture/code and EN/RU review](docs/architecture/supervision-phase36-acceptance-review.md). That historical post-#126 source had 142 tasks / 138 controls. The current Phase 3.7 plan has 144 tasks and 140 control slots, classified by actual coverage. The +1.57%/+6.64% performance question and readiness are separate; absence of regression and production readiness are not claimed. #28 owns persistent ELF integration and #38 production bootstrap trust.
 
 ## Architecture
 
@@ -79,7 +79,7 @@ cargo xtask debug
 cargo run --locked -p repository-checks -- cost-l list --json
 ```
 
-The kernel runner requires **125 checks per DEV/PROD profile**, both non-test boots and **138 negative controls**. Controls deliberately break enforcement and must fail with the expected evidence. Missing events, unexpected panics, emulator errors and timeouts fail the runner.
+The current kernel runner requires **147 checks per DEV/PROD profile** and the complete **144-task inventory**: four ordinary tasks, ten legacy-failure checks, twenty-one invariants, ninety-three negative-input checks and sixteen mixed input/invariant checks. These 140 control slots have distinct evidence requirements; positive invariants do not claim omitted-implementation detection. Missing events, unrelated panics, emulator errors and watchdog expiry fail the runner.
 
 The retained [ELF-alignment run](research/measurements/runs/1791171892998-issue70-elf-entry-alignment-1cd2f1cf8717.json) records **97 checks per DEV/PROD profile and 82 negative controls** for its exact source hashes. It does not verify later revisions or physical hardware. Artifacts under `target/kernel/` retain ELF images, hashes, UART events, QEMU settings, size reports, unsafe inventory and measurement samples. See [testing and GDB instructions](docs/kernel/testing.md).
 

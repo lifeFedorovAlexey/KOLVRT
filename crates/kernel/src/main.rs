@@ -2,6 +2,9 @@
 #![no_main]
 #![deny(unsafe_op_in_unsafe_fn)]
 extern crate alloc;
+#[cfg(all(feature = "kernel-tests", feature = "native-apps"))]
+compile_error!("kernel-tests and native-apps select separate boot drivers; enable one");
+
 mod asid;
 mod arch {
     pub mod aarch64;

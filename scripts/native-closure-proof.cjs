@@ -133,6 +133,34 @@ run(
 );
 native(["service-run"]);
 native(["lifecycle-test"]);
+native(["app-smoke"]);
+const executionReceipts = {};
+for (const name of [
+  "native-counter-client-1-positive.json",
+  "native-counter-client-2-positive.json",
+  "native-selftest-lifecycle-peer-6-positive.json",
+]) {
+  const file = path.join(directory, "target/kernel", name);
+  if (!fs.existsSync(file))
+    throw new Error("runner escaped the restricted workspace: " + name);
+  const receipt = JSON.parse(fs.readFileSync(file));
+  if (Object.keys(receipt.profiles).sort().join(",") !== "dev,prod")
+    throw new Error("both profiles required in restricted workspace");
+  if (
+    receipt.source_files.some((item) =>
+      absent.some((component) =>
+        item.path.startsWith("crates/" + component + "/"),
+      ),
+    )
+  )
+    throw new Error("unrelated source reached execution");
+  for (const value of Object.values(receipt.profiles)) {
+    for (const image of Object.values(value.applications))
+      if (!fs.existsSync(path.resolve(directory, image.artifact)))
+        throw new Error("selected ELF missing from restricted workspace");
+  }
+  executionReceipts[name] = receipt;
+}
 for (const item of before)
   if (
     item.digest !==
@@ -146,11 +174,14 @@ const proof = {
   implementation_copies: 0,
   directory,
   source_references: references,
+  execution_workspace: fs.realpathSync(directory),
+  execution_receipts: executionReceipts,
   absent_workspace_components: absent,
   native_external_packages: 0,
   scenarios: [
     "production runtime DEV/PROD",
     "public lifecycle/actual counter service DEV/PROD",
+    "ordinary completed production session DEV/PROD",
   ],
   hardware: "UNKNOWN",
 };

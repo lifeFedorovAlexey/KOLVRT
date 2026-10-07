@@ -89,6 +89,12 @@ Full Phase 3.7 acceptance remains incomplete pending the current complete founda
 
 The fast COMPONENT layer additionally imports the actual shared kernel_core::supervision::validate_grants used by Kernel Scope::install: empty images, zero/excess instance credits and self/missing SEND bindings are rejected. The single production Grant type replaces the earlier kernel-local definition and inline validation; no model/copy is built for these tests. Separate actual ELF, lifecycle, domain/quota and application protocol methods retain their own input tests.
 
+The earlier dependency-removal execution proof was invalid: the prebuilt xtask reset cwd to its compiled-in original repository, escaping the restricted workspace. The current host runner resolves the caller workspace and its process test verifies this selection. The proof now requires DEV/PROD runtime, lifecycle and ordinary completed-session receipts inside the restricted workspace, verifies selected ELF existence there and rejects unrelated source entries; it embeds these actual receipts. Original implementation directories are referenced, never copied. Foundation kernel-tests and native-apps are mutually exclusive boot-driver configurations, rejected at compilation; guest linker flags require bare-metal target_os=none, and bounded QEMU observation isolates stdin.
+
+Guest linker scripts apply only to AArch64 target_os=none, preserving ordinary host component tests on ARM64 hosts. Native application boot and kernel foundation-test boot are separate configurations; enabling both is a compile-time configuration error rather than running a second singleton bootstrap or silently skipping a requested layer.
+
+The external debugger now identifies readiness replies by the exact receiver/service-token pair, not the number of pre-SVC breakpoint stops. A stop before the same operation can repeat; the following different COMMIT token establishes the selected post-readiness delivery. HOST tests verify duplicate stops retain one reply and reject the old commit token or a later multi-reply boundary. Debug hit traces are retained on success/failure. An observed ordinary W00 completion without the selected fault remains a rejected SYSTEM run; no fallback, retry-until-green or guest change is used.
+
 <!-- knowledge -->
 
 ```json
@@ -185,6 +191,8 @@ The fast COMPONENT layer additionally imports the actual shared kernel_core::sup
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/native_apps.rs",
+          "crates/xtask/src/workspace.rs",
+          "crates/xtask/tests/cli.rs",
           "package.json",
           "scripts/ci-gate.cjs",
           "scripts/ci-workload.ps1",

@@ -291,6 +291,7 @@ fn observe_runtime(elf: &Path) -> Result<Value> {
     let run = json!({"qemu_version":version,"arguments":qemu_args(elf),"accelerator":"TCG","kernel_sha256":Sha256::digest(fs::read(elf)?).iter().map(|b|format!("{b:02x}")).collect::<String>()});
     let mut child = Command::new(emulator)
         .args(qemu_args(elf))
+        .stdin(Stdio::null())
         .stdout(fs::File::create(&log)?)
         .stderr(fs::File::create(elf.with_extension("stderr"))?)
         .spawn()?;

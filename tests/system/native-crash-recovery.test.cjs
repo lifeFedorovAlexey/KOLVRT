@@ -123,3 +123,24 @@ test("completed recovery requires actual shutdown and zero retained resources", 
     assert.throws(() => validateRecovery(events, complete.fault, true));
   }
 });
+
+test("fault boundary counts unique reply tokens, not repeated stops before the same SVC", () => {
+  const { FaultBoundary } = require("./native-crash-recovery.cjs");
+  const frame = (operation, token) => {
+    const bytes = Buffer.alloc(40);
+    bytes.writeUInt16LE(1);
+    bytes.writeUInt16LE(operation, 2);
+    bytes.writeBigUInt64LE(256n, 8);
+    bytes.writeBigUInt64LE(BigInt(token), 16);
+    return bytes;
+  };
+  const b = new FaultBoundary();
+  assert.equal(b.observe(frame(3, 1)).shouldFault, false);
+  assert.equal(b.observe(frame(4, 1)).replies, 1);
+  assert.equal(b.observe(frame(4, 1)).replies, 1);
+  assert.equal(b.observe(frame(3, 1)).shouldFault, false);
+  assert.equal(b.observe(frame(2, 0)).shouldFault, false);
+  assert.equal(b.observe(frame(3, 3)).shouldFault, true);
+  b.observe(frame(4, 3));
+  assert.equal(b.observe(frame(3, 4)).shouldFault, false);
+});

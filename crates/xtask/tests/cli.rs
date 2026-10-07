@@ -68,3 +68,35 @@ fn compare_subcommand_revalidates_retained_measurements_without_claiming_a_winne
     assert!(stdout.contains("\"baseline_ticks\""));
     assert!(stdout.contains("\"candidate_ticks\""));
 }
+
+#[test]
+fn prebuilt_runner_executes_in_the_callers_workspace() {
+    let unique = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    let root = std::env::temp_dir().join(format!(
+        "kolvrt-caller-workspace-{}-{unique}",
+        std::process::id()
+    ));
+    let child = root.join("nested");
+    std::fs::create_dir_all(&child).unwrap();
+    std::fs::write(
+        root.join("Cargo.toml"),
+        "[workspace] # Caller selected metadata\n",
+    )
+    .unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_xtask"))
+        .arg("unknown-command")
+        .current_dir(&child)
+        .output()
+        .unwrap();
+    assert!(!result.status.success());
+    assert!(String::from_utf8_lossy(&result.stderr).contains("usage:"));
+    assert!(
+        root.join("target/kernel").is_dir(),
+        "runner must use the caller workspace, not its compilation directory"
+    );
+    assert!(!child.join("target/kernel").exists());
+    std::fs::remove_dir_all(root).unwrap();
+}

@@ -9,6 +9,29 @@ const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
 const MAGIC = 0x4b4f4c5652543701n.toString();
 const WATCHDOG_MS = 30000;
 
+/** Breakpoint hits may repeat one SVC; identify replies by their actual service token. */
+class FaultBoundary {
+  constructor() {
+    this.replies = new Set();
+  }
+  observe(bytes) {
+    assert.equal(bytes.length, 40);
+    assert.equal(bytes.readUInt16LE(0), 1);
+    const operation = bytes.readUInt16LE(2);
+    const key =
+      bytes.readBigUInt64LE(8).toString() +
+      ":" +
+      bytes.readBigUInt64LE(16).toString();
+    if (operation === 4) this.replies.add(key);
+    return {
+      operation,
+      replies: this.replies.size,
+      shouldFault:
+        operation === 3 && this.replies.size === 1 && !this.replies.has(key),
+    };
+  }
+}
+
 /** Check the actual production fault/replacement/client ledger, in order. */
 function validateRecovery(events, fault, completed = false) {
   assert.equal(fault.cpu, 1);
@@ -384,6 +407,7 @@ async function runProfile(profile, record, emulator) {
     child.once("close", resolve);
   });
   let remote, fault;
+  const hits = [];
   try {
     remote = new Remote(await connect(selected, child, deadline), deadline);
     assert(
@@ -392,7 +416,7 @@ async function runProfile(profile, record, emulator) {
     await remote.registers();
     for (const address of points)
       await remote.ok(`Z1,${address.toString(16)},4`);
-    let replies = 0;
+    const boundary = new FaultBoundary();
     for (let hit = 0; hit < 256; hit++) {
       const stop = await remote.command("c"),
         thread = stop.match(/thread:([^;]+);/)?.[1];
@@ -412,11 +436,19 @@ async function runProfile(profile, record, emulator) {
           );
         assert.equal(bytes.length, 40);
         assert.equal(bytes.readUInt16LE(0), 1);
-        const operation = bytes.readUInt16LE(2);
-        if (operation === 4) replies++;
+        const { operation, replies, shouldFault } = boundary.observe(bytes);
+        hits.push({
+          hit,
+          thread,
+          pc,
+          operation,
+          selector: bytes.readBigUInt64LE(8).toString(),
+          token: bytes.readBigUInt64LE(16).toString(),
+          replies,
+        });
         // Readiness GET has replied; the client binding and delivery exist.
         // Stop before its first ADD COMMIT, hence before Counter::apply.
-        if (operation === 3 && replies === 1) {
+        if (shouldFault) {
           fault = {
             cpu: 1,
             exceptionLevel: 0,
@@ -484,6 +516,10 @@ async function runProfile(profile, record, emulator) {
       await pause(20);
     }
   } finally {
+    fs.writeFileSync(
+      `target/kernel/${profile}-crash-debug-hits.json`,
+      JSON.stringify(hits, null, 2) + "\n",
+    );
     remote?.socket.destroy();
     if (child.exitCode === null) child.kill();
     await closed;
@@ -526,7 +562,7 @@ async function main() {
     ) + "\n",
   );
 }
-module.exports = { validateRecovery, ipcBreakpoints };
+module.exports = { validateRecovery, ipcBreakpoints, FaultBoundary };
 if (require.main === module)
   main().catch((error) => {
     console.error(error);
