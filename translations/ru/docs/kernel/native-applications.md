@@ -116,6 +116,8 @@ Guest linker scripts применяются только к AArch64 target_os=no
 
 Restricted-workspace proof привязывает repository-relative путь host emulator до смены workspace: Windows default .toolchains и явно относительные QEMU_AARCH64 paths разрешаются относительно вызывающего репозитория; absolute paths и PATH command names сохраняют семантику. host_emulator отдельно записывает этот внешний инструмент от guest implementation references. Native CI 3873bc8 упал из-за отсутствующего relative host-tool path, а не guest result; timeout и guest policy для исправления не менялись.
 
+Исправления по ревью сбрасывают устаревшие IPC-маркеры при ошибках прямого lifecycle launch и сохраняют исходную ошибку вместе с ошибками очистки внешнего harness. Отдельный [отчёт повторной диагностики](../../../../research/results/supervision-readiness-host-stall-review.json) сохраняет новые хеши исходников; прежний отчёт не изменён. Эти исправления отчётности не устанавливают причину исходной задержки CI и не обновляют native acceptance.
+
 <!-- knowledge -->
 
 ```json

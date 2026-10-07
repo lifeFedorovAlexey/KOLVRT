@@ -117,6 +117,8 @@ The external debugger now identifies readiness replies by the exact receiver/ser
 
 The restricted-workspace proof anchors a repository-relative host emulator path before changing workspace: Windows default .toolchains and explicit relative QEMU_AARCH64 paths resolve against the invoking repository; absolute paths and PATH command names retain their semantics. host_emulator records that external tool separately from guest implementation references. The 3873bc8 native CI failure was a missing relative host-tool path, not a guest result; no timeout or guest policy changed to repair it.
 
+Follow-up review clears stale IPC markers on direct lifecycle launch failures and retains both diagnostic and cleanup errors in the external harness. The separate [review diagnostic receipt](../../research/results/supervision-readiness-host-stall-review.json) preserves the new source hashes; the earlier receipt is unchanged. These reporting repairs do not establish the original CI latency cause or renew native acceptance.
+
 <!-- knowledge -->
 
 ```json

@@ -164,6 +164,7 @@ async function main() {
   const childClosed = exited(child);
   let remote, socket, held, heldClosed, observed, result;
   const hits = [];
+  const errors = [];
   try {
     remote = new Remote(await connect(gdbPort, child, deadline), deadline);
     await remote.command("qSupported");
@@ -293,41 +294,57 @@ async function main() {
       hits,
       observed,
     };
+  } catch (error) {
+    errors.push(error);
   } finally {
-    remote?.socket.destroy();
-    socket?.destroy();
-    try {
+    // Keep the original diagnostic failure and every cleanup failure while
+    // still attempting each independent cleanup action.
+    const cleanup = async (action) => {
+      try {
+        await action();
+      } catch (error) {
+        errors.push(error);
+      }
+    };
+    await cleanup(() => remote?.socket.destroy());
+    await cleanup(() => socket?.destroy());
+    await cleanup(async () => {
       if (heldClosed) {
         const end = await bounded(heldClosed, "hold helper cleanup");
         if (end.error) throw end.error;
         assert.equal(end.code, 0, "hold helper cleanup exit");
       }
-    } finally {
-      // Even helper startup/resume errors must retire the QEMU process we own.
-      try {
-        if (child.pid && child.exitCode === null && child.signalCode === null)
-          child.kill();
-        await bounded(childClosed, "QEMU cleanup");
-      } finally {
-        // Do not terminate the holder before QEMU: its normal finally resumes
-        // the thread; only an already failed/timed-out helper needs termination.
-        try {
-          if (held?.pid && held.exitCode === null && held.signalCode === null) {
-            held.kill();
-            await bounded(heldClosed, "hold helper termination");
-          }
-        } finally {
-          fs.closeSync(fd);
-        }
+    });
+    // Retire the owned QEMU even when helper startup or resume failed.
+    await cleanup(async () => {
+      if (child.pid && child.exitCode === null && child.signalCode === null)
+        child.kill();
+      const end = await bounded(childClosed, "QEMU cleanup");
+      if (end.error) throw end.error;
+    });
+    // Let the helper resume normally first; forced termination is only fallback
+    // after the owned QEMU cleanup attempt.
+    await cleanup(async () => {
+      if (held?.pid && held.exitCode === null && held.signalCode === null) {
+        held.kill();
+        const end = await bounded(heldClosed, "hold helper termination");
+        if (end.error) throw end.error;
       }
-    }
-    assert.equal(hash(fs.readFileSync(elf)), digest);
-    for (const [p, digest] of Object.entries(sourceFiles))
-      assert.equal(
-        hash(Buffer.from(fs.readFileSync(p, "utf8").replace(/\r\n/g, "\n"))),
-        digest,
-        "diagnostic source changed during execution: " + p,
+    });
+    await cleanup(() => fs.closeSync(fd));
+    await cleanup(() => assert.equal(hash(fs.readFileSync(elf)), digest));
+    for (const [p, digest] of Object.entries(sourceFiles)) {
+      await cleanup(() =>
+        assert.equal(
+          hash(Buffer.from(fs.readFileSync(p, "utf8").replace(/\r\n/g, "\n"))),
+          digest,
+          "diagnostic source changed during execution: " + p,
+        ),
       );
+    }
+  }
+  if (errors.length) {
+    throw new AggregateError(errors, "Host-stall diagnostic or cleanup failed");
   }
   // Publish only after the witness, owned-process cleanup and immutable-input
   // checks have all succeeded. A failing diagnostic must not create a receipt.
