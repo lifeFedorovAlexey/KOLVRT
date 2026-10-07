@@ -244,6 +244,7 @@ supervisor_image_start:
  mov x9,x1
  svc #0x53
  mov x5,x0
+ mov x23,x2
  mov x1,x9
  mov x0,x20
  svc #0x4e
@@ -271,6 +272,7 @@ supervisor_image_start:
  svc #0x53
  mov x7,x0
  mov x8,x1
+ mov x21,x2
  add x0,x0,x1,lsr #3
  mov x6,x0
  str x0,[x19,#24]

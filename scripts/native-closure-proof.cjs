@@ -107,6 +107,16 @@ for (const pkg of packages)
     throw new Error("external package in native closure: " + pkg.name);
 const env = { ...process.env };
 delete env.CARGO_TARGET_DIR;
+// Host tools belong to the invoking repository, not the restricted guest workspace.
+const emulator =
+  env.QEMU_AARCH64 ||
+  (process.platform === "win32"
+    ? ".toolchains/qemu/bin/qemu-system-aarch64.exe"
+    : "qemu-system-aarch64");
+env.QEMU_AARCH64 =
+  !path.isAbsolute(emulator) && /[\\/]/.test(emulator)
+    ? path.resolve(root, emulator)
+    : emulator;
 function native(args) {
   const result = cp.spawnSync(runner, args, {
     cwd: directory,
@@ -175,6 +185,7 @@ const proof = {
   directory,
   source_references: references,
   execution_workspace: fs.realpathSync(directory),
+  host_emulator: env.QEMU_AARCH64,
   execution_receipts: executionReceipts,
   absent_workspace_components: absent,
   native_external_packages: 0,

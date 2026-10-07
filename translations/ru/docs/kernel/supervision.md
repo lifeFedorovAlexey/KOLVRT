@@ -82,6 +82,8 @@ Phase 3.7 расширяет механизм immutable image-format grants и o
 
 Bootstrap grant shape теперь имеет единственную production реализацию в kernel_core::supervision. Kernel Scope::install использует общий тип Grant и вызывает validate_grants до публикации ACTIVE ownership. Быстрые host component tests импортируют ту же функцию и проверяют непустой image input, существующие границы instance credits 1..8 и отказ self/missing SEND destinations. Это проверка immutable bootstrap authority shape, а не интерпретатор EL0 dependency policy или generic package manifest format. Проверки image format/geometry и process/domain quota/placement остаются в настоящих ELF/process/domain методах, проверяемых их component tests; успех grant-shape не доказывает format validity или caller provenance.
 
+CI точного 3873bc8 наблюдал worker readiness stage 1020, Submit operation 1, Expired status 16 до admission. submitted_at=1078757950, deadline=1086570450, failed_at=1086709243 и frequency=62500000 показывают 127.22 ms между clocks против policy 125 ms; запрос не достиг сервиса. Это не устанавливает service reply latency или kernel performance defect. Diagnostics теперь сохраняют public CLOCK residency counters на обоих samples, чтобы различать время caller execution window и off-CPU checkpoint. Принятый deadline /8, строгое требование READY и production scheduling остаются неизменными до attribution.
+
 <!-- knowledge -->
 
 ```json

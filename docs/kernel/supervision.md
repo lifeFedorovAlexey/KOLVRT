@@ -80,6 +80,8 @@ The ordinary ELF supervisor selects its lifetime through application SessionPoli
 
 Bootstrap grant shape now has one production implementation in kernel_core::supervision. Kernel Scope::install uses the shared Grant type and calls validate_grants before publishing ACTIVE ownership. Fast host component tests import that same function and verify nonempty image input, existing 1..8 instance-credit bounds and rejection of self/missing SEND destinations. This is immutable bootstrap authority-shape validation, not an EL0 dependency-policy interpreter or generic package manifest format. Image format/geometry and process/domain quota/placement validation remain in their actual ELF/process/domain methods, exercised by their component tests; format validity or caller provenance is not inferred from grant-shape success.
 
+Exact 3873bc8 CI observed worker readiness stage 1020, Submit operation 1, Expired status 16 before admission. submitted_at=1078757950, deadline=1086570450, failed_at=1086709243 and frequency=62500000 show 127.22 ms between clocks against 125 ms policy; no request reached the service. This does not establish service reply latency or a kernel performance defect. Diagnostics now retain the public CLOCK residency counters at both samples to distinguish caller execution-window time from off-CPU checkpoint time. The accepted /8 deadline, strict READY requirement and production scheduling remain unchanged pending attribution.
+
 <!-- knowledge -->
 
 ```json

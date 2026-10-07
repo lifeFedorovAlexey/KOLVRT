@@ -95,6 +95,8 @@ Guest linker scripts apply only to AArch64 target_os=none, preserving ordinary h
 
 The external debugger now identifies readiness replies by the exact receiver/service-token pair, not the number of pre-SVC breakpoint stops. A stop before the same operation can repeat; the following different COMMIT token establishes the selected post-readiness delivery. HOST tests verify duplicate stops retain one reply and reject the old commit token or a later multi-reply boundary. Debug hit traces are retained on success/failure. An observed ordinary W00 completion without the selected fault remains a rejected SYSTEM run; no fallback, retry-until-green or guest change is used.
 
+The restricted-workspace proof anchors a repository-relative host emulator path before changing workspace: Windows default .toolchains and explicit relative QEMU_AARCH64 paths resolve against the invoking repository; absolute paths and PATH command names retain their semantics. host_emulator records that external tool separately from guest implementation references. The 3873bc8 native CI failure was a missing relative host-tool path, not a guest result; no timeout or guest policy changed to repair it.
+
 <!-- knowledge -->
 
 ```json

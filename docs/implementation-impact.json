@@ -376,14 +376,14 @@
     {
       "path": "crates/kernel/src/supervision_workload.S",
       "before_sha256_lf": "6c6c8ef8d06ace49f8907492373df794233c1acf20b9557483dc97e69f03be3a",
-      "after_sha256_lf": "b368ee274e38ab30e05f8661189f46b69f7016bf372e12aaf94475b1e363d8be",
+      "after_sha256_lf": "80ed085fc7495026c1162e53a6dfccb3ad4b64b7bab1f778e00638f1eab71af7",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
     {
       "path": "crates/kernel/src/supervision_workload.rs",
       "before_sha256_lf": "73868af14eeb17328f79bcd6d5c47445316047684cc4f1cc60e3fa088616ec0a",
-      "after_sha256_lf": "bd8e261a2c965ffa520f2b6025e1904e30bc0bff699e29206834e0345c642525",
+      "after_sha256_lf": "5a8d267ef4bb87002fd0ce0061adba7b53f98822c54c09dbeae8ec51b9088ddc",
       "disposition": "existing-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
@@ -502,7 +502,7 @@
     {
       "path": "scripts/native-closure-proof.cjs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "1ef1bb1ad06f7688ce0f3d7ee806a784977fda67c70cf1ebc26d0f20ed4dd75f",
+      "after_sha256_lf": "f65271945ebf25368c564bd1ddbcbc774e868d62001f25e45d72acd4b15ce01d",
       "disposition": "new-feature",
       "reason": "Phase 3.7 native ELF/IPC slice and test classification: tests import production modules; E2E selects actual production artifacts. Source-copy mutations and copied application implementations are removed. Canonical owners retain prior receipts as historical; incomplete replacement scenarios do not establish full acceptance."
     },
