@@ -1,0 +1,2 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+     Running `target\debug\repository-checks.exe arena assess target/kernel/arena-clock/1791408485740-34204\prod-1-run.json`

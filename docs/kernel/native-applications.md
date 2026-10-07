@@ -1,7 +1,7 @@
 # Native ELF applications and persistent service
 
 Document status: CURRENT
-Evidence scope: accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is open as #133; master #37 closure is pending its disposition.
+Evidence scope: accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is retained under owner-closed #133; master #37 is closed after the reviewed PR #137 and successful merged-main checks. Historical latency attribution remains UNKNOWN.
 Current reference: [Accepted supervision foundation](supervision.md)
 
 <a name="native-elf-applications"></a>
@@ -18,19 +18,19 @@ The [renewed review](../architecture/native-phase37-fixture-review.md) and [fres
 
 The [333726b failure](../../research/results/native-phase37-333726b-failure.json) is retained: stage 1002, Submit=1, Expired=16, coverage 15. That stage covered both committed-crash payload 2 and the subsequent readiness probe payload 1; the old diagnostics do not distinguish them. The earlier attribution of that failure specifically to payload 2 is therefore unproven. Change 43af402 separately selects the maximum valid deadline for the committed-crash input; readiness retains /8 and all real COMMIT/EffectUnknown/death/resource assertions. Three local DEV+PROD repeats passed 147 checks/profile, but do not prove the earlier failure cause or universal repair of readiness expiry.
 
-BOUNDED_IMPLEMENTED retains the accepted implementation scope. Current-source QEMU verification is now STALE: the #133 fixture/harness changes require new exact-source acceptance. The earlier VERIFIED receipt retains its source scope; readiness, image trust (#38), physical ARM and performance acceptance remain separate. ABI is experimental; startup-crash and post-commit replay are not claimed. Earlier revision history below does not describe current CI status.
+BOUNDED_IMPLEMENTED retains the accepted implementation scope. Current-source QEMU verification remains STALE for the shared CLOCK runner/SDK changes described below; closing the bounded milestone does not renew old receipts for changed sources. The earlier VERIFIED receipt retains its source scope; readiness, image trust (#38), physical ARM and performance acceptance remain separate. ABI is experimental; startup-crash and post-commit replay are not claimed. Earlier revision history below does not describe current CI status.
 
 ## Observed regression failure on 2026-10-07
 
 [Issue #133](https://github.com/lifeFedorovAlexey/KOLVRT/issues/133) retains the shard 0 failure in [CI 37576487522](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37576487522) at documentation-only 038d960. After the committed crash, replacement creation and stale token/SEND rejection, the new readiness probe payload 1 inherits stage 1002; it receives /8 and Submit rejects it as Expired before admission. The clock interval is 131.395008 ms against a 125 ms deadline; EL0 residency increases by 1.499088 ms. The remaining 129.895920 ms is not attributed between kernel/checkpoint and host/QEMU scheduling; no service response latency is measured.
 
-The native job passed independently; earlier passing source-bound receipts and bounded acceptance remain retained. This is a new full-regression failure, not evidence that all native QEMU scenarios fail. Master #37 closure awaits disposition of #133; increasing the timeout, retrying until green or inventing a performance allowance is not a resolution.
+The native job passed independently; earlier passing source-bound receipts and bounded acceptance remain retained. That was a subsequent full-regression failure, not evidence that all native QEMU scenarios failed. Issue #133 has since been closed by the owner; the original latency cause remains UNKNOWN. Master #37 was closed after all required checks passed for PR #137 at 7de095b and [merged main bc8222a](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37688334584). This disposition does not establish historical causality, and does not turn timeout increases, retry-until-green or invented performance allowances into valid repairs.
 
 ## Issue #133 diagnostic source change
 
 The [supervision diagnostics](supervision.md) now distinguish stages 1030/1040/1050/1060/1005 and publish payload_operation/probe_timing_valid. UNIT boundary checks call the single production Endpoint::submit. The external Windows harness suspended its owned QEMU CPU0 host thread for 500 ms and reproduced readiness rejection at stage 1030, coverage 15, Expired before admission, preserving /8 and the image hash. This is diagnostic evidence of possible host starvation, not attribution of the earlier CI failure or a passing regression.
 
-Production behavior, timeout and retries remain unchanged. New fixture/harness sources make the earlier QEMU receipt stale for the current tree; it remains retained with acceptance history. Issue #133 and master #37 closure still require justified disposition and fresh exact-source checks.
+Production behavior, timeout and retries remain unchanged. New fixture/harness sources make the earlier QEMU receipt stale for the current tree; it remains retained with acceptance history. Issues #133 and #37 are now closed within their bounded disposition. The external host-stall reproduction demonstrates a possible cause class, not the cause of the historical failure; passing later checks does not change that distinction.
 
 ## Test classification and single implementation
 

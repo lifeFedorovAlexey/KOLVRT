@@ -79,11 +79,11 @@ The CLOCK passport reuses the fresh machine-mode executor and therefore must pub
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "The CLOCK pilot changes shared execution/SDK sources; retained receipts remain historical until exact-source applicability is renewed. Production mechanism guarantees and historical acceptance are preserved.",
-            "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
-            "receipt": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
-            "receipt_sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032"
+            "state": "VERIFIED",
+            "reason": "Current-source full matrix passed after the shared CLOCK executor refactor; fresh device validation remains mandatory before every scenario oracle. Historical descriptor acceptance is unchanged.",
+            "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG DEV/PROD; descriptor discovery and fresh observation gate, not driver or physical readiness.",
+            "receipt": "research/measurements/runs/1791408804253-phase40-clock-passport-488919492db0.json",
+            "receipt_sha256": "1e6b5dfd336c6a36e1aff2e57dcfa5d1d2c3d7601a90ddbcfec198b2a970eb84"
           },
           {
             "environment": "physical-arm64",

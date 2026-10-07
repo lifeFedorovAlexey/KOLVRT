@@ -1,0 +1,640 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running `target\debug\xtask.exe selftest`
+   Compiling serde_core v1.0.229
+   Compiling native-protocol-model v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\native-protocol-model)
+   Compiling native-userspace v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\apps\native-runtime)
+   Compiling kernel-core v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel-core)
+   Compiling serde_json v1.0.145
+   Compiling native-state-models v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\native-state-models)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.41s
+     Running unittests src\lib.rs (target\debug\deps\kernel_core-8a196824d2632b46.exe)
+
+running 57 tests
+test domain::tests::quotas_survive_close_and_accepted_work_then_release ... ok
+test elf::tests::accepts_one_bounded_executable_segment_and_zero_fill_geometry ... ok
+test handles::tests::target_identity_survives_moves_and_reuse_changes_target ... ok
+test handles::tests::transactional_failure_burns_generation_and_exhaustion_never_wraps ... ok
+test handles::tests::lookup_close_reuse_forged_type_and_capacity ... ok
+test device::tests::exhausted_sequence_never_wraps_or_republishes ... ok
+test handles::tests::event_revocation_serializes_with_admission_and_survives_aliases ... ok
+test elf::tests::rejects_foreign_virtual_address_and_bad_entry ... ok
+test handles::tests::event_revocation_right_cannot_be_granted_on_completion ... ok
+test ipc::tests::closed_service_admission_and_zero_client_quota_leave_no_phantom_work ... ok
+test ipc::mailbox::tests::wake_and_ack_saturation_retain_every_generation ... ok
+test ipc::tests::copy_failure_transactions_keep_request_and_terminal_id_reserved ... ok
+test handles::tests::revoke_requires_explicit_right_and_does_not_alias_close ... ok
+test ipc::tests::accepted_receipt_is_exact_requester_scoped_and_survives_grant_revoke ... ok
+test ipc::tests::caller_local_endpoint_grants_receiver_binding_transfer_and_revoke ... ok
+test handles::tests::transfer_is_receiver_local_transactional_and_attenuates_rights ... ok
+test ipc::tests::cancellation_during_copy_never_commits_a_cancelled_token ... ok
+test ipc::tests::endpoint_references_exhaust_and_recover_without_silent_wrap ... ok
+test domain::tests::teardown_serializes_with_concurrent_admission ... ok
+test ipc::tests::closing_requester_is_observed_before_deferred_death_notification ... ok
+test handles::tests::process_local_equal_values_and_stress ... ok
+test ipc::tests::deadline_before_admission_and_at_commit_or_reply_boundary ... ok
+test ipc::tests::cancel_head_and_nonhead_preserves_linearized_fifo ... ok
+test ipc::tests::endpoint_and_token_generation_reuse_never_rebinds_stale_identity ... ok
+test ipc::tests::exact_payload_bounds_snapshot_and_initialized_frames ... ok
+test ipc::tests::exact_waiter_registration_ready_ack_and_shutdown_quiescence ... ok
+test ipc::tests::process_death_before_after_commit_and_retained_domain_lifetime ... ok
+test ipc::tests::queue_capacity_fifo_full_rollback_and_reuse ... ok
+test memory::tests::exact_extent_claim_preserves_pool_ownership ... ok
+test memory::tests::exhaustion_reuse_and_transactional_rejection ... ok
+test process::tests::every_rollback_burns_identity_and_exhaustion_never_overwrites ... ok
+test ipc::tests::wire_rejects_malformed_unknown_overflow_and_unused_fields ... ok
+test scheduling::ownership::tests::completed_reader_excludes_reset_and_stale_handles_cannot_touch_reuse ... ok
+test process::tests::publication_terminal_detachment_and_exact_reuse ... ok
+test scheduling::ownership::tests::foreign_cpu_and_unmasked_access_are_rejected ... ok
+test scheduling::ownership::tests::live_reset_inspection_duplicate_start_and_early_completion_fail ... ok
+test scheduling::ownership::tests::generation_wrap_never_revalidates_old_handles ... ok
+test scheduling::ownership::tests::reentry_does_not_wait_or_issue_a_second_permit ... ok
+test scheduling::tests::each_ready_task_is_served_in_one_rotation ... ok
+test memory::tests::cursor_preserves_ownership_and_linear_scan_work ... ok
+test user_copy::tests::bounded_byte_ranges ... ok
+test scheduling::tests::empty_exhausted_and_invalid_queues_have_no_selection ... ok
+test wait::admission_tests::revoked_alias_rejects_new_work_and_retains_accepted_effect ... ok
+test wait::tests::shared_alias_observes_revocation_after_owner_close ... ok
+test time::tests::rounding_and_overflow ... ok
+test wait::tests::revoke_rejects_future_admission_without_erasing_pending_work ... ok
+test scheduling::ownership::tests::concurrent_attempt_cannot_borrow_or_publish_while_owner_is_active ... ok
+test elf::tests::truncation_overflow_overlap_and_permissions_fail_closed ... ok
+test window::tests::current_contract ... ok
+test wait::admission_tests::concurrent_revoke_and_admit_have_one_linearization_order ... ok
+test ipc::tests::real_arbiter_under_concurrent_cancel_reply_and_deadline ... ok
+test ipc::tests::readiness_absolute_deadline_admission_boundary_preserves_rejected_state ... ok
+test ipc::tests::signal_before_registration_and_waiter_death_need_no_polling_semantics ... ok
+test ipc::tests::terminal_arbiter_commit_cancel_deadline_death_and_second_attempt ... ok
+test ipc::tests::service_token_cannot_be_used_by_another_process ... ok
+test ipc::tests::receiver_and_endpoint_quota_rejections_are_transactional ... ok
+test ipc::mailbox::tests::concurrent_duplicate_publish_and_delayed_owner_ack ... ok
+
+test result: ok. 57 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests\boot_description.rs (target\debug\deps\boot_description-a3524abe62591699.exe)
+
+running 8 tests
+test uart_spi_controller_and_extent_are_discovered ... ok
+test explicit_uart_parent_overrides_root_but_must_match_controller ... ok
+test duplicate_interrupt_properties_and_phandles_fail_closed ... ok
+test malformed_extents_alignment_and_version ... ok
+test uart_rejects_overflow_overlap_and_nonexact_register_extent ... ok
+test uart_rejects_forged_irq_and_controller_bindings ... ok
+test invalid_psci_conduit_and_cpu_enable_method ... ok
+test actual_qemu_description_and_every_truncation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests\bootstrap_grants.rs (target\debug\deps\bootstrap_grants-7e3ed893f3e651b5.exe)
+
+running 3 tests
+test immutable_service_client_manifest_accepts_existing_bounds ... ok
+test manifest_rejects_self_or_missing_send_destination_without_mutating_grants ... ok
+test manifest_rejects_empty_images_and_invalid_instance_credits ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\device_contract.rs (target\debug\deps\device_contract-ce484ecc1da11abf.exe)
+
+running 4 tests
+test parser_snapshot_is_immutable_and_reserved_without_grant ... ok
+test different_trusted_scopes_reject_cross_owner_identity_and_claim ... ok
+test identical_descriptor_cannot_resurrect_invalidated_identity ... ok
+test forged_observations_are_rejected_without_mutating_current_identity ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\elf_contract.rs (target\debug\deps\elf_contract-5e0228285867d496.exe)
+
+running 9 tests
+test caller_window_accepts_exact_boundary_and_rejects_invalid_geometry ... ok
+test accepted_image_preserves_every_load_field_payload_and_page_rounding ... ok
+test aligned_entry_checks_file_geometry_without_decoding_an_instruction ... ok
+test entry_requires_aarch64_instruction_alignment ... ok
+test identity_and_header_fields_fail_independently ... ok
+test segment_sizes_alignment_permissions_and_checked_arithmetic_fail_independently ... ok
+test unsupported_program_kinds_and_executable_stack_are_rejected ... ok
+test program_header_range_count_and_segment_limit_are_enforced ... ok
+test entry_requires_executable_file_bytes_and_overlap_is_order_independent ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\event_revocation.rs (target\debug\deps\event_revocation-3ea496616e499620.exe)
+
+running 4 tests
+test default_grants_are_minimal_and_denied_effects_leave_the_latch_unchanged ... ok
+test every_completion_revoke_grant_rejects_before_generation_or_publication ... ok
+test delegated_revoke_preserves_pending_work_retention_and_permanent_revocation ... ok
+test signal_racing_revoke_has_one_ordered_admission_and_never_loses_an_accepted_effect ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\handle_contract.rs (target\debug\deps\handle_contract-342631f3598e85d2.exe)
+
+running 4 tests
+test exhausted_slot_does_not_hide_other_vacancies_or_reset_after_rebinding ... ok
+test rejected_transfer_never_changes_owner_generation_or_live_entries ... ok
+test explicit_event_grants_attenuate_all_known_rights_and_share_revocation ... ok
+test all_rights_combinations_gate_lookup_and_transfer_without_escalation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\process_protocol.rs (target\debug\deps\process_protocol-c3c5934237d229b2.exe)
+
+running 5 tests
+test completion_reason_validation_and_reclamation_follow_terminal_state ... ok
+test reservation_validates_cpu_range_and_uses_only_its_slots ... ok
+test process_id_exposes_identity_without_weakening_generation_checks ... ok
+test rollback_is_creation_only_and_never_publishes_a_completion ... ok
+test unpublished_prepared_retirement_requires_detachment_and_burns_identity ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\wait.rs (target\debug\deps\wait-395d6c7e723e1882.exe)
+
+running 4 tests
+test notifications_before_and_after_registration_are_retained ... ok
+test shared_event_reference_charge_is_bounded ... ok
+test publication_racing_registration_never_loses_wakeup ... ok
+test delegated_event_references_survive_concurrent_signal_and_final_close ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running unittests src\lib.rs (target\debug\deps\native_protocol_model-140390df0f7d0b0c.exe)
+
+running 7 tests
+test tests::every_unknown_right_and_redelegation_escalation_is_denied ... ok
+test tests::attenuation_and_generation_exhaustion ... ok
+test tests::owns_validated_snapshot ... ok
+test tests::rejects_every_truncation_and_invalid_header ... ok
+test tests::response_identity_and_poisoned_storage ... ok
+test tests::endpoint_has_no_arbitrary_command_escape_hatch ... ok
+test tests::unsupported_versions_never_decode_as_current_contract ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\lib.rs (target\debug\deps\native_state_models-9f79677d30b4c7db.exe)
+
+running 18 tests
+test fallback::tests::accepted_transition_is_a_mandatory_result ... ok
+test fallback::tests::authority_quota_state_and_generation_cannot_be_downgraded ... ok
+test fallback::tests::committed_or_unknown_effects_never_authorize_replay ... ok
+test fallback::tests::defaults_and_production_need_explicit_policy ... ok
+test retirement::tests::unsupported_lookup_requires_retained_tombstone ... ok
+test tests::every_ready_set_has_bounded_service ... ok
+test tests::exhausted_generation_retires_only_its_slot ... ok
+test retirement::tests::expiry_preserves_bindings_requests_and_tombstone ... ok
+test retirement::tests::deadline_cannot_authorize_free_or_new_admission ... ok
+test retirement::tests::successor_neither_renews_support_nor_authorizes_removal ... ok
+test tests::denied_delegation_does_not_publish_or_replace_identity ... ok
+test tests::failed_transfer_is_transactional ... ok
+test tests::migration_drains_before_retirement ... ok
+test tests::registration_has_no_lost_wakeup ... ok
+test tests::startup_and_shutdown_preserve_dependencies ... ok
+test tests::transfer_preserves_binding_and_attenuates_authority ... ok
+test tests::lifetime_negative_controls ... ok
+test tests::all_lifetime_interleavings ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\main.rs (target\debug\deps\native_state_models-591df7d06d873386.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\native_userspace-1573e2855f67ba80.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\counter.rs (target\debug\deps\counter-67e1532f2c843353.exe)
+
+running 5 tests
+test native_frames_are_explicit_initialized_little_endian ... ok
+test parser_rejects_reserved_fields_versions_lengths_and_get_delta ... ok
+test repeated_state_and_restart_initial_value ... ok
+test reply_parser_rejects_malformed_version_reserved_status_and_length ... ok
+test overflow_does_not_mutate_state ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests kernel_core
+
+running 1 test
+test crates\kernel-core\src\handles.rs - handles::Retained (line 149) - compile fail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests native_protocol_model
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests native_state_models
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests native_userspace
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.54s
+[OK] build: target/kernel/dev-native-apps.elf (7106008 bytes ELF; 3213339 bytes loaded)
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | DEV | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 63970 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+[DEBUG] process: slot=0 generation=1 owner=0 state=Creating rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Prepared rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Admitted rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Creating rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Prepared rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Admitted rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Creating rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Prepared rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Admitted rollback=None
+[DEBUG] handles: process_slot=1 process_generation=1 capacity=8 active=3 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] handles: slot=2 generation=1 kind=Endpoint
+[DEBUG] process: slot=1 generation=1 owner=0 state=Completed rollback=None
+[DEBUG] handles: process_slot=4 process_generation=1 capacity=8 active=2 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] process: slot=4 generation=1 owner=1 state=Completed rollback=None
+[DEBUG] handles: process_slot=0 process_generation=1 capacity=8 active=4 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] handles: slot=2 generation=1 kind=Endpoint
+[DEBUG] handles: slot=3 generation=1 kind=Endpoint
+[DEBUG] process: slot=0 generation=1 owner=0 state=Completed rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Reclaiming rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Free rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Reclaiming rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Free rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Reclaiming rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Free rollback=None
+[OK] boot: validation complete; powering off (not a running system)
+Native ELF counter-client passed (dev): {"client_exit":"success","client_loaded_as_elf":true,"counter_final":12,"frames_restored":true,"guest_shutdown":true,"hardware":"UNKNOWN","owners_released":true,"production_supervisor_tested":true,"requests_completed":3,"resource_leaks":0,"scope":"ordinary production session finishes after its client; separate persistent and crash scenarios remain required","service_instance":1,"service_restarted":false,"supervisor_ready":true}
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.89s
+[OK] build: target/kernel/prod-native-apps.elf (1566784 bytes ELF; 518612 bytes loaded)
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | PROD | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 64629 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+[OK] boot: validation complete; powering off (not a running system)
+Native ELF counter-client passed (prod): {"client_exit":"success","client_loaded_as_elf":true,"counter_final":12,"frames_restored":true,"guest_shutdown":true,"hardware":"UNKNOWN","owners_released":true,"production_supervisor_tested":true,"requests_completed":3,"resource_leaks":0,"scope":"ordinary production session finishes after its client; separate persistent and crash scenarios remain required","service_instance":1,"service_restarted":false,"supervisor_ready":true}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.56s
+[OK] build: target/kernel/dev-native-apps.elf (7106008 bytes ELF; 3213339 bytes loaded)
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.84s
+[OK] build: target/kernel/prod-native-apps.elf (1566736 bytes ELF; 518608 bytes loaded)
+Production supervisor crash-recovery passed (dev)
+Production supervisor crash-recovery passed (prod)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.52s
+[OK] build: target/kernel/dev-native-apps.elf (7089624 bytes ELF; 3198523 bytes loaded)
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | DEV | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 63974 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+[DEBUG] process: slot=0 generation=1 owner=0 state=Creating rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Prepared rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Admitted rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Creating rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Prepared rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Admitted rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Creating rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Prepared rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Admitted rollback=None
+[DEBUG] handles: process_slot=1 process_generation=1 capacity=8 active=3 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] handles: slot=2 generation=1 kind=Endpoint
+[DEBUG] process: slot=1 generation=1 owner=0 state=Completed rollback=None
+[DEBUG] handles: process_slot=4 process_generation=1 capacity=8 active=2 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] process: slot=4 generation=1 owner=1 state=Completed rollback=None
+[DEBUG] handles: process_slot=0 process_generation=1 capacity=8 active=4 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] handles: slot=2 generation=1 kind=Endpoint
+[DEBUG] handles: slot=3 generation=1 kind=Endpoint
+[DEBUG] process: slot=0 generation=1 owner=0 state=Completed rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Reclaiming rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Free rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Reclaiming rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Free rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Reclaiming rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Free rollback=None
+[OK] boot: validation complete; powering off (not a running system)
+Native ELF selftest-abi-client passed (dev): {"client_exit":"success","client_loaded_as_elf":true,"counter_final":12,"frames_restored":true,"guest_shutdown":true,"hardware":"UNKNOWN","owners_released":true,"production_supervisor_tested":true,"requests_completed":3,"resource_leaks":0,"scope":"ordinary production session finishes after its client; separate persistent and crash scenarios remain required","service_instance":1,"service_restarted":false,"supervisor_ready":true}
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `release` profile [optimized + debuginfo] target(s) in 3.05s
+[OK] build: target/kernel/prod-native-apps.elf (1562688 bytes ELF; 514100 bytes loaded)
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | PROD | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 64630 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+[OK] boot: validation complete; powering off (not a running system)
+Native ELF selftest-abi-client passed (prod): {"client_exit":"success","client_loaded_as_elf":true,"counter_final":12,"frames_restored":true,"guest_shutdown":true,"hardware":"UNKNOWN","owners_released":true,"production_supervisor_tested":true,"requests_completed":3,"resource_leaks":0,"scope":"ordinary production session finishes after its client; separate persistent and crash scenarios remain required","service_instance":1,"service_restarted":false,"supervisor_ready":true}
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running tests\elf_contract.rs (target\debug\deps\elf_contract-5e0228285867d496.exe)
+
+running 9 tests
+test accepted_image_preserves_every_load_field_payload_and_page_rounding ... ok
+test aligned_entry_checks_file_geometry_without_decoding_an_instruction ... ok
+test caller_window_accepts_exact_boundary_and_rejects_invalid_geometry ... ok
+test entry_requires_aarch64_instruction_alignment ... ok
+test entry_requires_executable_file_bytes_and_overlap_is_order_independent ... ok
+test identity_and_header_fields_fail_independently ... ok
+test program_header_range_count_and_segment_limit_are_enforced ... ok
+test segment_sizes_alignment_permissions_and_checked_arithmetic_fail_independently ... ok
+test unsupported_program_kinds_and_executable_stack_are_rejected ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running tests\counter.rs (target\debug\deps\counter-67e1532f2c843353.exe)
+
+running 5 tests
+test native_frames_are_explicit_initialized_little_endian ... ok
+test overflow_does_not_mutate_state ... ok
+test repeated_state_and_restart_initial_value ... ok
+test parser_rejects_reserved_fields_versions_lengths_and_get_delta ... ok
+test reply_parser_rejects_malformed_version_reserved_status_and_length ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling native-apps v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\apps\native-apps)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running tests\supervision.rs (target\debug\deps\supervision-8038d4e9cd4bfc8e.exe)
+
+running 5 tests
+test actual_terminal_outcomes_permit_replacement ... ok
+test fresh_binding_requires_new_identity_success_and_zero_initial_state ... ok
+test live_service_cannot_be_replaced ... ok
+test session_policy_rejects_unknown_configuration ... ok
+test stale_denied_and_unknown_responses_do_not_authorize_replacement ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src\main.rs (target\debug\deps\xtask-991d88c83f68f45e.exe)
+
+running 4 tests
+test native_apps::tests::lifecycle_oracle_rejects_unrelated_panic_and_missing_loader_evidence ... ok
+test native_apps::tests::lifecycle_oracle_accepts_observed_steps_and_actual_reclamation ... ok
+test native_apps::tests::lifecycle_oracle_rejects_retained_resources_and_missing_owner_release ... ok
+test native_apps::tests::lifecycle_oracle_rejects_wrong_binding_stale_acceptance_and_fabricated_values ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 29 filtered out; finished in 0.00s
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.51s
+[OK] build: target/kernel/dev-native-apps.elf (7077336 bytes ELF; 3182811 bytes loaded)
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | DEV | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 63977 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+[DEBUG] process: slot=0 generation=1 owner=0 state=Creating rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Prepared rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Admitted rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Creating rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Prepared rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Admitted rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Creating rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Prepared rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Admitted rollback=None
+[DEBUG] handles: process_slot=4 process_generation=1 capacity=8 active=2 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] process: slot=4 generation=1 owner=1 state=Completed rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Reclaiming rollback=None
+[DEBUG] process: slot=4 generation=1 owner=1 state=Free rollback=None
+[DEBUG] process: slot=4 generation=2 owner=1 state=Creating rollback=None
+[DEBUG] process: slot=4 generation=2 owner=1 state=Prepared rollback=None
+[DEBUG] process: slot=4 generation=2 owner=1 state=Admitted rollback=None
+[DEBUG] handles: process_slot=1 process_generation=1 capacity=8 active=3 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] handles: slot=2 generation=2 kind=Endpoint
+[DEBUG] process: slot=1 generation=1 owner=0 state=Completed rollback=None
+[DEBUG] process: slot=5 generation=1 owner=1 state=Creating rollback=None
+[DEBUG] process: slot=5 generation=1 owner=1 state=Prepared rollback=None
+[DEBUG] process: slot=5 generation=1 owner=1 state=Admitted rollback=None
+[DEBUG] handles: process_slot=5 process_generation=1 capacity=8 active=2 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=1 kind=Endpoint
+[DEBUG] handles: slot=1 generation=1 kind=Endpoint
+[DEBUG] process: slot=5 generation=1 owner=1 state=Completed rollback=None
+[DEBUG] handles: process_slot=4 process_generation=2 capacity=8 active=2 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=2 kind=Endpoint
+[DEBUG] handles: slot=1 generation=2 kind=Endpoint
+[DEBUG] process: slot=4 generation=2 owner=1 state=Completed rollback=None
+[DEBUG] handles: process_slot=0 process_generation=1 capacity=8 active=6 lifecycle=retiring
+[DEBUG] handles: slot=0 generation=2 kind=Endpoint
+[DEBUG] handles: slot=1 generation=2 kind=Endpoint
+[DEBUG] handles: slot=2 generation=1 kind=Endpoint
+[DEBUG] handles: slot=3 generation=1 kind=Endpoint
+[DEBUG] handles: slot=4 generation=1 kind=Endpoint
+[DEBUG] handles: slot=5 generation=1 kind=Endpoint
+[DEBUG] process: slot=0 generation=1 owner=0 state=Completed rollback=None
+[DEBUG] process: slot=4 generation=2 owner=1 state=Reclaiming rollback=None
+[DEBUG] process: slot=4 generation=2 owner=1 state=Free rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Reclaiming rollback=None
+[DEBUG] process: slot=1 generation=1 owner=0 state=Free rollback=None
+[DEBUG] process: slot=5 generation=1 owner=1 state=Reclaiming rollback=None
+[DEBUG] process: slot=5 generation=1 owner=1 state=Free rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Reclaiming rollback=None
+[DEBUG] process: slot=0 generation=1 owner=0 state=Free rollback=None
+[OK] boot: validation complete; powering off (not a running system)
+Native ELF selftest-lifecycle-peer passed (dev): {"client_exit":"success","counter_final":12,"external_actor_fault_contained":true,"frames_restored":true,"fresh_binding_completed":true,"hardware":"UNKNOWN","observed_steps":{"10":[1,1,0],"11":[13,0,0],"12":[5,12,12],"13":[2,0,258],"14":[12,0,0],"15":[3,3,2],"16":[2,2,0],"17":[0,514,0],"18":[1,0,0],"19":[11,2,0],"20":[12,0,0],"21":[3,0,0]},"old_binding_rejected":true,"production_recovery_method_tested":true,"production_supervisor_tested":false,"resource_leaks":0,"restart_initial_value":0,"scope":"production kernel/counter service through an external lifecycle ABI client; does not test production supervisor recovery policy","service_crash_restarted":false,"service_stop_restarted":true}
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.03s
+   Compiling kolvrt-kernel v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\kernel)
+    Finished `release` profile [optimized + debuginfo] target(s) in 2.88s
+[OK] build: target/kernel/prod-native-apps.elf (1558544 bytes ELF; 511440 bytes loaded)
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | PROD | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 64631 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+[OK] boot: validation complete; powering off (not a running system)
+Native ELF selftest-lifecycle-peer passed (prod): {"client_exit":"success","counter_final":12,"external_actor_fault_contained":true,"frames_restored":true,"fresh_binding_completed":true,"hardware":"UNKNOWN","observed_steps":{"10":[1,1,0],"11":[13,0,0],"12":[5,12,12],"13":[2,0,258],"14":[12,0,0],"15":[3,3,2],"16":[2,2,0],"17":[0,514,0],"18":[1,0,0],"19":[11,2,0],"20":[12,0,0],"21":[3,0,0]},"old_binding_rejected":true,"production_recovery_method_tested":true,"production_supervisor_tested":false,"resource_leaks":0,"restart_initial_value":0,"scope":"production kernel/counter service through an external lifecycle ABI client; does not test production supervisor recovery policy","service_crash_restarted":false,"service_stop_restarted":true}

@@ -1,7 +1,7 @@
 # Пилот Arena для запросов clock
 
 Document status: CURRENT
-Evidence scope: проверенный ограниченный протокол измерений issue #32; приёмка настоящего выполнения ещё ожидается.
+Evidence scope: принятый ограниченный пилот CLOCK issue #32 на исходниках 2978ad9; реальное выполнение QEMU DEV/PROD, точные artifacts и независимое review, не аппаратный performance или допустимые records Arena.
 Current reference: [Контракт native CLOCK](../kernel/clock.md); [Контракт измерений Arena](../architecture/arena-measurement-contract.md)
 
 <a name="kolvrt-arena-clock-passport"></a>
@@ -44,7 +44,7 @@ Grant авторизации clock не выдумывается. PMU, физи�
 
 ## Текущее evidence
 
-В этом документе пока не принято настоящее выполнение пилота. Review исходников и полной пары EN/RU, host-проверки отказов, DEV/PROD-запуски точных исходников и сохранённые отчёты должны предшествовать приёмке. Этот предварительный протокол не закрывает issue #32 и не повышает готовность физической платформы.
+[Приёмка](../../../../research/results/clock-passport-acceptance.json) фиксирует двенадцать успешных загрузок на чистых исходниках `2978ad9`, шесть независимо перепроверенных переносимых паспортов, пять проверок CLOCK oracle и семнадцать проверок допуска Arena. Полная foundation matrix выполнила 144 обязательства: 32 настоящих исполнения и 112 проверенных использований свежих результатов того же invocation; каждая suite DEV/PROD прошла 147 проверок. Все 151 digest исполняемых исходников совпадают между кампанией и matrix. [Неизменяемый bundle](../../../../research/arena/runs/clock-query-2978ad9/campaign.json) сохраняет каждую пару и сырые artifacts; прежние неудачные подготовительные host-проверки сохранены отдельно. Review исходников, протокола и полной пары EN/RU завершено. READY ограничено pipeline этого пилота; tails остаются inconclusive, physical hardware — unknown, record eligibility — false.
 
 [Английский оригинал](../../../../docs/research/clock-passport.md)
 
@@ -70,8 +70,8 @@ Grant авторизации clock не выдумывается. PMU, физи�
         "law.044"
       ],
       "feature": {
-        "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Bounded external CLOCK ABI actor and Arena passport pipeline with matched intermediate-recorder observations; actual execution acceptance pending.",
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Accepted external CLOCK ABI pilot: fixed twelve-boot DEV/PROD campaign, exact original ELF/source/configuration evidence, partial execution-window accounting, matched incremental recorder observations and six structurally admissible passports through the existing Arena validator.",
         "sources": [
           "apps/native-runtime/src/lib.rs",
           "tests/native-apps/Cargo.toml",
@@ -91,18 +91,21 @@ Grant авторизации clock не выдумывается. PMU, физи�
           "research/arena/clock-query/dev-environment.json",
           "research/arena/clock-query/prod-environment.json"
         ],
-        "acceptance": [],
+        "acceptance": ["research/results/clock-passport-acceptance.json"],
         "issues": [32],
         "adrs": ["adr.0006", "adr.0015"],
         "limitations": [
           "No pure syscall latency, full timestamp observer cost, exclusive CPU attribution, physical evidence, adequate tails or eligible Arena record."
         ],
-        "next_gate": "Review profile, oracle and complete EN/RU pair; execute twelve fresh DEV/PROD guest boots and retain exact-source passport evidence.",
+        "next_gate": "Extend separate IPC, reliability and fuzz scopes in #33/#34/#35; independent record publication, adequate tails and physical hardware remain unverified.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "UNKNOWN",
-            "reason": "Real pilot campaign pending."
+            "state": "VERIFIED",
+            "reason": "Independent review validated all twelve CLOCK boots, six portable passports and the complete source-matching foundation matrix.",
+            "receipt": "research/results/clock-passport-acceptance.json",
+            "receipt_sha256": "8bea832e800a4d58f401d8916b2c9f302c548ae99a7a0d0c6c719b003ed3743f",
+            "scope": "Clean campaign source 2978ad9693b7df1e70487ffbf01d5ffdfe27fe31, pinned QEMU 10.1.0 ARM64 TCG, DEV/PROD; useful CLOCK envelope and incremental recorder cost only. Full matrix uses identical 151 execution source hashes."
           },
           {
             "environment": "physical-arm64",
@@ -110,13 +113,22 @@ Grant авторизации clock не выдумывается. PMU, физи�
             "reason": "No physical benchmark campaign."
           }
         ],
-        "readiness": "NOT_READY",
+        "readiness": "READY",
         "transitions": [
           {
             "from": "UNRECORDED",
             "to": "EXPERIMENTAL",
             "reason": "Introduce the external pilot protocol and proposed profiles without execution acceptance."
+          },
+          {
+            "from": "EXPERIMENTAL",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Independent source, EN/RU and actual evidence review accepted twelve real boots, exact raw artifacts and current-source regression; no eligible records or hardware performance claim.",
+            "acceptance": ["research/results/clock-passport-acceptance.json"]
           }
+        ],
+        "readiness_acceptance": [
+          "research/results/clock-passport-acceptance.json"
         ]
       }
     }

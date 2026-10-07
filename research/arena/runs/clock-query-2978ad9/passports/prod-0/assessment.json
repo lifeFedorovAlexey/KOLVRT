@@ -1,0 +1,35 @@
+{
+  "admission_state": "STRUCTURALLY_ADMISSIBLE",
+  "comparison_class": "0fc65047a28ae8e761fabe27096c5b4215fdf842d95348ed2f8c2bfd429ded3d",
+  "limitations": "Offline integrity and producer-asserted evidence only. Independent review, execution/source applicability and record publication are not implemented; no regression or certification claim.",
+  "measurements": {
+    "arena.metric.clock-query-envelope": {
+      "denominator": "one useful CLOCK query inside a three-CLOCK envelope",
+      "methodologies": [
+        {
+          "id": "arena.methodology.kolvrt-profile",
+          "section": "Descriptive sampling",
+          "version": "1"
+        },
+        {
+          "id": "arena.standard.spec-run-rules",
+          "section": "1.2 and 1.3: validation, disclosure and reproducibility principles",
+          "version": "CPU2017-6644-2021-09-13"
+        }
+      ],
+      "sample_count": 24,
+      "state": "AVAILABLE",
+      "units": "timer_ticks",
+      "value": 538.0
+    }
+  },
+  "reasons": [],
+  "record_eligible": false,
+  "run_id": "clock-prod-0-1791408485740-34204",
+  "security": {
+    "failed": 0,
+    "not_evaluated": 0,
+    "sfr": 2,
+    "verified": 2
+  }
+}

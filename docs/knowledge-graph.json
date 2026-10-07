@@ -2,9 +2,7 @@
   "edges": [
     {
       "confidence": "HYPOTHESIS",
-      "evidence": [
-        "research/cost-l/COST-L-0001.json"
-      ],
+      "evidence": ["research/cost-l/COST-L-0001.json"],
       "from": "linux.memory.allocation",
       "scope": "Research candidate, not confirmed driver dependency.",
       "to": "cost-l.0001",
@@ -835,6 +833,11 @@
       "from": "kolvrt.arena.clock-passport",
       "to": "research/arena/profiles/clock-query-prod.json",
       "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.clock-passport",
+      "to": "research/results/clock-passport-acceptance.json",
+      "type": "validated_by"
     },
     {
       "from": "kolvrt.arena.clock-passport",
@@ -3084,10 +3087,10 @@
     "docs/architecture-decisions/0026-el0-supervision.md": "f3bf1a0686f11e8b229a74b17ee7be0235873edbe93599a5235376317a0f6cde",
     "docs/architecture-decisions/0027-device-observations.md": "d80280cfdda884b9c0252aa2b4860ff497932a50205fd509c2c9351609790474",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
-    "docs/architecture/arena-measurement-contract.md": "49efdc3892b2db5b6646943a6715cb78663784941984231c1960578a2fdbb230",
+    "docs/architecture/arena-measurement-contract.md": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/compatibility-manifests.md": "1f3c195ba2566faa440e649b1d9bf8537fdad141ee47262274bcf20f142edc48",
-    "docs/architecture/component-arena.md": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+    "docs/architecture/component-arena.md": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
     "docs/architecture/dependency-hygiene.md": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
     "docs/architecture/first-native-slice.md": "46a668922aab3f1aa7829bcf666c336a65a307f88d198d226e474c34d4adc325",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
@@ -3102,20 +3105,20 @@
     "docs/ci/performance.md": "dbcbe80746a93b92eb906547075a63c44aa072838e9cadd57a907af4530dfaaf",
     "docs/kernel/capabilities.md": "b9f545cbc3231a5a0129e0f1a54a3a9bf107dbe537db62822b4eb332a3d7ca85",
     "docs/kernel/clock.md": "a24703a64f9d1e66ed02b9465400a28667a49f5662184b16d76d7f29cff064de",
-    "docs/kernel/devices.md": "78029634a225c42964bd5a686016f44dd4290c7aaa51916d1499f583e2f1a711",
+    "docs/kernel/devices.md": "b19954e815acc7291aab2b86c88509147cea0c80ce256aa092ccaab1ad4474da",
     "docs/kernel/domains.md": "9067c663ffab79544cfb12487ccbd9c7b8ed290e498a96d8a918462d605a58a3",
     "docs/kernel/handles.md": "8d3acea970169fe55763b695bd0fe039d8668c963d06431a32520ca8a0203d5e",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "e8edabcd0268aec1e89a0eab7833d15e7b0e66413de80725dec0563fbd0c5d37",
-    "docs/kernel/native-applications.md": "fbb82d5a7387b33eb5d4aa85b46c5df041d85be600bd299b8d30c7ac9b746531",
+    "docs/kernel/native-applications.md": "33a0beb93d45fbfcb8aecdbb4ec0e7203e23744b9e7c71f289140e523b1cb046",
     "docs/kernel/processes.md": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
     "docs/kernel/scheduler.md": "3a7099d5c09a350d2ac8683da945a30f80db9c2397a6bc1e2d63b0d8eb54035e",
-    "docs/kernel/supervision.md": "ef84411a67d2edab2eef0b027d3af5822049ce42a8b5a1d0de2fab6e61552709",
+    "docs/kernel/supervision.md": "edf965f6d1b02edb7d1956ad04e1ab4a5373672e3d0ef228d5afb860fbb73c83",
     "docs/kernel/user-copy.md": "16941492671fc63f4550421d6592472bd6035e6a4ecf8a67e9282806942fbe4d",
     "docs/kernel/wait.md": "7dd7bf8bef8b3cdff4dc5d41d68ee396410a49362979fa42172b61fc854b65e1",
     "docs/knowledge-enrollment.json": "ce626a3a9a3ebe41e1fccb404b0b993782af0cc0c0d18f59c857a77873be85f1",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
-    "docs/research/clock-passport.md": "bf5cb386e05b9cb470eff47b74564f5b82fd40d3b50f0b05fc3612356b5f4dec",
+    "docs/research/clock-passport.md": "2f97139c0cc3aec4efad809d42c1e0185e064f0ceab0a1bd4e35934238058f0b",
     "docs/research/cost-l-queries.md": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
     "docs/research/host-survey.md": "f3027d023eb3b9ce3e65c14823bf88bf9bc0be2f1a1eed934d32abf15b8935e2",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
@@ -3216,7 +3219,7 @@
     "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
     "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
-    "translations/manifest.json": "14e290f8baf5d759e68767bb2c70f320605ad6df332d89af7e0c674dc03ce06a",
+    "translations/manifest.json": "99ac4a516cfc5be524019dd7b3665320a0de28691a12c117f895565d37ac28d0",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3245,10 +3248,10 @@
     "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "b418467a1b29450254dd1100873ec87c64dda3892a8ad385eda91ea6098c0a5f",
     "translations/ru/docs/architecture-decisions/0027-device-observations.md": "bfe65e69852f3fb945665500c0b25980ae5f06ec659c2329a6bdc86032ea5d8d",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
-    "translations/ru/docs/architecture/arena-measurement-contract.md": "c978134c1c3bbe9c7d50fbb080c2cb73d84b11b3220d5d2ae5995eda1ee87a62",
+    "translations/ru/docs/architecture/arena-measurement-contract.md": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/compatibility-manifests.md": "61672ddbce35165ea36ab13005c7b79092d9f8fd6fe6f5ef3dd409e880ec1c3a",
-    "translations/ru/docs/architecture/component-arena.md": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+    "translations/ru/docs/architecture/component-arena.md": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
     "translations/ru/docs/architecture/dependency-hygiene.md": "90ec082b25c9f409ceb054dd094906f23cc61445de98ea06ada20f2b04d6c172",
     "translations/ru/docs/architecture/first-native-slice.md": "b0155cfc7eaa77cfbfa3ad3e073af5151e4a8c9803aedae053ac903caf4c8dee",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
@@ -3263,19 +3266,19 @@
     "translations/ru/docs/ci/performance.md": "cb27ac993e1da65a06db02c0a6c8ce0f9bded4ee5cd30d5aa31df14d0bbb70d1",
     "translations/ru/docs/kernel/capabilities.md": "482662a55414cf67b61121c09b2f5c1a9660fc2737b4c00f69b7957e52ea454c",
     "translations/ru/docs/kernel/clock.md": "9dd206f3d86d9f76d42d027d25e715a13df72a8ad3f7db974c98a5e4cfdfefec",
-    "translations/ru/docs/kernel/devices.md": "99e811ebc674b62de5b68012a786732f413aebc90e61d5c2066fa6758411d2d7",
+    "translations/ru/docs/kernel/devices.md": "ba0045576ecdeacaa6be702ef68b126e3a3453c00633e50c4db7d0f706d0f1b5",
     "translations/ru/docs/kernel/domains.md": "265cc4e5cca9f7189622cd03bd9aaa2ec9f5f271220f6fd430c73c5206d9296b",
     "translations/ru/docs/kernel/handles.md": "28482cf15d598cac06c31c8ad6af32b3721ead26af9fc8d12ddc75a3a723510c",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "6cc41a31a923cc6b255b061130cf767e09cd7537e7f502d51a7dfd828be5315a",
-    "translations/ru/docs/kernel/native-applications.md": "22153090247074b6c3fb280b8b5b676c1336308c55153099422816347ef88f31",
+    "translations/ru/docs/kernel/native-applications.md": "a949c8920e8d5f7d8d6ecccd473752ae2bfef232d4f08f8c3cc410696db1d80e",
     "translations/ru/docs/kernel/processes.md": "9f15349c8df73bf8e629d4400ddba567ae5e85756365fd7deedb1e3c73f0e4f5",
     "translations/ru/docs/kernel/scheduler.md": "06d860224d0b7cb94619c2ed689c71cd911e57b80d33b70991f52b04b36849ed",
-    "translations/ru/docs/kernel/supervision.md": "b49aa8d733f4788a5d8252e5471b684a70b7d22901ce7a3934d946830e53aacc",
+    "translations/ru/docs/kernel/supervision.md": "c6d61c21d12b04b2b48f08d2280fe8df24d0c9b2f9b5c940a23c36ada553d41e",
     "translations/ru/docs/kernel/user-copy.md": "72164fc7c526a3b24f2bd50842c01ce2641fee6fee996e162b9a0b47479229b6",
     "translations/ru/docs/kernel/wait.md": "a4f7a1b09e9f032bcddd11e5988e0e0a954cac5f6cd28d7e92ac5ecb60019cf6",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
-    "translations/ru/docs/research/clock-passport.md": "b4201ad81c01bed71f9c29f4e76e1f3b3b2907e3ef1310d33aef62e588111642",
+    "translations/ru/docs/research/clock-passport.md": "89071afe53e2ee169a880cb786a496edb94bf9534cdae7e025505d026ccdf0f3",
     "translations/ru/docs/research/cost-l-queries.md": "11ec1ab0303c9d8d10ceb1f702d2e9c4444f4cad8e96b34b2a3c36e3e807b731",
     "translations/ru/docs/research/host-survey.md": "786cc999b220cf1c0989a5b9ed33c4874265306c43431dc69c44b3021f1fdc9b",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
@@ -3285,9 +3288,7 @@
   },
   "nodes": {
     "adr.0001": {
-      "aliases": [
-        "ADR-0001"
-      ],
+      "aliases": ["ADR-0001"],
       "document": "adr.0001",
       "document_status": "CURRENT",
       "estimated_bytes": 2724,
@@ -3298,10 +3299,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0001 — Приоритет собственной модели и изоляция наследуемого поведения. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0001 — Приоритет собственной модели и изоляция наследуемого поведения"
         }
       },
@@ -3322,16 +3320,11 @@
       "path": "docs/architecture-decisions/0001-native-authority.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0001 — Native authority and legacy isolation"
     },
     "adr.0002": {
-      "aliases": [
-        "ADR-0002"
-      ],
+      "aliases": ["ADR-0002"],
       "document": "adr.0002",
       "document_status": "CURRENT",
       "estimated_bytes": 3819,
@@ -3342,10 +3335,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0002 — Маршрутизация по областям состояния. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0002 — Маршрутизация по областям состояния"
         }
       },
@@ -3366,16 +3356,11 @@
       "path": "docs/architecture-decisions/0002-stateful-routing.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0002 — Routing by state domain"
     },
     "adr.0003": {
-      "aliases": [
-        "ADR-0003"
-      ],
+      "aliases": ["ADR-0003"],
       "document": "adr.0003",
       "document_status": "CURRENT",
       "estimated_bytes": 1801,
@@ -3386,10 +3371,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0003 — Единая архитектура для профилей исполнения. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0003 — Единая архитектура для профилей исполнения"
         }
       },
@@ -3410,16 +3392,11 @@
       "path": "docs/architecture-decisions/0003-profiles.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0003 — One architecture across execution profiles"
     },
     "adr.0004": {
-      "aliases": [
-        "ADR-0004"
-      ],
+      "aliases": ["ADR-0004"],
       "document": "adr.0004",
       "document_status": "CURRENT",
       "estimated_bytes": 1999,
@@ -3430,10 +3407,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0004 — Безопасный Rust и проверяемые границы. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0004 — Безопасный Rust и проверяемые границы"
         }
       },
@@ -3454,16 +3428,11 @@
       "path": "docs/architecture-decisions/0004-unsafe.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0004 — Safe Rust and audited boundaries"
     },
     "adr.0005": {
-      "aliases": [
-        "ADR-0005"
-      ],
+      "aliases": ["ADR-0005"],
       "document": "adr.0005",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 2065,
@@ -3474,10 +3443,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0005 — Контракты платформы с приоритетом ARM64. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0005 — Контракты платформы с приоритетом ARM64"
         }
       },
@@ -3498,16 +3464,11 @@
       "path": "docs/architecture-decisions/0005-platform.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0005 — ARM64-first platform contracts"
     },
     "adr.0006": {
-      "aliases": [
-        "ADR-0006"
-      ],
+      "aliases": ["ADR-0006"],
       "document": "adr.0006",
       "document_status": "CURRENT",
       "estimated_bytes": 1897,
@@ -3518,10 +3479,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0006 — Измерение зависимостей и честное сравнение. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0006 — Измерение зависимостей и честное сравнение"
         }
       },
@@ -3542,16 +3500,11 @@
       "path": "docs/architecture-decisions/0006-metrics.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0006 — Dependency measurements and fair comparisons"
     },
     "adr.0007": {
-      "aliases": [
-        "ADR-0007"
-      ],
+      "aliases": ["ADR-0007"],
       "document": "adr.0007",
       "document_status": "CURRENT",
       "estimated_bytes": 5710,
@@ -3562,10 +3515,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0007 — Совместимость с ошибками и вывод модулей из эксплуатации. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0007 — Совместимость с ошибками и вывод модулей из эксплуатации"
         }
       },
@@ -3586,16 +3536,11 @@
       "path": "docs/architecture-decisions/0007-bug-compat.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0007 — Bug compatibility and module retirement"
     },
     "adr.0008": {
-      "aliases": [
-        "ADR-0008"
-      ],
+      "aliases": ["ADR-0008"],
       "document": "adr.0008",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 4287,
@@ -3606,10 +3551,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0008 — Области защиты служб. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0008 — Области защиты служб"
         }
       },
@@ -3630,16 +3572,11 @@
       "path": "docs/architecture-decisions/0008-placement.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0008 — Service protection domains"
     },
     "adr.0009": {
-      "aliases": [
-        "ADR-0009"
-      ],
+      "aliases": ["ADR-0009"],
       "document": "adr.0009",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 2685,
@@ -3650,10 +3587,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0009 — Проектная основа собственного сценария. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0009 — Проектная основа собственного сценария"
         }
       },
@@ -3674,16 +3608,11 @@
       "path": "docs/architecture-decisions/0009-native-slice-baseline.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0009 — Native slice design baseline"
     },
     "adr.0010": {
-      "aliases": [
-        "ADR-0010"
-      ],
+      "aliases": ["ADR-0010"],
       "document": "adr.0010",
       "document_status": "HISTORICAL",
       "estimated_bytes": 3958,
@@ -3694,10 +3623,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0010 — Самостоятельный фундамент EL1. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0010 — Самостоятельный фундамент EL1"
         }
       },
@@ -3718,16 +3644,11 @@
       "path": "docs/architecture-decisions/0010-kernel-foundation.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0010 — Native EL1 foundation"
     },
     "adr.0011": {
-      "aliases": [
-        "ADR-0011"
-      ],
+      "aliases": ["ADR-0011"],
       "document": "adr.0011",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 2777,
@@ -3738,10 +3659,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0011 — Ревью методов по производительности и надёжности. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0011 — Ревью методов по производительности и надёжности"
         }
       },
@@ -3762,16 +3680,11 @@
       "path": "docs/architecture-decisions/0011-method-review.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0011 — Performance and reliability method review"
     },
     "adr.0012": {
-      "aliases": [
-        "ADR-0012"
-      ],
+      "aliases": ["ADR-0012"],
       "document": "adr.0012",
       "document_status": "CURRENT",
       "estimated_bytes": 4047,
@@ -3782,10 +3695,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0012 — Владение на нескольких CPU и подтверждённое освобождение ресурсов. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0012 — Владение на нескольких CPU и подтверждённое освобождение ресурсов"
         }
       },
@@ -3806,16 +3716,11 @@
       "path": "docs/architecture-decisions/0012-multicore-retirement.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0012 — Multicore ownership and acknowledged retirement"
     },
     "adr.0013": {
-      "aliases": [
-        "ADR-0013"
-      ],
+      "aliases": ["ADR-0013"],
       "document": "adr.0013",
       "document_status": "CURRENT",
       "estimated_bytes": 5278,
@@ -3826,10 +3731,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0013 — Effective authority и необходимость привилегий. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0013 — Effective authority и необходимость привилегий"
         }
       },
@@ -3850,16 +3752,11 @@
       "path": "docs/architecture-decisions/0013-security-boundaries.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0013 — Effective authority and privileged necessity"
     },
     "adr.0014": {
-      "aliases": [
-        "ADR-0014"
-      ],
+      "aliases": ["ADR-0014"],
       "document": "adr.0014",
       "document_status": "CURRENT",
       "estimated_bytes": 5035,
@@ -3870,10 +3767,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0014 — Основа исполнения в EL0 с фиксированным закреплением за CPU. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0014 — Основа исполнения в EL0 с фиксированным закреплением за CPU"
         }
       },
@@ -3894,16 +3788,11 @@
       "path": "docs/architecture-decisions/0014-el0-foundation.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0014 — Fixed-affinity EL0 execution foundation"
     },
     "adr.0015": {
-      "aliases": [
-        "ADR-0015"
-      ],
+      "aliases": ["ADR-0015"],
       "document": "adr.0015",
       "document_status": "CURRENT",
       "estimated_bytes": 15600,
@@ -3914,10 +3803,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0015 — Версионированная маршрутизация в изолированных потребителях EL0. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0015 — Версионированная маршрутизация в изолированных потребителях EL0"
         }
       },
@@ -3938,16 +3824,11 @@
       "path": "docs/architecture-decisions/0015-el0-versioned-routing.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0015 — Versioned routing in isolated EL0 consumers"
     },
     "adr.0016": {
-      "aliases": [
-        "ADR-0016"
-      ],
+      "aliases": ["ADR-0016"],
       "document": "adr.0016",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 6185,
@@ -3958,10 +3839,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0016 — Обязанности scheduler и enforced per-CPU ownership. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0016 — Обязанности scheduler и enforced per-CPU ownership"
         }
       },
@@ -3982,16 +3860,11 @@
       "path": "docs/architecture-decisions/0016-scheduler-ownership.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0016 — Scheduler responsibilities and enforced per-CPU ownership"
     },
     "adr.0017": {
-      "aliases": [
-        "ADR-0017"
-      ],
+      "aliases": ["ADR-0017"],
       "document": "adr.0017",
       "document_status": "HISTORICAL MILESTONE",
       "estimated_bytes": 7153,
@@ -4002,10 +3875,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0017 — Жизненный цикл собственных процессов с защитой от устаревших поколений. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0017 — Жизненный цикл собственных процессов с защитой от устаревших поколений"
         }
       },
@@ -4026,16 +3896,11 @@
       "path": "docs/architecture-decisions/0017-process-lifecycle.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0017 — Generation-safe native process lifecycle"
     },
     "adr.0018": {
-      "aliases": [
-        "ADR-0018"
-      ],
+      "aliases": ["ADR-0018"],
       "document": "adr.0018",
       "document_status": "CURRENT",
       "estimated_bytes": 4916,
@@ -4046,10 +3911,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0018 — Ограниченное синхронное копирование пользовательских данных. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0018 — Ограниченное синхронное копирование пользовательских данных"
         }
       },
@@ -4070,16 +3932,11 @@
       "path": "docs/architecture-decisions/0018-safe-user-copy.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0018 — Bounded synchronous safe user copy"
     },
     "adr.0019": {
-      "aliases": [
-        "ADR-0019"
-      ],
+      "aliases": ["ADR-0019"],
       "document": "adr.0019",
       "document_status": "HISTORICAL",
       "estimated_bytes": 4948,
@@ -4090,10 +3947,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0019 — Линейные namespace дескрипторов процессов. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0019 — Линейные namespace дескрипторов процессов"
         }
       },
@@ -4114,16 +3968,11 @@
       "path": "docs/architecture-decisions/0019-process-local-handles.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0019 — Linear process-local handle namespaces"
     },
     "adr.0020": {
-      "aliases": [
-        "ADR-0020"
-      ],
+      "aliases": ["ADR-0020"],
       "document": "adr.0020",
       "document_status": "CURRENT",
       "estimated_bytes": 6196,
@@ -4134,10 +3983,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0020 — Передача дескрипторов с ограничением прав и удержание targets. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0020 — Передача дескрипторов с ограничением прав и удержание targets"
         }
       },
@@ -4158,16 +4004,11 @@
       "path": "docs/architecture-decisions/0020-handle-transfer-and-retention.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0020 — Attenuated handle transfer and retained targets"
     },
     "adr.0021": {
-      "aliases": [
-        "ADR-0021"
-      ],
+      "aliases": ["ADR-0021"],
       "document": "adr.0021",
       "document_status": "CURRENT",
       "estimated_bytes": 7208,
@@ -4178,10 +4019,7 @@
         "ru": {
           "read_when": null,
           "summary": "Навигация по документу: ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU. Доказательства имеют указанные границы.",
-          "tags": [
-            "architecture",
-            "decision"
-          ],
+          "tags": ["architecture", "decision"],
           "title": "ADR-0021 — Жизненный цикл AArch64 ASID при фиксированном CPU"
         }
       },
@@ -4202,16 +4040,11 @@
       "path": "docs/architecture-decisions/0021-asid-lifecycle.md",
       "schema_version": 1,
       "summary": "Scoped architecture decision; acceptance is intended authority, not proof of all implementation.",
-      "tags": [
-        "architecture",
-        "decision"
-      ],
+      "tags": ["architecture", "decision"],
       "title": "ADR-0021 — Fixed-affinity AArch64 ASID lifecycle"
     },
     "adr.0022": {
-      "aliases": [
-        "ADR-0022"
-      ],
+      "aliases": ["ADR-0022"],
       "document": "adr.0022",
       "document_status": "CURRENT",
       "estimated_bytes": 7084,
@@ -4253,9 +4086,7 @@
       "title": "ADR-0022 — Bounded native Event grants and revocation"
     },
     "adr.0023": {
-      "aliases": [
-        "ADR-0023"
-      ],
+      "aliases": ["ADR-0023"],
       "document": "adr.0023",
       "document_status": "CURRENT",
       "estimated_bytes": 6955,
@@ -4297,9 +4128,7 @@
       "title": "ADR-0023 — One-process domains and scoped Event grants"
     },
     "adr.0024": {
-      "aliases": [
-        "ADR-0024"
-      ],
+      "aliases": ["ADR-0024"],
       "document": "adr.0024",
       "document_status": "CURRENT",
       "estimated_bytes": 3643,
@@ -4334,9 +4163,7 @@
       "title": "ADR-0024 — Documentation knowledge navigation and feature freshness"
     },
     "adr.0025": {
-      "aliases": [
-        "ADR-0025"
-      ],
+      "aliases": ["ADR-0025"],
       "document": "adr.0025",
       "document_status": "CURRENT",
       "estimated_bytes": 8708,
@@ -4371,9 +4198,7 @@
       "title": "ADR-0025 — Concrete bounded IPC and continuous fixed-affinity execution"
     },
     "adr.0026": {
-      "aliases": [
-        "ADR-0026"
-      ],
+      "aliases": ["ADR-0026"],
       "document": "adr.0026",
       "document_status": "CURRENT",
       "estimated_bytes": 7905,
@@ -4408,14 +4233,8 @@
       "title": "ADR-0026 — Isolated EL0 supervision and bounded lifecycle rendezvous"
     },
     "adr.0027": {
-      "aliases": [
-        "ADR-0027"
-      ],
-      "depends_on": [
-        "adr.0008",
-        "law.031",
-        "law.035"
-      ],
+      "aliases": ["ADR-0027"],
+      "depends_on": ["adr.0008", "law.031", "law.035"],
       "document": "adr.0027",
       "document_status": "CURRENT",
       "estimated_bytes": 6997,
@@ -4450,9 +4269,7 @@
       "title": "ADR-0027 — Bounded native device observations"
     },
     "case.kol-path.0001": {
-      "aliases": [
-        "KOL-PATH-0001"
-      ],
+      "aliases": ["KOL-PATH-0001"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0001",
       "kind": "research-case",
@@ -4484,9 +4301,7 @@
       "title": "close(): ошибка после освобождения fd"
     },
     "case.kol-path.0002": {
-      "aliases": [
-        "KOL-PATH-0002"
-      ],
+      "aliases": ["KOL-PATH-0002"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0002",
       "kind": "research-case",
@@ -4518,9 +4333,7 @@
       "title": "POSIX locks: любой close снимает блокировки процесса"
     },
     "case.kol-path.0003": {
-      "aliases": [
-        "KOL-PATH-0003"
-      ],
+      "aliases": ["KOL-PATH-0003"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0003",
       "kind": "research-case",
@@ -4552,9 +4365,7 @@
       "title": "epoll: dup и lifetime open file description"
     },
     "case.kol-path.0004": {
-      "aliases": [
-        "KOL-PATH-0004"
-      ],
+      "aliases": ["KOL-PATH-0004"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0004",
       "kind": "research-case",
@@ -4586,9 +4397,7 @@
       "title": "select: предел fd_set находится в libc"
     },
     "case.kol-path.0005": {
-      "aliases": [
-        "KOL-PATH-0005"
-      ],
+      "aliases": ["KOL-PATH-0005"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0005",
       "kind": "research-case",
@@ -4620,9 +4429,7 @@
       "title": "ioctl time32: переход времени через 2038"
     },
     "case.kol-path.0006": {
-      "aliases": [
-        "KOL-PATH-0006"
-      ],
+      "aliases": ["KOL-PATH-0006"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0006",
       "kind": "research-case",
@@ -4654,9 +4461,7 @@
       "title": "ioctl: padding, pointers и compat layout"
     },
     "case.kol-path.0007": {
-      "aliases": [
-        "KOL-PATH-0007"
-      ],
+      "aliases": ["KOL-PATH-0007"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0007",
       "kind": "research-case",
@@ -4702,9 +4507,7 @@
       "title": "Dirty COW: откат исправления из-за s390"
     },
     "case.kol-path.0008": {
-      "aliases": [
-        "KOL-PATH-0008"
-      ],
+      "aliases": ["KOL-PATH-0008"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0008",
       "kind": "research-case",
@@ -4750,9 +4553,7 @@
       "title": "Dirty Pipe: неинициализированные flags буфера"
     },
     "case.kol-path.0009": {
-      "aliases": [
-        "KOL-PATH-0009"
-      ],
+      "aliases": ["KOL-PATH-0009"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0009",
       "kind": "research-case",
@@ -4784,9 +4585,7 @@
       "title": "GUP pinning: ссылка не равна DMA lease"
     },
     "case.kol-path.0010": {
-      "aliases": [
-        "KOL-PATH-0010"
-      ],
+      "aliases": ["KOL-PATH-0010"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0010",
       "kind": "research-case",
@@ -4818,9 +4617,7 @@
       "title": "Coherent DMA всё равно требует barriers"
     },
     "case.kol-path.0011": {
-      "aliases": [
-        "KOL-PATH-0011"
-      ],
+      "aliases": ["KOL-PATH-0011"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0011",
       "kind": "research-case",
@@ -4852,9 +4649,7 @@
       "title": "Cortex-A53 843419: linker workaround"
     },
     "case.kol-path.0012": {
-      "aliases": [
-        "KOL-PATH-0012"
-      ],
+      "aliases": ["KOL-PATH-0012"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0012",
       "kind": "research-case",
@@ -4886,9 +4681,7 @@
       "title": "Device Tree bindings — внешний ABI"
     },
     "case.kol-path.0013": {
-      "aliases": [
-        "KOL-PATH-0013"
-      ],
+      "aliases": ["KOL-PATH-0013"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0013",
       "kind": "research-case",
@@ -4920,9 +4713,7 @@
       "title": "ACPI _OSI: идентичность ОС вместо capability"
     },
     "case.kol-path.0014": {
-      "aliases": [
-        "KOL-PATH-0014"
-      ],
+      "aliases": ["KOL-PATH-0014"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0014",
       "kind": "research-case",
@@ -4954,9 +4745,7 @@
       "title": "USB persist: descriptors не доказывают идентичность"
     },
     "case.kol-path.0015": {
-      "aliases": [
-        "KOL-PATH-0015"
-      ],
+      "aliases": ["KOL-PATH-0015"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0015",
       "kind": "research-case",
@@ -4988,9 +4777,7 @@
       "title": "blk-mq: масштабирование очередей не гарантирует ordering"
     },
     "case.kol-path.0016": {
-      "aliases": [
-        "KOL-PATH-0016"
-      ],
+      "aliases": ["KOL-PATH-0016"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0016",
       "kind": "research-case",
@@ -5022,9 +4809,7 @@
       "title": "cgroup v1: несовместимые иерархии controllers"
     },
     "case.kol-path.0017": {
-      "aliases": [
-        "KOL-PATH-0017"
-      ],
+      "aliases": ["KOL-PATH-0017"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0017",
       "kind": "research-case",
@@ -5056,9 +4841,7 @@
       "title": "User namespaces: dropping groups расширяло доступ"
     },
     "case.kol-path.0018": {
-      "aliases": [
-        "KOL-PATH-0018"
-      ],
+      "aliases": ["KOL-PATH-0018"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0018",
       "kind": "research-case",
@@ -5090,9 +4873,7 @@
       "title": "Seccomp notification: TOCTOU mutable pointers"
     },
     "case.kol-path.0019": {
-      "aliases": [
-        "KOL-PATH-0019"
-      ],
+      "aliases": ["KOL-PATH-0019"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0019",
       "kind": "research-case",
@@ -5124,9 +4905,7 @@
       "title": "PID reuse: pidfd и атомарное создание"
     },
     "case.kol-path.0020": {
-      "aliases": [
-        "KOL-PATH-0020"
-      ],
+      "aliases": ["KOL-PATH-0020"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0020",
       "kind": "research-case",
@@ -5158,9 +4937,7 @@
       "title": "clone3: размерная структура вместо перегрузки аргументов"
     },
     "case.kol-path.0021": {
-      "aliases": [
-        "KOL-PATH-0021"
-      ],
+      "aliases": ["KOL-PATH-0021"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0021",
       "kind": "research-case",
@@ -5192,9 +4969,7 @@
       "title": "Autogroup: nice действует внутри task group"
     },
     "case.kol-path.0022": {
-      "aliases": [
-        "KOL-PATH-0022"
-      ],
+      "aliases": ["KOL-PATH-0022"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0022",
       "kind": "research-case",
@@ -5226,9 +5001,7 @@
       "title": "RCU: удаление ссылки не разрешает free"
     },
     "case.kol-path.0023": {
-      "aliases": [
-        "KOL-PATH-0023"
-      ],
+      "aliases": ["KOL-PATH-0023"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0023",
       "kind": "research-case",
@@ -5260,9 +5033,7 @@
       "title": "Удаление числового _sysctl ABI"
     },
     "case.kol-path.0024": {
-      "aliases": [
-        "KOL-PATH-0024"
-      ],
+      "aliases": ["KOL-PATH-0024"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0024",
       "kind": "research-case",
@@ -5294,9 +5065,7 @@
       "title": "SO_REUSEPORT: shared port требует общей authority"
     },
     "case.kol-path.0025": {
-      "aliases": [
-        "KOL-PATH-0025"
-      ],
+      "aliases": ["KOL-PATH-0025"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0025",
       "kind": "research-case",
@@ -5328,9 +5097,7 @@
       "title": "Robust futex: cleanup по списку вместо всех VMA"
     },
     "case.kol-path.0026": {
-      "aliases": [
-        "KOL-PATH-0026"
-      ],
+      "aliases": ["KOL-PATH-0026"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0026",
       "kind": "research-case",
@@ -5362,9 +5129,7 @@
       "title": "futex_waitv: ожидание нескольких адресов"
     },
     "case.kol-path.0027": {
-      "aliases": [
-        "KOL-PATH-0027"
-      ],
+      "aliases": ["KOL-PATH-0027"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0027",
       "kind": "research-case",
@@ -5396,9 +5161,7 @@
       "title": "PCI MSI: неисправный bridge требует scoped fallback"
     },
     "case.kol-path.0028": {
-      "aliases": [
-        "KOL-PATH-0028"
-      ],
+      "aliases": ["KOL-PATH-0028"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0028",
       "kind": "research-case",
@@ -5430,9 +5193,7 @@
       "title": "USB internal API redesign без вечного driver ABI"
     },
     "case.kol-path.0029": {
-      "aliases": [
-        "KOL-PATH-0029"
-      ],
+      "aliases": ["KOL-PATH-0029"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0029",
       "kind": "research-case",
@@ -5464,9 +5225,7 @@
       "title": "Удалённая mandatory file locking"
     },
     "case.kol-path.0030": {
-      "aliases": [
-        "KOL-PATH-0030"
-      ],
+      "aliases": ["KOL-PATH-0030"],
       "entity_status": "ANALYZED_WITH_OPEN_QUESTIONS",
       "id": "case.kol-path.0030",
       "kind": "research-case",
@@ -5526,9 +5285,7 @@
       "title": "epoll fix regression: нельзя воскресить dying file"
     },
     "cost-l.0001": {
-      "aliases": [
-        "COST-L-0001"
-      ],
+      "aliases": ["COST-L-0001"],
       "entity_status": "CANDIDATE",
       "id": "cost-l.0001",
       "kind": "cost-l",
@@ -5557,9 +5314,7 @@
       "title": "Allocation-context and reclaim side effects"
     },
     "cost-l.0002": {
-      "aliases": [
-        "COST-L-0002"
-      ],
+      "aliases": ["COST-L-0002"],
       "entity_status": "CANDIDATE",
       "id": "cost-l.0002",
       "kind": "cost-l",
@@ -5588,9 +5343,7 @@
       "title": "sysfs text attributes as a stable machine-consumed ABI"
     },
     "cost-l.0003": {
-      "aliases": [
-        "COST-L-0003"
-      ],
+      "aliases": ["COST-L-0003"],
       "entity_status": "CANDIDATE",
       "id": "cost-l.0003",
       "kind": "cost-l",
@@ -5621,8 +5374,8 @@
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 18946,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "estimated_bytes": 19448,
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "localized": {
@@ -5637,13 +5390,13 @@
         "en": {
           "end": 258,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 1
         },
         "ru": {
           "end": 258,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 1
         }
       },
@@ -5865,22 +5618,15 @@
       ],
       "document": "doc.kolvrt.arena.measurement-contract",
       "document_status": "CURRENT",
-      "estimated_bytes": 10197,
-      "evidence_scope": "experimental offline A0/A1 contracts and import admission checks; no executed Arena kernel benchmark, records service, independent attestation or certification.",
+      "estimated_bytes": 10618,
+      "evidence_scope": "experimental general offline A0/A1 contracts and import admission plus the accepted bounded QEMU CLOCK pilot; no records service, general independent attestation or certification.",
       "id": "doc.kolvrt.arena.measurement-contract",
       "kind": "subsystem-contract",
       "localized": {
         "ru": {
-          "read_when": [
-            "Arena профили измерений сравнимость SFR SAR допуск"
-          ],
+          "read_when": ["Arena профили измерений сравнимость SFR SAR допуск"],
           "summary": "Экспериментальный реестр методик, замороженные профили измерений и офлайн-допуск импортов; без kernel records.",
-          "tags": [
-            "arena",
-            "standards",
-            "measurement",
-            "security"
-          ],
+          "tags": ["arena", "standards", "measurement", "security"],
           "title": "Контракт измерений Arena"
         }
       },
@@ -5888,13 +5634,13 @@
         "en": {
           "end": 80,
           "path": "docs/architecture/arena-measurement-contract.md",
-          "sha256": "49efdc3892b2db5b6646943a6715cb78663784941984231c1960578a2fdbb230",
+          "sha256": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
           "start": 1
         },
         "ru": {
           "end": 80,
           "path": "translations/ru/docs/architecture/arena-measurement-contract.md",
-          "sha256": "c978134c1c3bbe9c7d50fbb080c2cb73d84b11b3220d5d2ae5995eda1ee87a62",
+          "sha256": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194",
           "start": 1
         }
       },
@@ -5904,19 +5650,11 @@
       ],
       "schema_version": 1,
       "summary": "Experimental standards registry, frozen measurement profiles and offline import admission; no kernel records.",
-      "tags": [
-        "arena",
-        "standards",
-        "measurement",
-        "security"
-      ],
+      "tags": ["arena", "standards", "measurement", "security"],
       "title": "Arena measurement contract"
     },
     "doc.kolvrt.ci.performance": {
-      "depends_on": [
-        "doc.kolvrt.docs.knowledge",
-        "adr.0006"
-      ],
+      "depends_on": ["doc.kolvrt.docs.knowledge", "adr.0006"],
       "document": "doc.kolvrt.ci.performance",
       "document_status": "CURRENT",
       "estimated_bytes": 21936,
@@ -6029,10 +5767,7 @@
         "ru": {
           "read_when": null,
           "summary": "Историческая Phase 0.1; исходные числа и отсутствие ядра не являются текущим статусом.",
-          "tags": [
-            "historical",
-            "phase-0"
-          ],
+          "tags": ["historical", "phase-0"],
           "title": "Результаты и ограничения этапа 0.1"
         }
       },
@@ -6053,10 +5788,7 @@
       "path": "docs/research/phase-0-1-report.md",
       "schema_version": 1,
       "summary": "Historical Phase 0.1 snapshot; original counts and no-kernel statement are not current status.",
-      "tags": [
-        "historical",
-        "phase-0"
-      ],
+      "tags": ["historical", "phase-0"],
       "title": "Phase 0.1 results and limits"
     },
     "doc.kolvrt.ipc.acceptance-review": {
@@ -6239,7 +5971,7 @@
     "doc.kolvrt.kernel.devices": {
       "document": "doc.kolvrt.kernel.devices",
       "document_status": "CURRENT",
-      "estimated_bytes": 8498,
+      "estimated_bytes": 8519,
       "evidence_scope": "Phase 4.0 descriptor contract; implementation and exact-source execution evidence are recorded separately below.",
       "id": "doc.kolvrt.kernel.devices",
       "kind": "subsystem-contract",
@@ -6255,13 +5987,13 @@
         "en": {
           "end": 116,
           "path": "docs/kernel/devices.md",
-          "sha256": "78029634a225c42964bd5a686016f44dd4290c7aaa51916d1499f583e2f1a711",
+          "sha256": "b19954e815acc7291aab2b86c88509147cea0c80ce256aa092ccaab1ad4474da",
           "start": 1
         },
         "ru": {
           "end": 116,
           "path": "translations/ru/docs/kernel/devices.md",
-          "sha256": "99e811ebc674b62de5b68012a786732f413aebc90e61d5c2066fa6758411d2d7",
+          "sha256": "ba0045576ecdeacaa6be702ef68b126e3a3453c00633e50c4db7d0f706d0f1b5",
           "start": 1
         }
       },
@@ -6409,8 +6141,8 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 38631,
-      "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is open as #133; master #37 closure is pending its disposition.",
+      "estimated_bytes": 39233,
+      "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is retained under owner-closed #133; master #37 is closed after the reviewed PR #137 and successful merged-main checks. Historical latency attribution remains UNKNOWN.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "localized": {
@@ -6425,13 +6157,13 @@
         "en": {
           "end": 304,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "fbb82d5a7387b33eb5d4aa85b46c5df041d85be600bd299b8d30c7ac9b746531",
+          "sha256": "33a0beb93d45fbfcb8aecdbb4ec0e7203e23744b9e7c71f289140e523b1cb046",
           "start": 1
         },
         "ru": {
           "end": 303,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "22153090247074b6c3fb280b8b5b676c1336308c55153099422816347ef88f31",
+          "sha256": "a949c8920e8d5f7d8d6ecccd473752ae2bfef232d4f08f8c3cc410696db1d80e",
           "start": 1
         }
       },
@@ -6511,7 +6243,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 29126,
+      "estimated_bytes": 29404,
       "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. The retained Phase 3.6 receipt is stale for these changed sources; bounded Phase 3.7 acceptance is recorded in [native applications](native-applications.md). Readiness and performance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -6527,13 +6259,13 @@
         "en": {
           "end": 199,
           "path": "docs/kernel/supervision.md",
-          "sha256": "ef84411a67d2edab2eef0b027d3af5822049ce42a8b5a1d0de2fab6e61552709",
+          "sha256": "edf965f6d1b02edb7d1956ad04e1ab4a5373672e3d0ef228d5afb860fbb73c83",
           "start": 1
         },
         "ru": {
           "end": 201,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "b49aa8d733f4788a5d8252e5471b684a70b7d22901ce7a3934d946830e53aacc",
+          "sha256": "c6d61c21d12b04b2b48f08d2280fe8df24d0c9b2f9b5c940a23c36ada553d41e",
           "start": 1
         }
       },
@@ -6729,8 +6461,8 @@
     "doc.kolvrt.research.clock-passport": {
       "document": "doc.kolvrt.research.clock-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 11161,
-      "evidence_scope": "reviewed bounded issue #32 measurement protocol; real execution acceptance remains pending.",
+      "estimated_bytes": 13026,
+      "evidence_scope": "accepted bounded issue #32 CLOCK pilot on source 2978ad9; real QEMU DEV/PROD execution, exact artifacts and independent review, not physical performance or eligible Arena records.",
       "id": "doc.kolvrt.research.clock-passport",
       "kind": "subsystem-contract",
       "localized": {
@@ -6743,15 +6475,15 @@
       },
       "locations": {
         "en": {
-          "end": 125,
+          "end": 137,
           "path": "docs/research/clock-passport.md",
-          "sha256": "bf5cb386e05b9cb470eff47b74564f5b82fd40d3b50f0b05fc3612356b5f4dec",
+          "sha256": "2f97139c0cc3aec4efad809d42c1e0185e064f0ceab0a1bd4e35934238058f0b",
           "start": 1
         },
         "ru": {
-          "end": 125,
+          "end": 137,
           "path": "translations/ru/docs/research/clock-passport.md",
-          "sha256": "b4201ad81c01bed71f9c29f4e76e1f3b3b2907e3ef1310d33aef62e588111642",
+          "sha256": "89071afe53e2ee169a880cb786a496edb94bf9534cdae7e025505d026ccdf0f3",
           "start": 1
         }
       },
@@ -6989,7 +6721,7 @@
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
       "estimated_bytes": 869,
-      "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is open as #133; master #37 closure is pending its disposition.",
+      "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is retained under owner-closed #133; master #37 is closed after the reviewed PR #137 and successful merged-main checks. Historical latency attribution remains UNKNOWN.",
       "feature": {
         "acceptance": [
           "docs/architecture/native-phase37-acceptance-review.md",
@@ -6997,14 +6729,10 @@
           "docs/architecture/native-phase37-fixture-review.md",
           "research/results/native-phase37-43af402.json"
         ],
-        "adrs": [
-          "adr.0026"
-        ],
+        "adrs": ["adr.0026"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Original standalone no_std ELF supervisor/service/client loaded by the actual kernel ELF loader. One production SDK/service/supervisor implementation; external ABI actors only. Actual persistent requests and post-binding pre-first-COMMIT fault/recovery/fresh binding followed by normal production-session shutdown and acquired reclamation. SessionPolicy selects persistent or finish-after-client lifetime through an opaque application bootstrap argument; no kernel watchdog or application-specific callbacks.",
-        "issues": [
-          28
-        ],
+        "issues": [28],
         "limitations": [
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
@@ -7146,13 +6874,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "fbb82d5a7387b33eb5d4aa85b46c5df041d85be600bd299b8d30c7ac9b746531",
+          "sha256": "33a0beb93d45fbfcb8aecdbb4ec0e7203e23744b9e7c71f289140e523b1cb046",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "22153090247074b6c3fb280b8b5b676c1336308c55153099422816347ef88f31",
+          "sha256": "a949c8920e8d5f7d8d6ecccd473752ae2bfef232d4f08f8c3cc410696db1d80e",
           "start": 7
         }
       },
@@ -7177,33 +6905,21 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1237,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "feature": {
         "acceptance": [
           "research/results/arena-foundation-host.json",
           "research/results/arena-foundation-host-final.json",
           "research/results/arena-launcher-host.json"
         ],
-        "adrs": [
-          "adr.0006",
-          "adr.0003",
-          "adr.0024"
-        ],
+        "adrs": ["adr.0006", "adr.0003", "adr.0024"],
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates; no kernel benchmark runner or records publication.",
-        "issues": [
-          93,
-          32,
-          33,
-          34,
-          35,
-          36,
-          50
-        ],
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
+        "issues": [93, 32, 33, 34, 35, 36, 50],
         "limitations": [
           "Producer assertions are not attestation; record_eligible is always false. The proposed range profile and synthetic tests do not establish kernel PERF/SEC acceptance, DEV attribution, PROD external outcomes or physical ARM64 performance."
         ],
-        "next_gate": "Review source mappings and implement the first real kernel mechanism pipeline in #32; independently verify execution/applicability before records.",
+        "next_gate": "Extend reviewed pipelines to IPC #33 and REL/fuzz/SAR #34/#35; implement publication/regression #36 and independently verified contribution/custody before records. Preserve the accepted CLOCK pilot scope.",
         "readiness": "NOT_READY",
         "roadmap_gate": "Replaceable Component Arena / Performance & Reliability Passports",
         "sources": [
@@ -7251,21 +6967,15 @@
         ]
       },
       "gaps": [
-        "Real kernel measurement pipelines, independent evidence admission, records/history and versioned architecture projection remain unimplemented."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "id": "kolvrt.arena",
       "kind": "feature",
       "localized": {
         "ru": {
-          "read_when": [
-            "сравнить заменяемые компоненты Arena"
-          ],
-          "summary": "Экспериментальная офлайн-валидация контракта Arena; реальные измерения и records остаются открытыми.",
-          "tags": [
-            "arena",
-            "passports",
-            "components"
-          ],
+          "read_when": ["сравнить заменяемые компоненты Arena"],
+          "summary": "Экспериментальная общая валидация Arena с отдельно принятым ограниченным пилотом CLOCK; gates публикации records остаются открытыми.",
+          "tags": ["arena", "passports", "components"],
           "title": "Принцип и архитектурная граница"
         }
       },
@@ -7273,26 +6983,20 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 7
         }
       },
       "path": "docs/architecture/component-arena.md",
-      "read_when": [
-        "compare replaceable components Arena"
-      ],
-      "summary": "Experimental offline Arena contract validation; real measurement and record gates remain open.",
-      "tags": [
-        "arena",
-        "passports",
-        "components"
-      ],
+      "read_when": ["compare replaceable components Arena"],
+      "summary": "Experimental general Arena validation with a separately accepted bounded CLOCK pilot; record publication gates remain open.",
+      "tags": ["arena", "passports", "components"],
       "title": "Principle and architectural boundary"
     },
     "kolvrt.arena.admission": {
@@ -7301,7 +7005,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1057,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.admission",
       "kind": "contract-section",
       "localized": {
@@ -7316,13 +7020,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 33
         }
       },
@@ -7342,23 +7046,21 @@
       "document": "doc.kolvrt.research.clock-passport",
       "document_status": "CURRENT",
       "estimated_bytes": 1238,
-      "evidence_scope": "reviewed bounded issue #32 measurement protocol; real execution acceptance remains pending.",
+      "evidence_scope": "accepted bounded issue #32 CLOCK pilot on source 2978ad9; real QEMU DEV/PROD execution, exact artifacts and independent review, not physical performance or eligible Arena records.",
       "feature": {
-        "acceptance": [],
-        "adrs": [
-          "adr.0006",
-          "adr.0015"
-        ],
-        "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Bounded external CLOCK ABI actor and Arena passport pipeline with matched intermediate-recorder observations; actual execution acceptance pending.",
-        "issues": [
-          32
-        ],
+        "acceptance": ["research/results/clock-passport-acceptance.json"],
+        "adrs": ["adr.0006", "adr.0015"],
+        "implementation": "BOUNDED_IMPLEMENTED",
+        "implementation_scope": "Accepted external CLOCK ABI pilot: fixed twelve-boot DEV/PROD campaign, exact original ELF/source/configuration evidence, partial execution-window accounting, matched incremental recorder observations and six structurally admissible passports through the existing Arena validator.",
+        "issues": [32],
         "limitations": [
           "No pure syscall latency, full timestamp observer cost, exclusive CPU attribution, physical evidence, adequate tails or eligible Arena record."
         ],
-        "next_gate": "Review profile, oracle and complete EN/RU pair; execute twelve fresh DEV/PROD guest boots and retain exact-source passport evidence.",
-        "readiness": "NOT_READY",
+        "next_gate": "Extend separate IPC, reliability and fuzz scopes in #33/#34/#35; independent record publication, adequate tails and physical hardware remain unverified.",
+        "readiness": "READY",
+        "readiness_acceptance": [
+          "research/results/clock-passport-acceptance.json"
+        ],
         "sources": [
           "apps/native-runtime/src/lib.rs",
           "tests/native-apps/Cargo.toml",
@@ -7383,13 +7085,22 @@
             "from": "UNRECORDED",
             "reason": "Introduce the external pilot protocol and proposed profiles without execution acceptance.",
             "to": "EXPERIMENTAL"
+          },
+          {
+            "acceptance": ["research/results/clock-passport-acceptance.json"],
+            "from": "EXPERIMENTAL",
+            "reason": "Independent source, EN/RU and actual evidence review accepted twelve real boots, exact raw artifacts and current-source regression; no eligible records or hardware performance claim.",
+            "to": "BOUNDED_IMPLEMENTED"
           }
         ],
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Real pilot campaign pending.",
-            "state": "UNKNOWN"
+            "reason": "Independent review validated all twelve CLOCK boots, six portable passports and the complete source-matching foundation matrix.",
+            "receipt": "research/results/clock-passport-acceptance.json",
+            "receipt_sha256": "8bea832e800a4d58f401d8916b2c9f302c548ae99a7a0d0c6c719b003ed3743f",
+            "scope": "Clean campaign source 2978ad9693b7df1e70487ffbf01d5ffdfe27fe31, pinned QEMU 10.1.0 ARM64 TCG, DEV/PROD; useful CLOCK envelope and incremental recorder cost only. Full matrix uses identical 151 execution source hashes.",
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -7412,13 +7123,13 @@
         "en": {
           "end": 14,
           "path": "docs/research/clock-passport.md",
-          "sha256": "bf5cb386e05b9cb470eff47b74564f5b82fd40d3b50f0b05fc3612356b5f4dec",
+          "sha256": "2f97139c0cc3aec4efad809d42c1e0185e064f0ceab0a1bd4e35934238058f0b",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/research/clock-passport.md",
-          "sha256": "b4201ad81c01bed71f9c29f4e76e1f3b3b2907e3ef1310d33aef62e588111642",
+          "sha256": "89071afe53e2ee169a880cb786a496edb94bf9534cdae7e025505d026ccdf0f3",
           "start": 7
         }
       },
@@ -7432,7 +7143,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1142,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.comparison",
       "kind": "contract-section",
       "localized": {
@@ -7447,13 +7158,13 @@
         "en": {
           "end": 80,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 63
         },
         "ru": {
           "end": 80,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 63
         }
       },
@@ -7467,7 +7178,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1175,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.contract",
       "kind": "contract-section",
       "localized": {
@@ -7482,13 +7193,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 19
         }
       },
@@ -7502,7 +7213,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1170,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.cost-l",
       "kind": "contract-section",
       "localized": {
@@ -7517,13 +7228,13 @@
         "en": {
           "end": 90,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 79
         },
         "ru": {
           "end": 90,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 79
         }
       },
@@ -7537,7 +7248,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 2193,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.passports",
       "kind": "contract-section",
       "localized": {
@@ -7552,13 +7263,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 41
         }
       },
@@ -7572,7 +7283,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1080,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.receipts",
       "kind": "contract-section",
       "localized": {
@@ -7587,13 +7298,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 55
         }
       },
@@ -7606,8 +7317,8 @@
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 1978,
-      "evidence_scope": "experimental offline standards/profile/import validation; real kernel Arena runs, attribution, records and graph UI remain unimplemented.",
+      "estimated_bytes": 2061,
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.roadmap",
       "kind": "contract-section",
       "localized": {
@@ -7622,13 +7333,13 @@
         "en": {
           "end": 104,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "f7a654ee27d88c5501a1e63b94d25b76012ce8101ef05d644864461e78aaf1a0",
+          "sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
           "start": 89
         },
         "ru": {
           "end": 104,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "39b25747c413b5c736b152ece9195c2498402518ac3da0ab3954e83561ff5451",
+          "sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389",
           "start": 89
         }
       },
@@ -7823,14 +7534,10 @@
           "research/measurements/ci-build-reuse.json",
           "research/measurements/ci-b5-reuse.json"
         ],
-        "adrs": [
-          "adr.0006"
-        ],
+        "adrs": ["adr.0006"],
         "implementation": "EXPERIMENTAL",
         "implementation_scope": "Experimental timing, versioned integrity-checked caches, split local checks, four-way kernel matrix partitioning and exact-source aggregate validation; CI performance acceptance remains pending. Phase 3.7 adds a mandatory separate native workload for production-method UNIT tests, external ABI/SYSTEM scenarios, actual application smoke/runtime and original-source dependency closure proof. Matrix coverage distinguishes negative inputs, positive invariants and remaining legacy failures; this is correctness integration, not new CI speed acceptance. B5 reuses fresh same-invocation ordinary events within each shard with schema-2 donor provenance and independent consumer assertions; feature-specific controls and statistical ASID runs remain separately executed.",
-        "issues": [
-          109
-        ],
+        "issues": [109],
         "limitations": [
           "Hosted cold/warm acceleration, cache service behavior and semantic/EN-RU review remain pending. No compiler-exclusive CPU attribution or historical QEMU observation replay is claimed; invocation-local ordinary reuse preserves each required assertion, and conservative impact scheduling cannot prove semantic completeness."
         ],
@@ -7881,12 +7588,7 @@
         "ru": {
           "read_when": null,
           "summary": "Измеренный старый baseline, проверка целостности кэшей, параллельные проверки и полная агрегация четырёх QEMU shards.",
-          "tags": [
-            "ci",
-            "timing",
-            "cache",
-            "tooling"
-          ],
+          "tags": ["ci", "timing", "cache", "tooling"],
           "title": "Интеграция supervisor и сопоставимость workload"
         }
       },
@@ -7906,20 +7608,12 @@
       },
       "path": "docs/ci/performance.md",
       "summary": "Measured legacy baseline, integrity-checked caches, parallel checks and complete four-shard QEMU matrix aggregation.",
-      "tags": [
-        "ci",
-        "timing",
-        "cache",
-        "tooling"
-      ],
+      "tags": ["ci", "timing", "cache", "tooling"],
       "title": "Supervisor integration and workload equivalence"
     },
     "kolvrt.clock.query": {
       "anchor": "kolvrt-clock-query",
-      "depends_on": [
-        "adr.0015",
-        "law.036"
-      ],
+      "depends_on": ["adr.0015", "law.036"],
       "document": "doc.kolvrt.kernel.clock",
       "document_status": "CURRENT",
       "estimated_bytes": 553,
@@ -7954,9 +7648,7 @@
     },
     "kolvrt.clock.query.api": {
       "anchor": "kolvrt-clock-query-api",
-      "depends_on": [
-        "kolvrt.clock.query"
-      ],
+      "depends_on": ["kolvrt.clock.query"],
       "document": "doc.kolvrt.kernel.clock",
       "document_status": "CURRENT",
       "estimated_bytes": 1171,
@@ -8007,21 +7699,11 @@
       "estimated_bytes": 1261,
       "evidence_scope": "bounded host/CI declarations and synthetic regression fixtures; no loader, Linux driver support or deployed module acceptance.",
       "feature": {
-        "acceptance": [
-          "research/results/issue47-compatibility-manifests.json"
-        ],
-        "adrs": [
-          "adr.0007",
-          "adr.0013",
-          "adr.0015"
-        ],
+        "acceptance": ["research/results/issue47-compatibility-manifests.json"],
+        "adrs": ["adr.0007", "adr.0013", "adr.0015"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Closed module inventory, reciprocal debt/consumer/version/scope checks, source/artifact/EXC/support identities and Cargo-parsed native declaration closure, with existing synthetic window contracts only.",
-        "issues": [
-          47,
-          46,
-          48
-        ],
+        "issues": [47, 46, 48],
         "limitations": [
           "Unmarked adapters and auxiliary source completeness require review; no production module/driver data, loader, live consumers, admission or runtime retirement proof. Current Linux debts remain research-only."
         ],
@@ -8145,17 +7827,10 @@
           "research/results/issue48-cost-l-arena-rebased.json",
           "research/results/issue48-manifest-queries.json"
         ],
-        "adrs": [
-          "adr.0007",
-          "adr.0008",
-          "adr.0013",
-          "adr.0015"
-        ],
+        "adrs": ["adr.0007", "adr.0008", "adr.0013", "adr.0015"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Bounded host queries over registry and reciprocal module declarations, default repository join and explicit custom-inventory join; no runtime inspection or production deployment.",
-        "issues": [
-          48
-        ],
+        "issues": [48],
         "limitations": [
           "TRANSITIVE relations remain declared without reconstructed package paths; global runtime coverage is UNKNOWN. Production data/source completeness under #47 and semantic/EN-RU human acceptance for #48 remain open."
         ],
@@ -8199,9 +7874,7 @@
         ],
         "transitions": [
           {
-            "acceptance": [
-              "research/results/issue48-cost-l-queries.json"
-            ],
+            "acceptance": ["research/results/issue48-cost-l-queries.json"],
             "from": "UNRECORDED",
             "reason": "First scoped CLI implementation with exact-source host acceptance; production integration remains gated by #47.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -8258,17 +7931,11 @@
       "estimated_bytes": 12595,
       "evidence_scope": "host Cargo metadata, source audit and dependency policy enforcement; no kernel behavior claim.",
       "feature": {
-        "acceptance": [
-          "research/results/issue94-dependency-hygiene.json"
-        ],
-        "adrs": [
-          "adr.0013"
-        ],
+        "acceptance": ["research/results/issue94-dependency-hygiene.json"],
+        "adrs": ["adr.0013"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Host-only metadata and policy checker; no external production kernel dependency, no count quota.",
-        "issues": [
-          94
-        ],
+        "issues": [94],
         "limitations": [
           "Workspace-unified all-target closures are conservative, not compiled size or isolated consumer counts. Artifact history expires after 90 days without external archival. No kernel execution claim."
         ],
@@ -8296,9 +7963,7 @@
         ],
         "transitions": [
           {
-            "acceptance": [
-              "research/results/issue94-dependency-hygiene.json"
-            ],
+            "acceptance": ["research/results/issue94-dependency-hygiene.json"],
             "from": "UNRECORDED",
             "reason": "First bounded implementation of the dependency hygiene policy, inventory and CI controls.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -8326,12 +7991,7 @@
         "ru": {
           "read_when": null,
           "summary": "All-declaration kernel boundary, feature-expanded inventory, graph deltas and supply-chain checks.",
-          "tags": [
-            "dependencies",
-            "supply-chain",
-            "kernel",
-            "tcb"
-          ],
+          "tags": ["dependencies", "supply-chain", "kernel", "tcb"],
           "title": "Политика и реализация"
         }
       },
@@ -8351,21 +8011,12 @@
       },
       "path": "docs/architecture/dependency-hygiene.md",
       "summary": "All-declaration kernel boundary, feature-expanded inventory, graph deltas and supply-chain checks.",
-      "tags": [
-        "dependencies",
-        "supply-chain",
-        "kernel",
-        "tcb"
-      ],
+      "tags": ["dependencies", "supply-chain", "kernel", "tcb"],
       "title": "Policy and implementation"
     },
     "kolvrt.devices.observations": {
       "anchor": "kolvrt-devices-observations",
-      "depends_on": [
-        "law.031",
-        "law.035",
-        "adr.0008"
-      ],
+      "depends_on": ["law.031", "law.035", "adr.0008"],
       "document": "doc.kolvrt.kernel.devices",
       "document_status": "CURRENT",
       "estimated_bytes": 1184,
@@ -8375,14 +8026,10 @@
           "research/results/device-phase40.json",
           "research/results/device-phase40-reviewed.json"
         ],
-        "adrs": [
-          "adr.0027"
-        ],
+        "adrs": ["adr.0027"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "One root-level non-DMA PL011 discovered from the pinned boot DTB, immutable bounded observations, reserved boot-console ownership and owner-local identity validation.",
-        "issues": [
-          79
-        ],
+        "issues": [79],
         "limitations": [
           "No driver binding, MMIO/IRQ grants, DMA, hotplug, global scope allocator or physical ARM64 acceptance; boot console remains reserved."
         ],
@@ -8411,9 +8058,7 @@
             "to": "EXPERIMENTAL"
           },
           {
-            "acceptance": [
-              "research/results/device-phase40.json"
-            ],
+            "acceptance": ["research/results/device-phase40.json"],
             "from": "EXPERIMENTAL",
             "reason": "Independent architecture/code and EN/RU review accepted the bounded contract; real DEV/PROD discovery and full 144-obligation matrix passed.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -8422,11 +8067,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "The CLOCK pilot changes shared execution/SDK sources; retained receipts remain historical until exact-source applicability is renewed. Production mechanism guarantees and historical acceptance are preserved.",
-            "receipt": "research/measurements/runs/1791406911825-phase40-device-reviewed-82cc5a1ec9cb.json",
-            "receipt_sha256": "d1460f417412517edef54367766a2be65b0f9e8d5983f977d2e3a6921c902032",
-            "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG, two CPUs; bounded descriptor and observation identity only.",
-            "state": "STALE"
+            "reason": "Current-source full matrix passed after the shared CLOCK executor refactor; fresh device validation remains mandatory before every scenario oracle. Historical descriptor acceptance is unchanged.",
+            "receipt": "research/measurements/runs/1791408804253-phase40-clock-passport-488919492db0.json",
+            "receipt_sha256": "1e6b5dfd336c6a36e1aff2e57dcfa5d1d2c3d7601a90ddbcfec198b2a970eb84",
+            "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG DEV/PROD; descriptor discovery and fresh observation gate, not driver or physical readiness.",
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -8449,13 +8094,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/devices.md",
-          "sha256": "78029634a225c42964bd5a686016f44dd4290c7aaa51916d1499f583e2f1a711",
+          "sha256": "b19954e815acc7291aab2b86c88509147cea0c80ce256aa092ccaab1ad4474da",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/devices.md",
-          "sha256": "99e811ebc674b62de5b68012a786732f413aebc90e61d5c2066fa6758411d2d7",
+          "sha256": "ba0045576ecdeacaa6be702ef68b126e3a3453c00633e50c4db7d0f706d0f1b5",
           "start": 7
         }
       },
@@ -8470,17 +8115,11 @@
       "estimated_bytes": 351,
       "evidence_scope": "deterministic offline navigation and the enrolled Phase 3 pilot; no kernel or hardware acceptance is inferred.",
       "feature": {
-        "acceptance": [
-          "research/results/documentation-knowledge-pilot.json"
-        ],
-        "adrs": [
-          "adr.0024"
-        ],
+        "acceptance": ["research/results/documentation-knowledge-pilot.json"],
+        "adrs": ["adr.0024"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Offline metadata validation, Unicode EN/RU context, exact-source verification freshness, prerequisite closure and review-visible per-change implementation impact declarations.",
-        "issues": [
-          74
-        ],
+        "issues": [74],
         "limitations": [
           "No automatic semantic-completeness proof, no-impact truth proof, LLM search or all-doc migration; arbitrary implementation roots outside the declared CI boundary still require human enrollment review."
         ],
@@ -8530,11 +8169,7 @@
         "ru": {
           "read_when": null,
           "summary": "Автономный поиск по stable ID, извлечение в границах и проверка графа.",
-          "tags": [
-            "documentation",
-            "catalog",
-            "navigation"
-          ],
+          "tags": ["documentation", "catalog", "navigation"],
           "title": "Функция навигации"
         }
       },
@@ -8554,11 +8189,7 @@
       },
       "path": "docs/knowledge-system.md",
       "summary": "Offline stable-ID discovery, scoped extraction and graph validation.",
-      "tags": [
-        "documentation",
-        "catalog",
-        "navigation"
-      ],
+      "tags": ["documentation", "catalog", "navigation"],
       "title": "Navigation feature"
     },
     "kolvrt.handles.evidence": {
@@ -8722,17 +8353,10 @@
         "acceptance": [
           "research/measurements/runs/1791022558822-issue23-transfer-bf3f9b298688.json"
         ],
-        "adrs": [
-          "adr.0019",
-          "adr.0020",
-          "adr.0022",
-          "adr.0023"
-        ],
+        "adrs": ["adr.0019", "adr.0020", "adr.0022", "adr.0023"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Bounded caller-local namespaces and receiver-local transfer on fixed-affinity CPUs.",
-        "issues": [
-          23
-        ],
+        "issues": [23],
         "limitations": [
           "Close does not revoke retained work; no general grants, domains or IPC."
         ],
@@ -8834,9 +8458,7 @@
     },
     "kolvrt.ipc.cancel": {
       "anchor": "copy-transactions-and-terminal-arbitration",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
@@ -8871,9 +8493,7 @@
     },
     "kolvrt.ipc.cross-cpu": {
       "anchor": "blocking-cross-cpu-wake-and-idle",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
@@ -8908,9 +8528,7 @@
     },
     "kolvrt.ipc.deadline": {
       "anchor": "copy-transactions-and-terminal-arbitration",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
@@ -8945,9 +8563,7 @@
     },
     "kolvrt.ipc.endpoint": {
       "anchor": "authority-and-identities",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1371,
@@ -8982,9 +8598,7 @@
     },
     "kolvrt.ipc.payload": {
       "anchor": "copied-transport",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 2223,
@@ -9019,9 +8633,7 @@
     },
     "kolvrt.ipc.performance": {
       "anchor": "measurement-method",
-      "depends_on": [
-        "kolvrt.ipc"
-      ],
+      "depends_on": ["kolvrt.ipc"],
       "document": "doc.kolvrt.kernel.ipc-performance",
       "document_status": "CURRENT",
       "estimated_bytes": 4643,
@@ -9056,9 +8668,7 @@
     },
     "kolvrt.ipc.queue": {
       "anchor": "bounded-storage-and-accounting",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1150,
@@ -9093,9 +8703,7 @@
     },
     "kolvrt.ipc.receive": {
       "anchor": "copy-transactions-and-terminal-arbitration",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
@@ -9130,9 +8738,7 @@
     },
     "kolvrt.ipc.request": {
       "anchor": "copied-transport",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 2223,
@@ -9167,12 +8773,7 @@
     },
     "kolvrt.ipc.review.execution": {
       "anchor": "kolvrt-ipc-review-execution",
-      "depends_on": [
-        "adr.0016",
-        "adr.0017",
-        "adr.0018",
-        "adr.0021"
-      ],
+      "depends_on": ["adr.0016", "adr.0017", "adr.0018", "adr.0021"],
       "document": "doc.kolvrt.ipc.review",
       "document_status": "CURRENT",
       "estimated_bytes": 6207,
@@ -9248,9 +8849,7 @@
     },
     "kolvrt.ipc.teardown": {
       "anchor": "teardown-and-reclamation",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1011,
@@ -9285,9 +8884,7 @@
     },
     "kolvrt.ipc.terminal": {
       "anchor": "copy-transactions-and-terminal-arbitration",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1086,
@@ -9321,9 +8918,7 @@
       "title": "Copy transactions and terminal arbitration"
     },
     "kolvrt.ipc.transport": {
-      "aliases": [
-        "kolvrt.ipc"
-      ],
+      "aliases": ["kolvrt.ipc"],
       "anchor": "bounded-native-ipc",
       "depends_on": [
         "kolvrt.process.identity",
@@ -9365,14 +8960,10 @@
           "research/results/ipc-phase35-controls-current.json",
           "research/results/ipc-phase35-readiness.json"
         ],
-        "adrs": [
-          "adr.0025"
-        ],
+        "adrs": ["adr.0025"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Complete bounded native.request/1 IPC mechanism, READY for Phase 3.5 and the #27 reader under fixed affinity, immutable mappings and whole-session retirement; not overall production/platform readiness.",
-        "issues": [
-          26
-        ],
+        "issues": [26],
         "limitations": [
           "ABI remains experimental and unfrozen.",
           "Fixed affinity, immutable mappings and conservative whole-session retirement; no supervisor, service discovery, migration, zero-copy or universal wait/invoke.",
@@ -9381,9 +8972,7 @@
         ],
         "next_gate": "Bounded Phase 3.6/#27 and Phase 3.7/#28 are separately accepted. General runtime/event subscriptions, production bootstrap trust and physical ARM require their own scope and evidence; rederive architecture before extending the bounded IPC contract.",
         "readiness": "READY",
-        "readiness_acceptance": [
-          "research/results/ipc-phase35-readiness.json"
-        ],
+        "readiness_acceptance": ["research/results/ipc-phase35-readiness.json"],
         "roadmap_gate": "Phase 3.5",
         "sources": [
           "crates/kernel-core/Cargo.toml",
@@ -9475,12 +9064,7 @@
         "ru": {
           "read_when": null,
           "summary": "Ограниченный IPC через endpoint с копированием запросов, блокирующим ожиданием и точными terminal outcomes.",
-          "tags": [
-            "ipc",
-            "endpoint",
-            "native",
-            "el0"
-          ],
+          "tags": ["ipc", "endpoint", "native", "el0"],
           "title": "Ограниченный IPC между нативными EL0-процессами"
         }
       },
@@ -9500,19 +9084,12 @@
       },
       "path": "docs/kernel/ipc.md",
       "summary": "Bounded endpoint IPC with copied requests, blocking waits and exact terminal outcomes.",
-      "tags": [
-        "ipc",
-        "endpoint",
-        "native",
-        "el0"
-      ],
+      "tags": ["ipc", "endpoint", "native", "el0"],
       "title": "Bounded native EL0 IPC"
     },
     "kolvrt.ipc.wait": {
       "anchor": "blocking-cross-cpu-wake-and-idle",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
@@ -9547,9 +9124,7 @@
     },
     "kolvrt.ipc.wakeup": {
       "anchor": "blocking-cross-cpu-wake-and-idle",
-      "depends_on": [
-        "kolvrt.ipc.transport"
-      ],
+      "depends_on": ["kolvrt.ipc.transport"],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
       "estimated_bytes": 1443,
@@ -9600,17 +9175,11 @@
       "estimated_bytes": 269,
       "evidence_scope": "Phase 3.2 bounded synchronous current-process copies on two fixed-affinity CPUs; issue #22.",
       "feature": {
-        "acceptance": [
-          "research/results/kernel-phase32.json"
-        ],
-        "adrs": [
-          "adr.0018"
-        ],
+        "acceptance": ["research/results/kernel-phase32.json"],
+        "adrs": ["adr.0018"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Synchronous current-process copies over immutable mappings.",
-        "issues": [
-          22
-        ],
+        "issues": [22],
         "limitations": [
           "No asynchronous copy, shared mutable mappings or public pointer ABI."
         ],
@@ -9623,9 +9192,7 @@
         ],
         "transitions": [
           {
-            "acceptance": [
-              "research/results/kernel-phase32.json"
-            ],
+            "acceptance": ["research/results/kernel-phase32.json"],
             "from": "UNRECORDED",
             "reason": "Initial reviewed catalog adoption of existing scoped contract; not a new implementation transition.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -10307,10 +9874,7 @@
     },
     "kolvrt.process.identity": {
       "anchor": "kolvrt-process-identity",
-      "depends_on": [
-        "adr.0017",
-        "adr.0021"
-      ],
+      "depends_on": ["adr.0017", "adr.0021"],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
       "estimated_bytes": 1696,
@@ -10360,17 +9924,11 @@
       "estimated_bytes": 296,
       "evidence_scope": "Phase 3.1, bounded two-CPU trusted-bootstrap processes; issue #20.",
       "feature": {
-        "acceptance": [
-          "research/results/kernel-phase31.json"
-        ],
-        "adrs": [
-          "adr.0017"
-        ],
+        "acceptance": ["research/results/kernel-phase31.json"],
+        "adrs": ["adr.0017"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Two fixed-affinity CPUs; trusted bootstrap admission, whole-dispatch retirement.",
-        "issues": [
-          20
-        ],
+        "issues": [20],
         "limitations": [
           "No public EL0 create API, migration or asynchronous retirement."
         ],
@@ -10383,9 +9941,7 @@
         ],
         "transitions": [
           {
-            "acceptance": [
-              "research/results/kernel-phase31.json"
-            ],
+            "acceptance": ["research/results/kernel-phase31.json"],
             "from": "UNRECORDED",
             "reason": "Initial reviewed catalog adoption of existing scoped contract; not a new implementation transition.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -10472,10 +10028,7 @@
     },
     "kolvrt.process.reclamation": {
       "anchor": "kolvrt-process-reclamation",
-      "depends_on": [
-        "adr.0017",
-        "adr.0021"
-      ],
+      "depends_on": ["adr.0017", "adr.0021"],
       "document": "doc.kolvrt.kernel.processes",
       "document_status": "CURRENT",
       "estimated_bytes": 3413,
@@ -10560,18 +10113,11 @@
       "estimated_bytes": 1574,
       "evidence_scope": "versioned Windows host-tool framework, synthetic provider experiments and schema/CLI checks; no actual host inventory collected or published.",
       "feature": {
-        "acceptance": [
-          "research/results/issue53-host-survey.json"
-        ],
-        "adrs": [
-          "adr.0008",
-          "adr.0013"
-        ],
+        "acceptance": ["research/results/issue53-host-survey.json"],
+        "adrs": ["adr.0008", "adr.0013"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Versioned local Windows research-host collection with a closed allowlist, Node projection/validation, explicit gaps, bounded output and synthetic integration evidence.",
-        "issues": [
-          53
-        ],
+        "issues": [53],
         "limitations": [
           "Actual Windows-provider collection and real ARM64 inventory have not run. Reports are unauthenticated research observations, not boot_target/driver/DMA guarantees or publication consent. #54 driver mapping and #58 physical first-machine review remain separate."
         ],
@@ -10590,9 +10136,7 @@
         ],
         "transitions": [
           {
-            "acceptance": [
-              "research/results/issue53-host-survey.json"
-            ],
+            "acceptance": ["research/results/issue53-host-survey.json"],
             "from": "UNRECORDED",
             "reason": "First local allowlisted framework with exact-source synthetic host acceptance; physical collection and publication remain separate decisions.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -10625,12 +10169,7 @@
         "ru": {
           "read_when": null,
           "summary": "Локальные наблюдения об исследовательской машине из разрешённых полей: синтетическая проверка без публикации и полномочий на устройства.",
-          "tags": [
-            "hardware",
-            "survey",
-            "privacy",
-            "research_host"
-          ],
+          "tags": ["hardware", "survey", "privacy", "research_host"],
           "title": "Область применения и команды"
         }
       },
@@ -10650,12 +10189,7 @@
       },
       "path": "docs/research/host-survey.md",
       "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
-      "tags": [
-        "hardware",
-        "survey",
-        "privacy",
-        "research_host"
-      ],
+      "tags": ["hardware", "survey", "privacy", "research_host"],
       "title": "Scope and commands"
     },
     "kolvrt.security.capability-revocation": {
@@ -10693,16 +10227,10 @@
         "acceptance": [
           "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
         ],
-        "adrs": [
-          "adr.0013",
-          "adr.0022",
-          "adr.0023"
-        ],
+        "adrs": ["adr.0013", "adr.0022", "adr.0023"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Merged bounded Phase 3.4 explicit scoped Event grants, generation-aware domains and retained service notification with revoke/admission serialization.",
-        "issues": [
-          24
-        ],
+        "issues": [24],
         "limitations": [
           "The full general IPC/supervisor production contract is not delivered; one-process fixed-affinity domains and single-cell Event notification remain bounded."
         ],
@@ -10779,16 +10307,9 @@
         }
       },
       "path": "docs/kernel/capabilities.md",
-      "read_when": [
-        "review Phase 3.4 capability revocation"
-      ],
+      "read_when": ["review Phase 3.4 capability revocation"],
       "summary": "Current bounded Phase 3.4 capability revocation with explicit remaining gates.",
-      "tags": [
-        "capability",
-        "revocation",
-        "phase",
-        "3.4"
-      ],
+      "tags": ["capability", "revocation", "phase", "3.4"],
       "title": "Bounded current feature contract"
     },
     "kolvrt.security.compat-authority": {
@@ -10851,16 +10372,10 @@
         "acceptance": [
           "research/measurements/runs/1791130278634-phase3-4-revocation-integrated-f3be261c515b.json"
         ],
-        "adrs": [
-          "adr.0023"
-        ],
+        "adrs": ["adr.0023"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Generation-aware one-process domains, explicit limits and grants, same-CPU Event notification, retained terminal outcomes and revoke/admission serialization.",
-        "issues": [
-          24,
-          25,
-          75
-        ],
+        "issues": [24, 25, 75],
         "limitations": [
           "One process/domain and fixed-affinity single-cell notification; no general IPC, supervisor installation policy, multi-process domains, immediate revoke/drain, migration or silicon verification."
         ],
@@ -10908,12 +10423,7 @@
         "ru": {
           "read_when": null,
           "summary": "Домены, budgets и retained notification outcomes.",
-          "tags": [
-            "domain",
-            "security",
-            "grant",
-            "notification"
-          ],
+          "tags": ["domain", "security", "grant", "notification"],
           "title": "Границы реализованной функции"
         }
       },
@@ -10933,12 +10443,7 @@
       },
       "path": "docs/kernel/domains.md",
       "summary": "Bounded domains, budgets and retained notification outcomes.",
-      "tags": [
-        "domain",
-        "security",
-        "grant",
-        "notification"
-      ],
+      "tags": ["domain", "security", "grant", "notification"],
       "title": "Implemented feature scope"
     },
     "kolvrt.security.domains.grants": {
@@ -11092,18 +10597,11 @@
       "estimated_bytes": 8720,
       "evidence_scope": "bounded scoped grants and domains are accepted Phase 3.4 behavior at 3124d65; the historical synchronous Event slice has a separate CI receipt, while general IPC remains planned.",
       "feature": {
-        "acceptance": [
-          "research/results/event-revocation-ci.json"
-        ],
-        "adrs": [
-          "adr.0022"
-        ],
+        "acceptance": ["research/results/event-revocation-ci.json"],
+        "adrs": ["adr.0022"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Trusted explicit Event SEND/TRANSFER/REVOKE grants, attenuation and atomic target-wide revocation serialized with synchronous signal admission.",
-        "issues": [
-          24,
-          72
-        ],
+        "issues": [24, 72],
         "limitations": [
           "Event-only synchronous publication; no issuer independence, general service/domain grants, async cancellation/drain or silicon acceptance."
         ],
@@ -11118,9 +10616,7 @@
         ],
         "transitions": [
           {
-            "acceptance": [
-              "research/results/event-revocation-ci.json"
-            ],
+            "acceptance": ["research/results/event-revocation-ci.json"],
             "from": "UNRECORDED",
             "reason": "Adopt already-merged PR #72 with its actual passing CI receipt; this documentation change implements no kernel behavior.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -11178,11 +10674,7 @@
       },
       "path": "docs/kernel/capabilities.md",
       "summary": "Synchronous Event grants and target-wide admission revocation.",
-      "tags": [
-        "event",
-        "revocation",
-        "grant"
-      ],
+      "tags": ["event", "revocation", "grant"],
       "title": "Bounded synchronous Event slice"
     },
     "kolvrt.security.handle-retention": {
@@ -11623,19 +11115,11 @@
       "estimated_bytes": 1215,
       "evidence_scope": "bounded host-side correction for #71; injected-clock regression evidence, not production clock authenticity, live revocation or crash-durable replay acceptance.",
       "feature": {
-        "acceptance": [
-          "research/results/issue71-verifier-time.json"
-        ],
-        "adrs": [
-          "adr.0013",
-          "adr.0008"
-        ],
+        "acceptance": ["research/results/issue71-verifier-time.json"],
+        "adrs": ["adr.0013", "adr.0008"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Current-time session/key admission and final-acceptance revalidation, sticky clock failure/rollback rejection and single active provisioned session per host verifier.",
-        "issues": [
-          71,
-          14
-        ],
+        "issues": [71, 14],
         "limitations": [
           "Immutable policy snapshot does not observe online revocation. Trusted provider authenticity/progress, storage-crash durability, recovery/pruning and production admission remain open; quantum/kernel execution is not involved."
         ],
@@ -11653,9 +11137,7 @@
         ],
         "transitions": [
           {
-            "acceptance": [
-              "research/results/issue71-verifier-time.json"
-            ],
+            "acceptance": ["research/results/issue71-verifier-time.json"],
             "from": "UNRECORDED",
             "reason": "First enrolled corrected temporal verifier scope with exact-source host evidence; durable replay and production trust gates remain open.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -11683,13 +11165,7 @@
         "ru": {
           "read_when": null,
           "summary": "Допуск host-verifier по текущим часам с необратимым отказом и неизменяемыми границами сеанса и политики.",
-          "tags": [
-            "trust",
-            "clock",
-            "freshness",
-            "session",
-            "migration"
-          ],
+          "tags": ["trust", "clock", "freshness", "session", "migration"],
           "title": "Временная граница"
         }
       },
@@ -11709,13 +11185,7 @@
       },
       "path": "docs/security/verifier-time.md",
       "summary": "Current-clock host verifier acceptance with sticky failure and immutable session/policy boundaries.",
-      "tags": [
-        "trust",
-        "clock",
-        "freshness",
-        "session",
-        "migration"
-      ],
+      "tags": ["trust", "clock", "freshness", "session", "migration"],
       "title": "Temporal boundary"
     },
     "kolvrt.services.supervision": {
@@ -11734,17 +11204,11 @@
       "estimated_bytes": 1063,
       "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. The retained Phase 3.6 receipt is stale for these changed sources; bounded Phase 3.7 acceptance is recorded in [native applications](native-applications.md). Readiness and performance are separate.",
       "feature": {
-        "acceptance": [
-          "research/results/supervision-phase36-main126.json"
-        ],
-        "adrs": [
-          "adr.0026"
-        ],
+        "acceptance": ["research/results/supervision-phase36-main126.json"],
+        "adrs": ["adr.0026"],
         "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies. Immutable bootstrap grant shape has one shared kernel-core production type/validator imported directly by host component tests.",
-        "issues": [
-          27
-        ],
+        "issues": [27],
         "limitations": [
           "Development static manifest/image assurance only; production trust remains #38.",
           "Fixed affinity and two-CPU lifecycle barrier; generic wait-any, migration, independent live admission and persistent services are excluded.",
@@ -11782,9 +11246,7 @@
             "to": "EXPERIMENTAL"
           },
           {
-            "acceptance": [
-              "research/results/supervision-phase36-main126.json"
-            ],
+            "acceptance": ["research/results/supervision-phase36-main126.json"],
             "from": "EXPERIMENTAL",
             "reason": "Post-#126 code/architecture and full EN/RU semantic review with independent current-source 142-task functional verification; readiness/performance acceptance remain separate.",
             "to": "BOUNDED_IMPLEMENTED"
@@ -11812,13 +11274,7 @@
         "ru": {
           "read_when": null,
           "summary": "Readiness EL0, конечный restart и shutdown поверх privileged lifecycle mechanisms.",
-          "tags": [
-            "supervisor",
-            "service",
-            "lifecycle",
-            "bootstrap",
-            "el0"
-          ],
+          "tags": ["supervisor", "service", "lifecycle", "bootstrap", "el0"],
           "title": "Ограниченный жизненный цикл сервисов"
         }
       },
@@ -11826,31 +11282,23 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "ef84411a67d2edab2eef0b027d3af5822049ce42a8b5a1d0de2fab6e61552709",
+          "sha256": "edf965f6d1b02edb7d1956ad04e1ab4a5373672e3d0ef228d5afb860fbb73c83",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "b49aa8d733f4788a5d8252e5471b684a70b7d22901ce7a3934d946830e53aacc",
+          "sha256": "c6d61c21d12b04b2b48f08d2280fe8df24d0c9b2f9b5c940a23c36ada553d41e",
           "start": 13
         }
       },
       "path": "docs/kernel/supervision.md",
       "summary": "EL0 readiness, finite restart and shutdown over privileged lifecycle mechanisms.",
-      "tags": [
-        "supervisor",
-        "service",
-        "lifecycle",
-        "bootstrap",
-        "el0"
-      ],
+      "tags": ["supervisor", "service", "lifecycle", "bootstrap", "el0"],
       "title": "Bounded service lifecycle"
     },
     "law.001": {
-      "aliases": [
-        "LAW-001"
-      ],
+      "aliases": ["LAW-001"],
       "anchor": "law-001",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -11886,9 +11334,7 @@
       "title": "LAW-001 — Native authority and dependency isolation"
     },
     "law.003": {
-      "aliases": [
-        "LAW-003"
-      ],
+      "aliases": ["LAW-003"],
       "anchor": "law-003",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -11924,9 +11370,7 @@
       "title": "LAW-003 — Concurrent native and compatibility routes"
     },
     "law.004": {
-      "aliases": [
-        "LAW-004"
-      ],
+      "aliases": ["LAW-004"],
       "anchor": "law-004",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -11962,9 +11406,7 @@
       "title": "LAW-004 — Explicit semantic binding"
     },
     "law.005": {
-      "aliases": [
-        "LAW-005"
-      ],
+      "aliases": ["LAW-005"],
       "anchor": "law-005",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12000,9 +11442,7 @@
       "title": "LAW-005 — Shared-state consistency"
     },
     "law.008": {
-      "aliases": [
-        "LAW-008"
-      ],
+      "aliases": ["LAW-008"],
       "anchor": "law-008",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12038,9 +11478,7 @@
       "title": "LAW-008 — Controlled evolution and retirement"
     },
     "law.009": {
-      "aliases": [
-        "LAW-009"
-      ],
+      "aliases": ["LAW-009"],
       "anchor": "law-009",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12076,9 +11514,7 @@
       "title": "LAW-009 — Translation cannot expand effective authority"
     },
     "law.013": {
-      "aliases": [
-        "LAW-013"
-      ],
+      "aliases": ["LAW-013"],
       "anchor": "law-013",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12114,9 +11550,7 @@
       "title": "LAW-013 — Explicit identity and lifetime ownership"
     },
     "law.018": {
-      "aliases": [
-        "LAW-018"
-      ],
+      "aliases": ["LAW-018"],
       "anchor": "law-018",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12152,9 +11586,7 @@
       "title": "LAW-018 — Validated boundary data"
     },
     "law.020": {
-      "aliases": [
-        "LAW-020"
-      ],
+      "aliases": ["LAW-020"],
       "anchor": "law-020",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12190,9 +11622,7 @@
       "title": "LAW-020 — Device memory ownership and ordering"
     },
     "law.025": {
-      "aliases": [
-        "LAW-025"
-      ],
+      "aliases": ["LAW-025"],
       "anchor": "law-025",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12228,9 +11658,7 @@
       "title": "LAW-025 — Single resource authority and accounting"
     },
     "law.026": {
-      "aliases": [
-        "LAW-026"
-      ],
+      "aliases": ["LAW-026"],
       "anchor": "law-026",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12266,9 +11694,7 @@
       "title": "LAW-026 — Observable outcomes are explicit"
     },
     "law.027": {
-      "aliases": [
-        "LAW-027"
-      ],
+      "aliases": ["LAW-027"],
       "anchor": "law-027",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12304,9 +11730,7 @@
       "title": "LAW-027 — Visible scheduling scope"
     },
     "law.030": {
-      "aliases": [
-        "LAW-030"
-      ],
+      "aliases": ["LAW-030"],
       "anchor": "law-030",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12342,9 +11766,7 @@
       "title": "LAW-030 — Atomic waiting and rollback of preparation"
     },
     "law.031": {
-      "aliases": [
-        "LAW-031"
-      ],
+      "aliases": ["LAW-031"],
       "anchor": "law-031",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12380,9 +11802,7 @@
       "title": "LAW-031 — Scoped platform adaptation"
     },
     "law.035": {
-      "aliases": [
-        "LAW-035"
-      ],
+      "aliases": ["LAW-035"],
       "anchor": "law-035",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12418,9 +11838,7 @@
       "title": "LAW-035 — Profiles preserve correctness"
     },
     "law.036": {
-      "aliases": [
-        "LAW-036"
-      ],
+      "aliases": ["LAW-036"],
       "anchor": "law-036",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12456,9 +11874,7 @@
       "title": "LAW-036 — Honest observations and comparisons"
     },
     "law.040": {
-      "aliases": [
-        "LAW-040"
-      ],
+      "aliases": ["LAW-040"],
       "anchor": "law-040",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12494,9 +11910,7 @@
       "title": "LAW-040 — Evidence and reviewable architectural change"
     },
     "law.041": {
-      "aliases": [
-        "LAW-041"
-      ],
+      "aliases": ["LAW-041"],
       "anchor": "law-041",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12532,9 +11946,7 @@
       "title": "LAW-041 — Progress has explicit dependencies and bounds"
     },
     "law.042": {
-      "aliases": [
-        "LAW-042"
-      ],
+      "aliases": ["LAW-042"],
       "anchor": "law-042",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12570,9 +11982,7 @@
       "title": "LAW-042 — Failure containment and recovery are explicit"
     },
     "law.043": {
-      "aliases": [
-        "LAW-043"
-      ],
+      "aliases": ["LAW-043"],
       "anchor": "law-043",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12608,9 +12018,7 @@
       "title": "LAW-043 — Publication and shutdown follow dependency order"
     },
     "law.044": {
-      "aliases": [
-        "LAW-044"
-      ],
+      "aliases": ["LAW-044"],
       "anchor": "law-044",
       "depends_on": [],
       "document": "doc.kolvrt.kernel-laws",
@@ -12657,12 +12065,7 @@
         "ru": {
           "read_when": null,
           "summary": "Каноническая секция: Контекст выделения и reclaim.",
-          "tags": [
-            "linux",
-            "memory",
-            "allocation",
-            "reclaim"
-          ],
+          "tags": ["linux", "memory", "allocation", "reclaim"],
           "title": "Контекст выделения и reclaim"
         }
       },
@@ -12684,21 +12087,14 @@
       "relationships": [
         {
           "confidence": "HYPOTHESIS",
-          "evidence": [
-            "research/cost-l/COST-L-0001.json"
-          ],
+          "evidence": ["research/cost-l/COST-L-0001.json"],
           "scope": "Research candidate, not confirmed driver dependency.",
           "to": "cost-l.0001",
           "type": "motivates"
         }
       ],
       "summary": "Linux v6.12 allocation context; no configured driver or native service execution.",
-      "tags": [
-        "linux",
-        "memory",
-        "allocation",
-        "reclaim"
-      ],
+      "tags": ["linux", "memory", "allocation", "reclaim"],
       "title": "Allocation context and reclaim"
     }
   },

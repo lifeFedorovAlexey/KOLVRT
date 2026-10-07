@@ -19,7 +19,9 @@
     "research/arena/profiles/clock-query-dev.json": "ceaf039fc7e7bd837372a21083e5c0612145930c6c03db034617184e010afa0c",
     "research/arena/profiles/clock-query-prod.json": "d347435c39a3c1a84c0e81d39064515c22728c1bf909edeb8279ee927d4c90eb",
     "docs/kernel/clock.md": "a24703a64f9d1e66ed02b9465400a28667a49f5662184b16d76d7f29cff064de",
-    "docs/research/clock-passport.md": "bf5cb386e05b9cb470eff47b74564f5b82fd40d3b50f0b05fc3612356b5f4dec",
+    "docs/research/clock-passport.md": "2f97139c0cc3aec4efad809d42c1e0185e064f0ceab0a1bd4e35934238058f0b",
+    "docs/architecture/component-arena.md": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
+    "docs/architecture/arena-measurement-contract.md": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
     "apps/native-runtime/src/lib.rs": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1",
     "tests/native-apps/src/clock-client.rs": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b",
     "Cargo.lock": "a6544e18c79fd120c9d452d1dafc1a5ee42d649934e46df9e59de3c7370d9a7c",
@@ -32,14 +34,14 @@
     {
       "command": "cargo test --locked -p xtask arena_clock",
       "exit_code": 0,
-      "log_path": "research/arena/clock-query/evidence/host-clock-oracle.log",
-      "log_sha256": "019111cc12d4cd6ff90b35fe006f09cb74abc8c451cb5da5d9084c6b0138d946"
+      "log_path": "research/arena/clock-query/evidence/current-docs-host-clock-oracle.log",
+      "log_sha256": "8c96fb03d463b4616d24a9c1fef102945f2c82a6cf173431b2ae85bbe2003467"
     },
     {
       "command": "cargo test --locked -p repository-checks --test arena",
       "exit_code": 0,
-      "log_path": "research/arena/clock-query/evidence/host-arena-admission-final.log",
-      "log_sha256": "6d59e26bb3f4e99e63a231da2af34f9acbb32c4cee0fd731cf48cbc790236ecc"
+      "log_path": "research/arena/clock-query/evidence/current-docs-host-arena-admission.log",
+      "log_sha256": "c1b06e445a046a9b45c94f104ce69ccd8d657fdd7088a961046613d76a192196"
     }
   ],
   "scope": [
@@ -55,10 +57,10 @@
       "log_sha256": "47e8f1c6d6490404d79b8ea4ce95be3f9dea7db65aba92b9b9241b62b79e63a3"
     },
     {
-      "review_path": "research/arena/clock-query/evidence/negative-review-attempt2.json",
-      "review_sha256": "af0d623b205e415ea75db45246b9caa157bb93de776ded823dc2ae597361d933",
-      "status": "failed",
-      "reason": "Before final metadata freeze, repository profile check rejected stale device source evidence; logs retained in the referenced review."
+      "review_path": "research/arena/clock-query/evidence/negative-review-accepted-campaign.json",
+      "review_sha256": "e5893783d07b60c920bc503c8983a921bbd515862e7fda63d292fe2129c30bf7",
+      "status": "passed",
+      "reason": "Accepted campaign host review preserved unchanged; renewed only after mutable acceptance documentation changed. No QEMU rerun."
     }
   ]
 }

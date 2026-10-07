@@ -1,108 +1,141 @@
 {
   "schema_version": 1,
-  "base_commit": "d9d41c73e03fd9597668325fb76db704d914483b",
+  "base_commit": "bc8222a54f2e88d40b4958273c1b7666a59dc804",
   "files": [
     {
-      "path": "crates/kernel-core/src/device.rs",
+      "path": "apps/native-runtime/src/lib.rs",
+      "before_sha256_lf": "765beb9ceca178e6cd8365103da2e9310343aaf31a1e0c5d802b39dc815c0d71",
+      "after_sha256_lf": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "crates/xtask/src/arena_clock.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "8e4e073e258ebc0376d169b3b638a5bb2820dc8b2fe2162335a4d895e60e7f66",
+      "after_sha256_lf": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194",
       "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
     },
     {
-      "path": "crates/kernel-core/src/lib.rs",
-      "before_sha256_lf": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a",
-      "after_sha256_lf": "4a68ad9259e1696dec995bc16b9934c45172ed8e4fa802d7f72829b5e581fca8",
-      "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
-    },
-    {
-      "path": "crates/kernel-core/src/platform.rs",
-      "before_sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9",
-      "after_sha256_lf": "4423248c501cef4d50bc229fc6c97fa13eafbdea3632d037eb2b6a78f3fcd1a9",
-      "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
-    },
-    {
-      "path": "crates/kernel-core/tests/boot_description.rs",
-      "before_sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac",
-      "after_sha256_lf": "5bc02706a994eee762c1465a8e2c491788678e6962dc839e537810a0543406e1",
-      "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
-    },
-    {
-      "path": "crates/kernel-core/tests/device_contract.rs",
+      "path": "crates/xtask/src/arena_clock/passport.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "b86a40aa7b781c2488d0e487e3b1aa220cbfaedefe32f693dc429bb5157d0a2c",
+      "after_sha256_lf": "9ca4cdc068132564de33da07ea303d1e9fc9975611c14352865172d2bd3d9029",
       "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
-    },
-    {
-      "path": "crates/kernel/src/main.rs",
-      "before_sha256_lf": "e982449bf1b148b521a011abe566cc9fb17022aa715cbdca33184c9679f09983",
-      "after_sha256_lf": "669b1dd09ebf4c69c5412d593ae751f690e661b95a7034bfd1c2bcc469846fac",
-      "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
-    },
-    {
-      "path": "crates/kernel/src/process_workload.rs",
-      "before_sha256_lf": "9f6f63adc2c0727fb415546a2802c7fa7a9bcd1cfb8a1beb69eecaa284f2bf2f",
-      "after_sha256_lf": "792b9eed41612401362e7110dd1beafcd767997a506fc8eeeb9dff06fcbe2944",
-      "disposition": "existing-feature",
-      "reason": "Correct first quantum snapshot assumption: pending architectural IRQ can precede first EL0 instruction; retain actual subsequent progress, fairness and resource assertions."
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
     },
     {
       "path": "crates/xtask/src/main.rs",
-      "before_sha256_lf": "c1be15b227ba59f3213f05174e326bdf2570c3341d787362a59127cffac1cfec",
-      "after_sha256_lf": "8ee48dc74c3d0f4e6ddef79633f8a32a73d58c885cc3839c7be057cf65a4713a",
+      "before_sha256_lf": "8ee48dc74c3d0f4e6ddef79633f8a32a73d58c885cc3839c7be057cf65a4713a",
+      "after_sha256_lf": "e0b0bcc5196064637284b8ee2299968c59345a596bf5948c5f17d044bee83746",
       "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
     },
     {
       "path": "crates/xtask/src/native_apps.rs",
-      "before_sha256_lf": "169a2248251de7657d72552d88277319d24bb5a122d5a56ab41b4148d20c9d65",
-      "after_sha256_lf": "abbfbb40463102a27c5c0a52d41b53fb6f2747afbc133e825f3a9a083334302f",
+      "before_sha256_lf": "abbfbb40463102a27c5c0a52d41b53fb6f2747afbc133e825f3a9a083334302f",
+      "after_sha256_lf": "20617866ae4cf00dc6e6d987edbd8c215e5dc42c16516ae5f5662c8333041c11",
       "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
     },
     {
-      "path": "crates/xtask/src/output.rs",
-      "before_sha256_lf": "74b097298a893132360fd39f9f5705c692a6c29fa0362ebef6605a191ec8494c",
-      "after_sha256_lf": "4a4e1313760b677b500758c69d563fb1b82268503a6094d670242b15e31d3702",
+      "path": "research/arena/clock-query/dev-environment.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "d52780cfdef469252bcd5aa2b513365e21d505f4062709a39715293e2fa352a7",
       "disposition": "new-feature",
-      "reason": "Issue79 bounded immutable device observations and nonwrapping scoped identity, strict production DTB validation and actual boot console consumption; descriptor never grants device access."
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "research/arena/clock-query/input.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "159401618cdf165a384316b379537e792b6a3a73051b7432c3206164e8d60ff9",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "research/arena/clock-query/prod-environment.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a9827290c8bdab41bca3a74b4f4bc7c28d1d1847682e64f1f13c4a6a35de0afa",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "research/arena/clock-query/protocol.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "research/arena/clock-query/resources.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "392e03b36dbeb25bed21ef083e3e42ecd20e1e4ce0ce6cf6b1b398e120d1e5e6",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "research/arena/profiles/clock-query-dev.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "ceaf039fc7e7bd837372a21083e5c0612145930c6c03db034617184e010afa0c",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "research/arena/profiles/clock-query-prod.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "d347435c39a3c1a84c0e81d39064515c22728c1bf909edeb8279ee927d4c90eb",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "tests/native-apps/Cargo.toml",
+      "before_sha256_lf": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad",
+      "after_sha256_lf": "fc2f40a299cc163ae623d97d4a25b0491674f5f8192087ceab6ec4ba763c1338",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+    },
+    {
+      "path": "tests/native-apps/src/clock-client.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b",
+      "disposition": "new-feature",
+      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
     }
   ],
   "features": [
     {
       "id": "kolvrt.apps.native-elf",
       "disposition": "semantic-change",
-      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
+      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
     },
     {
       "id": "kolvrt.arena",
       "disposition": "semantic-change",
-      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
+      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+    },
+    {
+      "id": "kolvrt.arena.clock-passport",
+      "disposition": "semantic-change",
+      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
     },
     {
       "id": "kolvrt.ci.performance",
       "disposition": "semantic-change",
-      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
-    },
-    {
-      "id": "kolvrt.ipc.transport",
-      "disposition": "semantic-change",
-      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
-    },
-    {
-      "id": "kolvrt.services.supervision",
-      "disposition": "semantic-change",
-      "reason": "Document actual descriptor-backed boot-console dependency, inventory evidence validation, and corrected first-snapshot assumption while retaining real progress/budget/authority invariants and historical evidence scopes."
+      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
     },
     {
       "id": "kolvrt.devices.observations",
       "disposition": "semantic-change",
-      "reason": "Introduce and review the bounded PL011 descriptor contract, ownership, rejection semantics and separately scoped exact-source execution acceptance."
+      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+    },
+    {
+      "id": "kolvrt.ipc.transport",
+      "disposition": "semantic-change",
+      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+    },
+    {
+      "id": "kolvrt.services.supervision",
+      "disposition": "semantic-change",
+      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
     }
   ]
 }

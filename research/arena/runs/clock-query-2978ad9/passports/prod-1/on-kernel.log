@@ -1,0 +1,40 @@
+@KOLVRT/1 {"event":"device-observation","status":"pass","kind":"pl011","reservation":"boot-console","scope":1,"generation":1,"mmio_base":150994944,"mmio_size":4096,"irq":33,"interrupt_controller":32771}
+
+                      #######
+                    ##########
+                          ###       ######
+            ###           ###         ######
+          #######         ###           #####
+         ##########       ###          #####
+        ###     ####      ###        ####
+                  ####    ###      ####
+                    ####  ###    ####          #
+                      ### ###  ####            ###
+                        #########              ####
+     ##############################################
+     ####               ########
+     ####              ##########
+       ##           ####   ##  ####
+                  ####     ##    ####
+                 ###       ##      ####        #
+               ###         ##        ####   ####
+             ####          ##          ########
+             #####         ##            ####
+              ######       ##
+                           ########
+                           #######
+KOLVRT | PROD | AArch64 | EL1
+[OK] console: UART ready
+[OK] memory: 256 MiB RAM; 64635 free pages (4 KiB/page)
+[OK] exceptions: vectors installed
+[OK] protection: MMU enabled; W^X enforced; heap initialized
+[OK] interrupts: GICv3 and physical timer initialized
+[OK] SMP: 2 CPUs participating
+@KOLVRT/1 {"event":"native-root-image","format":"elf64","generation":1}
+@KOLVRT/1 {"event":"native-process-terminal","slot":0,"generation":1,"owner":0,"state":2,"exit_code":0,"ipc_blocks":0,"ipc_wakes":0}
+@KOLVRT/1 {"event":"native-report-progress","words":[1129073409, 1, 2, 62500000, 4, 24, 28, 0, 10625, 1625, 568, 537, 537, 531, 538, 532, 532, 531, 531, 537, 531, 531, 538, 532, 525, 531, 538, 525, 531, 531, 525, 531, 525, 788, 544, 531, 8200, 1244, 169, 163, 163, 162, 162, 156, 162, 163, 163, 163, 162, 162, 162, 162, 162, 162, 162, 162, 162, 156, 162, 162, 163, 243, 163, 163]}
+@KOLVRT/1 {"event":"native-task","generation":1,"state":2,"ipc_blocks":0,"terminal_blocks":0,"ipc_wakes":0,"peer_faults_at_exit":0}
+@KOLVRT/1 {"event":"native-scheduler","all_blocked":0}
+@KOLVRT/1 {"event":"native-user-report","words":[1129073409, 1, 2, 62500000, 4, 24, 28, 0, 10625, 1625, 568, 537, 537, 531, 538, 532, 532, 531, 531, 537, 531, 531, 538, 532, 525, 531, 538, 525, 531, 531, 525, 531, 525, 788, 544, 531, 8200, 1244, 169, 163, 163, 162, 162, 156, 162, 163, 163, 163, 162, 162, 162, 162, 162, 162, 162, 162, 162, 156, 162, 162, 163, 243, 163, 163]}
+@KOLVRT/1 {"event":"native-boot","status":"complete","root_exit":0,"owners_released":true,"frames_restored":true,"live_processes":0,"live_domains":0}
+[OK] boot: validation complete; powering off (not a running system)
