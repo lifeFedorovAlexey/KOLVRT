@@ -5422,7 +5422,7 @@
   "supplemental": [
     {
       "original_path": "D:\\KOLVRT\\target\\phase36-review\\issue33-actor-stack-repair.md",
-      "path": "preparation/issue33-actor-stack-repair.md",
+      "path": "preparation/issue33-actor-stack-repair.md.txt",
       "bytes": 2015,
       "sha256": "bf45cc2eb352d2a93f3d9dd00f13470fd755aec5bffd784b1807f18937c2ed3d"
     },
@@ -5447,7 +5447,7 @@
     },
     {
       "original_path": "D:\\KOLVRT\\target\\phase36-review\\issue33-pilot-analysis.md",
-      "path": "analysis/issue33-pilot-analysis.md",
+      "path": "analysis/issue33-pilot-analysis.md.txt",
       "bytes": 5213,
       "sha256": "a6a78a1cf1a8f64084f8aba1e98914dc9442586fda7cfd40364402326b8eb180",
       "scope": "independent descriptive pilot analysis, not qualifying Arena admission"
