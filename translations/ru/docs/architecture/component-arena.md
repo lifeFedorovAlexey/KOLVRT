@@ -106,6 +106,8 @@ kolvrt arena leaderboard allocator
 
 Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) определяет основанную на стандартах модель Arena A0–A5. [Контракт измерений](arena-measurement-contract.md) реализует закрытые schemas registry/profile/import и офлайн-сравнение/допуск через cargo xtask arena. Это экспериментальные host tools, а не выполненный kernel passport или record service. PERF/SEC/REL/RES остаются отдельными dimensions; SEC использует TOE/SPD/SFR/SAR, а не security score. #32–#36 и #50 отвечают за реальные pipelines.
 
+Свежее выполнение с машинным evidence через общий runner xtask требует ровно одного проверенного [загрузочного наблюдения устройства](../kernel/devices.md). Отсутствие события инвентаризации приводит к отказу текущей проверки выполнения, даже если остальные события workload успешны. Чтение исторических свидетельств отделено и допускает потоки до появления дескриптора; эта совместимость не разрешает новый запуск без наблюдения. Меняется допуск evidence, а не производительность ядра, методика измерений или право на Arena record.
+
 <!-- knowledge -->
 
 ```json

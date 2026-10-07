@@ -123,6 +123,7 @@ This generated registry summary separates implementation from verification. `BOU
 | [kolvrt.compatibility.manifests](docs/architecture/compatibility-manifests.md#kolvrt-compatibility-manifests) | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.cost-l.offline-queries](docs/research/cost-l-queries.md#kolvrt-cost-l-offline-queries)                | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
 | [kolvrt.dependencies.hygiene](docs/architecture/dependency-hygiene.md#kolvrt-dependency-hygiene)              | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
+| [kolvrt.devices.observations](docs/kernel/devices.md#kolvrt-devices-observations)                             | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.docs.navigation](docs/knowledge-system.md#kolvrt-docs-navigation)                                     | BOUNDED_IMPLEMENTED | host-process: VERIFIED; physical-arm64: NOT_APPLICABLE                    |
 | [kolvrt.handles.local](docs/kernel/handles.md#kolvrt-handles-local)                                           | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.ipc.transport](docs/kernel/ipc.md#bounded-native-ipc)                                                 | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |

@@ -795,7 +795,9 @@ fn quantum_progress(
         *counter = unsafe {
             core::ptr::read_volatile((registry.data_address(id).unwrap() + 8) as *const u64)
         };
-        passed &= check!(3, *counter > 0);
+        // A pending timer IRQ may return before the first EL0 instruction.
+        // Retain this baseline, including zero; bit 8 requires actual later
+        // counter growth within the unchanged slice budget. Bit 3 is retired.
     }
     let mut peer_progress = [false; config::ACTIVE_CPUS];
     for _ in 0..SPIN_BUDGET * 3 {

@@ -974,6 +974,7 @@ fn execute_validated(
         elf.with_extension("results.json"),
         serde_json::to_string_pretty(&events)?,
     )?;
+    output::require_current_device_observation(&events)?;
     let native_events: Vec<_> = events
         .iter()
         .filter(|event| {
