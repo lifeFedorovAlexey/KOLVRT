@@ -7,7 +7,7 @@ use crate::{
     scheduler::task::Task,
 };
 use core::sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering};
-use kernel_core::{domain::Limits, handles::Handle, ipc::Reference};
+use kernel_core::{handles::Handle, ipc::Reference};
 pub(crate) const CONTROL: u16 = 0xb0;
 static INSTALLED: AtomicBool = AtomicBool::new(false);
 static ACTIVE: AtomicBool = AtomicBool::new(false);
@@ -37,17 +37,8 @@ pub(crate) fn capture(task: &Task, frame: &mut Context) {
     }
     PENDING.store(true, Ordering::Release);
 }
-#[derive(Clone, Copy)]
-pub(crate) struct Grant {
-    pub image: &'static [u8],
-    pub image_format: ImageFormat,
-    /// Finite immutable SEND destination; selectors/tokens cannot widen it.
-    pub send_to: Option<usize>,
-    pub owner: usize,
-    pub limits: Limits,
-    /// Maximum total instantiations, not an automatic restart policy.
-    pub instances: usize,
-}
+pub(crate) type Grant = kernel_core::supervision::Grant<'static, ImageFormat>;
+
 struct Instance {
     id: ProcessId,
     endpoint: Reference,
@@ -80,17 +71,8 @@ impl Scope {
                 .is_ok(),
             "bootstrap is single use"
         );
-        assert!(
-            grants
-                .iter()
-                .all(|g| !g.image.is_empty() && g.instances > 0 && g.instances <= 8)
-        );
-        assert!(
-            grants.iter().enumerate().all(|(index, grant)| grant
-                .send_to
-                .is_none_or(|target| target < grants.len() && target != index)),
-            "invalid immutable SEND grant edge"
-        );
+        kernel_core::supervision::validate_grants(&grants)
+            .expect("invalid immutable bootstrap grants");
         OWNER_SLOT.store(supervisor.slot(), Ordering::Relaxed);
         OWNER_GENERATION.store(supervisor.generation(), Ordering::Relaxed);
         ACTIVE.store(true, Ordering::Release);

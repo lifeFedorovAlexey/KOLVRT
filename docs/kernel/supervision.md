@@ -78,6 +78,8 @@ Phase 3.7 extends the mechanism with immutable image-format grants and operation
 
 The ordinary ELF supervisor selects its lifetime through application SessionPolicy: bootstrap argument 1 stays persistent after the client, argument 2 finishes the session after the actual client completes. Invalid configuration is rejected. Both modes use the same production service/client/recovery implementation. FinishAfterClient seals admission, observes successful client exit, requests exact owner-local service termination, observes Terminated and exits normally; generic kernel retirement then requires real quiescence and resource release. Application lifetime policy is not a kernel test switch. The immutable ELF bootstrap no longer contains a workload watchdog; the external runner bounds diagnostic hangs. The separate historical assembly fixture retains its explicitly scoped policy/watchdog and 1/8 readiness deadline.
 
+Bootstrap grant shape now has one production implementation in kernel_core::supervision. Kernel Scope::install uses the shared Grant type and calls validate_grants before publishing ACTIVE ownership. Fast host component tests import that same function and verify nonempty image input, existing 1..8 instance-credit bounds and rejection of self/missing SEND destinations. This is immutable bootstrap authority-shape validation, not an EL0 dependency-policy interpreter or generic package manifest format. Image format/geometry and process/domain quota/placement validation remain in their actual ELF/process/domain methods, exercised by their component tests; format validity or caller provenance is not inferred from grant-shape success.
+
 <!-- knowledge -->
 
 ```json
@@ -104,7 +106,7 @@ The ordinary ELF supervisor selects its lifetime through application SessionPoli
       ],
       "feature": {
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies. Immutable bootstrap grant shape has one shared kernel-core production type/validator imported directly by host component tests.",
         "sources": [
           "crates/kernel-core/src/process.rs",
           "crates/kernel-core/tests/process_protocol.rs",
@@ -122,7 +124,10 @@ The ordinary ELF supervisor selects its lifetime through application SessionPoli
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/output.rs",
-          "crates/xtask/src/timing.rs"
+          "crates/xtask/src/timing.rs",
+          "crates/kernel-core/src/lib.rs",
+          "crates/kernel-core/src/supervision.rs",
+          "crates/kernel-core/tests/bootstrap_grants.rs"
         ],
         "acceptance": ["research/results/supervision-phase36-main126.json"],
         "issues": [27],

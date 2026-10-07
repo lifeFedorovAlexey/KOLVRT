@@ -80,6 +80,8 @@ Phase 3.7 расширяет механизм immutable image-format grants и o
 
 Обычный ELF supervisor выбирает время жизни через application SessionPolicy: bootstrap argument 1 сохраняет persistent работу после клиента, argument 2 завершает сессию после настоящего завершения клиента. Недопустимая конфигурация отвергается. Оба режима используют одну production реализацию service/client/recovery. FinishAfterClient закрывает admission, наблюдает успешный client exit, запрашивает точное owner-local termination сервиса, наблюдает Terminated и выходит штатно; затем generic kernel retirement требует настоящую quiescence и освобождение ресурсов. Политика времени жизни приложения не является kernel test switch. Immutable ELF bootstrap больше не содержит workload watchdog; внешний runner ограничивает diagnostic hangs. Отдельный исторический assembly fixture сохраняет явно ограниченные policy/watchdog и readiness deadline 1/8.
 
+Bootstrap grant shape теперь имеет единственную production реализацию в kernel_core::supervision. Kernel Scope::install использует общий тип Grant и вызывает validate_grants до публикации ACTIVE ownership. Быстрые host component tests импортируют ту же функцию и проверяют непустой image input, существующие границы instance credits 1..8 и отказ self/missing SEND destinations. Это проверка immutable bootstrap authority shape, а не интерпретатор EL0 dependency policy или generic package manifest format. Проверки image format/geometry и process/domain quota/placement остаются в настоящих ELF/process/domain методах, проверяемых их component tests; успех grant-shape не доказывает format validity или caller provenance.
+
 <!-- knowledge -->
 
 ```json
@@ -106,7 +108,7 @@ Phase 3.7 расширяет механизм immutable image-format grants и o
       ],
       "feature": {
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies. Immutable bootstrap grant shape has one shared kernel-core production type/validator imported directly by host component tests.",
         "sources": [
           "crates/kernel-core/src/process.rs",
           "crates/kernel-core/tests/process_protocol.rs",
@@ -124,7 +126,10 @@ Phase 3.7 расширяет механизм immutable image-format grants и o
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/output.rs",
-          "crates/xtask/src/timing.rs"
+          "crates/xtask/src/timing.rs",
+          "crates/kernel-core/src/lib.rs",
+          "crates/kernel-core/src/supervision.rs",
+          "crates/kernel-core/tests/bootstrap_grants.rs"
         ],
         "acceptance": ["research/results/supervision-phase36-main126.json"],
         "issues": [27],

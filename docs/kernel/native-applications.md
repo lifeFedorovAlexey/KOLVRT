@@ -87,6 +87,8 @@ Full Phase 3.7 acceptance remains incomplete pending the current complete founda
 
 [Russian translation](../../translations/ru/docs/kernel/native-applications.md)
 
+The fast COMPONENT layer additionally imports the actual shared kernel_core::supervision::validate_grants used by Kernel Scope::install: empty images, zero/excess instance credits and self/missing SEND bindings are rejected. The single production Grant type replaces the earlier kernel-local definition and inline validation; no model/copy is built for these tests. Separate actual ELF, lifecycle, domain/quota and application protocol methods retain their own input tests.
+
 <!-- knowledge -->
 
 ```json
@@ -141,8 +143,11 @@ Full Phase 3.7 acceptance remains incomplete pending the current complete founda
           "crates/kernel-core/src/handles.rs",
           "crates/kernel-core/src/ipc.rs",
           "crates/kernel-core/src/ipc/identity.rs",
+          "crates/kernel-core/src/lib.rs",
           "crates/kernel-core/src/process.rs",
+          "crates/kernel-core/src/supervision.rs",
           "crates/kernel-core/src/wait.rs",
+          "crates/kernel-core/tests/bootstrap_grants.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/build.rs",
           "crates/kernel/src/arch/aarch64/context.rs",

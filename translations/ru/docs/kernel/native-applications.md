@@ -86,6 +86,8 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
 
 [English original](../../../../docs/kernel/native-applications.md)
 
+Быстрый COMPONENT layer дополнительно импортирует настоящий общий kernel_core::supervision::validate_grants, вызываемый Kernel Scope::install: empty images, zero/excess instance credits и self/missing SEND bindings отвергаются. Единственный production тип Grant заменяет прежнее kernel-local определение и inline validation; модель/копия для этих тестов не создаётся. Отдельные настоящие ELF, lifecycle, domain/quota и application protocol методы сохраняют собственные input tests.
+
 <!-- knowledge -->
 
 ```json
@@ -140,8 +142,11 @@ L1 проверяет компоненты, L2 — внешние ABI actors, L3
           "crates/kernel-core/src/handles.rs",
           "crates/kernel-core/src/ipc.rs",
           "crates/kernel-core/src/ipc/identity.rs",
+          "crates/kernel-core/src/lib.rs",
           "crates/kernel-core/src/process.rs",
+          "crates/kernel-core/src/supervision.rs",
           "crates/kernel-core/src/wait.rs",
+          "crates/kernel-core/tests/bootstrap_grants.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/build.rs",
           "crates/kernel/src/arch/aarch64/context.rs",

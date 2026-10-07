@@ -184,12 +184,27 @@
     },
     {
       "from": "kolvrt.apps.native-elf",
+      "to": "crates/kernel-core/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
       "to": "crates/kernel-core/src/process.rs",
       "type": "implemented_by"
     },
     {
       "from": "kolvrt.apps.native-elf",
+      "to": "crates/kernel-core/src/supervision.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
       "to": "crates/kernel-core/src/wait.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
+      "to": "crates/kernel-core/tests/bootstrap_grants.rs",
       "type": "implemented_by"
     },
     {
@@ -2489,7 +2504,22 @@
     },
     {
       "from": "kolvrt.services.supervision",
+      "to": "crates/kernel-core/src/lib.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
       "to": "crates/kernel-core/src/process.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel-core/src/supervision.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.services.supervision",
+      "to": "crates/kernel-core/tests/bootstrap_grants.rs",
       "type": "implemented_by"
     },
     {
@@ -2641,10 +2671,12 @@
     "crates/kernel-core/src/ipc/mailbox.rs": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c",
     "crates/kernel-core/src/ipc/tests.rs": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0",
     "crates/kernel-core/src/ipc/wire.rs": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178",
-    "crates/kernel-core/src/lib.rs": "3ff7fe9052e7ceab49b0cc14d19cc92b8d50b0d61454f065dfb179c839e612de",
+    "crates/kernel-core/src/lib.rs": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a",
     "crates/kernel-core/src/process.rs": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983",
+    "crates/kernel-core/src/supervision.rs": "96d0ccd94f13e4d1e47720e01c308b3c9e8dd37c216ed05078fc0c4ecefb7ca6",
     "crates/kernel-core/src/user_copy.rs": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da",
     "crates/kernel-core/src/wait.rs": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332",
+    "crates/kernel-core/tests/bootstrap_grants.rs": "e7e88c94a1e741bd7677868af0af3183c286ef42c5200aaed38775da7fd425c0",
     "crates/kernel-core/tests/handle_contract.rs": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c",
     "crates/kernel-core/tests/process_protocol.rs": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447",
     "crates/kernel/Cargo.toml": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5",
@@ -2683,7 +2715,7 @@
     "crates/kernel/src/security.rs": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806",
     "crates/kernel/src/security/testing.rs": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df",
     "crates/kernel/src/smp.rs": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3",
-    "crates/kernel/src/supervision.rs": "e3b29976dc855426fa0c0c046bb2d9264a41160d590cf493b7de4500bf5b0876",
+    "crates/kernel/src/supervision.rs": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a",
     "crates/kernel/src/supervision_workload.S": "b368ee274e38ab30e05f8661189f46b69f7016bf372e12aaf94475b1e363d8be",
     "crates/kernel/src/supervision_workload.rs": "bd8e261a2c965ffa520f2b6025e1904e30bc0bff699e29206834e0345c642525",
     "crates/kernel/src/sync/mod.rs": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
@@ -2777,10 +2809,10 @@
     "docs/kernel/handles.md": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "0eff03811c018dd28691f97ef8b7d22481cb2a1899f8d9511e7488877f06d918",
-    "docs/kernel/native-applications.md": "d183cd66a4b77559af5acb75f17af84b1457cf601b116744e7d4a17b01fa8fd4",
+    "docs/kernel/native-applications.md": "e04f6251ac574aeb1faa4e906ce2dc73718248a0e01dde17373ab0641c8cd8f2",
     "docs/kernel/processes.md": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
     "docs/kernel/scheduler.md": "a5848937b2dd27ceb20601bd71eb024b3f452db228d36046d4241464e15d6326",
-    "docs/kernel/supervision.md": "9780f9e5d4d6527675c2d26dbdf770f880d253583b1861c57cae091cbcfccec3",
+    "docs/kernel/supervision.md": "ab428681060a434bc9574edd06b486d3aef4585f71c38a67fd38523849d3a89a",
     "docs/kernel/user-copy.md": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
     "docs/knowledge-enrollment.json": "71f7ecdadafd8031a03f66586ce4fe9626138134457b175669deec9231193af5",
@@ -2875,7 +2907,7 @@
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
     "tests/system/native-crash-recovery.cjs": "dcd85fc717dc28c89a2973e872bd3a9a40c67ba8ac5abbdd9ad741b69e6e6427",
     "tests/system/native-crash-recovery.test.cjs": "a017be1c0911cb65e69483b3552db239c1ca64f961cd307b7b4a626101a768bb",
-    "translations/manifest.json": "82fadadb98b1209112a477c862edc02f431dc454f4d2ca4d886dfe83ff74d285",
+    "translations/manifest.json": "a17f4d0e661f9435814b0f8ec69e2f7de5d518636370fdd80d7c423ca8089311",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2922,10 +2954,10 @@
     "translations/ru/docs/kernel/handles.md": "aa1eed6078d4b58efd17cf2f43b79e7456ec3a7e51be5d474e4aeba22c1b7e11",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "38d3125b798f1855e5c2ac82af76ac8cf8e1a839858f79aba68cb6c9761cd018",
-    "translations/ru/docs/kernel/native-applications.md": "c1ed3592d3342903d9fe2091a0caa0eabdf4e39e95b52cbe6afb6b0ac0be4f2e",
+    "translations/ru/docs/kernel/native-applications.md": "b7c63dc0b8e546b3d5397b679fa41bbd39937804d45d7d84429333f198e7bbfb",
     "translations/ru/docs/kernel/processes.md": "f3e4b7140ddf31dff5dbf277ed1154393e186c67b6012d9d92ebf00cafcaacd0",
     "translations/ru/docs/kernel/scheduler.md": "e25f27bfdc10f7b829dbb17b04da0a9899f3a65a595df8d29f5969c49a982ed4",
-    "translations/ru/docs/kernel/supervision.md": "13d30ecaa41c214370e9f3626da20a95dfe5faae15ca005b57c67a5d8568a781",
+    "translations/ru/docs/kernel/supervision.md": "0bcf63e371575f2d1508165a2fce22930a376cbfada180729fb06c97b9c0ae6b",
     "translations/ru/docs/kernel/user-copy.md": "c34a2d6fc2ad1dbfcef6ac2ff555f96219f543bfa9f58b9ebd1bf1c39fbfcf26",
     "translations/ru/docs/kernel/wait.md": "c62f7e1467ed30b782d972d3418205cf5b3995fcae6dbbba9e68020591b48ba3",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -5687,7 +5719,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 26993,
+      "estimated_bytes": 27620,
       "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5701,15 +5733,15 @@
       },
       "locations": {
         "en": {
-          "end": 234,
+          "end": 239,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "d183cd66a4b77559af5acb75f17af84b1457cf601b116744e7d4a17b01fa8fd4",
+          "sha256": "e04f6251ac574aeb1faa4e906ce2dc73718248a0e01dde17373ab0641c8cd8f2",
           "start": 1
         },
         "ru": {
-          "end": 233,
+          "end": 238,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "c1ed3592d3342903d9fe2091a0caa0eabdf4e39e95b52cbe6afb6b0ac0be4f2e",
+          "sha256": "b7c63dc0b8e546b3d5397b679fa41bbd39937804d45d7d84429333f198e7bbfb",
           "start": 1
         }
       },
@@ -5789,7 +5821,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 21655,
+      "estimated_bytes": 22674,
       "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. Current-source acceptance remains incomplete; readiness and performance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -5803,15 +5835,15 @@
       },
       "locations": {
         "en": {
-          "end": 170,
+          "end": 175,
           "path": "docs/kernel/supervision.md",
-          "sha256": "9780f9e5d4d6527675c2d26dbdf770f880d253583b1861c57cae091cbcfccec3",
+          "sha256": "ab428681060a434bc9574edd06b486d3aef4585f71c38a67fd38523849d3a89a",
           "start": 1
         },
         "ru": {
-          "end": 172,
+          "end": 177,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "13d30ecaa41c214370e9f3626da20a95dfe5faae15ca005b57c67a5d8568a781",
+          "sha256": "0bcf63e371575f2d1508165a2fce22930a376cbfada180729fb06c97b9c0ae6b",
           "start": 1
         }
       },
@@ -6188,8 +6220,11 @@
           "crates/kernel-core/src/handles.rs",
           "crates/kernel-core/src/ipc.rs",
           "crates/kernel-core/src/ipc/identity.rs",
+          "crates/kernel-core/src/lib.rs",
           "crates/kernel-core/src/process.rs",
+          "crates/kernel-core/src/supervision.rs",
           "crates/kernel-core/src/wait.rs",
+          "crates/kernel-core/tests/bootstrap_grants.rs",
           "crates/kernel/Cargo.toml",
           "crates/kernel/build.rs",
           "crates/kernel/src/arch/aarch64/context.rs",
@@ -6280,13 +6315,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "d183cd66a4b77559af5acb75f17af84b1457cf601b116744e7d4a17b01fa8fd4",
+          "sha256": "e04f6251ac574aeb1faa4e906ce2dc73718248a0e01dde17373ab0641c8cd8f2",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "c1ed3592d3342903d9fe2091a0caa0eabdf4e39e95b52cbe6afb6b0ac0be4f2e",
+          "sha256": "b7c63dc0b8e546b3d5397b679fa41bbd39937804d45d7d84429333f198e7bbfb",
           "start": 7
         }
       },
@@ -10345,7 +10380,7 @@
         "acceptance": ["research/results/supervision-phase36-main126.json"],
         "adrs": ["adr.0026"],
         "implementation": "BOUNDED_IMPLEMENTED",
-        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies.",
+        "implementation_scope": "Real isolated EL0 supervisor and static service images; exact-authority lifecycle rendezvous with actual acquired completion, root/owner quiescence and copy/source/ack drainage. Phase 3.7 removes arbitrary coordination cutoffs at the maintainer request; published CPU failure retains resources, and silent stalls require external diagnosis. Ordered readiness, fresh replacement, finite backoff/restart policy and under-load shutdown remain separate application policies. Immutable bootstrap grant shape has one shared kernel-core production type/validator imported directly by host component tests.",
         "issues": [27],
         "limitations": [
           "Development static manifest/image assurance only; production trust remains #38.",
@@ -10371,7 +10406,10 @@
           "crates/xtask/src/main.rs",
           "crates/xtask/src/matrix.rs",
           "crates/xtask/src/output.rs",
-          "crates/xtask/src/timing.rs"
+          "crates/xtask/src/timing.rs",
+          "crates/kernel-core/src/lib.rs",
+          "crates/kernel-core/src/supervision.rs",
+          "crates/kernel-core/tests/bootstrap_grants.rs"
         ],
         "transitions": [
           {
@@ -10417,13 +10455,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "9780f9e5d4d6527675c2d26dbdf770f880d253583b1861c57cae091cbcfccec3",
+          "sha256": "ab428681060a434bc9574edd06b486d3aef4585f71c38a67fd38523849d3a89a",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "13d30ecaa41c214370e9f3626da20a95dfe5faae15ca005b57c67a5d8568a781",
+          "sha256": "0bcf63e371575f2d1508165a2fce22930a376cbfada180729fb06c97b9c0ae6b",
           "start": 13
         }
       },
