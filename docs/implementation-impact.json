@@ -1,32 +1,56 @@
 {
   "schema_version": 1,
-  "base_commit": "459a2fcbf3b84ddeb98c000ff7ca09c66276c932",
+  "base_commit": "d1f47dfd20deec938ef4900eb6a71d5ca5cab65c",
   "files": [
     {
-      "path": "crates/kernel/src/supervision_workload.S",
-      "before_sha256_lf": "447557cda721ce1bc565689484a1f865e2246eb60e18ec5eb76ba36a26d6ecc9",
-      "after_sha256_lf": "dd23d1db3daadb5e6271e206a5f3bddb65463bab483b5fed28c4b48cf5eb2bd5",
+      "path": "crates/xtask/src/matrix.rs",
+      "before_sha256_lf": "cc5b59c9d2f7e8bef4cbbdaf35ec9f64f3993c5c6b07427f771b6cce1934a19f",
+      "after_sha256_lf": "058cecab5631d0b102d320d0460ed262db0d2d1d0a4616b541f25cbdfe2acb4a",
       "disposition": "existing-feature",
-      "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
+      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
     },
     {
-      "path": "tests/system/supervision-host-stall.cjs",
-      "before_sha256_lf": "e85ae7747e8670c94d0e257a49bbd0e6d1ff5297506802385c86a079d1c9df14",
-      "after_sha256_lf": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
+      "path": "scripts/ci-evidence.cjs",
+      "before_sha256_lf": "a74e61a7bfd4c6736a46ebd2b4f15cc7182944ceacd2add41ed9eb0c2e3d9b97",
+      "after_sha256_lf": "2da8ab8536fde789c4701969440a2b4802a156dd801c8f2f14e5a2846323d72a",
       "disposition": "existing-feature",
-      "reason": "Issue133 diagnostic-only fixture stages and real production-method boundary tests; external host-thread starvation reproducer reuses GDB utility. No production deadline, scheduling or admission semantics change."
+      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
+    },
+    {
+      "path": "scripts/tests/ci-infrastructure.test.cjs",
+      "before_sha256_lf": "e82a3ed037d8d06796ce0dd1c13c01c88fb285b425971df6e006cc95324fd987",
+      "after_sha256_lf": "922413dedbfbbef5c2b626b012d2925b09c021f07b2da0bf1e19a99ab79aaf66",
+      "disposition": "existing-feature",
+      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
+    },
+    {
+      "path": ".github/workflows/ci-windows-workload.yml",
+      "before_sha256_lf": "40a95557b9ccb7e9ed820080908940d3eb6a4d7c9bd44ecfb1891aa80cfc5519",
+      "after_sha256_lf": "d92070d60b434a805c5289aa71b52f9d2912fa254939fd64729bf6dd14bc39d9",
+      "disposition": "existing-feature",
+      "reason": "Issue109 B5: share fresh same-invocation ordinary evidence within a shard, independently validate every consumer, reject incompatible provenance, and report actual executed/reused counts. Production kernel/app behavior unchanged."
     }
   ],
   "features": [
     {
       "id": "kolvrt.apps.native-elf",
       "disposition": "semantic-change",
-      "reason": "Correct direct lifecycle diagnostic classification and preserve original plus cleanup failures. Canonical EN/RU scope explains the reporting repair; current native verification remains STALE and historical receipts remain unchanged."
+      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
+    },
+    {
+      "id": "kolvrt.ci.performance",
+      "disposition": "semantic-change",
+      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
+    },
+    {
+      "id": "kolvrt.ipc.transport",
+      "disposition": "semantic-change",
+      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
     },
     {
       "id": "kolvrt.services.supervision",
       "disposition": "semantic-change",
-      "reason": "Correct direct lifecycle diagnostic classification and preserve original plus cleanup failures. Canonical EN/RU scope explains the reporting repair; current native verification remains STALE and historical receipts remain unchanged."
+      "reason": "Update canonical EN/RU execution and evidence-consumption contracts for schema2 receipts with same-shard executed donors and independently checked obligations. Preserve historical executed receipts and pending runtime/performance acceptance."
     }
   ]
 }

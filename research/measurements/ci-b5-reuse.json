@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "scope": "Issue109 B5 local invocation-scoped observation reuse. One reference/reuse shard0 pair and one four-shard optimized matrix; not hosted cold/warm acceptance or kernel runtime performance.",
+  "reviewed_base": "d1f47dfd20deec938ef4900eb6a71d5ca5cab65c",
+  "source_identity": "Exact source_files in retained matrix plans; local uncommitted B5 implementation at measurement time.",
+  "attempts": [
+    {
+      "shard": 0,
+      "reuse": "off",
+      "label": "baseline-shard-0",
+      "exit_code": 0,
+      "wall_seconds": 309.7595683
+    },
+    {
+      "shard": 0,
+      "reuse": "on",
+      "label": "reuse-shard-0",
+      "exit_code": 0,
+      "wall_seconds": 37.077867
+    },
+    {
+      "shard": 1,
+      "reuse": "on",
+      "label": "reuse-shard-1",
+      "exit_code": 0,
+      "wall_seconds": 73.2930072
+    },
+    {
+      "shard": 2,
+      "reuse": "on",
+      "label": "reuse-shard-2",
+      "exit_code": 0,
+      "wall_seconds": 65.1699796
+    },
+    {
+      "shard": 3,
+      "reuse": "on",
+      "label": "reuse-shard-3",
+      "exit_code": 0,
+      "wall_seconds": 71.534929
+    }
+  ],
+  "comparison": {
+    "shard": 0,
+    "equivalent_tasks": 36,
+    "build_and_qemu_identity": "All36 reference/optimized task build metadata, ELF hashes, QEMU arguments and version equal.",
+    "reference_seconds": 309.7595683,
+    "reuse_seconds": 37.077867,
+    "saved_seconds": 272.6817013,
+    "limits": "Single ordered local pair, caches/host load uncontrolled. No causal percentage, population claim, CI latency guarantee, or comparison against historical130-task baseline.",
+    "source_limit": "The reference/reuse timing pair uses its retained pre-Clippy source inventory. Final source changes only the equivalent ordinary-observation guard form; final matrix is separately validated, not retroactively timed against the old reference."
+  },
+  "matrix": {
+    "obligations": 144,
+    "executed": 38,
+    "reused": 106,
+    "shards": [
+      {
+        "shard": 0,
+        "obligations": 36,
+        "executed": 10,
+        "reused": 26
+      },
+      {
+        "shard": 1,
+        "obligations": 36,
+        "executed": 11,
+        "reused": 25
+      },
+      {
+        "shard": 2,
+        "obligations": 36,
+        "executed": 9,
+        "reused": 27
+      },
+      {
+        "shard": 3,
+        "obligations": 36,
+        "executed": 8,
+        "reused": 28
+      }
+    ]
+  },
+  "receipts": [
+    {
+      "path": "research/results/ci-matrix-b5-reuse.json.receipt",
+      "sha256": "1924ac73eeafa79cbc11d0ad20d6b43a66cbf3ca524371424938daafb4f8bdbe"
+    },
+    {
+      "path": "research/results/ci-matrix-b5-reference-shard0.json.receipt",
+      "sha256": "c6a4964a6c4cb88b0392f49d58e5a3e0f3c18b1e8a00bfc63cb9819639590350"
+    }
+  ],
+  "final_source_validation": {
+    "attempts": [
+      {
+        "wall_seconds": 37.3241454,
+        "exit_code": 0,
+        "shard": 0
+      },
+      {
+        "wall_seconds": 47.0910557,
+        "exit_code": 0,
+        "shard": 1
+      },
+      {
+        "wall_seconds": 42.7379756,
+        "exit_code": 0,
+        "shard": 2
+      },
+      {
+        "wall_seconds": 50.0908879,
+        "exit_code": 0,
+        "shard": 3
+      }
+    ],
+    "obligations": 144,
+    "executed": 38,
+    "reused": 106,
+    "source_identity": "Final exact source_files in the linked receipt plan",
+    "receipt": {
+      "path": "research/results/ci-matrix-b5-final.json.receipt",
+      "sha256": "c22177a0be2f0689fa70d4ab7940d86a4885c428efd4e340400be4913ec1e9c3"
+    }
+  }
+}

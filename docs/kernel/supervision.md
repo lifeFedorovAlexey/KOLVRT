@@ -90,6 +90,10 @@ Deterministic UNIT checks call the actual Endpoint::submit at deadline boundarie
 
 The [review follow-up diagnostic](../../research/results/supervision-readiness-host-stall-review.json) retains a separate result for the corrected direct-launch markers and cleanup. At PR head 4e37987, [CI 37584043283](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37584043283) passed all four matrix shards and required foundation jobs; this does not attribute the earlier readiness failure. Passive host scheduling capture was unavailable locally: Windows refused WPR CPU profiling with error 0xc5585011. No trace was recorded by WPR and no host scheduling cause is inferred from that refusal.
 
+## Matrix evidence consumption
+
+Issue #109 B5 changes only host-side consumption of equivalent ordinary suite evidence. Schema-2 execution receipts retain schema-1 source plans and all 144 task obligations. A later consumer may use an earlier executed ordinary donor from the same invocation and shard only when source/profile/features/ELF/QEMU identities match; every required named assertion is checked independently from retained events. Fatal controls, different profiles and builds, historical results and reuse chains are excluded. KOLVRT_MATRIX_REUSE=off executes the reference afresh. This does not alter supervisor readiness policy, restart backoff, acquired quiescence or reclamation. Existing receipts retain their historical scope; owner verification is not promoted by this runner change, and no performance or readiness acceptance follows. [CI reuse contract](../ci/performance.md) defines provenance and expected counts.
+
 <!-- knowledge -->
 
 ```json

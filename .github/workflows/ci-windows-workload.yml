@@ -92,6 +92,7 @@ jobs:
           pattern: ci-matrix-*
           path: target/shards
       - name: Execute required workload
+        id: workload
         shell: pwsh
         env:
           CI_WORKLOAD: ${{ inputs.workload }}
@@ -118,10 +119,27 @@ jobs:
           QEMU_CACHE_HIT: ${{ steps.qemu-cache.outputs.cache-hit || 'disabled-or-miss' }}
           CI_WORKLOAD: ${{ inputs.workload }}
           NODE_CACHE_HIT: ${{ steps.node-cache.outputs.cache-hit || 'unknown-or-disabled' }}
+          WORKLOAD_OUTCOME: ${{ steps.workload.outcome }}
         run: |
           New-Item -ItemType Directory -Force target/ci-timings | Out-Null
           $source = git rev-parse HEAD
-          @{ schema_version = 1; source_commit = $source; expected_commit = '${{ github.event.pull_request.head.sha || github.sha }}'; workload = $env:CI_WORKLOAD; cargo_cache = $env:CARGO_CACHE_HIT; qemu_archive_cache = $env:QEMU_CACHE_HIT; npm_cache = $env:NODE_CACHE_HIT; reused_qemu_observations = 0 } | ConvertTo-Json | Set-Content target/ci-timings/job.json
+          $reusedObservations = $null
+          if ($env:WORKLOAD_OUTCOME -eq 'success') {
+            if ($env:CI_WORKLOAD -in @('matrix', 'evidence')) {
+              $receiptPath = if ($env:CI_WORKLOAD -eq 'evidence') { 'target/kernel/ci-matrix.json' } elseif ($env:CI_MATRIX_SHARD -ne '') { "target/kernel/shard-$env:CI_MATRIX_SHARD.json" } else { 'target/kernel/matrix-execution.json' }
+              try {
+                $matrixReceipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
+                if ($matrixReceipt.schema_version -ne 2 -or $null -eq $matrixReceipt.completed -or $matrixReceipt.completed.Count -eq 0) { throw 'Missing schema-2 matrix observations' }
+                if (@($matrixReceipt.completed | Where-Object { $_.outcome -ne 'passed' -or $_.observation -notin @('executed', 'reused') }).Count -ne 0) { throw 'Invalid matrix observation' }
+                $reusedObservations = @($matrixReceipt.completed | Where-Object { $_.observation -eq 'reused' }).Count
+              } catch {
+                Write-Warning "Reuse evidence unavailable: $_"
+              }
+            } else {
+              $reusedObservations = 0
+            }
+          }
+          @{ schema_version = 1; source_commit = $source; expected_commit = '${{ github.event.pull_request.head.sha || github.sha }}'; workload = $env:CI_WORKLOAD; cargo_cache = $env:CARGO_CACHE_HIT; qemu_archive_cache = $env:QEMU_CACHE_HIT; npm_cache = $env:NODE_CACHE_HIT; reused_qemu_observations = $reusedObservations } | ConvertTo-Json | Set-Content target/ci-timings/job.json
           if ($source -ne '${{ github.event.pull_request.head.sha || github.sha }}') { throw 'Evidence source commit mismatch' }
       - name: Summarize nested executed observations
         if: always()

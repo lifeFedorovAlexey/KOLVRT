@@ -408,6 +408,111 @@ fn control_diagnostic(id: &str, reason: &str, output: &str) -> String {
     format!("{reason}: {id}\nSubprocess output (last 24 lines):\n{tail}")
 }
 
+// Invocation-local observations only: a donor is always an actual ordinary run.
+fn reusable(task: &Task) -> bool {
+    task.tests
+        && task.feature.is_none()
+        && task.marker.is_none()
+        && task.ipc_test.is_none()
+        && (task.flag.is_none() || task.flag.and_then(observable_checks).is_some())
+}
+
+fn ordinary_evidence(task: &Task, result: &Value) -> Result<()> {
+    if !reusable(task) || result["observation"] != "executed" || result.get("reused_from").is_some()
+    {
+        return Err("matrix donor is not an executed ordinary suite".into());
+    }
+    let profile = if task.prod { "prod" } else { "dev" };
+    let elf = format!("target/kernel/{profile}-tests.elf");
+    let features = if task.prod {
+        json!(["machine-events", "kernel-tests"])
+    } else {
+        json!(["machine-events", "diagnostics", "kernel-tests"])
+    };
+    if result["build"]["artifact"] != elf
+        || result["build"]["features"] != features
+        || result["run"]["arguments"] != json!(qemu_args(Path::new(&elf)))
+        || !result["build"]["sha256"].is_string()
+        || result["build"]["sha256"] != result["run"]["elf_sha256"]
+    {
+        return Err("matrix ordinary observation configuration mismatch".into());
+    }
+    let events = result["events"]
+        .as_array()
+        .ok_or("ordinary events absent")?;
+    let suites = events
+        .iter()
+        .filter(|event| event["event"] == "suite")
+        .collect::<Vec<_>>();
+    if suites.len() != 1
+        || suites[0]["status"] != "pass"
+        || events.iter().any(|event| event["status"] == "fail")
+    {
+        return Err("matrix ordinary observation suite did not pass".into());
+    }
+    if let Some(checks) = task.flag.and_then(observable_checks)
+        && !required_observations(&result["events"], checks)?
+    {
+        return Err(format!("required invariant observations absent: {}", task.id).into());
+    }
+    Ok(())
+}
+
+fn reuse_enabled(value: Option<&str>) -> Result<bool> {
+    match value {
+        None | Some("on") => Ok(true),
+        Some("off") => Ok(false),
+        _ => Err("KOLVRT_MATRIX_REUSE must be on or off".into()),
+    }
+}
+fn reuse_policy() -> Result<bool> {
+    match env::var("KOLVRT_MATRIX_REUSE") {
+        Ok(value) => reuse_enabled(Some(&value)),
+        Err(env::VarError::NotPresent) => reuse_enabled(None),
+        Err(error) => Err(error.into()),
+    }
+}
+
+#[derive(Default)]
+struct Observations {
+    // DEV and PROD cannot donate to one another. Never cache a reused result.
+    donors: [Option<Value>; 2],
+}
+impl Observations {
+    fn execute(&mut self, task: &Task) -> Result<Value> {
+        if !reusable(task) {
+            return execute_task(task);
+        }
+        let slot = usize::from(task.prod);
+        if let Some(donor) = &self.donors[slot] {
+            ordinary_evidence(task, donor)?;
+            let elf = donor["build"]["artifact"]
+                .as_str()
+                .ok_or("donor ELF absent")?;
+            let digest = Sha256::digest(fs::read(elf)?)
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>();
+            if donor["build"]["sha256"] != digest {
+                return Err("matrix donor ELF changed before observation reuse".into());
+            }
+            let mut result = donor.clone();
+            result["id"] = json!(task.id);
+            result["observation"] = json!("reused");
+            result["reused_from"] = donor["id"].clone();
+            println!(
+                "Matrix task passed: {} (reused from {})",
+                task.id, donor["id"]
+            );
+            return Ok(result);
+        }
+        let result = execute_task(task)?;
+        ordinary_evidence(task, &result)?;
+        self.donors[slot] = Some(result.clone());
+        Ok(result)
+    }
+}
+
 fn execute_task(task: &Task) -> Result<Value> {
     let profile = if task.prod { "prod" } else { "dev" };
     let artifact = format!(
@@ -481,16 +586,20 @@ fn execute_task(task: &Task) -> Result<Value> {
         let elf = build(task.prod, task.tests, None, true)?;
         execute(&elf, task.tests, true)?;
     }
+    let mut result = json!({"id":task.id,"outcome":"passed","observation":"executed","build":read_json(format!("{artifact}-build.json"))?,"run":read_json(format!("{artifact}.run.json"))?});
+    if reusable(task) {
+        result["events"] = read_json(format!("{artifact}.results.json"))?;
+        ordinary_evidence(task, &result)?;
+    }
     println!("Matrix task passed: {} (executed)", task.id);
-    Ok(
-        json!({"id":task.id,"outcome":"passed","observation":"executed","build":read_json(format!("{artifact}-build.json"))?,"run":read_json(format!("{artifact}.run.json"))?}),
-    )
+    Ok(result)
 }
 
 pub fn run(shard: Option<(usize, usize)>) -> Result<()> {
     if shard.is_some_and(|(index, count)| count == 0 || count > 16 || index >= count) {
         return Err("invalid matrix shard; require 0 <= index < count <= 16".into());
     }
+    let reuse = reuse_policy()?;
     let destination = shard.map_or_else(
         || "target/kernel/matrix-execution.json".to_owned(),
         |(index, _)| format!("target/kernel/shard-{index}.json"),
@@ -500,9 +609,14 @@ pub fn run(shard: Option<(usize, usize)>) -> Result<()> {
     }
     let plan = plan_document()?;
     let mut completed = Vec::new();
+    let mut observations = Observations::default();
     for (position, task) in tasks().iter().enumerate() {
         if selected(position, shard) {
-            completed.push(execute_task(task)?);
+            completed.push(if reuse {
+                observations.execute(task)?
+            } else {
+                execute_task(task)?
+            });
         }
     }
     if plan["source_files"] != source_inventory()? {
@@ -511,7 +625,7 @@ pub fn run(shard: Option<(usize, usize)>) -> Result<()> {
     fs::write(
         destination,
         serde_json::to_string_pretty(
-            &json!({"schema_version":1,"plan":plan,"shard_index":shard.map(|v|v.0),"shard_count":shard.map(|v|v.1),"completed":completed,"scope":if shard.is_some() {"partial; requires exact-source aggregate"} else {"complete serial matrix"}}),
+            &json!({"schema_version":2,"reuse_policy":if reuse {"same-invocation"} else {"disabled"},"plan":plan,"shard_index":shard.map(|v|v.0),"shard_count":shard.map(|v|v.1),"completed":completed,"scope":if shard.is_some() {"partial; requires exact-source aggregate"} else {"complete serial matrix"}}),
         )?,
     )?;
     Ok(())
@@ -531,11 +645,21 @@ pub fn run_one(flag: &str, prod: bool) -> Result<()> {
 }
 
 pub fn run_ipc() -> Result<()> {
+    let reuse = reuse_policy()?;
+    let sources = source_inventory()?;
+    let mut observations = Observations::default();
     for task in tasks().iter().filter(|task| {
         task.flag
             .is_some_and(|flag| IPC_CONTROLS.iter().any(|entry| entry.0 == flag))
     }) {
-        execute_task(task)?;
+        if reuse {
+            observations.execute(task)?;
+        } else {
+            execute_task(task)?;
+        }
+    }
+    if sources != source_inventory()? {
+        return Err("IPC matrix sources changed during execution".into());
     }
     Ok(())
 }
@@ -618,6 +742,86 @@ fn panic_site_witness(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn reuse_policy_accepts_only_explicit_on_off_or_absent() {
+        assert!(reuse_enabled(None).unwrap());
+        assert!(reuse_enabled(Some("on")).unwrap());
+        assert!(!reuse_enabled(Some("off")).unwrap());
+        for value in ["", "ON", "false", "0", " off", "off "] {
+            assert!(reuse_enabled(Some(value)).is_err());
+        }
+    }
+    fn ordinary_result(task: &Task, events: Value) -> Value {
+        let profile = if task.prod { "prod" } else { "dev" };
+        let elf = format!("target/kernel/{profile}-tests.elf");
+        json!({"id":task.id,"observation":"executed",
+            "build":{"artifact":elf,"sha256":"digest","features":if task.prod {
+                vec!["machine-events", "kernel-tests"]
+            } else {vec!["machine-events", "diagnostics", "kernel-tests"]}},
+            "run":{"arguments":qemu_args(Path::new(&elf)),"elf_sha256":"digest"},
+            "events":events})
+    }
+    #[test]
+    fn reuse_requires_ordinary_profile_features_arguments_and_direct_execution() {
+        let task = observable_task("--supervision-wait-control", false);
+        let events = json!([
+            {"event":"suite","status":"pass"},
+            {"event":"test","name":"supervision_el0_lifecycle","status":"pass"}
+        ]);
+        let result = ordinary_result(&task, events);
+        assert!(ordinary_evidence(&task, &result).is_ok());
+        let mut prod = task.clone();
+        prod.prod = true;
+        assert!(ordinary_evidence(&prod, &result).is_err());
+        for (field, value) in [
+            ("observation", json!("reused")),
+            ("reused_from", json!("other")),
+            ("events", json!([])),
+        ] {
+            let mut invalid = result.clone();
+            invalid[field] = value;
+            assert!(ordinary_evidence(&task, &invalid).is_err());
+        }
+        for (section, field, value) in [
+            (
+                "build",
+                "features",
+                json!(["machine-events", "kernel-tests"]),
+            ),
+            ("run", "arguments", json!(["-smp", "1"])),
+            ("run", "elf_sha256", json!("different")),
+            ("build", "artifact", json!("target/kernel/prod-tests.elf")),
+        ] {
+            let mut invalid = result.clone();
+            invalid[section][field] = value;
+            assert!(ordinary_evidence(&task, &invalid).is_err());
+        }
+        let mut boot = task.clone();
+        boot.tests = false;
+        assert!(!reusable(&boot));
+        let mut feature = task.clone();
+        feature.feature = Some("panic-test");
+        assert!(!reusable(&feature));
+        let mut fatal = task;
+        fatal.flag = Some("--panic-control");
+        assert!(!reusable(&fatal));
+    }
+    #[test]
+    fn reuse_rechecks_consumer_missing_duplicate_failed_checks_and_suite() {
+        let task = observable_task("--supervision-wait-control", false);
+        let suite = json!({"event":"suite","status":"pass"});
+        let check = json!({"event":"test","name":"supervision_el0_lifecycle","status":"pass"});
+        for events in [
+            json!([suite.clone()]),
+            json!([suite.clone(), check.clone(), check.clone()]),
+            json!([suite.clone(), {"event":"test","name":"supervision_el0_lifecycle","status":"fail"}]),
+            json!([suite.clone(), check.clone(), {"event":"panic","status":"fail"}]),
+            json!([suite.clone(), suite, check.clone()]),
+            json!([check]),
+        ] {
+            assert!(ordinary_evidence(&task, &ordinary_result(&task, events)).is_err());
+        }
+    }
     #[test]
     fn assertion_oracle_rejects_unrelated_or_missing_guest_panic() {
         let site = "kernel halted at crates/kernel/src/sync/mod.rs:40";

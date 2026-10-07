@@ -103,6 +103,10 @@ Current Phase 3.7 controls import the actual Endpoint and Mailbox protocols and 
 
 Issue #133 adds a host UNIT test of the actual Endpoint::submit method in [the existing IPC test module](../../crates/kernel-core/src/ipc/tests.rs). With d = sampled CLOCK + frequency / 8, admission at d - 1 creates the real request, charges and receiver wake; admission at d and d + 1 returns Expired without changing charges, references, queue/request occupancy or the registered unwoken receiver. Cancellation and collection of the admitted request restore its charges. The 21 IPC UNIT tests pass. This boundary evidence neither attributes the historical readiness delay nor proves EL0 timing or QEMU latency.
 
+## Matrix evidence consumption
+
+Issue #109 B5 changes only host-side consumption of equivalent ordinary suite evidence. Schema-2 execution receipts retain schema-1 source plans and all 144 task obligations. A later consumer may use an earlier executed ordinary donor from the same invocation and shard only when source/profile/features/ELF/QEMU identities match; every required named assertion is checked independently from retained events. Fatal controls, different profiles and builds, historical results and reuse chains are excluded. KOLVRT_MATRIX_REUSE=off executes the reference afresh. This does not alter IPC admission, authority, deadlines, completion or resource lifetime. Existing receipts retain their historical scope; owner verification is not promoted by this runner change, and no performance or readiness acceptance follows. [CI reuse contract](../ci/performance.md) defines provenance and expected counts.
+
 <!-- knowledge -->
 
 ```json

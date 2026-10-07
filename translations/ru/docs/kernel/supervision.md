@@ -92,6 +92,10 @@ Fixture теперь различает readiness нового replacement (stag
 
 [Повторная диагностика после ревью](../../../../research/results/supervision-readiness-host-stall-review.json) сохраняет отдельный результат для исправленных маркеров прямого запуска и очистки. На head PR 4e37987 [CI 37584043283](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37584043283) прошёл все четыре matrix shard и обязательные задания foundation; это не устанавливает причину предыдущего отказа readiness. Пассивная запись планирования хоста локально недоступна: Windows отклонила профилирование WPR CPU с ошибкой 0xc5585011. WPR не записал трассу; из этого отказа не выводится причина задержки планирования хоста.
 
+## Использование evidence matrix
+
+B5 issue #109 меняет только потребление evidence эквивалентного обычного suite на host. Receipts выполнения schema 2 сохраняют source plans schema 1 и все 144 обязательные проверки. Последующий consumer может использовать более ранний executed ordinary donor только из того же вызова и shard при совпадении source/profile/features/ELF/QEMU identities; каждый обязательный именованный assertion независимо проверяется по сохранённым events. Fatal controls, другие profiles и сборки, исторические результаты и цепочки reuse исключены. KOLVRT_MATRIX_REUSE=off заново исполняет reference. Это не меняет readiness policy supervisor, restart backoff, acquired quiescence или reclamation. Существующие receipts сохраняют исторический scope; это изменение runner не повышает verification владельца и не даёт performance или readiness acceptance. [Контракт CI reuse](../ci/performance.md) определяет provenance и ожидаемые counts.
+
 <!-- knowledge -->
 
 ```json

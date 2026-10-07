@@ -103,6 +103,10 @@ Sources: [core endpoint state](../../../../crates/kernel-core/src/ipc.rs), [iden
 
 Issue #133 добавляет host UNIT-тест настоящего метода Endpoint::submit в [существующем модуле тестов IPC](../../../../crates/kernel-core/src/ipc/tests.rs). При d = sampled CLOCK + frequency / 8 допуск в момент d - 1 создаёт настоящий запрос, учитывает charges и пробуждает receiver; допуск в моменты d и d + 1 возвращает Expired без изменения charges, references, занятости очереди/запросов и зарегистрированного непробуждённого receiver. Cancellation и collection принятого запроса освобождают его charges. Все 21 UNIT-тест IPC проходят. Это доказательство границы не устанавливает причину исторической задержки readiness и не доказывает время исполнения EL0 или latency QEMU.
 
+## Использование evidence matrix
+
+B5 issue #109 меняет только потребление evidence эквивалентного обычного suite на host. Receipts выполнения schema 2 сохраняют source plans schema 1 и все 144 обязательные проверки. Последующий consumer может использовать более ранний executed ordinary donor только из того же вызова и shard при совпадении source/profile/features/ELF/QEMU identities; каждый обязательный именованный assertion независимо проверяется по сохранённым events. Fatal controls, другие profiles и сборки, исторические результаты и цепочки reuse исключены. KOLVRT_MATRIX_REUSE=off заново исполняет reference. Это не меняет IPC admission, authority, deadlines, completion или время жизни ресурсов. Существующие receipts сохраняют исторический scope; это изменение runner не повышает verification владельца и не даёт performance или readiness acceptance. [Контракт CI reuse](../ci/performance.md) определяет provenance и ожидаемые counts.
+
 <!-- knowledge -->
 
 ```json
