@@ -39,6 +39,7 @@
     "docs/architecture/kernel-laws.md",
     "docs/architecture/native-abi.md",
     "docs/architecture/native-model.md",
+    "docs/architecture/native-phase37-acceptance-review.md",
     "docs/architecture/production-scheduler.md",
     "docs/architecture/supervision-phase36-acceptance-review.md",
     "docs/ci/performance.md",

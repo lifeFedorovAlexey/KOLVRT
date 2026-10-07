@@ -1,7 +1,7 @@
 # Native ELF applications and persistent service
 
 Document status: CURRENT
-Evidence scope: experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.
+Evidence scope: accepted bounded Phase 3.7 slice at implementation 7f8dd80: original ELF applications, persistent state, actual production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. Prior copied-implementation and source-mutant runs are not current evidence.
 Current reference: [Accepted supervision foundation](supervision.md)
 
 <a name="native-elf-applications"></a>
@@ -11,6 +11,12 @@ Current reference: [Accepted supervision foundation](supervision.md)
 Ordinary counter-service, counter-client and native-supervisor are separate no_std/no_main ELF artifacts under apps/native-apps. The kernel receives full original ELF bytes and uses its real loader; applications and the host harness verify the counter protocol and expected values. GET and checked ADD(delta) use private userspace state; RESET is absent. ADD(5), ADD(7), GET produce 5, 12, 12. The ordinary service contains no injected crash, test request counter or reply corruption.
 
 Finite client SEND binding uses the existing supervision checkpoint and exact instance tokens. The kernel supplies generic process/ELF/IPC/authority/lifetime mechanisms. Ordinary implementation must contain no application callbacks or test interventions. Hardware, disk durability and stable ABI are not claimed.
+
+## Current bounded acceptance
+
+The [acceptance review](../architecture/native-phase37-acceptance-review.md) and [exact receipt](../../research/results/native-phase37-current.json) accept the first native application slice. Full CI 37557806495 at 7f8dd80 passed: 144/144 tasks across four shards, native, host, kernel DEV/PROD, routing, ASID and evidence aggregation. Dependency hygiene and CodeRabbit are green. Production crash/recovery and ordinary completion passed in both profiles; the corrected independence proof actually executes runtime/lifecycle/smoke inside the restricted workspace. Earlier failures below retain their historical scope rather than describing current status.
+
+BOUNDED_IMPLEMENTED and QEMU VERIFIED apply only to the declared scope. Readiness, image trust (#38), physical ARM and performance acceptance remain separate; no new performance blocker is introduced for #28. ABI remains experimental; startup crash and post-commit replay are not claimed.
 
 ## Test classification and single implementation
 
@@ -31,7 +37,7 @@ The production supervisor now checks the actual lifecycle terminal outcome befor
 
 The current external ELF inventory is explicit: selftest-abi-client calls the real native-userspace IPC API against the production service/supervisor; selftest-lifecycle-client calls public lifecycle/IPC APIs and imports native-apps::supervision::recover_service; selftest-lifecycle-peer exercises binding, stale SEND and fault containment. Each is a test client with no production counterpart. There is no copied production supervisor. The lifecycle SYSTEM scenario uses selftest-lifecycle-client as its root instead of native-supervisor, so production_supervisor_tested=false: that scenario does not execute the production supervisor. The real counter-service is used. The unused selftest-fault-client and dead native-*-negative features were removed; lifecycle-peer supplies the executed external fault scenario. Host UNIT tests in apps/native-apps/tests/supervision.rs import needs_replacement and fresh_binding without an ELF.
 
-CI on exact 7d64fac stopped at user-context (shard 0), retirement (shard 1), shootdown (shard 2), and remote-tlbi (shard 3). Retirement compilation was repaired in 71753ae. That commit then failed static because the graph had a stale final manifest digest; c77f6e8 regenerated the exact graph and passed CI static. The four corruption-based controls are now migrated as mapped below. Other legacy controls remain subject to the complete matrix; the named passes do not establish a green foundation or full Phase 3.7 acceptance.
+CI on exact 7d64fac stopped at user-context (shard 0), retirement (shard 1), shootdown (shard 2), and remote-tlbi (shard 3). Retirement compilation was repaired in 71753ae. That commit then failed static because the graph had a stale final manifest digest; c77f6e8 regenerated the exact graph and passed CI static. The four corruption-based controls are now migrated as mapped below. At that revision other legacy controls still required the complete matrix; those named passes alone did not establish a green foundation or Phase 3.7 acceptance.
 
 | Migrated control | Actual inputs / observations                                                                                              | Evidence limit                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
@@ -43,19 +49,19 @@ CI on exact 7d64fac stopped at user-context (shard 0), retirement (shard 1), sho
 
 These controls use ordinary kernel-tests builds and require every mapped test exactly once with status pass. Missing, duplicate, failed and unrelated observations are rejected. The task inventory is preserved. The four obsolete corruption features are removed. The ordinary suite now has 147 checks per profile. REMOTE_TLBI_COMPLETED is observation-only instrumentation in kernel-tests; this evidence is not byte-identical production-binary execution. The new production crash/recovery/shutdown scenario is separate from these ordinary kernel checks.
 
-The next obsolete controls are classified explicitly. completion-publication-state-inputs imports the production Ownership state machine and rejects completion while borrowed or not quiescent, rejects inspection before Done and verifies phase/generation retention. This UNIT evidence does not test a withheld remote CPU publication or its liveness/failure handling. process-exit calls the single production Table::complete with a duplicate completion and verifies the terminal record, state and live-slot count remain unchanged; the test-only Registry::repeat_completion wrapper is removed. process-rollback uses real zero-memory-budget creation failures and checks resource rollback. asid-reuse-invariants observes actual same-VA isolation, invalidation counters and pool exhaustion; it is not a skipped-invalidation negative control.
+The additional migrated controls are classified explicitly. completion-publication-state-inputs imports the production Ownership state machine and rejects completion while borrowed or not quiescent, rejects inspection before Done and verifies phase/generation retention. This UNIT evidence does not test a withheld remote CPU publication or its liveness/failure handling. process-exit calls the single production Table::complete with a duplicate completion and verifies the terminal record, state and live-slot count remain unchanged; the test-only Registry::repeat_completion wrapper is removed. process-rollback uses real zero-memory-budget creation failures and checks resource rollback. asid-reuse-invariants observes actual same-VA isolation, invalidation counters and pool exhaustion; it is not a skipped-invalidation negative control.
 
 shootdown-invariants and remote-tlbi-invariants are positive invariant coverage; their previous control flags are CLI aliases. They do not establish missing-ACK or skipped-TLBI detection. The plan and archived counts distinguish ordinary, negative-input, invariant and remaining legacy-failure tasks. Withheld publication/missing ACK/skipped invalidation SYSTEM coverage remain outside this coverage; the separate production crash/recovery/shutdown E2E does not establish omitted-TLBI or missing-ACK detection.
 
 The process transition family now uses explicit production-method negative inputs: Table::reclaim without quiescence preserves the completed record/live-slot count (UNIT); Registry::start for an already admitted process preserves state/frames; stale IDs fail start/data/receipt validation after actual slot reuse; Registry::reclaim for a live process preserves state/frames. No forced scheduler unlink is claimed. Obsolete process-contract features and early panic branches are removed.
 
-The scheduler family now separates three levels of evidence. Registry::create rejects AArch32, privileged-mode and masked-user-IRQ input contexts before allocation; process count and available pages remain unchanged. Ownership UNIT tests call the one production protocol with foreign CPU, unmasked access, borrowed/reentrant access, stale generation, duplicate start, live reset and premature inspection; phase/generation remain retained. Adapter UNIT tests construct actual Local/Task/State fixture values and invoke the real methods with a lock held, a lock inside an ownership callback, stale task generation or an already running peer. These four fatal assertions execute in DEV and PROD; the host requires a fresh guest panic at the actual unique production assertion site, because PROD omits the diagnostic message. No implementation body is copied or mutated. The IRQ/SIMD compatibility flag now selects the real interrupt round-trip invariant; it does not establish skipped-restore detection. These tests do not establish complete hardware adapter fault coverage or current Phase 3.7 acceptance.
+The scheduler family now separates three levels of evidence. Registry::create rejects AArch32, privileged-mode and masked-user-IRQ input contexts before allocation; process count and available pages remain unchanged. Ownership UNIT tests call the one production protocol with foreign CPU, unmasked access, borrowed/reentrant access, stale generation, duplicate start, live reset and premature inspection; phase/generation remain retained. Adapter UNIT tests construct actual Local/Task/State fixture values and invoke the real methods with a lock held, a lock inside an ownership callback, stale task generation or an already running peer. These four fatal assertions execute in DEV and PROD; the host requires a fresh guest panic at the actual unique production assertion site, because PROD omits the diagnostic message. No implementation body is copied or mutated. The IRQ/SIMD compatibility flag now selects the real interrupt round-trip invariant; it does not establish skipped-restore detection. These tests alone do not establish complete hardware adapter fault coverage or Phase 3.7 acceptance.
 
-Exact d33ce92 CI passed static, native, host, kernel DEV/PROD, routing and ASID jobs, but all matrix shards failed: scheduler-user-irq (0), scheduler-context (1), scheduler-inner-lock (2), scheduler-aarch32 (3). The foundation aggregate failed and evidence was skipped. The scheduler migration addresses these obsolete controls and adjacent family controls; a full current matrix is still required.
+Exact d33ce92 CI passed static, native, host, kernel DEV/PROD, routing and ASID jobs, but all matrix shards failed: scheduler-user-irq (0), scheduler-context (1), scheduler-inner-lock (2), scheduler-aarch32 (3). The foundation aggregate failed and evidence was skipped. The scheduler migration addresses these obsolete controls and adjacent family controls; at that revision a complete matrix was still required.
 
 The remaining no-op user-copy, handle, domain/capability and IPC mutation selectors are now removed. Controls use actual production APIs and existing real EL0 negative inputs/invariants, with new Namespace retirement, Mailbox invalid generation and Endpoint invalid consumer/token/duplicate-terminal UNIT inputs. Five fatal IPC adapter inputs passed through the matrix runner in DEV/PROD (ten executions): storage inside scheduler ownership, publication into READY, wrong-process wake, blocked unlink and dropping a closed endpoint with a retained reference. Public duplicate terminal rejection preserves outcome/accounting; no private second charge-release mutation is claimed. The current plan distinguishes negative inputs, invariants, mixed coverage and still-executed legacy failure/oracle checks. Measurement archival now retains the current complete matrix execution and coverage classes instead of requiring every IPC task to be a failure. ipc-controls selects every registered IPC task, including migrated positive/invariant checks.
 
-Exact 0439387 CI passed scheduler and failed next at user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID passed; evidence was skipped and foundation failed. The broader migration addresses this scope and adjacent families; a full current 144-task execution is running and is not yet a claimed pass.
+Exact 0439387 CI passed scheduler and failed next at user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID passed; evidence was skipped and foundation failed. The broader migration addresses this scope and adjacent families; a complete 144-task execution was still pending at that revision. The current accepted run is identified above.
 
 Phase 3.7 removes the arbitrary two-second coordination cutoff from the actual SMP wait and scheduler completion/copy-drain paths at the maintainer’s explicit request. Acquired completion, root detachment, owner release and transport drainage remain mandatory; published secondary failure still halts with resources retained. A silent stalled CPU has no finite in-kernel detector in this foundation; the host watchdog diagnoses tests and cannot establish completion or reclaim. Workload expiry and the canonical 1/128-second supervisor restart backoff remain separate policies. Historical #126 timeout evidence is not current-source acceptance.
 
@@ -67,11 +73,11 @@ The oracle requires actual lower-EL instruction-abort completion of the old serv
 
 This is selected post-binding, pre-commit crash coverage. It establishes normal production-session shutdown/reclamation after this selected recovery. It does not establish startup-crash recovery, post-commit replay, performance or physical ARM. The older lifecycle test root still has production_supervisor_tested=false; this new separate scenario reports true without rewriting that older scope.
 
-Exact CI 17ac5e9 passed all 144 tasks and complete foundation. Later 66b497a failed shard 2 inside the actual supervision cancellation fixture (AlreadyTerminal, coverage 127); the other shards and ordinary workloads passed. Its load and commit-ack requests accidentally used the short readiness-probe deadline, permitting expiry to win before the requested Cancel. Those test inputs now use the maximum valid absolute deadline (zero is invalid/Expired by the native ABI); readiness deadlines and canonical 1/128 restart backoff remain intact. The test still requires actual commitment acknowledgement, successful explicit cancellation and EffectUnknown, and does not accept an expiry as cancellation. Production IPC state transitions and timing policy are unchanged. New exact-source full CI/acceptance remains pending.
+Exact CI 17ac5e9 passed all 144 tasks and complete foundation. Later 66b497a failed shard 2 inside the actual supervision cancellation fixture (AlreadyTerminal, coverage 127); the other shards and ordinary workloads passed. Its load and commit-ack requests accidentally used the short readiness-probe deadline, permitting expiry to win before the requested Cancel. Those test inputs now use the maximum valid absolute deadline (zero is invalid/Expired by the native ABI); readiness deadlines and canonical 1/128 restart backoff remain intact. The test still requires actual commitment acknowledgement, successful explicit cancellation and EffectUnknown, and does not accept an expiry as cancellation. Production IPC state transitions and timing policy are unchanged. At that revision new exact-source full CI/acceptance remained pending.
 
-Earlier b037833 CI failed matrix shard 1 in supervision_workload during initial readiness, not in the observable process-stale guards. The other three shards, static, host, native, routing, ASID and kernel DEV/PROD passed; native includes the actual production crash-recovery SYSTEM scenario. Probe-stage/timestamp diagnostics now preserve the accepted readiness deadline to investigate admission expiry before making a repair. Final CI and current-source acceptance remain pending.
+Earlier b037833 CI failed matrix shard 1 in supervision_workload during initial readiness, not in the observable process-stale guards. The other three shards, static, host, native, routing, ASID and kernel DEV/PROD passed; native includes the actual production crash-recovery SYSTEM scenario. Probe-stage/timestamp diagnostics now preserve the accepted readiness deadline to investigate admission expiry before making a repair. At that revision final CI and current-source acceptance remained pending.
 
-Latest completed cc50a5a CI failed only matrix shard 0 at process_quantum_return_and_peer_progress; three other shards and static/host/native/routing/ASID/kernel DEV/PROD passed. Readiness did not fail in that run. The quantum fixture now seeds x20 consistently with its submitted TPIDR and retains every execution/context/resource check, with detailed failure-bit diagnostics. Full new-source CI and retained acceptance remain required.
+Historical cc50a5a CI failed only matrix shard 0 at process_quantum_return_and_peer_progress; three other shards and static/host/native/routing/ASID/kernel DEV/PROD passed. Readiness did not fail in that run. The quantum fixture now seeds x20 consistently with its submitted TPIDR and retains every execution/context/resource check, with detailed failure-bit diagnostics. At that revision full new-source CI and retained acceptance remained required.
 
 ## Commands and evidence limits
 
@@ -83,7 +89,7 @@ cargo xtask native-controls checks invalid inputs to actual ELF/parser/policy me
 
 L1 exercises components, L2 external ABI actors, and L3 production QEMU system scenarios. None establishes L4 physical ARM: NOT_RUN/UNKNOWN. Filesystem, initramfs, storage, DMA, network, package manager, Linux ABI and dynamic linking remain outside scope.
 
-Full Phase 3.7 acceptance remains incomplete pending the current complete foundation and final exact-source semantic/EN-RU review. The actual production supervisor crash path is now exercised by the separate external post-binding pre-commit SYSTEM scenario. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation retain their separate test-root scope. Normal production-session shutdown/reclamation is now executed; startup-crash and post-commit replay limits remain explicit. Historical receipts are not relabeled as current-source passes.
+Bounded functional Phase 3.7 acceptance is complete through the separate source/code/architecture and full EN/RU review with retained current-source CI. The actual production supervisor crash path is exercised by the external post-binding pre-commit SYSTEM scenario. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation retain their separate test-root scope. Normal production-session shutdown/reclamation executes; startup crash and post-commit replay remain outside scope. Historical receipts are not relabeled as current-source passes.
 
 [Russian translation](../../translations/ru/docs/kernel/native-applications.md)
 
@@ -125,7 +131,7 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
         "law.044"
       ],
       "feature": {
-        "implementation": "EXPERIMENTAL",
+        "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Original standalone no_std ELF supervisor/service/client loaded by the actual kernel ELF loader. One production SDK/service/supervisor implementation; external ABI actors only. Actual persistent requests and post-binding pre-first-COMMIT fault/recovery/fresh binding followed by normal production-session shutdown and acquired reclamation. SessionPolicy selects persistent or finish-after-client lifetime through an opaque application bootstrap argument; no kernel watchdog or application-specific callbacks.",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
@@ -213,19 +219,25 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
           "tests/system/native-crash-recovery.cjs",
           "tests/system/native-crash-recovery.test.cjs"
         ],
-        "acceptance": [],
+        "acceptance": [
+          "docs/architecture/native-phase37-acceptance-review.md",
+          "research/results/native-phase37-current.json"
+        ],
         "issues": [28],
         "adrs": ["adr.0026"],
         "limitations": [
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
-          "Final exact-source receipts, physical-absence proof review and complete foundation regression acceptance are pending."
+          "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Complete current-source full foundation, retained exact-source receipt and semantic/EN-RU acceptance. Selected production crash/recovery/normal shutdown executes; startup and post-commit replay are outside this slice. No issue closure while required gates remain pending.",
+        "next_gate": "Maintain exact-source acceptance when implementation inputs change. Physical ARM and production image trust (#38) require separate evidence; startup/post-commit recovery and performance readiness are outside this bounded slice.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "UNKNOWN",
-            "reason": "Phase 3.7 changes actual application session lifetime, external production crash/recovery/shutdown oracle, generic bootstrap and quantum fixture inputs. Prior receipts retain their earlier source scope; new full exact-source evidence and semantic review remain required."
+            "state": "VERIFIED",
+            "reason": "Complete 144-task current-source CI, actual native DEV/PROD sessions/crash recovery/reclamation and corrected restricted-workspace execution independently inspected; bounded source and EN/RU semantic review retained.",
+            "scope": "Implementation 7f8dd80f6a322a4654994fc1aa3ed44beaefdd10; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Guest inputs and seven checkout/runner integration inputs distinguished in receipt.",
+            "receipt": "research/results/native-phase37-current.json",
+            "receipt_sha256": "be7bd8478ac5e2c98720b3cc14bc00d2aa1898673b47fd13ff79f91a2250a023"
           },
           {
             "environment": "physical-arm64",
@@ -240,6 +252,15 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
             "to": "EXPERIMENTAL",
             "reason": "Begin Phase 3.7 on merged current main after #125/#126; register the partial scope without claiming application/QEMU acceptance.",
             "acceptance": []
+          },
+          {
+            "from": "EXPERIMENTAL",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Accept the first bounded native ELF/persistent counter and selected production supervisor recovery/shutdown slice after full source-bound CI and Codex architecture/code/EN-RU review. Physical ARM, production trust, stable ABI and performance readiness remain separate.",
+            "acceptance": [
+              "docs/architecture/native-phase37-acceptance-review.md",
+              "research/results/native-phase37-current.json"
+            ]
           }
         ]
       }

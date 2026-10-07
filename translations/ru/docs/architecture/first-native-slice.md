@@ -43,7 +43,7 @@ Current reference: [Владение планировщиком и Phase 3.0](..
 
 ## Экспериментальная интеграция supervision
 
-[Supervisor Phase 3.6](../kernel/supervision.md) предоставляет экспериментальную реальную isolated EL0 service policy и bounded lifecycle mechanism. Весь native slice ещё не завершён: bounded functional architecture/code и EN/RU review завершены после #126, performance readiness отделена, persistent integration принадлежит #28, production bootstrap trust — #38. Current-source receipts отделены от принятого historical evidence Phase 3.5.
+[Supervisor Phase 3.6](../kernel/supervision.md) предоставляет принятую bounded isolated EL0 policy и lifecycle mechanism. [Native applications Phase 3.7](../kernel/native-applications.md) теперь дополняют основу настоящими standalone ELF, persistent counter, выбранным production crash/recovery и штатным shutdown/reclamation. [Review](native-phase37-acceptance-review.md) принимает этот ограниченный slice, а не весь будущий OS runtime. Performance readiness отделена; production bootstrap trust принадлежит #38, physical ARM остаётся UNKNOWN. Current-source receipts отделены от historical evidence Phase 3.5/3.6.
 
 <!-- knowledge -->
 

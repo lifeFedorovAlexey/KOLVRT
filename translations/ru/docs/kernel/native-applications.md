@@ -1,7 +1,7 @@
 # Native ELF applications и постоянный сервис
 
 Document status: CURRENT
-Evidence scope: экспериментальная реализация Phase 3.7; прежние проверки копий service/supervisor и изменённых исходников не подтверждают production E2E. Полная acceptance не завершена.
+Evidence scope: принятый bounded slice Phase 3.7 на implementation 7f8dd80: original ELF applications, persistent state, настоящий production supervisor crash/recovery и штатное освобождение ресурсов; QEMU DEV/PROD. Прежние проверки копий и source mutations не являются текущим evidence.
 Current reference: [Принятая основа supervision](supervision.md)
 
 <a name="native-elf-applications"></a>
@@ -11,6 +11,12 @@ Current reference: [Принятая основа supervision](supervision.md)
 Обычные counter-service, counter-client и native-supervisor — отдельные no_std/no_main ELF в apps/native-apps. Kernel получает полные исходные ELF bytes и использует настоящий loader; counter protocol и ожидаемые значения проверяются приложениями и host harness. GET и checked ADD(delta) используют private userspace state; RESET отсутствует. ADD(5), ADD(7), GET дают 5, 12, 12. Нормальный сервис не содержит намеренного падения, test request counter или повреждения reply.
 
 Finite client SEND binding использует существующий checkpoint supervision и точные instance tokens. Kernel предоставляет generic process/ELF/IPC/authority/lifetime механизмы. Обычная реализация не должна содержать callbacks приложения или тестовые вмешательства. Hardware, disk durability и stable ABI не заявляются.
+
+## Текущая ограниченная приёмка
+
+[Приёмочная review](../architecture/native-phase37-acceptance-review.md) и [точный receipt](../../../../research/results/native-phase37-current.json) принимают первый native application slice. Полный CI 37557806495 на 7f8dd80 прошёл: 144/144 задачи в четырёх shard, native, host, kernel DEV/PROD, routing, ASID и evidence aggregation. Dependency hygiene и CodeRabbit зелёные. Production crash/recovery и обычное завершение прошли в обоих профилях; исправленное доказательство независимости действительно выполняет runtime/lifecycle/smoke внутри restricted workspace. Ниже сохранена история прежних failures; она не описывает текущий статус.
+
+BOUNDED_IMPLEMENTED и QEMU VERIFIED относятся только к объявленному scope. Readiness, image trust (#38), physical ARM и performance acceptance имеют отдельные границы; новый performance-блокер для #28 не вводится. ABI остаётся experimental, startup crash и post-commit replay не заявляются.
 
 ## Классификация тестов и единственная реализация
 
@@ -31,7 +37,7 @@ Production supervisor теперь проверяет настоящий termina
 
 Текущий список внешних ELF указан явно: selftest-abi-client вызывает настоящий native-userspace IPC API с production service/supervisor; selftest-lifecycle-client вызывает public lifecycle/IPC API и импортирует native-apps::supervision::recover_service; selftest-lifecycle-peer проверяет binding, stale SEND и fault containment. Каждый является тестовым клиентом без production-аналога. Копии production supervisor нет. Lifecycle SYSTEM-сценарий использует selftest-lifecycle-client как root вместо native-supervisor, поэтому production_supervisor_tested=false: production supervisor в этом сценарии не выполняется. Используется настоящий counter-service. Неиспользуемый selftest-fault-client и мёртвые native-*-negative features удалены; выполняемый внешний fault scenario предоставляет lifecycle-peer. Host UNIT-тесты apps/native-apps/tests/supervision.rs импортируют needs_replacement и fresh_binding без ELF.
 
-CI на exact 7d64fac остановился на user-context (shard 0), retirement (shard 1), shootdown (shard 2) и remote-tlbi (shard 3). Компиляция retirement исправлена в 71753ae. Затем static этого коммита упал из-за устаревшего final manifest digest в graph; c77f6e8 перегенерировал точный graph и прошёл CI static. Четыре corruption-based controls теперь перенесены согласно карте ниже. Остальные legacy controls ещё проверяются полной matrix; отдельные passes не подтверждают зелёный foundation или полную acceptance Phase 3.7.
+CI на exact 7d64fac остановился на user-context (shard 0), retirement (shard 1), shootdown (shard 2) и remote-tlbi (shard 3). Компиляция retirement исправлена в 71753ae. Затем static этого коммита упал из-за устаревшего final manifest digest в graph; c77f6e8 перегенерировал точный graph и прошёл CI static. Четыре corruption-based controls теперь перенесены согласно карте ниже. На той revision остальные legacy controls ещё требовали полной matrix; отдельные passes сами по себе не подтверждали зелёный foundation или acceptance Phase 3.7.
 
 | Перенесённый control | Настоящие входы / observations                                                                                                       | Предел evidence                                                                  |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
@@ -43,18 +49,18 @@ CI на exact 7d64fac остановился на user-context (shard 0), retire
 
 Эти controls используют обычную kernel-tests сборку и требуют каждую mapped test ровно один раз со status pass. Missing, duplicate, failed и unrelated observations отвергаются. Task inventory сохранён. Четыре старые corruption features удалены. Обычный suite теперь содержит 147 checks на profile. REMOTE_TLBI_COMPLETED — только observation instrumentation в kernel-tests; эта evidence не является byte-identical production-binary execution. Новый production crash/recovery/shutdown сценарий отделён от этих обычных kernel checks.
 
-Следующие старые controls классифицированы явно. completion-publication-state-inputs импортирует production Ownership state machine, отвергает completion при удерживаемом access или отсутствии quiescence, отвергает inspection до Done и проверяет сохранение phase/generation. Эта UNIT evidence не проверяет зависшую publication удалённого CPU или её liveness/failure handling. process-exit вызывает единственный production Table::complete с повторным completion и проверяет сохранение terminal record, state и live-slot count; test-only wrapper Registry::repeat_completion удалён. process-rollback использует настоящие creation failures при нулевом memory budget и проверяет resource rollback. asid-reuse-invariants наблюдает настоящие same-VA isolation, invalidation counters и pool exhaustion; это не negative control пропущенного invalidation.
+Дополнительные перенесённые controls классифицированы явно. completion-publication-state-inputs импортирует production Ownership state machine, отвергает completion при удерживаемом access или отсутствии quiescence, отвергает inspection до Done и проверяет сохранение phase/generation. Эта UNIT evidence не проверяет зависшую publication удалённого CPU или её liveness/failure handling. process-exit вызывает единственный production Table::complete с повторным completion и проверяет сохранение terminal record, state и live-slot count; test-only wrapper Registry::repeat_completion удалён. process-rollback использует настоящие creation failures при нулевом memory budget и проверяет resource rollback. asid-reuse-invariants наблюдает настоящие same-VA isolation, invalidation counters и pool exhaustion; это не negative control пропущенного invalidation.
 
 shootdown-invariants и remote-tlbi-invariants являются positive invariant coverage; прежние control flags остаются CLI aliases. Они не подтверждают обнаружение отсутствующего ACK или пропущенного TLBI. Plan и archived counts различают ordinary, negative-input, invariant и оставшиеся legacy-failure tasks. SYSTEM coverage зависшей publication/отсутствующего ACK/пропущенного invalidation остаётся вне этого покрытия; отдельный production crash/recovery/shutdown E2E не устанавливает обнаружение пропущенного TLBI или отсутствующего ACK.
 
 Семейство process transitions теперь использует явные negative inputs настоящих production-методов: Table::reclaim без quiescence сохраняет completed record/live-slot count (UNIT); Registry::start для уже admitted process сохраняет state/frames; stale IDs отвергаются при start/data/receipt validation после настоящего slot reuse; Registry::reclaim живого process сохраняет state/frames. Намеренный scheduler unlink не заявляется. Старые process-contract features и ранние panic branches удалены.
-Семейство scheduler теперь разделяет три уровня доказательств. Registry::create отвергает входные контексты AArch32, привилегированный режим и замаскированный пользовательский IRQ до выделения памяти; число процессов и доступных страниц не меняется. UNIT-тесты Ownership вызывают единственный production-протокол с чужим CPU, разрешённым IRQ, повторным входом при удержанном доступе, устаревшим поколением, повторным start, сбросом работающего поколения и преждевременной инспекцией; фаза и поколение сохраняются. UNIT-тесты адаптера создают настоящие fixture-значения Local/Task/State и вызывают реальные методы с удержанным lock, lock внутри callback владения, устаревшим поколением задачи либо уже работающей соседней задачей. Эти четыре фатальные проверки выполняются в DEV и PROD; host требует свежий guest panic в месте единственной соответствующей production-проверки, поскольку PROD не выводит диагностическое сообщение. Тела реализации не копируются и не изменяются. Совместимый флаг IRQ/SIMD теперь выбирает инвариант настоящего round-trip через прерывание; он не доказывает обнаружение пропущенного восстановления. Эти тесты не устанавливают полноту аппаратного fault coverage адаптера или текущую приёмку Phase 3.7.
+Семейство scheduler теперь разделяет три уровня доказательств. Registry::create отвергает входные контексты AArch32, привилегированный режим и замаскированный пользовательский IRQ до выделения памяти; число процессов и доступных страниц не меняется. UNIT-тесты Ownership вызывают единственный production-протокол с чужим CPU, разрешённым IRQ, повторным входом при удержанном доступе, устаревшим поколением, повторным start, сбросом работающего поколения и преждевременной инспекцией; фаза и поколение сохраняются. UNIT-тесты адаптера создают настоящие fixture-значения Local/Task/State и вызывают реальные методы с удержанным lock, lock внутри callback владения, устаревшим поколением задачи либо уже работающей соседней задачей. Эти четыре фатальные проверки выполняются в DEV и PROD; host требует свежий guest panic в месте единственной соответствующей production-проверки, поскольку PROD не выводит диагностическое сообщение. Тела реализации не копируются и не изменяются. Совместимый флаг IRQ/SIMD теперь выбирает инвариант настоящего round-trip через прерывание; он не доказывает обнаружение пропущенного восстановления. Эти тесты сами по себе не устанавливают полноту аппаратного fault coverage адаптера или приёмку Phase 3.7.
 
-CI на точном d33ce92 прошёл static, native, host, kernel DEV/PROD, routing и ASID, но все matrix shard упали: scheduler-user-irq (0), scheduler-context (1), scheduler-inner-lock (2), scheduler-aarch32 (3). Итоговый foundation упал, evidence был пропущен. Миграция scheduler исправляет эти устаревшие controls и соседние проверки семейства; полная текущая matrix всё ещё обязательна.
+CI на точном d33ce92 прошёл static, native, host, kernel DEV/PROD, routing и ASID, но все matrix shard упали: scheduler-user-irq (0), scheduler-context (1), scheduler-inner-lock (2), scheduler-aarch32 (3). Итоговый foundation упал, evidence был пропущен. Миграция scheduler исправляет эти устаревшие controls и соседние проверки семейства; на той revision полная matrix ещё требовалась.
 
 Оставшиеся no-op selectors мутации user-copy, handles, domain/capability и IPC удалены. Controls используют настоящие production API и существующие реальные EL0 отрицательные входы/инварианты; добавлены UNIT-входы retirement Namespace, неверного поколения Mailbox и неправильного consumer/token/повторного terminal transition Endpoint. Пять фатальных входов адаптера IPC прошли через matrix runner в DEV/PROD (десять выполнений): storage внутри scheduler ownership, публикация в READY, wake чужого процесса, unlink заблокированной задачи и drop закрытого endpoint с удержанной ссылкой. Отказ публичного повторного terminal transition сохраняет outcome/accounting; мутация приватного второго release charge не заявляется. Текущий plan различает отрицательные входы, инварианты, смешанное покрытие и по-прежнему выполняемые legacy failure/oracle checks. Архив измерений теперь сохраняет текущую полную matrix execution и классы покрытия, а не требует отказа от каждой IPC-задачи. ipc-controls выбирает все зарегистрированные IPC-задачи, включая мигрированные положительные/инвариантные проверки.
 
-CI на точном 0439387 прошёл scheduler и затем упал на user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID прошли; evidence пропущен, итоговый foundation красный. Общая миграция исправляет этот scope и соседние семейства; полное текущее выполнение 144 задач идёт и ещё не объявлено пройденным.
+CI на точном 0439387 прошёл scheduler и затем упал на user-copy-recovery (0), handle-generation (1), handle-owner (2), handle-type (3). Static/native/host/kernel DEV/PROD/routing/ASID прошли; evidence пропущен, итоговый foundation красный. Общая миграция исправляет этот scope и соседние семейства; на той revision полное выполнение 144 задач ещё ожидалось. Текущий принятый запуск указан выше.
 
 По явному требованию maintainer Phase 3.7 убирает произвольное двухсекундное ограничение из настоящего SMP wait и путей scheduler completion/copy-drain. Acquired completion, detached roots, released owners и transport drainage остаются обязательными; опубликованный secondary failure по-прежнему останавливает работу с удержанием ресурсов. Конечного внутрядерного детектора молча зависшего CPU в этой foundation нет; host watchdog диагностирует тесты и не доказывает completion или reclaim. Workload expiry и canonical supervisor restart backoff 1/128 секунды остаются отдельными policy. Исторический timeout evidence #126 не является current-source acceptance.
 
@@ -66,11 +72,11 @@ Oracle требует реальный completion старого сервиса 
 
 Это выбранное post-binding, pre-commit crash coverage. Оно устанавливает normal production-session shutdown/reclamation после выбранного recovery. Startup-crash recovery, post-commit replay, performance и physical ARM не устанавливаются. Старый lifecycle test root по-прежнему имеет production_supervisor_tested=false; новый отдельный сценарий сообщает true, не переписывая прежний scope.
 
-CI на точном 17ac5e9 прошёл все 144 tasks и полный foundation. Более поздний 66b497a упал на shard 2 внутри настоящего supervision cancellation fixture (AlreadyTerminal, coverage 127); остальные shard и обычные workloads прошли. Его load и commit-ack запросы ошибочно использовали короткий deadline readiness probe, разрешая expiry победить до требуемого Cancel. Эти тестовые входы теперь задают максимальный допустимый absolute deadline (zero недопустим/Expired по native ABI); readiness deadlines и canonical restart backoff 1/128 сохранены. Тест по-прежнему требует реальный commitment acknowledgement, успешную явную cancellation и EffectUnknown, не принимая expiry за cancellation. Production IPC transitions и timing policy не меняются. Новые exact-source полный CI/acceptance пока ожидаются.
+CI на точном 17ac5e9 прошёл все 144 tasks и полный foundation. Более поздний 66b497a упал на shard 2 внутри настоящего supervision cancellation fixture (AlreadyTerminal, coverage 127); остальные shard и обычные workloads прошли. Его load и commit-ack запросы ошибочно использовали короткий deadline readiness probe, разрешая expiry победить до требуемого Cancel. Эти тестовые входы теперь задают максимальный допустимый absolute deadline (zero недопустим/Expired по native ABI); readiness deadlines и canonical restart backoff 1/128 сохранены. Тест по-прежнему требует реальный commitment acknowledgement, успешную явную cancellation и EffectUnknown, не принимая expiry за cancellation. Production IPC transitions и timing policy не меняются. На той revision новые exact-source полный CI/acceptance ещё ожидались.
 
-Прежний CI b037833 упал на matrix shard 1 в supervision_workload во время initial readiness, а не в observable process-stale guards. Остальные три shard, static, host, native, routing, ASID и kernel DEV/PROD прошли; native включает настоящий production crash-recovery SYSTEM-сценарий. Диагностика probe stages/timestamps теперь сохраняет принятый readiness deadline для расследования admission expiry до выбора исправления. Итоговые CI и current-source acceptance пока ожидаются.
+Прежний CI b037833 упал на matrix shard 1 в supervision_workload во время initial readiness, а не в observable process-stale guards. Остальные три shard, static, host, native, routing, ASID и kernel DEV/PROD прошли; native включает настоящий production crash-recovery SYSTEM-сценарий. Диагностика probe stages/timestamps теперь сохраняет принятый readiness deadline для расследования admission expiry до выбора исправления. На той revision итоговые CI и current-source acceptance ещё ожидались.
 
-Последний завершённый CI cc50a5a упал только на matrix shard 0 в process_quantum_return_and_peer_progress; три остальных shard и static/host/native/routing/ASID/kernel DEV/PROD прошли. Readiness в этом запуске не упала. Quantum fixture теперь инициализирует x20 согласно переданному TPIDR и сохраняет каждую execution/context/resource check, добавляя detailed failure-bit diagnostics. Полный CI нового source и retained acceptance остаются обязательными.
+Исторический CI cc50a5a упал только на matrix shard 0 в process_quantum_return_and_peer_progress; три остальных shard и static/host/native/routing/ASID/kernel DEV/PROD прошли. Readiness в этом запуске не упала. Quantum fixture теперь инициализирует x20 согласно переданному TPIDR и сохраняет каждую execution/context/resource check, добавляя detailed failure-bit diagnostics. На той revision полный CI нового source и retained acceptance ещё требовались.
 
 ## Команды и пределы evidence
 
@@ -82,7 +88,7 @@ cargo xtask native-controls проверяет неверные входы на�
 
 L1 проверяет компоненты, L2 — внешние ABI actors, L3 — production QEMU system scenarios. Ни один из этих уровней не доказывает L4 physical ARM: NOT_RUN/UNKNOWN. Filesystem, initramfs, storage, DMA, network, package manager, Linux ABI и dynamic linking остаются вне scope.
 
-Полная acceptance Phase 3.7 остаётся незавершённой до текущего полного foundation и финального exact-source semantic/EN-RU review. Настоящий crash path production supervisor теперь выполняется отдельным внешним post-binding pre-commit SYSTEM-сценарием. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation сохраняют отдельный test-root scope. Normal production-session shutdown/reclamation теперь выполняется; ограничения startup-crash и post-commit replay остаются явными. Исторические receipts не переименовываются в current-source passes.
+Ограниченная функциональная приёмка Phase 3.7 завершена отдельной source/code/architecture и полной EN/RU review с сохранённым current-source CI. Настоящий production supervisor crash path проверен внешним post-binding pre-commit SYSTEM-сценарием. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation сохраняют собственный test-root scope. Штатное завершение production session и reclamation выполнены; startup crash и post-commit replay остаются вне scope. Historical receipts не переименованы в current-source passes.
 
 [English original](../../../../docs/kernel/native-applications.md)
 
@@ -124,7 +130,7 @@ Restricted-workspace proof привязывает repository-relative путь h
         "law.044"
       ],
       "feature": {
-        "implementation": "EXPERIMENTAL",
+        "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Original standalone no_std ELF supervisor/service/client loaded by the actual kernel ELF loader. One production SDK/service/supervisor implementation; external ABI actors only. Actual persistent requests and post-binding pre-first-COMMIT fault/recovery/fresh binding followed by normal production-session shutdown and acquired reclamation. SessionPolicy selects persistent or finish-after-client lifetime through an opaque application bootstrap argument; no kernel watchdog or application-specific callbacks.",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
@@ -212,19 +218,25 @@ Restricted-workspace proof привязывает repository-relative путь h
           "tests/system/native-crash-recovery.cjs",
           "tests/system/native-crash-recovery.test.cjs"
         ],
-        "acceptance": [],
+        "acceptance": [
+          "docs/architecture/native-phase37-acceptance-review.md",
+          "research/results/native-phase37-current.json"
+        ],
         "issues": [28],
         "adrs": ["adr.0026"],
         "limitations": [
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
-          "Final exact-source receipts, physical-absence proof review and complete foundation regression acceptance are pending."
+          "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Complete current-source full foundation, retained exact-source receipt and semantic/EN-RU acceptance. Selected production crash/recovery/normal shutdown executes; startup and post-commit replay are outside this slice. No issue closure while required gates remain pending.",
+        "next_gate": "Maintain exact-source acceptance when implementation inputs change. Physical ARM and production image trust (#38) require separate evidence; startup/post-commit recovery and performance readiness are outside this bounded slice.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "UNKNOWN",
-            "reason": "Phase 3.7 changes actual application session lifetime, external production crash/recovery/shutdown oracle, generic bootstrap and quantum fixture inputs. Prior receipts retain their earlier source scope; new full exact-source evidence and semantic review remain required."
+            "state": "VERIFIED",
+            "reason": "Complete 144-task current-source CI, actual native DEV/PROD sessions/crash recovery/reclamation and corrected restricted-workspace execution independently inspected; bounded source and EN/RU semantic review retained.",
+            "scope": "Implementation 7f8dd80f6a322a4654994fc1aa3ed44beaefdd10; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Guest inputs and seven checkout/runner integration inputs distinguished in receipt.",
+            "receipt": "research/results/native-phase37-current.json",
+            "receipt_sha256": "be7bd8478ac5e2c98720b3cc14bc00d2aa1898673b47fd13ff79f91a2250a023"
           },
           {
             "environment": "physical-arm64",
@@ -239,6 +251,15 @@ Restricted-workspace proof привязывает repository-relative путь h
             "to": "EXPERIMENTAL",
             "reason": "Begin Phase 3.7 on merged current main after #125/#126; register the partial scope without claiming application/QEMU acceptance.",
             "acceptance": []
+          },
+          {
+            "from": "EXPERIMENTAL",
+            "to": "BOUNDED_IMPLEMENTED",
+            "reason": "Accept the first bounded native ELF/persistent counter and selected production supervisor recovery/shutdown slice after full source-bound CI and Codex architecture/code/EN-RU review. Physical ARM, production trust, stable ABI and performance readiness remain separate.",
+            "acceptance": [
+              "docs/architecture/native-phase37-acceptance-review.md",
+              "research/results/native-phase37-current.json"
+            ]
           }
         ]
       }

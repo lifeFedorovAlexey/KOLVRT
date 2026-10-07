@@ -57,6 +57,12 @@
       "type": "related_to"
     },
     {
+      "from": "doc.kolvrt.native-applications.acceptance-review",
+      "scope": "First native ELF/persistent counter, selected actual production crash/recovery/shutdown and source-matched QEMU evidence; no physical ARM or stable ABI acceptance.",
+      "to": "kolvrt.apps.native-elf",
+      "type": "related_to"
+    },
+    {
       "from": "doc.kolvrt.supervision.acceptance-review",
       "scope": "Bounded lifecycle readiness and source-matched QEMU evidence; no physical ARM or stable ABI acceptance.",
       "to": "kolvrt.services.supervision",
@@ -404,6 +410,11 @@
     },
     {
       "from": "kolvrt.apps.native-elf",
+      "to": "docs/architecture/native-phase37-acceptance-review.md",
+      "type": "validated_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
       "to": "kolvrt.ipc.transport",
       "type": "depends_on"
     },
@@ -456,6 +467,11 @@
       "from": "kolvrt.apps.native-elf",
       "to": "package.json",
       "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
+      "to": "research/results/native-phase37-current.json",
+      "type": "validated_by"
     },
     {
       "from": "kolvrt.apps.native-elf",
@@ -2807,12 +2823,13 @@
     "docs/architecture/compatibility-manifests.md": "08ca3c3edb4d41fd37bcc972a3c98169e7fc9cefa02784ef8074392227a96dcc",
     "docs/architecture/component-arena.md": "e8dceb1f1081e07cf3d5a7457fef5e17c0f26514fa7328244e21aebee567a009",
     "docs/architecture/dependency-hygiene.md": "5551ff0cd3f319687baccc704f3ceb5d0d41c757c8fabe734e7fc4bbd7c4ec21",
-    "docs/architecture/first-native-slice.md": "0b342908865e42ddf9b0912aec4708cb9cde630dc1139c9e77d00f973b638fa5",
+    "docs/architecture/first-native-slice.md": "f073b4b3a331300b7a21559430bbf7493aa3d92a20e06de4236dc4cdd265f51b",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
     "docs/architecture/ipc-phase35-review.md": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
     "docs/architecture/kernel-laws.md": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
+    "docs/architecture/native-phase37-acceptance-review.md": "c2989ee3e38826671ff1cbef806d26817bac3ec87f75f2e7ceb7717d288e1faa",
     "docs/architecture/production-scheduler.md": "0850f894c4617c5714628dd1b28e51a1cf8d5bb8928ebbdb678e999ec5a7d60f",
     "docs/architecture/supervision-phase36-acceptance-review.md": "fe65eabe0baf5dc6997c5a86307d12f7aad4e51643f607a62948adad96ac9499",
     "docs/ci/performance.md": "f24e3be40e6dfd173d29c5a44319ec208741cf0181abf36d2c5c716db1e375bd",
@@ -2821,13 +2838,13 @@
     "docs/kernel/handles.md": "0276ad291bdf7497c93c8e8617a4f534584ddf96fd79ef0a14b63b7c8e1f8805",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
     "docs/kernel/ipc.md": "0eff03811c018dd28691f97ef8b7d22481cb2a1899f8d9511e7488877f06d918",
-    "docs/kernel/native-applications.md": "0ed9529615caf3ab0015eee03a74c1e7724acc3e6d3299ab83fba1cb443445ea",
+    "docs/kernel/native-applications.md": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
     "docs/kernel/processes.md": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
     "docs/kernel/scheduler.md": "a5848937b2dd27ceb20601bd71eb024b3f452db228d36046d4241464e15d6326",
     "docs/kernel/supervision.md": "9249606a1fdcc52b900ecf5324b7f79296fcfef436d2ffa021864bc1813b12ec",
     "docs/kernel/user-copy.md": "4c9979068931c4d0e947ebd4ae887b0ad98a7502594a2d57653cdce7f3b4df9e",
     "docs/kernel/wait.md": "00249f4b0932901af888915f7e5b6b35b3dcf0ecc241f6226aa9b2d1e157aaeb",
-    "docs/knowledge-enrollment.json": "71f7ecdadafd8031a03f66586ce4fe9626138134457b175669deec9231193af5",
+    "docs/knowledge-enrollment.json": "8899592bf8c4efd76c862c3055c034d06a0a80e252e683825524fb55594e0c6c",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
     "docs/research/cost-l-queries.md": "ed2e22edd7f6bd6e56779cd2a3f8dd95ce7ebccfcaa7239e6349824de66263c0",
     "docs/research/host-survey.md": "2deef5b90939e1f051c82f5832f021fbfe51671ec3b32cb4006da01848fa5aa9",
@@ -2919,7 +2936,7 @@
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
     "tests/system/native-crash-recovery.cjs": "53a09a2d6ce23c0133de51022bef3153c1beb856fcc3608c1ecb88f9e7cf71a8",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
-    "translations/manifest.json": "32cbe7ec49ac86309472ae513404b05e5add34c30cb1305547e462202faa0de8",
+    "translations/manifest.json": "bac595f0786a1e3d5d488557f63f6f92f317a37689baf2daa4cdde40730c6e8f",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -2952,12 +2969,13 @@
     "translations/ru/docs/architecture/compatibility-manifests.md": "ce00611076fad4cb83d2b300973c05bd8ac615241bc335e82b4d1dc1580e5e64",
     "translations/ru/docs/architecture/component-arena.md": "7c62396026d0d71e3464a0554979a6775ccb89dcb22941378fd672c370ea054f",
     "translations/ru/docs/architecture/dependency-hygiene.md": "1efb9c0a95e2ca3238c6fa946941133a0b1d199f772075e2e5ca439661227d0d",
-    "translations/ru/docs/architecture/first-native-slice.md": "f68435e9a55327ef6b958df8e3d513505e636d011d63cc3e82b347a472707b36",
+    "translations/ru/docs/architecture/first-native-slice.md": "81c5a90c7bf132e5c974bea3ea96bceb6854e760dcd2bb30eb213ec0ea0082db",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
     "translations/ru/docs/architecture/ipc-phase35-review.md": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074",
     "translations/ru/docs/architecture/kernel-laws.md": "7cded42635e1a2ce541162c8655638bfb712aa91c54ced705b7284bca65e37ae",
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
+    "translations/ru/docs/architecture/native-phase37-acceptance-review.md": "55d381a0b56ad8321468af8691acfe779d399af301c96accf89896fcbb60f4b6",
     "translations/ru/docs/architecture/production-scheduler.md": "e88dca8186ef927313b664a01a6d3baab8010da8d083022f77eb40553bc5aa3d",
     "translations/ru/docs/architecture/supervision-phase36-acceptance-review.md": "7fa1020a11fd9d0cb009350486e30ca219f5f1333615abc95281f996fc4a6195",
     "translations/ru/docs/ci/performance.md": "bc8b9153beb2443d84be64c8946a7cd557f836552c2fa2f1e8550170d08bcdd8",
@@ -2966,7 +2984,7 @@
     "translations/ru/docs/kernel/handles.md": "aa1eed6078d4b58efd17cf2f43b79e7456ec3a7e51be5d474e4aeba22c1b7e11",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
     "translations/ru/docs/kernel/ipc.md": "38d3125b798f1855e5c2ac82af76ac8cf8e1a839858f79aba68cb6c9761cd018",
-    "translations/ru/docs/kernel/native-applications.md": "6ffb7a40f91cc63cd0072372bb444d82dd15b9732325e1d3db7b78058db2ba58",
+    "translations/ru/docs/kernel/native-applications.md": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089",
     "translations/ru/docs/kernel/processes.md": "f3e4b7140ddf31dff5dbf277ed1154393e186c67b6012d9d92ebf00cafcaacd0",
     "translations/ru/docs/kernel/scheduler.md": "e25f27bfdc10f7b829dbb17b04da0a9899f3a65a595df8d29f5969c49a982ed4",
     "translations/ru/docs/kernel/supervision.md": "e60ad7f0c4a8fd6890e284a07e4767aeae79f097b75bb890c7c0fc417d42207f",
@@ -5168,7 +5186,7 @@
     "doc.kolvrt.architecture.first-native-slice": {
       "document": "doc.kolvrt.architecture.first-native-slice",
       "document_status": "DESIGN BASELINE",
-      "estimated_bytes": 6491,
+      "estimated_bytes": 6652,
       "evidence_scope": "complete isolated-task workload defined here (IPC, handles, cancellation, and failure containment); bounded EL0, scheduler, and routing milestones have separate implementation evidence.",
       "id": "doc.kolvrt.architecture.first-native-slice",
       "kind": "navigation",
@@ -5184,13 +5202,13 @@
         "en": {
           "end": 57,
           "path": "docs/architecture/first-native-slice.md",
-          "sha256": "0b342908865e42ddf9b0912aec4708cb9cde630dc1139c9e77d00f973b638fa5",
+          "sha256": "f073b4b3a331300b7a21559430bbf7493aa3d92a20e06de4236dc4cdd265f51b",
           "start": 1
         },
         "ru": {
           "end": 57,
           "path": "translations/ru/docs/architecture/first-native-slice.md",
-          "sha256": "f68435e9a55327ef6b958df8e3d513505e636d011d63cc3e82b347a472707b36",
+          "sha256": "81c5a90c7bf132e5c974bea3ea96bceb6854e760dcd2bb30eb213ec0ea0082db",
           "start": 1
         }
       },
@@ -5731,8 +5749,8 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 29922,
-      "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
+      "estimated_bytes": 32247,
+      "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 7f8dd80: original ELF applications, persistent state, actual production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. Prior copied-implementation and source-mutant runs are not current evidence.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "localized": {
@@ -5745,15 +5763,15 @@
       },
       "locations": {
         "en": {
-          "end": 249,
+          "end": 270,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "0ed9529615caf3ab0015eee03a74c1e7724acc3e6d3299ab83fba1cb443445ea",
+          "sha256": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
           "start": 1
         },
         "ru": {
-          "end": 248,
+          "end": 269,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "6ffb7a40f91cc63cd0072372bb444d82dd15b9732325e1d3db7b78058db2ba58",
+          "sha256": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089",
           "start": 1
         }
       },
@@ -5931,6 +5949,47 @@
       "schema_version": 1,
       "summary": "Trusted bootstrap 0x55 event latch scoped separately from the native IPC wait source.",
       "title": "Wait and wake foundation"
+    },
+    "doc.kolvrt.native-applications.acceptance-review": {
+      "document": "doc.kolvrt.native-applications.acceptance-review",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 11801,
+      "evidence_scope": "Codex source/code/architecture/EN-RU review at the maintainer's request over implementation 7f8dd80f6a322a4654994fc1aa3ed44beaefdd10, reviewed base bf54960925559d8925c24b6d40e557e98af08f41 and independently checked current CI artifacts. No independent human sign-off, production trust, physical ARM or performance acceptance is claimed.",
+      "id": "doc.kolvrt.native-applications.acceptance-review",
+      "kind": "security-analysis",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Приёмка ограниченного Phase 3.7 по исходникам и полная смысловая проверка EN/RU, отдельно от готовности к production и физического ARM.",
+          "tags": null,
+          "title": "Приёмочная проверка native-приложений Phase 3.7"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 64,
+          "path": "docs/architecture/native-phase37-acceptance-review.md",
+          "sha256": "c2989ee3e38826671ff1cbef806d26817bac3ec87f75f2e7ceb7717d288e1faa",
+          "start": 1
+        },
+        "ru": {
+          "end": 64,
+          "path": "translations/ru/docs/architecture/native-phase37-acceptance-review.md",
+          "sha256": "55d381a0b56ad8321468af8691acfe779d399af301c96accf89896fcbb60f4b6",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/native-phase37-acceptance-review.md",
+      "relationships": [
+        {
+          "scope": "First native ELF/persistent counter, selected actual production crash/recovery/shutdown and source-matched QEMU evidence; no physical ARM or stable ABI acceptance.",
+          "to": "kolvrt.apps.native-elf",
+          "type": "related_to"
+        }
+      ],
+      "schema_version": 1,
+      "summary": "Source-grounded bounded Phase 3.7 acceptance and full semantic EN/RU review, separate from production readiness and physical ARM.",
+      "title": "Phase 3.7 native application acceptance review"
     },
     "doc.kolvrt.native-model": {
       "document": "doc.kolvrt.native-model",
@@ -6195,18 +6254,21 @@
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
       "estimated_bytes": 869,
-      "evidence_scope": "experimental Phase 3.7 implementation; prior copied-service/supervisor and source-mutant runs do not establish production E2E. Full acceptance is incomplete.",
+      "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 7f8dd80: original ELF applications, persistent state, actual production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. Prior copied-implementation and source-mutant runs are not current evidence.",
       "feature": {
-        "acceptance": [],
+        "acceptance": [
+          "docs/architecture/native-phase37-acceptance-review.md",
+          "research/results/native-phase37-current.json"
+        ],
         "adrs": ["adr.0026"],
-        "implementation": "EXPERIMENTAL",
+        "implementation": "BOUNDED_IMPLEMENTED",
         "implementation_scope": "Original standalone no_std ELF supervisor/service/client loaded by the actual kernel ELF loader. One production SDK/service/supervisor implementation; external ABI actors only. Actual persistent requests and post-binding pre-first-COMMIT fault/recovery/fresh binding followed by normal production-session shutdown and acquired reclamation. SessionPolicy selects persistent or finish-after-client lifetime through an opaque application bootstrap argument; no kernel watchdog or application-specific callbacks.",
         "issues": [28],
         "limitations": [
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
-          "Final exact-source receipts, physical-absence proof review and complete foundation regression acceptance are pending."
+          "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Complete current-source full foundation, retained exact-source receipt and semantic/EN-RU acceptance. Selected production crash/recovery/normal shutdown executes; startup and post-commit replay are outside this slice. No issue closure while required gates remain pending.",
+        "next_gate": "Maintain exact-source acceptance when implementation inputs change. Physical ARM and production image trust (#38) require separate evidence; startup/post-commit recovery and performance readiness are outside this bounded slice.",
         "readiness": "NOT_READY",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
@@ -6300,13 +6362,25 @@
             "from": "UNRECORDED",
             "reason": "Begin Phase 3.7 on merged current main after #125/#126; register the partial scope without claiming application/QEMU acceptance.",
             "to": "EXPERIMENTAL"
+          },
+          {
+            "acceptance": [
+              "docs/architecture/native-phase37-acceptance-review.md",
+              "research/results/native-phase37-current.json"
+            ],
+            "from": "EXPERIMENTAL",
+            "reason": "Accept the first bounded native ELF/persistent counter and selected production supervisor recovery/shutdown slice after full source-bound CI and Codex architecture/code/EN-RU review. Physical ARM, production trust, stable ABI and performance readiness remain separate.",
+            "to": "BOUNDED_IMPLEMENTED"
           }
         ],
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Phase 3.7 changes actual application session lifetime, external production crash/recovery/shutdown oracle, generic bootstrap and quantum fixture inputs. Prior receipts retain their earlier source scope; new full exact-source evidence and semantic review remain required.",
-            "state": "UNKNOWN"
+            "reason": "Complete 144-task current-source CI, actual native DEV/PROD sessions/crash recovery/reclamation and corrected restricted-workspace execution independently inspected; bounded source and EN/RU semantic review retained.",
+            "receipt": "research/results/native-phase37-current.json",
+            "receipt_sha256": "be7bd8478ac5e2c98720b3cc14bc00d2aa1898673b47fd13ff79f91a2250a023",
+            "scope": "Implementation 7f8dd80f6a322a4654994fc1aa3ed44beaefdd10; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Guest inputs and seven checkout/runner integration inputs distinguished in receipt.",
+            "state": "VERIFIED"
           },
           {
             "environment": "physical-arm64",
@@ -6329,13 +6403,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "0ed9529615caf3ab0015eee03a74c1e7724acc3e6d3299ab83fba1cb443445ea",
+          "sha256": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "6ffb7a40f91cc63cd0072372bb444d82dd15b9732325e1d3db7b78058db2ba58",
+          "sha256": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089",
           "start": 7
         }
       },

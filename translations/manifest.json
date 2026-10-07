@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "1163ef4631e68ef5fa0c12ef7ae17bfb3b713af0c54e1aa32247fcaf1467328b",
-        "translation_sha256": "5938efa0d8c3444a5c44b834b2ecf39d0c5686a86182ef65b9cc2423a6b7c27e"
+        "source_sha256": "543aad80cd547d43e9b581b080b261dfd6f33864be351830a227ae81c99de951",
+        "translation_sha256": "b1f98bfd7bb4774bd07951ac8517db4f5fc6cf205162adf883f21655ed4a809f"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -170,8 +170,8 @@
         "translation_sha256": "a222b3d38d99589879097d0439cd8aadc21301d88ff08d82506534a806204585"
       },
       "docs/architecture/first-native-slice.md": {
-        "source_sha256": "0b342908865e42ddf9b0912aec4708cb9cde630dc1139c9e77d00f973b638fa5",
-        "translation_sha256": "f68435e9a55327ef6b958df8e3d513505e636d011d63cc3e82b347a472707b36"
+        "source_sha256": "f073b4b3a331300b7a21559430bbf7493aa3d92a20e06de4236dc4cdd265f51b",
+        "translation_sha256": "81c5a90c7bf132e5c974bea3ea96bceb6854e760dcd2bb30eb213ec0ea0082db"
       },
       "docs/architecture/implementation-review.md": {
         "source_sha256": "8d32aebeab5d55f6143945c0b4c949c5439c20c7d6fa01f8524cf651f0d5e367",
@@ -216,6 +216,10 @@
       "docs/architecture/native-model.md": {
         "source_sha256": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
         "translation_sha256": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424"
+      },
+      "docs/architecture/native-phase37-acceptance-review.md": {
+        "source_sha256": "c2989ee3e38826671ff1cbef806d26817bac3ec87f75f2e7ceb7717d288e1faa",
+        "translation_sha256": "55d381a0b56ad8321468af8691acfe779d399af301c96accf89896fcbb60f4b6"
       },
       "docs/architecture/output-policy.md": {
         "source_sha256": "d23c27275fa886c36714f53552add03a46f987e47a37a2b7b01ec59971c09d52",
@@ -306,8 +310,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "0ed9529615caf3ab0015eee03a74c1e7724acc3e6d3299ab83fba1cb443445ea",
-        "translation_sha256": "6ffb7a40f91cc63cd0072372bb444d82dd15b9732325e1d3db7b78058db2ba58"
+        "source_sha256": "50aafc3c86a0bf6bd6c28f64c0b3fc4ddcaabca31c7a0383729d153bdc3fda2a",
+        "translation_sha256": "37c1a2b67df915762d5a377d6a6500beef09c6a1a5840593e2a1031b2de0f089"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
