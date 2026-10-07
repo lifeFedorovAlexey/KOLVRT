@@ -561,12 +561,22 @@
     },
     {
       "from": "kolvrt.apps.native-elf",
+      "to": "tests/system/hold-qemu-thread.ps1",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
       "to": "tests/system/native-crash-recovery.cjs",
       "type": "implemented_by"
     },
     {
       "from": "kolvrt.apps.native-elf",
       "to": "tests/system/native-crash-recovery.test.cjs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.apps.native-elf",
+      "to": "tests/system/supervision-host-stall.cjs",
       "type": "implemented_by"
     },
     {
@@ -2711,7 +2721,7 @@
     "crates/kernel-core/src/ipc.rs": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4",
     "crates/kernel-core/src/ipc/identity.rs": "0eb329df587f27963d3ba71ad3e939ef59d84c4175b542216b15315e2a250327",
     "crates/kernel-core/src/ipc/mailbox.rs": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c",
-    "crates/kernel-core/src/ipc/tests.rs": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0",
+    "crates/kernel-core/src/ipc/tests.rs": "3414e71e1cadfd20183d78c52f3b77e9afabf311c2398e5c2b29bfec98271a1f",
     "crates/kernel-core/src/ipc/wire.rs": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178",
     "crates/kernel-core/src/lib.rs": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a",
     "crates/kernel-core/src/process.rs": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983",
@@ -2758,8 +2768,8 @@
     "crates/kernel/src/security/testing.rs": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df",
     "crates/kernel/src/smp.rs": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3",
     "crates/kernel/src/supervision.rs": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a",
-    "crates/kernel/src/supervision_workload.S": "5c13e46c80d85407ea13b0b6f6a14a143a73cedc76bbcebeda7050f471def80c",
-    "crates/kernel/src/supervision_workload.rs": "5a8d267ef4bb87002fd0ce0061adba7b53f98822c54c09dbeae8ec51b9088ddc",
+    "crates/kernel/src/supervision_workload.S": "447557cda721ce1bc565689484a1f865e2246eb60e18ec5eb76ba36a26d6ecc9",
+    "crates/kernel/src/supervision_workload.rs": "1c42cee5b0d1e36c8962705556f95618d23cada5589cf74e67928e44310879c3",
     "crates/kernel/src/sync/mod.rs": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da",
     "crates/kernel/src/test_support/arch_probes.S": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732",
     "crates/kernel/src/test_support/ipc_inputs.rs": "f9e598fecb2e6a7034fa9555f71b4c5ad0506f3cf43204dc85b0890f359a1a1b",
@@ -2854,11 +2864,11 @@
     "docs/kernel/domains.md": "9067c663ffab79544cfb12487ccbd9c7b8ed290e498a96d8a918462d605a58a3",
     "docs/kernel/handles.md": "8d3acea970169fe55763b695bd0fe039d8668c963d06431a32520ca8a0203d5e",
     "docs/kernel/ipc-performance.md": "2b83982e026e4ef4818bd20aaa23ede9f76726ba8a8dcccf97b2a0acd7e3db20",
-    "docs/kernel/ipc.md": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
-    "docs/kernel/native-applications.md": "2ac41bbd13e119d467b802f8289fa6089ca9c664daa951c809baa6fee13a2c31",
+    "docs/kernel/ipc.md": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
+    "docs/kernel/native-applications.md": "8cec7590e33470e84c27e6d8e7b911878389ea6cc2270e87ff44b07bb109aa99",
     "docs/kernel/processes.md": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
     "docs/kernel/scheduler.md": "3a7099d5c09a350d2ac8683da945a30f80db9c2397a6bc1e2d63b0d8eb54035e",
-    "docs/kernel/supervision.md": "f307a1b6a6093ef5fd1299ad7404828d6ccf2eed21203dbea4041d2f25907af5",
+    "docs/kernel/supervision.md": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
     "docs/kernel/user-copy.md": "16941492671fc63f4550421d6592472bd6035e6a4ecf8a67e9282806942fbe4d",
     "docs/kernel/wait.md": "7dd7bf8bef8b3cdff4dc5d41d68ee396410a49362979fa42172b61fc854b65e1",
     "docs/knowledge-enrollment.json": "90057be4e5ee0eba7cf4294b276e07a07fa9c125069c1d490e90f88a803cf651",
@@ -2951,9 +2961,11 @@
     "tests/native-apps/src/abi_steps.rs": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7",
     "tests/native-apps/src/lifecycle-client.rs": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677",
     "tests/native-apps/src/lifecycle-peer.rs": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278",
-    "tests/system/native-crash-recovery.cjs": "53a09a2d6ce23c0133de51022bef3153c1beb856fcc3608c1ecb88f9e7cf71a8",
+    "tests/system/hold-qemu-thread.ps1": "5b66c5ea25ce4360c722cc6d8b63b4f2c87ad9747416f4357ef692d19caf0633",
+    "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
-    "translations/manifest.json": "8d016551499c562f0d1ce8748b6dc62a7fab3c24c537075a740cb3c8b0008832",
+    "tests/system/supervision-host-stall.cjs": "e85ae7747e8670c94d0e257a49bbd0e6d1ff5297506802385c86a079d1c9df14",
+    "translations/manifest.json": "0ce184e2cb3753897e77cae46db208a905b31c4446b64e5a6606931985a27c16",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3001,11 +3013,11 @@
     "translations/ru/docs/kernel/domains.md": "265cc4e5cca9f7189622cd03bd9aaa2ec9f5f271220f6fd430c73c5206d9296b",
     "translations/ru/docs/kernel/handles.md": "28482cf15d598cac06c31c8ad6af32b3721ead26af9fc8d12ddc75a3a723510c",
     "translations/ru/docs/kernel/ipc-performance.md": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511",
-    "translations/ru/docs/kernel/ipc.md": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
-    "translations/ru/docs/kernel/native-applications.md": "428dac505204d4523bfa7a63caa5c8276aa7a32864ac73e31e70c892d9f39fa0",
+    "translations/ru/docs/kernel/ipc.md": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
+    "translations/ru/docs/kernel/native-applications.md": "c9e011abee8ac2534e9a1245d8bf602b6769a12bdc3b321681921ad67c4221c1",
     "translations/ru/docs/kernel/processes.md": "889cccb44d4bec92069d1309f790c31e8bf07677a893854fe993d598c43a75ed",
     "translations/ru/docs/kernel/scheduler.md": "06d860224d0b7cb94619c2ed689c71cd911e57b80d33b70991f52b04b36849ed",
-    "translations/ru/docs/kernel/supervision.md": "6e206b7b0ffb266069e62d515359c61f39fa85c8462294b377cfc89884433673",
+    "translations/ru/docs/kernel/supervision.md": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293",
     "translations/ru/docs/kernel/user-copy.md": "72164fc7c526a3b24f2bd50842c01ce2641fee6fee996e162b9a0b47479229b6",
     "translations/ru/docs/kernel/wait.md": "a4f7a1b09e9f032bcddd11e5988e0e0a954cac5f6cd28d7e92ac5ecb60019cf6",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
@@ -5699,7 +5711,7 @@
     "doc.kolvrt.kernel.ipc": {
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 25914,
+      "estimated_bytes": 26528,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a and later source-bound snapshots retain their historical counts. Current Phase 3.7 integration has separate accepted evidence: 144/144 tasks, 147 checks per DEV/PROD profile. READY applies only to the bounded IPC contract; physical ARM, performance readiness and production trust are not established.",
       "id": "doc.kolvrt.kernel.ipc",
       "kind": "subsystem-contract",
@@ -5713,15 +5725,15 @@
       },
       "locations": {
         "en": {
-          "end": 341,
+          "end": 343,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 1
         },
         "ru": {
-          "end": 341,
+          "end": 343,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 1
         }
       },
@@ -5767,7 +5779,7 @@
     "doc.kolvrt.kernel.native-applications": {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 34247,
+      "estimated_bytes": 35491,
       "evidence_scope": "accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved. The later 038d960 readiness regression is open as #133; master #37 closure is pending its disposition.",
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
@@ -5781,15 +5793,15 @@
       },
       "locations": {
         "en": {
-          "end": 280,
+          "end": 288,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "2ac41bbd13e119d467b802f8289fa6089ca9c664daa951c809baa6fee13a2c31",
+          "sha256": "8cec7590e33470e84c27e6d8e7b911878389ea6cc2270e87ff44b07bb109aa99",
           "start": 1
         },
         "ru": {
-          "end": 279,
+          "end": 287,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "428dac505204d4523bfa7a63caa5c8276aa7a32864ac73e31e70c892d9f39fa0",
+          "sha256": "c9e011abee8ac2534e9a1245d8bf602b6769a12bdc3b321681921ad67c4221c1",
           "start": 1
         }
       },
@@ -5869,7 +5881,7 @@
     "doc.kolvrt.kernel.supervision": {
       "document": "doc.kolvrt.kernel.supervision",
       "document_status": "CURRENT",
-      "estimated_bytes": 24082,
+      "estimated_bytes": 25678,
       "evidence_scope": "historical accepted bounded Phase 3.6 after #126; Phase 3.7 changes source and coordination policy. The retained Phase 3.6 receipt is stale for these changed sources; bounded Phase 3.7 acceptance is recorded in [native applications](native-applications.md). Readiness and performance are separate.",
       "id": "doc.kolvrt.kernel.supervision",
       "kind": "subsystem-contract",
@@ -5883,15 +5895,15 @@
       },
       "locations": {
         "en": {
-          "end": 177,
+          "end": 183,
           "path": "docs/kernel/supervision.md",
-          "sha256": "f307a1b6a6093ef5fd1299ad7404828d6ccf2eed21203dbea4041d2f25907af5",
+          "sha256": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
           "start": 1
         },
         "ru": {
-          "end": 179,
+          "end": 185,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "6e206b7b0ffb266069e62d515359c61f39fa85c8462294b377cfc89884433673",
+          "sha256": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293",
           "start": 1
         }
       },
@@ -6329,7 +6341,7 @@
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Maintain exact-source acceptance when runtime/test inputs change. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness require their separate scopes; the bounded first native application slice is accepted.",
+        "next_gate": "Resolve Issue #133 readiness regression and renew exact-source acceptance after diagnostic/test changes before master #37 closure. Retain prior bounded implementation acceptance. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness have separate scopes.",
         "readiness": "NOT_READY",
         "sources": [
           ".github/workflows/ci-windows-workload.yml",
@@ -6415,6 +6427,8 @@
           "tests/native-apps/src/lifecycle-client.rs",
           "tests/native-apps/src/lifecycle-peer.rs",
           "tests/system/native-crash-recovery.cjs",
+          "tests/system/supervision-host-stall.cjs",
+          "tests/system/hold-qemu-thread.ps1",
           "tests/system/native-crash-recovery.test.cjs"
         ],
         "transitions": [
@@ -6437,11 +6451,11 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Complete new-source 144-task CI, native DEV/PROD persistent/crash/recovery/shutdown and restricted-workspace execution independently checked after committed-crash fixture input correction; scoped source/code/architecture/EN-RU renewal retained.",
+            "reason": "Issue #133 changes fixture diagnostics, deadline-boundary tests and the external host-stall harness after the retained 43af402 source. New exact-source verification and regression disposition are pending; historical passing native evidence is preserved and is not a blanket current-source failure claim.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
-            "state": "VERIFIED"
+            "state": "STALE"
           },
           {
             "environment": "physical-arm64",
@@ -6464,13 +6478,13 @@
         "en": {
           "end": 14,
           "path": "docs/kernel/native-applications.md",
-          "sha256": "2ac41bbd13e119d467b802f8289fa6089ca9c664daa951c809baa6fee13a2c31",
+          "sha256": "8cec7590e33470e84c27e6d8e7b911878389ea6cc2270e87ff44b07bb109aa99",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/kernel/native-applications.md",
-          "sha256": "428dac505204d4523bfa7a63caa5c8276aa7a32864ac73e31e70c892d9f39fa0",
+          "sha256": "c9e011abee8ac2534e9a1245d8bf602b6769a12bdc3b321681921ad67c4221c1",
           "start": 7
         }
       },
@@ -7799,13 +7813,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 58
         }
       },
@@ -7834,13 +7848,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 66
         }
       },
@@ -7869,13 +7883,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 58
         }
       },
@@ -7904,13 +7918,13 @@
         "en": {
           "end": 27,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 16
         },
         "ru": {
           "end": 27,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 16
         }
       },
@@ -7939,13 +7953,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 34
         }
       },
@@ -8009,13 +8023,13 @@
         "en": {
           "end": 35,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 26
         },
         "ru": {
           "end": 35,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 26
         }
       },
@@ -8044,13 +8058,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 58
         }
       },
@@ -8079,13 +8093,13 @@
         "en": {
           "end": 59,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 34
         },
         "ru": {
           "end": 59,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 34
         }
       },
@@ -8190,13 +8204,13 @@
         "en": {
           "end": 83,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 76
         },
         "ru": {
           "end": 83,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 76
         }
       },
@@ -8225,13 +8239,13 @@
         "en": {
           "end": 67,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 58
         },
         "ru": {
           "end": 67,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 58
         }
       },
@@ -8267,7 +8281,7 @@
       ],
       "document": "doc.kolvrt.kernel.ipc",
       "document_status": "CURRENT",
-      "estimated_bytes": 25801,
+      "estimated_bytes": 26415,
       "evidence_scope": "accepted bounded Phase 3.5 on main 9b4687a and later source-bound snapshots retain their historical counts. Current Phase 3.7 integration has separate accepted evidence: 144/144 tasks, 147 checks per DEV/PROD profile. READY applies only to the bounded IPC contract; physical ARM, performance readiness and production trust are not established.",
       "feature": {
         "acceptance": [
@@ -8392,15 +8406,15 @@
       },
       "locations": {
         "en": {
-          "end": 341,
+          "end": 343,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 4
         },
         "ru": {
-          "end": 341,
+          "end": 343,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 4
         }
       },
@@ -8430,13 +8444,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 66
         }
       },
@@ -8465,13 +8479,13 @@
         "en": {
           "end": 77,
           "path": "docs/kernel/ipc.md",
-          "sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
+          "sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
           "start": 66
         },
         "ru": {
           "end": 77,
           "path": "translations/ru/docs/kernel/ipc.md",
-          "sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7",
+          "sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3",
           "start": 66
         }
       },
@@ -10604,13 +10618,13 @@
         "en": {
           "end": 18,
           "path": "docs/kernel/supervision.md",
-          "sha256": "f307a1b6a6093ef5fd1299ad7404828d6ccf2eed21203dbea4041d2f25907af5",
+          "sha256": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
           "start": 11
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/kernel/supervision.md",
-          "sha256": "6e206b7b0ffb266069e62d515359c61f39fa85c8462294b377cfc89884433673",
+          "sha256": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293",
           "start": 13
         }
       },

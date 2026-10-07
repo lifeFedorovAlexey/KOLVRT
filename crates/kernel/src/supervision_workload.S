@@ -3,6 +3,9 @@
 .global supervisor_image_start, supervisor_image_end
 .global supervised_service_start, supervised_service_end
 .macro lifecycle op, selector=0, token=xzr, arg=0
+ // Lifecycle rejection is not an IPC probe stage.
+ mov x10,#0
+ mov x17,#0
  mov x0,#\op
  mov x1,#\selector
  mov x2,\token
@@ -37,6 +40,15 @@ supervisor_image_start:
  add x19,x19,#4096
  mov x20,#1000
  mov x12,#0
+ // Initialize optional IPC diagnostics before any launch can fail.
+ mov x5,#0
+ mov x6,#0
+ mov x7,#0
+ mov x8,#0
+ mov x10,#0
+ mov x17,#0
+ mov x21,#0
+ mov x23,#0
  // Static EL0 manifest: peer first; worker depends on authenticated peer readiness.
  lifecycle 1,1
  cbnz x0,.Lsup_fail
@@ -137,9 +149,11 @@ supervisor_image_start:
  sup_ipc
  cmp x0,#2
  b.ne .Lsup_fail
+ mov x20,#1030
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
  sup_event 5
+ mov x20,#1040
  bl .Lsup_peer_probe
  cbnz x0,.Lsup_fail
  // Readiness timeout is a terminal probe result, never a forged READY flag.
@@ -175,6 +189,7 @@ supervisor_image_start:
  cbnz x0,.Lsup_fail
  mov x24,x1
  mov x25,x2
+ mov x20,#1050
  bl .Lsup_probe
  cbnz x0,.Lsup_fail
  bl .Lsup_death
@@ -189,9 +204,11 @@ supervisor_image_start:
  subs x26,x26,#1
  b.ne .Lsup_storm
  sup_event 7
+ mov x20,#1060
  bl .Lsup_peer_probe
  cbnz x0,.Lsup_fail
  // Accepted load is cancelled with its actual commitment outcome.
+ mov x20,#1005
  mov x25,x28
  mov x0,#3
  bl .Lsup_submit
@@ -267,6 +284,8 @@ supervisor_image_start:
  mov x0,#-1
  mov x6,x0
  mov x7,#0
+ mov x8,#0
+ mov x21,#0
  str x0,[x19,#24]
  cmp x17,#2
  b.eq .Lsup_submit_call

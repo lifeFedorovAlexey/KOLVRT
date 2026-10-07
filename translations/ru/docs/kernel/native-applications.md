@@ -18,13 +18,19 @@ Finite client SEND binding использует существующий checkpo
 
 [Сбой 333726b](../../../../research/results/native-phase37-333726b-failure.json) сохранён: stage 1002, Submit=1, Expired=16, coverage 15. Этот stage использовался и для committed-crash payload 2, и для последующего readiness probe payload 1; прежние diagnostics не различают их. Поэтому утверждение, что именно payload 2 вызвал тот сбой, не доказано. Изменение 43af402 отдельно выбирает максимальный допустимый deadline для committed-crash input; readiness сохраняет /8 и все реальные COMMIT/EffectUnknown/death/resource assertions. Три локальных повтора DEV+PROD прошли 147 checks/profile, но они не доказывают причину прежнего сбоя или универсальное исправление readiness expiry.
 
-BOUNDED_IMPLEMENTED и QEMU VERIFIED относятся к объявленному scope; readiness, image trust (#38), physical ARM и performance acceptance отделены. ABI experimental, startup-crash и post-commit replay не заявляются. Ниже сохранена история прежних revisions; это не текущий CI status.
+BOUNDED_IMPLEMENTED сохраняет принятую область реализации. QEMU verification текущих исходников теперь STALE: изменения fixture/harness #133 требуют новой exact-source приёмки. Прежний VERIFIED receipt сохраняет свой source scope; readiness, image trust (#38), physical ARM и performance acceptance отделены. ABI experimental, startup-crash и post-commit replay не заявляются. Ниже сохранена история прежних revisions; это не текущий CI status.
 
 ## Наблюдаемый отказ regression от 2026-10-07
 
 [Issue #133](https://github.com/lifeFedorovAlexey/KOLVRT/issues/133) сохраняет отказ shard 0 в [CI 37576487522](https://github.com/lifeFedorovAlexey/KOLVRT/actions/runs/37576487522) на documentation-only 038d960. После committed crash, создания replacement и отклонения старых token/SEND новый readiness probe payload 1 наследует stage 1002; он получает /8 и отклоняется Submit как Expired до admission. Интервал между clocks равен 131.395008 ms при deadline 125 ms; рост EL0 residency равен 1.499088 ms. Остальные 129.895920 ms не распределены между kernel/checkpoint и host/QEMU scheduling; задержка ответа сервиса этим не измерена.
 
 Native job прошёл независимо; прежние успешные source-bound receipts и bounded acceptance сохраняются. Это новый отказ полного regression, а не доказательство отказа всех native QEMU сценариев. Закрытие master #37 ожидает разбора #133; увеличение timeout, повтор до зелёного результата и автоматическая performance allowance не являются решением.
+
+## Диагностическое изменение исходников #133
+
+[Диагностика supervision](supervision.md) теперь различает stages 1030/1040/1050/1060/1005 и публикует payload_operation/probe_timing_valid. UNIT boundary checks вызывают единственный production Endpoint::submit. Внешний Windows harness приостановил принадлежащий его QEMU host thread CPU0 на 500 ms и воспроизвёл отказ readiness stage 1030, coverage 15, Expired до admission, сохранив /8 и hash образа. Это диагностическое свидетельство возможного host starvation, не установленная причина прежнего CI и не успешная regression.
+
+Production behavior, timeout и retries не меняются. Новые fixture/harness sources делают прежний QEMU receipt устаревшим для текущего дерева; он сохранён вместе с историей приёмки. Для #133 и закрытия master #37 всё ещё нужны обоснованный разбор и свежие exact-source checks.
 
 ## Классификация тестов и единственная реализация
 
@@ -224,6 +230,8 @@ Restricted-workspace proof привязывает repository-relative путь h
           "tests/native-apps/src/lifecycle-client.rs",
           "tests/native-apps/src/lifecycle-peer.rs",
           "tests/system/native-crash-recovery.cjs",
+          "tests/system/supervision-host-stall.cjs",
+          "tests/system/hold-qemu-thread.ps1",
           "tests/system/native-crash-recovery.test.cjs"
         ],
         "acceptance": [
@@ -238,12 +246,12 @@ Restricted-workspace proof привязывает repository-relative путь h
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Maintain exact-source acceptance when runtime/test inputs change. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness require their separate scopes; the bounded first native application slice is accepted.",
+        "next_gate": "Resolve Issue #133 readiness regression and renew exact-source acceptance after diagnostic/test changes before master #37 closure. Retain prior bounded implementation acceptance. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness have separate scopes.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Complete new-source 144-task CI, native DEV/PROD persistent/crash/recovery/shutdown and restricted-workspace execution independently checked after committed-crash fixture input correction; scoped source/code/architecture/EN-RU renewal retained.",
+            "state": "STALE",
+            "reason": "Issue #133 changes fixture diagnostics, deadline-boundary tests and the external host-stall harness after the retained 43af402 source. New exact-source verification and regression disposition are pending; historical passing native evidence is preserved and is not a blanket current-source failure claim.",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45"

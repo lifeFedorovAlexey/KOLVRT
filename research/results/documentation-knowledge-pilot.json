@@ -3,7 +3,7 @@
   "catalog_bytes": 83201,
   "catalog_nodes": 204,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "0f86b5043c818e519ecfa80ec6c757cd7cd59c90dcac8b7ed317ac17e6f985d7",
+  "catalog_sha256": "b9d70ca9cdc600cd8762eafe50f3584cc4049841981f961083d67abee4f04792",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
   "context_plus_catalog_bytes": 213923,
   "correctness": {
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 107,
-    "utf8_bytes": 974133
+    "utf8_bytes": 977587
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",

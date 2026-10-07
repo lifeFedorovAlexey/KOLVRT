@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "ec7fe60eac345f33c115be6469e32137b98577dd7fbaab7ce0e05d03e8210221",
-        "translation_sha256": "94914b46acd5e00f150db6a36d189ee21398472e3e6379e8375ca11242c450c2"
+        "source_sha256": "18683115e7b0c64af18d9783b8b70c2409caeb806964dfbb3f251500a6296a40",
+        "translation_sha256": "680c7eccb662d8cc477c99b39f26092ef5c0b41885e8e3b50bb73e3d92a238c0"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -306,16 +306,16 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "ed7884f31be1f5f109fa9604927505df30090c97fdb7a79d49ecab67f7e12556",
-        "translation_sha256": "67fc060c32c337334f803228e549a0cd06ff8a5d9b69dd4fb871c08c48a5c8e7"
+        "source_sha256": "710b6c0f3b10b67c25d08d27daedecf4e317094514cb534b4db5bcf0c6578d82",
+        "translation_sha256": "d1aefca45af5bd60c185056065cbbdb6c0f0af94571c7687e2c56121b7bc74d3"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "2ac41bbd13e119d467b802f8289fa6089ca9c664daa951c809baa6fee13a2c31",
-        "translation_sha256": "428dac505204d4523bfa7a63caa5c8276aa7a32864ac73e31e70c892d9f39fa0"
+        "source_sha256": "8cec7590e33470e84c27e6d8e7b911878389ea6cc2270e87ff44b07bb109aa99",
+        "translation_sha256": "c9e011abee8ac2534e9a1245d8bf602b6769a12bdc3b321681921ad67c4221c1"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "cfb3eb74180feda4c9a04c21e5e72135a89b66e22e97af155fd03e2de78763d3",
@@ -334,8 +334,8 @@
         "translation_sha256": "395e7920498d371257573b4fdd8cfa6d91718c1f8aa4447d1353f1327d556790"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "f307a1b6a6093ef5fd1299ad7404828d6ccf2eed21203dbea4041d2f25907af5",
-        "translation_sha256": "6e206b7b0ffb266069e62d515359c61f39fa85c8462294b377cfc89884433673"
+        "source_sha256": "242a1af3115b3c17208f510556fe5e11878923d175231906b7eb363dbd790966",
+        "translation_sha256": "58bc149c08a1b6a4c3a2c09db6accaf21a4c5aa22f1d6d78c17cee5a14d76293"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",

@@ -377,6 +377,59 @@ fn terminal_arbiter_commit_cancel_deadline_death_and_second_attempt() {
 }
 
 #[test]
+fn readiness_absolute_deadline_admission_boundary_preserves_rejected_state() {
+    // The readiness fixture selects CLOCK + frequency / 8. Explicit admission
+    // times test that contract, not the cause of any guest execution delay.
+    let frequency = 62_500_000_u64;
+    let sampled_at = 1_078_757_950_u64;
+    let deadline = sampled_at + frequency / 8;
+    for admitted_at in [deadline - 1, deadline, deadline + 1] {
+        let mut rig = Rig::new(1);
+        let service = rig.ids[0];
+        let client = rig.ids[1];
+        let consumer = rig.domains[1].reference();
+        let grant = rig.ep().reference().try_clone().unwrap();
+        let waiter = WaitKey::new(service).unwrap();
+        assert_eq!(rig.ep().wait_readable(service, waiter), Ok(false));
+        let before = rig.usages();
+        let references = grant.references();
+        let result = rig.ep().submit(
+            &grant,
+            &consumer,
+            1,
+            deadline,
+            Payload::copy(b"ready").unwrap(),
+            admitted_at,
+        );
+        if admitted_at < deadline {
+            let request = result.unwrap();
+            assert_eq!(rig.ep().occupancy(), 1);
+            assert_eq!(rig.ep().outstanding(), 1);
+            assert_eq!(rig.ep().next_deadline(), Some(deadline));
+            assert_eq!(rig.ep().pending_wakes().count(), 1);
+            assert_eq!(rig.usages()[0].2, before[0].2 + 1);
+            assert_eq!(rig.usages()[0].3, before[0].3 + 1);
+            assert_eq!(rig.usages()[1].3, before[1].3 + 1);
+            assert_eq!(
+                rig.ep().cancel(client, request, admitted_at),
+                Ok(Outcome::CancelledBeforeEffect)
+            );
+            assert_eq!(rig.collect(1, request).0, Outcome::CancelledBeforeEffect);
+            assert_eq!(rig.usages(), before);
+        } else {
+            assert_eq!(result, Err(Error::Expired));
+            assert_eq!(rig.usages(), before);
+            assert_eq!(grant.references(), references);
+            assert_eq!(rig.ep().occupancy(), 0);
+            assert_eq!(rig.ep().outstanding(), 0);
+            assert_eq!(rig.ep().next_deadline(), None);
+            assert_eq!(rig.ep().waiter_count(), 1);
+            assert_eq!(rig.ep().pending_wakes().count(), 0);
+        }
+    }
+}
+
+#[test]
 fn deadline_before_admission_and_at_commit_or_reply_boundary() {
     let mut rig = Rig::new(4);
     let service = rig.ids[0];

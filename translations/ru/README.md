@@ -117,7 +117,7 @@ cargo run --locked -p repository-checks -- cost-l list --json
 
 | Каноническая функция                                                                                          | Реализация          | Граница доказательств                                                     |
 | ------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
-| [kolvrt.apps.native-elf](docs/kernel/native-applications.md#native-elf-applications)                          | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
+| [kolvrt.apps.native-elf](docs/kernel/native-applications.md#native-elf-applications)                          | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
 | [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                       | EXPERIMENTAL        | host-process: STALE; physical-arm64: UNKNOWN                              |
 | [kolvrt.ci.performance](docs/ci/performance.md#ci-performance)                                                | EXPERIMENTAL        | github-actions: UNKNOWN                                                   |
 | [kolvrt.compatibility.manifests](docs/architecture/compatibility-manifests.md#kolvrt-compatibility-manifests) | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |
