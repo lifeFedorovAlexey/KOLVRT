@@ -956,7 +956,7 @@
     {
       "document": "doc.kolvrt.kernel.native-applications",
       "document_status": "CURRENT",
-      "estimated_bytes": 33304,
+      "estimated_bytes": 32878,
       "id": "doc.kolvrt.kernel.native-applications",
       "kind": "subsystem-contract",
       "path": "docs/kernel/native-applications.md",
@@ -1029,6 +1029,23 @@
       ],
       "summary": "Source-grounded bounded Phase 3.7 acceptance and full semantic EN/RU review, separate from production readiness and physical ARM.",
       "title": "Phase 3.7 native application acceptance review"
+    },
+    {
+      "document": "doc.kolvrt.native-applications.fixture-review",
+      "document_status": "HISTORICAL MILESTONE",
+      "estimated_bytes": 4501,
+      "id": "doc.kolvrt.native-applications.fixture-review",
+      "kind": "security-analysis",
+      "path": "docs/architecture/native-phase37-fixture-review.md",
+      "relationships": [
+        {
+          "scope": "Renewed exact-source full CI after fixture correction; unchanged production code, no hardware/performance acceptance.",
+          "to": "kolvrt.apps.native-elf",
+          "type": "related_to"
+        }
+      ],
+      "summary": "Source-grounded committed-crash test input correction and bounded Phase 3.7 evidence renewal.",
+      "title": "Phase 3.7 committed-crash fixture and acceptance renewal"
     },
     {
       "document": "doc.kolvrt.native-model",

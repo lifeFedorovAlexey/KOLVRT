@@ -1,7 +1,7 @@
 # Native ELF applications and persistent service
 
 Document status: CURRENT
-Evidence scope: accepted bounded Phase 3.7 slice at implementation 7f8dd80: original ELF applications, persistent state, actual production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. Prior copied-implementation and source-mutant runs are not current evidence.
+Evidence scope: accepted bounded Phase 3.7 slice at implementation 43af402: original ELF applications, persistent state, production supervisor crash/recovery and normal reclamation; QEMU DEV/PROD. The 333726b failure and earlier source-bound receipts are preserved.
 Current reference: [Accepted supervision foundation](supervision.md)
 
 <a name="native-elf-applications"></a>
@@ -12,15 +12,13 @@ Ordinary counter-service, counter-client and native-supervisor are separate no_s
 
 Finite client SEND binding uses the existing supervision checkpoint and exact instance tokens. The kernel supplies generic process/ELF/IPC/authority/lifetime mechanisms. Ordinary implementation must contain no application callbacks or test interventions. Hardware, disk durability and stable ABI are not claimed.
 
-## Current regression check
-
-Publication CI at 333726b exposed a repeated matrix shard 2 failure: stage 1002 (committed-crash request), Submit=1, Expired=16 before admission. Native DEV/PROD passed separately. The [original failure](../../research/results/native-phase37-333726b-failure.json) is retained. The crash-after-COMMIT fixture wrongly assigned its readiness deadline to payload operation 2, allowing expiry to replace the required COMMIT/fault. That test input now selects the maximum valid absolute deadline, like the separate Cancel scenario; actual readiness probes with operation 1 retain /8, silent-readiness expiry and strict COMMIT/EffectUnknown/death checks. Production IPC, supervisor timing and scheduler are unchanged. Earlier bounded acceptance retains its source scope; Three local DEV and PROD repeats passed all 147 checks/profile; fresh complete CI regression after this correction is still required.
-
 ## Current bounded acceptance
 
-The [acceptance review](../architecture/native-phase37-acceptance-review.md) and [exact receipt](../../research/results/native-phase37-current.json) accept the first native application slice. Full CI 37557806495 at 7f8dd80 passed: 144/144 tasks across four shards, native, host, kernel DEV/PROD, routing, ASID and evidence aggregation. Dependency hygiene and CodeRabbit are green. Production crash/recovery and ordinary completion passed in both profiles; the corrected independence proof actually executes runtime/lifecycle/smoke inside the restricted workspace. Earlier failures below retain their historical scope rather than describing current status.
+The [renewed review](../architecture/native-phase37-fixture-review.md) and [fresh receipt](../../research/results/native-phase37-43af402.json) accept the corrected first slice. Full CI 37571776305 at 43af402 passed all four shards, 144/144 tasks, native/host/kernel DEV-PROD/routing/ASID/evidence/foundation; dependency hygiene passed. Production crash/recovery/normal shutdown and restricted-workspace execution are verified in both profiles. The earlier 7f8dd80 review retains its source scope.
 
-BOUNDED_IMPLEMENTED and QEMU VERIFIED apply only to the declared scope. Readiness, image trust (#38), physical ARM and performance acceptance remain separate; no new performance blocker is introduced for #28. ABI remains experimental; startup crash and post-commit replay are not claimed.
+The [333726b failure](../../research/results/native-phase37-333726b-failure.json) is retained: committed-crash payload operation 2 wrongly received the readiness deadline, so Submit expired before admission. Only that fixture input is corrected; actual readiness probes retain /8 and all real COMMIT/EffectUnknown/death/resource assertions remain mandatory. Three local DEV+PROD repeats passed 147 checks/profile. No universal repair of all historical readiness expiries is claimed.
+
+BOUNDED_IMPLEMENTED and QEMU VERIFIED apply to the declared scope; readiness, image trust (#38), physical ARM and performance acceptance remain separate. ABI is experimental; startup-crash and post-commit replay are not claimed. Earlier revision history below does not describe current CI status.
 
 ## Test classification and single implementation
 
@@ -93,7 +91,7 @@ cargo xtask native-controls checks invalid inputs to actual ELF/parser/policy me
 
 L1 exercises components, L2 external ABI actors, and L3 production QEMU system scenarios. None establishes L4 physical ARM: NOT_RUN/UNKNOWN. Filesystem, initramfs, storage, DMA, network, package manager, Linux ABI and dynamic linking remain outside scope.
 
-Bounded functional acceptance of implementation 7f8dd80 was completed through the separate source/code/architecture and full EN/RU review with retained source-bound CI; fresh regression after the subsequent fixture correction is still required. The actual production supervisor crash path is exercised by the external post-binding pre-commit SYSTEM scenario. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation retain their separate test-root scope. Normal production-session shutdown/reclamation executes; startup crash and post-commit replay remain outside scope. Historical receipts are not relabeled as current-source passes.
+Bounded functional acceptance of implementation 7f8dd80 was completed through the separate source/code/architecture and full EN/RU review with retained source-bound CI; the subsequent fixture correction is accepted by a separate review and complete source-bound CI at 43af402. The actual production supervisor crash path is exercised by the external post-binding pre-commit SYSTEM scenario. Lifecycle stop/replacement/stale/fresh binding/peer fault/reclamation retain their separate test-root scope. Normal production-session shutdown/reclamation executes; startup crash and post-commit replay remain outside scope. Historical receipts are not relabeled as current-source passes.
 
 [Russian translation](../../translations/ru/docs/kernel/native-applications.md)
 
@@ -225,7 +223,9 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
         ],
         "acceptance": [
           "docs/architecture/native-phase37-acceptance-review.md",
-          "research/results/native-phase37-current.json"
+          "research/results/native-phase37-current.json",
+          "docs/architecture/native-phase37-fixture-review.md",
+          "research/results/native-phase37-43af402.json"
         ],
         "issues": [28],
         "adrs": ["adr.0026"],
@@ -233,15 +233,15 @@ The restricted-workspace proof anchors a repository-relative host emulator path 
           "Physical ARM NOT_RUN/UNKNOWN; no production trust, filesystem, disk durability, migration, generic spawn or stable ABI.",
           "Selected post-binding pre-first-ADD-COMMIT crash/recovery only; no startup-crash, post-commit replay, universal latency or omitted-operation mutation equivalence. Production readiness and performance acceptance are separate."
         ],
-        "next_gate": "Complete new-source full foundation after the committed-crash fixture input correction; preserve earlier bounded acceptance and exact source receipts without relabeling the failed publication run. Physical ARM and production trust remain separate.",
+        "next_gate": "Maintain exact-source acceptance when runtime/test inputs change. Physical ARM, production image trust (#38), startup/post-commit recovery and performance readiness require their separate scopes; the bounded first native application slice is accepted.",
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "STALE",
-            "reason": "Publication head 333726b failed the committed-crash fixture before Submit admission. The fixture source now changes; the passing 7f8dd80 receipt remains historical and does not verify the corrected source. Fresh complete CI is required.",
-            "scope": "Implementation 7f8dd80f6a322a4654994fc1aa3ed44beaefdd10; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Guest inputs and seven checkout/runner integration inputs distinguished in receipt.",
-            "receipt": "research/results/native-phase37-current.json",
-            "receipt_sha256": "be7bd8478ac5e2c98720b3cc14bc00d2aa1898673b47fd13ff79f91a2250a023"
+            "state": "VERIFIED",
+            "reason": "Complete new-source 144-task CI, native DEV/PROD persistent/crash/recovery/shutdown and restricted-workspace execution independently checked after committed-crash fixture input correction; scoped source/code/architecture/EN-RU renewal retained.",
+            "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
+            "receipt": "research/results/native-phase37-43af402.json",
+            "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45"
           },
           {
             "environment": "physical-arm64",

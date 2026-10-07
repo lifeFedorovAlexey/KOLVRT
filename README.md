@@ -29,9 +29,9 @@ The kernel boots on QEMU `virt` and runs isolated EL0 processes on two CPUs. It 
 
 Bounded Phase 3.5 IPC is implemented and ready for its declared contract: isolated EL0 request/response, blocking/wakeup, cancellation, deadlines, death/shutdown arbitration and retained ownership. After Phase 3.5, supervision policy (#27) and persistent isolated services (#28) were the next gates; physical ARM and stable ABI remain separate scopes.
 
-[Phase 3.7 native ELF applications](docs/kernel/native-applications.md) are accepted within their bounded scope: separate production supervisor/service/client, persistent counter state, actual crash/recovery with fresh binding and normal reclamation. The [review and exact-source evidence](docs/architecture/native-phase37-acceptance-review.md) establish DEV/PROD and full CI at 7f8dd80. Physical ARM remains UNKNOWN and ABI experimental; production trust and performance readiness have separate scope.
+[Phase 3.7 native ELF applications](docs/kernel/native-applications.md) are accepted within their bounded scope: separate production supervisor/service/client, persistent counter state, actual crash/recovery with fresh binding and normal reclamation. The [renewed review and exact-source evidence](docs/architecture/native-phase37-fixture-review.md) establish DEV/PROD and full CI at 43af402. Physical ARM remains UNKNOWN and ABI experimental; production trust and performance readiness have separate scope.
 
-Subsequent publication CI 333726b failed one matrix shard when the committed-crash test request expired before admission; the other workload jobs passed. Its fixture input is corrected while actual readiness probes retain /8; QEMU evidence after this source change is STALE until complete new CI. Earlier bounded acceptance retains its exact source scope.
+Historical publication CI 333726b failed one matrix shard when the committed-crash test request expired before admission. Its fixture input is corrected; actual readiness probes retain /8. Complete new CI at 43af402 passed all four shards and foundation; the original failure and earlier receipts are preserved.
 
 An earlier implementation does not settle later architecture. Before extending it, derive the design from current invariants and accepted decisions; refactor or remove code that constrains them.
 
@@ -117,7 +117,7 @@ This generated registry summary separates implementation from verification. `BOU
 
 | Canonical feature                                                                                             | Implementation      | Evidence limit                                                            |
 | ------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------- |
-| [kolvrt.apps.native-elf](docs/kernel/native-applications.md#native-elf-applications)                          | BOUNDED_IMPLEMENTED | qemu-arm64: STALE; physical-arm64: UNKNOWN                                |
+| [kolvrt.apps.native-elf](docs/kernel/native-applications.md#native-elf-applications)                          | BOUNDED_IMPLEMENTED | qemu-arm64: VERIFIED; physical-arm64: UNKNOWN                             |
 | [kolvrt.arena](docs/architecture/component-arena.md#kolvrt-arena-scope)                                       | EXPERIMENTAL        | host-process: STALE; physical-arm64: UNKNOWN                              |
 | [kolvrt.ci.performance](docs/ci/performance.md#ci-performance)                                                | EXPERIMENTAL        | github-actions: UNKNOWN                                                   |
 | [kolvrt.compatibility.manifests](docs/architecture/compatibility-manifests.md#kolvrt-compatibility-manifests) | BOUNDED_IMPLEMENTED | host-process: STALE; physical-arm64: NOT_APPLICABLE                       |

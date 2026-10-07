@@ -1,0 +1,3880 @@
+{
+  "schema_version": 1,
+  "scope": "Native kernel/app dependency and execution closure using the original implementation files through directory references; host runner dependency closure is excluded; not full Phase 3.7 acceptance",
+  "implementation_copies": 0,
+  "directory": "D:\\a\\KOLVRT\\KOLVRT\\target\\native-reference-ef9fffa3-dd71-4adf-9c98-e02493792951",
+  "source_references": [
+    {
+      "path": "crates/kernel",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\crates\\kernel",
+      "source_copied": false
+    },
+    {
+      "path": "crates/kernel-core",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\crates\\kernel-core",
+      "source_copied": false
+    },
+    {
+      "path": "apps/native-runtime",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\apps\\native-runtime",
+      "source_copied": false
+    },
+    {
+      "path": "apps/native-apps",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\apps\\native-apps",
+      "source_copied": false
+    },
+    {
+      "path": "tests/native-apps",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\tests\\native-apps",
+      "source_copied": false
+    },
+    {
+      "path": ".cargo",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\.cargo",
+      "source_copied": false
+    },
+    {
+      "path": "assets",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\assets",
+      "source_copied": false
+    },
+    {
+      "path": "research/fixtures",
+      "actual_source": "D:\\a\\KOLVRT\\KOLVRT\\research\\fixtures",
+      "source_copied": false
+    }
+  ],
+  "execution_workspace": "D:\\a\\KOLVRT\\KOLVRT\\target\\native-reference-ef9fffa3-dd71-4adf-9c98-e02493792951",
+  "host_emulator": "D:\\a\\KOLVRT\\KOLVRT\\.toolchains\\qemu\\bin\\qemu-system-aarch64.exe",
+  "execution_receipts": {
+    "native-counter-client-1-positive.json": {
+      "profiles": {
+        "dev": {
+          "applications": {
+            "client": {
+              "artifact": "target/kernel/apps/dev-client-9e36e3605d067d3df524cb386ded26bc13b484091b5a0351a1eed36276ccd03e.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 816288,
+              "sha256": "9e36e3605d067d3df524cb386ded26bc13b484091b5a0351a1eed36276ccd03e"
+            },
+            "root": {
+              "artifact": "target/kernel/apps/dev-root-c9ebe3748470b3c470d1c18894241b0247f514455b3a12b0681e0d6c6fe52942.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 833888,
+              "sha256": "c9ebe3748470b3c470d1c18894241b0247f514455b3a12b0681e0d6c6fe52942"
+            },
+            "service": {
+              "artifact": "target/kernel/apps/dev-service-773e32ec0c7c32bafb9b4ee5514de36026e8da487ef5671290a5d1ca54f18b77.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 754896,
+              "sha256": "773e32ec0c7c32bafb9b4ee5514de36026e8da487ef5671290a5d1ca54f18b77"
+            }
+          },
+          "result": {
+            "counter_after_client_exit": 12,
+            "events": [
+              {
+                "event": "native-root-image",
+                "format": "elf64",
+                "generation": 1
+              },
+              {
+                "event": "native-image",
+                "format": "elf64",
+                "generation": 1,
+                "selector": 0
+              },
+              {
+                "event": "native-image",
+                "format": "elf64",
+                "generation": 1,
+                "selector": 1
+              },
+              {
+                "event": "native-process-terminal",
+                "exit_code": 0,
+                "generation": 1,
+                "ipc_blocks": 5,
+                "ipc_wakes": 5,
+                "owner": 0,
+                "slot": 1,
+                "state": 2
+              },
+              {
+                "code": 0,
+                "event": "native-completion",
+                "generation": 1,
+                "kind": "exit",
+                "selector": 1
+              },
+              {
+                "event": "native-report-progress",
+                "words": [
+                  5426640009636887000
+                ]
+              },
+              {
+                "event": "native-report-progress",
+                "words": [
+                  5426640009636887000,
+                  2,
+                  12,
+                  1,
+                  0
+                ]
+              },
+              {
+                "event": "native-report-progress",
+                "words": [
+                  5426640009636887000,
+                  2,
+                  12,
+                  1,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "guest_shutdown": false,
+            "host_observation_stop": true,
+            "kernel_sha256": "f955a616048ba6776a3e2ccdce4b1de590a3d3ae5cba8d6f595b77db21f18519",
+            "kernel_watchdog_ms": 0,
+            "resource_leaks": "NOT_MEASURED_ON_FORCED_VM_STOP",
+            "run": {
+              "accelerator": "TCG",
+              "arguments": [
+                "-machine",
+                "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+                "-cpu",
+                "cortex-a57",
+                "-accel",
+                "tcg",
+                "-smp",
+                "2",
+                "-m",
+                "256M",
+                "-display",
+                "none",
+                "-serial",
+                "stdio",
+                "-monitor",
+                "none",
+                "-nic",
+                "none",
+                "-no-reboot",
+                "-kernel",
+                "target/kernel/dev-counter-client-1-positive.elf"
+              ],
+              "kernel_sha256": "f955a616048ba6776a3e2ccdce4b1de590a3d3ae5cba8d6f595b77db21f18519",
+              "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n"
+            },
+            "service_outlives_client": true
+          }
+        },
+        "prod": {
+          "applications": {
+            "client": {
+              "artifact": "target/kernel/apps/prod-client-ba301c0bd27d7ae42d481ebb5f05a5b778b0bc68a1b0d003d1d243184c2de086.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 32504,
+              "sha256": "ba301c0bd27d7ae42d481ebb5f05a5b778b0bc68a1b0d003d1d243184c2de086"
+            },
+            "root": {
+              "artifact": "target/kernel/apps/prod-root-8fd7a77f449ef768fd5007b4cb681bb33a2e1f5167475415648d0a8953d79f10.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 41384,
+              "sha256": "8fd7a77f449ef768fd5007b4cb681bb33a2e1f5167475415648d0a8953d79f10"
+            },
+            "service": {
+              "artifact": "target/kernel/apps/prod-service-f0e9b3c8ea639e1c99326bb977cfc0441fd1c8f1b53ad9a682e6d3bce19cece6.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 13960,
+              "sha256": "f0e9b3c8ea639e1c99326bb977cfc0441fd1c8f1b53ad9a682e6d3bce19cece6"
+            }
+          },
+          "result": {
+            "counter_after_client_exit": 12,
+            "events": [
+              {
+                "event": "native-root-image",
+                "format": "elf64",
+                "generation": 1
+              },
+              {
+                "event": "native-image",
+                "format": "elf64",
+                "generation": 1,
+                "selector": 0
+              },
+              {
+                "event": "native-image",
+                "format": "elf64",
+                "generation": 1,
+                "selector": 1
+              },
+              {
+                "event": "native-process-terminal",
+                "exit_code": 0,
+                "generation": 1,
+                "ipc_blocks": 5,
+                "ipc_wakes": 5,
+                "owner": 0,
+                "slot": 1,
+                "state": 2
+              },
+              {
+                "code": 0,
+                "event": "native-completion",
+                "generation": 1,
+                "kind": "exit",
+                "selector": 1
+              },
+              {
+                "event": "native-report-progress",
+                "words": [
+                  5426640009636887000,
+                  2,
+                  12,
+                  1,
+                  0
+                ]
+              },
+              {
+                "event": "native-report-progress",
+                "words": [
+                  5426640009636887000,
+                  2,
+                  12,
+                  1,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "guest_shutdown": false,
+            "host_observation_stop": true,
+            "kernel_sha256": "bfafc97d953e75e3e091bbb1e5e88ef08b531d96821084c2a96853fad1d54201",
+            "kernel_watchdog_ms": 0,
+            "resource_leaks": "NOT_MEASURED_ON_FORCED_VM_STOP",
+            "run": {
+              "accelerator": "TCG",
+              "arguments": [
+                "-machine",
+                "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+                "-cpu",
+                "cortex-a57",
+                "-accel",
+                "tcg",
+                "-smp",
+                "2",
+                "-m",
+                "256M",
+                "-display",
+                "none",
+                "-serial",
+                "stdio",
+                "-monitor",
+                "none",
+                "-nic",
+                "none",
+                "-no-reboot",
+                "-kernel",
+                "target/kernel/prod-counter-client-1-positive.elf"
+              ],
+              "kernel_sha256": "bfafc97d953e75e3e091bbb1e5e88ef08b531d96821084c2a96853fad1d54201",
+              "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n"
+            },
+            "service_outlives_client": true
+          }
+        }
+      },
+      "schema_version": 1,
+      "scope": "standalone ELF native IPC smoke, not complete Phase 3.7 or hardware acceptance",
+      "source_files": [
+        {
+          "path": ".cargo/config.toml",
+          "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+        },
+        {
+          "path": "Cargo.lock",
+          "sha256_lf": "4eac83a59c99b5a0b7ad3479c339a07aeff3d59567dabaf6f2abf3931c56781c"
+        },
+        {
+          "path": "Cargo.toml",
+          "sha256_lf": "072ba3468e4a79777e87f53ead193fb4e159d4b7fc17bbf68e7881d03e44f137"
+        },
+        {
+          "path": "apps/native-apps/Cargo.toml",
+          "sha256_lf": "ecfa79cf6826f62ffe2f67236aefac1cb497f7c2f6d150d0def9713145a9534c"
+        },
+        {
+          "path": "apps/native-apps/build.rs",
+          "sha256_lf": "f3100883829de10842c65edcb5ea332261755e00b88f48766fd1310a02e89e6f"
+        },
+        {
+          "path": "apps/native-apps/linker.ld",
+          "sha256_lf": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a"
+        },
+        {
+          "path": "apps/native-apps/src/client.rs",
+          "sha256_lf": "52278939c70cc466e8046c7eaa0f5c5980105bcaab3ab239b71cd4345a168bb7"
+        },
+        {
+          "path": "apps/native-apps/src/counter-client.rs",
+          "sha256_lf": "9646416fb9270a53fc6dd85293495f686078b520471628688d8395f938195d37"
+        },
+        {
+          "path": "apps/native-apps/src/counter-service.rs",
+          "sha256_lf": "635fca7cd71c649dd20a773e214ed49f3752ccc0a0f5b9241d82c39ebcb9ee1c"
+        },
+        {
+          "path": "apps/native-apps/src/lib.rs",
+          "sha256_lf": "322a8319f94df8d186f33f6edcd71d4f42fad3bb5f0a3f973ef14941f8c29936"
+        },
+        {
+          "path": "apps/native-apps/src/supervision.rs",
+          "sha256_lf": "deababd624234c547c23d5d4d2e1034b401bebaaeb515bea34095a052669dda6"
+        },
+        {
+          "path": "apps/native-apps/src/supervisor.rs",
+          "sha256_lf": "7d65f92ce1283bbecb2dfd5e5a88b13cbeae289fa5ddd2a4b8e44b6fe1cb6c99"
+        },
+        {
+          "path": "apps/native-apps/tests/supervision.rs",
+          "sha256_lf": "9e432c2875e322c7ef32acec0b0fc9f67b4f081c80dce7ebe9e53736e7eb06cb"
+        },
+        {
+          "path": "apps/native-runtime/Cargo.toml",
+          "sha256_lf": "9597f67e385b3486ece0be3c9ac4c18ed86da694bbc56f65110b392e17afb110"
+        },
+        {
+          "path": "apps/native-runtime/src/lib.rs",
+          "sha256_lf": "765beb9ceca178e6cd8365103da2e9310343aaf31a1e0c5d802b39dc815c0d71"
+        },
+        {
+          "path": "apps/native-runtime/tests/counter.rs",
+          "sha256_lf": "4f1d3d35c19c0a34060294e09ec0dee08b5b2f0bce6fc33c4d91a686459e1e63"
+        },
+        {
+          "path": "assets/branding/boot-logo.txt",
+          "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+        },
+        {
+          "path": "crates/kernel/Cargo.toml",
+          "sha256_lf": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5"
+        },
+        {
+          "path": "crates/kernel/assets/minimal-exit.elf",
+          "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+        },
+        {
+          "path": "crates/kernel/build.rs",
+          "sha256_lf": "b918684548caf593126da85f79ac702a917591bbb9d092de9da3e2c8c1df2623"
+        },
+        {
+          "path": "crates/kernel/linker.ld",
+          "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/context.rs",
+          "sha256_lf": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/entry.S",
+          "sha256_lf": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/mod.rs",
+          "sha256_lf": "e54606a21a0152921041ddab5fef0ede92fbcc6f436026acac4770b1455e5e2e"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/page.rs",
+          "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+        },
+        {
+          "path": "crates/kernel/src/asid.rs",
+          "sha256_lf": "7216e67ee636e5df1679728ee0911b90fd77bc0a76371dd090b300d8d205cd7e"
+        },
+        {
+          "path": "crates/kernel/src/boot_workload.S",
+          "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+        },
+        {
+          "path": "crates/kernel/src/boot_workload.rs",
+          "sha256_lf": "ec7e1247f19e7e31ec586ddd173ab265437eaf63641460b08965a8a82ee6c2ac"
+        },
+        {
+          "path": "crates/kernel/src/diagnostics/mod.rs",
+          "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+        },
+        {
+          "path": "crates/kernel/src/execution.rs",
+          "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+        },
+        {
+          "path": "crates/kernel/src/hal/mod.rs",
+          "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+        },
+        {
+          "path": "crates/kernel/src/handles/testing.rs",
+          "sha256_lf": "10896a336d12aa9b43bdd3d71c0fd48a1a580aa0aa3488fd73be7673e5a96fa4"
+        },
+        {
+          "path": "crates/kernel/src/handles.rs",
+          "sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2"
+        },
+        {
+          "path": "crates/kernel/src/interrupt/mod.rs",
+          "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+        },
+        {
+          "path": "crates/kernel/src/ipc/deferred.rs",
+          "sha256_lf": "2dd4e5bddd94a02e05d743508c4e453fe175d990e5550f40ab21d70138d91ba4"
+        },
+        {
+          "path": "crates/kernel/src/ipc/native.rs",
+          "sha256_lf": "bcf6931bd66b9648110bd35be16d6358eda9478a901328c49c7ce42b089d87ac"
+        },
+        {
+          "path": "crates/kernel/src/ipc/storage.rs",
+          "sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991"
+        },
+        {
+          "path": "crates/kernel/src/ipc.rs",
+          "sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933"
+        },
+        {
+          "path": "crates/kernel/src/ipc_authority_workload.S",
+          "sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997"
+        },
+        {
+          "path": "crates/kernel/src/ipc_benchmark.S",
+          "sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835"
+        },
+        {
+          "path": "crates/kernel/src/ipc_benchmark.rs",
+          "sha256_lf": "9f02333e41c00ae18e7bd5eeb87a49ec07606e2b496ea87ab736b99372d902cc"
+        },
+        {
+          "path": "crates/kernel/src/ipc_death_workload.S",
+          "sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3"
+        },
+        {
+          "path": "crates/kernel/src/ipc_multi_workload.S",
+          "sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1"
+        },
+        {
+          "path": "crates/kernel/src/ipc_paths_benchmark.S",
+          "sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606"
+        },
+        {
+          "path": "crates/kernel/src/ipc_payload_workload.S",
+          "sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec"
+        },
+        {
+          "path": "crates/kernel/src/ipc_queue_workload.S",
+          "sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370"
+        },
+        {
+          "path": "crates/kernel/src/ipc_revoke_workload.S",
+          "sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb"
+        },
+        {
+          "path": "crates/kernel/src/ipc_workload.S",
+          "sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465"
+        },
+        {
+          "path": "crates/kernel/src/ipc_workload.rs",
+          "sha256_lf": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21"
+        },
+        {
+          "path": "crates/kernel/src/main.rs",
+          "sha256_lf": "e982449bf1b148b521a011abe566cc9fb17022aa715cbdca33184c9679f09983"
+        },
+        {
+          "path": "crates/kernel/src/memory/mod.rs",
+          "sha256_lf": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0"
+        },
+        {
+          "path": "crates/kernel/src/native_boot.rs",
+          "sha256_lf": "05e2e2ae4241d73afecaf281d58fdfed3db2f1f9e8f5bbcae1deb2f73642b15f"
+        },
+        {
+          "path": "crates/kernel/src/percpu.rs",
+          "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+        },
+        {
+          "path": "crates/kernel/src/platform/config.rs",
+          "sha256_lf": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196"
+        },
+        {
+          "path": "crates/kernel/src/platform/mod.rs",
+          "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+        },
+        {
+          "path": "crates/kernel/src/process.rs",
+          "sha256_lf": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810"
+        },
+        {
+          "path": "crates/kernel/src/process_workload.rs",
+          "sha256_lf": "9f6f63adc2c0727fb415546a2802c7fa7a9bcd1cfb8a1beb69eecaa284f2bf2f"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/config.rs",
+          "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/local.rs",
+          "sha256_lf": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/mod.rs",
+          "sha256_lf": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/task.rs",
+          "sha256_lf": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df"
+        },
+        {
+          "path": "crates/kernel/src/security/testing.S",
+          "sha256_lf": "d0414f46eadf9bb2b5329aaa06dd6f233c5e070f82ca7d489b12c55f510065c1"
+        },
+        {
+          "path": "crates/kernel/src/security/testing.rs",
+          "sha256_lf": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df"
+        },
+        {
+          "path": "crates/kernel/src/security.rs",
+          "sha256_lf": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806"
+        },
+        {
+          "path": "crates/kernel/src/smp.rs",
+          "sha256_lf": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3"
+        },
+        {
+          "path": "crates/kernel/src/supervision.rs",
+          "sha256_lf": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a"
+        },
+        {
+          "path": "crates/kernel/src/supervision_workload.S",
+          "sha256_lf": "5c13e46c80d85407ea13b0b6f6a14a143a73cedc76bbcebeda7050f471def80c"
+        },
+        {
+          "path": "crates/kernel/src/supervision_workload.rs",
+          "sha256_lf": "5a8d267ef4bb87002fd0ce0061adba7b53f98822c54c09dbeae8ec51b9088ddc"
+        },
+        {
+          "path": "crates/kernel/src/sync/mod.rs",
+          "sha256_lf": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da"
+        },
+        {
+          "path": "crates/kernel/src/test_support/arch_probes.S",
+          "sha256_lf": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732"
+        },
+        {
+          "path": "crates/kernel/src/test_support/ipc_inputs.rs",
+          "sha256_lf": "f9e598fecb2e6a7034fa9555f71b4c5ad0506f3cf43204dc85b0890f359a1a1b"
+        },
+        {
+          "path": "crates/kernel/src/test_support/irq_wait.rs",
+          "sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
+        },
+        {
+          "path": "crates/kernel/src/test_support/scheduler_inputs.rs",
+          "sha256_lf": "4c18b8edd47062cb0a802690075eade2a64d2ef2bd8d634aa0e991436e8a2ac7"
+        },
+        {
+          "path": "crates/kernel/src/tests.rs",
+          "sha256_lf": "1d016609499f75b3e16bc96ba9681251ca35313c5b0866ac6a1de5044753aafb"
+        },
+        {
+          "path": "crates/kernel/src/time/mod.rs",
+          "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+        },
+        {
+          "path": "crates/kernel/src/user_copy/testing.rs",
+          "sha256_lf": "14eaf4b40767a63e88bdb284dddf24c11fcf0e3c6c33475bf137168e4ca6f61e"
+        },
+        {
+          "path": "crates/kernel/src/user_copy.rs",
+          "sha256_lf": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0"
+        },
+        {
+          "path": "crates/kernel-core/Cargo.toml",
+          "sha256_lf": "dbeb6358918b8a690af305f32609c0879346d041406f6c799467dc082c5ec362"
+        },
+        {
+          "path": "crates/kernel-core/src/domain/pool.rs",
+          "sha256_lf": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05"
+        },
+        {
+          "path": "crates/kernel-core/src/domain.rs",
+          "sha256_lf": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788"
+        },
+        {
+          "path": "crates/kernel-core/src/elf.rs",
+          "sha256_lf": "faa97534ec072f53c773012af327345dde9a35cece294ac1e436dd7399a79e58"
+        },
+        {
+          "path": "crates/kernel-core/src/execution.rs",
+          "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+        },
+        {
+          "path": "crates/kernel-core/src/handles.rs",
+          "sha256_lf": "6effe77cfae8e5b64f35e7d2eeb4a4052d2dbe01666204bad06cd64a9af43cd2"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/identity.rs",
+          "sha256_lf": "0eb329df587f27963d3ba71ad3e939ef59d84c4175b542216b15315e2a250327"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/mailbox.rs",
+          "sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/tests.rs",
+          "sha256_lf": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/wire.rs",
+          "sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc.rs",
+          "sha256_lf": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4"
+        },
+        {
+          "path": "crates/kernel-core/src/lib.rs",
+          "sha256_lf": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a"
+        },
+        {
+          "path": "crates/kernel-core/src/memory.rs",
+          "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+        },
+        {
+          "path": "crates/kernel-core/src/platform.rs",
+          "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+        },
+        {
+          "path": "crates/kernel-core/src/process.rs",
+          "sha256_lf": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983"
+        },
+        {
+          "path": "crates/kernel-core/src/scheduling/ownership.rs",
+          "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+        },
+        {
+          "path": "crates/kernel-core/src/scheduling.rs",
+          "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+        },
+        {
+          "path": "crates/kernel-core/src/supervision.rs",
+          "sha256_lf": "96d0ccd94f13e4d1e47720e01c308b3c9e8dd37c216ed05078fc0c4ecefb7ca6"
+        },
+        {
+          "path": "crates/kernel-core/src/time.rs",
+          "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+        },
+        {
+          "path": "crates/kernel-core/src/user_copy.rs",
+          "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+        },
+        {
+          "path": "crates/kernel-core/src/wait.rs",
+          "sha256_lf": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332"
+        },
+        {
+          "path": "crates/kernel-core/src/window.rs",
+          "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+        },
+        {
+          "path": "crates/kernel-core/tests/boot_description.rs",
+          "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+        },
+        {
+          "path": "crates/kernel-core/tests/bootstrap_grants.rs",
+          "sha256_lf": "e7e88c94a1e741bd7677868af0af3183c286ef42c5200aaed38775da7fd425c0"
+        },
+        {
+          "path": "crates/kernel-core/tests/elf_contract.rs",
+          "sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5"
+        },
+        {
+          "path": "crates/kernel-core/tests/event_revocation.rs",
+          "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+        },
+        {
+          "path": "crates/kernel-core/tests/handle_contract.rs",
+          "sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c"
+        },
+        {
+          "path": "crates/kernel-core/tests/process_protocol.rs",
+          "sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447"
+        },
+        {
+          "path": "crates/kernel-core/tests/wait.rs",
+          "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+        },
+        {
+          "path": "rust-toolchain.toml",
+          "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+        },
+        {
+          "path": "tests/native-apps/Cargo.toml",
+          "sha256_lf": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad"
+        },
+        {
+          "path": "tests/native-apps/build.rs",
+          "sha256_lf": "bdc015f0fd2a44f8ac4d4e9330c96e72ce5c66a664d5b5a5f7df1bb240f54815"
+        },
+        {
+          "path": "tests/native-apps/src/abi-client.rs",
+          "sha256_lf": "20935d704d12997c1351f2185dea1b77fb6c5a80bdcd7b22e6e31724b0fc9e0b"
+        },
+        {
+          "path": "tests/native-apps/src/abi_steps.rs",
+          "sha256_lf": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7"
+        },
+        {
+          "path": "tests/native-apps/src/lifecycle-client.rs",
+          "sha256_lf": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677"
+        },
+        {
+          "path": "tests/native-apps/src/lifecycle-peer.rs",
+          "sha256_lf": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278"
+        }
+      ]
+    },
+    "native-counter-client-2-positive.json": {
+      "profiles": {
+        "dev": {
+          "applications": {
+            "client": {
+              "artifact": "target/kernel/apps/dev-client-9e36e3605d067d3df524cb386ded26bc13b484091b5a0351a1eed36276ccd03e.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 816288,
+              "sha256": "9e36e3605d067d3df524cb386ded26bc13b484091b5a0351a1eed36276ccd03e"
+            },
+            "root": {
+              "artifact": "target/kernel/apps/dev-root-c9ebe3748470b3c470d1c18894241b0247f514455b3a12b0681e0d6c6fe52942.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 833888,
+              "sha256": "c9ebe3748470b3c470d1c18894241b0247f514455b3a12b0681e0d6c6fe52942"
+            },
+            "service": {
+              "artifact": "target/kernel/apps/dev-service-773e32ec0c7c32bafb9b4ee5514de36026e8da487ef5671290a5d1ca54f18b77.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 754896,
+              "sha256": "773e32ec0c7c32bafb9b4ee5514de36026e8da487ef5671290a5d1ca54f18b77"
+            }
+          },
+          "events": [
+            {
+              "event": "native-root-image",
+              "format": "elf64",
+              "generation": 1
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 0
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 1
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 5,
+              "ipc_wakes": 5,
+              "owner": 0,
+              "slot": 1,
+              "state": 2
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "exit",
+              "selector": 1
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 6,
+              "ipc_wakes": 5,
+              "owner": 1,
+              "slot": 4,
+              "state": 7
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                4
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                4,
+                3,
+                12,
+                1,
+                2
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 5,
+              "ipc_wakes": 5,
+              "owner": 0,
+              "slot": 0,
+              "state": 2
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                4,
+                3,
+                12,
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "event": "native-task",
+              "generation": 1,
+              "ipc_blocks": 5,
+              "ipc_wakes": 5,
+              "peer_faults_at_exit": 0,
+              "state": 2,
+              "terminal_blocks": 3
+            },
+            {
+              "all_blocked": 0,
+              "event": "native-scheduler"
+            },
+            {
+              "event": "native-user-report",
+              "words": [
+                5426640009636887000,
+                4,
+                3,
+                12,
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "event": "native-boot",
+              "frames_restored": true,
+              "live_domains": 0,
+              "live_processes": 0,
+              "owners_released": true,
+              "root_exit": 0,
+              "status": "complete"
+            }
+          ],
+          "kernel_build": {
+            "artifact": "target/kernel/dev-native-apps.elf",
+            "compiler": "1.99.0",
+            "elf_bytes": 6600280,
+            "features": [
+              "machine-events",
+              "diagnostics",
+              "native-apps"
+            ],
+            "load_bytes": 3102167,
+            "memory_bytes": 4200087,
+            "sha256": "ddc40d47706cde0e313c779ae14aafbbe14642a2a765658257cbae4a25c1b662",
+            "target": "aarch64-unknown-none"
+          },
+          "result": {
+            "client_exit": "success",
+            "client_loaded_as_elf": true,
+            "counter_final": 12,
+            "frames_restored": true,
+            "guest_shutdown": true,
+            "hardware": "UNKNOWN",
+            "owners_released": true,
+            "production_supervisor_tested": true,
+            "requests_completed": 3,
+            "resource_leaks": 0,
+            "scope": "ordinary production session finishes after its client; separate persistent and crash scenarios remain required",
+            "service_instance": 1,
+            "service_restarted": false,
+            "supervisor_ready": true
+          },
+          "run": {
+            "accelerator": "TCG",
+            "active_cpus": 2,
+            "arguments": [
+              "-machine",
+              "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+              "-cpu",
+              "cortex-a57",
+              "-accel",
+              "tcg",
+              "-smp",
+              "2",
+              "-m",
+              "256M",
+              "-display",
+              "none",
+              "-serial",
+              "stdio",
+              "-monitor",
+              "none",
+              "-nic",
+              "none",
+              "-no-reboot",
+              "-kernel",
+              "target/kernel/dev-counter-client-2-positive.elf"
+            ],
+            "configured_cpus": 2,
+            "elf_sha256": "ddc40d47706cde0e313c779ae14aafbbe14642a2a765658257cbae4a25c1b662",
+            "measurement_claim": "emulator timer ticks; not hardware throughput",
+            "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+            "timeout_seconds": 30
+          }
+        },
+        "prod": {
+          "applications": {
+            "client": {
+              "artifact": "target/kernel/apps/prod-client-ba301c0bd27d7ae42d481ebb5f05a5b778b0bc68a1b0d003d1d243184c2de086.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 32504,
+              "sha256": "ba301c0bd27d7ae42d481ebb5f05a5b778b0bc68a1b0d003d1d243184c2de086"
+            },
+            "root": {
+              "artifact": "target/kernel/apps/prod-root-8fd7a77f449ef768fd5007b4cb681bb33a2e1f5167475415648d0a8953d79f10.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 41384,
+              "sha256": "8fd7a77f449ef768fd5007b4cb681bb33a2e1f5167475415648d0a8953d79f10"
+            },
+            "service": {
+              "artifact": "target/kernel/apps/prod-service-f0e9b3c8ea639e1c99326bb977cfc0441fd1c8f1b53ad9a682e6d3bce19cece6.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 13960,
+              "sha256": "f0e9b3c8ea639e1c99326bb977cfc0441fd1c8f1b53ad9a682e6d3bce19cece6"
+            }
+          },
+          "events": [
+            {
+              "event": "native-root-image",
+              "format": "elf64",
+              "generation": 1
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 0
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 1
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 5,
+              "ipc_wakes": 5,
+              "owner": 0,
+              "slot": 1,
+              "state": 2
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "exit",
+              "selector": 1
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 6,
+              "ipc_wakes": 5,
+              "owner": 1,
+              "slot": 4,
+              "state": 7
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 4,
+              "ipc_wakes": 4,
+              "owner": 0,
+              "slot": 0,
+              "state": 2
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                4,
+                3,
+                12,
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "event": "native-task",
+              "generation": 1,
+              "ipc_blocks": 4,
+              "ipc_wakes": 4,
+              "peer_faults_at_exit": 0,
+              "state": 2,
+              "terminal_blocks": 3
+            },
+            {
+              "all_blocked": 0,
+              "event": "native-scheduler"
+            },
+            {
+              "event": "native-user-report",
+              "words": [
+                5426640009636887000,
+                4,
+                3,
+                12,
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "event": "native-boot",
+              "frames_restored": true,
+              "live_domains": 0,
+              "live_processes": 0,
+              "owners_released": true,
+              "root_exit": 0,
+              "status": "complete"
+            }
+          ],
+          "kernel_build": {
+            "artifact": "target/kernel/prod-native-apps.elf",
+            "compiler": "1.99.0",
+            "elf_bytes": 1551000,
+            "features": [
+              "machine-events",
+              "native-apps"
+            ],
+            "load_bytes": 513968,
+            "memory_bytes": 1607792,
+            "sha256": "ab700a8425224213d177d501f13e4365837ecc919399e058b98971df85d31a5f",
+            "target": "aarch64-unknown-none"
+          },
+          "result": {
+            "client_exit": "success",
+            "client_loaded_as_elf": true,
+            "counter_final": 12,
+            "frames_restored": true,
+            "guest_shutdown": true,
+            "hardware": "UNKNOWN",
+            "owners_released": true,
+            "production_supervisor_tested": true,
+            "requests_completed": 3,
+            "resource_leaks": 0,
+            "scope": "ordinary production session finishes after its client; separate persistent and crash scenarios remain required",
+            "service_instance": 1,
+            "service_restarted": false,
+            "supervisor_ready": true
+          },
+          "run": {
+            "accelerator": "TCG",
+            "active_cpus": 2,
+            "arguments": [
+              "-machine",
+              "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+              "-cpu",
+              "cortex-a57",
+              "-accel",
+              "tcg",
+              "-smp",
+              "2",
+              "-m",
+              "256M",
+              "-display",
+              "none",
+              "-serial",
+              "stdio",
+              "-monitor",
+              "none",
+              "-nic",
+              "none",
+              "-no-reboot",
+              "-kernel",
+              "target/kernel/prod-counter-client-2-positive.elf"
+            ],
+            "configured_cpus": 2,
+            "elf_sha256": "ab700a8425224213d177d501f13e4365837ecc919399e058b98971df85d31a5f",
+            "measurement_claim": "emulator timer ticks; not hardware throughput",
+            "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+            "timeout_seconds": 30
+          }
+        }
+      },
+      "schema_version": 1,
+      "scope": "standalone ELF native IPC smoke, not complete Phase 3.7 or hardware acceptance",
+      "source_files": [
+        {
+          "path": ".cargo/config.toml",
+          "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+        },
+        {
+          "path": "Cargo.lock",
+          "sha256_lf": "4eac83a59c99b5a0b7ad3479c339a07aeff3d59567dabaf6f2abf3931c56781c"
+        },
+        {
+          "path": "Cargo.toml",
+          "sha256_lf": "072ba3468e4a79777e87f53ead193fb4e159d4b7fc17bbf68e7881d03e44f137"
+        },
+        {
+          "path": "apps/native-apps/Cargo.toml",
+          "sha256_lf": "ecfa79cf6826f62ffe2f67236aefac1cb497f7c2f6d150d0def9713145a9534c"
+        },
+        {
+          "path": "apps/native-apps/build.rs",
+          "sha256_lf": "f3100883829de10842c65edcb5ea332261755e00b88f48766fd1310a02e89e6f"
+        },
+        {
+          "path": "apps/native-apps/linker.ld",
+          "sha256_lf": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a"
+        },
+        {
+          "path": "apps/native-apps/src/client.rs",
+          "sha256_lf": "52278939c70cc466e8046c7eaa0f5c5980105bcaab3ab239b71cd4345a168bb7"
+        },
+        {
+          "path": "apps/native-apps/src/counter-client.rs",
+          "sha256_lf": "9646416fb9270a53fc6dd85293495f686078b520471628688d8395f938195d37"
+        },
+        {
+          "path": "apps/native-apps/src/counter-service.rs",
+          "sha256_lf": "635fca7cd71c649dd20a773e214ed49f3752ccc0a0f5b9241d82c39ebcb9ee1c"
+        },
+        {
+          "path": "apps/native-apps/src/lib.rs",
+          "sha256_lf": "322a8319f94df8d186f33f6edcd71d4f42fad3bb5f0a3f973ef14941f8c29936"
+        },
+        {
+          "path": "apps/native-apps/src/supervision.rs",
+          "sha256_lf": "deababd624234c547c23d5d4d2e1034b401bebaaeb515bea34095a052669dda6"
+        },
+        {
+          "path": "apps/native-apps/src/supervisor.rs",
+          "sha256_lf": "7d65f92ce1283bbecb2dfd5e5a88b13cbeae289fa5ddd2a4b8e44b6fe1cb6c99"
+        },
+        {
+          "path": "apps/native-apps/tests/supervision.rs",
+          "sha256_lf": "9e432c2875e322c7ef32acec0b0fc9f67b4f081c80dce7ebe9e53736e7eb06cb"
+        },
+        {
+          "path": "apps/native-runtime/Cargo.toml",
+          "sha256_lf": "9597f67e385b3486ece0be3c9ac4c18ed86da694bbc56f65110b392e17afb110"
+        },
+        {
+          "path": "apps/native-runtime/src/lib.rs",
+          "sha256_lf": "765beb9ceca178e6cd8365103da2e9310343aaf31a1e0c5d802b39dc815c0d71"
+        },
+        {
+          "path": "apps/native-runtime/tests/counter.rs",
+          "sha256_lf": "4f1d3d35c19c0a34060294e09ec0dee08b5b2f0bce6fc33c4d91a686459e1e63"
+        },
+        {
+          "path": "assets/branding/boot-logo.txt",
+          "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+        },
+        {
+          "path": "crates/kernel/Cargo.toml",
+          "sha256_lf": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5"
+        },
+        {
+          "path": "crates/kernel/assets/minimal-exit.elf",
+          "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+        },
+        {
+          "path": "crates/kernel/build.rs",
+          "sha256_lf": "b918684548caf593126da85f79ac702a917591bbb9d092de9da3e2c8c1df2623"
+        },
+        {
+          "path": "crates/kernel/linker.ld",
+          "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/context.rs",
+          "sha256_lf": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/entry.S",
+          "sha256_lf": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/mod.rs",
+          "sha256_lf": "e54606a21a0152921041ddab5fef0ede92fbcc6f436026acac4770b1455e5e2e"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/page.rs",
+          "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+        },
+        {
+          "path": "crates/kernel/src/asid.rs",
+          "sha256_lf": "7216e67ee636e5df1679728ee0911b90fd77bc0a76371dd090b300d8d205cd7e"
+        },
+        {
+          "path": "crates/kernel/src/boot_workload.S",
+          "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+        },
+        {
+          "path": "crates/kernel/src/boot_workload.rs",
+          "sha256_lf": "ec7e1247f19e7e31ec586ddd173ab265437eaf63641460b08965a8a82ee6c2ac"
+        },
+        {
+          "path": "crates/kernel/src/diagnostics/mod.rs",
+          "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+        },
+        {
+          "path": "crates/kernel/src/execution.rs",
+          "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+        },
+        {
+          "path": "crates/kernel/src/hal/mod.rs",
+          "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+        },
+        {
+          "path": "crates/kernel/src/handles/testing.rs",
+          "sha256_lf": "10896a336d12aa9b43bdd3d71c0fd48a1a580aa0aa3488fd73be7673e5a96fa4"
+        },
+        {
+          "path": "crates/kernel/src/handles.rs",
+          "sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2"
+        },
+        {
+          "path": "crates/kernel/src/interrupt/mod.rs",
+          "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+        },
+        {
+          "path": "crates/kernel/src/ipc/deferred.rs",
+          "sha256_lf": "2dd4e5bddd94a02e05d743508c4e453fe175d990e5550f40ab21d70138d91ba4"
+        },
+        {
+          "path": "crates/kernel/src/ipc/native.rs",
+          "sha256_lf": "bcf6931bd66b9648110bd35be16d6358eda9478a901328c49c7ce42b089d87ac"
+        },
+        {
+          "path": "crates/kernel/src/ipc/storage.rs",
+          "sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991"
+        },
+        {
+          "path": "crates/kernel/src/ipc.rs",
+          "sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933"
+        },
+        {
+          "path": "crates/kernel/src/ipc_authority_workload.S",
+          "sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997"
+        },
+        {
+          "path": "crates/kernel/src/ipc_benchmark.S",
+          "sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835"
+        },
+        {
+          "path": "crates/kernel/src/ipc_benchmark.rs",
+          "sha256_lf": "9f02333e41c00ae18e7bd5eeb87a49ec07606e2b496ea87ab736b99372d902cc"
+        },
+        {
+          "path": "crates/kernel/src/ipc_death_workload.S",
+          "sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3"
+        },
+        {
+          "path": "crates/kernel/src/ipc_multi_workload.S",
+          "sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1"
+        },
+        {
+          "path": "crates/kernel/src/ipc_paths_benchmark.S",
+          "sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606"
+        },
+        {
+          "path": "crates/kernel/src/ipc_payload_workload.S",
+          "sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec"
+        },
+        {
+          "path": "crates/kernel/src/ipc_queue_workload.S",
+          "sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370"
+        },
+        {
+          "path": "crates/kernel/src/ipc_revoke_workload.S",
+          "sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb"
+        },
+        {
+          "path": "crates/kernel/src/ipc_workload.S",
+          "sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465"
+        },
+        {
+          "path": "crates/kernel/src/ipc_workload.rs",
+          "sha256_lf": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21"
+        },
+        {
+          "path": "crates/kernel/src/main.rs",
+          "sha256_lf": "e982449bf1b148b521a011abe566cc9fb17022aa715cbdca33184c9679f09983"
+        },
+        {
+          "path": "crates/kernel/src/memory/mod.rs",
+          "sha256_lf": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0"
+        },
+        {
+          "path": "crates/kernel/src/native_boot.rs",
+          "sha256_lf": "05e2e2ae4241d73afecaf281d58fdfed3db2f1f9e8f5bbcae1deb2f73642b15f"
+        },
+        {
+          "path": "crates/kernel/src/percpu.rs",
+          "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+        },
+        {
+          "path": "crates/kernel/src/platform/config.rs",
+          "sha256_lf": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196"
+        },
+        {
+          "path": "crates/kernel/src/platform/mod.rs",
+          "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+        },
+        {
+          "path": "crates/kernel/src/process.rs",
+          "sha256_lf": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810"
+        },
+        {
+          "path": "crates/kernel/src/process_workload.rs",
+          "sha256_lf": "9f6f63adc2c0727fb415546a2802c7fa7a9bcd1cfb8a1beb69eecaa284f2bf2f"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/config.rs",
+          "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/local.rs",
+          "sha256_lf": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/mod.rs",
+          "sha256_lf": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/task.rs",
+          "sha256_lf": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df"
+        },
+        {
+          "path": "crates/kernel/src/security/testing.S",
+          "sha256_lf": "d0414f46eadf9bb2b5329aaa06dd6f233c5e070f82ca7d489b12c55f510065c1"
+        },
+        {
+          "path": "crates/kernel/src/security/testing.rs",
+          "sha256_lf": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df"
+        },
+        {
+          "path": "crates/kernel/src/security.rs",
+          "sha256_lf": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806"
+        },
+        {
+          "path": "crates/kernel/src/smp.rs",
+          "sha256_lf": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3"
+        },
+        {
+          "path": "crates/kernel/src/supervision.rs",
+          "sha256_lf": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a"
+        },
+        {
+          "path": "crates/kernel/src/supervision_workload.S",
+          "sha256_lf": "5c13e46c80d85407ea13b0b6f6a14a143a73cedc76bbcebeda7050f471def80c"
+        },
+        {
+          "path": "crates/kernel/src/supervision_workload.rs",
+          "sha256_lf": "5a8d267ef4bb87002fd0ce0061adba7b53f98822c54c09dbeae8ec51b9088ddc"
+        },
+        {
+          "path": "crates/kernel/src/sync/mod.rs",
+          "sha256_lf": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da"
+        },
+        {
+          "path": "crates/kernel/src/test_support/arch_probes.S",
+          "sha256_lf": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732"
+        },
+        {
+          "path": "crates/kernel/src/test_support/ipc_inputs.rs",
+          "sha256_lf": "f9e598fecb2e6a7034fa9555f71b4c5ad0506f3cf43204dc85b0890f359a1a1b"
+        },
+        {
+          "path": "crates/kernel/src/test_support/irq_wait.rs",
+          "sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
+        },
+        {
+          "path": "crates/kernel/src/test_support/scheduler_inputs.rs",
+          "sha256_lf": "4c18b8edd47062cb0a802690075eade2a64d2ef2bd8d634aa0e991436e8a2ac7"
+        },
+        {
+          "path": "crates/kernel/src/tests.rs",
+          "sha256_lf": "1d016609499f75b3e16bc96ba9681251ca35313c5b0866ac6a1de5044753aafb"
+        },
+        {
+          "path": "crates/kernel/src/time/mod.rs",
+          "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+        },
+        {
+          "path": "crates/kernel/src/user_copy/testing.rs",
+          "sha256_lf": "14eaf4b40767a63e88bdb284dddf24c11fcf0e3c6c33475bf137168e4ca6f61e"
+        },
+        {
+          "path": "crates/kernel/src/user_copy.rs",
+          "sha256_lf": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0"
+        },
+        {
+          "path": "crates/kernel-core/Cargo.toml",
+          "sha256_lf": "dbeb6358918b8a690af305f32609c0879346d041406f6c799467dc082c5ec362"
+        },
+        {
+          "path": "crates/kernel-core/src/domain/pool.rs",
+          "sha256_lf": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05"
+        },
+        {
+          "path": "crates/kernel-core/src/domain.rs",
+          "sha256_lf": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788"
+        },
+        {
+          "path": "crates/kernel-core/src/elf.rs",
+          "sha256_lf": "faa97534ec072f53c773012af327345dde9a35cece294ac1e436dd7399a79e58"
+        },
+        {
+          "path": "crates/kernel-core/src/execution.rs",
+          "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+        },
+        {
+          "path": "crates/kernel-core/src/handles.rs",
+          "sha256_lf": "6effe77cfae8e5b64f35e7d2eeb4a4052d2dbe01666204bad06cd64a9af43cd2"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/identity.rs",
+          "sha256_lf": "0eb329df587f27963d3ba71ad3e939ef59d84c4175b542216b15315e2a250327"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/mailbox.rs",
+          "sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/tests.rs",
+          "sha256_lf": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/wire.rs",
+          "sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc.rs",
+          "sha256_lf": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4"
+        },
+        {
+          "path": "crates/kernel-core/src/lib.rs",
+          "sha256_lf": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a"
+        },
+        {
+          "path": "crates/kernel-core/src/memory.rs",
+          "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+        },
+        {
+          "path": "crates/kernel-core/src/platform.rs",
+          "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+        },
+        {
+          "path": "crates/kernel-core/src/process.rs",
+          "sha256_lf": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983"
+        },
+        {
+          "path": "crates/kernel-core/src/scheduling/ownership.rs",
+          "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+        },
+        {
+          "path": "crates/kernel-core/src/scheduling.rs",
+          "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+        },
+        {
+          "path": "crates/kernel-core/src/supervision.rs",
+          "sha256_lf": "96d0ccd94f13e4d1e47720e01c308b3c9e8dd37c216ed05078fc0c4ecefb7ca6"
+        },
+        {
+          "path": "crates/kernel-core/src/time.rs",
+          "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+        },
+        {
+          "path": "crates/kernel-core/src/user_copy.rs",
+          "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+        },
+        {
+          "path": "crates/kernel-core/src/wait.rs",
+          "sha256_lf": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332"
+        },
+        {
+          "path": "crates/kernel-core/src/window.rs",
+          "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+        },
+        {
+          "path": "crates/kernel-core/tests/boot_description.rs",
+          "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+        },
+        {
+          "path": "crates/kernel-core/tests/bootstrap_grants.rs",
+          "sha256_lf": "e7e88c94a1e741bd7677868af0af3183c286ef42c5200aaed38775da7fd425c0"
+        },
+        {
+          "path": "crates/kernel-core/tests/elf_contract.rs",
+          "sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5"
+        },
+        {
+          "path": "crates/kernel-core/tests/event_revocation.rs",
+          "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+        },
+        {
+          "path": "crates/kernel-core/tests/handle_contract.rs",
+          "sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c"
+        },
+        {
+          "path": "crates/kernel-core/tests/process_protocol.rs",
+          "sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447"
+        },
+        {
+          "path": "crates/kernel-core/tests/wait.rs",
+          "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+        },
+        {
+          "path": "rust-toolchain.toml",
+          "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+        },
+        {
+          "path": "tests/native-apps/Cargo.toml",
+          "sha256_lf": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad"
+        },
+        {
+          "path": "tests/native-apps/build.rs",
+          "sha256_lf": "bdc015f0fd2a44f8ac4d4e9330c96e72ce5c66a664d5b5a5f7df1bb240f54815"
+        },
+        {
+          "path": "tests/native-apps/src/abi-client.rs",
+          "sha256_lf": "20935d704d12997c1351f2185dea1b77fb6c5a80bdcd7b22e6e31724b0fc9e0b"
+        },
+        {
+          "path": "tests/native-apps/src/abi_steps.rs",
+          "sha256_lf": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7"
+        },
+        {
+          "path": "tests/native-apps/src/lifecycle-client.rs",
+          "sha256_lf": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677"
+        },
+        {
+          "path": "tests/native-apps/src/lifecycle-peer.rs",
+          "sha256_lf": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278"
+        }
+      ]
+    },
+    "native-selftest-lifecycle-peer-6-positive.json": {
+      "profiles": {
+        "dev": {
+          "applications": {
+            "client": {
+              "artifact": "target/kernel/apps/dev-client-075fad98db5085a2e83f94b5555ea744695a6fe272b15c9bc23424dc20e6adcb.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 808984,
+              "sha256": "075fad98db5085a2e83f94b5555ea744695a6fe272b15c9bc23424dc20e6adcb"
+            },
+            "root": {
+              "artifact": "target/kernel/apps/dev-root-ad47b7b552cfe4cfed295bb499767af0644a1465730d2e9879de500b9b1de3b6.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 818872,
+              "sha256": "ad47b7b552cfe4cfed295bb499767af0644a1465730d2e9879de500b9b1de3b6"
+            },
+            "service": {
+              "artifact": "target/kernel/apps/dev-service-773e32ec0c7c32bafb9b4ee5514de36026e8da487ef5671290a5d1ca54f18b77.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 754896,
+              "sha256": "773e32ec0c7c32bafb9b4ee5514de36026e8da487ef5671290a5d1ca54f18b77"
+            }
+          },
+          "events": [
+            {
+              "event": "native-root-image",
+              "format": "elf64",
+              "generation": 1
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3
+              ]
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 0
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12
+              ]
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 1
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 5,
+              "ipc_wakes": 4,
+              "owner": 1,
+              "slot": 4,
+              "state": 7
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 2,
+              "selector": 0
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 8,
+              "ipc_wakes": 8,
+              "owner": 0,
+              "slot": 1,
+              "state": 2
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "exit",
+              "selector": 1
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 2
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 0,
+              "ipc_wakes": 0,
+              "owner": 1,
+              "slot": 5,
+              "state": 3
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "fault",
+              "selector": 2
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 2,
+              "ipc_blocks": 7,
+              "ipc_wakes": 6,
+              "owner": 1,
+              "slot": 4,
+              "state": 7
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 2,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12,
+                0,
+                0,
+                21,
+                3
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12,
+                0,
+                0,
+                21,
+                3,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 9,
+              "ipc_wakes": 9,
+              "owner": 0,
+              "slot": 0,
+              "state": 2
+            },
+            {
+              "event": "native-task",
+              "generation": 1,
+              "ipc_blocks": 9,
+              "ipc_wakes": 9,
+              "peer_faults_at_exit": 0,
+              "state": 2,
+              "terminal_blocks": 6
+            },
+            {
+              "all_blocked": 0,
+              "event": "native-scheduler"
+            },
+            {
+              "event": "native-user-report",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12,
+                0,
+                0,
+                21,
+                3,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-boot",
+              "frames_restored": true,
+              "live_domains": 0,
+              "live_processes": 0,
+              "owners_released": true,
+              "root_exit": 0,
+              "status": "complete"
+            }
+          ],
+          "kernel_build": {
+            "artifact": "target/kernel/dev-native-apps.elf",
+            "compiler": "1.99.0",
+            "elf_bytes": 6575704,
+            "features": [
+              "machine-events",
+              "diagnostics",
+              "native-apps"
+            ],
+            "load_bytes": 3079847,
+            "memory_bytes": 4177767,
+            "sha256": "69e8033138e0414bef855d74ffc987a6c09c2e8c62204d2438a6a9d1cd19807a",
+            "target": "aarch64-unknown-none"
+          },
+          "result": {
+            "client_exit": "success",
+            "counter_final": 12,
+            "external_actor_fault_contained": true,
+            "frames_restored": true,
+            "fresh_binding_completed": true,
+            "hardware": "UNKNOWN",
+            "observed_steps": {
+              "10": [
+                1,
+                1,
+                0
+              ],
+              "11": [
+                13,
+                0,
+                0
+              ],
+              "12": [
+                5,
+                12,
+                12
+              ],
+              "13": [
+                2,
+                0,
+                258
+              ],
+              "14": [
+                12,
+                0,
+                0
+              ],
+              "15": [
+                3,
+                3,
+                2
+              ],
+              "16": [
+                2,
+                2,
+                0
+              ],
+              "17": [
+                0,
+                514,
+                0
+              ],
+              "18": [
+                1,
+                0,
+                0
+              ],
+              "19": [
+                11,
+                2,
+                0
+              ],
+              "20": [
+                12,
+                0,
+                0
+              ],
+              "21": [
+                3,
+                0,
+                0
+              ]
+            },
+            "old_binding_rejected": true,
+            "production_recovery_method_tested": true,
+            "production_supervisor_tested": false,
+            "resource_leaks": 0,
+            "restart_initial_value": 0,
+            "scope": "production kernel/counter service through an external lifecycle ABI client; does not test production supervisor recovery policy",
+            "service_crash_restarted": false,
+            "service_stop_restarted": true
+          },
+          "run": {
+            "accelerator": "TCG",
+            "active_cpus": 2,
+            "arguments": [
+              "-machine",
+              "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+              "-cpu",
+              "cortex-a57",
+              "-accel",
+              "tcg",
+              "-smp",
+              "2",
+              "-m",
+              "256M",
+              "-display",
+              "none",
+              "-serial",
+              "stdio",
+              "-monitor",
+              "none",
+              "-nic",
+              "none",
+              "-no-reboot",
+              "-kernel",
+              "target/kernel/dev-selftest-lifecycle-peer-6-positive.elf"
+            ],
+            "configured_cpus": 2,
+            "elf_sha256": "69e8033138e0414bef855d74ffc987a6c09c2e8c62204d2438a6a9d1cd19807a",
+            "measurement_claim": "emulator timer ticks; not hardware throughput",
+            "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+            "timeout_seconds": 30
+          }
+        },
+        "prod": {
+          "applications": {
+            "client": {
+              "artifact": "target/kernel/apps/prod-client-79914c5449dfd3629378a6a4a32f5d38ff7fe1709e022545219d72ad7e0a1e10.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 29392,
+              "sha256": "79914c5449dfd3629378a6a4a32f5d38ff7fe1709e022545219d72ad7e0a1e10"
+            },
+            "root": {
+              "artifact": "target/kernel/apps/prod-root-9af5be480acbf676b1cd389fdd63db1dbd3e4f86d9d14849d365e2f521375ac8.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 37384,
+              "sha256": "9af5be480acbf676b1cd389fdd63db1dbd3e4f86d9d14849d365e2f521375ac8"
+            },
+            "service": {
+              "artifact": "target/kernel/apps/prod-service-f0e9b3c8ea639e1c99326bb977cfc0441fd1c8f1b53ad9a682e6d3bce19cece6.elf",
+              "host_extracted_raw": false,
+              "original_elf_bytes": 13960,
+              "sha256": "f0e9b3c8ea639e1c99326bb977cfc0441fd1c8f1b53ad9a682e6d3bce19cece6"
+            }
+          },
+          "events": [
+            {
+              "event": "native-root-image",
+              "format": "elf64",
+              "generation": 1
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3
+              ]
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 0
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12
+              ]
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 1
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 6,
+              "ipc_wakes": 5,
+              "owner": 1,
+              "slot": 4,
+              "state": 7
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 2,
+              "selector": 0
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 8,
+              "ipc_wakes": 8,
+              "owner": 0,
+              "slot": 1,
+              "state": 2
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "exit",
+              "selector": 1
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-image",
+              "format": "elf64",
+              "generation": 1,
+              "selector": 2
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 0,
+              "ipc_wakes": 0,
+              "owner": 1,
+              "slot": 5,
+              "state": 3
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 1,
+              "kind": "fault",
+              "selector": 2
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0
+              ]
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 2,
+              "ipc_blocks": 7,
+              "ipc_wakes": 6,
+              "owner": 1,
+              "slot": 4,
+              "state": 7
+            },
+            {
+              "code": 0,
+              "event": "native-completion",
+              "generation": 2,
+              "kind": "terminated",
+              "selector": 0
+            },
+            {
+              "event": "native-process-terminal",
+              "exit_code": 0,
+              "generation": 1,
+              "ipc_blocks": 10,
+              "ipc_wakes": 10,
+              "owner": 0,
+              "slot": 0,
+              "state": 2
+            },
+            {
+              "event": "native-report-progress",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12,
+                0,
+                0,
+                21,
+                3,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-task",
+              "generation": 1,
+              "ipc_blocks": 10,
+              "ipc_wakes": 10,
+              "peer_faults_at_exit": 0,
+              "state": 2,
+              "terminal_blocks": 7
+            },
+            {
+              "all_blocked": 0,
+              "event": "native-scheduler"
+            },
+            {
+              "event": "native-user-report",
+              "words": [
+                5426640009636887000,
+                3,
+                10,
+                1,
+                1,
+                0,
+                11,
+                13,
+                0,
+                0,
+                12,
+                5,
+                12,
+                12,
+                13,
+                2,
+                0,
+                258,
+                14,
+                12,
+                0,
+                0,
+                15,
+                3,
+                3,
+                2,
+                16,
+                2,
+                2,
+                0,
+                17,
+                0,
+                514,
+                0,
+                18,
+                1,
+                0,
+                0,
+                19,
+                11,
+                2,
+                0,
+                20,
+                12,
+                0,
+                0,
+                21,
+                3,
+                0,
+                0
+              ]
+            },
+            {
+              "event": "native-boot",
+              "frames_restored": true,
+              "live_domains": 0,
+              "live_processes": 0,
+              "owners_released": true,
+              "root_exit": 0,
+              "status": "complete"
+            }
+          ],
+          "kernel_build": {
+            "artifact": "target/kernel/prod-native-apps.elf",
+            "compiler": "1.99.0",
+            "elf_bytes": 1542752,
+            "features": [
+              "machine-events",
+              "native-apps"
+            ],
+            "load_bytes": 506864,
+            "memory_bytes": 1600688,
+            "sha256": "a9d02a0d349e75c9eccd9c51eeb52f1d50199a794feb52989c1d34ecb589aa6b",
+            "target": "aarch64-unknown-none"
+          },
+          "result": {
+            "client_exit": "success",
+            "counter_final": 12,
+            "external_actor_fault_contained": true,
+            "frames_restored": true,
+            "fresh_binding_completed": true,
+            "hardware": "UNKNOWN",
+            "observed_steps": {
+              "10": [
+                1,
+                1,
+                0
+              ],
+              "11": [
+                13,
+                0,
+                0
+              ],
+              "12": [
+                5,
+                12,
+                12
+              ],
+              "13": [
+                2,
+                0,
+                258
+              ],
+              "14": [
+                12,
+                0,
+                0
+              ],
+              "15": [
+                3,
+                3,
+                2
+              ],
+              "16": [
+                2,
+                2,
+                0
+              ],
+              "17": [
+                0,
+                514,
+                0
+              ],
+              "18": [
+                1,
+                0,
+                0
+              ],
+              "19": [
+                11,
+                2,
+                0
+              ],
+              "20": [
+                12,
+                0,
+                0
+              ],
+              "21": [
+                3,
+                0,
+                0
+              ]
+            },
+            "old_binding_rejected": true,
+            "production_recovery_method_tested": true,
+            "production_supervisor_tested": false,
+            "resource_leaks": 0,
+            "restart_initial_value": 0,
+            "scope": "production kernel/counter service through an external lifecycle ABI client; does not test production supervisor recovery policy",
+            "service_crash_restarted": false,
+            "service_stop_restarted": true
+          },
+          "run": {
+            "accelerator": "TCG",
+            "active_cpus": 2,
+            "arguments": [
+              "-machine",
+              "virt-10.1,gic-version=3,virtualization=on,its=off,dtb-randomness=off",
+              "-cpu",
+              "cortex-a57",
+              "-accel",
+              "tcg",
+              "-smp",
+              "2",
+              "-m",
+              "256M",
+              "-display",
+              "none",
+              "-serial",
+              "stdio",
+              "-monitor",
+              "none",
+              "-nic",
+              "none",
+              "-no-reboot",
+              "-kernel",
+              "target/kernel/prod-selftest-lifecycle-peer-6-positive.elf"
+            ],
+            "configured_cpus": 2,
+            "elf_sha256": "a9d02a0d349e75c9eccd9c51eeb52f1d50199a794feb52989c1d34ecb589aa6b",
+            "measurement_claim": "emulator timer ticks; not hardware throughput",
+            "qemu_version": "QEMU emulator version 10.1.0 (v10.1.0-12094-g5fa1466eb8-dirty)\r\nCopyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers\r\n",
+            "timeout_seconds": 30
+          }
+        }
+      },
+      "schema_version": 1,
+      "scope": "standalone ELF native IPC smoke, not complete Phase 3.7 or hardware acceptance",
+      "source_files": [
+        {
+          "path": ".cargo/config.toml",
+          "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+        },
+        {
+          "path": "Cargo.lock",
+          "sha256_lf": "4eac83a59c99b5a0b7ad3479c339a07aeff3d59567dabaf6f2abf3931c56781c"
+        },
+        {
+          "path": "Cargo.toml",
+          "sha256_lf": "072ba3468e4a79777e87f53ead193fb4e159d4b7fc17bbf68e7881d03e44f137"
+        },
+        {
+          "path": "apps/native-apps/Cargo.toml",
+          "sha256_lf": "ecfa79cf6826f62ffe2f67236aefac1cb497f7c2f6d150d0def9713145a9534c"
+        },
+        {
+          "path": "apps/native-apps/build.rs",
+          "sha256_lf": "f3100883829de10842c65edcb5ea332261755e00b88f48766fd1310a02e89e6f"
+        },
+        {
+          "path": "apps/native-apps/linker.ld",
+          "sha256_lf": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a"
+        },
+        {
+          "path": "apps/native-apps/src/client.rs",
+          "sha256_lf": "52278939c70cc466e8046c7eaa0f5c5980105bcaab3ab239b71cd4345a168bb7"
+        },
+        {
+          "path": "apps/native-apps/src/counter-client.rs",
+          "sha256_lf": "9646416fb9270a53fc6dd85293495f686078b520471628688d8395f938195d37"
+        },
+        {
+          "path": "apps/native-apps/src/counter-service.rs",
+          "sha256_lf": "635fca7cd71c649dd20a773e214ed49f3752ccc0a0f5b9241d82c39ebcb9ee1c"
+        },
+        {
+          "path": "apps/native-apps/src/lib.rs",
+          "sha256_lf": "322a8319f94df8d186f33f6edcd71d4f42fad3bb5f0a3f973ef14941f8c29936"
+        },
+        {
+          "path": "apps/native-apps/src/supervision.rs",
+          "sha256_lf": "deababd624234c547c23d5d4d2e1034b401bebaaeb515bea34095a052669dda6"
+        },
+        {
+          "path": "apps/native-apps/src/supervisor.rs",
+          "sha256_lf": "7d65f92ce1283bbecb2dfd5e5a88b13cbeae289fa5ddd2a4b8e44b6fe1cb6c99"
+        },
+        {
+          "path": "apps/native-apps/tests/supervision.rs",
+          "sha256_lf": "9e432c2875e322c7ef32acec0b0fc9f67b4f081c80dce7ebe9e53736e7eb06cb"
+        },
+        {
+          "path": "apps/native-runtime/Cargo.toml",
+          "sha256_lf": "9597f67e385b3486ece0be3c9ac4c18ed86da694bbc56f65110b392e17afb110"
+        },
+        {
+          "path": "apps/native-runtime/src/lib.rs",
+          "sha256_lf": "765beb9ceca178e6cd8365103da2e9310343aaf31a1e0c5d802b39dc815c0d71"
+        },
+        {
+          "path": "apps/native-runtime/tests/counter.rs",
+          "sha256_lf": "4f1d3d35c19c0a34060294e09ec0dee08b5b2f0bce6fc33c4d91a686459e1e63"
+        },
+        {
+          "path": "assets/branding/boot-logo.txt",
+          "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+        },
+        {
+          "path": "crates/kernel/Cargo.toml",
+          "sha256_lf": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5"
+        },
+        {
+          "path": "crates/kernel/assets/minimal-exit.elf",
+          "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+        },
+        {
+          "path": "crates/kernel/build.rs",
+          "sha256_lf": "b918684548caf593126da85f79ac702a917591bbb9d092de9da3e2c8c1df2623"
+        },
+        {
+          "path": "crates/kernel/linker.ld",
+          "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/context.rs",
+          "sha256_lf": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/entry.S",
+          "sha256_lf": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/mod.rs",
+          "sha256_lf": "e54606a21a0152921041ddab5fef0ede92fbcc6f436026acac4770b1455e5e2e"
+        },
+        {
+          "path": "crates/kernel/src/arch/aarch64/page.rs",
+          "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+        },
+        {
+          "path": "crates/kernel/src/asid.rs",
+          "sha256_lf": "7216e67ee636e5df1679728ee0911b90fd77bc0a76371dd090b300d8d205cd7e"
+        },
+        {
+          "path": "crates/kernel/src/boot_workload.S",
+          "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+        },
+        {
+          "path": "crates/kernel/src/boot_workload.rs",
+          "sha256_lf": "ec7e1247f19e7e31ec586ddd173ab265437eaf63641460b08965a8a82ee6c2ac"
+        },
+        {
+          "path": "crates/kernel/src/diagnostics/mod.rs",
+          "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+        },
+        {
+          "path": "crates/kernel/src/execution.rs",
+          "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+        },
+        {
+          "path": "crates/kernel/src/hal/mod.rs",
+          "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+        },
+        {
+          "path": "crates/kernel/src/handles/testing.rs",
+          "sha256_lf": "10896a336d12aa9b43bdd3d71c0fd48a1a580aa0aa3488fd73be7673e5a96fa4"
+        },
+        {
+          "path": "crates/kernel/src/handles.rs",
+          "sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2"
+        },
+        {
+          "path": "crates/kernel/src/interrupt/mod.rs",
+          "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+        },
+        {
+          "path": "crates/kernel/src/ipc/deferred.rs",
+          "sha256_lf": "2dd4e5bddd94a02e05d743508c4e453fe175d990e5550f40ab21d70138d91ba4"
+        },
+        {
+          "path": "crates/kernel/src/ipc/native.rs",
+          "sha256_lf": "bcf6931bd66b9648110bd35be16d6358eda9478a901328c49c7ce42b089d87ac"
+        },
+        {
+          "path": "crates/kernel/src/ipc/storage.rs",
+          "sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991"
+        },
+        {
+          "path": "crates/kernel/src/ipc.rs",
+          "sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933"
+        },
+        {
+          "path": "crates/kernel/src/ipc_authority_workload.S",
+          "sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997"
+        },
+        {
+          "path": "crates/kernel/src/ipc_benchmark.S",
+          "sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835"
+        },
+        {
+          "path": "crates/kernel/src/ipc_benchmark.rs",
+          "sha256_lf": "9f02333e41c00ae18e7bd5eeb87a49ec07606e2b496ea87ab736b99372d902cc"
+        },
+        {
+          "path": "crates/kernel/src/ipc_death_workload.S",
+          "sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3"
+        },
+        {
+          "path": "crates/kernel/src/ipc_multi_workload.S",
+          "sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1"
+        },
+        {
+          "path": "crates/kernel/src/ipc_paths_benchmark.S",
+          "sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606"
+        },
+        {
+          "path": "crates/kernel/src/ipc_payload_workload.S",
+          "sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec"
+        },
+        {
+          "path": "crates/kernel/src/ipc_queue_workload.S",
+          "sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370"
+        },
+        {
+          "path": "crates/kernel/src/ipc_revoke_workload.S",
+          "sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb"
+        },
+        {
+          "path": "crates/kernel/src/ipc_workload.S",
+          "sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465"
+        },
+        {
+          "path": "crates/kernel/src/ipc_workload.rs",
+          "sha256_lf": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21"
+        },
+        {
+          "path": "crates/kernel/src/main.rs",
+          "sha256_lf": "e982449bf1b148b521a011abe566cc9fb17022aa715cbdca33184c9679f09983"
+        },
+        {
+          "path": "crates/kernel/src/memory/mod.rs",
+          "sha256_lf": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0"
+        },
+        {
+          "path": "crates/kernel/src/native_boot.rs",
+          "sha256_lf": "05e2e2ae4241d73afecaf281d58fdfed3db2f1f9e8f5bbcae1deb2f73642b15f"
+        },
+        {
+          "path": "crates/kernel/src/percpu.rs",
+          "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+        },
+        {
+          "path": "crates/kernel/src/platform/config.rs",
+          "sha256_lf": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196"
+        },
+        {
+          "path": "crates/kernel/src/platform/mod.rs",
+          "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+        },
+        {
+          "path": "crates/kernel/src/process.rs",
+          "sha256_lf": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810"
+        },
+        {
+          "path": "crates/kernel/src/process_workload.rs",
+          "sha256_lf": "9f6f63adc2c0727fb415546a2802c7fa7a9bcd1cfb8a1beb69eecaa284f2bf2f"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/config.rs",
+          "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/local.rs",
+          "sha256_lf": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/mod.rs",
+          "sha256_lf": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43"
+        },
+        {
+          "path": "crates/kernel/src/scheduler/task.rs",
+          "sha256_lf": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df"
+        },
+        {
+          "path": "crates/kernel/src/security/testing.S",
+          "sha256_lf": "d0414f46eadf9bb2b5329aaa06dd6f233c5e070f82ca7d489b12c55f510065c1"
+        },
+        {
+          "path": "crates/kernel/src/security/testing.rs",
+          "sha256_lf": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df"
+        },
+        {
+          "path": "crates/kernel/src/security.rs",
+          "sha256_lf": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806"
+        },
+        {
+          "path": "crates/kernel/src/smp.rs",
+          "sha256_lf": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3"
+        },
+        {
+          "path": "crates/kernel/src/supervision.rs",
+          "sha256_lf": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a"
+        },
+        {
+          "path": "crates/kernel/src/supervision_workload.S",
+          "sha256_lf": "5c13e46c80d85407ea13b0b6f6a14a143a73cedc76bbcebeda7050f471def80c"
+        },
+        {
+          "path": "crates/kernel/src/supervision_workload.rs",
+          "sha256_lf": "5a8d267ef4bb87002fd0ce0061adba7b53f98822c54c09dbeae8ec51b9088ddc"
+        },
+        {
+          "path": "crates/kernel/src/sync/mod.rs",
+          "sha256_lf": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da"
+        },
+        {
+          "path": "crates/kernel/src/test_support/arch_probes.S",
+          "sha256_lf": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732"
+        },
+        {
+          "path": "crates/kernel/src/test_support/ipc_inputs.rs",
+          "sha256_lf": "f9e598fecb2e6a7034fa9555f71b4c5ad0506f3cf43204dc85b0890f359a1a1b"
+        },
+        {
+          "path": "crates/kernel/src/test_support/irq_wait.rs",
+          "sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
+        },
+        {
+          "path": "crates/kernel/src/test_support/scheduler_inputs.rs",
+          "sha256_lf": "4c18b8edd47062cb0a802690075eade2a64d2ef2bd8d634aa0e991436e8a2ac7"
+        },
+        {
+          "path": "crates/kernel/src/tests.rs",
+          "sha256_lf": "1d016609499f75b3e16bc96ba9681251ca35313c5b0866ac6a1de5044753aafb"
+        },
+        {
+          "path": "crates/kernel/src/time/mod.rs",
+          "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+        },
+        {
+          "path": "crates/kernel/src/user_copy/testing.rs",
+          "sha256_lf": "14eaf4b40767a63e88bdb284dddf24c11fcf0e3c6c33475bf137168e4ca6f61e"
+        },
+        {
+          "path": "crates/kernel/src/user_copy.rs",
+          "sha256_lf": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0"
+        },
+        {
+          "path": "crates/kernel-core/Cargo.toml",
+          "sha256_lf": "dbeb6358918b8a690af305f32609c0879346d041406f6c799467dc082c5ec362"
+        },
+        {
+          "path": "crates/kernel-core/src/domain/pool.rs",
+          "sha256_lf": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05"
+        },
+        {
+          "path": "crates/kernel-core/src/domain.rs",
+          "sha256_lf": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788"
+        },
+        {
+          "path": "crates/kernel-core/src/elf.rs",
+          "sha256_lf": "faa97534ec072f53c773012af327345dde9a35cece294ac1e436dd7399a79e58"
+        },
+        {
+          "path": "crates/kernel-core/src/execution.rs",
+          "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+        },
+        {
+          "path": "crates/kernel-core/src/handles.rs",
+          "sha256_lf": "6effe77cfae8e5b64f35e7d2eeb4a4052d2dbe01666204bad06cd64a9af43cd2"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/identity.rs",
+          "sha256_lf": "0eb329df587f27963d3ba71ad3e939ef59d84c4175b542216b15315e2a250327"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/mailbox.rs",
+          "sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/tests.rs",
+          "sha256_lf": "19c17dcff3ff9a3f4d94bfd7d8822fbf556171f1198837ddfb1ebfa00f836cc0"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc/wire.rs",
+          "sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178"
+        },
+        {
+          "path": "crates/kernel-core/src/ipc.rs",
+          "sha256_lf": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4"
+        },
+        {
+          "path": "crates/kernel-core/src/lib.rs",
+          "sha256_lf": "6d16f91997c3dcc51fdf1ec7043a0e773fbb2fb694dcec37255ee2d83990525a"
+        },
+        {
+          "path": "crates/kernel-core/src/memory.rs",
+          "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+        },
+        {
+          "path": "crates/kernel-core/src/platform.rs",
+          "sha256_lf": "cadb3aeadd4a38128ff21a6ca9959a21d4db8bfd50ba2ae43ddd625c840178f9"
+        },
+        {
+          "path": "crates/kernel-core/src/process.rs",
+          "sha256_lf": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983"
+        },
+        {
+          "path": "crates/kernel-core/src/scheduling/ownership.rs",
+          "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+        },
+        {
+          "path": "crates/kernel-core/src/scheduling.rs",
+          "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+        },
+        {
+          "path": "crates/kernel-core/src/supervision.rs",
+          "sha256_lf": "96d0ccd94f13e4d1e47720e01c308b3c9e8dd37c216ed05078fc0c4ecefb7ca6"
+        },
+        {
+          "path": "crates/kernel-core/src/time.rs",
+          "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+        },
+        {
+          "path": "crates/kernel-core/src/user_copy.rs",
+          "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+        },
+        {
+          "path": "crates/kernel-core/src/wait.rs",
+          "sha256_lf": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332"
+        },
+        {
+          "path": "crates/kernel-core/src/window.rs",
+          "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+        },
+        {
+          "path": "crates/kernel-core/tests/boot_description.rs",
+          "sha256_lf": "2cd49ded6602daa5ca91581775d0c0d2d273bd0f59e2efddacfdefc0af84f7ac"
+        },
+        {
+          "path": "crates/kernel-core/tests/bootstrap_grants.rs",
+          "sha256_lf": "e7e88c94a1e741bd7677868af0af3183c286ef42c5200aaed38775da7fd425c0"
+        },
+        {
+          "path": "crates/kernel-core/tests/elf_contract.rs",
+          "sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5"
+        },
+        {
+          "path": "crates/kernel-core/tests/event_revocation.rs",
+          "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+        },
+        {
+          "path": "crates/kernel-core/tests/handle_contract.rs",
+          "sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c"
+        },
+        {
+          "path": "crates/kernel-core/tests/process_protocol.rs",
+          "sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447"
+        },
+        {
+          "path": "crates/kernel-core/tests/wait.rs",
+          "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+        },
+        {
+          "path": "rust-toolchain.toml",
+          "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+        },
+        {
+          "path": "tests/native-apps/Cargo.toml",
+          "sha256_lf": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad"
+        },
+        {
+          "path": "tests/native-apps/build.rs",
+          "sha256_lf": "bdc015f0fd2a44f8ac4d4e9330c96e72ce5c66a664d5b5a5f7df1bb240f54815"
+        },
+        {
+          "path": "tests/native-apps/src/abi-client.rs",
+          "sha256_lf": "20935d704d12997c1351f2185dea1b77fb6c5a80bdcd7b22e6e31724b0fc9e0b"
+        },
+        {
+          "path": "tests/native-apps/src/abi_steps.rs",
+          "sha256_lf": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7"
+        },
+        {
+          "path": "tests/native-apps/src/lifecycle-client.rs",
+          "sha256_lf": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677"
+        },
+        {
+          "path": "tests/native-apps/src/lifecycle-peer.rs",
+          "sha256_lf": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278"
+        }
+      ]
+    }
+  },
+  "absent_workspace_components": [
+    "routing",
+    "routing-demo",
+    "window-compat",
+    "migration-advisor",
+    "migration-workbench"
+  ],
+  "native_external_packages": 0,
+  "scenarios": [
+    "production runtime DEV/PROD",
+    "public lifecycle/actual counter service DEV/PROD",
+    "ordinary completed production session DEV/PROD"
+  ],
+  "hardware": "UNKNOWN"
+}

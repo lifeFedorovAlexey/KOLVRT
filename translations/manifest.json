@@ -10,8 +10,8 @@
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "8b987287c630e5d7cccbadd1d7ee3475e6cc7ad205146904666bf272c9990a7f",
-        "translation_sha256": "fe103053cc9d0d7744454771858d55a7155dffabed0d87cbb30812cdecccf604"
+        "source_sha256": "ec7fe60eac345f33c115be6469e32137b98577dd7fbaab7ce0e05d03e8210221",
+        "translation_sha256": "94914b46acd5e00f150db6a36d189ee21398472e3e6379e8375ca11242c450c2"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -221,6 +221,10 @@
         "source_sha256": "c2989ee3e38826671ff1cbef806d26817bac3ec87f75f2e7ceb7717d288e1faa",
         "translation_sha256": "55d381a0b56ad8321468af8691acfe779d399af301c96accf89896fcbb60f4b6"
       },
+      "docs/architecture/native-phase37-fixture-review.md": {
+        "source_sha256": "d6bcb8a349e89ee9bb50c481676a3ae3b39dacf0271e4da411e151e6824f395f",
+        "translation_sha256": "6a3f726a124e755a2c0707e9b7d1afab9779b22aae0032bd0d3694ae5941dd34"
+      },
       "docs/architecture/output-policy.md": {
         "source_sha256": "d23c27275fa886c36714f53552add03a46f987e47a37a2b7b01ec59971c09d52",
         "translation_sha256": "34e910ee27f78a02baa22e29a80a764d7a08a8259dbcd413b02213bacd825253"
@@ -310,8 +314,8 @@
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "baeb20264964284ec69a1f2662938001d214d6e863a4d63346d8fe68fd708b11",
-        "translation_sha256": "ef1222ababd4c33927294a25f92d7c57e2ca63cd376f0b55883d13b1551b645d"
+        "source_sha256": "d9fcb3d2bebf5c593b4cea4d36d1f3fc03c1cce169f8bf47ac306fb73165b9e9",
+        "translation_sha256": "cb1d9c54f3ed3ed2acd7630006900693160e9e087e29c413ca8e4b1f108b224e"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "7094c5dc1cd103d42e9d8d4605a3502eb50e855b8aff774fa298200f84738228",
