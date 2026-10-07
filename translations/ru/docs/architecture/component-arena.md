@@ -112,6 +112,10 @@ Issue [#93](https://github.com/lifeFedorovAlexey/KOLVRT/issues/93) опреде�
 
 Пилот CLOCK добавляет producer кампании с настоящим ядром через существующий xtask/native executor: отдельные профили DEV/PROD, зафиксированный протокол, проверяемый oracle отчёта и парные наблюдения recorder. Его [принятый ограниченный паспорт](../research/clock-passport.md) сохраняет двенадцать успешных загрузок DEV/PROD и шесть переносимых свидетельств пар; независимый допуск остаётся структурным. Существующий offline admission остаётся структурным, а record eligibility — false; producer не реализует records/history, аппаратный performance, IPC-паспорта или REL/fuzz-кампании. Приёмка исполнения и текущие доказательства относятся к feature пилота, а не к предполагаемой приёмке всей Arena.
 
+## Интеграция issue 33
+
+Issue #33 добавляет экспериментальный внешний IPC producer через общий с CLOCK build/execution путь. Функциональный pilot и выбранное исполнение настоящего production-сервиса не завершают SEC applicability, основную выборку или публикацию records. Существующий Arena admission сохраняет силу; неполные популяции и потери нельзя переименовать в eligible. [IPC pilot](../research/ipc-passport.md) определяет текущий scope и gates.
+
 <!-- knowledge -->
 
 ```json

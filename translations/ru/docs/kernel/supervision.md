@@ -106,6 +106,10 @@ B5 issue #109 меняет только потребление evidence экви
 
 Пилот CLOCK выбирает внешний ABI root через общий сборщик оригинальных ELF и не заявляет покрытие production-supervisor. Обычные native-команды сохраняют свои валидаторы supervisor и crash-recovery. Изменение выбора oracle в общем executor сохраняет обработку ошибок, свежее наблюдение устройства и существующие watchdogs; deadlines supervision, restart backoff и политика quiescence не меняются.
 
+## Интеграция issue 33
+
+Инструменты IPC issue #33 используют существующие неизменяемые selectors и SEND bindings; новая deployment-конфигурация и дополнительные lifecycle-полномочия не вводятся. Измерением управляет внешний root, который не выполняет production supervisor. Существующие policy readiness, restart, quiescence и отказов сохраняются. [Scope IPC pilot](../research/ipc-passport.md) отделяет работу настоящего counter-service от покрытия supervisor.
+
 <!-- knowledge -->
 
 ```json

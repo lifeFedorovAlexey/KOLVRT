@@ -1,14 +1,6 @@
 //! Immutable schema-v1 bundles; producer assertions never imply reviewed admission.
 use super::*;
-fn digest(bytes: &[u8]) -> String {
-    Sha256::digest(bytes)
-        .iter()
-        .map(|b| format!("{b:02x}"))
-        .collect()
-}
-fn value_digest(value: &Value) -> Result<String> {
-    Ok(digest(serde_json::to_string(value)?.as_bytes()))
-}
+use crate::arena_common::{digest, manifest_matches, value_digest};
 pub(super) fn snapshot() -> Result<Value> {
     let mut files = serde_json::Map::new();
     for path in [
@@ -66,6 +58,7 @@ fn review(path: &str, negative: bool) -> Result<Value> {
     let mut required = vec![
         "crates/xtask/src/arena_clock.rs",
         "crates/xtask/src/arena_clock/passport.rs",
+        "crates/xtask/src/arena_common.rs",
     ];
     if negative {
         required.extend([
@@ -177,32 +170,6 @@ fn artifact(
         artifacts.push(json!({"path":path,"sha256":hash}));
     }
     Ok(hash)
-}
-fn manifest_matches(attempt: &Value, manifest: &Value) -> bool {
-    let Some(args) = attempt["run"]["arguments"].as_array() else {
-        return false;
-    };
-    let expected = manifest["qemu_arguments_without_kernel"].as_array();
-    let arguments_match = expected.is_some_and(|expected| {
-        args.len() == expected.len() + 2
-            && &args[..expected.len()] == expected.as_slice()
-            && args[expected.len()] == "-kernel"
-            && args.last() == Some(&attempt["kernel"]["artifact"])
-    });
-    arguments_match
-        && attempt["result"]["frequency"] == manifest["expected_counter_frequency"]
-        && attempt["run"]["configured_cpus"] == manifest["configured_cpus"]
-        && attempt["run"]["active_cpus"] == manifest["active_cpus"]
-        && attempt["kernel_build"]["compiler"] == manifest["compiler_version"]
-        && attempt["kernel_build"]["target"] == manifest["target"]
-        && attempt["kernel_build"]["features"] == manifest["kernel_features"]
-        && attempt["run"]["qemu_version"]
-            .as_str()
-            .is_some_and(|version| {
-                version.lines().next().is_some_and(|line| {
-                    line.split_whitespace().nth(3) == manifest["qemu_version"].as_str()
-                })
-            })
 }
 pub(super) fn write(root: &Path, campaign: &Value) -> Result<()> {
     let frozen = &campaign["definition_snapshot"];

@@ -1,141 +1,181 @@
 {
   "schema_version": 1,
-  "base_commit": "bc8222a54f2e88d40b4958273c1b7666a59dc804",
+  "base_commit": "1f6980da7902d5c82f580239cb2984880b7f4958",
   "files": [
     {
-      "path": "apps/native-runtime/src/lib.rs",
-      "before_sha256_lf": "765beb9ceca178e6cd8365103da2e9310343aaf31a1e0c5d802b39dc815c0d71",
-      "after_sha256_lf": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1",
+      "path": "crates/kernel/src/native_boot.rs",
+      "before_sha256_lf": "05e2e2ae4241d73afecaf281d58fdfed3db2f1f9e8f5bbcae1deb2f73642b15f",
+      "after_sha256_lf": "4fb5e1b86ed624d4cb2c7fb2f1161262a16b618f0fef1ea7e4c0d9a0d04c4ed8",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/arena_clock.rs",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194",
-      "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "before_sha256_lf": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194",
+      "after_sha256_lf": "84674da3e00e9f5ca5f7737528c80af3322d1e772380ef00e7dd55813b2e7181",
+      "disposition": "existing-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/arena_clock/passport.rs",
+      "before_sha256_lf": "9ca4cdc068132564de33da07ea303d1e9fc9975611c14352865172d2bd3d9029",
+      "after_sha256_lf": "6ec6c2a9b83b6170042bbd574030ec3f511ff171fe770d90a8a7a3da76029639",
+      "disposition": "existing-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "crates/xtask/src/arena_common.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "9ca4cdc068132564de33da07ea303d1e9fc9975611c14352865172d2bd3d9029",
+      "after_sha256_lf": "c0b012605d95468b4f21e18df1908434942fa35c852bf4544be49bf165ecf285",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "crates/xtask/src/arena_ipc.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "4ff65900efe7d957334bddf01fe51984c31010277da8bcd9d9a55e86c8a8ff32",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/main.rs",
-      "before_sha256_lf": "8ee48dc74c3d0f4e6ddef79633f8a32a73d58c885cc3839c7be057cf65a4713a",
-      "after_sha256_lf": "e0b0bcc5196064637284b8ee2299968c59345a596bf5948c5f17d044bee83746",
+      "before_sha256_lf": "e0b0bcc5196064637284b8ee2299968c59345a596bf5948c5f17d044bee83746",
+      "after_sha256_lf": "90d83b321159f4e4ede7d3a7684591772023f53b8f6050020f002de13e9ef9d3",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/native_apps.rs",
-      "before_sha256_lf": "abbfbb40463102a27c5c0a52d41b53fb6f2747afbc133e825f3a9a083334302f",
-      "after_sha256_lf": "20617866ae4cf00dc6e6d987edbd8c215e5dc42c16516ae5f5662c8333041c11",
+      "before_sha256_lf": "20617866ae4cf00dc6e6d987edbd8c215e5dc42c16516ae5f5662c8333041c11",
+      "after_sha256_lf": "7e3e73c3f15765066480b6ccf20f8d7507d5106a835a616e1ca9a31018c6d4e9",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
-      "path": "research/arena/clock-query/dev-environment.json",
+      "path": "research/arena/ipc-query/dev-environment.json",
       "before_sha256_lf": null,
-      "after_sha256_lf": "d52780cfdef469252bcd5aa2b513365e21d505f4062709a39715293e2fa352a7",
+      "after_sha256_lf": "e83985152e088b6cb98c2636368322d0cb461e027bdee8cd51212be8951f3c0d",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
-      "path": "research/arena/clock-query/input.json",
+      "path": "research/arena/ipc-query/input.json",
       "before_sha256_lf": null,
-      "after_sha256_lf": "159401618cdf165a384316b379537e792b6a3a73051b7432c3206164e8d60ff9",
+      "after_sha256_lf": "f992f25cdb570d9312004e944c0d096ae8e148ec9cb1aceee9620219e2aa1382",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
-      "path": "research/arena/clock-query/prod-environment.json",
+      "path": "research/arena/ipc-query/prod-environment.json",
       "before_sha256_lf": null,
-      "after_sha256_lf": "a9827290c8bdab41bca3a74b4f4bc7c28d1d1847682e64f1f13c4a6a35de0afa",
+      "after_sha256_lf": "442c1d4dcc3370bacf31e6f429bdc8ebab433d269630f2585d704df82558c748",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
-      "path": "research/arena/clock-query/protocol.json",
+      "path": "research/arena/ipc-query/protocol.json",
       "before_sha256_lf": null,
-      "after_sha256_lf": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
+      "after_sha256_lf": "91f55645b3b2c945accc9e5eac3e32fe4d57f85239d8ba9a49001d0cf79a0bec",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
-      "path": "research/arena/clock-query/resources.json",
+      "path": "research/arena/ipc-query/resources.json",
       "before_sha256_lf": null,
-      "after_sha256_lf": "392e03b36dbeb25bed21ef083e3e42ecd20e1e4ce0ce6cf6b1b398e120d1e5e6",
+      "after_sha256_lf": "1a2caffeb2ce91678f35c89fa5c729553970784c7867d63af9acbf58b17fa6b3",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
-    },
-    {
-      "path": "research/arena/profiles/clock-query-dev.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "ceaf039fc7e7bd837372a21083e5c0612145930c6c03db034617184e010afa0c",
-      "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
-    },
-    {
-      "path": "research/arena/profiles/clock-query-prod.json",
-      "before_sha256_lf": null,
-      "after_sha256_lf": "d347435c39a3c1a84c0e81d39064515c22728c1bf909edeb8279ee927d4c90eb",
-      "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "tests/native-apps/Cargo.toml",
-      "before_sha256_lf": "04102e9a2722fe20b9bfed54117ca0aae3d700fcbb4d687d6ca126a9c115e1ad",
-      "after_sha256_lf": "fc2f40a299cc163ae623d97d4a25b0491674f5f8192087ceab6ec4ba763c1338",
+      "before_sha256_lf": "fc2f40a299cc163ae623d97d4a25b0491674f5f8192087ceab6ec4ba763c1338",
+      "after_sha256_lf": "a8d9a7f9c1d309a2385b39c12a6f8d42d56bd3ca5674b38d743a3c6946fe5856",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
-      "path": "tests/native-apps/src/clock-client.rs",
+      "path": "tests/native-apps/src/ipc-measure-client.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b",
+      "after_sha256_lf": "bf6df9b4ba9f74f89789d57d1361621c12b96e86ce575d7b735e23a1aeb0c05a",
       "disposition": "new-feature",
-      "reason": "Add the external CLOCK ABI pilot through the existing native builder/executor, preserve production kernel semantics and mandatory fresh observations, and bind fixed profiles/raw evidence to scoped independent review."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "tests/native-apps/src/ipc-measure-peer.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "0f95cb2c2a9c3174e981841c67e170f935e92aff337000755d7bdcc5101735de",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "tests/native-apps/src/ipc-measure-root.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "e3dc4661db8d0c1ff033908988d5c6404324bfe73059ea5cc0f115245823a1de",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "tests/native-apps/src/ipc_measure.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "5a5365535f7be52963d772d238048c06d31d65be75fe62953ed13f3abbb27103",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "tests/native-apps/src/ipc_measure_protocol.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "5d4a12f3a22120f2a0891b351c1713296d489387cc643a6d71067c7e0c515600",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "tests/native-apps/tests/ipc_measure_protocol.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "87b5692d46ba8e7339cbc2291d29855e8ae4663528c8a45e0eec3de6c8aae5cd",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     }
   ],
   "features": [
     {
       "id": "kolvrt.apps.native-elf",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
     },
     {
       "id": "kolvrt.arena",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
     },
     {
       "id": "kolvrt.arena.clock-passport",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
+    },
+    {
+      "id": "kolvrt.arena.ipc-passport",
+      "disposition": "semantic-change",
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
     },
     {
       "id": "kolvrt.ci.performance",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
     },
     {
       "id": "kolvrt.devices.observations",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
     },
     {
       "id": "kolvrt.ipc.transport",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
     },
     {
       "id": "kolvrt.services.supervision",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe the CLOCK integration and scenario boundary, preserve historical receipts, and distinguish current source verification from bounded mechanism acceptance."
+      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
     }
   ]
 }

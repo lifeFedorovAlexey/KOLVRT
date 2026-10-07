@@ -104,6 +104,10 @@ The process quantum regression accepts zero as the first counter snapshot when a
 
 The CLOCK pilot selects an external ABI root through the shared original-ELF builder and never claims production-supervisor coverage. The ordinary native commands retain their supervisor and crash-recovery validators. The shared executor dispatch change preserves failure handling, the fresh device observation and existing watchdogs; no supervision deadline, restart backoff or quiescence policy changes.
 
+## Issue 33 integration
+
+The issue #33 IPC tools use the existing immutable selectors and SEND bindings; no deployment configuration or additional lifecycle authority is introduced. An external root coordinates measurement and does not execute the production supervisor. Existing readiness, restart, quiescence and failure policies remain unchanged. [IPC pilot scope](../research/ipc-passport.md) separates the actual counter-service workload from supervisor coverage.
+
 <!-- knowledge -->
 
 ```json

@@ -41,3 +41,24 @@ path = "src/clock-client.rs"
 required-features = ["guest"]
 test = false
 bench = false
+
+[[bin]]
+name = "selftest-ipc-measure-root"
+path = "src/ipc-measure-root.rs"
+required-features = ["guest"]
+test = false
+bench = false
+
+[[bin]]
+name = "selftest-ipc-measure-client"
+path = "src/ipc-measure-client.rs"
+required-features = ["guest"]
+test = false
+bench = false
+
+[[bin]]
+name = "selftest-ipc-measure-peer"
+path = "src/ipc-measure-peer.rs"
+required-features = ["guest"]
+test = false
+bench = false

@@ -89,7 +89,8 @@ Grant авторизации clock не выдумывается. PMU, физи�
           "research/arena/clock-query/input.json",
           "research/arena/clock-query/resources.json",
           "research/arena/clock-query/dev-environment.json",
-          "research/arena/clock-query/prod-environment.json"
+          "research/arena/clock-query/prod-environment.json",
+          "crates/xtask/src/arena_common.rs"
         ],
         "acceptance": ["research/results/clock-passport-acceptance.json"],
         "issues": [32],
@@ -101,8 +102,8 @@ Grant авторизации clock не выдумывается. PMU, физи�
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Independent review validated all twelve CLOCK boots, six portable passports and the complete source-matching foundation matrix.",
+            "state": "STALE",
+            "reason": "The accepted 2978ad9 campaign remains historical. Shared Arena execution and native report export changed for issue33; current-source applicability and regression require renewed evidence.",
             "receipt": "research/results/clock-passport-acceptance.json",
             "receipt_sha256": "8bea832e800a4d58f401d8916b2c9f302c548ae99a7a0d0c6c719b003ed3743f",
             "scope": "Clean campaign source 2978ad9693b7df1e70487ffbf01d5ffdfe27fe31, pinned QEMU 10.1.0 ARM64 TCG, DEV/PROD; useful CLOCK envelope and incremental recorder cost only. Full matrix uses identical 151 execution source hashes."

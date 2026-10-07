@@ -132,6 +132,12 @@ B5 issue #109 меняет только потребление evidence экви
 
 Паспорт CLOCK использует общий сборщик оригинальных ELF с явно выбранным внешним ABI-клиентом в роли root. Он не запускает production-сервис и не заявляет проверку supervisor. Выбор обычных сценариев service, lifecycle и crash-recovery не меняется. Общий executor выбирает oracle сценария, сохраняя обязательную проверку наблюдения устройства для свежего запуска. Снимок SDK открывает существующие результаты CLOCK; прежний вызов с двумя результатами сохраняет исходную последовательность инструкций DEV. Это изменение исходников runner/SDK требует новых доказательств на точных исходниках; исторические native receipts сохраняют исходный scope.
 
+## Передача завершённого отчёта
+
+Общий экспортёр машинных событий сохраняет существующий буфер отчёта из 2048 слов на процесс. Отчёты длиной до 64 слов включительно сохраняют одно неизменённое событие `native-user-report`. Более длинные завершённые отчёты корневого процесса передаются событиями версии 2 `native-user-report-chunk`: не более 64 слов в каждом, с явными slot корня, поколением процесса, смещением и полной длиной. За ними следует одно событие `native-user-report-end` с той же идентичностью и длиной. Событие загрузчика сообщает slot и поколение корня. Длина, кратная 64, определяется существующим чтением нулевой длины на конечном смещении; дополнительный пустой фрагмент не публикуется. Каждое событие укладывается в существующее ограничение logger. Промежуточные снимки сохраняют прежнее значение первых 64 слов и не являются доказательством окончательного отчёта.
+
+Общий host reader `logical_report` проверяет идентичность загруженного корня, непрерывные точные смещения, неизменную полную длину, беззнаковые слова, границу буфера и завершающий маркер. Пропуски, дубликаты, перекрытия, усечение, смешение версий и несовпадения отклоняются. Старые отчёты по-прежнему ограничены 64 словами. Сборка доказывает только полноту передачи; oracle каждого приложения отдельно проверяет свою схему, реальный полезный результат, завершение и освобождение ресурсов. Экспортёр не интерпретирует протоколы приложений, не добавляет измерительные probes, не увеличивает буферы и не выдаёт полномочия. Host-проверки отказов не доказывают свежий запуск DEV/PROD; проверка владельца остаётся STALE до сохранения применимого свидетельства для точных исходников.
+
 <!-- knowledge -->
 
 ```json
@@ -267,7 +273,7 @@ B5 issue #109 меняет только потребление evidence экви
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "The retained 43af402 receipt predates diagnostic/test and CLOCK shared runner/SDK changes, so this owner-specific verification remains STALE. The owner closed #133 and master #37 closed after reviewed PR #137 and passing merged-main bc8222a checks. Historical latency attribution remains UNKNOWN; those dispositions do not relabel the old receipt as current-source evidence.",
+            "reason": "The retained 43af402 receipt predates diagnostic/test, CLOCK shared runner/SDK and completed report transport changes, so this owner-specific verification remains STALE. The owner closed #133 and master #37 closed after reviewed PR #137 and passing merged-main bc8222a checks. Historical latency attribution remains UNKNOWN; those dispositions do not relabel the old receipt as current-source evidence.",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45"

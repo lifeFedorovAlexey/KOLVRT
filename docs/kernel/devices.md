@@ -36,6 +36,10 @@ The runner now requires exactly one valid observation before accepting fresh mac
 
 The CLOCK passport reuses the fresh machine-mode executor and therefore must publish the same validated device observation before its own oracle can pass. Selecting a different external root does not bypass discovery or create a device grant. The shared-runner source change makes the previous receipt historical for that runner revision; descriptor implementation and accepted bounded scope remain unchanged.
 
+## Issue 33 integration
+
+The shared Arena execution path used by CLOCK and the IPC pilot continues to require a fresh validated boot device observation for every actual invocation. IPC report reassembly does not replace that observation or establish a new device driver/grant claim. Existing descriptor acceptance remains bounded; changed shared sources require renewed current-source verification.
+
 <!-- knowledge -->
 
 ```json
@@ -79,8 +83,8 @@ The CLOCK passport reuses the fresh machine-mode executor and therefore must pub
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Current-source full matrix passed after the shared CLOCK executor refactor; fresh device validation remains mandatory before every scenario oracle. Historical descriptor acceptance is unchanged.",
+            "state": "STALE",
+            "reason": "Historical bounded acceptance is retained; issue33 changes shared execution/report sources and requires new exact-source regression evidence before current verification.",
             "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG DEV/PROD; descriptor discovery and fresh observation gate, not driver or physical readiness.",
             "receipt": "research/measurements/runs/1791408804253-phase40-clock-passport-488919492db0.json",
             "receipt_sha256": "1e6b5dfd336c6a36e1aff2e57dcfa5d1d2c3d7601a90ddbcfec198b2a970eb84"

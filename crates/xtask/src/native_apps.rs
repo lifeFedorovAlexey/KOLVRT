@@ -9,23 +9,109 @@ pub fn validate(events: &[Value]) -> Result<Value> {
     {
         return Err("native kernel failure".into());
     }
-    let reports: Vec<_> = events
-        .iter()
-        .filter(|e| e["event"] == "native-user-report")
-        .collect();
-    if reports.len() != 1 {
-        return Err("missing unique userspace result; ordinary boot is insufficient".into());
-    }
-    let words = reports[0]["words"]
-        .as_array()
-        .ok_or("invalid userspace result words")?;
+    let words = logical_report(events)?;
     if words.first() == Some(&json!(MAGIC)) && words.get(1) == Some(&json!(3)) {
-        return validate_lifecycle(events, words);
+        return validate_lifecycle(events, &words);
     }
     if words.first() == Some(&json!(MAGIC)) && words.get(1) == Some(&json!(4)) {
-        return validate_session(events, words);
+        return validate_session(events, &words);
     }
     Err("unknown completed-native scenario schema".into())
+}
+
+/// Reassemble one completed root report. Progress snapshots are not final evidence.
+pub fn logical_report(events: &[Value]) -> Result<Vec<Value>> {
+    let mut words = Vec::new();
+    let mut identity = None;
+    let mut finished = false;
+    let mut legacy = false;
+    for event in events {
+        let kind = event["event"].as_str().unwrap_or("");
+        if !matches!(
+            kind,
+            "native-user-report" | "native-user-report-chunk" | "native-user-report-end"
+        ) {
+            continue;
+        }
+        if finished {
+            return Err("duplicate or mixed completed userspace report".into());
+        }
+        if kind == "native-user-report" {
+            if identity.is_some() || event.get("version").is_some() {
+                return Err("mixed or versioned legacy report".into());
+            }
+            let chunk = event["words"].as_array().ok_or("invalid legacy words")?;
+            if chunk.len() > 64 || chunk.iter().any(|word| word.as_u64().is_none()) {
+                return Err("invalid legacy report length or word".into());
+            }
+            words.extend_from_slice(chunk);
+            legacy = true;
+            finished = true;
+            continue;
+        }
+        if event["version"].as_u64() != Some(2) {
+            return Err("unsupported report version".into());
+        }
+        let slot = event["slot"].as_u64().ok_or("missing report slot")?;
+        let generation = event["generation"]
+            .as_u64()
+            .ok_or("missing report generation")?;
+        let total = event["total"].as_u64().ok_or("missing report total")?;
+        if generation == 0 || !(65..=kernel_core::execution::REPORT_WORDS as u64).contains(&total) {
+            return Err("invalid report identity or bound".into());
+        }
+        let current = (slot, generation, total);
+        if let Some(expected) = identity {
+            if current != expected {
+                return Err("report identity or total changed".into());
+            }
+        } else {
+            if kind != "native-user-report-chunk" {
+                return Err("report end without chunks".into());
+            }
+            identity = Some(current);
+        }
+        if kind == "native-user-report-end" {
+            if words.len() as u64 != total
+                || event.get("words").is_some()
+                || event.get("offset").is_some()
+            {
+                return Err("incomplete or malformed report end".into());
+            }
+            finished = true;
+        } else {
+            if event["offset"].as_u64() != Some(words.len() as u64) {
+                return Err("report gap, duplicate or overlap".into());
+            }
+            let chunk = event["words"].as_array().ok_or("invalid chunk words")?;
+            let remaining = total as usize - words.len();
+            if chunk.len() != remaining.min(64)
+                || chunk.is_empty()
+                || chunk.iter().any(|word| word.as_u64().is_none())
+            {
+                return Err("invalid report chunk length or word".into());
+            }
+            words.extend_from_slice(chunk);
+        }
+    }
+    if !finished {
+        return Err("missing complete userspace result".into());
+    }
+    if !legacy {
+        let (slot, generation, _) = identity.ok_or("missing report identity")?;
+        let roots: Vec<_> = events
+            .iter()
+            .filter(|e| e["event"] == "native-root-image")
+            .collect();
+        if roots.len() != 1
+            || roots[0]["format"] != "elf64"
+            || roots[0]["generation"].as_u64() != Some(generation)
+            || roots[0]["slot"].as_u64() != Some(slot)
+        {
+            return Err("report does not identify the loaded root".into());
+        }
+    }
+    Ok(words)
 }
 
 pub fn smoke(args: &[String]) -> Result<()> {
@@ -535,6 +621,83 @@ pub(super) fn build_images(
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn chunked_report(total: usize) -> Vec<Value> {
+        let mut events =
+            vec![json!({"event":"native-root-image", "format":"elf64", "slot":0, "generation":7})];
+        let words: Vec<_> = (0..total).map(|n| json!(n)).collect();
+        for (index, chunk) in words.chunks(64).enumerate() {
+            events.push(json!({"event":"native-user-report-chunk","version":2,"slot":0,"generation":7,"offset":index*64,"total":total,"words":chunk}));
+        }
+        events.push(json!({"event":"native-user-report-end","version":2,"slot":0,"generation":7,"total":total}));
+        events
+    }
+    #[test]
+    fn report_reader_preserves_legacy_and_complete_chunk_boundaries() {
+        for total in [0, 1, 64] {
+            let words: Vec<_> = (0..total).map(|n| json!(n)).collect();
+            assert_eq!(
+                logical_report(&[json!({"event":"native-user-report","words":words})]).unwrap(),
+                words
+            );
+        }
+        for total in [65, 128, 1984, 2048] {
+            let events = chunked_report(total);
+            assert_eq!(
+                logical_report(&events).unwrap(),
+                (0..total).map(|n| json!(n)).collect::<Vec<_>>()
+            );
+        }
+    }
+    #[test]
+    fn report_reader_rejects_missing_duplicate_overlapping_and_truncated_chunks() {
+        let source = chunked_report(129);
+        for index in 1..source.len() {
+            let mut bad = source.clone();
+            bad.remove(index);
+            assert!(logical_report(&bad).is_err(), "missing {index}");
+            let mut bad = source.clone();
+            bad.insert(index, bad[index].clone());
+            assert!(logical_report(&bad).is_err(), "duplicate {index}");
+        }
+        for offset in [0, 63, 65, 128] {
+            let mut bad = source.clone();
+            bad[2]["offset"] = json!(offset);
+            assert!(logical_report(&bad).is_err());
+        }
+        let mut bad = source.clone();
+        bad[1]["words"].as_array_mut().unwrap().pop();
+        assert!(logical_report(&bad).is_err());
+    }
+    #[test]
+    fn report_reader_rejects_identity_bounds_word_types_and_mixed_versions() {
+        for (key, value) in [
+            ("slot", json!(1)),
+            ("generation", json!(8)),
+            ("total", json!(130)),
+            ("version", json!(1)),
+        ] {
+            let mut bad = chunked_report(129);
+            bad[2][key] = value;
+            assert!(logical_report(&bad).is_err());
+        }
+        for total in [64, 2049] {
+            assert!(logical_report(&chunked_report(total)).is_err());
+        }
+        for value in [json!(-1), json!(1.5), json!("0"), Value::Null] {
+            let mut bad = chunked_report(129);
+            bad[1]["words"][0] = value;
+            assert!(logical_report(&bad).is_err());
+        }
+        let mut bad = chunked_report(129);
+        bad[0]["slot"] = json!(1);
+        assert!(logical_report(&bad).is_err());
+        let legacy = json!({"event":"native-user-report","words":[1]});
+        let mut bad = chunked_report(129);
+        bad.push(legacy.clone());
+        assert!(logical_report(&bad).is_err());
+        assert!(logical_report(&[legacy.clone(), legacy]).is_err());
+        assert!(logical_report(&[]).is_err());
+    }
     fn observed_inputs() -> Vec<Value> {
         let fixture: Value = serde_json::from_str(include_str!(
             "../../../tests/fixtures/native-lifecycle-observations.json"

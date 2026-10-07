@@ -112,6 +112,10 @@ Fresh machine-mode evidence execution through the shared xtask runner requires e
 
 The CLOCK pilot adds a real-kernel campaign producer through the existing xtask/native executor, with separate DEV/PROD profiles, frozen protocol, checked report oracle and matched recorder observations. Its [accepted bounded passport](../research/clock-passport.md) retains twelve successful DEV/PROD boots and six portable pair receipts; independent admission remains structural. Existing offline admission remains structural and record eligibility remains false; this producer does not implement records/history, hardware performance, IPC passports or REL/fuzz campaigns. Execution acceptance and current evidence belong to the pilot feature, not an inferred acceptance of the entire Arena.
 
+## Issue 33 integration
+
+Issue #33 adds an experimental external IPC producer through the shared CLOCK build/execution path. Its functional pilot and selected original production-service execution do not complete SEC applicability, main sampling or record publication. Existing Arena admission remains authoritative; incomplete or lossy populations cannot be relabeled eligible. [IPC pilot](../research/ipc-passport.md) owns its current scope and gates.
+
 <!-- knowledge -->
 
 ```json
