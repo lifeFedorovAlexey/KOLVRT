@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "issue": 32,
+  "reviewer": "independent Codex audit_acceptance subagent",
+  "review_date": "2026-10-08",
+  "reviewed_base": "d9d41c73e03fd9597668325fb76db704d914483b",
+  "status": "pending",
+  "scope": [
+    "SDK CLOCK macro/snapshot, external actor, generic image helper and current runner/oracle; passport writer not yet present and not accepted. No execution or human review attestation."
+  ],
+  "source_files": {
+    "apps/native-runtime/src/lib.rs": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1",
+    "tests/native-apps/Cargo.toml": "4c886eeac9484f0920a46ad6e2f33ebc02b2abb0cacc8b9b84900cd94b9c4944",
+    "tests/native-apps/src/clock-client.rs": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b",
+    "crates/xtask/src/main.rs": "29c0cc1610c3c621bea1e28e1d939322bbc994f781542a0282d083b5a1cb1e27",
+    "crates/xtask/src/native_apps.rs": "58e6feb4431355d89c559f0a2c3e778a759445bdcc1b1d2222a684037b445894",
+    "crates/xtask/src/arena_clock.rs": "0eb3c3b6b97150c964cb249525a608dfdc583eecf7b3b406e1ec862bed86b545",
+    "crates/kernel/src/scheduler/mod.rs": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43",
+    "crates/kernel/src/scheduler/task.rs": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df",
+    "crates/kernel/src/arch/aarch64/entry.S": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c"
+  },
+  "accepted_findings": [
+    "Shared clock_abi macro preserves legacy output-discard behavior; snapshot names existing x0 through x3 and never exposes x4.",
+    "No production kernel implementation changes or test-specific corruption/probe hooks are introduced.",
+    "Actor performs three real CLOCK calls per envelope; mandatory oracle executes after the end snapshot in both modes; ON adds actor-private volatile recorder stores only.",
+    "Checked monotonic counters, stable nonzero frequency, zero READ_WINDOW differences and nonnegative residual are required; reports occur outside measured intervals.",
+    "Exact 64-word report, unique loader/report/completion, own root exit and complete reclamation are required by the host oracle.",
+    "Fixed three OFF/ON pairs per DEV/PROD profile retain attempted failures; no retry or historical sample reuse is introduced."
+  ],
+  "pending": [
+    "Passport writer and configuration-frequency enforcement require review after implementation freeze.",
+    "Real execution and negative-test results are not asserted by this source review.",
+    "Final digest refresh and applicability review required after source changes."
+  ],
+  "limits": [
+    "Execution-window accounting is not exclusive CPU time; unattributed residual does not localize kernel or host delay.",
+    "Recorder comparison excludes full timestamp instrumentation cost; limited samples do not establish tails or performance superiority.",
+    "Reported incomplete query counts can be rejected; host evidence cannot detect an adversary forging the entire actor and custody chain."
+  ],
+  "en_ru_review": {
+    "status": "PAIRED_MEANING_REVIEWED_NOT_INDEPENDENT_AUTHOR_REVIEW",
+    "paths": [
+      "docs/kernel/clock.md",
+      "docs/research/clock-passport.md",
+      "docs/architecture/arena-measurement-contract.md"
+    ],
+    "note": "Complete pairs checked for meaning and scope by their author; parent independent review of authored contracts/profiles remains required."
+  },
+  "reviewers": [
+    {
+      "identity": "Codex audit_acceptance subagent",
+      "role": "independent implementation reviewer; author of proposed profiles/docs",
+      "human": false
+    }
+  ],
+  "digest_format": "sha256 of exact file bytes"
+}

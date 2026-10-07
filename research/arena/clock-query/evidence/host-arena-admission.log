@@ -1,0 +1,111 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling autocfg v1.5.1
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling zerocopy v0.8.59
+   Compiling getrandom v0.3.4
+   Compiling version_check v0.9.5
+   Compiling serde_json v1.0.145
+   Compiling parking_lot_core v0.9.12
+   Compiling ref-cast v1.0.27
+   Compiling memchr v2.8.3
+   Compiling cfg-if v1.0.5
+   Compiling zmij v1.0.23
+   Compiling jsonschema-value v0.58.5
+   Compiling unicode-general-category v1.1.0
+   Compiling heck v0.5.0
+   Compiling regex-syntax v0.8.11
+   Compiling typenum v1.20.1
+   Compiling scopeguard v1.2.0
+   Compiling smallvec v1.16.2
+   Compiling ryu v1.0.23
+   Compiling windows-link v0.2.1
+   Compiling once_cell v1.21.4
+   Compiling itoa v1.0.18
+   Compiling lock_api v0.4.14
+   Compiling aho-corasick v1.1.5
+   Compiling ahash v0.8.12
+   Compiling equivalent v1.0.2
+   Compiling num-traits v0.2.19
+   Compiling borrow-or-share v0.2.4
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.2.0
+   Compiling bit-vec v0.8.0
+   Compiling vsimd v0.8.0
+   Compiling const-oid v0.10.2
+   Compiling hybrid-array v0.4.15
+   Compiling regex-automata v0.4.18
+   Compiling bytecount v0.6.9
+   Compiling bit-set v0.8.0
+   Compiling outref v0.5.2
+   Compiling parking_lot v0.12.5
+   Compiling micromap v0.3.0
+   Compiling percent-encoding v2.3.2
+   Compiling num-cmp v0.1.0
+   Compiling hashbrown v0.17.1
+   Compiling jsonschema-regex v0.58.5
+   Compiling syn v3.0.6
+   Compiling syn v2.0.119
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling uuid-simd v0.8.0
+   Compiling data-encoding v2.11.1
+   Compiling cpufeatures v0.3.1
+   Compiling num-integer v0.1.47
+   Compiling num-complex v0.4.6
+   Compiling digest v0.11.3
+   Compiling num-bigint v0.4.8
+   Compiling num-iter v0.1.46
+   Compiling sha2 v0.11.0
+   Compiling serde_derive v1.0.229
+   Compiling ref-cast-impl v1.0.27
+   Compiling strum_macros v0.28.0
+   Compiling num-rational v0.4.2
+   Compiling num v0.4.3
+   Compiling fraction v0.17.0
+   Compiling regex v1.13.1
+   Compiling fancy-regex v0.19.2
+   Compiling strum v0.28.0
+   Compiling fluent-uri v0.4.1
+   Compiling email_address v0.2.9
+   Compiling referencing v0.58.5
+   Compiling jsonschema v0.58.4
+   Compiling repository-checks v0.1.0 (C:\Users\life\.codex\worktrees\arena-clock-passport\KOLVRT\crates\repository-checks)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.79s
+     Running tests\arena.rs (target\debug\deps\arena-6bb28181497215b5.exe)
+
+running 17 tests
+test published_standard_cannot_be_superseded_by_draft_or_cycles ... ok
+test malformed_registry_and_fake_standard_classification_are_rejected ... ok
+test missing_observation_keeps_reason_and_never_becomes_zero ... ok
+test prod_forbids_internal_attribution_even_for_shared_metric ... ok
+test warmup_failure_and_whitespace_units_cannot_admit ... ok
+test same_version_labels_cannot_hide_methodology_change ... ok
+test evidence_corruption_escape_and_unlinked_assertions_are_rejected ... ok
+test overhead_is_matched_versioned_and_not_subtracted ... ok
+test accepted_authorship_requires_links_and_fixture_never_becomes_kernel_evidence ... ok
+test metrics_need_sources_units_and_explicit_custom_origin ... ok
+test implementation_changes_do_not_freeze_class_but_require_fresh_artifacts ... ok
+test changed_current_registry_does_not_rewrite_old_snapshots ... ok
+test broken_oracle_or_missing_sar_cannot_admit_fastest_result ... ok
+test dropped_unfinished_and_bad_sample_plan_remain_ineligible ... ok
+test semantic_environment_and_protocol_changes_never_share_class ... ok
+test cli_enforces_nonzero_rejections_without_publishing_records ... ok
+test checked_registry_and_example_resolve_canonical_targets ... FAILED
+
+failures:
+
+---- checked_registry_and_example_resolve_canonical_targets stdout ----
+
+thread 'checked_registry_and_example_resolve_canonical_targets' (6380) panicked at crates\repository-checks\tests\arena.rs:57:27:
+called `Result::unwrap()` on an `Err` value: "proposed profile contract digest differs from current canonical document"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    checked_registry_and_example_resolve_canonical_targets
+
+test result: FAILED. 16 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.34s
+
+error: test failed, to rerun pass `-p repository-checks --test arena`

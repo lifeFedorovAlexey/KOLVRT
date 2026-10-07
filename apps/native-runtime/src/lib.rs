@@ -145,13 +145,51 @@ pub mod native {
         }
         words
     }
+    // One ABI definition; unused observations remain discarded by legacy callers.
+    macro_rules! clock_abi {
+        ($ticks:tt, $frequency:tt, $window:tt, $read_window:tt) => {
+            // SAFETY: read-only public CLOCK ABI, all changed registers declared;
+            // x4 is clobbered without exposing an unstable observation field.
+            unsafe {
+                core::arch::asm!("svc #0x53", lateout("x0") $ticks,
+                    lateout("x1") $frequency, lateout("x2") $window,
+                    lateout("x3") $read_window, lateout("x4") _, options(nostack));
+            }
+        };
+    }
+    /// Existing CLOCK return observations. These are timer ticks, not PMU cycles.
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    pub struct ClockSnapshot {
+        pub ticks: u64,
+        pub frequency: u64,
+        /// Accumulated EL0 execution windows; may include host stalls and is not CPU time.
+        pub execution_window_ticks: u64,
+        /// READ_WINDOW service-body accounting; does not measure CLOCK cost.
+        pub read_window_service_ticks: u64,
+    }
+    #[inline(always)]
+    pub fn clock_snapshot() -> ClockSnapshot {
+        let ticks: u64;
+        let frequency: u64;
+        let execution_window_ticks: u64;
+        let read_window_service_ticks: u64;
+        clock_abi!(
+            ticks,
+            frequency,
+            execution_window_ticks,
+            read_window_service_ticks
+        );
+        ClockSnapshot {
+            ticks,
+            frequency,
+            execution_window_ticks,
+            read_window_service_ticks,
+        }
+    }
     pub fn clock() -> (u64, u64) {
         let ticks: u64;
         let frequency: u64;
-        // SAFETY: read-only public native clock ABI; every changed register is declared.
-        unsafe {
-            core::arch::asm!("svc #0x53",lateout("x0") ticks,lateout("x1") frequency,lateout("x2") _,lateout("x3") _,lateout("x4") _,options(nostack));
-        }
+        clock_abi!(ticks, frequency, _, _);
         (ticks, frequency)
     }
     pub fn report(word: u64) {

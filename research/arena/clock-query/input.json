@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "workload": "arena.workload.clock-query",
+  "version": "1",
+  "opaque_argument_variable": "KOLVRT_NATIVE_ARGUMENT",
+  "off_argument": 1,
+  "on_argument": 2,
+  "warmup_samples": 4,
+  "measured_samples": 24,
+  "useful_queries_per_iteration": 1,
+  "clock_calls_per_iteration": 3,
+  "pairs_per_profile": 3,
+  "pair_order": [
+    ["OFF", "ON"],
+    ["ON", "OFF"],
+    ["OFF", "ON"]
+  ],
+  "profiles": ["DEV", "PROD"],
+  "total_boots": 12,
+  "retry_policy": "No retry or historical observation reuse; retain failed/unfinished attempts."
+}
