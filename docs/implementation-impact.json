@@ -19,7 +19,7 @@
     {
       "path": "crates/repository-checks/src/arena/architecture.html",
       "before_sha256_lf": null,
-      "after_sha256_lf": "3431f43038e65c5eecb837b14cfa8f5981d92d335c7d267db36bf1ac2f23b3c9",
+      "after_sha256_lf": "9663dbefec7883a38e12ba27669da6a1ecb796feea2316ca6082948d161399ef",
       "disposition": "existing-feature",
       "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
     },

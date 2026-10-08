@@ -138,8 +138,8 @@
         "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
       "docs/architecture/arena-measurement-contract.md": {
-        "source_sha256": "3245023ad41dac3ec1c94062b0c6c1d5fe80787736300245718c6215e7b743db",
-        "translation_sha256": "b87a78e4caf7847b8aa3bbc59153dad63a39ab61a3b3f0f35326e07eddef8b58"
+        "source_sha256": "54b608b63e9aca31eb4843bbb81fa2ed656392f0059fbcada0855f124a62077d",
+        "translation_sha256": "ec9e4723be199c902e9f531e22e33addecdf58c08627aaeac5eaf5f7052e8d8d"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
@@ -158,8 +158,8 @@
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
-        "translation_sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315"
+        "source_sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
+        "translation_sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",

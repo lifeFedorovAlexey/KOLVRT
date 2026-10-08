@@ -750,7 +750,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 22760,
+      "estimated_bytes": 23537,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -837,7 +837,7 @@
       ],
       "document": "doc.kolvrt.arena.measurement-contract",
       "document_status": "CURRENT",
-      "estimated_bytes": 11633,
+      "estimated_bytes": 12249,
       "id": "doc.kolvrt.arena.measurement-contract",
       "kind": "subsystem-contract",
       "path": "docs/architecture/arena-measurement-contract.md",

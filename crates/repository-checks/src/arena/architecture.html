@@ -3,440 +3,311 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>KOLVRT · карта ядра</title>
     <link rel="icon" href="data:," />
+    <title>KOLVRT · Architecture</title>
     <style>
       :root {
         color-scheme: dark;
-        --bg: #0b111a;
-        --panel: #121d29;
-        --line: #2a3b4c;
-        --muted: #94a9bb;
-        --ink: #eef5fa;
-        --teal: #61ddc6;
-        --blue: #77b8ff;
-        --amber: #ffc977;
-        --violet: #bf9fff;
+        --bg: #0b1220;
+        --panel: #152337;
+        --ink: #eff6ff;
+        --muted: #a7bdd5;
+        --line: #344c68;
+        --accent: #62e1c9;
       }
       * {
         box-sizing: border-box;
       }
       body {
         margin: 0;
+        overflow: hidden;
         background: var(--bg);
-        font:
-          14px/1.5 system-ui,
-          sans-serif;
         color: var(--ink);
+        font:
+          14px/1.45 system-ui,
+          sans-serif;
       }
-      main {
-        max-width: 1560px;
-        margin: auto;
-        padding: 32px;
-      }
-      h1,
-      h2,
-      h3,
-      p {
-        margin: 0;
-      }
-      h1 {
-        font-size: 34px;
-        letter-spacing: -1px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-      h3 {
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--muted);
-      }
-      .eyebrow {
-        color: var(--teal);
-        font-size: 12px;
-        letter-spacing: 0.18em;
-        font-weight: 700;
-      }
-      .intro {
-        display: flex;
-        justify-content: space-between;
-        gap: 24px;
-        align-items: end;
-        margin-bottom: 22px;
-      }
-      .muted {
-        color: var(--muted);
-      }
-      .counts {
-        display: flex;
-        gap: 12px;
-      }
-      .count {
-        padding: 10px 20px;
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-      }
-      .count strong {
-        font-size: 30px;
-        margin-right: 9px;
-        color: var(--teal);
-      }
-      .toolbar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        margin: 18px 0;
-      }
-      input[type="search"],
-      select,
-      button {
+      button,
+      a {
         font: inherit;
       }
-      input[type="search"],
-      select {
-        background: var(--panel);
-        color: var(--ink);
-        border: 1px solid var(--line);
-        padding: 10px 12px;
-        border-radius: 8px;
-      }
-      input[type="search"] {
-        width: 270px;
-      }
-      .filters {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      .filters label {
+      button {
         cursor: pointer;
-        color: var(--muted);
-      }
-      .workspace {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 365px;
-        gap: 18px;
-        align-items: start;
-      }
-      .graph {
-        position: relative;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 22px;
-        background: linear-gradient(140deg, #142232, #0f1823);
-        min-height: 650px;
-        overflow: hidden;
-      }
-      .graph svg {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 2;
-        overflow: visible;
-      }
-      .layer {
-        position: relative;
-        z-index: 3;
-      }
-      .layer + .layer {
-        margin-top: 32px;
-        padding-top: 24px;
-        border-top: 1px dashed #536579;
-      }
-      .layer-title {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 14px;
-      }
-      .nodes {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 22px 28px;
-      }
-      .nodes.el0 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .node {
-        text-align: left;
-        min-height: 110px;
-        border: 1px solid #344858;
-        border-radius: 12px;
-        background: #172533;
         color: var(--ink);
-        padding: 14px;
-        cursor: pointer;
-        box-shadow: 0 8px 20px #0002;
-        transition:
-          border-color 0.15s,
-          transform 0.15s;
+        background: #17273d;
+        border: 1px solid #3a506c;
+        border-radius: 9px;
+        padding: 8px 12px;
       }
-      .node:hover {
-        border-color: var(--blue);
-        transform: translateY(-2px);
-      }
-      .node.selected {
-        border: 2px solid var(--teal);
-        padding: 13px;
-        background: #163a3b;
-      }
-      .node.faded {
-        opacity: 0.82;
-      }
-      .node strong {
-        display: block;
-        font-size: 15px;
-      }
-      .node small {
-        display: block;
-        margin-top: 5px;
-        color: var(--muted);
-        font-size: 11px;
-      }
-      .node .measured {
-        color: var(--teal);
-      }
-      .inspector {
-        position: sticky;
-        top: 18px;
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 22px;
-      }
-      .section {
-        margin-top: 22px;
-      }
-      .section h3 {
-        margin-bottom: 9px;
-      }
-      .item {
-        padding: 9px 0;
-        border-bottom: 1px solid #253543;
-      }
-      .member {
-        font-weight: 600;
+      button:hover,
+      button:focus-visible {
+        border-color: var(--accent);
+        outline: 2px solid #62e1c955;
       }
       a {
-        color: var(--blue);
-        text-decoration: none;
+        color: #9bd5ff;
         overflow-wrap: anywhere;
       }
-      a:hover {
-        text-decoration: underline;
+      header {
+        position: fixed;
+        z-index: 3;
+        left: 20px;
+        right: 20px;
+        top: 16px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        pointer-events: none;
       }
-      .source {
+      header > div {
+        pointer-events: auto;
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        background: #0b1220eb;
+        border: 1px solid #2d425e;
+        border-radius: 13px;
+        padding: 6px;
+      }
+      .brand {
+        padding: 0 9px;
+        font-weight: 750;
+        letter-spacing: 0.03em;
+      }
+      .brand small {
         display: block;
-        font:
-          11px/1.7 ui-monospace,
-          monospace;
-      }
-      .relation {
-        border: 0;
-        background: transparent;
-        padding: 6px 0;
-        color: var(--ink);
-        text-align: left;
-        cursor: pointer;
-        width: 100%;
-      }
-      .relation span {
-        font-size: 11px;
-        margin-right: 6px;
-      }
-      .measurement {
-        margin-top: 14px;
-        padding: 14px;
-        background: #0e292c;
-        border: 1px solid #276158;
-        border-radius: 10px;
-      }
-      .measurement strong {
-        font-size: 25px;
-        color: var(--teal);
-      }
-      .measurement p {
-        margin-top: 6px;
-      }
-      .tag {
-        font-size: 11px;
-        border: 1px solid var(--line);
-        padding: 3px 7px;
-        border-radius: 5px;
-        display: inline-block;
-        margin: 4px 4px 0 0;
-      }
-      .foot {
-        margin-top: 18px;
-        font-size: 12px;
-        color: var(--muted);
-        overflow-wrap: anywhere;
-      }
-      .legend {
-        font-size: 12px;
-        color: var(--muted);
-        margin: 12px 0;
-      }
-      .empty {
-        padding: 20px;
-        border: 1px dashed var(--line);
-        color: var(--muted);
-        border-radius: 8px;
-      }
-      .warning {
-        color: var(--amber);
-      }
-      .graph-note {
-        font-size: 12px;
-        color: var(--muted);
-        margin-bottom: 16px;
-      }
-      .edge-label {
         font-size: 10px;
-        paint-order: stroke;
-        stroke: #101b27;
-        stroke-width: 4px;
+        font-weight: 400;
+        color: var(--muted);
+      }
+      #canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+        cursor: grab;
+      }
+      #canvas.dragging {
+        cursor: grabbing;
+      }
+      .node {
+        cursor: pointer;
+        outline: none;
+      }
+      .node .card {
+        fill: #152337;
+        stroke: #3a5574;
+        stroke-width: 1.4;
+      }
+      .node:hover .card,
+      .node:focus .card {
+        stroke: #9bd5ff;
+        stroke-width: 2.4;
+      }
+      .node.active .card {
+        fill: #143a3f;
+        stroke: #62e1c9;
+        stroke-width: 2.4;
+      }
+      .node text {
+        pointer-events: none;
+        fill: var(--ink);
+      }
+      .node .name {
+        font-size: 18px;
+        font-weight: 650;
+      }
+      .node .stats {
+        font-size: 13px;
+        fill: #aec7df;
+      }
+      .node .perf {
+        font-size: 12px;
+        fill: #b9cce0;
+      }
+      .node .measured {
+        fill: #78e8d1;
+      }
+      .icon {
+        stroke: #b9d6ef;
+        stroke-width: 1.8;
+        fill: none;
+        stroke-linecap: round;
         stroke-linejoin: round;
       }
-      .cost {
-        float: right;
+      .edge {
+        fill: none;
+        stroke-width: 1.6;
+        opacity: 0.52;
+        pointer-events: stroke;
+        cursor: pointer;
+      }
+      .edge.active {
+        stroke-width: 2.6;
+        opacity: 1;
+      }
+      .edge.muted {
+        opacity: 0.2;
+      }
+      .edge-label {
+        font-size: 12px;
+        font-weight: 650;
+        paint-order: stroke;
+        stroke: #0b1220;
+        stroke-width: 5px;
+        stroke-linejoin: round;
+        pointer-events: none;
+      }
+      .layerbox {
+        fill: #0e1929;
+        stroke: #243954;
+        stroke-width: 1.5;
+        rx: 18;
+      }
+      .layerlabel {
+        fill: #819fbd;
+        font-size: 14px;
+        font-weight: 650;
+        letter-spacing: 1px;
+      }
+      .popup {
+        position: fixed;
+        z-index: 5;
+        width: 370px;
+        max-width: calc(100vw - 24px);
+        max-height: calc(100vh - 90px);
+        overflow: auto;
+        padding: 18px;
+        border: 1px solid #567591;
+        border-radius: 14px;
+        background: #142236fa;
+        box-shadow: 0 16px 60px #0009;
+        backdrop-filter: blur(14px);
+      }
+      .popup[hidden] {
+        display: none;
+      }
+      .popup h2 {
+        font-size: 20px;
+        margin: 0 30px 6px 0;
+      }
+      .popup p {
+        margin: 8px 0;
+      }
+      .popup .muted {
         color: var(--muted);
-        font-size: 16px;
+        font-size: 12px;
       }
-      .summary-measurements {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px 20px;
-        padding: 16px 20px;
-        border: 1px solid #37615f;
-        border-radius: 12px;
-        background: #102a2c;
+      .popup .close {
+        position: absolute;
+        right: 9px;
+        top: 9px;
+        padding: 3px 9px;
       }
-      .summary-measurements > p {
-        grid-column: 1/-1;
+      .popup h3 {
+        font-size: 12px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: #a7c3de;
+        margin: 16px 0 6px;
       }
-      .summary-measurements strong {
+      .popup details {
+        padding: 5px 0;
+        border-bottom: 1px solid #2a4059;
+      }
+      .popup summary {
+        cursor: pointer;
+      }
+      .popup a {
+        font-size: 11px;
         display: block;
-        color: var(--teal);
-        font-size: 21px;
+        margin: 4px 0;
       }
-      .summary-measurements small {
-        color: var(--muted);
+      .popup .values {
+        color: var(--accent);
+        font-size: 17px;
+        font-weight: 650;
       }
-      @media (min-width: 980px) and (max-width: 1190px) {
-        main {
-          padding: 24px;
-        }
-        .workspace {
-          grid-template-columns: minmax(0, 1fr) 310px;
-          gap: 14px;
-        }
-        .graph,
-        .inspector {
-          padding: 16px;
-        }
-        .nodes {
-          gap: 16px 12px;
-        }
-        .node {
-          padding: 10px;
-        }
-        .node.selected {
-          padding: 9px;
-        }
-        .node strong {
-          font-size: 13px;
-        }
+      .relation {
+        padding: 7px 0;
+        border-bottom: 1px solid #2a4059;
+        cursor: pointer;
       }
-      @media (max-width: 979px) {
-        .workspace {
-          grid-template-columns: 1fr;
-        }
-        .inspector {
-          position: static;
-        }
-        .intro {
-          align-items: start;
-        }
-        .nodes {
-          gap: 16px;
-        }
+      .relation:hover {
+        color: var(--accent);
       }
-      @media (max-width: 620px) {
-        main {
-          padding: 16px;
+      footer {
+        position: fixed;
+        bottom: 12px;
+        left: 20px;
+        right: 20px;
+        pointer-events: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        color: #9fb6cf;
+        font-size: 11px;
+      }
+      footer span {
+        background: #0b1220e8;
+        padding: 5px 8px;
+        border-radius: 7px;
+      }
+      .legend-dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        margin-right: 7px;
+      }
+      @media (max-width: 700px) {
+        header {
+          left: 8px;
+          right: 8px;
+          top: 8px;
         }
-        .intro {
-          display: block;
+        .brand {
+          font-size: 12px;
         }
-        .counts {
-          margin-top: 15px;
+        .brand small {
+          max-width: 140px;
         }
-        .nodes {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+        button {
+          padding: 7px 9px;
         }
-        .toolbar input {
-          width: 100%;
-        }
-        h1 {
-          font-size: 28px;
+        footer {
+          left: 8px;
+          right: 8px;
+          font-size: 10px;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <div class="intro">
-        <div>
-          <div class="eyebrow">KOLVRT / ARCHITECTURE</div>
-          <h1>Как устроено ядро</h1>
-          <p class="muted">
-            Состав, контракты и связи. Выберите компонент, чтобы раскрыть
-            детали.
-          </p>
-        </div>
-        <div class="counts" id="counts"></div>
+    <header>
+      <div>
+        <span class="brand">KOLVRT<small id="subtitle"></small></span>
       </div>
-      <section
-        id="measurement-summary"
-        class="summary-measurements"
-        aria-label="Доступные исторические измерения"
-      ></section>
-      <div class="toolbar">
-        <input
-          id="search"
-          type="search"
-          placeholder="Найти компонент или исходник…"
-          aria-label="Поиск компонента"
-        /><select id="layer" aria-label="Уровень">
-          <option value="all">Все уровни</option>
-          <option value="EL1">Только ядро · EL1</option>
-          <option value="EL0">Только приложения · EL0</option>
-        </select>
-        <div class="filters" id="filters"></div>
+      <div>
+        <button id="minus" aria-label="Zoom out">−</button
+        ><button id="plus" aria-label="Zoom in">+</button
+        ><button id="fit"></button><button id="lang">EN</button
+        ><button id="help">?</button>
       </div>
-      <div class="workspace">
-        <section class="graph" id="graph" aria-label="Граф архитектуры">
-          <p class="graph-note">
-            Показаны связи выбранного блока. Стрелки — отношения из исходников,
-            без измеренных весов.
-          </p>
-          <svg id="edges" aria-hidden="true"></svg>
-          <div id="layers"></div>
-        </section>
-        <aside class="inspector" id="inspector" aria-live="polite"></aside>
-      </div>
-      <p class="legend">
-        — = отдельная стоимость не измерена. Общие исходники могут входить в
-        несколько групп. Карта не является трассировкой исполнения.
-      </p>
-      <div class="foot" id="provenance"></div>
-    </main>
+    </header>
+    <svg id="canvas" aria-label="Architecture graph">
+      <defs id="defs"></defs>
+      <g id="scene"></g>
+    </svg>
+    <section
+      id="popup"
+      class="popup"
+      hidden
+      tabindex="-1"
+      role="dialog"
+      aria-label="Подробности компонента"
+    ></section>
+    <footer><span id="hint"></span><span id="provenance"></span></footer>
     <script id="arena-model" type="application/json">
       __ARENA_MODEL__
     </script>
@@ -445,465 +316,1299 @@
       const model = JSON.parse(
         document.getElementById("arena-model").textContent,
       );
-      const colors = {
-        call: "#77b8ff",
-        data: "#61ddc6",
-        authority: "#ffc977",
-        lifetime: "#bf9fff",
+      const translations = {
+        members: {
+          "Boot admission sequence": "Допуск при загрузке",
+          "Selected platform initialization": "Инициализация платформы",
+          "Hardware abstraction selection": "Выбор аппаратного интерфейса",
+          "Platform description decoding": "Разбор описания платформы",
+          "Physical and virtual memory ownership":
+            "Владение физической и виртуальной памятью",
+          "Frame allocation state": "Состояние распределения фреймов",
+          "Address-space identifier lifecycle": "Жизненный цикл ASID",
+          "Architectural context save and restore":
+            "Сохранение и восстановление контекста",
+          "Vector installation and exception dispatch":
+            "Векторы и обработка исключений",
+          "Interrupt-controller dispatch": "Обработка контроллера прерываний",
+          "Secondary CPU and invalidation coordination":
+            "Вторичные CPU и инвалидация",
+          "Per-CPU identity and local state":
+            "Идентичность и локальное состояние CPU",
+          "Native-call and scheduling dispatch":
+            "Диспетчеризация native-вызовов и задач",
+          "Task context and completion state": "Контекст и завершение задач",
+          "Guarded per-CPU scheduler storage":
+            "Защищённое хранилище планировщика CPU",
+          "Task ownership transitions": "Переходы владения задачами",
+          "Process admission and resource lifecycle":
+            "Допуск процессов и ресурсов",
+          "Process registry transitions": "Переходы реестра процессов",
+          "ELF image validation": "Проверка ELF",
+          "Granted lifecycle operation enforcement":
+            "Исполнение разрешённых операций жизненного цикла",
+          "Initial native admission and completion reporting":
+            "Начальный допуск и отчёт завершения",
+          "Immutable bootstrap grant validation":
+            "Проверка неизменяемых разрешений загрузки",
+          "Protected user-memory copy boundary":
+            "Защищённое копирование пользовательской памяти",
+          "User range and snapshot validation": "Проверка диапазонов и снимков",
+          "Local handle resolution": "Разрешение локальных дескрипторов",
+          "Capability and domain enforcement": "Проверка полномочий и доменов",
+          "Generational handle namespace":
+            "Поколения пространства дескрипторов",
+          "Domain rights and resource accounting":
+            "Права домена и учёт ресурсов",
+          "Wait identity and terminal transitions":
+            "Идентичность ожиданий и завершение",
+          "Kernel synchronization primitives": "Примитивы синхронизации ядра",
+          "Task wait and wake integration": "Ожидание и пробуждение задач",
+          "Bounded endpoint and request state machine":
+            "Автомат ограниченных endpoint и запросов",
+          "IPC runtime integration": "Интеграция IPC с исполнением",
+          "Endpoint and request storage": "Хранилище endpoint и запросов",
+          "Admission, payload copy and completion":
+            "Допуск, копирование и завершение",
+          "Deferred wake and owner continuation":
+            "Отложенное пробуждение владельца",
+          "Counter reads and deadline arithmetic":
+            "Чтение счётчика и арифметика сроков",
+          "Own-task execution observation service":
+            "Наблюдение исполнения своей задачи",
+          "Time value arithmetic": "Арифметика времени",
+          "Checked immutable window reduction":
+            "Проверенное сведение неизменяемого окна",
+          "Execution observation ABI and report bounds":
+            "ABI наблюдений и границы отчёта",
+          "Native CLOCK dispatch": "Диспетчеризация CLOCK",
+          "Current-task accumulated observations":
+            "Накопленные наблюдения задачи",
+          "Immutable descriptor validation":
+            "Проверка неизменяемого дескриптора",
+          "Platform identity extraction": "Извлечение идентичности платформы",
+          "Boot descriptor publication": "Публикация загрузочного дескриптора",
+          "Bounded event serialization and console output":
+            "Ограниченная сериализация событий и вывод",
+          "Service policy and readiness coordination":
+            "Политика сервиса и готовность",
+          "Production recovery operation": "Восстановление production-сервиса",
+          "Counter request execution": "Исполнение запросов счётчика",
+          "Public native ABI call interface": "Интерфейс публичного native ABI",
+        },
+        nodes: {
+          "kolvrt.kernel.view.boot": {
+            ru: "Загрузка",
+            en: "Boot",
+            ruResponsibility: "Проверяет платформу и запускает механизмы ядра.",
+          },
+          "kolvrt.kernel.view.memory": {
+            ru: "Память",
+            en: "Memory",
+            ruResponsibility:
+              "Управляет владением памятью и адресными пространствами.",
+          },
+          "kolvrt.kernel.view.interrupts": {
+            ru: "Прерывания",
+            en: "Interrupts",
+            ruResponsibility:
+              "Сохраняет контекст и передаёт исключения и IRQ обработчикам.",
+          },
+          "kolvrt.kernel.view.smp": {
+            ru: "SMP / CPU",
+            en: "SMP / CPU",
+            ruResponsibility:
+              "Координирует CPU, локальное состояние и инвалидацию.",
+          },
+          "kolvrt.kernel.view.scheduler": {
+            ru: "Планировщик",
+            en: "Scheduler",
+            ruResponsibility:
+              "Управляет исполнением, владением и завершением задач.",
+          },
+          "kolvrt.kernel.view.process": {
+            ru: "Процессы",
+            en: "Processes",
+            ruResponsibility:
+              "Проверяет образы и управляет допуском и жизненным циклом процессов.",
+          },
+          "kolvrt.kernel.view.user-copy": {
+            ru: "Копирование",
+            en: "User-copy",
+            ruResponsibility:
+              "Проверяет и копирует пользовательские данные через защищённую границу.",
+          },
+          "kolvrt.kernel.view.authority": {
+            ru: "Полномочия",
+            en: "Authority",
+            ruResponsibility:
+              "Разрешает имена, проверяет полномочия и учитывает ресурсы.",
+          },
+          "kolvrt.kernel.view.wait": {
+            ru: "Ожидание",
+            en: "Wait / wake",
+            ruResponsibility:
+              "Управляет ожиданием, пробуждением и синхронизацией.",
+          },
+          "kolvrt.kernel.view.ipc": {
+            ru: "IPC",
+            en: "IPC",
+            ruResponsibility:
+              "Обеспечивает ограниченный обмен запросами и ответами.",
+          },
+          "kolvrt.kernel.view.clock": {
+            ru: "Время / CLOCK",
+            en: "Time / CLOCK",
+            ruResponsibility:
+              "Предоставляет время и наблюдения исполнения собственной задачи.",
+          },
+          "kolvrt.kernel.view.devices": {
+            ru: "Устройства",
+            en: "Devices",
+            ruResponsibility:
+              "Проверяет неизменяемую идентичность устройств; не выдаёт полномочия.",
+          },
+          "kolvrt.kernel.view.diagnostics": {
+            ru: "Диагностика",
+            en: "Diagnostics",
+            ruResponsibility:
+              "Сериализует события и выводит их через загрузочную консоль.",
+          },
+          "kolvrt.kernel.view.supervisor": {
+            ru: "Супервизор",
+            en: "Supervisor",
+            ruResponsibility:
+              "Применяет политику сервиса, готовности и восстановления.",
+          },
+          "kolvrt.kernel.view.counter-service": {
+            ru: "Сервис счётчика",
+            en: "Counter service",
+            ruResponsibility: "Исполняет запросы настоящего сервиса счётчика.",
+          },
+        },
+        edges: {
+          "Initialize physical memory, MMU and heap": {
+            ru: "Инициализирует физическую память, MMU и кучу",
+            ruShort: "инициализирует",
+            enShort: "initialize",
+          },
+          "Install exception vectors and interrupt controller": {
+            ru: "Устанавливает векторы исключений и контроллер прерываний",
+            ruShort: "ставит векторы",
+            enShort: "install vectors",
+          },
+          "Initialize per-CPU state and start secondary CPUs": {
+            ru: "Инициализирует состояние CPU и запускает вторичные CPU",
+            ruShort: "запускает CPU",
+            enShort: "start CPUs",
+          },
+          "Admit initial native images": {
+            ru: "Допускает начальные native-образы",
+            ruShort: "допускает ELF",
+            enShort: "admit ELF",
+          },
+          "Validate and publish reserved console descriptor": {
+            ru: "Проверяет и публикует зарезервированный дескриптор консоли",
+            ruShort: "публикует",
+            enShort: "publish",
+          },
+          "Validated reserved console address configures diagnostics": {
+            ru: "Настраивает диагностику проверенным адресом консоли",
+            ruShort: "настраивает",
+            enShort: "configure",
+          },
+          "Initialize console and emit boot diagnostics": {
+            ru: "Инициализирует консоль и выводит события загрузки",
+            ruShort: "выводит",
+            enShort: "emit",
+          },
+          "Dispatch timer interrupt to scheduler": {
+            ru: "Передаёт прерывание таймера планировщику",
+            ruShort: "тик таймера",
+            enShort: "timer tick",
+          },
+          "Dispatch inter-processor interrupt": {
+            ru: "Передаёт межпроцессорное прерывание",
+            ruShort: "доставляет IPI",
+            enShort: "deliver IPI",
+          },
+          "Require acquired invalidation acknowledgements before reuse": {
+            ru: "Требует полученные подтверждения инвалидации до повторного использования",
+            ruShort: "ждёт ACK",
+            enShort: "await ACK",
+          },
+          "Own and release process user-space frames": {
+            ru: "Владеет фреймами процесса и освобождает их",
+            ruShort: "владеет фреймами",
+            enShort: "own frames",
+          },
+          "Admit task contexts and acquire completion": {
+            ru: "Допускает контексты задач и получает завершение",
+            ruShort: "допускает задачи",
+            enShort: "admit tasks",
+          },
+          "Enforce domain charges and local namespace limits": {
+            ru: "Обеспечивает учёт домена и лимиты локального пространства имён",
+            ruShort: "учитывает ресурсы",
+            enShort: "charge resources",
+          },
+          "Create endpoints and senders under existing grants": {
+            ru: "Создаёт endpoint и отправителей по существующим разрешениям",
+            ruShort: "создаёт endpoint",
+            enShort: "create endpoints",
+          },
+          "Dispatch prepare, execute, copy and finish operations": {
+            ru: "Передаёт подготовку, исполнение, копирование и завершение",
+            ruShort: "исполняет IPC",
+            enShort: "execute IPC",
+          },
+          "Resolve current-task handle and security operations": {
+            ru: "Разрешает дескрипторы текущей задачи и операции безопасности",
+            ruShort: "проверяет права",
+            enShort: "check rights",
+          },
+          "Publish own-task counters through CLOCK": {
+            ru: "Публикует счётчики своей задачи через CLOCK",
+            ruShort: "публикует время",
+            enShort: "publish time",
+          },
+          "Integrate event waits and wakeups with task state": {
+            ru: "Связывает ожидание событий и пробуждение с состоянием задачи",
+            ruShort: "будит / ожидает",
+            enShort: "wait / wake",
+          },
+          "Snapshot and copy initialized user payload bytes": {
+            ru: "Создаёт снимок и копирует инициализированные байты пользователя",
+            ruShort: "копирует",
+            enShort: "copy payload",
+          },
+          "Check namespace rights and charge retained requests": {
+            ru: "Проверяет права пространства имён и учитывает удерживаемые запросы",
+            ruShort: "проверяет права",
+            enShort: "check rights",
+          },
+          "Retain exact wait identities until terminal wakeup": {
+            ru: "Удерживает точную идентичность ожидания до финального пробуждения",
+            ruShort: "держит ожидание",
+            enShort: "retain wait",
+          },
+          "Ping owner CPU for deferred continuations": {
+            ru: "Посылает сигнал CPU владельца для отложенного продолжения",
+            ruShort: "сигналит CPU",
+            enShort: "ping CPU",
+          },
+          "Use protected user-address range boundaries": {
+            ru: "Использует защищённые границы пользовательского адресного пространства",
+            ruShort: "проверяет диапазон",
+            enShort: "check range",
+          },
+          "Dispatch scheduler IPI and secondary polling": {
+            ru: "Передаёт IPI планировщика и опрос вторичного CPU",
+            ruShort: "доставляет IPI",
+            enShort: "deliver IPI",
+          },
+          "Request lifecycle operations within immutable grants": {
+            ru: "Запрашивает операции жизненного цикла в рамках неизменяемых разрешений",
+            ruShort: "управляет процессом",
+            enShort: "manage lifecycle",
+          },
+          "Issue readiness and service control requests": {
+            ru: "Посылает запросы готовности и управления сервисом",
+            ruShort: "проверяет готовность",
+            enShort: "probe readiness",
+          },
+          "Receive, commit and reply through native runtime": {
+            ru: "Получает, фиксирует и отвечает через native runtime",
+            ruShort: "запрос / ответ",
+            enShort: "request / reply",
+          },
+          "Publish lifecycle and generic report events": {
+            ru: "Публикует события жизненного цикла и общие отчёты",
+            ruShort: "публикует события",
+            enShort: "publish events",
+          },
+        },
       };
-      const kinds = {
-        call: "вызовы",
-        data: "данные",
-        authority: "полномочия",
-        lifetime: "время жизни",
+      let language = "ru",
+        selected = null,
+        pinned = false,
+        hoverTimer = null,
+        popupKind = null;
+      const words = {
+        ru: {
+          subtitle: "Карта ядра",
+          fit: "Вписать",
+          hint: "Тяните фон · колесо: масштаб · нажмите блок: состав и связи",
+          groups: "групп",
+          edges: "связей",
+          members: "состав",
+          ins: "вход",
+          outs: "выход",
+          perf: "замер",
+          none: "нет",
+          topology:
+            "Числа описывают состав и связи этой модели, а не полный граф вызовов или частоту исполнения.",
+          composition: "Состав",
+          links: "Связи",
+          sources: "Исходники",
+          contracts: "Контракты",
+          responsibility: "Назначение",
+          close: "Закрыть",
+          help: "Как читать карту",
+          call: "Вызов",
+          data: "Данные",
+          authority: "Полномочия",
+          lifetime: "Время жизни",
+          helpline:
+            "Стрелка направлена от инициатора к получателю. Цвет показывает вид связи; подпись — действие. Подведите курсор или выберите блок, чтобы раскрыть связи.",
+          helpnav:
+            "Тяните фон для перемещения; колесо или +/− меняют масштаб. Вписать возвращает всю карту. Tab и Enter выбирают блок; Escape закрывает подробности.",
+          notmeasured:
+            "Стоимость компонента отдельно не измерена. «—» не означает ноль.",
+          historical: "Исторический CLOCK-путь",
+          repeat: "Медианы отдельных повторов",
+          scope:
+            "2 граничных CLOCK + 1 запрос + учёт измерителя. Не эксклюзивная стоимость блока; стоимости частей неизвестны.",
+          baseline: "Базового замера нет.",
+          kernel: "EL1 · ЯДРО",
+          apps: "EL0 · ПРИЛОЖЕНИЯ",
+          snapshot: "снимок",
+          dirty: "рабочие изменения",
+          unavailable: "Недоступные замеры",
+          pin: "Нажмите для закрепления",
+          source: "исходники",
+          us: "мкс",
+          pending: "Замеры не реализованы",
+          missingMeasurements: "Замеры недоступны",
+          medianLabel: "Исторические медианы повторов",
+          noData: "нет данных",
+          ticks: "тики",
+        },
+        en: {
+          subtitle: "Kernel map",
+          fit: "Fit",
+          hint: "Drag background · wheel: zoom · select a node: composition and relations",
+          groups: "groups",
+          edges: "edges",
+          members: "parts",
+          ins: "in",
+          outs: "out",
+          perf: "measured",
+          none: "none",
+          topology:
+            "Counts describe this model’s composition and relations, not the complete call graph or execution frequency.",
+          composition: "Composition",
+          links: "Relations",
+          sources: "Sources",
+          contracts: "Contracts",
+          responsibility: "Responsibility",
+          close: "Close",
+          help: "Reading the map",
+          call: "Call",
+          data: "Data",
+          authority: "Authority",
+          lifetime: "Lifetime",
+          helpline:
+            "Arrows point from initiator to recipient. Color identifies relation kind; the label describes its action. Hover or select a node to reveal its relations.",
+          helpnav:
+            "Drag the background to pan; wheel or +/− zoom. Fit restores the full graph. Tab and Enter select nodes; Escape closes details.",
+          notmeasured:
+            "Component cost has not been measured separately. “—” does not mean zero.",
+          historical: "Historical CLOCK path",
+          repeat: "Medians of separate repeats",
+          scope:
+            "2 boundary CLOCK calls + 1 query + harness bookkeeping. Not exclusive component cost; subcosts are unknown.",
+          baseline: "No baseline measurement.",
+          kernel: "EL1 · KERNEL",
+          apps: "EL0 · APPLICATIONS",
+          snapshot: "snapshot",
+          dirty: "working changes",
+          unavailable: "Unavailable measurements",
+          pin: "Click to pin",
+          source: "source",
+          us: "µs",
+          pending: "Measurements not implemented",
+          missingMeasurements: "Measurements unavailable",
+          medianLabel: "Historical repeat medians",
+          noData: "unavailable",
+          ticks: "ticks",
+        },
+      };
+      const t = (k) => words[language][k];
+      const shortId = (n) => n.id.split(".").at(-1);
+      const title = (n) => translations.nodes[n.id][language];
+      const memberName = (m) =>
+        language === "ru" ? translations.members[m.name] : m.name;
+      const edgeText = (e) =>
+        language === "ru" ? translations.edges[e.label].ru : e.label;
+      const edgeShort = (e) => translations.edges[e.label][language + "Short"];
+      const colors = {
+        call: "#79b9ff",
+        data: "#5ed6bc",
+        authority: "#e7b86e",
+        lifetime: "#b49aff",
       };
       const nodes = new Map(model.nodes.map((n) => [n.id, n]));
-      const buttons = new Map();
-      let selected =
-        model.nodes.find((n) => n.measurements.length)?.id || model.nodes[0].id;
-      const enabled = new Set(Object.keys(kinds));
-      const el = (tag, text, cls) => {
+      const svg = document.getElementById("canvas"),
+        scene = document.getElementById("scene"),
+        popup = document.getElementById("popup");
+      const nodeEls = new Map(),
+        edgeEls = [],
+        positions = new Map();
+      const W = 1320,
+        H = 850,
+        CW = 218,
+        CH = 120;
+      const slots = {
+        boot: [30, 70],
+        memory: [290, 70],
+        interrupts: [550, 70],
+        smp: [810, 70],
+        devices: [1070, 70],
+        process: [30, 285],
+        scheduler: [290, 285],
+        ipc: [550, 285],
+        authority: [810, 285],
+        diagnostics: [1070, 285],
+        "user-copy": [290, 500],
+        wait: [550, 500],
+        clock: [810, 500],
+        supervisor: [290, 705],
+        "counter-service": [550, 705],
+      };
+      for (const n of model.nodes) positions.set(n.id, slots[shortId(n)]);
+      const icons = {
+        boot: "M12 3v8 M8 5a8 8 0 1 0 8 0",
+        memory:
+          "M5 6h14v12H5z M8 3v3m4-3v3m4-3v3M8 18v3m4-3v3m4-3v3M2 9h3m-3 6h3m14-6h3m-3 6h3",
+        interrupts: "M13 2 5 13h6l-1 9 9-13h-6z",
+        smp: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
+        scheduler: "M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6m-5 0v6",
+        process: "M5 3h11l4 4v14H5z M16 3v5h4 M8 12h8m-8 4h6",
+        "user-copy": "M3 5h7v14H3z M14 5h7v14h-7z M8 12h9m-3-3 3 3-3 3",
+        authority: "M12 2 21 6v6c0 5-9 10-9 10S3 17 3 12V6z M8 12l3 3 5-6",
+        wait: "M5 3h14M5 21h14M7 3c0 6 10 12 10 18M17 3c0 6-10 12-10 18",
+        ipc: "M3 5h14v9H8l-5 4z M9 18h8l4 3V10h-2",
+        clock: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 7v5l4 3",
+        devices: "M7 3h10v18H7z M10 6h4 M11 18h2",
+        diagnostics: "M3 4h18v16H3z M6 8l3 3-3 3m6 1h5",
+        supervisor: "M12 3 3 8l9 5 9-5z M3 13l9 5 9-5 M3 18l9 5 9-5",
+        "counter-service": "M6 3v18m12-18v18M3 8h18M3 16h18",
+      };
+      function element(tag, text, cls) {
         const e = document.createElement(tag);
         if (text !== undefined) e.textContent = text;
         if (cls) e.className = cls;
         return e;
-      };
-      const rootHref = model.view.repository_href || "../";
-      const sourceLink = (path) => {
-        const a = el("a", path, "source");
-        a.href = rootHref + path.split("/").map(encodeURIComponent).join("/");
-        a.target = "_blank";
-        a.rel = "noopener";
-        return a;
-      };
-      const countHost = document.getElementById("counts");
-      for (const [key, label] of [
-        ["el1_groups", "групп ядра"],
-        ["el0_groups", "групп EL0"],
-      ]) {
-        const box = el("div", undefined, "count");
-        box.append(el("strong", String(model.view[key])), el("span", label));
-        countHost.append(box);
       }
-      const filterHost = document.getElementById("filters");
-      for (const [kind, name] of Object.entries(kinds)) {
-        const label = el("label");
-        const input = el("input");
-        input.type = "checkbox";
-        input.checked = true;
-        input.dataset.kind = kind;
-        input.addEventListener("change", () => {
-          input.checked ? enabled.add(kind) : enabled.delete(kind);
-          refresh();
-          inspect();
-        });
-        label.append(input, el("span", " " + name));
-        label.style.color = colors[kind];
-        filterHost.append(label);
-      }
-      const layers = document.getElementById("layers");
-      for (const layer of ["EL1", "EL0"]) {
-        const section = el("section", undefined, "layer");
-        section.dataset.layer = layer;
-        const heading = el("div", undefined, "layer-title");
-        heading.append(
-          el("h3", layer === "EL1" ? "EL1 · ядро" : "EL0 · приложения"),
-          el(
-            "span",
-            layer === "EL1"
-              ? "Привилегированные механизмы"
-              : "Внешняя граница ядра",
-            "muted",
-          ),
-        );
-        const grid = el(
-          "div",
-          undefined,
-          "nodes" + (layer === "EL0" ? " el0" : ""),
-        );
-        for (const n of model.nodes.filter((n) => n.layer === layer)) {
-          const b = el("button", undefined, "node");
-          b.type = "button";
-          b.dataset.node = n.id;
-          b.setAttribute("aria-pressed", String(n.id === selected));
-          b.append(
-            el("span", "—", "cost"),
-            el("strong", n.label),
-            el("small", n.members.map((m) => m.name).join(" · ")),
-          );
-          b.append(
-            el(
-              "small",
-              n.measurements.length
-                ? "CLOCK: есть исторический замер пути"
-                : "Отдельного замера нет",
-              n.measurements.length ? "measured" : "",
-            ),
-          );
-          b.addEventListener("click", () => select(n.id));
-          buttons.set(n.id, b);
-          grid.append(b);
-        }
-        section.append(heading, grid);
-        layers.append(section);
-      }
-      function select(id) {
-        if (!visible(nodes.get(id))) {
-          document.getElementById("layer").value = "all";
-          document.getElementById("search").value = "";
-        }
-        selected = id;
-        for (const [key, b] of buttons) {
-          b.classList.toggle("selected", key === id);
-          b.setAttribute("aria-pressed", String(key === id));
-        }
-        inspect();
-        refresh();
-      }
-      function relationButton(edge, incoming) {
-        const other = nodes.get(incoming ? edge.from : edge.to);
-        const b = el("button", undefined, "relation");
-        const badge = el("span", kinds[edge.kind]);
-        badge.style.color = colors[edge.kind];
-        b.append(
-          badge,
-          el("strong", (incoming ? "← " : "→ ") + other.label),
-          el("div", edge.label, "muted"),
-        );
-        b.addEventListener("click", () => select(other.id));
-        return b;
-      }
-      function section(title) {
-        const s = el("div", undefined, "section");
-        s.append(el("h3", title));
-        return s;
-      }
-      function inspect() {
-        const n = nodes.get(selected);
-        const panel = document.getElementById("inspector");
-        panel.replaceChildren();
-        if (!n) {
-          panel.append(
-            el(
-              "p",
-              "По этому фильтру компонентов нет. Измените поиск или уровень.",
-              "empty",
-            ),
-          );
-          return;
-        }
-        panel.append(
-          el("div", n.layer + " / " + n.id.split(".").at(-1), "eyebrow"),
-          el("h2", n.label),
-          el("p", n.responsibility, "muted"),
-        );
-        const composition = section("Из чего состоит");
-        for (const m of n.members) {
-          const row = el("div", undefined, "item");
-          row.append(el("div", m.name, "member"));
-          for (const path of m.sources) row.append(sourceLink(path));
-          composition.append(row);
-        }
-        panel.append(composition);
-        const relations = section("Связи");
-        for (const edge of model.edges.filter(
-          (e) => enabled.has(e.kind) && (e.from === n.id || e.to === n.id),
-        )) {
-          relations.append(relationButton(edge, edge.to === n.id));
-          const evidence = el("details");
-          evidence.append(el("summary", "Исходники связи"));
-          for (const path of edge.evidence) evidence.append(sourceLink(path));
-          relations.append(evidence);
-        }
-        if (relations.children.length === 1)
-          relations.append(el("p", "Нет связей выбранных типов", "muted"));
-        panel.append(relations);
-        const contracts = section("Контракты");
-        for (const c of n.contract_locations) {
-          const link = sourceLink(c.path);
-          link.textContent = c.id;
-          link.className = "tag";
-          contracts.append(link);
-        }
-        panel.append(contracts);
-        const measure = section("Что измерено");
-        if (!n.measurements.length) {
-          measure.append(
-            el("div", "— Отдельного замера этого компонента нет.", "empty"),
-          );
-        } else {
-          measure.append(
-            el(
-              "p",
-              "CLOCK-путь: 2 граничных CLOCK + 1 запрос + общий учёт harness. Стоимость частей отдельно неизвестна.",
-              "muted",
-            ),
-          );
-          for (const profile of ["DEV", "PROD"]) {
-            const runs = n.measurements.filter(
-              (r) => r.execution_profile === profile,
-            );
-            if (!runs.length) continue;
-            const metrics = runs.map((r) => r.metrics[0]);
-            const converted = metrics.every(
-              (m) => typeof m.microseconds === "number",
-            );
-            const values = metrics.map((m) =>
-              converted ? m.microseconds : m.value,
-            );
-            const unit = converted ? "мкс" : metrics[0].units;
-            const card = el("div", undefined, "measurement");
-            card.append(
-              el("h3", profile + " · медианы повторов"),
-              el("strong", values.map((v) => Number(v).toFixed(3)).join(" / ")),
-              el("span", " " + unit),
-            );
-            card.append(
-              el(
-                "p",
-                "N по повторам: " +
-                  metrics.map((m) => m.sample_count).join(" / "),
-              ),
-            );
-            card.append(
-              el(
-                "p",
-                "Исторический source " +
-                  runs[0].exact_commit.slice(0, 12) +
-                  " · " +
-                  runs[0].platform,
-                "muted",
-              ),
-            );
-            for (const r of runs) card.append(sourceLink(r.path));
-            measure.append(card);
-          }
-          measure.append(
-            el(
-              "p",
-              "Это не эксклюзивная стоимость блока. Изменение: нет базового замера.",
-              "muted",
-            ),
-          );
-        }
-        panel.append(measure);
-      }
-      function visible(n) {
-        const query = document
-          .getElementById("search")
-          .value.toLocaleLowerCase();
-        const layer = document.getElementById("layer").value;
-        return (
-          (layer === "all" || n.layer === layer) &&
-          (!query ||
-            [
-              n.label,
-              n.responsibility,
-              ...n.members.flatMap((m) => [m.name, ...m.sources]),
-              ...n.contracts,
-            ]
-              .join(" ")
-              .toLocaleLowerCase()
-              .includes(query))
-        );
-      }
-      function refresh() {
-        const current = nodes.get(selected);
-        if (!current || !visible(current)) {
-          selected = model.nodes.find(visible)?.id || null;
-          for (const [key, button] of buttons) {
-            button.classList.toggle("selected", key === selected);
-            button.setAttribute("aria-pressed", String(key === selected));
-          }
-          inspect();
-        }
-        for (const n of model.nodes) {
-          const b = buttons.get(n.id);
-          b.hidden = !visible(n);
-          b.classList.toggle(
-            "faded",
-            n.id !== selected &&
-              !model.edges.some(
-                (e) =>
-                  enabled.has(e.kind) &&
-                  ((e.from === selected && e.to === n.id) ||
-                    (e.to === selected && e.from === n.id)),
-              ),
-          );
-        }
-        for (const layer of document.querySelectorAll(".layer"))
-          layer.hidden = !model.nodes.some(
-            (n) => n.layer === layer.dataset.layer && visible(n),
-          );
-        requestAnimationFrame(draw);
-      }
-      function svgEl(tag, attrs) {
+      function se(tag, attrs = {}, text) {
         const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
         for (const [k, v] of Object.entries(attrs))
           e.setAttribute(k, String(v));
+        if (text !== undefined) e.textContent = text;
         return e;
       }
-      function draw() {
-        const svg = document.getElementById("edges");
-        svg.replaceChildren();
-        const bounds = document.getElementById("graph").getBoundingClientRect();
-        svg.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
-        const defs = svgEl("defs", {});
-        for (const kind of enabled) {
-          const marker = svgEl("marker", {
-            id: "arrow-" + kind,
-            viewBox: "0 0 10 10",
-            refX: 9,
-            refY: 5,
-            markerWidth: 7,
-            markerHeight: 7,
-            orient: "auto-start-reverse",
-          });
-          marker.append(
-            svgEl("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: colors[kind] }),
-          );
-          defs.append(marker);
-        }
-        svg.append(defs);
-        for (const edge of model.edges) {
-          if (
-            !enabled.has(edge.kind) ||
-            (edge.from !== selected && edge.to !== selected)
-          )
-            continue;
-          const from = buttons.get(edge.from),
-            to = buttons.get(edge.to);
-          if (
-            from.hidden ||
-            to.hidden ||
-            from.closest(".layer").hidden ||
-            to.closest(".layer").hidden
-          )
-            continue;
-          const a = from.getBoundingClientRect(),
-            b = to.getBoundingClientRect();
-          const vertical = Math.abs(a.top - b.top) > 30;
-          let x1 = a.left + a.width / 2 - bounds.left,
-            y1 = a.top + a.height / 2 - bounds.top,
-            x2 = b.left + b.width / 2 - bounds.left,
-            y2 = b.top + b.height / 2 - bounds.top;
-          if (vertical) {
-            y1 += ((b.top > a.top ? 1 : -1) * a.height) / 2;
-            y2 += ((a.top > b.top ? 1 : -1) * b.height) / 2;
-          } else {
-            x1 += ((b.left > a.left ? 1 : -1) * a.width) / 2;
-            x2 += ((a.left > b.left ? 1 : -1) * b.width) / 2;
-          }
-          const path = svgEl("path", {
-            d: `M${x1},${y1} C${x1},${(y1 + y2) / 2} ${x2},${(y1 + y2) / 2} ${x2},${y2}`,
-            fill: "none",
-            stroke: colors[edge.kind],
-            "stroke-width": 2,
-            "stroke-opacity": 0.8,
-            "marker-end": "url(#arrow-" + edge.kind + ")",
-          });
-          const title = svgEl("title", {});
-          title.textContent = edge.label;
-          path.append(title);
-          svg.append(path);
-          const label = svgEl("text", {
-            x: (x1 + x2) / 2 + 4,
-            y: (y1 + y2) / 2 - 4,
-            fill: colors[edge.kind],
-            class: "edge-label",
-          });
-          label.textContent = kinds[edge.kind];
-          svg.append(label);
-        }
+      function link(path, label) {
+        const a = element("a", label || path);
+        a.href =
+          model.view.repository_href +
+          path.split("/").map(encodeURIComponent).join("/");
+        a.target = "_blank";
+        a.rel = "noopener";
+        return a;
       }
-      for (const id of ["search", "layer"])
-        document
-          .getElementById(id)
-          .addEventListener(id === "search" ? "input" : "change", refresh);
-      new ResizeObserver(draw).observe(document.getElementById("graph"));
-      const provenance = document.getElementById("provenance");
-      provenance.append(
-        el(
-          "p",
-          "Модель v" +
-            model.version +
-            " · source " +
-            model.view.source_commit +
-            (model.view.worktree_dirty ? " + рабочие изменения" : "") +
-            " · snapshot " +
-            model.view.snapshot_sha256,
-        ),
-      );
-      provenance.append(sourceLink(model.view.canonical_document));
-      provenance.append(
-        el(
-          "p",
-          "Снимок исходников и канонических связей; не динамический граф трафика. RECORD_ELIGIBLE=false.",
-        ),
-      );
-      for (const warning of model.view.measurement_warnings)
-        provenance.append(
-          el(
-            "p",
-            "Замер недоступен: " + warning.path + " — " + warning.reason,
-            "warning",
-          ),
+      for (const [k, c] of Object.entries(colors)) {
+        const marker = se("marker", {
+          id: "arrow-" + k,
+          viewBox: "0 0 10 10",
+          refX: 9,
+          refY: 5,
+          markerWidth: 7,
+          markerHeight: 7,
+          orient: "auto",
+        });
+        marker.append(se("path", { d: "M0 0L10 5L0 10Z", fill: c }));
+        document.getElementById("defs").append(marker);
+      }
+      let scale = 1,
+        tx = 0,
+        ty = 0;
+      function transform() {
+        scene.setAttribute(
+          "transform",
+          `translate(${tx} ${ty}) scale(${scale})`,
         );
-      const summary = document.getElementById("measurement-summary");
-      const measuredNode = model.nodes.find((n) => n.measurements.length);
-      if (measuredNode) {
-        summary.append(
-          el(
-            "p",
-            "CLOCK · исторический замер пути · QEMU · медианы отдельных повторов",
-          ),
-        );
-        for (const profile of ["DEV", "PROD"]) {
-          const runs = measuredNode.measurements.filter(
-            (r) => r.execution_profile === profile,
-          );
-          if (!runs.length) {
-            summary.append(el("p", profile + ": замеры недоступны"));
-            continue;
+      }
+      function fit() {
+        scale = Math.min((innerWidth - 40) / W, (innerHeight - 115) / H);
+        tx = (innerWidth - W * scale) / 2;
+        ty = 70 + (innerHeight - 115 - H * scale) / 2;
+        transform();
+      }
+      function zoom(f, x = innerWidth / 2, y = innerHeight / 2) {
+        const next = Math.max(0.3, Math.min(3.5, scale * f));
+        tx = x - ((x - tx) * next) / scale;
+        ty = y - ((y - ty) * next) / scale;
+        scale = next;
+        transform();
+        if (!pinned) closePopup();
+      }
+      svg.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          zoom(Math.exp(-e.deltaY * 0.001), e.clientX, e.clientY);
+        },
+        { passive: false },
+      );
+      let drag = null;
+      svg.addEventListener("pointerdown", (e) => {
+        if (e.target.closest(".node") || e.target.closest(".edge")) return;
+        drag = { x: e.clientX, y: e.clientY, tx, ty };
+        svg.setPointerCapture(e.pointerId);
+        svg.classList.add("dragging");
+        closePopup();
+      });
+      svg.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        tx = drag.tx + e.clientX - drag.x;
+        ty = drag.ty + e.clientY - drag.y;
+        transform();
+      });
+      function endDrag() {
+        drag = null;
+        svg.classList.remove("dragging");
+      }
+      svg.addEventListener("pointerup", endDrag);
+      svg.addEventListener("pointercancel", endDrag);
+      // Route through the visibility grid between inflated card bounds. Card interiors
+      // are obstacles; only the initial/final port segments touch their own cards.
+      function routingGrid() {
+        const boxes = [...positions].map(([id, [x, y]]) => ({ id, x, y }));
+        const portsByEdge = new Map();
+        for (const e of model.edges)
+          for (const id of [e.from, e.to]) {
+            const [x, y] = positions.get(id),
+              incident = model.edges.filter(
+                (r) => r.from === id || r.to === id,
+              );
+            const fraction = (incident.indexOf(e) + 1) / (incident.length + 1);
+            const px = x + 20 + (CW - 40) * fraction,
+              py = y + 15 + (CH - 30) * fraction;
+            portsByEdge.set(model.edges.indexOf(e) + ":" + id, [
+              { x: x - 10, y: py, card: { x, y: py } },
+              { x: x + CW + 10, y: py, card: { x: x + CW, y: py } },
+              { x: px, y: y - 10, card: { x: px, y } },
+              { x: px, y: y + CH + 10, card: { x: px, y: y + CH } },
+            ]);
           }
-          const metrics = runs.map((r) => r.metrics[0]);
-          const converted = metrics.every(
-            (m) => typeof m.microseconds === "number",
+        const portsFlat = [...portsByEdge.values()].flat();
+        const xs = [
+          ...new Set([
+            0,
+            W,
+            ...boxes.flatMap((b) => [
+              b.x - 30,
+              b.x - 20,
+              b.x - 10,
+              b.x + CW + 10,
+              b.x + CW + 20,
+              b.x + CW + 30,
+            ]),
+            ...portsFlat.map((p) => p.x),
+          ]),
+        ].sort((a, b) => a - b);
+        const ys = [
+          ...new Set([
+            0,
+            H,
+            ...boxes.flatMap((b) => [
+              b.y - 30,
+              b.y - 20,
+              b.y - 10,
+              b.y + CH + 10,
+              b.y + CH + 20,
+              b.y + CH + 30,
+            ]),
+            ...portsFlat.map((p) => p.y),
+          ]),
+        ].sort((a, b) => a - b);
+        const key = (x, y) => x + "," + y,
+          points = [],
+          lookup = new Map();
+        const blocked = (a, b) =>
+          boxes.some((r) =>
+            a.x === b.x
+              ? a.x > r.x - 6 &&
+                a.x < r.x + CW + 6 &&
+                Math.max(Math.min(a.y, b.y), r.y - 6) <
+                  Math.min(Math.max(a.y, b.y), r.y + CH + 6)
+              : a.y > r.y - 6 &&
+                a.y < r.y + CH + 6 &&
+                Math.max(Math.min(a.x, b.x), r.x - 6) <
+                  Math.min(Math.max(a.x, b.x), r.x + CW + 6),
           );
-          const values = metrics.map((m) =>
-            Number(converted ? m.microseconds : m.value).toFixed(3),
-          );
-          const cell = el("div");
-          cell.append(
-            el("span", profile),
-            el(
-              "strong",
-              values.join(" / ") + " " + (converted ? "мкс" : metrics[0].units),
-            ),
-            el(
-              "small",
-              "N=" +
-                metrics.map((m) => m.sample_count).join(" / ") +
-                " · source " +
-                runs[0].exact_commit.slice(0, 12),
-            ),
-          );
-          summary.append(cell);
+        for (const y of ys)
+          for (const x of xs) {
+            if (
+              boxes.some(
+                (r) =>
+                  x > r.x - 6 &&
+                  x < r.x + CW + 6 &&
+                  y > r.y - 6 &&
+                  y < r.y + CH + 6,
+              )
+            )
+              continue;
+            lookup.set(key(x, y), points.length);
+            points.push({ x, y, links: [] });
+          }
+        for (const row of [true, false])
+          for (const v of row ? ys : xs) {
+            const ids = (row ? xs : ys)
+              .map((w) => lookup.get(row ? key(w, v) : key(v, w)))
+              .filter((i) => i !== undefined);
+            for (let j = 1; j < ids.length; j++) {
+              const a = points[ids[j - 1]],
+                b = points[ids[j]];
+              if (blocked(a, b)) continue;
+              const distance = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+              a.links.push({ to: ids[j], distance, axis: row ? 1 : 2 });
+              b.links.push({ to: ids[j - 1], distance, axis: row ? 1 : 2 });
+            }
+          }
+        const ports = (id, e) =>
+          portsByEdge
+            .get(model.edges.indexOf(e) + ":" + id)
+            .map((p) => ({ ...p, index: lookup.get(key(p.x, p.y)) }));
+        return { points, ports };
+      }
+      const routeGrid = routingGrid(),
+        routeUse = new Map();
+      const reservedSegments = [];
+      function laneFree(a, b) {
+        return !reservedSegments.some(([c, d]) => {
+          const horizontal = a.y === b.y && c.y === d.y,
+            vertical = a.x === b.x && c.x === d.x;
+          if (horizontal)
+            return (
+              Math.abs(a.y - c.y) < 6 &&
+              Math.max(Math.min(a.x, b.x), Math.min(c.x, d.x)) <
+                Math.min(Math.max(a.x, b.x), Math.max(c.x, d.x)) - 1e-8
+            );
+          if (vertical)
+            return (
+              Math.abs(a.x - c.x) < 6 &&
+              Math.max(Math.min(a.y, b.y), Math.min(c.y, d.y)) <
+                Math.min(Math.max(a.y, b.y), Math.max(c.y, d.y)) - 1e-8
+            );
+          return false;
+        });
+      }
+      function edgeGeometry(e) {
+        const { points, ports } = routeGrid,
+          starts = ports(e.from, e),
+          ends = ports(e.to, e),
+          size = points.length * 3;
+        const distances = Array(size).fill(Infinity),
+          previous = Array(size).fill(-1),
+          origins = Array(size).fill(-1),
+          heap = [];
+        function push(state, cost) {
+          let i = heap.length;
+          heap.push({ state, cost });
+          while (i) {
+            const p = (i - 1) >> 1;
+            if (heap[p].cost <= cost) break;
+            heap[i] = heap[p];
+            i = p;
+          }
+          heap[i] = { state, cost };
         }
-        summary.append(
-          el(
+        function pop() {
+          const result = heap[0],
+            tail = heap.pop();
+          if (heap.length) {
+            let i = 0;
+            while (i * 2 + 1 < heap.length) {
+              let child = i * 2 + 1;
+              if (
+                child + 1 < heap.length &&
+                heap[child + 1].cost < heap[child].cost
+              )
+                child++;
+              if (heap[child].cost >= tail.cost) break;
+              heap[i] = heap[child];
+              i = child;
+            }
+            heap[i] = tail;
+          }
+          return result;
+        }
+        starts.forEach((p, i) => {
+          if (!laneFree(p.card, points[p.index])) return;
+          distances[p.index * 3] = 10;
+          origins[p.index * 3] = i;
+          push(p.index * 3, 10);
+        });
+        let last = -1,
+          target = null;
+        while (heap.length) {
+          const { state, cost } = pop();
+          if (cost !== distances[state]) continue;
+          const node = Math.floor(state / 3),
+            axis = state % 3;
+          target = ends.find(
+            (p) => p.index === node && laneFree(points[node], p.card),
+          );
+          if (target) {
+            last = state;
+            break;
+          }
+          for (const link of points[node].links) {
+            const arc = [node, link.to].sort((a, b) => a - b).join(":");
+            if (routeUse.has(arc) || !laneFree(points[node], points[link.to]))
+              continue;
+            const next = link.to * 3 + link.axis,
+              nextCost =
+                cost + link.distance + (axis && axis !== link.axis ? 25 : 0);
+            if (nextCost < distances[next]) {
+              distances[next] = nextCost;
+              previous[next] = state;
+              origins[next] = origins[state];
+              push(next, nextCost);
+            }
+          }
+        }
+        if (last < 0)
+          throw new Error(
+            "No unshared obstacle-free route: " + e.from + " -> " + e.to,
+          );
+        const route = [];
+        for (let state = last; state >= 0; state = previous[state])
+          route.push(Math.floor(state / 3));
+        route.reverse();
+        for (let i = 1; i < route.length; i++)
+          routeUse.set(
+            [route[i - 1], route[i]].sort((a, b) => a - b).join(":"),
+            true,
+          );
+        const path = [
+            starts[origins[last]].card,
+            ...route.map((i) => points[i]),
+            target.card,
+          ],
+          simple = [];
+        for (const point of path) {
+          while (simple.length > 1) {
+            const a = simple.at(-2),
+              b = simple.at(-1);
+            if (
+              (a.x === b.x && b.x === point.x) ||
+              (a.y === b.y && b.y === point.y)
+            )
+              simple.pop();
+            else break;
+          }
+          simple.push(point);
+        }
+        for (let i = 1; i < simple.length; i++)
+          reservedSegments.push([simple[i - 1], simple[i]]);
+        let label = 0;
+        for (let i = 1; i < simple.length - 1; i++)
+          if (
+            Math.abs(simple[i + 1].x - simple[i].x) +
+              Math.abs(simple[i + 1].y - simple[i].y) >
+            Math.abs(simple[label + 1].x - simple[label].x) +
+              Math.abs(simple[label + 1].y - simple[label].y)
+          )
+            label = i;
+        let d = "M" + simple[0].x + " " + simple[0].y;
+        for (let i = 1; i < simple.length - 1; i++) {
+          const a = simple[i - 1],
+            b = simple[i],
+            c = simple[i + 1],
+            ab = Math.abs(a.x - b.x) + Math.abs(a.y - b.y),
+            bc = Math.abs(c.x - b.x) + Math.abs(c.y - b.y),
+            r = Math.min(4, ab / 2, bc / 2);
+          const before = {
+              x: b.x + ((a.x - b.x) * r) / ab,
+              y: b.y + ((a.y - b.y) * r) / ab,
+            },
+            after = {
+              x: b.x + ((c.x - b.x) * r) / bc,
+              y: b.y + ((c.y - b.y) * r) / bc,
+            };
+          d +=
+            " L" +
+            before.x +
+            " " +
+            before.y +
+            " Q" +
+            b.x +
+            " " +
+            b.y +
+            " " +
+            after.x +
+            " " +
+            after.y;
+        }
+        d += " L" + simple.at(-1).x + " " + simple.at(-1).y;
+        return {
+          d,
+          x: (simple[label].x + simple[label + 1].x) / 2,
+          y: (simple[label].y + simple[label + 1].y) / 2 - 6,
+          points: simple,
+        };
+      }
+      function highlight(id) {
+        for (const { e, path, label } of edgeEls) {
+          const active = id && (e.from === id || e.to === id);
+          path.classList.toggle("active", !!active);
+          path.classList.toggle("muted", !!id && !active);
+          label.hidden = !active;
+          label.style.display = active ? "" : "none";
+        }
+        for (const [k, g] of nodeEls) g.classList.toggle("active", k === id);
+      }
+      function draw() {
+        routeUse.clear();
+        reservedSegments.length = 0;
+        scene.replaceChildren();
+        nodeEls.clear();
+        edgeEls.length = 0;
+        scene.append(
+          se("rect", {
+            x: 10,
+            y: 20,
+            width: 1300,
+            height: 620,
+            class: "layerbox",
+          }),
+          se("text", { x: 30, y: 48, class: "layerlabel" }, t("kernel")),
+          se("rect", {
+            x: 270,
+            y: 665,
+            width: 520,
+            height: 175,
+            class: "layerbox",
+          }),
+          se("text", { x: 290, y: 692, class: "layerlabel" }, t("apps")),
+        );
+        model.edges.forEach((e, i) => {
+          const geo = edgeGeometry(e, i),
+            p = se("path", {
+              d: geo.d,
+              stroke: colors[e.kind],
+              class: "edge",
+              "marker-end": `url(#arrow-${e.kind})`,
+              tabindex: 0,
+              role: "button",
+              "aria-label": edgeText(e),
+            });
+          p.append(se("title", {}, edgeText(e)));
+          const label = se(
+            "text",
+            {
+              x: geo.x,
+              y: geo.y,
+              fill: colors[e.kind],
+              class: "edge-label",
+              "text-anchor": "middle",
+            },
+            edgeShort(e),
+          );
+          label.style.display = "none";
+          p.addEventListener("pointerenter", (ev) => {
+            if (pinned) return;
+            label.style.display = "";
+            showEdge(e, ev.clientX, ev.clientY, false);
+          });
+          p.addEventListener("pointerleave", () => scheduleClose());
+          p.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            showEdge(e, ev.clientX, ev.clientY, true);
+          });
+          p.addEventListener("focus", () => {
+            if (!pinned) {
+              const r = p.getBoundingClientRect();
+              showEdge(e, r.x + r.width / 2, r.y + r.height / 2, false);
+            }
+          });
+          p.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              const r = p.getBoundingClientRect();
+              showEdge(e, r.x + r.width / 2, r.y + r.height / 2, true);
+            }
+          });
+          scene.append(p, label);
+          for (const point of [geo.points[0], geo.points.at(-1)])
+            scene.append(
+              se("circle", {
+                cx: point.x,
+                cy: point.y,
+                r: 3.5,
+                fill: colors[e.kind],
+                "pointer-events": "none",
+              }),
+            );
+          edgeEls.push({ e, path: p, label });
+        });
+        for (const n of model.nodes) {
+          const [x, y] = positions.get(n.id),
+            g = se("g", {
+              transform: `translate(${x} ${y})`,
+              class: "node",
+              tabindex: 0,
+              role: "button",
+              "aria-label": title(n),
+            });
+          g.append(
+            se("rect", { width: CW, height: CH, rx: 12, class: "card" }),
+            se("path", {
+              d: icons[shortId(n)],
+              transform: "translate(14 14)",
+              class: "icon",
+            }),
+            se("text", { x: 47, y: 33, class: "name" }, title(n)),
+          );
+          const ins = model.edges.filter((e) => e.to === n.id).length,
+            outs = model.edges.filter((e) => e.from === n.id).length;
+          g.append(
+            se(
+              "text",
+              { x: 14, y: 59, class: "stats" },
+              `${t("members")}: ${n.members.length} · ${t("ins")}: ${ins} / ${t("outs")}: ${outs}`,
+            ),
+          );
+          if (n.measurements.length) {
+            g.append(
+              se(
+                "text",
+                { x: 14, y: 76, class: "perf", style: "font-size:10px" },
+                t("medianLabel"),
+              ),
+            );
+            for (const [p, i] of [
+              ["DEV", 0],
+              ["PROD", 1],
+            ]) {
+              const ms = n.measurements
+                .filter((r) => r.execution_profile === p)
+                .map((r) => r.metrics[0]);
+              if (!ms.length) {
+                g.append(
+                  se(
+                    "text",
+                    { x: 14, y: 93 + i * 17, class: "perf" },
+                    p + ": " + t("noData"),
+                  ),
+                );
+                continue;
+              }
+              const converted = ms.every(
+                (v) => typeof v.microseconds === "number",
+              );
+              const values = ms.map((v) =>
+                converted ? v.microseconds : v.value,
+              );
+              g.append(
+                se(
+                  "text",
+                  { x: 14, y: 93 + i * 17, class: "perf measured" },
+                  `${p} ${Math.min(...values).toFixed(3)}–${Math.max(...values).toFixed(3)} ${converted ? t("us") : t("ticks")}`,
+                ),
+              );
+            }
+          } else {
+            g.append(
+              se(
+                "text",
+                { x: 14, y: 88, class: "perf" },
+                n.contracts.includes("kolvrt.clock.query")
+                  ? t("missingMeasurements")
+                  : t("pending"),
+              ),
+            );
+          }
+          g.append(
+            se(
+              "title",
+              {},
+              t("topology") +
+                " " +
+                (n.measurements.length ? t("historical") : t("notmeasured")),
+            ),
+          );
+          g.addEventListener("pointerenter", () => {
+            clearTimeout(hoverTimer);
+            if (!pinned) {
+              highlight(n.id);
+              hoverTimer = setTimeout(() => showNode(n, false), 160);
+            }
+          });
+          g.addEventListener("pointerleave", scheduleClose);
+          g.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            showNode(n, true);
+          });
+          g.addEventListener("focus", () => {
+            if (!pinned) showNode(n, false);
+          });
+          g.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              showNode(n, true);
+            }
+          });
+          scene.append(g);
+          nodeEls.set(n.id, g);
+        }
+        highlight(selected);
+        updateUI();
+      }
+      function popupBase(heading, pin) {
+        clearTimeout(hoverTimer);
+        pinned = pin;
+        popup.replaceChildren();
+        popup.hidden = false;
+        popup.setAttribute("aria-label", heading);
+        const close = element("button", "×", "close");
+        close.title = t("close");
+        close.setAttribute("aria-label", t("close"));
+        close.onclick = closePopup;
+        popup.append(close, element("h2", heading));
+        if (!pin) popup.append(element("p", t("pin"), "muted"));
+      }
+      function positionPopup(x, y) {
+        const w = popup.offsetWidth,
+          h = popup.offsetHeight;
+        popup.style.left =
+          Math.max(12, Math.min(innerWidth - w - 12, x + 16)) + "px";
+        popup.style.top =
+          Math.max(76, Math.min(innerHeight - h - 16, y)) + "px";
+      }
+      function showNode(n, pin) {
+        popupKind = { node: n.id };
+        selected = n.id;
+        highlight(selected);
+        popupBase(title(n), pin);
+        popup.append(
+          element(
             "p",
-            "2 граничных CLOCK + 1 запрос + учёт harness; не стоимость отдельного компонента. Базового замера нет.",
+            language === "ru"
+              ? translations.nodes[n.id].ruResponsibility
+              : n.responsibility,
+          ),
+          element("p", t("topology"), "muted"),
+          element("h3", t("composition")),
+        );
+        for (const m of n.members) {
+          const d = element("details");
+          d.append(element("summary", memberName(m)));
+          for (const p of m.sources) d.append(link(p));
+          popup.append(d);
+        }
+        popup.append(element("h3", t("links")));
+        for (const e of model.edges.filter(
+          (e) => e.from === n.id || e.to === n.id,
+        )) {
+          const incoming = e.to === n.id,
+            other = nodes.get(incoming ? e.from : e.to),
+            r = element(
+              "div",
+              (incoming ? "← " : "→ ") + title(other) + " · " + edgeShort(e),
+              "relation",
+            );
+          r.tabIndex = 0;
+          r.setAttribute("role", "button");
+          r.onclick = () =>
+            showEdge(
+              e,
+              nodeEls.get(n.id).getBoundingClientRect().right,
+              nodeEls.get(n.id).getBoundingClientRect().top,
+              true,
+            );
+          r.onkeydown = (ev) => {
+            if (ev.key === "Enter") r.click();
+          };
+          popup.append(r);
+        }
+        popup.append(element("h3", t("contracts")));
+        for (const c of n.contract_locations) popup.append(link(c.path, c.id));
+        if (n.measurements.length) {
+          popup.append(
+            element("h3", t("historical")),
+            element("p", t("repeat"), "muted"),
+          );
+          for (const p of ["DEV", "PROD"]) {
+            const runs = n.measurements.filter(
+                (r) => r.execution_profile === p,
+              ),
+              ms = runs.map((r) => r.metrics[0]);
+            if (!runs.length) continue;
+            const converted = ms.every(
+              (v) => typeof v.microseconds === "number",
+            );
+            popup.append(
+              element(
+                "p",
+                p +
+                  " " +
+                  ms
+                    .map((v) =>
+                      Number(converted ? v.microseconds : v.value).toFixed(3),
+                    )
+                    .join(" / ") +
+                  " " +
+                  (converted ? t("us") : "ticks"),
+                "values",
+              ),
+              element(
+                "p",
+                "N=" +
+                  ms.map((v) => v.sample_count).join(" / ") +
+                  " · QEMU · " +
+                  runs[0].exact_commit.slice(0, 12),
+                "muted",
+              ),
+            );
+            for (const r of runs) popup.append(link(r.path));
+          }
+          popup.append(
+            element("p", t("scope"), "muted"),
+            element("p", t("baseline"), "muted"),
+          );
+        } else popup.append(element("p", t("notmeasured"), "muted"));
+        const r = nodeEls.get(n.id).getBoundingClientRect();
+        positionPopup(r.right, r.top);
+      }
+      function showEdge(e, x, y, pin) {
+        popupKind = { edge: model.edges.indexOf(e) };
+        popupBase(
+          title(nodes.get(e.from)) + " → " + title(nodes.get(e.to)),
+          pin,
+        );
+        popup.append(
+          element("p", t(e.kind) + " · " + edgeText(e)),
+          element("h3", t("sources")),
+        );
+        for (const p of e.evidence) popup.append(link(p));
+        positionPopup(x, y);
+      }
+      function closePopup() {
+        clearTimeout(hoverTimer);
+        popup.hidden = true;
+        pinned = false;
+        popupKind = null;
+        selected = null;
+        highlight(null);
+      }
+      function scheduleClose() {
+        clearTimeout(hoverTimer);
+        if (!pinned) hoverTimer = setTimeout(closePopup, 260);
+      }
+      popup.addEventListener("pointerenter", () => clearTimeout(hoverTimer));
+      popup.addEventListener("pointerleave", scheduleClose);
+      popup.addEventListener("click", () => {
+        if (!popup.hidden) pinned = true;
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closePopup();
+      });
+      function help() {
+        popupKind = { help: true };
+        popupBase(t("help"), true);
+        for (const [k, c] of Object.entries(colors)) {
+          const row = element("p"),
+            dot = element("span", undefined, "legend-dot");
+          dot.style.background = c;
+          row.append(dot, document.createTextNode(t(k)));
+          popup.append(row);
+        }
+        popup.append(
+          element("p", t("helpline")),
+          element("p", t("helpnav")),
+          element("p", t("topology"), "muted"),
+          element("p", t("notmeasured"), "muted"),
+        );
+        for (const w of model.view.measurement_warnings)
+          popup.append(
+            element(
+              "p",
+              t("unavailable") + ": " + w.path + " — " + w.reason,
+              "muted",
+            ),
+          );
+        popup.append(
+          link(model.view.canonical_document),
+          element(
+            "p",
+            t("snapshot") + ": " + model.view.snapshot_sha256,
             "muted",
           ),
         );
-      } else {
-        summary.append(
-          el("p", "Измерения недоступны; причины указаны внизу карты."),
-        );
+        positionPopup(innerWidth - 400, 75);
       }
-      select(selected);
-      refresh();
+      function updateUI() {
+        document.documentElement.lang = language;
+        document.title = "KOLVRT · " + t("subtitle");
+        document.getElementById("subtitle").textContent =
+          `${t("subtitle")} · ${model.view.el1_groups} EL1 + ${model.view.el0_groups} EL0 · ${model.edges.length} ${t("edges")}`;
+        document.getElementById("fit").textContent = t("fit");
+        document.getElementById("lang").textContent =
+          language === "ru" ? "EN" : "RU";
+        document.getElementById("hint").textContent = t("hint");
+        document.getElementById("provenance").textContent =
+          t("source") +
+          " " +
+          model.view.source_commit.slice(0, 12) +
+          (model.view.worktree_dirty ? " + " + t("dirty") : "");
+        document.getElementById("help").title = t("help");
+        document.getElementById("help").setAttribute("aria-label", t("help"));
+        document
+          .getElementById("plus")
+          .setAttribute(
+            "aria-label",
+            language === "ru" ? "Увеличить" : "Zoom in",
+          );
+        document
+          .getElementById("minus")
+          .setAttribute(
+            "aria-label",
+            language === "ru" ? "Уменьшить" : "Zoom out",
+          );
+        svg.setAttribute("aria-label", t("subtitle"));
+        if (popup.hidden)
+          popup.setAttribute(
+            "aria-label",
+            language === "ru" ? "Подробности компонента" : "Component details",
+          );
+      }
+      document.getElementById("plus").onclick = () => zoom(1.25);
+      document.getElementById("minus").onclick = () => zoom(0.8);
+      document.getElementById("fit").onclick = () => {
+        closePopup();
+        fit();
+      };
+      document.getElementById("help").onclick = help;
+      document.getElementById("lang").onclick = () => {
+        const old = popupKind,
+          pin = pinned;
+        language = language === "ru" ? "en" : "ru";
+        draw();
+        if (old?.node) showNode(nodes.get(old.node), pin);
+        else if (old?.edge !== undefined)
+          showEdge(model.edges[old.edge], innerWidth - 400, 80, pin);
+        else if (old?.help) help();
+      };
+      window.addEventListener("resize", () => {
+        closePopup();
+        fit();
+      });
+      draw();
+      fit();
     </script>
   </body>
 </html>

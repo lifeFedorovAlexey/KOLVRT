@@ -3618,7 +3618,7 @@
     "crates/native-state-models/Cargo.toml": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007",
     "crates/repository-checks/Cargo.toml": "90c543bdaed3980edabb0c9d661f3a31a608888b8b2227f94e919b388b4f35b8",
     "crates/repository-checks/src/arena.rs": "bca36119db0984d95577938b3455189b918911cd1d404ef5120eaa17734f2004",
-    "crates/repository-checks/src/arena/architecture.html": "3431f43038e65c5eecb837b14cfa8f5981d92d335c7d267db36bf1ac2f23b3c9",
+    "crates/repository-checks/src/arena/architecture.html": "9663dbefec7883a38e12ba27669da6a1ecb796feea2316ca6082948d161399ef",
     "crates/repository-checks/src/arena/architecture.rs": "b4c6d19ac190a374bb9d0ac8c572e45f258da76a755064f1357f69956f782d42",
     "crates/repository-checks/src/arena/report.rs": "bb6efcab0b1c179e64eaf8887e0067227e7b5ad9a74345834b4dadbf1e762c13",
     "crates/repository-checks/src/compat_modules.rs": "8a053ff7e6285e11d8bef8e5c8ea8c88ddbb13929092e8cf77bf051430761c76",
@@ -3685,10 +3685,10 @@
     "docs/architecture-decisions/0026-el0-supervision.md": "f3bf1a0686f11e8b229a74b17ee7be0235873edbe93599a5235376317a0f6cde",
     "docs/architecture-decisions/0027-device-observations.md": "d80280cfdda884b9c0252aa2b4860ff497932a50205fd509c2c9351609790474",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
-    "docs/architecture/arena-measurement-contract.md": "3245023ad41dac3ec1c94062b0c6c1d5fe80787736300245718c6215e7b743db",
+    "docs/architecture/arena-measurement-contract.md": "54b608b63e9aca31eb4843bbb81fa2ed656392f0059fbcada0855f124a62077d",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/compatibility-manifests.md": "1f3c195ba2566faa440e649b1d9bf8537fdad141ee47262274bcf20f142edc48",
-    "docs/architecture/component-arena.md": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+    "docs/architecture/component-arena.md": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
     "docs/architecture/dependency-hygiene.md": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
     "docs/architecture/first-native-slice.md": "46a668922aab3f1aa7829bcf666c336a65a307f88d198d226e474c34d4adc325",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
@@ -3879,7 +3879,7 @@
     "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
     "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
-    "translations/manifest.json": "2626615f72ffe51f18dabd1f3c3adedc548f7e3964fc54fe8ff75bd8f00281c6",
+    "translations/manifest.json": "50e6f7370eb5ac0d84d1a57635f7a07db598ed9b793b54be11ef2d71b8108d2e",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3908,10 +3908,10 @@
     "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "b418467a1b29450254dd1100873ec87c64dda3892a8ad385eda91ea6098c0a5f",
     "translations/ru/docs/architecture-decisions/0027-device-observations.md": "bfe65e69852f3fb945665500c0b25980ae5f06ec659c2329a6bdc86032ea5d8d",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
-    "translations/ru/docs/architecture/arena-measurement-contract.md": "b87a78e4caf7847b8aa3bbc59153dad63a39ab61a3b3f0f35326e07eddef8b58",
+    "translations/ru/docs/architecture/arena-measurement-contract.md": "ec9e4723be199c902e9f531e22e33addecdf58c08627aaeac5eaf5f7052e8d8d",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/compatibility-manifests.md": "61672ddbce35165ea36ab13005c7b79092d9f8fd6fe6f5ef3dd409e880ec1c3a",
-    "translations/ru/docs/architecture/component-arena.md": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+    "translations/ru/docs/architecture/component-arena.md": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
     "translations/ru/docs/architecture/dependency-hygiene.md": "90ec082b25c9f409ceb054dd094906f23cc61445de98ea06ada20f2b04d6c172",
     "translations/ru/docs/architecture/first-native-slice.md": "b0155cfc7eaa77cfbfa3ad3e073af5151e4a8c9803aedae053ac903caf4c8dee",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
@@ -6037,7 +6037,7 @@
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 22760,
+      "estimated_bytes": 23537,
       "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
@@ -6051,15 +6051,15 @@
       },
       "locations": {
         "en": {
-          "end": 275,
+          "end": 277,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
           "start": 1
         },
         "ru": {
-          "end": 275,
+          "end": 277,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
           "start": 1
         }
       },
@@ -6316,7 +6316,7 @@
       ],
       "document": "doc.kolvrt.arena.measurement-contract",
       "document_status": "CURRENT",
-      "estimated_bytes": 11633,
+      "estimated_bytes": 12249,
       "evidence_scope": "experimental general offline A0/A1 contracts and import admission plus the accepted bounded QEMU CLOCK pilot; no records service, general independent attestation or certification.",
       "id": "doc.kolvrt.arena.measurement-contract",
       "kind": "subsystem-contract",
@@ -6330,15 +6330,15 @@
       },
       "locations": {
         "en": {
-          "end": 85,
+          "end": 87,
           "path": "docs/architecture/arena-measurement-contract.md",
-          "sha256": "3245023ad41dac3ec1c94062b0c6c1d5fe80787736300245718c6215e7b743db",
+          "sha256": "54b608b63e9aca31eb4843bbb81fa2ed656392f0059fbcada0855f124a62077d",
           "start": 1
         },
         "ru": {
-          "end": 85,
+          "end": 87,
           "path": "translations/ru/docs/architecture/arena-measurement-contract.md",
-          "sha256": "b87a78e4caf7847b8aa3bbc59153dad63a39ab61a3b3f0f35326e07eddef8b58",
+          "sha256": "ec9e4723be199c902e9f531e22e33addecdf58c08627aaeac5eaf5f7052e8d8d",
           "start": 1
         }
       },
@@ -7752,13 +7752,13 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
           "start": 7
         }
       },
@@ -7789,13 +7789,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
           "start": 33
         }
       },
@@ -7929,13 +7929,13 @@
         "en": {
           "end": 82,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
           "start": 63
         },
         "ru": {
           "end": 82,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
           "start": 63
         }
       },
@@ -7964,13 +7964,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
           "start": 19
         }
       },
@@ -7997,16 +7997,16 @@
       },
       "locations": {
         "en": {
-          "end": 100,
+          "end": 102,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
-          "start": 89
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
+          "start": 91
         },
         "ru": {
-          "end": 100,
+          "end": 102,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
-          "start": 89
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
+          "start": 91
         }
       },
       "path": "docs/architecture/component-arena.md",
@@ -8220,13 +8220,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
           "start": 41
         }
       },
@@ -8255,13 +8255,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
           "start": 55
         }
       },
@@ -8288,16 +8288,16 @@
       },
       "locations": {
         "en": {
-          "end": 114,
+          "end": 116,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
-          "start": 99
+          "sha256": "08631c49c852059e007e5a5e800de09dcf00a07a81c77ac17c405bec5df62da4",
+          "start": 101
         },
         "ru": {
-          "end": 114,
+          "end": 116,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
-          "start": 99
+          "sha256": "7ee9a498aca86f4fd909d1f5ae0ddc0d4b5250d241a17bf75646ff231bed493c",
+          "start": 101
         }
       },
       "path": "docs/architecture/component-arena.md",
