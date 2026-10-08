@@ -50,7 +50,7 @@ fn parse(document: &str) -> CheckResult<Value> {
     parse_json(json.trim())
 }
 fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult<BTreeSet<String>> {
-    if model["schema_version"] != 1 || model["version"] != "1" {
+    if model["schema_version"] != 1 || !matches!(model["version"].as_str(), Some("1" | "2")) {
         return Err("unsupported architecture model schema/version".into());
     }
     let nodes = list(model, "nodes")?;
@@ -59,6 +59,7 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
         return Err("architecture view exceeds bounded node/edge limits".into());
     }
     let mut ids = BTreeSet::new();
+    let mut all_member_ids = BTreeSet::new();
     let mut sources = BTreeSet::new();
     for node in nodes {
         let id = text(node, "id")?;
@@ -79,7 +80,27 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
             }
         }
         let mut members = BTreeSet::new();
-        for member in list(node, "members")? {
+        let mut member_ids = BTreeSet::new();
+        let member_list = list(node, "members")?;
+        if member_list.is_empty() || member_list.len() > 200 {
+            return Err("architecture group must have 1..200 members".into());
+        }
+        for member in member_list {
+            if model["version"] == "2" {
+                let member_id = text(member, "id")?;
+                let prefix = format!("{id}.");
+                if !member_id.starts_with(&prefix)
+                    || member_id.len() == prefix.len()
+                    || member_id.len() > 240
+                    || !member_id.bytes().all(|c| {
+                        c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'.' || c == b'-'
+                    })
+                    || !all_member_ids.insert(member_id.to_owned())
+                {
+                    return Err("invalid or duplicate scoped architecture member ID".into());
+                }
+                member_ids.insert(member_id);
+            }
             if !members.insert(text(member, "name")?) {
                 return Err("duplicate member in architecture group".into());
             }
@@ -87,6 +108,38 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
                 let path = source.as_str().ok_or("source path must be text")?;
                 safe_file(root, path)?;
                 sources.insert(path.to_owned());
+            }
+        }
+        if model["version"] == "2" {
+            let relations = node["member_relations"]
+                .as_array()
+                .ok_or("architecture member_relations must be an array")?;
+            if relations.len() > 1000 {
+                return Err("architecture member relations exceed bounded limit".into());
+            }
+            let mut seen = BTreeSet::new();
+            for relation in relations {
+                let from = text(relation, "from")?;
+                let to = text(relation, "to")?;
+                let kind = text(relation, "kind")?;
+                let label = text(relation, "label")?;
+                if !member_ids.contains(from) || !member_ids.contains(to) {
+                    return Err("member relation escapes its architecture group".into());
+                }
+                if !matches!(kind, "call" | "data" | "authority" | "lifetime")
+                    || !seen.insert((from, to, kind, label))
+                {
+                    return Err("unsupported or duplicate architecture member relation".into());
+                }
+                let evidence = list(relation, "evidence")?;
+                if evidence.is_empty() {
+                    return Err("architecture member relation requires source evidence".into());
+                }
+                for source in evidence {
+                    let path = source.as_str().ok_or("member evidence path must be text")?;
+                    safe_file(root, path)?;
+                    sources.insert(path.to_owned());
+                }
             }
         }
     }
@@ -483,6 +536,33 @@ mod tests {
         assert!(parse("no marker").is_err());
         assert!(parse(&format!("{MARKER}\ntext")).is_err());
         assert!(parse(&format!("{MARKER}\n```json\n{{}}\n```\n{MARKER}")).is_err());
+    }
+    #[test]
+    fn member_relations_require_local_identity_and_actual_evidence() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let known = ["test.one".to_owned(), "test.contract".to_owned()]
+            .into_iter()
+            .collect();
+        let valid = json!({"schema_version":1,"version":"2","nodes":[{"id":"test.one","label":"One","layer":"EL1","responsibility":"scope","contracts":["test.contract"],"members":[{"id":"test.one.first","name":"First","sources":["Cargo.toml"]},{"id":"test.one.second","name":"Second","sources":["Cargo.toml"]}],"member_relations":[{"from":"test.one.first","to":"test.one.second","kind":"call","label":"Actual call","evidence":["Cargo.toml"]}]}],"edges":[{"from":"test.one","to":"test.one","kind":"data","label":"Owned state","evidence":["Cargo.toml"]}]});
+        assert!(
+            validate(&root, &valid, &known)
+                .unwrap()
+                .contains("Cargo.toml")
+        );
+        for bad in ["test.other.member", "test.one.absent"] {
+            let mut changed = valid.clone();
+            changed["nodes"][0]["member_relations"][0]["to"] = json!(bad);
+            assert!(validate(&root, &changed, &known).is_err());
+        }
+        let mut changed = valid.clone();
+        changed["nodes"][0]["member_relations"][0]["evidence"] = json!([]);
+        assert!(validate(&root, &changed, &known).is_err());
+        let mut changed = valid.clone();
+        changed["nodes"][0]["members"][1]["id"] = json!("test.one.first");
+        assert!(validate(&root, &changed, &known).is_err());
+        let mut changed = valid;
+        changed["nodes"][0]["member_relations"][0]["evidence"] = json!(["../outside"]);
+        assert!(validate(&root, &changed, &known).is_err());
     }
     #[test]
     fn model_rejects_dangling_unknown_and_unsafe_sources() {

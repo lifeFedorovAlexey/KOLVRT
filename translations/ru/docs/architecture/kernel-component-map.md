@@ -4,7 +4,7 @@ Document status: CURRENT
 Evidence scope: логические ответственности и выбранные взаимодействия по исходному коду; без проверки исполнения или приёмки производительности отдельных компонентов.
 Current reference: [Нативная модель](native-model.md); [Component Arena](component-arena.md)
 
-Это представление версии 1 описывает ответственности текущего кода и выбранные взаимодействия. Оно определяет группировку ниже; связанные production-контракты сохраняют силу. Документ не подтверждает проверку исполнения, приёмку реализации просмотрщика или производительность компонентов. [Нативная модель](native-model.md) и [Component Arena](component-arena.md) задают архитектурные и измерительные границы.
+Это представление версии 2 описывает ответственности текущего кода и выбранные взаимодействия. Оно определяет группировку ниже; связанные production-контракты сохраняют силу. Документ не подтверждает проверку исполнения, приёмку реализации просмотрщика или производительность компонентов. [Нативная модель](native-model.md) и [Component Arena](component-arena.md) задают архитектурные и измерительные границы.
 
 ## Граница подсчёта
 
@@ -114,6 +114,14 @@ Current reference: [Нативная модель](native-model.md); [Component 
 
 Выполнение production-запросов счётчика и публикация ответов.
 
+## Внутренний состав
+
+Каждый логический элемент имеет стабильный идентификатор внутри родительского узла. Это локальные идентичности модели, а не новые идентификаторы ABI или полномочий. Необязательный список `member_relations` использует те же виды взаимодействий и свидетельства исходного кода, что и корневые рёбра; обе его конечные точки находятся внутри родителя. Версия 2 первоначально фиксирует восемь проверенных связей между семью элементами времени и наблюдений. Подписи различают путь диспетчеризации CLOCK, обработку CAPTURE/READ_WINDOW и вспомогательную функцию deadline; это выбранные связи исходного кода, а не утверждение, что все они выполняются при CLOCK.
+
+Группа ожидания дополнительно фиксирует пять проверенных связей между четырьмя механизмами. Ветка WAIT_OWN_EVENT, доступная только в STEP, использует объединяющие события защёлки; это не обычный путь ожидания IPC. Проверка входа в scheduler запрещает обычные блокировки при доступе по владению, не выдумывая вызов защёлки к блокировке. Для IPC отложенный опрос источника публикует удерживаемые последовательности пробуждения, а затем уведомляет удалённые CPU после освобождения разрешений endpoint. Владелец проверяет точные сохранённые WaitKey, поколение процесса и заблокированное состояние перед READY; устаревшие пробуждения подтверждаются без перевода задачи в готовое состояние. Подтверждение источника удаляет удерживаемое пробуждение endpoint до очистки подтверждения mailbox. READY на этом пути пробуждения перезапускает syscall и не утверждает завершение RPC. Завершение копирования проходит отдельным путём scheduler.
+
+Оставшиеся группы показывают состав без заявленных внутренних связей. Пустой список означает, что внутренние взаимодействия ещё не нанесены на карту, а не что их не существует. Измеренная атрибуция стоимости внутренним элементам отсутствует: исторические интервалы CLOCK остаются привязаны к пути родительского узла и не распределяются между его дочерними элементами. Добавление идентичности и состава элементов не меняет корневую границу подсчёта из 13 групп EL1 и двух служб EL0 или её 28 выбранных корневых взаимодействий.
+
 ## Каноническая машинная модель
 
 Машинные идентификаторы и подписи ниже совпадают в обеих языковых версиях.
@@ -123,7 +131,7 @@ Current reference: [Нативная модель](native-model.md); [Component 
 ```json
 {
   "schema_version": 1,
-  "version": "1",
+  "version": "2",
   "reviewed_base": "8df8f2d",
   "source_files": {
     "apps/native-apps/src/counter-service.rs": "635fca7cd71c649dd20a773e214ed49f3752ccc0a0f5b9241d82c39ebcb9ee1c",
@@ -136,6 +144,7 @@ Current reference: [Нативная модель](native-model.md); [Component 
     "crates/kernel-core/src/execution.rs": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c",
     "crates/kernel-core/src/handles.rs": "6effe77cfae8e5b64f35e7d2eeb4a4052d2dbe01666204bad06cd64a9af43cd2",
     "crates/kernel-core/src/ipc.rs": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4",
+    "crates/kernel-core/src/ipc/mailbox.rs": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c",
     "crates/kernel-core/src/memory.rs": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58",
     "crates/kernel-core/src/platform.rs": "4423248c501cef4d50bc229fc6c97fa13eafbdea3632d037eb2b6a78f3fcd1a9",
     "crates/kernel-core/src/process.rs": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983",
@@ -182,22 +191,27 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Boot admission sequence",
-          "sources": ["crates/kernel/src/main.rs"]
+          "sources": ["crates/kernel/src/main.rs"],
+          "id": "kolvrt.kernel.view.boot.boot-admission-sequence"
         },
         {
           "name": "Selected platform initialization",
-          "sources": ["crates/kernel/src/platform/mod.rs"]
+          "sources": ["crates/kernel/src/platform/mod.rs"],
+          "id": "kolvrt.kernel.view.boot.selected-platform-initialization"
         },
         {
           "name": "Hardware abstraction selection",
-          "sources": ["crates/kernel/src/hal/mod.rs"]
+          "sources": ["crates/kernel/src/hal/mod.rs"],
+          "id": "kolvrt.kernel.view.boot.hardware-abstraction-selection"
         },
         {
           "name": "Platform description decoding",
-          "sources": ["crates/kernel-core/src/platform.rs"]
+          "sources": ["crates/kernel-core/src/platform.rs"],
+          "id": "kolvrt.kernel.view.boot.platform-description-decoding"
         }
       ],
-      "contracts": ["adr.0010", "adr.0005"]
+      "contracts": ["adr.0010", "adr.0005"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.memory",
@@ -207,18 +221,22 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Physical and virtual memory ownership",
-          "sources": ["crates/kernel/src/memory/mod.rs"]
+          "sources": ["crates/kernel/src/memory/mod.rs"],
+          "id": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership"
         },
         {
           "name": "Frame allocation state",
-          "sources": ["crates/kernel-core/src/memory.rs"]
+          "sources": ["crates/kernel-core/src/memory.rs"],
+          "id": "kolvrt.kernel.view.memory.frame-allocation-state"
         },
         {
           "name": "Address-space identifier lifecycle",
-          "sources": ["crates/kernel/src/asid.rs"]
+          "sources": ["crates/kernel/src/asid.rs"],
+          "id": "kolvrt.kernel.view.memory.address-space-identifier-lifecycle"
         }
       ],
-      "contracts": ["adr.0010", "kolvrt.process.asid"]
+      "contracts": ["adr.0010", "kolvrt.process.asid"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.interrupts",
@@ -228,18 +246,22 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Architectural context save and restore",
-          "sources": ["crates/kernel/src/arch/aarch64/entry.S"]
+          "sources": ["crates/kernel/src/arch/aarch64/entry.S"],
+          "id": "kolvrt.kernel.view.interrupts.architectural-context-save-and-restore"
         },
         {
           "name": "Vector installation and exception dispatch",
-          "sources": ["crates/kernel/src/arch/aarch64/mod.rs"]
+          "sources": ["crates/kernel/src/arch/aarch64/mod.rs"],
+          "id": "kolvrt.kernel.view.interrupts.vector-installation-and-exception-dispatch"
         },
         {
           "name": "Interrupt-controller dispatch",
-          "sources": ["crates/kernel/src/interrupt/mod.rs"]
+          "sources": ["crates/kernel/src/interrupt/mod.rs"],
+          "id": "kolvrt.kernel.view.interrupts.interrupt-controller-dispatch"
         }
       ],
-      "contracts": ["adr.0014", "adr.0010"]
+      "contracts": ["adr.0014", "adr.0010"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.smp",
@@ -249,14 +271,17 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Secondary CPU and invalidation coordination",
-          "sources": ["crates/kernel/src/smp.rs"]
+          "sources": ["crates/kernel/src/smp.rs"],
+          "id": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination"
         },
         {
           "name": "Per-CPU identity and local state",
-          "sources": ["crates/kernel/src/percpu.rs"]
+          "sources": ["crates/kernel/src/percpu.rs"],
+          "id": "kolvrt.kernel.view.smp.per-cpu-identity-and-local-state"
         }
       ],
-      "contracts": ["adr.0012"]
+      "contracts": ["adr.0012"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.scheduler",
@@ -266,22 +291,27 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Native-call and scheduling dispatch",
-          "sources": ["crates/kernel/src/scheduler/mod.rs"]
+          "sources": ["crates/kernel/src/scheduler/mod.rs"],
+          "id": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch"
         },
         {
           "name": "Task context and completion state",
-          "sources": ["crates/kernel/src/scheduler/task.rs"]
+          "sources": ["crates/kernel/src/scheduler/task.rs"],
+          "id": "kolvrt.kernel.view.scheduler.task-context-and-completion-state"
         },
         {
           "name": "Guarded per-CPU scheduler storage",
-          "sources": ["crates/kernel/src/scheduler/local.rs"]
+          "sources": ["crates/kernel/src/scheduler/local.rs"],
+          "id": "kolvrt.kernel.view.scheduler.guarded-per-cpu-scheduler-storage"
         },
         {
           "name": "Task ownership transitions",
-          "sources": ["crates/kernel-core/src/scheduling/ownership.rs"]
+          "sources": ["crates/kernel-core/src/scheduling/ownership.rs"],
+          "id": "kolvrt.kernel.view.scheduler.task-ownership-transitions"
         }
       ],
-      "contracts": ["doc.kolvrt.kernel.scheduler", "adr.0016"]
+      "contracts": ["doc.kolvrt.kernel.scheduler", "adr.0016"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.process",
@@ -291,34 +321,41 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Process admission and resource lifecycle",
-          "sources": ["crates/kernel/src/process.rs"]
+          "sources": ["crates/kernel/src/process.rs"],
+          "id": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle"
         },
         {
           "name": "Process registry transitions",
-          "sources": ["crates/kernel-core/src/process.rs"]
+          "sources": ["crates/kernel-core/src/process.rs"],
+          "id": "kolvrt.kernel.view.process.process-registry-transitions"
         },
         {
           "name": "ELF image validation",
-          "sources": ["crates/kernel-core/src/elf.rs"]
+          "sources": ["crates/kernel-core/src/elf.rs"],
+          "id": "kolvrt.kernel.view.process.elf-image-validation"
         },
         {
           "name": "Granted lifecycle operation enforcement",
-          "sources": ["crates/kernel/src/supervision.rs"]
+          "sources": ["crates/kernel/src/supervision.rs"],
+          "id": "kolvrt.kernel.view.process.granted-lifecycle-operation-enforcement"
         },
         {
           "name": "Initial native admission and completion reporting",
-          "sources": ["crates/kernel/src/native_boot.rs"]
+          "sources": ["crates/kernel/src/native_boot.rs"],
+          "id": "kolvrt.kernel.view.process.initial-native-admission-and-completion-reporting"
         },
         {
           "name": "Immutable bootstrap grant validation",
-          "sources": ["crates/kernel-core/src/supervision.rs"]
+          "sources": ["crates/kernel-core/src/supervision.rs"],
+          "id": "kolvrt.kernel.view.process.immutable-bootstrap-grant-validation"
         }
       ],
       "contracts": [
         "kolvrt.process.lifecycle",
         "kolvrt.services.supervision",
         "kolvrt.apps.native-elf"
-      ]
+      ],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.user-copy",
@@ -328,14 +365,17 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Protected user-memory copy boundary",
-          "sources": ["crates/kernel/src/user_copy.rs"]
+          "sources": ["crates/kernel/src/user_copy.rs"],
+          "id": "kolvrt.kernel.view.user-copy.protected-user-memory-copy-boundary"
         },
         {
           "name": "User range and snapshot validation",
-          "sources": ["crates/kernel-core/src/user_copy.rs"]
+          "sources": ["crates/kernel-core/src/user_copy.rs"],
+          "id": "kolvrt.kernel.view.user-copy.user-range-and-snapshot-validation"
         }
       ],
-      "contracts": ["kolvrt.memory.user-copy"]
+      "contracts": ["kolvrt.memory.user-copy"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.authority",
@@ -345,26 +385,31 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Local handle resolution",
-          "sources": ["crates/kernel/src/handles.rs"]
+          "sources": ["crates/kernel/src/handles.rs"],
+          "id": "kolvrt.kernel.view.authority.local-handle-resolution"
         },
         {
           "name": "Capability and domain enforcement",
-          "sources": ["crates/kernel/src/security.rs"]
+          "sources": ["crates/kernel/src/security.rs"],
+          "id": "kolvrt.kernel.view.authority.capability-and-domain-enforcement"
         },
         {
           "name": "Generational handle namespace",
-          "sources": ["crates/kernel-core/src/handles.rs"]
+          "sources": ["crates/kernel-core/src/handles.rs"],
+          "id": "kolvrt.kernel.view.authority.generational-handle-namespace"
         },
         {
           "name": "Domain rights and resource accounting",
-          "sources": ["crates/kernel-core/src/domain.rs"]
+          "sources": ["crates/kernel-core/src/domain.rs"],
+          "id": "kolvrt.kernel.view.authority.domain-rights-and-resource-accounting"
         }
       ],
       "contracts": [
         "kolvrt.handles.local",
         "kolvrt.security.capability-revocation",
         "kolvrt.security.domains"
-      ]
+      ],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.wait",
@@ -373,19 +418,88 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "responsibility": "Maintain wait identities and coordinate wakeups with task state.",
       "members": [
         {
-          "name": "Wait identity and terminal transitions",
-          "sources": ["crates/kernel-core/src/wait.rs"]
+          "name": "Coalescing event latches and retained signal admission",
+          "sources": ["crates/kernel-core/src/wait.rs"],
+          "id": "kolvrt.kernel.view.wait.wait-identity-and-terminal-transitions"
         },
         {
-          "name": "Kernel synchronization primitives",
-          "sources": ["crates/kernel/src/sync/mod.rs"]
+          "name": "Ordinary-lock exclusion and scheduler entry guard",
+          "sources": ["crates/kernel/src/sync/mod.rs"],
+          "id": "kolvrt.kernel.view.wait.kernel-synchronization-primitives"
         },
         {
           "name": "Task wait and wake integration",
-          "sources": ["crates/kernel/src/scheduler/mod.rs"]
+          "sources": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/scheduler/local.rs",
+            "crates/kernel/src/scheduler/task.rs"
+          ],
+          "id": "kolvrt.kernel.view.wait.task-wait-and-wake-integration"
+        },
+        {
+          "id": "kolvrt.kernel.view.wait.retained-ipc-wake-publication-and-acknowledgement",
+          "name": "Retained IPC wake publication and acknowledgement",
+          "sources": [
+            "crates/kernel-core/src/ipc/mailbox.rs",
+            "crates/kernel/src/ipc/deferred.rs"
+          ]
         }
       ],
-      "contracts": ["doc.kolvrt.kernel.wait", "kolvrt.ipc.wait"]
+      "contracts": ["doc.kolvrt.kernel.wait", "kolvrt.ipc.wait"],
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.wait.task-wait-and-wake-integration",
+          "to": "kolvrt.kernel.view.wait.wait-identity-and-terminal-transitions",
+          "kind": "call",
+          "label": "STEP WAIT_OWN_EVENT registers then rechecks pending notification",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel-core/src/wait.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.wait.task-wait-and-wake-integration",
+          "to": "kolvrt.kernel.view.wait.kernel-synchronization-primitives",
+          "kind": "call",
+          "label": "Local ownership entry asserts no ordinary lock is held",
+          "evidence": [
+            "crates/kernel/src/scheduler/local.rs",
+            "crates/kernel/src/sync/mod.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.wait.task-wait-and-wake-integration",
+          "to": "kolvrt.kernel.view.wait.retained-ipc-wake-publication-and-acknowledgement",
+          "kind": "call",
+          "label": "deferred_local consumes the exact wake after applying or rejecting it",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel-core/src/ipc/mailbox.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.wait.retained-ipc-wake-publication-and-acknowledgement",
+          "to": "kolvrt.kernel.view.wait.task-wait-and-wake-integration",
+          "kind": "data",
+          "label": "pending exposes sequence for saved WaitKey and process-generation validation",
+          "evidence": [
+            "crates/kernel-core/src/ipc/mailbox.rs",
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/scheduler/task.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.wait.task-wait-and-wake-integration",
+          "to": "kolvrt.kernel.view.wait.retained-ipc-wake-publication-and-acknowledgement",
+          "kind": "call",
+          "label": "deferred_local polls retained wake publication and source acknowledgements",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/ipc/deferred.rs",
+            "crates/kernel-core/src/ipc/mailbox.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.ipc",
@@ -395,26 +509,32 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Bounded endpoint and request state machine",
-          "sources": ["crates/kernel-core/src/ipc.rs"]
+          "sources": ["crates/kernel-core/src/ipc.rs"],
+          "id": "kolvrt.kernel.view.ipc.bounded-endpoint-and-request-state-machine"
         },
         {
           "name": "IPC runtime integration",
-          "sources": ["crates/kernel/src/ipc.rs"]
+          "sources": ["crates/kernel/src/ipc.rs"],
+          "id": "kolvrt.kernel.view.ipc.ipc-runtime-integration"
         },
         {
           "name": "Endpoint and request storage",
-          "sources": ["crates/kernel/src/ipc/storage.rs"]
+          "sources": ["crates/kernel/src/ipc/storage.rs"],
+          "id": "kolvrt.kernel.view.ipc.endpoint-and-request-storage"
         },
         {
           "name": "Admission, payload copy and completion",
-          "sources": ["crates/kernel/src/ipc/native.rs"]
+          "sources": ["crates/kernel/src/ipc/native.rs"],
+          "id": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion"
         },
         {
           "name": "Deferred wake and owner continuation",
-          "sources": ["crates/kernel/src/ipc/deferred.rs"]
+          "sources": ["crates/kernel/src/ipc/deferred.rs"],
+          "id": "kolvrt.kernel.view.ipc.deferred-wake-and-owner-continuation"
         }
       ],
-      "contracts": ["kolvrt.ipc.transport", "kolvrt.ipc.request"]
+      "contracts": ["kolvrt.ipc.transport", "kolvrt.ipc.request"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.clock",
@@ -424,34 +544,126 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Counter reads and deadline arithmetic",
-          "sources": ["crates/kernel/src/time/mod.rs"]
+          "sources": [
+            "crates/kernel/src/time/mod.rs",
+            "crates/kernel/src/arch/aarch64/mod.rs"
+          ],
+          "id": "kolvrt.kernel.view.clock.counter"
         },
         {
           "name": "Own-task execution observation service",
-          "sources": ["crates/kernel/src/execution.rs"]
+          "sources": ["crates/kernel/src/execution.rs"],
+          "id": "kolvrt.kernel.view.clock.observation"
         },
         {
           "name": "Time value arithmetic",
-          "sources": ["crates/kernel-core/src/time.rs"]
+          "sources": ["crates/kernel-core/src/time.rs"],
+          "id": "kolvrt.kernel.view.clock.time-arithmetic"
         },
         {
           "name": "Checked immutable window reduction",
-          "sources": ["crates/kernel-core/src/window.rs"]
+          "sources": ["crates/kernel-core/src/window.rs"],
+          "id": "kolvrt.kernel.view.clock.window"
         },
         {
           "name": "Execution observation ABI and report bounds",
-          "sources": ["crates/kernel-core/src/execution.rs"]
+          "sources": ["crates/kernel-core/src/execution.rs"],
+          "id": "kolvrt.kernel.view.clock.abi"
         },
         {
-          "name": "Native CLOCK dispatch",
-          "sources": ["crates/kernel/src/scheduler/mod.rs"]
+          "name": "Own-task native-call dispatch",
+          "sources": ["crates/kernel/src/scheduler/mod.rs"],
+          "id": "kolvrt.kernel.view.clock.dispatch"
         },
         {
           "name": "Current-task accumulated observations",
-          "sources": ["crates/kernel/src/scheduler/task.rs"]
+          "sources": ["crates/kernel/src/scheduler/task.rs"],
+          "id": "kolvrt.kernel.view.clock.task-state"
         }
       ],
-      "contracts": ["kolvrt.clock.query", "kolvrt.clock.query.api"]
+      "contracts": ["kolvrt.clock.query", "kolvrt.clock.query.api"],
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.clock.dispatch",
+          "to": "kolvrt.kernel.view.clock.counter",
+          "kind": "call",
+          "label": "CLOCK reads ticks and counter frequency",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/arch/aarch64/mod.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.clock.dispatch",
+          "to": "kolvrt.kernel.view.clock.task-state",
+          "kind": "data",
+          "label": "CLOCK reads accumulated task counters into x2 and x3",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/scheduler/task.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.clock.dispatch",
+          "to": "kolvrt.kernel.view.clock.abi",
+          "kind": "data",
+          "label": "Decode the native CLOCK operation identifier",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel-core/src/execution.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.clock.dispatch",
+          "to": "kolvrt.kernel.view.clock.observation",
+          "kind": "call",
+          "label": "Dispatch CAPTURE and READ_WINDOW through Observations::call",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/execution.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.clock.observation",
+          "to": "kolvrt.kernel.view.clock.window",
+          "kind": "call",
+          "label": "READ_WINDOW validates captured span with window::checked",
+          "evidence": [
+            "crates/kernel/src/execution.rs",
+            "crates/kernel-core/src/window.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.clock.observation",
+          "to": "kolvrt.kernel.view.clock.abi",
+          "kind": "data",
+          "label": "Decode CAPTURE/READ_WINDOW and initialize bounded replies",
+          "evidence": [
+            "crates/kernel/src/execution.rs",
+            "crates/kernel-core/src/execution.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.clock.task-state",
+          "to": "kolvrt.kernel.view.clock.observation",
+          "kind": "lifetime",
+          "label": "Task state owns embedded Observations",
+          "evidence": [
+            "crates/kernel/src/scheduler/task.rs",
+            "crates/kernel/src/execution.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.clock.counter",
+          "to": "kolvrt.kernel.view.clock.time-arithmetic",
+          "kind": "call",
+          "label": "deadline_after converts durations through duration_ticks",
+          "evidence": [
+            "crates/kernel/src/time/mod.rs",
+            "crates/kernel-core/src/time.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.devices",
@@ -461,18 +673,22 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Immutable descriptor validation",
-          "sources": ["crates/kernel-core/src/device.rs"]
+          "sources": ["crates/kernel-core/src/device.rs"],
+          "id": "kolvrt.kernel.view.devices.immutable-descriptor-validation"
         },
         {
           "name": "Platform identity extraction",
-          "sources": ["crates/kernel-core/src/platform.rs"]
+          "sources": ["crates/kernel-core/src/platform.rs"],
+          "id": "kolvrt.kernel.view.devices.platform-identity-extraction"
         },
         {
           "name": "Boot descriptor publication",
-          "sources": ["crates/kernel/src/main.rs"]
+          "sources": ["crates/kernel/src/main.rs"],
+          "id": "kolvrt.kernel.view.devices.boot-descriptor-publication"
         }
       ],
-      "contracts": ["kolvrt.devices.observations"]
+      "contracts": ["kolvrt.devices.observations"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.diagnostics",
@@ -482,10 +698,12 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Bounded event serialization and console output",
-          "sources": ["crates/kernel/src/diagnostics/mod.rs"]
+          "sources": ["crates/kernel/src/diagnostics/mod.rs"],
+          "id": "kolvrt.kernel.view.diagnostics.bounded-event-serialization-and-console-output"
         }
       ],
-      "contracts": ["adr.0003", "adr.0010"]
+      "contracts": ["adr.0003", "adr.0010"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.supervisor",
@@ -495,14 +713,17 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Service policy and readiness coordination",
-          "sources": ["apps/native-apps/src/supervisor.rs"]
+          "sources": ["apps/native-apps/src/supervisor.rs"],
+          "id": "kolvrt.kernel.view.supervisor.service-policy-and-readiness-coordination"
         },
         {
           "name": "Production recovery operation",
-          "sources": ["apps/native-apps/src/supervision.rs"]
+          "sources": ["apps/native-apps/src/supervision.rs"],
+          "id": "kolvrt.kernel.view.supervisor.production-recovery-operation"
         }
       ],
-      "contracts": ["kolvrt.services.supervision", "kolvrt.apps.native-elf"]
+      "contracts": ["kolvrt.services.supervision", "kolvrt.apps.native-elf"],
+      "member_relations": []
     },
     {
       "id": "kolvrt.kernel.view.counter-service",
@@ -512,14 +733,17 @@ Current reference: [Нативная модель](native-model.md); [Component 
       "members": [
         {
           "name": "Counter request execution",
-          "sources": ["apps/native-apps/src/counter-service.rs"]
+          "sources": ["apps/native-apps/src/counter-service.rs"],
+          "id": "kolvrt.kernel.view.counter-service.counter-request-execution"
         },
         {
           "name": "Public native ABI call interface",
-          "sources": ["apps/native-runtime/src/lib.rs"]
+          "sources": ["apps/native-runtime/src/lib.rs"],
+          "id": "kolvrt.kernel.view.counter-service.public-native-abi-call-interface"
         }
       ],
-      "contracts": ["kolvrt.apps.native-elf"]
+      "contracts": ["kolvrt.apps.native-elf"],
+      "member_relations": []
     }
   ],
   "edges": [

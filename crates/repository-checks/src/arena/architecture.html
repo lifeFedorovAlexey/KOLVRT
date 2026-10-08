@@ -85,6 +85,8 @@
         width: 100vw;
         height: 100vh;
         touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
         cursor: grab;
       }
       #canvas.dragging {
@@ -149,15 +151,6 @@
       .edge.muted {
         opacity: 0.2;
       }
-      .edge-label {
-        font-size: 12px;
-        font-weight: 650;
-        paint-order: stroke;
-        stroke: #0b1220;
-        stroke-width: 5px;
-        stroke-linejoin: round;
-        pointer-events: none;
-      }
       .layerbox {
         fill: #0e1929;
         stroke: #243954;
@@ -175,7 +168,8 @@
         z-index: 5;
         width: 370px;
         max-width: calc(100vw - 24px);
-        max-height: calc(100vh - 90px);
+        max-height: calc(100vh - 110px);
+        overscroll-behavior: contain;
         overflow: auto;
         padding: 18px;
         border: 1px solid #567591;
@@ -286,7 +280,9 @@
   <body>
     <header>
       <div>
-        <span class="brand">KOLVRT<small id="subtitle"></small></span>
+        <button id="back" hidden></button
+        ><button id="detail-data" hidden></button
+        ><span class="brand">KOLVRT<small id="subtitle"></small></span>
       </div>
       <div>
         <button id="minus" aria-label="Zoom out">−</button
@@ -629,6 +625,102 @@
           },
         },
       };
+      Object.assign(translations.edges, {
+        "CLOCK reads ticks and counter frequency": {
+          ru: "CLOCK читает тики и частоту счётчика",
+          ruShort: "CLOCK читает тики и частоту счётчика",
+          enShort: "CLOCK reads ticks and counter frequency",
+        },
+        "CLOCK reads accumulated task counters into x2 and x3": {
+          ru: "CLOCK читает накопленные счётчики задачи в x2 и x3",
+          ruShort: "CLOCK читает накопленные счётчики задачи в x2 и x3",
+          enShort: "CLOCK reads accumulated task counters into x2 and x3",
+        },
+        "Decode the native CLOCK operation identifier": {
+          ru: "Декодирует идентификатор native-операции CLOCK",
+          ruShort: "Декодирует идентификатор native-операции CLOCK",
+          enShort: "Decode the native CLOCK operation identifier",
+        },
+        "Dispatch CAPTURE and READ_WINDOW through Observations::call": {
+          ru: "Передаёт CAPTURE и READ_WINDOW в Observations::call",
+          ruShort: "Передаёт CAPTURE и READ_WINDOW в Observations::call",
+          enShort:
+            "Dispatch CAPTURE and READ_WINDOW through Observations::call",
+        },
+        "READ_WINDOW validates captured span with window::checked": {
+          ru: "READ_WINDOW проверяет захваченный диапазон через window::checked",
+          ruShort:
+            "READ_WINDOW проверяет захваченный диапазон через window::checked",
+          enShort: "READ_WINDOW validates captured span with window::checked",
+        },
+        "Decode CAPTURE/READ_WINDOW and initialize bounded replies": {
+          ru: "Декодирует CAPTURE/READ_WINDOW и инициализирует ограниченные ответы",
+          ruShort:
+            "Декодирует CAPTURE/READ_WINDOW и инициализирует ограниченные ответы",
+          enShort: "Decode CAPTURE/READ_WINDOW and initialize bounded replies",
+        },
+        "Task state owns embedded Observations": {
+          ru: "Состояние задачи владеет встроенным Observations",
+          ruShort: "Состояние задачи владеет встроенным Observations",
+          enShort: "Task state owns embedded Observations",
+        },
+        "deadline_after converts durations through duration_ticks": {
+          ru: "deadline_after преобразует длительности через duration_ticks",
+          ruShort:
+            "deadline_after преобразует длительности через duration_ticks",
+          enShort: "deadline_after converts durations through duration_ticks",
+        },
+      });
+      translations.members["Own-task native-call dispatch"] =
+        "Диспетчеризация native-вызовов собственной задачи";
+      Object.assign(translations.members, {
+        "Coalescing event latches and retained signal admission":
+          "Объединяемые события и допуск удерживаемого сигнала",
+        "Ordinary-lock exclusion and scheduler entry guard":
+          "Исключение обычных блокировок и защита входа планировщика",
+        "Task wait and wake integration": "Ожидание и пробуждение задач",
+        "Retained IPC wake publication and acknowledgement":
+          "Публикация и подтверждение удерживаемого пробуждения IPC",
+      });
+      Object.assign(translations.edges, {
+        "STEP WAIT_OWN_EVENT registers then rechecks pending notification": {
+          ru: "STEP WAIT_OWN_EVENT регистрирует ожидание и повторно проверяет уведомление",
+          ruShort:
+            "STEP WAIT_OWN_EVENT регистрирует ожидание и повторно проверяет уведомление",
+          enShort:
+            "STEP WAIT_OWN_EVENT registers then rechecks pending notification",
+        },
+        "Local ownership entry asserts no ordinary lock is held": {
+          ru: "Вход во владение локальным состоянием проверяет отсутствие обычной блокировки",
+          ruShort:
+            "Вход во владение локальным состоянием проверяет отсутствие обычной блокировки",
+          enShort: "Local ownership entry asserts no ordinary lock is held",
+        },
+        "deferred_local consumes the exact wake after applying or rejecting it":
+          {
+            ru: "deferred_local потребляет точное пробуждение после применения или отклонения",
+            ruShort:
+              "deferred_local потребляет точное пробуждение после применения или отклонения",
+            enShort:
+              "deferred_local consumes the exact wake after applying or rejecting it",
+          },
+        "pending exposes sequence for saved WaitKey and process-generation validation":
+          {
+            ru: "pending предоставляет последовательность для проверки сохранённого WaitKey и поколения процесса",
+            ruShort:
+              "pending предоставляет последовательность для проверки сохранённого WaitKey и поколения процесса",
+            enShort:
+              "pending exposes sequence for saved WaitKey and process-generation validation",
+          },
+        "deferred_local polls retained wake publication and source acknowledgements":
+          {
+            ru: "deferred_local опрашивает удерживаемое пробуждение и подтверждения источника",
+            ruShort:
+              "deferred_local опрашивает удерживаемое пробуждение и подтверждения источника",
+            enShort:
+              "deferred_local polls retained wake publication and source acknowledgements",
+          },
+      });
       let language = "ru",
         selected = null,
         pinned = false,
@@ -755,6 +847,7 @@
       const nodeEls = new Map(),
         edgeEls = [],
         positions = new Map();
+      let detailNode = null;
       const W = 1320,
         H = 850,
         CW = 218,
@@ -883,23 +976,26 @@
       svg.addEventListener("pointercancel", endDrag);
       // Route through the visibility grid between inflated card bounds. Card interiors
       // are obstacles; only the initial/final port segments touch their own cards.
-      function routingGrid() {
-        const boxes = [...positions].map(([id, [x, y]]) => ({ id, x, y }));
+      function routingGrid(
+        locations = positions,
+        relations = model.edges,
+        width = CW,
+        height = CH,
+      ) {
+        const boxes = [...locations].map(([id, [x, y]]) => ({ id, x, y }));
         const portsByEdge = new Map();
-        for (const e of model.edges)
+        for (const e of relations)
           for (const id of [e.from, e.to]) {
-            const [x, y] = positions.get(id),
-              incident = model.edges.filter(
-                (r) => r.from === id || r.to === id,
-              );
+            const [x, y] = locations.get(id),
+              incident = relations.filter((r) => r.from === id || r.to === id);
             const fraction = (incident.indexOf(e) + 1) / (incident.length + 1);
-            const px = x + 20 + (CW - 40) * fraction,
-              py = y + 15 + (CH - 30) * fraction;
-            portsByEdge.set(model.edges.indexOf(e) + ":" + id, [
+            const px = x + 20 + (width - 40) * fraction,
+              py = y + 15 + (height - 30) * fraction;
+            portsByEdge.set(relations.indexOf(e) + ":" + id, [
               { x: x - 10, y: py, card: { x, y: py } },
-              { x: x + CW + 10, y: py, card: { x: x + CW, y: py } },
+              { x: x + width + 10, y: py, card: { x: x + width, y: py } },
               { x: px, y: y - 10, card: { x: px, y } },
-              { x: px, y: y + CH + 10, card: { x: px, y: y + CH } },
+              { x: px, y: y + height + 10, card: { x: px, y: y + height } },
             ]);
           }
         const portsFlat = [...portsByEdge.values()].flat();
@@ -911,9 +1007,9 @@
               b.x - 30,
               b.x - 20,
               b.x - 10,
-              b.x + CW + 10,
-              b.x + CW + 20,
-              b.x + CW + 30,
+              b.x + width + 10,
+              b.x + width + 20,
+              b.x + width + 30,
             ]),
             ...portsFlat.map((p) => p.x),
           ]),
@@ -926,9 +1022,9 @@
               b.y - 30,
               b.y - 20,
               b.y - 10,
-              b.y + CH + 10,
-              b.y + CH + 20,
-              b.y + CH + 30,
+              b.y + height + 10,
+              b.y + height + 20,
+              b.y + height + 30,
             ]),
             ...portsFlat.map((p) => p.y),
           ]),
@@ -940,13 +1036,13 @@
           boxes.some((r) =>
             a.x === b.x
               ? a.x > r.x - 6 &&
-                a.x < r.x + CW + 6 &&
+                a.x < r.x + width + 6 &&
                 Math.max(Math.min(a.y, b.y), r.y - 6) <
-                  Math.min(Math.max(a.y, b.y), r.y + CH + 6)
+                  Math.min(Math.max(a.y, b.y), r.y + height + 6)
               : a.y > r.y - 6 &&
-                a.y < r.y + CH + 6 &&
+                a.y < r.y + height + 6 &&
                 Math.max(Math.min(a.x, b.x), r.x - 6) <
-                  Math.min(Math.max(a.x, b.x), r.x + CW + 6),
+                  Math.min(Math.max(a.x, b.x), r.x + width + 6),
           );
         for (const y of ys)
           for (const x of xs) {
@@ -954,9 +1050,9 @@
               boxes.some(
                 (r) =>
                   x > r.x - 6 &&
-                  x < r.x + CW + 6 &&
+                  x < r.x + width + 6 &&
                   y > r.y - 6 &&
-                  y < r.y + CH + 6,
+                  y < r.y + height + 6,
               )
             )
               continue;
@@ -979,7 +1075,7 @@
           }
         const ports = (id, e) =>
           portsByEdge
-            .get(model.edges.indexOf(e) + ":" + id)
+            .get(relations.indexOf(e) + ":" + id)
             .map((p) => ({ ...p, index: lookup.get(key(p.x, p.y)) }));
         return { points, ports };
       }
@@ -1005,8 +1101,8 @@
           return false;
         });
       }
-      function edgeGeometry(e) {
-        const { points, ports } = routeGrid,
+      function edgeGeometry(e, grid = routeGrid) {
+        const { points, ports } = grid,
           starts = ports(e.from, e),
           ends = ports(e.to, e),
           size = points.length * 3;
@@ -1162,16 +1258,18 @@
         };
       }
       function highlight(id) {
-        for (const { e, path, label } of edgeEls) {
+        for (const { e, path } of edgeEls) {
           const active = id && (e.from === id || e.to === id);
           path.classList.toggle("active", !!active);
           path.classList.toggle("muted", !!id && !active);
-          label.hidden = !active;
-          label.style.display = active ? "" : "none";
         }
         for (const [k, g] of nodeEls) g.classList.toggle("active", k === id);
       }
       function draw() {
+        if (detailNode) {
+          drawDetail();
+          return;
+        }
         routeUse.clear();
         reservedSegments.length = 0;
         scene.replaceChildren();
@@ -1196,7 +1294,7 @@
           se("text", { x: 290, y: 692, class: "layerlabel" }, t("apps")),
         );
         model.edges.forEach((e, i) => {
-          const geo = edgeGeometry(e, i),
+          const geo = edgeGeometry(e),
             p = se("path", {
               d: geo.d,
               stroke: colors[e.kind],
@@ -1207,21 +1305,8 @@
               "aria-label": edgeText(e),
             });
           p.append(se("title", {}, edgeText(e)));
-          const label = se(
-            "text",
-            {
-              x: geo.x,
-              y: geo.y,
-              fill: colors[e.kind],
-              class: "edge-label",
-              "text-anchor": "middle",
-            },
-            edgeShort(e),
-          );
-          label.style.display = "none";
           p.addEventListener("pointerenter", (ev) => {
             if (pinned) return;
-            label.style.display = "";
             showEdge(e, ev.clientX, ev.clientY, false);
           });
           p.addEventListener("pointerleave", () => scheduleClose());
@@ -1242,7 +1327,7 @@
               showEdge(e, r.x + r.width / 2, r.y + r.height / 2, true);
             }
           });
-          scene.append(p, label);
+          scene.append(p);
           for (const point of [geo.points[0], geo.points.at(-1)])
             scene.append(
               se("circle", {
@@ -1253,7 +1338,7 @@
                 "pointer-events": "none",
               }),
             );
-          edgeEls.push({ e, path: p, label });
+          edgeEls.push({ e, path: p });
         });
         for (const n of model.nodes) {
           const [x, y] = positions.get(n.id),
@@ -1332,34 +1417,31 @@
               ),
             );
           }
-          g.append(
-            se(
-              "title",
-              {},
-              t("topology") +
-                " " +
-                (n.measurements.length ? t("historical") : t("notmeasured")),
-            ),
-          );
-          g.addEventListener("pointerenter", () => {
+          const label = g.querySelector(".name");
+          label.style.pointerEvents = "all";
+          label.addEventListener("pointerenter", () => {
             clearTimeout(hoverTimer);
+            if (!pinned)
+              hoverTimer = setTimeout(() => showLabel(n, label), 150);
+          });
+          label.addEventListener("pointerleave", scheduleClose);
+          g.addEventListener("pointerenter", () => {
             if (!pinned) {
               highlight(n.id);
-              hoverTimer = setTimeout(() => showNode(n, false), 160);
             }
           });
           g.addEventListener("pointerleave", scheduleClose);
           g.addEventListener("click", (ev) => {
             ev.stopPropagation();
-            showNode(n, true);
+            enterDetail(n);
           });
           g.addEventListener("focus", () => {
-            if (!pinned) showNode(n, false);
+            highlight(n.id);
           });
           g.addEventListener("keydown", (ev) => {
             if (ev.key === "Enter" || ev.key === " ") {
               ev.preventDefault();
-              showNode(n, true);
+              enterDetail(n);
             }
           });
           scene.append(g);
@@ -1367,6 +1449,209 @@
         }
         highlight(selected);
         updateUI();
+      }
+      function enterDetail(n) {
+        closePopup();
+        detailNode = n;
+        draw();
+        fit();
+      }
+      function wrapName(name) {
+        const lines = [];
+        let line = "";
+        for (const word of name.split(" ")) {
+          if (line && line.length + word.length > 23) {
+            lines.push(line);
+            line = word;
+          } else line += (line ? " " : "") + word;
+        }
+        if (line) lines.push(line);
+        return lines;
+      }
+      function showMember(member, index, pin) {
+        const id = member.id || detailNode.id + ".member-" + index;
+        const relations = (detailNode.member_relations || []).filter(
+          (e) => e.from === id || e.to === id,
+        );
+        const responsibility =
+          typeof member.responsibility === "object"
+            ? member.responsibility?.[language]
+            : language === "en"
+              ? member.responsibility
+              : null;
+        if (!relations.length && !responsibility) {
+          closePopup();
+          return;
+        }
+        popupKind = { member: index };
+        popupBase(responsibility ? t("responsibility") : t("links"), pin);
+        popup.querySelector("h2").remove();
+        if (responsibility) popup.append(element("p", responsibility));
+        for (const relation of relations)
+          popup.append(element("p", edgeText(relation)));
+        const firstDescription = popup.querySelector("p");
+        if (firstDescription) firstDescription.style.marginRight = "20px";
+        const rect = nodeEls
+          .get(id)
+          .querySelector(".name")
+          .getBoundingClientRect();
+        positionPopup(rect.right, rect.bottom);
+      }
+      function drawDetail() {
+        routeUse.clear();
+        reservedSegments.length = 0;
+        scene.replaceChildren();
+        nodeEls.clear();
+        edgeEls.length = 0;
+        const n = detailNode,
+          DW = 300,
+          DH = 180,
+          locations = new Map();
+        const children = n.members.map((m, i) => ({
+          ...m,
+          id: m.id || n.id + ".member-" + i,
+        }));
+        children.forEach((m, i) => {
+          const row = Math.floor(i / 3),
+            count = Math.min(3, children.length - row * 3);
+          locations.set(m.id, [
+            (W - (count * DW + (count - 1) * 90)) / 2 + (i % 3) * (DW + 90),
+            80 + row * 270,
+          ]);
+        });
+        const relations = n.member_relations || [],
+          grid = relations.length
+            ? routingGrid(locations, relations, DW, DH)
+            : null;
+        for (const relation of relations) {
+          const geo = edgeGeometry(relation, grid),
+            path = se("path", {
+              d: geo.d,
+              class: "edge",
+              stroke: colors[relation.kind],
+              "marker-end": `url(#arrow-${relation.kind})`,
+            });
+          const explain = () => {
+            const names = new Map(children.map((m) => [m.id, memberName(m)]));
+            popupKind = null;
+            popupBase(
+              names.get(relation.from) + " → " + names.get(relation.to),
+              true,
+            );
+            popup.append(element("p", edgeText(relation)));
+            for (const file of relation.evidence) popup.append(link(file));
+            positionPopup(innerWidth / 2, 100);
+          };
+          path.setAttribute("tabindex", "0");
+          path.setAttribute("role", "button");
+          path.setAttribute("aria-label", edgeText(relation));
+          path.addEventListener("click", explain);
+          path.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") explain();
+          });
+          scene.append(path);
+          for (const point of [geo.points[0], geo.points.at(-1)])
+            scene.append(
+              se("circle", {
+                cx: point.x,
+                cy: point.y,
+                r: 3.5,
+                fill: colors[relation.kind],
+                "pointer-events": "none",
+              }),
+            );
+        }
+        children.forEach((m, i) => {
+          const [x, y] = locations.get(m.id),
+            card = se("g", {
+              transform: `translate(${x} ${y})`,
+              class: "node",
+              role: "group",
+              "aria-label": memberName(m),
+            });
+          card.append(
+            se("rect", { width: DW, height: DH, rx: 12, class: "card" }),
+            se("path", {
+              d: icons[shortId(n)],
+              transform: "translate(14 14)",
+              class: "icon",
+            }),
+          );
+          const name = se("g", {
+            tabindex: 0,
+            role: "note",
+            "aria-label": memberName(m),
+            style: "pointer-events:all",
+          });
+          wrapName(memberName(m)).forEach((line, j) =>
+            name.append(
+              se(
+                "text",
+                {
+                  x: 47,
+                  y: 28 + j * 18,
+                  class: "name",
+                  style: "font-size:13px;pointer-events:all",
+                },
+                line,
+              ),
+            ),
+          );
+          name.addEventListener("pointerenter", () => {
+            clearTimeout(hoverTimer);
+            if (!pinned)
+              hoverTimer = setTimeout(() => showMember(m, i, false), 150);
+          });
+          name.addEventListener("pointerleave", scheduleClose);
+          name.addEventListener("focus", () => {
+            if (!pinned) showMember(m, i, false);
+          });
+          card.append(name);
+          m.sources.forEach((file, j) => {
+            const a = se("a", {
+              href:
+                model.view.repository_href +
+                file.split("/").map(encodeURIComponent).join("/"),
+              target: "_blank",
+              rel: "noopener",
+              "aria-label": file,
+            });
+            a.append(
+              se(
+                "text",
+                {
+                  x: 14,
+                  y: 89 + j * 14,
+                  fill: "#9bd5ff",
+                  style:
+                    "font-size:11px;pointer-events:all;text-decoration:underline",
+                },
+                file.split("/").slice(-2).join("/") + " ↗",
+              ),
+            );
+            card.append(a);
+          });
+          card.append(
+            se("text", { x: 14, y: DH - 12, class: "perf" }, t("pending")),
+          );
+          scene.append(card);
+          nodeEls.set(m.id, card);
+        });
+        updateUI();
+      }
+      function showLabel(n, label) {
+        popupKind = null;
+        popupBase(title(n), false);
+        popup.append(
+          element(
+            "p",
+            language === "ru"
+              ? translations.nodes[n.id].ruResponsibility
+              : n.responsibility,
+          ),
+        );
+        const rect = label.getBoundingClientRect();
+        positionPopup(rect.right, rect.bottom);
       }
       function popupBase(heading, pin) {
         clearTimeout(hoverTimer);
@@ -1379,9 +1664,9 @@
         close.setAttribute("aria-label", t("close"));
         close.onclick = closePopup;
         popup.append(close, element("h2", heading));
-        if (!pin) popup.append(element("p", t("pin"), "muted"));
       }
       function positionPopup(x, y) {
+        popup.style.maxHeight = Math.max(120, innerHeight - 110) + "px";
         const w = popup.offsetWidth,
           h = popup.offsetHeight;
         popup.style.left =
@@ -1389,100 +1674,60 @@
         popup.style.top =
           Math.max(76, Math.min(innerHeight - h - 16, y)) + "px";
       }
-      function showNode(n, pin) {
+      function showData(n) {
         popupKind = { node: n.id };
-        selected = n.id;
-        highlight(selected);
-        popupBase(title(n), pin);
-        popup.append(
-          element(
-            "p",
-            language === "ru"
-              ? translations.nodes[n.id].ruResponsibility
-              : n.responsibility,
-          ),
-          element("p", t("topology"), "muted"),
-          element("h3", t("composition")),
+        popupBase(
+          (language === "ru" ? "Данные · " : "Data · ") + title(n),
+          true,
         );
-        for (const m of n.members) {
-          const d = element("details");
-          d.append(element("summary", memberName(m)));
-          for (const p of m.sources) d.append(link(p));
-          popup.append(d);
-        }
-        popup.append(element("h3", t("links")));
-        for (const e of model.edges.filter(
-          (e) => e.from === n.id || e.to === n.id,
-        )) {
-          const incoming = e.to === n.id,
-            other = nodes.get(incoming ? e.from : e.to),
-            r = element(
-              "div",
-              (incoming ? "← " : "→ ") + title(other) + " · " + edgeShort(e),
-              "relation",
-            );
-          r.tabIndex = 0;
-          r.setAttribute("role", "button");
-          r.onclick = () =>
-            showEdge(
-              e,
-              nodeEls.get(n.id).getBoundingClientRect().right,
-              nodeEls.get(n.id).getBoundingClientRect().top,
-              true,
-            );
-          r.onkeydown = (ev) => {
-            if (ev.key === "Enter") r.click();
-          };
-          popup.append(r);
-        }
-        popup.append(element("h3", t("contracts")));
-        for (const c of n.contract_locations) popup.append(link(c.path, c.id));
-        if (n.measurements.length) {
-          popup.append(
-            element("h3", t("historical")),
-            element("p", t("repeat"), "muted"),
-          );
-          for (const p of ["DEV", "PROD"]) {
-            const runs = n.measurements.filter(
-                (r) => r.execution_profile === p,
-              ),
-              ms = runs.map((r) => r.metrics[0]);
-            if (!runs.length) continue;
-            const converted = ms.every(
-              (v) => typeof v.microseconds === "number",
-            );
-            popup.append(
-              element(
-                "p",
-                p +
-                  " " +
-                  ms
-                    .map((v) =>
-                      Number(converted ? v.microseconds : v.value).toFixed(3),
-                    )
-                    .join(" / ") +
-                  " " +
-                  (converted ? t("us") : "ticks"),
-                "values",
-              ),
-              element(
-                "p",
-                "N=" +
-                  ms.map((v) => v.sample_count).join(" / ") +
-                  " · QEMU · " +
-                  runs[0].exact_commit.slice(0, 12),
-                "muted",
-              ),
-            );
-            for (const r of runs) popup.append(link(r.path));
+        popup.append(
+          element("p", t("historical")),
+          element("p", t("repeat"), "muted"),
+        );
+        for (const profile of ["DEV", "PROD"]) {
+          const runs = n.measurements.filter(
+              (r) => r.execution_profile === profile,
+            ),
+            metrics = runs.map((r) => r.metrics[0]);
+          if (!runs.length) {
+            popup.append(element("p", profile + ": " + t("noData")));
+            continue;
           }
-          popup.append(
-            element("p", t("scope"), "muted"),
-            element("p", t("baseline"), "muted"),
+          const converted = metrics.every(
+            (m) => typeof m.microseconds === "number",
           );
-        } else popup.append(element("p", t("notmeasured"), "muted"));
-        const r = nodeEls.get(n.id).getBoundingClientRect();
-        positionPopup(r.right, r.top);
+          popup.append(
+            element(
+              "p",
+              profile +
+                " " +
+                metrics
+                  .map((m) =>
+                    Number(converted ? m.microseconds : m.value).toFixed(3),
+                  )
+                  .join(" / ") +
+                " " +
+                (converted ? t("us") : t("ticks")),
+              "values",
+            ),
+            element(
+              "p",
+              "N=" +
+                metrics.map((m) => m.sample_count).join(" / ") +
+                " · QEMU · " +
+                runs[0].exact_commit.slice(0, 12),
+              "muted",
+            ),
+          );
+          for (const run of runs) popup.append(link(run.path));
+        }
+        popup.append(element("p", t("scope"), "muted"));
+        const rect = (
+          detailNode
+            ? document.getElementById("detail-data")
+            : nodeEls.get(n.id)
+        ).getBoundingClientRect();
+        positionPopup(rect.right, rect.top);
       }
       function showEdge(e, x, y, pin) {
         popupKind = { edge: model.edges.indexOf(e) };
@@ -1509,6 +1754,20 @@
         clearTimeout(hoverTimer);
         if (!pinned) hoverTimer = setTimeout(closePopup, 260);
       }
+      popup.addEventListener("wheel", (e) => e.stopPropagation(), {
+        passive: true,
+      });
+      popup.addEventListener(
+        "toggle",
+        () => {
+          if (!popup.hidden)
+            positionPopup(
+              parseFloat(popup.style.left) - 16,
+              parseFloat(popup.style.top),
+            );
+        },
+        true,
+      );
       popup.addEventListener("pointerenter", () => clearTimeout(hoverTimer));
       popup.addEventListener("pointerleave", scheduleClose);
       popup.addEventListener("click", () => {
@@ -1559,7 +1818,26 @@
         document.getElementById("fit").textContent = t("fit");
         document.getElementById("lang").textContent =
           language === "ru" ? "EN" : "RU";
-        document.getElementById("hint").textContent = t("hint");
+        document.getElementById("hint").textContent = detailNode
+          ? language === "ru"
+            ? "Цветные стрелки — подтверждённые взаимодействия. Замеры механизмов не реализованы."
+            : "Colored arrows: reviewed interactions. Mechanism measurements not implemented."
+          : t("hint");
+        document.getElementById("back").hidden = !detailNode;
+        document.getElementById("detail-data").hidden = !(
+          detailNode && detailNode.measurements.length
+        );
+        document.getElementById("detail-data").textContent =
+          language === "ru" ? "Данные" : "Data";
+        document.getElementById("back").textContent =
+          language === "ru" ? "← Ядро" : "← Kernel";
+        if (detailNode)
+          document.getElementById("subtitle").textContent =
+            title(detailNode) +
+            " · " +
+            detailNode.members.length +
+            " " +
+            t("members");
         document.getElementById("provenance").textContent =
           t("source") +
           " " +
@@ -1586,6 +1864,14 @@
             language === "ru" ? "Подробности компонента" : "Component details",
           );
       }
+      document.getElementById("detail-data").onclick = () =>
+        showData(detailNode);
+      document.getElementById("back").onclick = () => {
+        closePopup();
+        detailNode = null;
+        draw();
+        fit();
+      };
       document.getElementById("plus").onclick = () => zoom(1.25);
       document.getElementById("minus").onclick = () => zoom(0.8);
       document.getElementById("fit").onclick = () => {
@@ -1598,7 +1884,9 @@
           pin = pinned;
         language = language === "ru" ? "en" : "ru";
         draw();
-        if (old?.node) showNode(nodes.get(old.node), pin);
+        if (old?.member !== undefined && detailNode)
+          showMember(detailNode.members[old.member], old.member, pin);
+        else if (old?.node) showData(nodes.get(old.node));
         else if (old?.edge !== undefined)
           showEdge(model.edges[old.edge], innerWidth - 400, 80, pin);
         else if (old?.help) help();
