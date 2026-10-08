@@ -8,6 +8,7 @@ use std::{
     path::{Component, Path},
 };
 
+pub mod architecture;
 pub mod report;
 
 const MAX_INPUT_BYTES: u64 = 32 * 1024 * 1024;
@@ -504,6 +505,9 @@ fn bundle_base(path: &Path) -> &Path {
         .unwrap_or_else(|| Path::new("."))
 }
 pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
+    if args.first().map(String::as_str) == Some("map") {
+        return architecture::cli(root, &args[1..]);
+    }
     match args
         .iter()
         .map(String::as_str)

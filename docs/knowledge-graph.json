@@ -36,6 +36,21 @@
       "type": "depends_on"
     },
     {
+      "from": "doc.kolvrt.architecture.kernel-component-map",
+      "to": "adr.0008",
+      "type": "depends_on"
+    },
+    {
+      "from": "doc.kolvrt.architecture.kernel-component-map",
+      "to": "adr.0010",
+      "type": "depends_on"
+    },
+    {
+      "from": "doc.kolvrt.architecture.kernel-component-map",
+      "to": "doc.kolvrt.architecture.arena",
+      "type": "depends_on"
+    },
+    {
       "from": "doc.kolvrt.arena.measurement-contract",
       "to": "adr.0003",
       "type": "depends_on"
@@ -616,6 +631,16 @@
     },
     {
       "from": "kolvrt.arena",
+      "to": "crates/repository-checks/src/arena/architecture.html",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
+      "to": "crates/repository-checks/src/arena/architecture.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
       "to": "crates/repository-checks/src/arena/report.rs",
       "type": "implemented_by"
     },
@@ -971,7 +996,7 @@
     },
     {
       "from": "kolvrt.arena.ipc-passport",
-      "to": "kolvrt.ipc",
+      "to": "kolvrt.ipc.transport",
       "type": "depends_on"
     },
     {
@@ -2600,6 +2625,146 @@
       "type": "depends_on"
     },
     {
+      "from": "kolvrt.kernel.view.authority",
+      "to": "kolvrt.handles.local",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.authority",
+      "to": "kolvrt.security.capability-revocation",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.authority",
+      "to": "kolvrt.security.domains",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.boot",
+      "to": "adr.0005",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.boot",
+      "to": "adr.0010",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.clock",
+      "to": "kolvrt.clock.query",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.clock",
+      "to": "kolvrt.clock.query.api",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.counter-service",
+      "to": "kolvrt.apps.native-elf",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.devices",
+      "to": "kolvrt.devices.observations",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.diagnostics",
+      "to": "adr.0003",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.diagnostics",
+      "to": "adr.0010",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.interrupts",
+      "to": "adr.0010",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.interrupts",
+      "to": "adr.0014",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.ipc",
+      "to": "kolvrt.ipc.request",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.ipc",
+      "to": "kolvrt.ipc.transport",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.memory",
+      "to": "adr.0010",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.memory",
+      "to": "kolvrt.process.asid",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.process",
+      "to": "kolvrt.apps.native-elf",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.process",
+      "to": "kolvrt.process.lifecycle",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.process",
+      "to": "kolvrt.services.supervision",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.scheduler",
+      "to": "adr.0016",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.scheduler",
+      "to": "doc.kolvrt.kernel.scheduler",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.smp",
+      "to": "adr.0012",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.supervisor",
+      "to": "kolvrt.apps.native-elf",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.supervisor",
+      "to": "kolvrt.services.supervision",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.user-copy",
+      "to": "kolvrt.memory.user-copy",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.wait",
+      "to": "doc.kolvrt.kernel.wait",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.kernel.view.wait",
+      "to": "kolvrt.ipc.wait",
+      "type": "depends_on"
+    },
+    {
       "from": "kolvrt.memory.user-copy",
       "to": "adr.0018",
       "type": "depends_on"
@@ -3452,8 +3617,10 @@
     "crates/native-protocol-model/Cargo.toml": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e",
     "crates/native-state-models/Cargo.toml": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007",
     "crates/repository-checks/Cargo.toml": "90c543bdaed3980edabb0c9d661f3a31a608888b8b2227f94e919b388b4f35b8",
-    "crates/repository-checks/src/arena.rs": "5021c2d39fed56328a943f605bd090cb29caf1086b841d14023f8c5390ec9b72",
-    "crates/repository-checks/src/arena/report.rs": "565d9a0568474ece86323ef1c11d4560f49cb492c21f07fec86707b39fccccd2",
+    "crates/repository-checks/src/arena.rs": "bca36119db0984d95577938b3455189b918911cd1d404ef5120eaa17734f2004",
+    "crates/repository-checks/src/arena/architecture.html": "3431f43038e65c5eecb837b14cfa8f5981d92d335c7d267db36bf1ac2f23b3c9",
+    "crates/repository-checks/src/arena/architecture.rs": "b4c6d19ac190a374bb9d0ac8c572e45f258da76a755064f1357f69956f782d42",
+    "crates/repository-checks/src/arena/report.rs": "bb6efcab0b1c179e64eaf8887e0067227e7b5ad9a74345834b4dadbf1e762c13",
     "crates/repository-checks/src/compat_modules.rs": "8a053ff7e6285e11d8bef8e5c8ea8c88ddbb13929092e8cf77bf051430761c76",
     "crates/repository-checks/src/cost_l.rs": "045971103a1bfe03e5c414d3cbc5824ce0727faf5da9b44fdb00a443c7f6a98e",
     "crates/repository-checks/src/cost_l_queries.rs": "567932099224415c21466ca823cb46666679beff1de961b9d37ac491bfb0195e",
@@ -3518,14 +3685,15 @@
     "docs/architecture-decisions/0026-el0-supervision.md": "f3bf1a0686f11e8b229a74b17ee7be0235873edbe93599a5235376317a0f6cde",
     "docs/architecture-decisions/0027-device-observations.md": "d80280cfdda884b9c0252aa2b4860ff497932a50205fd509c2c9351609790474",
     "docs/architecture/architecture-audit-2026-10-04.md": "b2afdf863e4a74149e14679dd6cca8dcac34e93f3313c53a7a5037dbd8768092",
-    "docs/architecture/arena-measurement-contract.md": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
+    "docs/architecture/arena-measurement-contract.md": "3245023ad41dac3ec1c94062b0c6c1d5fe80787736300245718c6215e7b743db",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/compatibility-manifests.md": "1f3c195ba2566faa440e649b1d9bf8537fdad141ee47262274bcf20f142edc48",
-    "docs/architecture/component-arena.md": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+    "docs/architecture/component-arena.md": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
     "docs/architecture/dependency-hygiene.md": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
     "docs/architecture/first-native-slice.md": "46a668922aab3f1aa7829bcf666c336a65a307f88d198d226e474c34d4adc325",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
     "docs/architecture/ipc-phase35-review.md": "a9a989ac91532addc54f9a3d97193cd23530196cadccff5d3f427fca3cf72a27",
+    "docs/architecture/kernel-component-map.md": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
     "docs/architecture/kernel-laws.md": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
     "docs/architecture/native-abi.md": "f498722103e4b34ef3ca742268480fb232bb3d56cd7a789b21b9e91a964ad893",
     "docs/architecture/native-model.md": "a8c86aec8f314abcadce7d93d825c95ffb27a26b82c3740919fca0d1c59cf3fa",
@@ -3547,13 +3715,13 @@
     "docs/kernel/supervision.md": "dce0718ba484852651c41e91ecdee7842f49e1529afef5e3e8e54810427b4c0d",
     "docs/kernel/user-copy.md": "16941492671fc63f4550421d6592472bd6035e6a4ecf8a67e9282806942fbe4d",
     "docs/kernel/wait.md": "7dd7bf8bef8b3cdff4dc5d41d68ee396410a49362979fa42172b61fc854b65e1",
-    "docs/knowledge-enrollment.json": "890a3fd94f271f470dd07383f990ab75ad8f8d93df4d068463260634d54b160c",
+    "docs/knowledge-enrollment.json": "4c1abd9f26e3005dedd5269d753e1c2a547723af0269faeba66624b51b4e9679",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
     "docs/research/clock-passport.md": "927ac62cb954279fdc46fb8faf260429cc8d401b07a854aa09b1a98acd8758c1",
     "docs/research/cost-l-queries.md": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
     "docs/research/host-survey.md": "f3027d023eb3b9ce3e65c14823bf88bf9bc0be2f1a1eed934d32abf15b8935e2",
     "docs/research/ipc-measurement-contract.md": "b1c405a1f9c45efaa6be8b3494db8ae300aaece39385613b3a461ee7547a547d",
-    "docs/research/ipc-passport.md": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
+    "docs/research/ipc-passport.md": "cd1d18186b53f991eb4d6bef7b7891bb370b652887555ba8f5992d151a918ed9",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "docs/security/verifier-time.md": "a54b7c49207b6e43b66b23ba4ec8ff870035073b817031a8ab97bb09df3fef35",
@@ -3711,7 +3879,7 @@
     "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
     "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
-    "translations/manifest.json": "8818046deee14b5f541d46e1258dc570ecc9e3b27845aee98e1722a8241020f9",
+    "translations/manifest.json": "2626615f72ffe51f18dabd1f3c3adedc548f7e3964fc54fe8ff75bd8f00281c6",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3740,14 +3908,15 @@
     "translations/ru/docs/architecture-decisions/0026-el0-supervision.md": "b418467a1b29450254dd1100873ec87c64dda3892a8ad385eda91ea6098c0a5f",
     "translations/ru/docs/architecture-decisions/0027-device-observations.md": "bfe65e69852f3fb945665500c0b25980ae5f06ec659c2329a6bdc86032ea5d8d",
     "translations/ru/docs/architecture/architecture-audit-2026-10-04.md": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f",
-    "translations/ru/docs/architecture/arena-measurement-contract.md": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194",
+    "translations/ru/docs/architecture/arena-measurement-contract.md": "b87a78e4caf7847b8aa3bbc59153dad63a39ab61a3b3f0f35326e07eddef8b58",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/compatibility-manifests.md": "61672ddbce35165ea36ab13005c7b79092d9f8fd6fe6f5ef3dd409e880ec1c3a",
-    "translations/ru/docs/architecture/component-arena.md": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+    "translations/ru/docs/architecture/component-arena.md": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
     "translations/ru/docs/architecture/dependency-hygiene.md": "90ec082b25c9f409ceb054dd094906f23cc61445de98ea06ada20f2b04d6c172",
     "translations/ru/docs/architecture/first-native-slice.md": "b0155cfc7eaa77cfbfa3ad3e073af5151e4a8c9803aedae053ac903caf4c8dee",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
     "translations/ru/docs/architecture/ipc-phase35-review.md": "7e92c6b01e888e17373b174e519201ff7a7c2ae7caaa3ed94f1a5f7e18f66074",
+    "translations/ru/docs/architecture/kernel-component-map.md": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
     "translations/ru/docs/architecture/kernel-laws.md": "7cded42635e1a2ce541162c8655638bfb712aa91c54ced705b7284bca65e37ae",
     "translations/ru/docs/architecture/native-abi.md": "ae022347a65b951075faea011f07396363fb676186071f84afa8e8947d660a3b",
     "translations/ru/docs/architecture/native-model.md": "0e992f8d05019dc5a5d139951df75592789473ffebd79035215c7bfca0f94424",
@@ -3774,7 +3943,7 @@
     "translations/ru/docs/research/cost-l-queries.md": "11ec1ab0303c9d8d10ceb1f702d2e9c4444f4cad8e96b34b2a3c36e3e807b731",
     "translations/ru/docs/research/host-survey.md": "786cc999b220cf1c0989a5b9ed33c4874265306c43431dc69c44b3021f1fdc9b",
     "translations/ru/docs/research/ipc-measurement-contract.md": "66d23740d70ebfc19891916ed464c66da61a42f9fe0a5c6a7b2887e61e85918d",
-    "translations/ru/docs/research/ipc-passport.md": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc",
+    "translations/ru/docs/research/ipc-passport.md": "b0b7969b0ee92b2297e0e055c2e8c81b019846518d3aa9403ab76548af22152d",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
     "translations/ru/docs/security/verifier-time.md": "6ba3042bf7b49b3ce0cfae58283203c4dc169b5842ac497fb2b575c294604d84",
@@ -5868,8 +6037,8 @@
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 21060,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "estimated_bytes": 22760,
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "localized": {
@@ -5882,15 +6051,15 @@
       },
       "locations": {
         "en": {
-          "end": 267,
+          "end": 275,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
           "start": 1
         },
         "ru": {
-          "end": 267,
+          "end": 275,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
           "start": 1
         }
       },
@@ -6035,6 +6204,41 @@
       "summary": "Broader isolated-task workload design, scoped separately from experimental bounded Phase 3.5 IPC.",
       "title": "First native slice"
     },
+    "doc.kolvrt.architecture.kernel-component-map": {
+      "depends_on": ["adr.0010", "adr.0008", "doc.kolvrt.architecture.arena"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 33969,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "doc.kolvrt.architecture.kernel-component-map",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Source-derived logical view of kernel responsibilities, EL0 services and typed interactions.",
+          "tags": null,
+          "title": "Карта компонентов ядра"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 887,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 1
+        },
+        "ru": {
+          "end": 887,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 1
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "schema_version": 1,
+      "summary": "Source-derived logical view of kernel responsibilities, EL0 services and typed interactions.",
+      "title": "Kernel component map"
+    },
     "doc.kolvrt.architecture.native-abi": {
       "document": "doc.kolvrt.architecture.native-abi",
       "document_status": "DESIGN BASELINE",
@@ -6112,7 +6316,7 @@
       ],
       "document": "doc.kolvrt.arena.measurement-contract",
       "document_status": "CURRENT",
-      "estimated_bytes": 10618,
+      "estimated_bytes": 11633,
       "evidence_scope": "experimental general offline A0/A1 contracts and import admission plus the accepted bounded QEMU CLOCK pilot; no records service, general independent attestation or certification.",
       "id": "doc.kolvrt.arena.measurement-contract",
       "kind": "subsystem-contract",
@@ -6126,15 +6330,15 @@
       },
       "locations": {
         "en": {
-          "end": 80,
+          "end": 85,
           "path": "docs/architecture/arena-measurement-contract.md",
-          "sha256": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
+          "sha256": "3245023ad41dac3ec1c94062b0c6c1d5fe80787736300245718c6215e7b743db",
           "start": 1
         },
         "ru": {
-          "end": 80,
+          "end": 85,
           "path": "translations/ru/docs/architecture/arena-measurement-contract.md",
-          "sha256": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194",
+          "sha256": "b87a78e4caf7847b8aa3bbc59153dad63a39ab61a3b3f0f35326e07eddef8b58",
           "start": 1
         }
       },
@@ -7091,7 +7295,7 @@
     "doc.kolvrt.research.ipc-passport": {
       "document": "doc.kolvrt.research.ipc-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 14910,
+      "estimated_bytes": 14920,
       "evidence_scope": "96 retained functional pilot boots; the separately preregistered 576-boot main campaign and current-source acceptance remain pending. Historical pilot evidence does not verify later writer changes.",
       "id": "doc.kolvrt.research.ipc-passport",
       "kind": "subsystem-contract",
@@ -7107,13 +7311,13 @@
         "en": {
           "end": 169,
           "path": "docs/research/ipc-passport.md",
-          "sha256": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
+          "sha256": "cd1d18186b53f991eb4d6bef7b7891bb370b652887555ba8f5992d151a918ed9",
           "start": 1
         },
         "ru": {
           "end": 169,
           "path": "translations/ru/docs/research/ipc-passport.md",
-          "sha256": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc",
+          "sha256": "b0b7969b0ee92b2297e0e055c2e8c81b019846518d3aa9403ab76548af22152d",
           "start": 1
         }
       },
@@ -7467,7 +7671,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1237,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "feature": {
         "acceptance": [
           "research/results/arena-foundation-host.json",
@@ -7476,7 +7680,7 @@
         ],
         "adrs": ["adr.0006", "adr.0003", "adr.0024"],
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; a source-bound logical architecture map with terminal and HTML views; no general records publication.",
         "issues": [93, 32, 33, 34, 35, 36, 50],
         "limitations": [
           "Producer assertions are not attestation; record_eligible is always false. The proposed range profile and synthetic tests do not establish kernel PERF/SEC acceptance, DEV attribution, PROD external outcomes or physical ARM64 performance."
@@ -7497,7 +7701,9 @@
           "crates/repository-checks/src/lib.rs",
           "crates/xtask/src/main.rs",
           "scripts/run-arena.ps1",
-          "crates/repository-checks/tests/arena_launcher.rs"
+          "crates/repository-checks/tests/arena_launcher.rs",
+          "crates/repository-checks/src/arena/architecture.rs",
+          "crates/repository-checks/src/arena/architecture.html"
         ],
         "transitions": [
           {
@@ -7530,7 +7736,7 @@
         ]
       },
       "gaps": [
-        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history, historical topology reconstruction and measured runtime graph weights remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "id": "kolvrt.arena",
       "kind": "feature",
@@ -7546,13 +7752,13 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
           "start": 7
         }
       },
@@ -7568,7 +7774,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1057,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "kolvrt.arena.admission",
       "kind": "contract-section",
       "localized": {
@@ -7583,13 +7789,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
           "start": 33
         }
       },
@@ -7707,8 +7913,8 @@
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 2241,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "estimated_bytes": 2205,
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "kolvrt.arena.comparison",
       "kind": "contract-section",
       "localized": {
@@ -7721,15 +7927,15 @@
       },
       "locations": {
         "en": {
-          "end": 84,
+          "end": 82,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
           "start": 63
         },
         "ru": {
-          "end": 84,
+          "end": 82,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
           "start": 63
         }
       },
@@ -7743,7 +7949,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1175,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "kolvrt.arena.contract",
       "kind": "contract-section",
       "localized": {
@@ -7758,13 +7964,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
           "start": 19
         }
       },
@@ -7778,7 +7984,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1170,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "kolvrt.arena.cost-l",
       "kind": "contract-section",
       "localized": {
@@ -7791,16 +7997,16 @@
       },
       "locations": {
         "en": {
-          "end": 94,
+          "end": 100,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
-          "start": 83
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "start": 89
         },
         "ru": {
-          "end": 94,
+          "end": 100,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
-          "start": 83
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "start": 89
         }
       },
       "path": "docs/architecture/component-arena.md",
@@ -7851,7 +8057,7 @@
     "kolvrt.arena.ipc-passport": {
       "anchor": "kolvrt-arena-ipc-passport",
       "depends_on": [
-        "kolvrt.ipc",
+        "kolvrt.ipc.transport",
         "kolvrt.arena.clock-passport",
         "doc.kolvrt.arena.measurement-contract",
         "adr.0025",
@@ -7979,13 +8185,13 @@
         "en": {
           "end": 16,
           "path": "docs/research/ipc-passport.md",
-          "sha256": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
+          "sha256": "cd1d18186b53f991eb4d6bef7b7891bb370b652887555ba8f5992d151a918ed9",
           "start": 7
         },
         "ru": {
           "end": 16,
           "path": "translations/ru/docs/research/ipc-passport.md",
-          "sha256": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc",
+          "sha256": "b0b7969b0ee92b2297e0e055c2e8c81b019846518d3aa9403ab76548af22152d",
           "start": 7
         }
       },
@@ -7999,7 +8205,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 2193,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "kolvrt.arena.passports",
       "kind": "contract-section",
       "localized": {
@@ -8014,13 +8220,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
           "start": 41
         }
       },
@@ -8034,7 +8240,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 1080,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "kolvrt.arena.receipts",
       "kind": "contract-section",
       "localized": {
@@ -8049,13 +8255,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
           "start": 55
         }
       },
@@ -8069,7 +8275,7 @@
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
       "estimated_bytes": 2061,
-      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
+      "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.",
       "id": "kolvrt.arena.roadmap",
       "kind": "contract-section",
       "localized": {
@@ -8082,16 +8288,16 @@
       },
       "locations": {
         "en": {
-          "end": 108,
+          "end": 114,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
-          "start": 93
+          "sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+          "start": 99
         },
         "ru": {
-          "end": 108,
+          "end": 114,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
-          "start": 93
+          "sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315",
+          "start": 99
         }
       },
       "path": "docs/architecture/component-arena.md",
@@ -9907,6 +10113,539 @@
       "path": "docs/kernel/ipc.md",
       "summary": "Exact owner wake identity, mailbox acknowledgement and idle progress.",
       "title": "Blocking, cross-CPU wake and idle"
+    },
+    "kolvrt.kernel.view.authority": {
+      "anchor": "kolvrt-kernel-view-authority",
+      "depends_on": [
+        "kolvrt.handles.local",
+        "kolvrt.security.capability-revocation",
+        "kolvrt.security.domains"
+      ],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 202,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.authority",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Names, rights and resource authority.",
+          "tags": null,
+          "title": "Имена, права и ресурсные полномочия (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 76,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 69
+        },
+        "ru": {
+          "end": 76,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 69
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Names, rights and resource authority.",
+      "title": "Names, rights and resource authority (EL1)"
+    },
+    "kolvrt.kernel.view.boot": {
+      "anchor": "kolvrt-kernel-view-boot",
+      "depends_on": ["adr.0010", "adr.0005"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 176,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.boot",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Boot and platform.",
+          "tags": null,
+          "title": "Загрузка и платформа (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 34,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 27
+        },
+        "ru": {
+          "end": 34,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 27
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Boot and platform.",
+      "title": "Boot and platform (EL1)"
+    },
+    "kolvrt.kernel.view.clock": {
+      "anchor": "kolvrt-kernel-view-clock",
+      "depends_on": ["kolvrt.clock.query", "kolvrt.clock.query.api"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 193,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.clock",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Time and own-task observations.",
+          "tags": null,
+          "title": "Время и наблюдения текущей задачи (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 94,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 87
+        },
+        "ru": {
+          "end": 94,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 87
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Time and own-task observations.",
+      "title": "Time and own-task observations (EL1)"
+    },
+    "kolvrt.kernel.view.counter-service": {
+      "anchor": "kolvrt-kernel-view-counter-service",
+      "depends_on": ["kolvrt.apps.native-elf"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 136,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.counter-service",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Counter service.",
+          "tags": null,
+          "title": "Служба счётчика (EL0)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 116,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 111
+        },
+        "ru": {
+          "end": 116,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 111
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Counter service.",
+      "title": "Counter service (EL0)"
+    },
+    "kolvrt.kernel.view.devices": {
+      "anchor": "kolvrt-kernel-view-devices",
+      "depends_on": ["kolvrt.devices.observations"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 210,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.devices",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Immutable device identity.",
+          "tags": null,
+          "title": "Неизменяемая идентичность устройств (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 100,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 93
+        },
+        "ru": {
+          "end": 100,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 93
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Immutable device identity.",
+      "title": "Immutable device identity (EL1)"
+    },
+    "kolvrt.kernel.view.diagnostics": {
+      "anchor": "kolvrt-kernel-view-diagnostics",
+      "depends_on": ["adr.0003", "adr.0010"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 194,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.diagnostics",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Diagnostics and boot console.",
+          "tags": null,
+          "title": "Диагностика и загрузочная консоль (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 106,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 99
+        },
+        "ru": {
+          "end": 106,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 99
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Diagnostics and boot console.",
+      "title": "Diagnostics and boot console (EL1)"
+    },
+    "kolvrt.kernel.view.interrupts": {
+      "anchor": "kolvrt-kernel-view-interrupts",
+      "depends_on": ["adr.0014", "adr.0010"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 202,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.interrupts",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Exceptions and interrupts.",
+          "tags": null,
+          "title": "Исключения и прерывания (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 46,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 39
+        },
+        "ru": {
+          "end": 46,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 39
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Exceptions and interrupts.",
+      "title": "Exceptions and interrupts (EL1)"
+    },
+    "kolvrt.kernel.view.ipc": {
+      "anchor": "kolvrt-kernel-view-ipc",
+      "depends_on": ["kolvrt.ipc.transport", "kolvrt.ipc.request"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 177,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.ipc",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Bounded IPC.",
+          "tags": null,
+          "title": "Ограниченный IPC (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 88,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 81
+        },
+        "ru": {
+          "end": 88,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 81
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Bounded IPC.",
+      "title": "Bounded IPC (EL1)"
+    },
+    "kolvrt.kernel.view.memory": {
+      "anchor": "kolvrt-kernel-view-memory",
+      "depends_on": ["adr.0010", "kolvrt.process.asid"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 176,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.memory",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Memory and address spaces.",
+          "tags": null,
+          "title": "Память и адресные пространства (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 40,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 33
+        },
+        "ru": {
+          "end": 40,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 33
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Memory and address spaces.",
+      "title": "Memory and address spaces (EL1)"
+    },
+    "kolvrt.kernel.view.process": {
+      "anchor": "kolvrt-kernel-view-process",
+      "depends_on": [
+        "kolvrt.process.lifecycle",
+        "kolvrt.services.supervision",
+        "kolvrt.apps.native-elf"
+      ],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 225,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.process",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Processes, images and lifecycle.",
+          "tags": null,
+          "title": "Процессы, образы и жизненный цикл (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 64,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 57
+        },
+        "ru": {
+          "end": 64,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 57
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Processes, images and lifecycle.",
+      "title": "Processes, images and lifecycle (EL1)"
+    },
+    "kolvrt.kernel.view.scheduler": {
+      "anchor": "kolvrt-kernel-view-scheduler",
+      "depends_on": ["doc.kolvrt.kernel.scheduler", "adr.0016"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 192,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.scheduler",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Scheduling and task ownership.",
+          "tags": null,
+          "title": "Планирование и владение задачами (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 58,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 51
+        },
+        "ru": {
+          "end": 58,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 51
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Scheduling and task ownership.",
+      "title": "Scheduling and task ownership (EL1)"
+    },
+    "kolvrt.kernel.view.smp": {
+      "anchor": "kolvrt-kernel-view-smp",
+      "depends_on": ["adr.0012"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 194,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.smp",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: SMP and per-CPU state.",
+          "tags": null,
+          "title": "SMP и состояние CPU (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 52,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 45
+        },
+        "ru": {
+          "end": 52,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 45
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: SMP and per-CPU state.",
+      "title": "SMP and per-CPU state (EL1)"
+    },
+    "kolvrt.kernel.view.supervisor": {
+      "anchor": "kolvrt-kernel-view-supervisor",
+      "depends_on": ["kolvrt.services.supervision", "kolvrt.apps.native-elf"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 216,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.supervisor",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Native supervisor.",
+          "tags": null,
+          "title": "Нативный supervisor (EL0)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 112,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 105
+        },
+        "ru": {
+          "end": 112,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 105
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Native supervisor.",
+      "title": "Native supervisor (EL0)"
+    },
+    "kolvrt.kernel.view.user-copy": {
+      "anchor": "kolvrt-kernel-view-user-copy",
+      "depends_on": ["kolvrt.memory.user-copy"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 195,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.user-copy",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: User-copy boundary.",
+          "tags": null,
+          "title": "Граница копирования пользователя (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 70,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 63
+        },
+        "ru": {
+          "end": 70,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 63
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: User-copy boundary.",
+      "title": "User-copy boundary (EL1)"
+    },
+    "kolvrt.kernel.view.wait": {
+      "anchor": "kolvrt-kernel-view-wait",
+      "depends_on": ["doc.kolvrt.kernel.wait", "kolvrt.ipc.wait"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 187,
+      "evidence_scope": "source-derived logical responsibilities and selected interactions; no runtime verification or per-component performance acceptance.",
+      "id": "kolvrt.kernel.view.wait",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "View grouping: Wait, wake and synchronization.",
+          "tags": null,
+          "title": "Ожидание, пробуждение и синхронизация (EL1)"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 82,
+          "path": "docs/architecture/kernel-component-map.md",
+          "sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+          "start": 75
+        },
+        "ru": {
+          "end": 82,
+          "path": "translations/ru/docs/architecture/kernel-component-map.md",
+          "sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544",
+          "start": 75
+        }
+      },
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Wait, wake and synchronization.",
+      "title": "Wait, wake and synchronization (EL1)"
     },
     "kolvrt.memory.user-copy": {
       "anchor": "kolvrt-memory-user-copy",

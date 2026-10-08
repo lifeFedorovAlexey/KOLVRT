@@ -138,8 +138,8 @@
         "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
       "docs/architecture/arena-measurement-contract.md": {
-        "source_sha256": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
-        "translation_sha256": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194"
+        "source_sha256": "3245023ad41dac3ec1c94062b0c6c1d5fe80787736300245718c6215e7b743db",
+        "translation_sha256": "b87a78e4caf7847b8aa3bbc59153dad63a39ab61a3b3f0f35326e07eddef8b58"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
@@ -158,8 +158,8 @@
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
-        "translation_sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd"
+        "source_sha256": "142e390cc691a21d851ae753281d076aa0d3e0115e7979558441712cdcd4daad",
+        "translation_sha256": "00d3983824adb8cc5c68d197f31888286a599eb373bf37d58f28c27f598e8315"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
@@ -192,6 +192,10 @@
       "docs/architecture/kernel-admission-policy.md": {
         "source_sha256": "51c5aa686a7335d18a1033b94e2d6531c284cd126bad235db81536884b748d28",
         "translation_sha256": "e95188f0108c8bb1fb5d62cb02439a93653b4078b842810947f2fe79cf1d9ec3"
+      },
+      "docs/architecture/kernel-component-map.md": {
+        "source_sha256": "d94f21c9f70bdb09157c9797a220f722c2b4de5564c93eaea400959ac86ddd54",
+        "translation_sha256": "285ef66cbaeb00bc45ce0e36e58259f3d727e055b099ac39443fade3b6420544"
       },
       "docs/architecture/kernel-laws.md": {
         "source_sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
@@ -406,8 +410,8 @@
         "translation_sha256": "66d23740d70ebfc19891916ed464c66da61a42f9fe0a5c6a7b2887e61e85918d"
       },
       "docs/research/ipc-passport.md": {
-        "source_sha256": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
-        "translation_sha256": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc"
+        "source_sha256": "cd1d18186b53f991eb4d6bef7b7891bb370b652887555ba8f5992d151a918ed9",
+        "translation_sha256": "b0b7969b0ee92b2297e0e055c2e8c81b019846518d3aa9403ab76548af22152d"
       },
       "docs/research/issue-submissions.md": {
         "source_sha256": "c9b6aed813fa54af671408b2be840837b8a07aadd8ed01ca223953cc4c310020",

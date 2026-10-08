@@ -44,6 +44,9 @@ pwsh -File scripts/run-arena.ps1 registry
 pwsh -File scripts/run-arena.ps1 profile
 cargo xtask arena check
 cargo xtask arena registry
+cargo xtask arena map
+cargo xtask arena map --html
+cargo xtask arena map --html target/custom-arena-map.html
 cargo xtask arena profile research/arena/profiles/user-copy-range.json
 cargo xtask arena assess PATH_TO_RUN_JSON
 cargo xtask arena compare LEFT_RUN_JSON RIGHT_RUN_JSON
@@ -52,11 +55,13 @@ cargo test --locked -p repository-checks --test arena
 
 The shared repository check validates the checked-in registry and proposed profiles. assess prints the retained rejection reasons and exits nonzero for INELIGIBLE; compare rejects incompatible or structurally rejected imports. Neither command publishes a record. Tests mutate provenance, methodology, environment, oracle, missing SAR, observation loss, overhead and artifact paths/digests; synthetic numbers never become measured kernel results. Closed schemas also reject added universal scores and missing units/source fields.
 
-The one-command launcher `scripts/run-arena.ps1` supports check/registry/profile/assess/compare, defaults to check, and selects the proposed range profile when profile has no path. It runs current source through the existing xtask, resolves relative inputs from the project root and preserves rejection exit codes. Cargo comes from PATH or an existing project `.toolchains` installation (including the shared Git checkout for worktrees); environment is restored afterward. `-Help` starts no build. It adds no graphical interface or record publication.
+The one-command launcher `scripts/run-arena.ps1` supports check/registry/profile/assess/compare, defaults to check, and selects the proposed range profile when profile has no path. It runs current source through the existing xtask, resolves relative inputs from the project root and preserves rejection exit codes. Cargo comes from PATH or an existing project `.toolchains` installation (including the shared Git checkout for worktrees); environment is restored afterward. `-Help` starts no build. The launcher itself adds no record publication; the map commands below provide the bounded graphical projection.
+
+The current [logical architecture projection](kernel-component-map.md) is available through `cargo xtask arena map` and `cargo xtask arena map --html [OUTPUT]` (default `target/arena-map.html`). It renders one source-bound version 1 model with 13 EL1 groups, two EL0 production services and 28 selected interactions. Its logical elements and typed edges are architectural descriptions, not isolated deployment units or measured call frequencies. Source-hash mismatches reject the view as STALE. Both terminal and interactive HTML retain explicit unknown costs and only attach validated historical CLOCK path observations, separately for DEV and PROD; those envelopes cannot be allocated to individual groups. This does not implement historical topology reconstruction, general graph coverage or runtime edge weights.
 
 ## Remaining gates
 
-The bounded CLOCK pilot for #32 supplies the first accepted real QEMU mechanism passport: DEV/PROD external envelopes, partial execution-window accounting, matched recorder cost and scoped host admission/security evidence. It does not establish exclusive CPU attribution, broad SEC coverage or physical performance. #33 supplies IPC after #26; #34/#35 supply REL/fuzz/SAR campaigns; #36 integrates publication/regression gates; #50 owns native/compat equivalence and COST-L attribution. CLOCK acceptance closes none of those later scopes or the complete #93 acceptance. Reviewed source mappings, signed/independent custody where required, accepted contribution verification, record history and canonical versioned graph projections remain open. Physical ARM64 performance requires its own campaign; QEMU is a separate reproducibility/regression environment.
+The bounded CLOCK pilot for #32 supplies the first accepted real QEMU mechanism passport: DEV/PROD external envelopes, partial execution-window accounting, matched recorder cost and scoped host admission/security evidence. It does not establish exclusive CPU attribution, broad SEC coverage or physical performance. #33 supplies IPC after #26; #34/#35 supply REL/fuzz/SAR campaigns; #36 integrates publication/regression gates; #50 owns native/compat equivalence and COST-L attribution. CLOCK acceptance closes none of those later scopes or the complete #93 acceptance. Reviewed source mappings, signed/independent custody where required, accepted contribution verification, record history, historical topology reconstruction and measured runtime graph weights remain open. Physical ARM64 performance requires its own campaign; QEMU is a separate reproducibility/regression environment.
 
 [Russian translation](../../translations/ru/docs/architecture/arena-measurement-contract.md)
 

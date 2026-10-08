@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>KOLVRT · карта ядра</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b111a;
+        --panel: #121d29;
+        --line: #2a3b4c;
+        --muted: #94a9bb;
+        --ink: #eef5fa;
+        --teal: #61ddc6;
+        --blue: #77b8ff;
+        --amber: #ffc977;
+        --violet: #bf9fff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        font:
+          14px/1.5 system-ui,
+          sans-serif;
+        color: var(--ink);
+      }
+      main {
+        max-width: 1560px;
+        margin: auto;
+        padding: 32px;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      h1 {
+        font-size: 34px;
+        letter-spacing: -1px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      h3 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      .eyebrow {
+        color: var(--teal);
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        font-weight: 700;
+      }
+      .intro {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 22px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .counts {
+        display: flex;
+        gap: 12px;
+      }
+      .count {
+        padding: 10px 20px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+      .count strong {
+        font-size: 30px;
+        margin-right: 9px;
+        color: var(--teal);
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin: 18px 0;
+      }
+      input[type="search"],
+      select,
+      button {
+        font: inherit;
+      }
+      input[type="search"],
+      select {
+        background: var(--panel);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        border-radius: 8px;
+      }
+      input[type="search"] {
+        width: 270px;
+      }
+      .filters {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .filters label {
+        cursor: pointer;
+        color: var(--muted);
+      }
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 365px;
+        gap: 18px;
+        align-items: start;
+      }
+      .graph {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px;
+        background: linear-gradient(140deg, #142232, #0f1823);
+        min-height: 650px;
+        overflow: hidden;
+      }
+      .graph svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2;
+        overflow: visible;
+      }
+      .layer {
+        position: relative;
+        z-index: 3;
+      }
+      .layer + .layer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px dashed #536579;
+      }
+      .layer-title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .nodes {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px 28px;
+      }
+      .nodes.el0 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .node {
+        text-align: left;
+        min-height: 110px;
+        border: 1px solid #344858;
+        border-radius: 12px;
+        background: #172533;
+        color: var(--ink);
+        padding: 14px;
+        cursor: pointer;
+        box-shadow: 0 8px 20px #0002;
+        transition:
+          border-color 0.15s,
+          transform 0.15s;
+      }
+      .node:hover {
+        border-color: var(--blue);
+        transform: translateY(-2px);
+      }
+      .node.selected {
+        border: 2px solid var(--teal);
+        padding: 13px;
+        background: #163a3b;
+      }
+      .node.faded {
+        opacity: 0.82;
+      }
+      .node strong {
+        display: block;
+        font-size: 15px;
+      }
+      .node small {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .node .measured {
+        color: var(--teal);
+      }
+      .inspector {
+        position: sticky;
+        top: 18px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px;
+      }
+      .section {
+        margin-top: 22px;
+      }
+      .section h3 {
+        margin-bottom: 9px;
+      }
+      .item {
+        padding: 9px 0;
+        border-bottom: 1px solid #253543;
+      }
+      .member {
+        font-weight: 600;
+      }
+      a {
+        color: var(--blue);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .source {
+        display: block;
+        font:
+          11px/1.7 ui-monospace,
+          monospace;
+      }
+      .relation {
+        border: 0;
+        background: transparent;
+        padding: 6px 0;
+        color: var(--ink);
+        text-align: left;
+        cursor: pointer;
+        width: 100%;
+      }
+      .relation span {
+        font-size: 11px;
+        margin-right: 6px;
+      }
+      .measurement {
+        margin-top: 14px;
+        padding: 14px;
+        background: #0e292c;
+        border: 1px solid #276158;
+        border-radius: 10px;
+      }
+      .measurement strong {
+        font-size: 25px;
+        color: var(--teal);
+      }
+      .measurement p {
+        margin-top: 6px;
+      }
+      .tag {
+        font-size: 11px;
+        border: 1px solid var(--line);
+        padding: 3px 7px;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 4px 4px 0 0;
+      }
+      .foot {
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--muted);
+        overflow-wrap: anywhere;
+      }
+      .legend {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 12px 0;
+      }
+      .empty {
+        padding: 20px;
+        border: 1px dashed var(--line);
+        color: var(--muted);
+        border-radius: 8px;
+      }
+      .warning {
+        color: var(--amber);
+      }
+      .graph-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+      .edge-label {
+        font-size: 10px;
+        paint-order: stroke;
+        stroke: #101b27;
+        stroke-width: 4px;
+        stroke-linejoin: round;
+      }
+      .cost {
+        float: right;
+        color: var(--muted);
+        font-size: 16px;
+      }
+      .summary-measurements {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 20px;
+        padding: 16px 20px;
+        border: 1px solid #37615f;
+        border-radius: 12px;
+        background: #102a2c;
+      }
+      .summary-measurements > p {
+        grid-column: 1/-1;
+      }
+      .summary-measurements strong {
+        display: block;
+        color: var(--teal);
+        font-size: 21px;
+      }
+      .summary-measurements small {
+        color: var(--muted);
+      }
+      @media (min-width: 980px) and (max-width: 1190px) {
+        main {
+          padding: 24px;
+        }
+        .workspace {
+          grid-template-columns: minmax(0, 1fr) 310px;
+          gap: 14px;
+        }
+        .graph,
+        .inspector {
+          padding: 16px;
+        }
+        .nodes {
+          gap: 16px 12px;
+        }
+        .node {
+          padding: 10px;
+        }
+        .node.selected {
+          padding: 9px;
+        }
+        .node strong {
+          font-size: 13px;
+        }
+      }
+      @media (max-width: 979px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+        .inspector {
+          position: static;
+        }
+        .intro {
+          align-items: start;
+        }
+        .nodes {
+          gap: 16px;
+        }
+      }
+      @media (max-width: 620px) {
+        main {
+          padding: 16px;
+        }
+        .intro {
+          display: block;
+        }
+        .counts {
+          margin-top: 15px;
+        }
+        .nodes {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .toolbar input {
+          width: 100%;
+        }
+        h1 {
+          font-size: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="intro">
+        <div>
+          <div class="eyebrow">KOLVRT / ARCHITECTURE</div>
+          <h1>Как устроено ядро</h1>
+          <p class="muted">
+            Состав, контракты и связи. Выберите компонент, чтобы раскрыть
+            детали.
+          </p>
+        </div>
+        <div class="counts" id="counts"></div>
+      </div>
+      <section
+        id="measurement-summary"
+        class="summary-measurements"
+        aria-label="Доступные исторические измерения"
+      ></section>
+      <div class="toolbar">
+        <input
+          id="search"
+          type="search"
+          placeholder="Найти компонент или исходник…"
+          aria-label="Поиск компонента"
+        /><select id="layer" aria-label="Уровень">
+          <option value="all">Все уровни</option>
+          <option value="EL1">Только ядро · EL1</option>
+          <option value="EL0">Только приложения · EL0</option>
+        </select>
+        <div class="filters" id="filters"></div>
+      </div>
+      <div class="workspace">
+        <section class="graph" id="graph" aria-label="Граф архитектуры">
+          <p class="graph-note">
+            Показаны связи выбранного блока. Стрелки — отношения из исходников,
+            без измеренных весов.
+          </p>
+          <svg id="edges" aria-hidden="true"></svg>
+          <div id="layers"></div>
+        </section>
+        <aside class="inspector" id="inspector" aria-live="polite"></aside>
+      </div>
+      <p class="legend">
+        — = отдельная стоимость не измерена. Общие исходники могут входить в
+        несколько групп. Карта не является трассировкой исполнения.
+      </p>
+      <div class="foot" id="provenance"></div>
+    </main>
+    <script id="arena-model" type="application/json">
+      __ARENA_MODEL__
+    </script>
+    <script>
+      "use strict";
+      const model = JSON.parse(
+        document.getElementById("arena-model").textContent,
+      );
+      const colors = {
+        call: "#77b8ff",
+        data: "#61ddc6",
+        authority: "#ffc977",
+        lifetime: "#bf9fff",
+      };
+      const kinds = {
+        call: "вызовы",
+        data: "данные",
+        authority: "полномочия",
+        lifetime: "время жизни",
+      };
+      const nodes = new Map(model.nodes.map((n) => [n.id, n]));
+      const buttons = new Map();
+      let selected =
+        model.nodes.find((n) => n.measurements.length)?.id || model.nodes[0].id;
+      const enabled = new Set(Object.keys(kinds));
+      const el = (tag, text, cls) => {
+        const e = document.createElement(tag);
+        if (text !== undefined) e.textContent = text;
+        if (cls) e.className = cls;
+        return e;
+      };
+      const rootHref = model.view.repository_href || "../";
+      const sourceLink = (path) => {
+        const a = el("a", path, "source");
+        a.href = rootHref + path.split("/").map(encodeURIComponent).join("/");
+        a.target = "_blank";
+        a.rel = "noopener";
+        return a;
+      };
+      const countHost = document.getElementById("counts");
+      for (const [key, label] of [
+        ["el1_groups", "групп ядра"],
+        ["el0_groups", "групп EL0"],
+      ]) {
+        const box = el("div", undefined, "count");
+        box.append(el("strong", String(model.view[key])), el("span", label));
+        countHost.append(box);
+      }
+      const filterHost = document.getElementById("filters");
+      for (const [kind, name] of Object.entries(kinds)) {
+        const label = el("label");
+        const input = el("input");
+        input.type = "checkbox";
+        input.checked = true;
+        input.dataset.kind = kind;
+        input.addEventListener("change", () => {
+          input.checked ? enabled.add(kind) : enabled.delete(kind);
+          refresh();
+          inspect();
+        });
+        label.append(input, el("span", " " + name));
+        label.style.color = colors[kind];
+        filterHost.append(label);
+      }
+      const layers = document.getElementById("layers");
+      for (const layer of ["EL1", "EL0"]) {
+        const section = el("section", undefined, "layer");
+        section.dataset.layer = layer;
+        const heading = el("div", undefined, "layer-title");
+        heading.append(
+          el("h3", layer === "EL1" ? "EL1 · ядро" : "EL0 · приложения"),
+          el(
+            "span",
+            layer === "EL1"
+              ? "Привилегированные механизмы"
+              : "Внешняя граница ядра",
+            "muted",
+          ),
+        );
+        const grid = el(
+          "div",
+          undefined,
+          "nodes" + (layer === "EL0" ? " el0" : ""),
+        );
+        for (const n of model.nodes.filter((n) => n.layer === layer)) {
+          const b = el("button", undefined, "node");
+          b.type = "button";
+          b.dataset.node = n.id;
+          b.setAttribute("aria-pressed", String(n.id === selected));
+          b.append(
+            el("span", "—", "cost"),
+            el("strong", n.label),
+            el("small", n.members.map((m) => m.name).join(" · ")),
+          );
+          b.append(
+            el(
+              "small",
+              n.measurements.length
+                ? "CLOCK: есть исторический замер пути"
+                : "Отдельного замера нет",
+              n.measurements.length ? "measured" : "",
+            ),
+          );
+          b.addEventListener("click", () => select(n.id));
+          buttons.set(n.id, b);
+          grid.append(b);
+        }
+        section.append(heading, grid);
+        layers.append(section);
+      }
+      function select(id) {
+        if (!visible(nodes.get(id))) {
+          document.getElementById("layer").value = "all";
+          document.getElementById("search").value = "";
+        }
+        selected = id;
+        for (const [key, b] of buttons) {
+          b.classList.toggle("selected", key === id);
+          b.setAttribute("aria-pressed", String(key === id));
+        }
+        inspect();
+        refresh();
+      }
+      function relationButton(edge, incoming) {
+        const other = nodes.get(incoming ? edge.from : edge.to);
+        const b = el("button", undefined, "relation");
+        const badge = el("span", kinds[edge.kind]);
+        badge.style.color = colors[edge.kind];
+        b.append(
+          badge,
+          el("strong", (incoming ? "← " : "→ ") + other.label),
+          el("div", edge.label, "muted"),
+        );
+        b.addEventListener("click", () => select(other.id));
+        return b;
+      }
+      function section(title) {
+        const s = el("div", undefined, "section");
+        s.append(el("h3", title));
+        return s;
+      }
+      function inspect() {
+        const n = nodes.get(selected);
+        const panel = document.getElementById("inspector");
+        panel.replaceChildren();
+        if (!n) {
+          panel.append(
+            el(
+              "p",
+              "По этому фильтру компонентов нет. Измените поиск или уровень.",
+              "empty",
+            ),
+          );
+          return;
+        }
+        panel.append(
+          el("div", n.layer + " / " + n.id.split(".").at(-1), "eyebrow"),
+          el("h2", n.label),
+          el("p", n.responsibility, "muted"),
+        );
+        const composition = section("Из чего состоит");
+        for (const m of n.members) {
+          const row = el("div", undefined, "item");
+          row.append(el("div", m.name, "member"));
+          for (const path of m.sources) row.append(sourceLink(path));
+          composition.append(row);
+        }
+        panel.append(composition);
+        const relations = section("Связи");
+        for (const edge of model.edges.filter(
+          (e) => enabled.has(e.kind) && (e.from === n.id || e.to === n.id),
+        )) {
+          relations.append(relationButton(edge, edge.to === n.id));
+          const evidence = el("details");
+          evidence.append(el("summary", "Исходники связи"));
+          for (const path of edge.evidence) evidence.append(sourceLink(path));
+          relations.append(evidence);
+        }
+        if (relations.children.length === 1)
+          relations.append(el("p", "Нет связей выбранных типов", "muted"));
+        panel.append(relations);
+        const contracts = section("Контракты");
+        for (const c of n.contract_locations) {
+          const link = sourceLink(c.path);
+          link.textContent = c.id;
+          link.className = "tag";
+          contracts.append(link);
+        }
+        panel.append(contracts);
+        const measure = section("Что измерено");
+        if (!n.measurements.length) {
+          measure.append(
+            el("div", "— Отдельного замера этого компонента нет.", "empty"),
+          );
+        } else {
+          measure.append(
+            el(
+              "p",
+              "CLOCK-путь: 2 граничных CLOCK + 1 запрос + общий учёт harness. Стоимость частей отдельно неизвестна.",
+              "muted",
+            ),
+          );
+          for (const profile of ["DEV", "PROD"]) {
+            const runs = n.measurements.filter(
+              (r) => r.execution_profile === profile,
+            );
+            if (!runs.length) continue;
+            const metrics = runs.map((r) => r.metrics[0]);
+            const converted = metrics.every(
+              (m) => typeof m.microseconds === "number",
+            );
+            const values = metrics.map((m) =>
+              converted ? m.microseconds : m.value,
+            );
+            const unit = converted ? "мкс" : metrics[0].units;
+            const card = el("div", undefined, "measurement");
+            card.append(
+              el("h3", profile + " · медианы повторов"),
+              el("strong", values.map((v) => Number(v).toFixed(3)).join(" / ")),
+              el("span", " " + unit),
+            );
+            card.append(
+              el(
+                "p",
+                "N по повторам: " +
+                  metrics.map((m) => m.sample_count).join(" / "),
+              ),
+            );
+            card.append(
+              el(
+                "p",
+                "Исторический source " +
+                  runs[0].exact_commit.slice(0, 12) +
+                  " · " +
+                  runs[0].platform,
+                "muted",
+              ),
+            );
+            for (const r of runs) card.append(sourceLink(r.path));
+            measure.append(card);
+          }
+          measure.append(
+            el(
+              "p",
+              "Это не эксклюзивная стоимость блока. Изменение: нет базового замера.",
+              "muted",
+            ),
+          );
+        }
+        panel.append(measure);
+      }
+      function visible(n) {
+        const query = document
+          .getElementById("search")
+          .value.toLocaleLowerCase();
+        const layer = document.getElementById("layer").value;
+        return (
+          (layer === "all" || n.layer === layer) &&
+          (!query ||
+            [
+              n.label,
+              n.responsibility,
+              ...n.members.flatMap((m) => [m.name, ...m.sources]),
+              ...n.contracts,
+            ]
+              .join(" ")
+              .toLocaleLowerCase()
+              .includes(query))
+        );
+      }
+      function refresh() {
+        const current = nodes.get(selected);
+        if (!current || !visible(current)) {
+          selected = model.nodes.find(visible)?.id || null;
+          for (const [key, button] of buttons) {
+            button.classList.toggle("selected", key === selected);
+            button.setAttribute("aria-pressed", String(key === selected));
+          }
+          inspect();
+        }
+        for (const n of model.nodes) {
+          const b = buttons.get(n.id);
+          b.hidden = !visible(n);
+          b.classList.toggle(
+            "faded",
+            n.id !== selected &&
+              !model.edges.some(
+                (e) =>
+                  enabled.has(e.kind) &&
+                  ((e.from === selected && e.to === n.id) ||
+                    (e.to === selected && e.from === n.id)),
+              ),
+          );
+        }
+        for (const layer of document.querySelectorAll(".layer"))
+          layer.hidden = !model.nodes.some(
+            (n) => n.layer === layer.dataset.layer && visible(n),
+          );
+        requestAnimationFrame(draw);
+      }
+      function svgEl(tag, attrs) {
+        const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        for (const [k, v] of Object.entries(attrs))
+          e.setAttribute(k, String(v));
+        return e;
+      }
+      function draw() {
+        const svg = document.getElementById("edges");
+        svg.replaceChildren();
+        const bounds = document.getElementById("graph").getBoundingClientRect();
+        svg.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
+        const defs = svgEl("defs", {});
+        for (const kind of enabled) {
+          const marker = svgEl("marker", {
+            id: "arrow-" + kind,
+            viewBox: "0 0 10 10",
+            refX: 9,
+            refY: 5,
+            markerWidth: 7,
+            markerHeight: 7,
+            orient: "auto-start-reverse",
+          });
+          marker.append(
+            svgEl("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: colors[kind] }),
+          );
+          defs.append(marker);
+        }
+        svg.append(defs);
+        for (const edge of model.edges) {
+          if (
+            !enabled.has(edge.kind) ||
+            (edge.from !== selected && edge.to !== selected)
+          )
+            continue;
+          const from = buttons.get(edge.from),
+            to = buttons.get(edge.to);
+          if (
+            from.hidden ||
+            to.hidden ||
+            from.closest(".layer").hidden ||
+            to.closest(".layer").hidden
+          )
+            continue;
+          const a = from.getBoundingClientRect(),
+            b = to.getBoundingClientRect();
+          const vertical = Math.abs(a.top - b.top) > 30;
+          let x1 = a.left + a.width / 2 - bounds.left,
+            y1 = a.top + a.height / 2 - bounds.top,
+            x2 = b.left + b.width / 2 - bounds.left,
+            y2 = b.top + b.height / 2 - bounds.top;
+          if (vertical) {
+            y1 += ((b.top > a.top ? 1 : -1) * a.height) / 2;
+            y2 += ((a.top > b.top ? 1 : -1) * b.height) / 2;
+          } else {
+            x1 += ((b.left > a.left ? 1 : -1) * a.width) / 2;
+            x2 += ((a.left > b.left ? 1 : -1) * b.width) / 2;
+          }
+          const path = svgEl("path", {
+            d: `M${x1},${y1} C${x1},${(y1 + y2) / 2} ${x2},${(y1 + y2) / 2} ${x2},${y2}`,
+            fill: "none",
+            stroke: colors[edge.kind],
+            "stroke-width": 2,
+            "stroke-opacity": 0.8,
+            "marker-end": "url(#arrow-" + edge.kind + ")",
+          });
+          const title = svgEl("title", {});
+          title.textContent = edge.label;
+          path.append(title);
+          svg.append(path);
+          const label = svgEl("text", {
+            x: (x1 + x2) / 2 + 4,
+            y: (y1 + y2) / 2 - 4,
+            fill: colors[edge.kind],
+            class: "edge-label",
+          });
+          label.textContent = kinds[edge.kind];
+          svg.append(label);
+        }
+      }
+      for (const id of ["search", "layer"])
+        document
+          .getElementById(id)
+          .addEventListener(id === "search" ? "input" : "change", refresh);
+      new ResizeObserver(draw).observe(document.getElementById("graph"));
+      const provenance = document.getElementById("provenance");
+      provenance.append(
+        el(
+          "p",
+          "Модель v" +
+            model.version +
+            " · source " +
+            model.view.source_commit +
+            (model.view.worktree_dirty ? " + рабочие изменения" : "") +
+            " · snapshot " +
+            model.view.snapshot_sha256,
+        ),
+      );
+      provenance.append(sourceLink(model.view.canonical_document));
+      provenance.append(
+        el(
+          "p",
+          "Снимок исходников и канонических связей; не динамический граф трафика. RECORD_ELIGIBLE=false.",
+        ),
+      );
+      for (const warning of model.view.measurement_warnings)
+        provenance.append(
+          el(
+            "p",
+            "Замер недоступен: " + warning.path + " — " + warning.reason,
+            "warning",
+          ),
+        );
+      const summary = document.getElementById("measurement-summary");
+      const measuredNode = model.nodes.find((n) => n.measurements.length);
+      if (measuredNode) {
+        summary.append(
+          el(
+            "p",
+            "CLOCK · исторический замер пути · QEMU · медианы отдельных повторов",
+          ),
+        );
+        for (const profile of ["DEV", "PROD"]) {
+          const runs = measuredNode.measurements.filter(
+            (r) => r.execution_profile === profile,
+          );
+          if (!runs.length) {
+            summary.append(el("p", profile + ": замеры недоступны"));
+            continue;
+          }
+          const metrics = runs.map((r) => r.metrics[0]);
+          const converted = metrics.every(
+            (m) => typeof m.microseconds === "number",
+          );
+          const values = metrics.map((m) =>
+            Number(converted ? m.microseconds : m.value).toFixed(3),
+          );
+          const cell = el("div");
+          cell.append(
+            el("span", profile),
+            el(
+              "strong",
+              values.join(" / ") + " " + (converted ? "мкс" : metrics[0].units),
+            ),
+            el(
+              "small",
+              "N=" +
+                metrics.map((m) => m.sample_count).join(" / ") +
+                " · source " +
+                runs[0].exact_commit.slice(0, 12),
+            ),
+          );
+          summary.append(cell);
+        }
+        summary.append(
+          el(
+            "p",
+            "2 граничных CLOCK + 1 запрос + учёт harness; не стоимость отдельного компонента. Базового замера нет.",
+            "muted",
+          ),
+        );
+      } else {
+        summary.append(
+          el("p", "Измерения недоступны; причины указаны внизу карты."),
+        );
+      }
+      select(selected);
+      refresh();
+    </script>
+  </body>
+</html>

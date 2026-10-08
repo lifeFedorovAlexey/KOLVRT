@@ -44,6 +44,9 @@ pwsh -File scripts/run-arena.ps1 registry
 pwsh -File scripts/run-arena.ps1 profile
 cargo xtask arena check
 cargo xtask arena registry
+cargo xtask arena map
+cargo xtask arena map --html
+cargo xtask arena map --html target/custom-arena-map.html
 cargo xtask arena profile research/arena/profiles/user-copy-range.json
 cargo xtask arena assess PATH_TO_RUN_JSON
 cargo xtask arena compare LEFT_RUN_JSON RIGHT_RUN_JSON
@@ -52,11 +55,13 @@ cargo test --locked -p repository-checks --test arena
 
 Общая проверка репозитория валидирует сохранённые registry и proposed profiles. assess печатает сохранённые причины отказа и завершает работу с ненулевым кодом при INELIGIBLE; compare отвергает несовместимые или структурно отклонённые imports. Команды не публикуют record. Tests изменяют provenance, methodology, environment, oracle, missing SAR, потерю observations, overhead и artifact paths/digests; synthetic numbers не становятся измеренными kernel results. Закрытые schemas также отвергают добавленные universal scores и отсутствие units/source fields.
 
-Запуск одной командой: `scripts/run-arena.ps1` поддерживает check/registry/profile/assess/compare, по умолчанию выполняет check, а profile без пути выбирает proposed range profile. Скрипт запускает текущий source через существующий xtask, разрешает относительные пути от корня проекта и сохраняет exit code отказа. Cargo берётся из PATH либо из существующей `.toolchains` установки проекта (для worktree также из общего Git checkout); environment восстанавливается после запуска. `-Help` не запускает сборку. Графический интерфейс и публикация records не добавляются.
+Запуск одной командой: `scripts/run-arena.ps1` поддерживает check/registry/profile/assess/compare, по умолчанию выполняет check, а profile без пути выбирает proposed range profile. Скрипт запускает текущий source через существующий xtask, разрешает относительные пути от корня проекта и сохраняет exit code отказа. Cargo берётся из PATH либо из существующей `.toolchains` установки проекта (для worktree также из общего Git checkout); environment восстанавливается после запуска. `-Help` не запускает сборку. Сам launcher не добавляет публикации records; команды map ниже предоставляют ограниченную графическую проекцию.
+
+Текущая [логическая проекция архитектуры](kernel-component-map.md) доступна через `cargo xtask arena map` и `cargo xtask arena map --html [OUTPUT]` (по умолчанию `target/arena-map.html`). Она показывает одну модель версии 1 с привязкой к исходникам: 13 групп EL1, две production-службы EL0 и 28 выбранных взаимодействий. Её логические элементы и типизированные рёбра описывают архитектуру, а не изолированные единицы развёртывания или измеренные частоты вызовов. Несовпадение хешей исходников отклоняет представление как STALE. Терминал и интерактивный HTML сохраняют явно неизвестные стоимости и добавляют только проверенные исторические наблюдения пути CLOCK, отдельно для DEV и PROD; распределять эти интервалы между отдельными группами нельзя. Восстановление исторической топологии, полное покрытие общего графа и веса рёбер исполнения этим не реализованы.
 
 ## Оставшиеся gates
 
-Ограниченный пилот CLOCK для #32 предоставляет первый принятый паспорт настоящего QEMU-механизма: внешние интервалы DEV/PROD, частичный учёт окон исполнения, парную стоимость recorder и ограниченные host-свидетельства допуска и безопасности. Он не устанавливает исключительную CPU-атрибуцию, широкое SEC-покрытие или физическую производительность. #33 предоставляет IPC после #26; #34/#35 — REL/fuzz/SAR campaigns; #36 интегрирует publication/regression gates; #50 отвечает за native/compat equivalence и COST-L attribution. Приёмка CLOCK не закрывает эти последующие области или полную acceptance #93. Reviewed source mappings, подписанный/независимый custody где требуется, accepted contribution verification, record history и canonical versioned graph projections остаются открытыми. Physical ARM64 performance требует отдельной campaign; QEMU — отдельная среда воспроизводимости/regression.
+Ограниченный пилот CLOCK для #32 предоставляет первый принятый паспорт настоящего QEMU-механизма: внешние интервалы DEV/PROD, частичный учёт окон исполнения, парную стоимость recorder и ограниченные host-свидетельства допуска и безопасности. Он не устанавливает исключительную CPU-атрибуцию, широкое SEC-покрытие или физическую производительность. #33 предоставляет IPC после #26; #34/#35 — REL/fuzz/SAR campaigns; #36 интегрирует publication/regression gates; #50 отвечает за native/compat equivalence и COST-L attribution. Приёмка CLOCK не закрывает эти последующие области или полную acceptance #93. Reviewed source mappings, подписанный/независимый custody где требуется, accepted contribution verification, record history, восстановление исторической топологии и измеренные веса рёбер исполнения остаются открытыми. Physical ARM64 performance требует отдельной campaign; QEMU — отдельная среда воспроизводимости/regression.
 
 [English original](../../../../docs/architecture/arena-measurement-contract.md)
 

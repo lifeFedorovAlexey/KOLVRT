@@ -1,7 +1,7 @@
 # KOLVRT Arena — Replaceable Component Arena / Performance & Reliability Passports
 
 Document status: CURRENT
-Evidence scope: experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.
+Evidence scope: experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.
 Current reference: [Benchmark methodology](benchmarking.md); [ADR-0006](../architecture-decisions/0006-metrics.md)
 
 <a name="kolvrt-arena-scope"></a>
@@ -80,6 +80,12 @@ Compare only matching contract/suite versions, architecture, platform, execution
 
 There is no universal SCORE or automatic crown. Show multidimensional trade-offs and, where uncertainty permits, a Pareto frontier among eligible candidates. A user may sort by a named metric or apply declared workload budgets; preserve all dimensions, failures and workload coverage in the view. A scheduler with a better median but a failed soak remains ineligible; a scheduler with worse p99 must show that regression even when it passes a permissive tail budget. Insufficient evidence yields an inconclusive comparison.
 
+## Current logical architecture map
+
+`cargo xtask arena map` renders the [canonical component map](kernel-component-map.md) in the terminal. `cargo xtask arena map --html [OUTPUT]` writes an interactive standalone HTML view; the default output is `target/arena-map.html`. Both views use the same version 1 model: 13 functional EL1 groups, two production EL0 services and 28 selected typed interactions. Elements name logical mechanisms; source paths provide evidence, not the counting boundary. Shared sources do not imply exclusive ownership, physical isolation, a new ABI or additive code size or cost.
+
+The map validates canonical IDs, source paths and LF-normalized reviewed source hashes. Changed sources reject the snapshot as STALE instead of silently presenting an outdated topology as current. The historical CLOCK overlay reads retained admissible passports and labels DEV/PROD path measurements separately. It measures an envelope using three CLOCK calls, including partial transitions of the boundary calls; it does not isolate the cost of the CLOCK group or its neighbours. Other component costs, interaction frequencies and weights remain unknown; no missing measurement becomes zero. Viewing the map does not execute the kernel, establish a speedup or publish a record. Historical topology reconstruction, measured runtime edge weights and a general architecture graph remain outside this bounded view.
+
 <a name="kolvrt-arena-cost-l"></a>
 
 ## COST-L migration evidence
@@ -149,11 +155,11 @@ Issue #33 adds an experimental external IPC producer through the shared CLOCK bu
       "tags": ["arena", "passports", "components"],
       "read_when": ["compare replaceable components Arena"],
       "gaps": [
-        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history, historical topology reconstruction and measured runtime graph weights remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; a source-bound logical architecture map with terminal and HTML views; no general records publication.",
         "sources": [
           "crates/repository-checks/src/arena.rs",
           "crates/repository-checks/src/arena/report.rs",
@@ -167,7 +173,9 @@ Issue #33 adds an experimental external IPC producer through the shared CLOCK bu
           "crates/repository-checks/src/lib.rs",
           "crates/xtask/src/main.rs",
           "scripts/run-arena.ps1",
-          "crates/repository-checks/tests/arena_launcher.rs"
+          "crates/repository-checks/tests/arena_launcher.rs",
+          "crates/repository-checks/src/arena/architecture.rs",
+          "crates/repository-checks/src/arena/architecture.html"
         ],
         "acceptance": [
           "research/results/arena-foundation-host.json",

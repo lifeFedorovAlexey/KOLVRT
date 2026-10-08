@@ -1,7 +1,7 @@
 # KOLVRT Arena — арена заменяемых компонентов / паспорта производительности и надёжности
 
 Document status: CURRENT
-Evidence scope: экспериментальная общая валидация Arena и принятый ограниченный QEMU-пилот CLOCK; records/history, универсальная атрибуция и graph UI не реализованы.
+Evidence scope: экспериментальная общая валидация Arena и принятый ограниченный QEMU-пилот CLOCK; логическая карта с привязкой к исходникам имеет терминальное и HTML-представления; records/history и универсальная атрибуция не реализованы.
 Current reference: [Методика измерений](benchmarking.md); [ADR-0006](../architecture-decisions/0006-metrics.md)
 
 <a name="kolvrt-arena-scope"></a>
@@ -80,6 +80,12 @@ kolvrt arena leaderboard allocator
 
 Нет универсального SCORE или автоматической короны. Показывайте многомерные компромиссы и, когда неопределённость позволяет, границу Парето среди допущенных кандидатов. Пользователь может сортировать по конкретной метрике или применять объявленные бюджеты нагрузки; представление сохраняет все измерения, отказы и покрытие нагрузок. Планировщик с лучшей медианой, но проваленным длительным испытанием остаётся недопущенным; планировщик с худшим p99 должен показывать регрессию, даже если проходит мягкий бюджет хвоста. Недостаток свидетельств делает сравнение неопределённым.
 
+## Текущая логическая карта архитектуры
+
+`cargo xtask arena map` показывает [каноническую карту компонентов](kernel-component-map.md) в терминале. `cargo xtask arena map --html [OUTPUT]` записывает интерактивное самостоятельное HTML-представление; путь по умолчанию — `target/arena-map.html`. Оба представления используют одну модель версии 1: 13 функциональных групп EL1, две production-службы EL0 и 28 выбранных типизированных взаимодействий. Элементы называют логические механизмы; пути исходников являются свидетельствами, а не границей подсчёта. Общие исходники не означают исключительного владения, физической изоляции, нового ABI или аддитивного размера кода либо стоимости.
+
+Карта проверяет канонические ID, пути исходников и проверенные хеши исходников после нормализации LF. Изменённые исходники отклоняют снимок как STALE вместо молчаливого показа устаревшей топологии как актуальной. Исторический слой CLOCK читает сохранённые допущенные паспорта и отдельно помечает измерения пути DEV/PROD. Измеряется интервал с тремя вызовами CLOCK, включающий частичные переходы граничных вызовов; он не выделяет стоимость группы CLOCK или её соседей. Стоимости остальных компонентов, частоты и веса взаимодействий остаются неизвестными; отсутствующее измерение не становится нулём. Просмотр карты не запускает ядро, не устанавливает ускорения и не публикует record. Восстановление исторической топологии, измеренные веса рёбер исполнения и общий граф архитектуры остаются за пределами этого ограниченного представления.
+
 <a name="kolvrt-arena-cost-l"></a>
 
 ## Свидетельства миграции COST-L
@@ -149,11 +155,11 @@ Issue #33 добавляет экспериментальный внешний I
       "tags": ["arena", "passports", "components"],
       "read_when": ["сравнить заменяемые компоненты Arena"],
       "gaps": [
-        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history, historical topology reconstruction and measured runtime graph weights remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; a source-bound logical architecture map with terminal and HTML views; no general records publication.",
         "sources": [
           "crates/repository-checks/src/arena.rs",
           "crates/repository-checks/src/arena/report.rs",
@@ -167,7 +173,9 @@ Issue #33 добавляет экспериментальный внешний I
           "crates/repository-checks/src/lib.rs",
           "crates/xtask/src/main.rs",
           "scripts/run-arena.ps1",
-          "crates/repository-checks/tests/arena_launcher.rs"
+          "crates/repository-checks/tests/arena_launcher.rs",
+          "crates/repository-checks/src/arena/architecture.rs",
+          "crates/repository-checks/src/arena/architecture.html"
         ],
         "acceptance": [
           "research/results/arena-foundation-host.json",

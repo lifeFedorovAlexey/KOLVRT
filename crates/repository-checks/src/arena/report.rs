@@ -44,7 +44,7 @@ fn observation<'a>(run: &'a Value, id: &str) -> Option<&'a Value> {
         .iter()
         .find(|o| s(o, "metric_id") == id)
 }
-fn retained_frequency(bundle: &Path, run: &Value) -> Option<u64> {
+pub(super) fn retained_frequency(bundle: &Path, run: &Value) -> Option<u64> {
     // The assessor has already checked artifact hashes. Only actual retained pair
     // observations agreeing with the manifest justify a unit conversion here.
     let manifest =

@@ -37,6 +37,7 @@
     "docs/architecture/first-native-slice.md",
     "docs/architecture/ipc-phase35-acceptance-review.md",
     "docs/architecture/ipc-phase35-review.md",
+    "docs/architecture/kernel-component-map.md",
     "docs/architecture/kernel-laws.md",
     "docs/architecture/native-abi.md",
     "docs/architecture/native-model.md",

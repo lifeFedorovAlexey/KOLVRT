@@ -53,7 +53,7 @@ SEC maps six scoped native-request requirements to four source/runtime/negative-
       "kind": "feature",
       "summary": "IPC transport and useful-service measurement through ordinary production interfaces.",
       "depends_on": [
-        "kolvrt.ipc",
+        "kolvrt.ipc.transport",
         "kolvrt.arena.clock-passport",
         "doc.kolvrt.arena.measurement-contract",
         "adr.0025",

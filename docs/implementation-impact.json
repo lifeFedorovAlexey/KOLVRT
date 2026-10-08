@@ -12,23 +12,37 @@
     {
       "path": "crates/repository-checks/src/arena.rs",
       "before_sha256_lf": "39d0d0e635ac92ef03f2e1b031859a3319f932fffd20026385b56c5ec63b0c0b",
-      "after_sha256_lf": "5021c2d39fed56328a943f605bd090cb29caf1086b841d14023f8c5390ec9b72",
+      "after_sha256_lf": "bca36119db0984d95577938b3455189b918911cd1d404ef5120eaa17734f2004",
       "disposition": "existing-feature",
-      "reason": "Add human-readable Arena report and descriptive diff over the existing assessor and comparison-class gates, retaining invalid evidence and distinguishing repeat/recorder observations from proven implementation improvements."
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
+    },
+    {
+      "path": "crates/repository-checks/src/arena/architecture.html",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "3431f43038e65c5eecb837b14cfa8f5981d92d335c7d267db36bf1ac2f23b3c9",
+      "disposition": "existing-feature",
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
+    },
+    {
+      "path": "crates/repository-checks/src/arena/architecture.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "b4c6d19ac190a374bb9d0ac8c572e45f258da76a755064f1357f69956f782d42",
+      "disposition": "existing-feature",
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
     },
     {
       "path": "crates/repository-checks/src/arena/report.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "565d9a0568474ece86323ef1c11d4560f49cb492c21f07fec86707b39fccccd2",
+      "after_sha256_lf": "bb6efcab0b1c179e64eaf8887e0067227e7b5ad9a74345834b4dadbf1e762c13",
       "disposition": "existing-feature",
-      "reason": "Add human-readable Arena report and descriptive diff over the existing assessor and comparison-class gates, retaining invalid evidence and distinguishing repeat/recorder observations from proven implementation improvements."
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
     },
     {
       "path": "crates/repository-checks/tests/arena.rs",
       "before_sha256_lf": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
       "after_sha256_lf": "a3ac7a7f2cd4d0baa1c8f447c32620cd9fbdd6220b33633a663467fe851e4047",
       "disposition": "existing-feature",
-      "reason": "Add human-readable Arena report and descriptive diff over the existing assessor and comparison-class gates, retaining invalid evidence and distinguishing repeat/recorder observations from proven implementation improvements."
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/arena_clock.rs",
@@ -537,7 +551,7 @@
     {
       "id": "kolvrt.arena",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU documentation adds validated human-readable report/diff commands and preserves machine JSON, compatibility rules and historical evidence limits."
+      "reason": "Canonical EN/RU documents describe the implemented terminal/HTML logical map and readable evidence views, with reviewed source bindings and explicit historical measurement scope; general publication, graph history and runtime cost attribution remain incomplete."
     },
     {
       "id": "kolvrt.arena.clock-passport",

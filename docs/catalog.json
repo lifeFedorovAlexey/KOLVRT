@@ -750,7 +750,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 21060,
+      "estimated_bytes": 22760,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -798,6 +798,17 @@
       "title": "First native slice"
     },
     {
+      "depends_on": ["adr.0010", "adr.0008", "doc.kolvrt.architecture.arena"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 33969,
+      "id": "doc.kolvrt.architecture.kernel-component-map",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "Source-derived logical view of kernel responsibilities, EL0 services and typed interactions.",
+      "title": "Kernel component map"
+    },
+    {
       "document": "doc.kolvrt.architecture.native-abi",
       "document_status": "DESIGN BASELINE",
       "estimated_bytes": 12219,
@@ -826,7 +837,7 @@
       ],
       "document": "doc.kolvrt.arena.measurement-contract",
       "document_status": "CURRENT",
-      "estimated_bytes": 10618,
+      "estimated_bytes": 11633,
       "id": "doc.kolvrt.arena.measurement-contract",
       "kind": "subsystem-contract",
       "path": "docs/architecture/arena-measurement-contract.md",
@@ -1133,7 +1144,7 @@
     {
       "document": "doc.kolvrt.research.ipc-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 14910,
+      "estimated_bytes": 14920,
       "id": "doc.kolvrt.research.ipc-passport",
       "kind": "subsystem-contract",
       "path": "docs/research/ipc-passport.md",
@@ -1230,7 +1241,7 @@
       "document_status": "CURRENT",
       "estimated_bytes": 1237,
       "gaps": [
-        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history, historical topology reconstruction and measured runtime graph weights remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "id": "kolvrt.arena",
       "implementation": "EXPERIMENTAL",
@@ -1277,7 +1288,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 2241,
+      "estimated_bytes": 2205,
       "id": "kolvrt.arena.comparison",
       "kind": "contract-section",
       "path": "docs/architecture/component-arena.md",
@@ -1329,7 +1340,7 @@
     {
       "anchor": "kolvrt-arena-ipc-passport",
       "depends_on": [
-        "kolvrt.ipc",
+        "kolvrt.ipc.transport",
         "kolvrt.arena.clock-passport",
         "doc.kolvrt.arena.measurement-contract",
         "adr.0025",
@@ -1877,6 +1888,194 @@
       "path": "docs/kernel/ipc.md",
       "summary": "Exact owner wake identity, mailbox acknowledgement and idle progress.",
       "title": "Blocking, cross-CPU wake and idle"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-authority",
+      "depends_on": [
+        "kolvrt.handles.local",
+        "kolvrt.security.capability-revocation",
+        "kolvrt.security.domains"
+      ],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 202,
+      "id": "kolvrt.kernel.view.authority",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Names, rights and resource authority.",
+      "title": "Names, rights and resource authority (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-boot",
+      "depends_on": ["adr.0010", "adr.0005"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 176,
+      "id": "kolvrt.kernel.view.boot",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Boot and platform.",
+      "title": "Boot and platform (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-clock",
+      "depends_on": ["kolvrt.clock.query", "kolvrt.clock.query.api"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 193,
+      "id": "kolvrt.kernel.view.clock",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Time and own-task observations.",
+      "title": "Time and own-task observations (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-counter-service",
+      "depends_on": ["kolvrt.apps.native-elf"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 136,
+      "id": "kolvrt.kernel.view.counter-service",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Counter service.",
+      "title": "Counter service (EL0)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-devices",
+      "depends_on": ["kolvrt.devices.observations"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 210,
+      "id": "kolvrt.kernel.view.devices",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Immutable device identity.",
+      "title": "Immutable device identity (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-diagnostics",
+      "depends_on": ["adr.0003", "adr.0010"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 194,
+      "id": "kolvrt.kernel.view.diagnostics",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Diagnostics and boot console.",
+      "title": "Diagnostics and boot console (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-interrupts",
+      "depends_on": ["adr.0014", "adr.0010"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 202,
+      "id": "kolvrt.kernel.view.interrupts",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Exceptions and interrupts.",
+      "title": "Exceptions and interrupts (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-ipc",
+      "depends_on": ["kolvrt.ipc.transport", "kolvrt.ipc.request"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 177,
+      "id": "kolvrt.kernel.view.ipc",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Bounded IPC.",
+      "title": "Bounded IPC (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-memory",
+      "depends_on": ["adr.0010", "kolvrt.process.asid"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 176,
+      "id": "kolvrt.kernel.view.memory",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Memory and address spaces.",
+      "title": "Memory and address spaces (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-process",
+      "depends_on": [
+        "kolvrt.process.lifecycle",
+        "kolvrt.services.supervision",
+        "kolvrt.apps.native-elf"
+      ],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 225,
+      "id": "kolvrt.kernel.view.process",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Processes, images and lifecycle.",
+      "title": "Processes, images and lifecycle (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-scheduler",
+      "depends_on": ["doc.kolvrt.kernel.scheduler", "adr.0016"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 192,
+      "id": "kolvrt.kernel.view.scheduler",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Scheduling and task ownership.",
+      "title": "Scheduling and task ownership (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-smp",
+      "depends_on": ["adr.0012"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 194,
+      "id": "kolvrt.kernel.view.smp",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: SMP and per-CPU state.",
+      "title": "SMP and per-CPU state (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-supervisor",
+      "depends_on": ["kolvrt.services.supervision", "kolvrt.apps.native-elf"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 216,
+      "id": "kolvrt.kernel.view.supervisor",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Native supervisor.",
+      "title": "Native supervisor (EL0)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-user-copy",
+      "depends_on": ["kolvrt.memory.user-copy"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 195,
+      "id": "kolvrt.kernel.view.user-copy",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: User-copy boundary.",
+      "title": "User-copy boundary (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-wait",
+      "depends_on": ["doc.kolvrt.kernel.wait", "kolvrt.ipc.wait"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 187,
+      "id": "kolvrt.kernel.view.wait",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: Wait, wake and synchronization.",
+      "title": "Wait, wake and synchronization (EL1)"
     },
     {
       "anchor": "kolvrt-memory-user-copy",
