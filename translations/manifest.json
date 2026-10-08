@@ -2,16 +2,16 @@
   "locales": {
     "ru": {
       "AGENTS.md": {
-        "source_sha256": "9a64a571a46c22dea16d0be293388273f4054be1697b5dfcd5d374771d492719",
-        "translation_sha256": "d61f4582406296e178eeecf1559e9d044758c32d655be2ace4706c680f790a79"
+        "source_sha256": "116be94aa824c028d0a87dee8ff71191e8ddd9c8aee2c4256d0ad0b5739065ab",
+        "translation_sha256": "1bb24b06ffaa00f5c7d41f19d5f9f2162fef238f74df75b0cc4344ee022e534c"
       },
       "CONTRIBUTING.md": {
         "source_sha256": "7af3945c1eeb2f2f5e44171168f3c0f57b887ff49b8b36dd465312a5b8c0e5f1",
         "translation_sha256": "2238ca72e839de3cca03b353bab2418c17bfcc9427ece655e86a060ce80b9616"
       },
       "README.md": {
-        "source_sha256": "74ac72bc6e5815036e0ff55941b66146f3de454465fe925c74da66def5f1dddf",
-        "translation_sha256": "ea604bcac62e6f52a21754e50bd9ed48c016bdb6605e2b3d81b37f5e78ac940b"
+        "source_sha256": "0ca20ecbc355d29ee7bc7459aaff87075804a3b8daae0c8a0c5cf4bffeecb628",
+        "translation_sha256": "cc1ab0545b2695b6149e910511685c94f0665613cb0b57c63b3ea20843c2272e"
       },
       "crates/repository-checks/README.md": {
         "source_sha256": "feb3aa98e3e5109722e5546b5e2613271a103b14cf7ca806c8f1f29fb4e7d6d6",
@@ -138,8 +138,8 @@
         "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
       "docs/architecture/arena-measurement-contract.md": {
-        "source_sha256": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
-        "translation_sha256": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194"
+        "source_sha256": "209579185723e6ed12ef3ad285340043e4a0e15f05385386286f4cccd86484f7",
+        "translation_sha256": "4aa1274293c2b1de21e50ce60e54b41313688d3da12ea2116e2a57d132afb3eb"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
@@ -150,16 +150,16 @@
         "translation_sha256": "27099d2860b554c9ff6b7d9b316293108021f9d5965e479a5c02d2fb794fecf1"
       },
       "docs/architecture/compatibility-manifests.md": {
-        "source_sha256": "1f3c195ba2566faa440e649b1d9bf8537fdad141ee47262274bcf20f142edc48",
-        "translation_sha256": "61672ddbce35165ea36ab13005c7b79092d9f8fd6fe6f5ef3dd409e880ec1c3a"
+        "source_sha256": "e1fc0c2614964ff97b6efbed81cc452e725e726a629ff168a261c7773a6cc26b",
+        "translation_sha256": "82f19923b11204c38d6627711720ed867f8285bc7fcc6400a4a78e1c800e16ee"
       },
       "docs/architecture/compatibility-model.md": {
         "source_sha256": "5026400cd373e9dd33154781669a19acfaa4ddeb308972e6b9c173f3574a3ff9",
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "95755f52705f6cbc17ec335beea1b8f092133565c543590235825303c4e1b7cb",
-        "translation_sha256": "e81bf1a07cc5f0f10ce84a3011c4abcb98282ae4309543aed1ff698d7c8f2389"
+        "source_sha256": "94c098af7e56e70a294c7421ae34da0706683d124bf5579bc0fb597c2b1f62d0",
+        "translation_sha256": "cee881f8177d4a077e55a0a5e6c651efad1add03612ef81bf9ac54e1401c0f3a"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
@@ -192,6 +192,10 @@
       "docs/architecture/kernel-admission-policy.md": {
         "source_sha256": "51c5aa686a7335d18a1033b94e2d6531c284cd126bad235db81536884b748d28",
         "translation_sha256": "e95188f0108c8bb1fb5d62cb02439a93653b4078b842810947f2fe79cf1d9ec3"
+      },
+      "docs/architecture/kernel-component-map.md": {
+        "source_sha256": "bed6b5bc41ac7384fde19fcf80dbcd232fb4cc7b0c3f0544429ca0d13b1dfe46",
+        "translation_sha256": "a146b3921d044a09695f72db711be2f7816d0164e0ffe34344a355971679f128"
       },
       "docs/architecture/kernel-laws.md": {
         "source_sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
@@ -266,12 +270,12 @@
         "translation_sha256": "413aba443021e1d12bc3d9c843f0100055b7f91a7e81ef736963d4f693476103"
       },
       "docs/ci/performance.md": {
-        "source_sha256": "dbcbe80746a93b92eb906547075a63c44aa072838e9cadd57a907af4530dfaaf",
-        "translation_sha256": "cb27ac993e1da65a06db02c0a6c8ce0f9bded4ee5cd30d5aa31df14d0bbb70d1"
+        "source_sha256": "1cea6cae78e2573670529e4be0ac1867bba15f7a2ee81aeffc50347f0b9f7dd9",
+        "translation_sha256": "3874d45a9a193f81720e73a0d0daba75036f37216710d699012a5e7e83bf0909"
       },
       "docs/documentation-policy.md": {
-        "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
-        "translation_sha256": "f0f8060a4a50345ab33676736c79dc955637f5a383cb36c50b55027107eefb24"
+        "source_sha256": "ae3397c0c43308f4791e56861f9fb53cc2bbcce6713857479a0347dac03117b9",
+        "translation_sha256": "4853cdbf686be6d489663c59e9290bddb064bf30a6290667e3b519e4a22f7d4f"
       },
       "docs/index.md": {
         "source_sha256": "908624e2456ee40147b98e1a4056f02aad81724fcd3a36d3605a91c9011eebfe",
@@ -290,8 +294,8 @@
         "translation_sha256": "9dd206f3d86d9f76d42d027d25e715a13df72a8ad3f7db974c98a5e4cfdfefec"
       },
       "docs/kernel/devices.md": {
-        "source_sha256": "b19954e815acc7291aab2b86c88509147cea0c80ce256aa092ccaab1ad4474da",
-        "translation_sha256": "ba0045576ecdeacaa6be702ef68b126e3a3453c00633e50c4db7d0f706d0f1b5"
+        "source_sha256": "d4760d22281e2a93b6e3241e0d7ea7b5a210d448c0ed2886c67f25d4b195312b",
+        "translation_sha256": "106cff06844088447a37237c3eb15849c0dc71abd5f47f93d2670cf998db35ea"
       },
       "docs/kernel/domains.md": {
         "source_sha256": "9067c663ffab79544cfb12487ccbd9c7b8ed290e498a96d8a918462d605a58a3",
@@ -318,16 +322,16 @@
         "translation_sha256": "9bde3e79de7a31c9953f0b9ee75fb3935d06434b4740c3040bc5a69278169511"
       },
       "docs/kernel/ipc.md": {
-        "source_sha256": "e8edabcd0268aec1e89a0eab7833d15e7b0e66413de80725dec0563fbd0c5d37",
-        "translation_sha256": "6cc41a31a923cc6b255b061130cf767e09cd7537e7f502d51a7dfd828be5315a"
+        "source_sha256": "e34f4a8a597a466e7ff22e3c0e89a9b0ce9a6359268aa08933d3c25a97e2258b",
+        "translation_sha256": "a45e3b7961f0a29baf14170be71b5f9592d2e5c1d0cd5bd587052992aefea9ba"
       },
       "docs/kernel/memory.md": {
         "source_sha256": "a633826712d320b68976f270c0b230dd6780b65cb845155e76d31c83de2e1ef9",
         "translation_sha256": "9cf4e7425712e52069e3b4b6f37447013aa0710c682b72adcd0cc3394e7b2654"
       },
       "docs/kernel/native-applications.md": {
-        "source_sha256": "5b803ba32778ec124a82e41ee9afad66ea022553b5559d6a0fe54d58b5fb03bd",
-        "translation_sha256": "47507900a8d183461e520aa5728cc5872e7442a2db3dec6621f05e1f47591569"
+        "source_sha256": "2a065af8f6ec88803cc0cb96a3ed05371a14e675d3f1208f5096251492aa650b",
+        "translation_sha256": "fb3d274d71d5d8cf2c101a55dc14ef73f5778c7f0ab3377e2fddfda6a6d65351"
       },
       "docs/kernel/processes.md": {
         "source_sha256": "213ddaa1b818bb55587913c0044010b500df5e772e4214a5d4f8aa9be36630a7",
@@ -346,8 +350,8 @@
         "translation_sha256": "395e7920498d371257573b4fdd8cfa6d91718c1f8aa4447d1353f1327d556790"
       },
       "docs/kernel/supervision.md": {
-        "source_sha256": "edf965f6d1b02edb7d1956ad04e1ab4a5373672e3d0ef228d5afb860fbb73c83",
-        "translation_sha256": "c6d61c21d12b04b2b48f08d2280fe8df24d0c9b2f9b5c940a23c36ada553d41e"
+        "source_sha256": "dce0718ba484852651c41e91ecdee7842f49e1529afef5e3e8e54810427b4c0d",
+        "translation_sha256": "0e6de8adde524e2a0dd9500e5bc989aa6d5e7ca5f7f0a14342b76cbc4bb93a03"
       },
       "docs/kernel/testing.md": {
         "source_sha256": "eab587a94b643dd7aa3a84dcaaca54727bc1d9a6cf373b1772c48d7f69cb6e70",
@@ -390,16 +394,24 @@
         "translation_sha256": "a47b17b48533d5613e8e2549f7124a8617253f83409c61bcb9ea53331f604c34"
       },
       "docs/research/clock-passport.md": {
-        "source_sha256": "2f97139c0cc3aec4efad809d42c1e0185e064f0ceab0a1bd4e35934238058f0b",
-        "translation_sha256": "89071afe53e2ee169a880cb786a496edb94bf9534cdae7e025505d026ccdf0f3"
+        "source_sha256": "927ac62cb954279fdc46fb8faf260429cc8d401b07a854aa09b1a98acd8758c1",
+        "translation_sha256": "7a51fe1c9ee0290b1e8adf4fb99a02db4b83369c2c292fe0c78d72bcacfceaf3"
       },
       "docs/research/cost-l-queries.md": {
-        "source_sha256": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
-        "translation_sha256": "11ec1ab0303c9d8d10ceb1f702d2e9c4444f4cad8e96b34b2a3c36e3e807b731"
+        "source_sha256": "d4b00e8ff391e037f3e97c415455f34b3fe2aaaedada295cf09add57b9aeee1b",
+        "translation_sha256": "c14e8296cfd0b22e05f3c5c9b94adae1a68836ec69e3b46d51b222ea1862795d"
       },
       "docs/research/host-survey.md": {
         "source_sha256": "f3027d023eb3b9ce3e65c14823bf88bf9bc0be2f1a1eed934d32abf15b8935e2",
         "translation_sha256": "786cc999b220cf1c0989a5b9ed33c4874265306c43431dc69c44b3021f1fdc9b"
+      },
+      "docs/research/ipc-measurement-contract.md": {
+        "source_sha256": "b1c405a1f9c45efaa6be8b3494db8ae300aaece39385613b3a461ee7547a547d",
+        "translation_sha256": "66d23740d70ebfc19891916ed464c66da61a42f9fe0a5c6a7b2887e61e85918d"
+      },
+      "docs/research/ipc-passport.md": {
+        "source_sha256": "cd1d18186b53f991eb4d6bef7b7891bb370b652887555ba8f5992d151a918ed9",
+        "translation_sha256": "b0b7969b0ee92b2297e0e055c2e8c81b019846518d3aa9403ab76548af22152d"
       },
       "docs/research/issue-submissions.md": {
         "source_sha256": "c9b6aed813fa54af671408b2be840837b8a07aadd8ed01ca223953cc4c310020",

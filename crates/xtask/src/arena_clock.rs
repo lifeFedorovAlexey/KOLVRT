@@ -1,5 +1,6 @@
 //! Fixed, retained CLOCK-query experiments through the ordinary native ELF executor.
 use super::*;
+use crate::arena_common::{AttemptSpec, compiler_identity, git, run_attempt, write_json};
 mod passport;
 const MAGIC: u64 = 0x434c_4b01;
 const ORDERS: [[u64; 2]; 3] = [[1, 2], [2, 1], [1, 2]];
@@ -61,6 +62,7 @@ pub(super) fn validate(events: &[Value]) -> Result<Value> {
         json!({"mode":words[2],"frequency":words[3],"warmup_wall_ticks":&wall[..4],"sample_wall_ticks":&wall[4..],"warmup_execution_window_ticks":&window[..4],"sample_execution_window_ticks":&window[4..],"warmup_unattributed_ticks":&residual[..4],"sample_unattributed_ticks":&residual[4..],"read_window_total_ticks":0,"completed_queries":28,"raw_words":words,"owners_released":true,"frames_restored":true}),
     )
 }
+#[cfg(test)]
 fn validate_mode(events: &[Value], mode: u64) -> Result<Value> {
     let result = validate(events)?;
     if result["mode"] != mode {
@@ -68,42 +70,11 @@ fn validate_mode(events: &[Value], mode: u64) -> Result<Value> {
     }
     Ok(result)
 }
-fn write_json(path: impl AsRef<Path>, value: &Value) -> Result<()> {
-    fs::write(path, serde_json::to_string_pretty(value)?)?;
-    Ok(())
-}
-fn git(args: &[&str]) -> Result<String> {
-    let output = Command::new("git").args(args).output()?;
-    if !output.status.success() {
-        return Err("clock source provenance git query failed".into());
-    }
-    Ok(String::from_utf8(output.stdout)?.trim().to_owned())
-}
 pub(super) fn run(args: &[String]) -> Result<()> {
     if args != ["clock-query"] {
         return Err("usage: cargo xtask arena run clock-query".into());
     }
-    for (name, _) in env::vars_os() {
-        let name = name.to_string_lossy();
-        if matches!(
-            name.as_ref(),
-            "RUSTFLAGS"
-                | "CARGO_ENCODED_RUSTFLAGS"
-                | "CARGO_BUILD_RUSTFLAGS"
-                | "CARGO_TARGET_AARCH64_UNKNOWN_NONE_RUSTFLAGS"
-                | "RUSTC"
-                | "RUSTC_WRAPPER"
-                | "RUSTC_WORKSPACE_WRAPPER"
-        ) || name.starts_with("CARGO_PROFILE_")
-        {
-            return Err(format!("fixed CLOCK class rejects build override {name}").into());
-        }
-    }
-    let compiler = Command::new("rustc").arg("--version").output()?;
-    if !compiler.status.success() {
-        return Err("cannot observe actual rustc version".into());
-    }
-    let compiler_version = String::from_utf8(compiler.stdout)?;
+    let compiler_version = compiler_identity()?;
     let root = PathBuf::from(format!(
         "target/kernel/arena-clock/{}-{}",
         SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis(),
@@ -130,58 +101,18 @@ pub(super) fn run(args: &[String]) -> Result<()> {
                     "{profile}/pair-{pair}/{}",
                     if mode == 1 { "off" } else { "on" }
                 ));
-                fs::create_dir_all(&directory)?;
-                let mut attempt = json!({"profile":profile,"pair":pair,"order":position,"mode":mode,"directory":directory,"status":"failed"});
-                let outcome = (|| -> Result<()> {
-                    let (built, applications) = native_apps::build_images(
+                let attempt = run_attempt(
+                    AttemptSpec {
                         prod,
-                        ["selftest-clock-client", "counter-service", "counter-client"],
-                        mode,
-                    )?;
-                    attempt["applications"] = applications;
-                    let elf = directory.join("kernel.elf");
-                    fs::copy(&built, &elf)?;
-                    let digest = Sha256::digest(fs::read(&elf)?)
-                        .iter()
-                        .map(|b| format!("{b:02x}"))
-                        .collect::<String>();
-                    attempt["kernel"] = json!({"artifact":elf,"sha256":digest});
-                    let build = read_json(
-                        built.with_file_name(format!("{profile}-native-apps-build.json")),
-                    )?;
-                    write_json(directory.join("kernel-build.json"), &build)?;
-                    attempt["kernel_build"] = build;
-                    execute_validated(&elf, false, true, false, true, Some(validate))?;
-                    let run = read_json(elf.with_extension("run.json"))?;
-                    if run["elf_sha256"] != digest {
-                        return Err("clock kernel identity changed during execution".into());
-                    }
-                    let events = read_json(elf.with_extension("results.json"))?;
-                    attempt["result"] =
-                        validate_mode(events.as_array().ok_or("clock events absent")?, mode)?;
-                    attempt["run"] = run;
-                    attempt["events"] = events;
-                    Ok(())
-                })();
-                if let Err(error) = outcome {
-                    attempt["error"] = json!(error.to_string());
-                } else {
-                    attempt["status"] = json!("passed");
-                }
-                // Preserve available diagnostics even when the shared executor rejected the run.
-                for (key, suffix) in [("run", "run.json"), ("events", "results.json")] {
-                    let path = directory.join("kernel.elf").with_extension(suffix);
-                    if path.exists() {
-                        match read_json(path) {
-                            Ok(value) => attempt[key] = value,
-                            Err(error) => {
-                                attempt["status"] = json!("failed");
-                                attempt[format!("{key}_error")] = json!(error.to_string());
-                            }
-                        }
-                    }
-                }
-                write_json(directory.join("attempt.json"), &attempt)?;
+                        images: ["selftest-clock-client", "counter-service", "counter-client"],
+                        argument: mode,
+                        directory: &directory,
+                        image_store: None,
+                    },
+                    json!({"profile":profile,"pair":pair,"order":position,"mode":mode}),
+                    validate,
+                    &[("mode", mode)],
+                )?;
                 attempts.push(attempt);
             }
         }

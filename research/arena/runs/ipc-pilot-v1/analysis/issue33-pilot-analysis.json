@@ -1,0 +1,2993 @@
+{
+  "schema_version": 1,
+  "status": "independent descriptive pilot audit",
+  "campaign_path": "target/kernel/arena-ipc/1791411850163-36492/campaign.json",
+  "campaign_sha256": "fa96a21f80a02ed69a6eab5f4c9d74f2166f1c07aaebfe20898a57b4456eec7b",
+  "exact_commit": "1f6980da7902d5c82f580239cb2984880b7f4958",
+  "source_unchanged": true,
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256_lf": "9cebcf5282282591d1be03dc5ae5bcc75285e0207e8e41fb434e872c4928db41"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "a6544e18c79fd120c9d452d1dafc1a5ee42d649934e46df9e59de3c7370d9a7c"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "aec6de3fa55776f811d26ee1c095b0ea26ba0952b1de6592d1ebc08fcafd6db6"
+    },
+    {
+      "path": "apps/native-apps/Cargo.toml",
+      "sha256_lf": "ecfa79cf6826f62ffe2f67236aefac1cb497f7c2f6d150d0def9713145a9534c"
+    },
+    {
+      "path": "apps/native-apps/build.rs",
+      "sha256_lf": "f3100883829de10842c65edcb5ea332261755e00b88f48766fd1310a02e89e6f"
+    },
+    {
+      "path": "apps/native-apps/linker.ld",
+      "sha256_lf": "264c16d85af3a2fc3e32076199caa650fd42e5d5144f6ff438c3ff47b49b433a"
+    },
+    {
+      "path": "apps/native-apps/src/client.rs",
+      "sha256_lf": "52278939c70cc466e8046c7eaa0f5c5980105bcaab3ab239b71cd4345a168bb7"
+    },
+    {
+      "path": "apps/native-apps/src/counter-client.rs",
+      "sha256_lf": "9646416fb9270a53fc6dd85293495f686078b520471628688d8395f938195d37"
+    },
+    {
+      "path": "apps/native-apps/src/counter-service.rs",
+      "sha256_lf": "635fca7cd71c649dd20a773e214ed49f3752ccc0a0f5b9241d82c39ebcb9ee1c"
+    },
+    {
+      "path": "apps/native-apps/src/lib.rs",
+      "sha256_lf": "322a8319f94df8d186f33f6edcd71d4f42fad3bb5f0a3f973ef14941f8c29936"
+    },
+    {
+      "path": "apps/native-apps/src/supervision.rs",
+      "sha256_lf": "deababd624234c547c23d5d4d2e1034b401bebaaeb515bea34095a052669dda6"
+    },
+    {
+      "path": "apps/native-apps/src/supervisor.rs",
+      "sha256_lf": "7d65f92ce1283bbecb2dfd5e5a88b13cbeae289fa5ddd2a4b8e44b6fe1cb6c99"
+    },
+    {
+      "path": "apps/native-apps/tests/supervision.rs",
+      "sha256_lf": "9e432c2875e322c7ef32acec0b0fc9f67b4f081c80dce7ebe9e53736e7eb06cb"
+    },
+    {
+      "path": "apps/native-runtime/Cargo.toml",
+      "sha256_lf": "9597f67e385b3486ece0be3c9ac4c18ed86da694bbc56f65110b392e17afb110"
+    },
+    {
+      "path": "apps/native-runtime/src/lib.rs",
+      "sha256_lf": "27a2e5a3c0a1bd0f8836661cb6ea50d185fa62e4292cb9c639e5152724bfa2c1"
+    },
+    {
+      "path": "apps/native-runtime/tests/counter.rs",
+      "sha256_lf": "4f1d3d35c19c0a34060294e09ec0dee08b5b2f0bce6fc33c4d91a686459e1e63"
+    },
+    {
+      "path": "assets/branding/boot-logo.txt",
+      "sha256_lf": "3b3158087d0fd8f9b149971805208303b0e0704e548970de838810c0a4ffd7d2"
+    },
+    {
+      "path": "crates/kernel/Cargo.toml",
+      "sha256_lf": "4789fc3b27b269e942c1da716ca9dd3c87a435203bdd0cce9804ad4114bd13d5"
+    },
+    {
+      "path": "crates/kernel/assets/minimal-exit.elf",
+      "sha256": "c092a81c359796604240e4a2e9a8aac30b6faf43b4e4358cce16ede3a203c9ea"
+    },
+    {
+      "path": "crates/kernel/build.rs",
+      "sha256_lf": "b918684548caf593126da85f79ac702a917591bbb9d092de9da3e2c8c1df2623"
+    },
+    {
+      "path": "crates/kernel/linker.ld",
+      "sha256_lf": "c5d5b5c07d7201397f2d0ebe3bc8980f4a643fa22202754f408ac52c0c5e36c0"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/context.rs",
+      "sha256_lf": "f159ac446ee1d9024f7c6e3ca0002dd973ad7687459daf8892b3f3fdad79be4c"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/entry.S",
+      "sha256_lf": "5df5e13ad91b815d43d31838238d13ce91032e818bd40e7ffcb411e819c1ac1c"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/mod.rs",
+      "sha256_lf": "e54606a21a0152921041ddab5fef0ede92fbcc6f436026acac4770b1455e5e2e"
+    },
+    {
+      "path": "crates/kernel/src/arch/aarch64/page.rs",
+      "sha256_lf": "db947976e512e264c24c1d366d62e4c44530439c829a1d0b20974618cb2eaed0"
+    },
+    {
+      "path": "crates/kernel/src/asid.rs",
+      "sha256_lf": "7216e67ee636e5df1679728ee0911b90fd77bc0a76371dd090b300d8d205cd7e"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.S",
+      "sha256_lf": "fc63054b9117b67684ef9de80fdf7a7e492f86da90f8c89c4285cf57f07e2716"
+    },
+    {
+      "path": "crates/kernel/src/boot_workload.rs",
+      "sha256_lf": "ec7e1247f19e7e31ec586ddd173ab265437eaf63641460b08965a8a82ee6c2ac"
+    },
+    {
+      "path": "crates/kernel/src/diagnostics/mod.rs",
+      "sha256_lf": "b03821bb2ff3a75672c6f5033eaf5182dc10acf45105db0ac806b15435fc19d4"
+    },
+    {
+      "path": "crates/kernel/src/execution.rs",
+      "sha256_lf": "a22679e860a69e7dfde7845fe0b882ec6039701a20272901c1b1d957aa108d1f"
+    },
+    {
+      "path": "crates/kernel/src/hal/mod.rs",
+      "sha256_lf": "4cd1c37db0bc76b990e919f2c2673d84385266793642d23519f417d8a841e731"
+    },
+    {
+      "path": "crates/kernel/src/handles/testing.rs",
+      "sha256_lf": "10896a336d12aa9b43bdd3d71c0fd48a1a580aa0aa3488fd73be7673e5a96fa4"
+    },
+    {
+      "path": "crates/kernel/src/handles.rs",
+      "sha256_lf": "53f114a1ba01ac43f3e8e5e3af85bf5e2ce47b08049b241578e42c9d7c539db2"
+    },
+    {
+      "path": "crates/kernel/src/interrupt/mod.rs",
+      "sha256_lf": "1ed289dca58d3e0d2bdc107279d871c61d7e9152f24602a380b0886a527d1a2c"
+    },
+    {
+      "path": "crates/kernel/src/ipc/deferred.rs",
+      "sha256_lf": "2dd4e5bddd94a02e05d743508c4e453fe175d990e5550f40ab21d70138d91ba4"
+    },
+    {
+      "path": "crates/kernel/src/ipc/native.rs",
+      "sha256_lf": "bcf6931bd66b9648110bd35be16d6358eda9478a901328c49c7ce42b089d87ac"
+    },
+    {
+      "path": "crates/kernel/src/ipc/storage.rs",
+      "sha256_lf": "f4b296d6e9bb07efd78fffbd6aca55c2f740460b22395860585f8e42fe1b9991"
+    },
+    {
+      "path": "crates/kernel/src/ipc.rs",
+      "sha256_lf": "4d8942e9ad2836b10b2bc62e98a6e35ce17befae305fe1276f5d9bd35af1e933"
+    },
+    {
+      "path": "crates/kernel/src/ipc_authority_workload.S",
+      "sha256_lf": "54915d99a89f301b150123b751b38f2a34553eff42da978dcdd204abc828c997"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.S",
+      "sha256_lf": "f67e0d1a2ddfec7047098366207d1560c4748079c0fe84788dc32bf6ebdf5835"
+    },
+    {
+      "path": "crates/kernel/src/ipc_benchmark.rs",
+      "sha256_lf": "9f02333e41c00ae18e7bd5eeb87a49ec07606e2b496ea87ab736b99372d902cc"
+    },
+    {
+      "path": "crates/kernel/src/ipc_death_workload.S",
+      "sha256_lf": "3d3b54e0f8c8e5cf7280b9e9289f79f00c57c1e7572f657d5b8828e851545be3"
+    },
+    {
+      "path": "crates/kernel/src/ipc_multi_workload.S",
+      "sha256_lf": "b715cf3ec00ca9c6afa30978b0c1aaed9146b6ed908427b2e685a413b059daa1"
+    },
+    {
+      "path": "crates/kernel/src/ipc_paths_benchmark.S",
+      "sha256_lf": "5cbddc5bb28e16de5142174bc999a08233fb4eab12ff5a1d31856f2d8b411606"
+    },
+    {
+      "path": "crates/kernel/src/ipc_payload_workload.S",
+      "sha256_lf": "48baf395b1321d4b636011ff9e81462f2fd7f1f3a40204c780eb0dd21eee01ec"
+    },
+    {
+      "path": "crates/kernel/src/ipc_queue_workload.S",
+      "sha256_lf": "4802ea7509c29383357f41230eadd04b87c548c50e7ee7ee71ca002dd69cf370"
+    },
+    {
+      "path": "crates/kernel/src/ipc_revoke_workload.S",
+      "sha256_lf": "fe64520f0efa683454629c6b37b8735b6c94450f2d4830a6bb9056b59f82bbbb"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.S",
+      "sha256_lf": "5cbdfca9b69620306410e833f881ae11309d829092835dcdf1e6cf74663ea465"
+    },
+    {
+      "path": "crates/kernel/src/ipc_workload.rs",
+      "sha256_lf": "a2eb7282744a50d1e248b189f4ff7c26bc4db50b0635ae9b12ed0be7d6694d21"
+    },
+    {
+      "path": "crates/kernel/src/main.rs",
+      "sha256_lf": "669b1dd09ebf4c69c5412d593ae751f690e661b95a7034bfd1c2bcc469846fac"
+    },
+    {
+      "path": "crates/kernel/src/memory/mod.rs",
+      "sha256_lf": "7b30429ef9fcc21fe3bf8eb77778078288f81051a732c1a6cb48de568cc519f0"
+    },
+    {
+      "path": "crates/kernel/src/native_boot.rs",
+      "sha256_lf": "4fb5e1b86ed624d4cb2c7fb2f1161262a16b618f0fef1ea7e4c0d9a0d04c4ed8"
+    },
+    {
+      "path": "crates/kernel/src/percpu.rs",
+      "sha256_lf": "5910cf7b2ba96d8812bb390249ea70bc8e016cc8554aeea2b8ed07b6b2c39185"
+    },
+    {
+      "path": "crates/kernel/src/platform/config.rs",
+      "sha256_lf": "07c5221c6fec1b0695b67fad1e7ad2f314ffbe80f9e703d552896a52164da196"
+    },
+    {
+      "path": "crates/kernel/src/platform/mod.rs",
+      "sha256_lf": "bfb5f120aabbb9a776ff9a61bb1ac1d9b974a4663e94265454d9afc635f9c7d4"
+    },
+    {
+      "path": "crates/kernel/src/process.rs",
+      "sha256_lf": "cd560c0b57d78d3ed169b0c5d50a13f0a245cd0a811a39d50456ac9478829810"
+    },
+    {
+      "path": "crates/kernel/src/process_workload.rs",
+      "sha256_lf": "792b9eed41612401362e7110dd1beafcd767997a506fc8eeeb9dff06fcbe2944"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/config.rs",
+      "sha256_lf": "fd30a63d0908d966141a703a40ea91291338186ebd0e46f795f116295db962b3"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/local.rs",
+      "sha256_lf": "0e295809eab3d48636ae39b0d5ab3e10ea37d1ec63361a005afcf5b028727429"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/mod.rs",
+      "sha256_lf": "cd9b1aee50697e7a3e69ee3650a754731325d00d3315332c549873f2c68d6c43"
+    },
+    {
+      "path": "crates/kernel/src/scheduler/task.rs",
+      "sha256_lf": "82295a88f8943ee273ef718dd5823c24db9923b253f734a5089f0b98015581df"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.S",
+      "sha256_lf": "d0414f46eadf9bb2b5329aaa06dd6f233c5e070f82ca7d489b12c55f510065c1"
+    },
+    {
+      "path": "crates/kernel/src/security/testing.rs",
+      "sha256_lf": "955944baaa20dda85722bc416b7538337ecce109dee415e4c2806ce4615fe5df"
+    },
+    {
+      "path": "crates/kernel/src/security.rs",
+      "sha256_lf": "4a46f6eaf4d6dd5882aae5c1bb002f3b4451d40fc1bfbef1c1c5eb153fa96806"
+    },
+    {
+      "path": "crates/kernel/src/smp.rs",
+      "sha256_lf": "5be7c210395aa8b4fb08677928fcd33add7113cb46ace17bbd5f7fb4bb9bbaf3"
+    },
+    {
+      "path": "crates/kernel/src/supervision.rs",
+      "sha256_lf": "b665f610da6512e79c90a71994547c9ba793d1f8751a095bf3c515d93c00567a"
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.S",
+      "sha256_lf": "dd23d1db3daadb5e6271e206a5f3bddb65463bab483b5fed28c4b48cf5eb2bd5"
+    },
+    {
+      "path": "crates/kernel/src/supervision_workload.rs",
+      "sha256_lf": "1c42cee5b0d1e36c8962705556f95618d23cada5589cf74e67928e44310879c3"
+    },
+    {
+      "path": "crates/kernel/src/sync/mod.rs",
+      "sha256_lf": "4425454d73f2cb1b355ae34891612f3480d8463cadcc02babb034179700547da"
+    },
+    {
+      "path": "crates/kernel/src/test_support/arch_probes.S",
+      "sha256_lf": "33264073ddf3cab266eee301750d0f4ec2263549c71a06e05f428bec6435d732"
+    },
+    {
+      "path": "crates/kernel/src/test_support/ipc_inputs.rs",
+      "sha256_lf": "f9e598fecb2e6a7034fa9555f71b4c5ad0506f3cf43204dc85b0890f359a1a1b"
+    },
+    {
+      "path": "crates/kernel/src/test_support/irq_wait.rs",
+      "sha256_lf": "820ab03a287202803e3d817fbe1775fc3a283a086ed8e08c36f5123241434db2"
+    },
+    {
+      "path": "crates/kernel/src/test_support/scheduler_inputs.rs",
+      "sha256_lf": "4c18b8edd47062cb0a802690075eade2a64d2ef2bd8d634aa0e991436e8a2ac7"
+    },
+    {
+      "path": "crates/kernel/src/tests.rs",
+      "sha256_lf": "1d016609499f75b3e16bc96ba9681251ca35313c5b0866ac6a1de5044753aafb"
+    },
+    {
+      "path": "crates/kernel/src/time/mod.rs",
+      "sha256_lf": "cefff7cdc9c810edcf5f6024dd62f78df68d01fa2338741257a6a1c9d557c69a"
+    },
+    {
+      "path": "crates/kernel/src/user_copy/testing.rs",
+      "sha256_lf": "14eaf4b40767a63e88bdb284dddf24c11fcf0e3c6c33475bf137168e4ca6f61e"
+    },
+    {
+      "path": "crates/kernel/src/user_copy.rs",
+      "sha256_lf": "796bda906820e7b9944b7512b4adcd3502c491599f83e8622933555950fd6ae0"
+    },
+    {
+      "path": "crates/kernel-core/Cargo.toml",
+      "sha256_lf": "dbeb6358918b8a690af305f32609c0879346d041406f6c799467dc082c5ec362"
+    },
+    {
+      "path": "crates/kernel-core/src/device.rs",
+      "sha256_lf": "8e4e073e258ebc0376d169b3b638a5bb2820dc8b2fe2162335a4d895e60e7f66"
+    },
+    {
+      "path": "crates/kernel-core/src/domain/pool.rs",
+      "sha256_lf": "fefed033d75958f5bd431239e3826703626b88091b46458430c2da5ff5da2b05"
+    },
+    {
+      "path": "crates/kernel-core/src/domain.rs",
+      "sha256_lf": "dad82df93e0beaf252017dd6ee5cb02fe2bb3b815ba64f1bf911e2d77de78788"
+    },
+    {
+      "path": "crates/kernel-core/src/elf.rs",
+      "sha256_lf": "faa97534ec072f53c773012af327345dde9a35cece294ac1e436dd7399a79e58"
+    },
+    {
+      "path": "crates/kernel-core/src/execution.rs",
+      "sha256_lf": "1b66287b7111d0fd319f8439e051bcc8658ef11fd8d156002afed213bf52933c"
+    },
+    {
+      "path": "crates/kernel-core/src/handles.rs",
+      "sha256_lf": "6effe77cfae8e5b64f35e7d2eeb4a4052d2dbe01666204bad06cd64a9af43cd2"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/identity.rs",
+      "sha256_lf": "0eb329df587f27963d3ba71ad3e939ef59d84c4175b542216b15315e2a250327"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/mailbox.rs",
+      "sha256_lf": "fee25e70388e3e2d2750c871537c1851d906fd786dd1efc7db300fb43c60076c"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/tests.rs",
+      "sha256_lf": "3414e71e1cadfd20183d78c52f3b77e9afabf311c2398e5c2b29bfec98271a1f"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc/wire.rs",
+      "sha256_lf": "bdab769b2685eee7e2075d2dbbe33899d31921ef7fb43ca4d210322bdeabc178"
+    },
+    {
+      "path": "crates/kernel-core/src/ipc.rs",
+      "sha256_lf": "9cd0ca58b7504db9487d6862a811502032ecb36f3cbb3cad3e3b15441dad97f4"
+    },
+    {
+      "path": "crates/kernel-core/src/lib.rs",
+      "sha256_lf": "4a68ad9259e1696dec995bc16b9934c45172ed8e4fa802d7f72829b5e581fca8"
+    },
+    {
+      "path": "crates/kernel-core/src/memory.rs",
+      "sha256_lf": "0505ba3442c15da22f87b77b6365698588d3ca8c0db65d67e4bf130e232ceb58"
+    },
+    {
+      "path": "crates/kernel-core/src/platform.rs",
+      "sha256_lf": "4423248c501cef4d50bc229fc6c97fa13eafbdea3632d037eb2b6a78f3fcd1a9"
+    },
+    {
+      "path": "crates/kernel-core/src/process.rs",
+      "sha256_lf": "1067a28c3b51d65994a4ae5fe43e5e4d2f3303cc8c24c6709c22b52531312983"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling/ownership.rs",
+      "sha256_lf": "41376235734055e9824655e6c5565b3224364f8796146dd917c53f1e784936ea"
+    },
+    {
+      "path": "crates/kernel-core/src/scheduling.rs",
+      "sha256_lf": "e3f54d3f1371895a741c72d01c1f9994a81f5a91e04eb8236cb47c5811596a04"
+    },
+    {
+      "path": "crates/kernel-core/src/supervision.rs",
+      "sha256_lf": "96d0ccd94f13e4d1e47720e01c308b3c9e8dd37c216ed05078fc0c4ecefb7ca6"
+    },
+    {
+      "path": "crates/kernel-core/src/time.rs",
+      "sha256_lf": "308484a5d494f89849224ec0687368f8420712215739418249e30e49a104c403"
+    },
+    {
+      "path": "crates/kernel-core/src/user_copy.rs",
+      "sha256_lf": "3fec5bdf29e979923cc3dcda503e1fcea2627cb17291090a045344a6bc0909da"
+    },
+    {
+      "path": "crates/kernel-core/src/wait.rs",
+      "sha256_lf": "c9b1a7f133f9eb2794b8396abec06f791d3fd6b0c850207ee6402f8b910f7332"
+    },
+    {
+      "path": "crates/kernel-core/src/window.rs",
+      "sha256_lf": "9c27386bd51db4c9db01151926a023bb7fbe5f8668c4d08bef753b257971f92f"
+    },
+    {
+      "path": "crates/kernel-core/tests/boot_description.rs",
+      "sha256_lf": "5bc02706a994eee762c1465a8e2c491788678e6962dc839e537810a0543406e1"
+    },
+    {
+      "path": "crates/kernel-core/tests/bootstrap_grants.rs",
+      "sha256_lf": "e7e88c94a1e741bd7677868af0af3183c286ef42c5200aaed38775da7fd425c0"
+    },
+    {
+      "path": "crates/kernel-core/tests/device_contract.rs",
+      "sha256_lf": "b86a40aa7b781c2488d0e487e3b1aa220cbfaedefe32f693dc429bb5157d0a2c"
+    },
+    {
+      "path": "crates/kernel-core/tests/elf_contract.rs",
+      "sha256_lf": "e4069925c7de54efcbd4be35516f9bd690c22262bb0d3bc4f6e6d4d1474a2fd5"
+    },
+    {
+      "path": "crates/kernel-core/tests/event_revocation.rs",
+      "sha256_lf": "7c551c653ae49f97a6959f7361dea28f2d81a037a7b32e6b8667c41a536c48f2"
+    },
+    {
+      "path": "crates/kernel-core/tests/handle_contract.rs",
+      "sha256_lf": "b3b10350d201420f4bbc3e38fd6dd8130066baccc161babe17e0c87422daf95c"
+    },
+    {
+      "path": "crates/kernel-core/tests/process_protocol.rs",
+      "sha256_lf": "20e1db6a7640d788c32bd36cced17bd29d386531582d6b88d49489ed81687447"
+    },
+    {
+      "path": "crates/kernel-core/tests/wait.rs",
+      "sha256_lf": "fe5c7dc803b7478b473cb381b15dcd0e744ecce03562093403abf30c576a45f0"
+    },
+    {
+      "path": "crates/routing/Cargo.toml",
+      "sha256_lf": "1aec056de2f046f517d3de80c6597597fde1440a49031a971281f77c797a0558"
+    },
+    {
+      "path": "crates/routing/build.rs",
+      "sha256_lf": "89c475575801c9877959b4f6856837d52fd51e5290681504b37b521ce0241fc3"
+    },
+    {
+      "path": "crates/routing/src/conformance.rs",
+      "sha256_lf": "44a17a56a4112f570ac6e5932b0a84a827d7332e12fe7acc9fc8577576b5bfa4"
+    },
+    {
+      "path": "crates/routing/src/lib.rs",
+      "sha256_lf": "d4c8e1c0d5b2968f32fcbd6c41de552108ff7ea2232c76d75018db00f2de2322"
+    },
+    {
+      "path": "crates/routing-demo/Cargo.toml",
+      "sha256_lf": "3cb8bc8084df88e9b68837dbe0703f095667b0a98e05192a7a80cedfdecc555c"
+    },
+    {
+      "path": "crates/routing-demo/build.rs",
+      "sha256_lf": "14b3b0b7dc7c3c087fa1b5c630894018dfbb29a0ff2f231edd6775bfe6cf7e18"
+    },
+    {
+      "path": "crates/routing-demo/linker.ld",
+      "sha256_lf": "ac7202177d96d09a00d2a1ac6176d78723ba901d5c11601cda5ff4e07aa27a6f"
+    },
+    {
+      "path": "crates/routing-demo/src/main.rs",
+      "sha256_lf": "f7241ab5b6147051b5439b27162f117b250e368e13e3848f8251b8be01a87a93"
+    },
+    {
+      "path": "crates/window-compat/Cargo.toml",
+      "sha256_lf": "f5ea22a7cc8acbf28dfba08b19f049553fba43d70ff8d51f10a419f119d5ec55"
+    },
+    {
+      "path": "crates/window-compat/src/lib.rs",
+      "sha256_lf": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b"
+    },
+    {
+      "path": "crates/window-compat/tests/protocols.rs",
+      "sha256_lf": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533"
+    },
+    {
+      "path": "crates/xtask/Cargo.toml",
+      "sha256_lf": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d"
+    },
+    {
+      "path": "crates/xtask/src/arena_clock/passport.rs",
+      "sha256_lf": "6ec6c2a9b83b6170042bbd574030ec3f511ff171fe770d90a8a7a3da76029639"
+    },
+    {
+      "path": "crates/xtask/src/arena_clock.rs",
+      "sha256_lf": "84674da3e00e9f5ca5f7737528c80af3322d1e772380ef00e7dd55813b2e7181"
+    },
+    {
+      "path": "crates/xtask/src/arena_common.rs",
+      "sha256_lf": "c0b012605d95468b4f21e18df1908434942fa35c852bf4544be49bf165ecf285"
+    },
+    {
+      "path": "crates/xtask/src/arena_ipc.rs",
+      "sha256_lf": "4ff65900efe7d957334bddf01fe51984c31010277da8bcd9d9a55e86c8a8ff32"
+    },
+    {
+      "path": "crates/xtask/src/main.rs",
+      "sha256_lf": "90d83b321159f4e4ede7d3a7684591772023f53b8f6050020f002de13e9ef9d3"
+    },
+    {
+      "path": "crates/xtask/src/matrix.rs",
+      "sha256_lf": "058cecab5631d0b102d320d0460ed262db0d2d1d0a4616b541f25cbdfe2acb4a"
+    },
+    {
+      "path": "crates/xtask/src/native_apps.rs",
+      "sha256_lf": "7e3e73c3f15765066480b6ccf20f8d7507d5106a835a616e1ca9a31018c6d4e9"
+    },
+    {
+      "path": "crates/xtask/src/output.rs",
+      "sha256_lf": "4a4e1313760b677b500758c69d563fb1b82268503a6094d670242b15e31d3702"
+    },
+    {
+      "path": "crates/xtask/src/routing_demo.rs",
+      "sha256_lf": "2dd71020fc8243e945ff4281ad2aa991a4825456247b4237e2248337075e1506"
+    },
+    {
+      "path": "crates/xtask/src/timing.rs",
+      "sha256_lf": "64d1f4316164aca2c133b233c32f6331aa47f03cfa3827200ba6642ad7e5a598"
+    },
+    {
+      "path": "crates/xtask/src/workspace.rs",
+      "sha256_lf": "567279b7e34c6360e80a741dcb076ed1c509f7da25660aeafca1545108555196"
+    },
+    {
+      "path": "crates/xtask/tests/cli.rs",
+      "sha256_lf": "809f2f3839e02ec12753829dba8abd126fc32fb2ab766d29dd83fa4fdfc16d05"
+    },
+    {
+      "path": "crates/xtask/tests/locking.rs",
+      "sha256_lf": "514bca6cad00923cadb21bc115d872eec907c6bc369696c74ad7275e4a999571"
+    },
+    {
+      "path": "crates/xtask/tests/native_boundary.rs",
+      "sha256_lf": "39075a4085296b48610644ae642487ddaf84bb8594c3afdd703a63ba37db9085"
+    },
+    {
+      "path": "crates/xtask/tests/output_writer.rs",
+      "sha256_lf": "5332696610ead45e437cb954f8b3e9e875d274722d2e2cf6e4b96874b608caaa"
+    },
+    {
+      "path": "crates/xtask/tests/scheduler_boundary.rs",
+      "sha256_lf": "f44d71f23c02509b1839c0368632f16449046080ada2fdea7d6462028dca3434"
+    },
+    {
+      "path": "crates/xtask/tests/timer_wait.rs",
+      "sha256_lf": "439b2b70df1d62d70d4ae63bc8f03ea8699cc91d26c863fe30907d943a6a5791"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256_lf": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228"
+    },
+    {
+      "path": "tests/fixtures/native-lifecycle-observations.json",
+      "sha256_lf": "c96a7557ca5a43c5bf3874d50237e83db8a71edd1ed44f20adfc92a15e6c7801"
+    },
+    {
+      "path": "tests/fixtures/native-production-crash-observations.json",
+      "sha256_lf": "ea7ffb30afd673ab62751d5e81bfc967ba2216d6fd442f7f3a2f3bbaa3fb3cdf"
+    },
+    {
+      "path": "tests/fixtures/native-production-crash-shutdown-observations.json",
+      "sha256_lf": "d7e2cf2836fd018dc4085e8efc6ad034c4b2d1dec22f0acfb13ee0ab0313988d"
+    },
+    {
+      "path": "tests/fixtures/native-production-session-observations.json",
+      "sha256_lf": "0a5e314659bae6898c92fc2f3b7c82f705f828509be8215b053f7533e17aa313"
+    },
+    {
+      "path": "tests/native-apps/Cargo.toml",
+      "sha256_lf": "a8d9a7f9c1d309a2385b39c12a6f8d42d56bd3ca5674b38d743a3c6946fe5856"
+    },
+    {
+      "path": "tests/native-apps/build.rs",
+      "sha256_lf": "bdc015f0fd2a44f8ac4d4e9330c96e72ce5c66a664d5b5a5f7df1bb240f54815"
+    },
+    {
+      "path": "tests/native-apps/src/abi-client.rs",
+      "sha256_lf": "20935d704d12997c1351f2185dea1b77fb6c5a80bdcd7b22e6e31724b0fc9e0b"
+    },
+    {
+      "path": "tests/native-apps/src/abi_steps.rs",
+      "sha256_lf": "d055dbf8772c24dfe658910dc657b79393530708c41d6c4b7f11312cb5f92fa7"
+    },
+    {
+      "path": "tests/native-apps/src/clock-client.rs",
+      "sha256_lf": "12df0f5f57e88f8576b089acbf9d961e4b042e7c3d19a32afdef891f07558b1b"
+    },
+    {
+      "path": "tests/native-apps/src/ipc-measure-client.rs",
+      "sha256_lf": "bf6df9b4ba9f74f89789d57d1361621c12b96e86ce575d7b735e23a1aeb0c05a"
+    },
+    {
+      "path": "tests/native-apps/src/ipc-measure-peer.rs",
+      "sha256_lf": "0f95cb2c2a9c3174e981841c67e170f935e92aff337000755d7bdcc5101735de"
+    },
+    {
+      "path": "tests/native-apps/src/ipc-measure-root.rs",
+      "sha256_lf": "e3dc4661db8d0c1ff033908988d5c6404324bfe73059ea5cc0f115245823a1de"
+    },
+    {
+      "path": "tests/native-apps/src/ipc_measure.rs",
+      "sha256_lf": "5a5365535f7be52963d772d238048c06d31d65be75fe62953ed13f3abbb27103"
+    },
+    {
+      "path": "tests/native-apps/src/ipc_measure_protocol.rs",
+      "sha256_lf": "5d4a12f3a22120f2a0891b351c1713296d489387cc643a6d71067c7e0c515600"
+    },
+    {
+      "path": "tests/native-apps/src/lifecycle-client.rs",
+      "sha256_lf": "c686ed60e60ea6db4e27b777e54f369e3d8f4ae369e033b299d62fb755a8a677"
+    },
+    {
+      "path": "tests/native-apps/src/lifecycle-peer.rs",
+      "sha256_lf": "cb1249f3692e8daf17a02dfbcafe970aeafba33cf0b3b3ddfc91fe22d67af278"
+    },
+    {
+      "path": "tests/native-apps/tests/ipc_measure_protocol.rs",
+      "sha256_lf": "87b5692d46ba8e7339cbc2291d29855e8ae4663528c8a45e0eec3de6c8aae5cd"
+    },
+    {
+      "path": "tests/system/hold-qemu-thread.ps1",
+      "sha256_lf": "5b66c5ea25ce4360c722cc6d8b63b4f2c87ad9747416f4357ef692d19caf0633"
+    },
+    {
+      "path": "tests/system/native-crash-recovery.cjs",
+      "sha256_lf": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95"
+    },
+    {
+      "path": "tests/system/native-crash-recovery.test.cjs",
+      "sha256_lf": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38"
+    },
+    {
+      "path": "tests/system/supervision-host-stall.cjs",
+      "sha256_lf": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f"
+    }
+  ],
+  "current_source_mismatches": [],
+  "validation_findings": [],
+  "counts": {
+    "boots": 96,
+    "passed": 96,
+    "raw_records": 3456,
+    "measured_offered": 3080,
+    "measured_successes": 2637,
+    "measured_exhausted": 443,
+    "all_phase_exhausted": 467
+  },
+  "ratio_ranges": {
+    "p50_ON_OFF": [
+      0.6579163730326522,
+      1.1754409526367624
+    ],
+    "throughput_ON_OFF": [
+      0.8178169655673091,
+      1.4163647175421208
+    ]
+  },
+  "groups": [
+    {
+      "case": 0,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 0,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5996119,
+          "throughput": 333.5490839991668,
+          "p50": 174038,
+          "p95": 218250,
+          "p99": 249268
+        },
+        {
+          "case": 0,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5923769,
+          "throughput": 337.6228884009488,
+          "p50": 173275,
+          "p95": 207207,
+          "p99": 207431
+        },
+        {
+          "case": 0,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6034875,
+          "throughput": 331.4070299716233,
+          "p50": 174832,
+          "p95": 216800,
+          "p99": 256956
+        },
+        {
+          "case": 0,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5848506,
+          "throughput": 341.9676751635375,
+          "p50": 171588,
+          "p95": 179438,
+          "p99": 243193
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9956158999758673,
+          "p50_delta_ON_OFF": -763,
+          "throughput_ratio_ON_OFF": 1.0122135079879044,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.0189057509849173,
+          "p50_delta_ON_OFF": 3244,
+          "throughput_ratio_ON_OFF": 0.9691180016156093,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0318660868262766,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 0,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 0,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 654025,
+          "throughput": 3057.987080004587,
+          "p50": 18031,
+          "p95": 26488,
+          "p99": 36900
+        },
+        {
+          "case": 0,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 624356,
+          "throughput": 3203.300681021725,
+          "p50": 18100,
+          "p95": 22575,
+          "p99": 23268
+        },
+        {
+          "case": 0,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 591237,
+          "throughput": 3382.7382251110807,
+          "p50": 17694,
+          "p95": 18687,
+          "p99": 19368
+        },
+        {
+          "case": 0,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 623219,
+          "throughput": 3209.1447789621307,
+          "p50": 18256,
+          "p95": 22718,
+          "p99": 24812
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.0038267428317897,
+          "p50_delta_ON_OFF": 69,
+          "throughput_ratio_ON_OFF": 1.0475193639526168,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9692156003505696,
+          "p50_delta_ON_OFF": -562,
+          "throughput_ratio_ON_OFF": 1.0540933669577512,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.1061976838391372,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 1,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 1,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6368993,
+          "throughput": 314.02138454226593,
+          "p50": 187881,
+          "p95": 211844,
+          "p99": 234012
+        },
+        {
+          "case": 1,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6321975,
+          "throughput": 316.3568346916905,
+          "p50": 188344,
+          "p95": 199794,
+          "p99": 205825
+        },
+        {
+          "case": 1,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6392531,
+          "throughput": 312.86512337601494,
+          "p50": 189543,
+          "p95": 215612,
+          "p99": 239463
+        },
+        {
+          "case": 1,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6533025,
+          "throughput": 306.1368967668117,
+          "p50": 188043,
+          "p95": 229794,
+          "p99": 277006
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.0024643258232604,
+          "p50_delta_ON_OFF": 463,
+          "throughput_ratio_ON_OFF": 1.007437232826767,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.0079768989007833,
+          "p50_delta_ON_OFF": 1500,
+          "throughput_ratio_ON_OFF": 1.021977836321795,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0333835549808406,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 1,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 1,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 695375,
+          "throughput": 2876.1459644076936,
+          "p50": 19325,
+          "p95": 36325,
+          "p99": 36532
+        },
+        {
+          "case": 1,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 629344,
+          "throughput": 3177.912238775614,
+          "p50": 18500,
+          "p95": 21757,
+          "p99": 21900
+        },
+        {
+          "case": 1,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 687919,
+          "throughput": 2907.3190302928106,
+          "p50": 19231,
+          "p95": 29550,
+          "p99": 36743
+        },
+        {
+          "case": 1,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 676475,
+          "throughput": 2956.5024575926677,
+          "p50": 18637,
+          "p95": 28650,
+          "p99": 30900
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9573091849935317,
+          "p50_delta_ON_OFF": -825,
+          "throughput_ratio_ON_OFF": 1.1049203615192962,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.031872082416698,
+          "p50_delta_ON_OFF": 594,
+          "throughput_ratio_ON_OFF": 0.9833643205086645,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.1049203615192962,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 2,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 2,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 21,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 11,
+          "overlap_pairs": 17,
+          "elapsed_ticks": 5829063,
+          "throughput": 225.164833524702,
+          "p50": 423956,
+          "p95": 861937,
+          "p99": 960625
+        },
+        {
+          "case": 2,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 26,
+          "measured_exhausted": 6,
+          "all_phase_exhausted": 7,
+          "overlap_pairs": 21,
+          "elapsed_ticks": 6460475,
+          "throughput": 251.52949280045198,
+          "p50": 412931,
+          "p95": 643194,
+          "p99": 667507
+        },
+        {
+          "case": 2,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 24,
+          "measured_exhausted": 8,
+          "all_phase_exhausted": 9,
+          "overlap_pairs": 21,
+          "elapsed_ticks": 6119769,
+          "throughput": 245.1072908144082,
+          "p50": 396106,
+          "p95": 946213,
+          "p99": 1186587
+        },
+        {
+          "case": 2,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 26,
+          "measured_exhausted": 6,
+          "all_phase_exhausted": 7,
+          "overlap_pairs": 22,
+          "elapsed_ticks": 7082825,
+          "throughput": 229.4282295552975,
+          "p50": 412050,
+          "p95": 794000,
+          "p99": 853693
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9739949428714301,
+          "p50_delta_ON_OFF": -11025,
+          "throughput_ratio_ON_OFF": 1.1170904837271474,
+          "success_delta_ON_OFF": 5
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9613056667880112,
+          "p50_delta_ON_OFF": -15944,
+          "throughput_ratio_ON_OFF": 1.0683397212692682,
+          "success_delta_ON_OFF": -2
+        }
+      ],
+      "phase_max_min": 1.2150880853406456,
+      "boots_with_overlap": 4
+    },
+    {
+      "case": 2,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 2,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 16,
+          "measured_exhausted": 16,
+          "all_phase_exhausted": 16,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 449900,
+          "throughput": 2222.716159146477,
+          "p50": 22338,
+          "p95": 76625,
+          "p99": 76625
+        },
+        {
+          "case": 2,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 19,
+          "measured_exhausted": 13,
+          "all_phase_exhausted": 13,
+          "overlap_pairs": 5,
+          "elapsed_ticks": 532988,
+          "throughput": 2228.005133323827,
+          "p50": 26257,
+          "p95": 69956,
+          "p99": 69956
+        },
+        {
+          "case": 2,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 20,
+          "measured_exhausted": 12,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 9,
+          "elapsed_ticks": 520250,
+          "throughput": 2402.6910139356078,
+          "p50": 22238,
+          "p95": 64956,
+          "p99": 81575
+        },
+        {
+          "case": 2,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 18,
+          "measured_exhausted": 14,
+          "all_phase_exhausted": 14,
+          "overlap_pairs": 6,
+          "elapsed_ticks": 561600,
+          "throughput": 2003.2051282051282,
+          "p50": 28137,
+          "p95": 104225,
+          "p99": 104225
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.1754409526367624,
+          "p50_delta_ON_OFF": 3919,
+          "throughput_ratio_ON_OFF": 1.0023795094823897,
+          "success_delta_ON_OFF": 3
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.7903472296264705,
+          "p50_delta_ON_OFF": -5899,
+          "throughput_ratio_ON_OFF": 1.1994233541566555,
+          "success_delta_ON_OFF": 2
+        }
+      ],
+      "phase_max_min": 1.2482773949766615,
+      "boots_with_overlap": 3
+    },
+    {
+      "case": 3,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 3,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5961681,
+          "throughput": 335.47584984839006,
+          "p50": 177718,
+          "p95": 186419,
+          "p99": 187625
+        },
+        {
+          "case": 3,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5916387,
+          "throughput": 338.0441475515378,
+          "p50": 175519,
+          "p95": 184119,
+          "p99": 186375
+        },
+        {
+          "case": 3,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5855463,
+          "throughput": 341.5613761029657,
+          "p50": 171994,
+          "p95": 188819,
+          "p99": 188943
+        },
+        {
+          "case": 3,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5873500,
+          "throughput": 340.51247126926023,
+          "p50": 172256,
+          "p95": 202737,
+          "p99": 208119
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9876264643986541,
+          "p50_delta_ON_OFF": -2199,
+          "throughput_ratio_ON_OFF": 1.0076556858095997,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9984790079881107,
+          "p50_delta_ON_OFF": -262,
+          "throughput_ratio_ON_OFF": 1.0030803712703846,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0181399831234523,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 3,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 3,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 602750,
+          "throughput": 3318.125259228536,
+          "p50": 17638,
+          "p95": 19763,
+          "p99": 26462
+        },
+        {
+          "case": 3,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 623875,
+          "throughput": 3205.770386696053,
+          "p50": 17969,
+          "p95": 23944,
+          "p99": 26481
+        },
+        {
+          "case": 3,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 650350,
+          "throughput": 3075.2671638348584,
+          "p50": 18131,
+          "p95": 30731,
+          "p99": 39450
+        },
+        {
+          "case": 3,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 635788,
+          "throughput": 3145.702655602182,
+          "p50": 17756,
+          "p95": 26387,
+          "p99": 41900
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.0187663000340175,
+          "p50_delta_ON_OFF": 331,
+          "throughput_ratio_ON_OFF": 0.9661390502905229,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.021119621536382,
+          "p50_delta_ON_OFF": 375,
+          "throughput_ratio_ON_OFF": 0.9776089797801184,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.078971381169639,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 4,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 4,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6403681,
+          "throughput": 312.32036698892404,
+          "p50": 186193,
+          "p95": 238838,
+          "p99": 262737
+        },
+        {
+          "case": 4,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6124219,
+          "throughput": 326.5722535395942,
+          "p50": 183794,
+          "p95": 188956,
+          "p99": 189113
+        },
+        {
+          "case": 4,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6389981,
+          "throughput": 312.98997602653276,
+          "p50": 187250,
+          "p95": 243338,
+          "p99": 247169
+        },
+        {
+          "case": 4,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6224819,
+          "throughput": 321.2944826186914,
+          "p50": 185775,
+          "p95": 192012,
+          "p99": 196625
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9871155199175049,
+          "p50_delta_ON_OFF": -2399,
+          "throughput_ratio_ON_OFF": 1.045632267559341,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.007939712017225,
+          "p50_delta_ON_OFF": 1475,
+          "throughput_ratio_ON_OFF": 0.9741529747897528,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.045632267559341,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 4,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 4,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 624712,
+          "throughput": 3201.4752397904954,
+          "p50": 18506,
+          "p95": 20950,
+          "p99": 21494
+        },
+        {
+          "case": 4,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 620744,
+          "throughput": 3221.9401234647457,
+          "p50": 18487,
+          "p95": 20632,
+          "p99": 20925
+        },
+        {
+          "case": 4,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 632531,
+          "throughput": 3161.9003653575874,
+          "p50": 18718,
+          "p95": 20782,
+          "p99": 23000
+        },
+        {
+          "case": 4,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 624062,
+          "throughput": 3204.809778515596,
+          "p50": 18400,
+          "p95": 21394,
+          "p99": 21625
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9989733059548255,
+          "p50_delta_ON_OFF": -19,
+          "throughput_ratio_ON_OFF": 1.0063923292049541,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.0172826086956521,
+          "p50_delta_ON_OFF": 318,
+          "throughput_ratio_ON_OFF": 0.9866109329028934,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0189885041176394,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 5,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 5,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 23,
+          "measured_exhausted": 9,
+          "all_phase_exhausted": 9,
+          "overlap_pairs": 14,
+          "elapsed_ticks": 6136956,
+          "throughput": 234.23664761487618,
+          "p50": 367875,
+          "p95": 590325,
+          "p99": 640006
+        },
+        {
+          "case": 5,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 22,
+          "measured_exhausted": 10,
+          "all_phase_exhausted": 10,
+          "overlap_pairs": 8,
+          "elapsed_ticks": 7057100,
+          "throughput": 194.83923991441245,
+          "p50": 278112,
+          "p95": 821100,
+          "p99": 1573975
+        },
+        {
+          "case": 5,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 19,
+          "measured_exhausted": 13,
+          "all_phase_exhausted": 13,
+          "overlap_pairs": 3,
+          "elapsed_ticks": 5705782,
+          "throughput": 208.12221707734366,
+          "p50": 242463,
+          "p95": 810481,
+          "p99": 810481
+        },
+        {
+          "case": 5,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 28,
+          "measured_exhausted": 4,
+          "all_phase_exhausted": 5,
+          "overlap_pairs": 20,
+          "elapsed_ticks": 6876631,
+          "throughput": 254.48508143013635,
+          "p50": 360419,
+          "p95": 597044,
+          "p99": 679282
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.7559959225280326,
+          "p50_delta_ON_OFF": -89763,
+          "throughput_ratio_ON_OFF": 0.8318051077761341,
+          "success_delta_ON_OFF": -1
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.6727253557664828,
+          "p50_delta_ON_OFF": -117956,
+          "throughput_ratio_ON_OFF": 0.8178169655673091,
+          "success_delta_ON_OFF": -9
+        }
+      ],
+      "phase_max_min": 1.2368330931675973,
+      "boots_with_overlap": 4
+    },
+    {
+      "case": 5,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 5,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 20,
+          "measured_exhausted": 12,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 6,
+          "elapsed_ticks": 554731,
+          "throughput": 2253.3444137789306,
+          "p50": 25225,
+          "p95": 63688,
+          "p99": 76544
+        },
+        {
+          "case": 5,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 17,
+          "measured_exhausted": 15,
+          "all_phase_exhausted": 15,
+          "overlap_pairs": 4,
+          "elapsed_ticks": 530693,
+          "throughput": 2002.0991420651865,
+          "p50": 27156,
+          "p95": 71144,
+          "p99": 71144
+        },
+        {
+          "case": 5,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 19,
+          "measured_exhausted": 13,
+          "all_phase_exhausted": 13,
+          "overlap_pairs": 7,
+          "elapsed_ticks": 479275,
+          "throughput": 2477.700693756194,
+          "p50": 22406,
+          "p95": 71025,
+          "p99": 71025
+        },
+        {
+          "case": 5,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 20,
+          "measured_exhausted": 12,
+          "all_phase_exhausted": 14,
+          "overlap_pairs": 10,
+          "elapsed_ticks": 714556,
+          "throughput": 1749.3380504816978,
+          "p50": 34056,
+          "p95": 79732,
+          "p99": 207863
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.0765510406342913,
+          "p50_delta_ON_OFF": 1931,
+          "throughput_ratio_ON_OFF": 0.8885011673415704,
+          "success_delta_ON_OFF": -3
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.6579163730326522,
+          "p50_delta_ON_OFF": -11650,
+          "throughput_ratio_ON_OFF": 1.4163647175421208,
+          "success_delta_ON_OFF": -1
+        }
+      ],
+      "phase_max_min": 1.4909102289917062,
+      "boots_with_overlap": 4
+    },
+    {
+      "case": 6,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 6,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6224931,
+          "throughput": 321.2887018346067,
+          "p50": 178812,
+          "p95": 223182,
+          "p99": 252213
+        },
+        {
+          "case": 6,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6215406,
+          "throughput": 321.78107109978015,
+          "p50": 180543,
+          "p95": 214694,
+          "p99": 292782
+        },
+        {
+          "case": 6,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6195225,
+          "throughput": 322.8292757728735,
+          "p50": 181756,
+          "p95": 198619,
+          "p99": 214381
+        },
+        {
+          "case": 6,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6005531,
+          "throughput": 333.0263385535767,
+          "p50": 174918,
+          "p95": 202131,
+          "p99": 210694
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.0096805583517885,
+          "p50_delta_ON_OFF": 1731,
+          "throughput_ratio_ON_OFF": 1.0015324823511127,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.0390926033913033,
+          "p50_delta_ON_OFF": 6838,
+          "throughput_ratio_ON_OFF": 0.9693806116807703,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0365329893393274,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 6,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 6,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 668400,
+          "throughput": 2992.220227408737,
+          "p50": 18082,
+          "p95": 33725,
+          "p99": 46950
+        },
+        {
+          "case": 6,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 599032,
+          "throughput": 3338.7198012793974,
+          "p50": 17819,
+          "p95": 18812,
+          "p99": 19112
+        },
+        {
+          "case": 6,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 609162,
+          "throughput": 3283.198886338938,
+          "p50": 17850,
+          "p95": 21556,
+          "p99": 22232
+        },
+        {
+          "case": 6,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 663143,
+          "throughput": 3015.9407548598115,
+          "p50": 18050,
+          "p95": 30644,
+          "p99": 38125
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9854551487667293,
+          "p50_delta_ON_OFF": -263,
+          "throughput_ratio_ON_OFF": 1.1158001575875747,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9889196675900277,
+          "p50_delta_ON_OFF": -200,
+          "throughput_ratio_ON_OFF": 1.0886151795417311,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.1158001575875747,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 7,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 7,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6541450,
+          "throughput": 305.74261058328045,
+          "p50": 188481,
+          "p95": 229656,
+          "p99": 280444
+        },
+        {
+          "case": 7,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6471350,
+          "throughput": 309.05452494456335,
+          "p50": 189781,
+          "p95": 217362,
+          "p99": 220863
+        },
+        {
+          "case": 7,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6414988,
+          "throughput": 311.7698739264984,
+          "p50": 190981,
+          "p95": 195462,
+          "p99": 195793
+        },
+        {
+          "case": 7,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6358713,
+          "throughput": 314.5290564301298,
+          "p50": 187319,
+          "p95": 200119,
+          "p99": 233456
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.0068972469373572,
+          "p50_delta_ON_OFF": 1300,
+          "throughput_ratio_ON_OFF": 1.010832361099307,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.0195495384878202,
+          "p50_delta_ON_OFF": 3662,
+          "throughput_ratio_ON_OFF": 0.9912275751723932,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0287380480924364,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 7,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 7,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 727350,
+          "throughput": 2749.707843541624,
+          "p50": 19869,
+          "p95": 29400,
+          "p99": 37594
+        },
+        {
+          "case": 7,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 678963,
+          "throughput": 2945.6686152264556,
+          "p50": 19093,
+          "p95": 26319,
+          "p99": 36344
+        },
+        {
+          "case": 7,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 630856,
+          "throughput": 3170.295598361591,
+          "p50": 18613,
+          "p95": 20494,
+          "p99": 23606
+        },
+        {
+          "case": 7,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 666825,
+          "throughput": 2999.28766917857,
+          "p50": 19325,
+          "p95": 23219,
+          "p99": 25613
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9609441844078715,
+          "p50_delta_ON_OFF": -776,
+          "throughput_ratio_ON_OFF": 1.0712660336424813,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.963156532988357,
+          "p50_delta_ON_OFF": -712,
+          "throughput_ratio_ON_OFF": 1.057016181188734,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.1529572517341518,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 8,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 8,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 19,
+          "measured_exhausted": 13,
+          "all_phase_exhausted": 13,
+          "overlap_pairs": 5,
+          "elapsed_ticks": 5651138,
+          "throughput": 210.134666681295,
+          "p50": 250644,
+          "p95": 787988,
+          "p99": 787988
+        },
+        {
+          "case": 8,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 24,
+          "measured_exhausted": 8,
+          "all_phase_exhausted": 8,
+          "overlap_pairs": 18,
+          "elapsed_ticks": 6369100,
+          "throughput": 235.5120817697948,
+          "p50": 277031,
+          "p95": 890593,
+          "p99": 1402994
+        },
+        {
+          "case": 8,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 20,
+          "measured_exhausted": 12,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 14,
+          "elapsed_ticks": 5470569,
+          "throughput": 228.49542707531884,
+          "p50": 382918,
+          "p95": 697375,
+          "p99": 700050
+        },
+        {
+          "case": 8,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 26,
+          "measured_exhausted": 6,
+          "all_phase_exhausted": 6,
+          "overlap_pairs": 22,
+          "elapsed_ticks": 6319150,
+          "throughput": 257.15483886282175,
+          "p50": 370719,
+          "p95": 682575,
+          "p99": 828075
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.105276806945309,
+          "p50_delta_ON_OFF": 26387,
+          "throughput_ratio_ON_OFF": 1.120767389261806,
+          "success_delta_ON_OFF": 5
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.0329063252760178,
+          "p50_delta_ON_OFF": 12199,
+          "throughput_ratio_ON_OFF": 0.8885519249249237,
+          "success_delta_ON_OFF": -6
+        }
+      ],
+      "phase_max_min": 1.1642481796683306,
+      "boots_with_overlap": 4
+    },
+    {
+      "case": 8,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 8,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 18,
+          "measured_exhausted": 14,
+          "all_phase_exhausted": 15,
+          "overlap_pairs": 1,
+          "elapsed_ticks": 506375,
+          "throughput": 2221.673660824488,
+          "p50": 22488,
+          "p95": 68338,
+          "p99": 68338
+        },
+        {
+          "case": 8,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 17,
+          "measured_exhausted": 15,
+          "all_phase_exhausted": 16,
+          "overlap_pairs": 2,
+          "elapsed_ticks": 516194,
+          "throughput": 2058.3346571250345,
+          "p50": 24756,
+          "p95": 67069,
+          "p99": 67069
+        },
+        {
+          "case": 8,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 18,
+          "measured_exhausted": 14,
+          "all_phase_exhausted": 16,
+          "overlap_pairs": 5,
+          "elapsed_ticks": 540650,
+          "throughput": 2080.828632201979,
+          "p50": 23707,
+          "p95": 75094,
+          "p99": 75094
+        },
+        {
+          "case": 8,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 20,
+          "measured_exhausted": 12,
+          "all_phase_exhausted": 14,
+          "overlap_pairs": 6,
+          "elapsed_ticks": 631894,
+          "throughput": 1978.1798846008983,
+          "p50": 28400,
+          "p95": 90556,
+          "p99": 116375
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.1008537886873,
+          "p50_delta_ON_OFF": 2268,
+          "throughput_ratio_ON_OFF": 0.9264792995570572,
+          "success_delta_ON_OFF": -1
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.8347535211267606,
+          "p50_delta_ON_OFF": -4693,
+          "throughput_ratio_ON_OFF": 1.0518905021733098,
+          "success_delta_ON_OFF": -2
+        }
+      ],
+      "phase_max_min": 1.2478775610960258,
+      "boots_with_overlap": 4
+    },
+    {
+      "case": 9,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 9,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5933950,
+          "throughput": 231.71749003614792,
+          "p50": 236813,
+          "p95": 325882,
+          "p99": 326062
+        },
+        {
+          "case": 9,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5849131,
+          "throughput": 235.07765512518014,
+          "p50": 235893,
+          "p95": 317719,
+          "p99": 332650
+        },
+        {
+          "case": 9,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5856838,
+          "throughput": 234.76831696557085,
+          "p50": 218163,
+          "p95": 355818,
+          "p99": 365650
+        },
+        {
+          "case": 9,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 5820418,
+          "throughput": 236.23732865921315,
+          "p50": 225362,
+          "p95": 289175,
+          "p99": 414318
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.996115078141825,
+          "p50_delta_ON_OFF": -920,
+          "throughput_ratio_ON_OFF": 1.0145011284582275,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9680558390500617,
+          "p50_delta_ON_OFF": -7199,
+          "throughput_ratio_ON_OFF": 0.9937816275608101,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0195058155617003,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 9,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 9,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 512006,
+          "throughput": 2685.515404116358,
+          "p50": 21625,
+          "p95": 24794,
+          "p99": 25056
+        },
+        {
+          "case": 9,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 568756,
+          "throughput": 2417.556913685306,
+          "p50": 23412,
+          "p95": 30768,
+          "p99": 38550
+        },
+        {
+          "case": 9,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 528475,
+          "throughput": 2601.8260087989024,
+          "p50": 22637,
+          "p95": 26325,
+          "p99": 26668
+        },
+        {
+          "case": 9,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 3,
+          "measured_offered": 33,
+          "measured_successes": 22,
+          "measured_exhausted": 11,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 537800,
+          "throughput": 2556.7125325399775,
+          "p50": 22706,
+          "p95": 28837,
+          "p99": 30181
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.082635838150289,
+          "p50_delta_ON_OFF": 1787,
+          "throughput_ratio_ON_OFF": 0.9002208328351701,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9969611556416806,
+          "p50_delta_ON_OFF": -69,
+          "throughput_ratio_ON_OFF": 1.0176451109323998,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.1108385448608025,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 10,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 10,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6514056,
+          "throughput": 307.0283706495615,
+          "p50": 188094,
+          "p95": 243006,
+          "p99": 288118
+        },
+        {
+          "case": 10,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6831125,
+          "throughput": 292.7775439623781,
+          "p50": 188431,
+          "p95": 287163,
+          "p99": 321025
+        },
+        {
+          "case": 10,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6255381,
+          "throughput": 319.7247297966343,
+          "p50": 185850,
+          "p95": 197637,
+          "p99": 210619
+        },
+        {
+          "case": 10,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 6483144,
+          "throughput": 308.492299415222,
+          "p50": 190981,
+          "p95": 222044,
+          "p99": 231669
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.001791657362808,
+          "p50_delta_ON_OFF": 337,
+          "throughput_ratio_ON_OFF": 0.9535846584566964,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9731334530660118,
+          "p50_delta_ON_OFF": -5131,
+          "throughput_ratio_ON_OFF": 1.0364107318163354,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0920397974160168,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 10,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 10,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 647681,
+          "throughput": 3087.9398963378576,
+          "p50": 18650,
+          "p95": 23388,
+          "p99": 25188
+        },
+        {
+          "case": 10,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 641550,
+          "throughput": 3117.449925960564,
+          "p50": 18637,
+          "p95": 22538,
+          "p99": 30463
+        },
+        {
+          "case": 10,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 684412,
+          "throughput": 2922.2164427274797,
+          "p50": 19038,
+          "p95": 27606,
+          "p99": 33975
+        },
+        {
+          "case": 10,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 32,
+          "measured_exhausted": 0,
+          "all_phase_exhausted": 0,
+          "overlap_pairs": 0,
+          "elapsed_ticks": 688437,
+          "throughput": 2905.13147898791,
+          "p50": 18844,
+          "p95": 31569,
+          "p99": 41943
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9993029490616622,
+          "p50_delta_ON_OFF": -13,
+          "throughput_ratio_ON_OFF": 1.0095565427480322,
+          "success_delta_ON_OFF": 0
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.010295054128635,
+          "p50_delta_ON_OFF": 194,
+          "throughput_ratio_ON_OFF": 1.005880960590989,
+          "success_delta_ON_OFF": 0
+        }
+      ],
+      "phase_max_min": 1.0730839373392564,
+      "boots_with_overlap": 0
+    },
+    {
+      "case": 11,
+      "profile": "dev",
+      "runs": [
+        {
+          "case": 11,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 23,
+          "measured_exhausted": 9,
+          "all_phase_exhausted": 9,
+          "overlap_pairs": 19,
+          "elapsed_ticks": 5966331,
+          "throughput": 240.93534200499437,
+          "p50": 408650,
+          "p95": 648281,
+          "p99": 1185656
+        },
+        {
+          "case": 11,
+          "profile": "dev",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 29,
+          "measured_exhausted": 3,
+          "all_phase_exhausted": 3,
+          "overlap_pairs": 23,
+          "elapsed_ticks": 8312143,
+          "throughput": 218.0544776479423,
+          "p50": 403638,
+          "p95": 1007156,
+          "p99": 1181356
+        },
+        {
+          "case": 11,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 23,
+          "measured_exhausted": 9,
+          "all_phase_exhausted": 10,
+          "overlap_pairs": 16,
+          "elapsed_ticks": 6174932,
+          "throughput": 232.79608585163368,
+          "p50": 383400,
+          "p95": 643275,
+          "p99": 1147938
+        },
+        {
+          "case": 11,
+          "profile": "dev",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 20,
+          "measured_exhausted": 12,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 15,
+          "elapsed_ticks": 5432138,
+          "throughput": 230.1119743276036,
+          "p50": 396962,
+          "p95": 583538,
+          "p99": 727731
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 0.9877352257433011,
+          "p50_delta_ON_OFF": -5012,
+          "throughput_ratio_ON_OFF": 0.905033175429374,
+          "success_delta_ON_OFF": 6
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 0.9658355207803265,
+          "p50_delta_ON_OFF": -13562,
+          "throughput_ratio_ON_OFF": 1.0116643713647373,
+          "success_delta_ON_OFF": 3
+        }
+      ],
+      "phase_max_min": 1.530178909298696,
+      "boots_with_overlap": 4
+    },
+    {
+      "case": 11,
+      "profile": "prod",
+      "runs": [
+        {
+          "case": 11,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 1,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 18,
+          "measured_exhausted": 14,
+          "all_phase_exhausted": 15,
+          "overlap_pairs": 4,
+          "elapsed_ticks": 458725,
+          "throughput": 2452.449724780642,
+          "p50": 22938,
+          "p95": 69275,
+          "p99": 69275
+        },
+        {
+          "case": 11,
+          "profile": "prod",
+          "pair": 0,
+          "mode": 2,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 17,
+          "measured_exhausted": 15,
+          "all_phase_exhausted": 17,
+          "overlap_pairs": 1,
+          "elapsed_ticks": 500057,
+          "throughput": 2124.757777613352,
+          "p50": 23425,
+          "p95": 84406,
+          "p99": 84406
+        },
+        {
+          "case": 11,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 2,
+          "order": 0,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 19,
+          "measured_exhausted": 13,
+          "all_phase_exhausted": 13,
+          "overlap_pairs": 6,
+          "elapsed_ticks": 520000,
+          "throughput": 2283.653846153846,
+          "p50": 22368,
+          "p95": 65925,
+          "p99": 65925
+        },
+        {
+          "case": 11,
+          "profile": "prod",
+          "pair": 1,
+          "mode": 1,
+          "order": 1,
+          "warmup": 4,
+          "measured_offered": 32,
+          "measured_successes": 20,
+          "measured_exhausted": 12,
+          "all_phase_exhausted": 12,
+          "overlap_pairs": 5,
+          "elapsed_ticks": 501975,
+          "throughput": 2490.163852781513,
+          "p50": 21719,
+          "p95": 65312,
+          "p99": 107100
+        }
+      ],
+      "pairs": [
+        {
+          "pair": 0,
+          "p50_ratio_ON_OFF": 1.021231144825181,
+          "p50_delta_ON_OFF": 487,
+          "throughput_ratio_ON_OFF": 0.86638178803172,
+          "success_delta_ON_OFF": -1
+        },
+        {
+          "pair": 1,
+          "p50_ratio_ON_OFF": 1.0298816704268152,
+          "p50_delta_ON_OFF": 649,
+          "throughput_ratio_ON_OFF": 0.9170697115384615,
+          "success_delta_ON_OFF": -1
+        }
+      ],
+      "phase_max_min": 1.1335767616763857,
+      "boots_with_overlap": 4
+    }
+  ],
+  "recommended_main": {
+    "pairs_per_case_profile": 12,
+    "total_boots": 576,
+    "population": "Unchanged36 total observations:4warm+32measured; saturation3+33. No stack/buffer expansion.",
+    "order": "Alternate OFF/ON and ON/OFF,6pairs each; pair rounds across24 case/profile groups in fixed case/profile order.",
+    "stopping": "Exactly576 planned boot slots. No replacement/retry, outcome-dependent stopping or selective omissions. Failed/incomplete boots remain in accounting and invalidate unavailable paired metrics.",
+    "primary": "Per-boot OFF success-latency nearest-rank p50, achieved throughput and full outcome counts. Saturation A/B/C reported separately; pooled successful quantiles supplemental.",
+    "uncertainty": "Per case/profile report all12 paired differences and log ON/OFF ratios of boot p50 and rates, their median and order-statistic interval [3rd,10th]; exponentiate loginterval for ratios. Under independent identically distributed continuous paired observations coverage=1-2*(1+12+66)/4096=0.96142578125. Conservative marginal95% interval for MEDIAN paired effect, not mean or simultaneous24groupconfidence.",
+    "sample_size_reason": "Two pilotpairs cannot support stable uncertainty and contention ratios vary substantially. Twelve pairs enable central-rank3rd..10th interval with >=95% nominal coverage; eightpairs require full min..max for >=95%. Resource choice for bounded descriptive uncertainty, not proof of power for a chosen performance allowance.",
+    "assumptions": "Freshboots do not guarantee independence/exchangeability under hostdrift. Publish pairindex/order tables. If drift/assumptions unsupported, mark intervals conditional/descriptive and conclusions inconclusive. No superiority/regression gate or post-hoc margin.",
+    "warmup": "Preserve fixed warmup regime. Pilot does not demonstrate steady-state stabilization. Label finite-session measurements, not stabilized steady-state; a stabilization claim needs separately preregistered work.",
+    "tails": "<=32successful samples perboot makes p99 the maximum. Report descriptive quantiles and inadequate-tail flag; moreboots do not justify treating requests as independent."
+  },
+  "limits": [
+    "Successconditional observer ratios compare different selected populations under contention; not isolated recorderCPU cost.",
+    "Expected Exhausted is zero useful throughput contribution, not missing silently discarded sample.",
+    "Userspace envelope overlap does not prove simultaneous admitted kernel work.",
+    "Saturation A includes nestedBprobes/rejection and feedbackrelease; A/C heterogeneous.",
+    "No p99 precision, physical/PMU/exclusiveCPU/DEVPROD equivalence or speedupclaim."
+  ]
+}

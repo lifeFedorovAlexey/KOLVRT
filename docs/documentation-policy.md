@@ -19,6 +19,14 @@ intended behavior. A discrepancy is a defect or requires a reviewed decision, no
 automatic CODE > ADR > DOC rule. Historical claims cannot override current decisions.
 Supersession may be partial: a scheduler does not complete IPC, handles or cancellation.
 
+## Architecture map and mandatory level review
+
+An implementation change that changes architecture, logical component responsibilities or interactions must update the [canonical kernel component map](architecture/kernel-component-map.md) and its complete EN/RU pair in the same task and pull request. The map must describe actual mechanisms and direct calls, data, authority and lifetime boundaries using reviewed source evidence. Source-file proximity, shared imports or a composed transitive path do not establish a direct interaction.
+
+Review all affected levels together. Incoming and outgoing root relations must retain their identity through real member endpoints in each detail projection. Compound branches preserve their root relation identity; external connections remain visible and lead to their actual groups. A renamed role must preserve or explicitly revise its model identity without silently changing its meaning. Update evidence digests only after checking the affected mechanisms and relationships against source; a digest refresh alone cannot establish semantic review or complete coverage.
+
+`cargo xtask arena map --check` is mandatory for these changes and also runs through the ordinary repository check. It checks structural consistency, applicable source evidence and root/detail correspondence in the declared model. It does not execute the HTML renderer; renderer changes also require rendered-output and interaction review. It cannot discover or prove every missing real interaction, validate architectural intent by itself or replace source and full EN/RU semantic review. Resolve discovered omissions in the same task and PR as the architecture change; retain explicit coverage limits until the relevant review is complete.
+
 ## Reviewed status audit
 
 This table is the historical Issue #6 audit of merged implementation through `d6bf7da`;

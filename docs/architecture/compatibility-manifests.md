@@ -47,6 +47,12 @@ Remaining #47 gates include reviewed production module/debt/consumer data when a
 
 [Russian translation](../../translations/ru/docs/architecture/compatibility-manifests.md)
 
+## Shared repository check integration
+
+`cargo run --locked -p repository-checks -- check` also runs the mandatory [canonical architecture-map check](kernel-component-map.md), available separately as `cargo xtask arena map --check`. Stale source bindings or an invalid declared map therefore fail the shared command even when compatibility declarations and COST-L queries are valid. Diagnose a global failure by its failing gate; do not attribute an architecture-map rejection to the declaration or query algorithm.
+
+The dedicated command `cargo run --locked -p repository-checks -- check-compatibility` retains its existing scope and does not establish whole-repository acceptance. This integration changes the shared command's admission requirements, not compatibility validation or query semantics. Neither a dedicated success nor the map gate proves deployed compatibility, kernel behavior or runtime acceptance; retained historical verification and receipts keep their recorded applicability.
+
 <!-- knowledge -->
 
 ```json

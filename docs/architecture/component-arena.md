@@ -1,7 +1,7 @@
 # KOLVRT Arena — Replaceable Component Arena / Performance & Reliability Passports
 
 Document status: CURRENT
-Evidence scope: experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.
+Evidence scope: experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; the source-bound logical map has terminal and HTML views; records/history and general attribution remain unimplemented.
 Current reference: [Benchmark methodology](benchmarking.md); [ADR-0006](../architecture-decisions/0006-metrics.md)
 
 <a name="kolvrt-arena-scope"></a>
@@ -64,6 +64,10 @@ Use paired runs and recorded ordering under equivalent quotas, devices and instr
 
 ## Comparison and leaderboard
 
+The implemented terminal view is `cargo xtask arena report [DIR|RUN]`. With no path it opens the retained CLOCK campaign `research/arena/runs/clock-query-2978ad9`; this is a historical default, not automatic discovery of the latest source. It reads original run passports through the existing assessor and shows operation, environment, repetitions, metric/statistic, units, sample counts, losses and admission. Invalid or incomplete evidence stays visible. Viewing results does not execute a kernel campaign.
+
+Use `cargo xtask arena diff BASE_RUN CANDIDATE_RUN` for a readable descriptive comparison. Both runs must pass the existing admission and exact comparison-class checks; DEV and PROD are not interchangeable. The view shows absolute and percentage differences with the declared metric direction. A favorable observed value is not proof of improvement: repeated measurements of one implementation, observer OFF/ON pairs and insufficient uncertainty evidence cannot establish a revision regression or superiority. Existing `assess` and `compare` commands retain machine-readable JSON output.
+
 These commands illustrate the intended interface; they are not available commands:
 
 ```bash
@@ -75,6 +79,24 @@ kolvrt arena leaderboard allocator
 Compare only matching contract/suite versions, architecture, platform, execution profile, workload and budgets. Display the cohort, units, uncertainty, eligibility and receipt links. Cross-cohort data may be browsed separately but must not produce a speed ratio or rank.
 
 There is no universal SCORE or automatic crown. Show multidimensional trade-offs and, where uncertainty permits, a Pareto frontier among eligible candidates. A user may sort by a named metric or apply declared workload budgets; preserve all dimensions, failures and workload coverage in the view. A scheduler with a better median but a failed soak remains ineligible; a scheduler with worse p99 must show that regression even when it passes a permissive tail budget. Insufficient evidence yields an inconclusive comparison.
+
+## Current logical architecture map
+
+`cargo xtask arena map` renders the [canonical component map](kernel-component-map.md) in the terminal. `cargo xtask arena map --html [OUTPUT]` writes an interactive standalone HTML view; the default output is `target/arena-map.html`. Both views use the same version 3 model: 13 functional EL1 groups, two production EL0 services and one shared EL0 native-runtime group. The shared runtime is linked code, not a third service or process. GIC and UART hardware are explicit external boundaries, not software groups. Elements name logical mechanisms; source paths provide evidence, not the counting boundary. Shared sources do not imply exclusive ownership, physical isolation, a new ABI or additive code size or cost.
+
+The HTML view uses the full browser viewport for the graph. Drag the background to pan; use the wheel, +/− controls and Fit to navigate. A local RU/EN switch translates group names, mechanisms, responsibilities and interaction explanations. Compact cards use content-dependent height; icons and member/incoming/outgoing counts describe topology, not throughput or performance. Measurement status is explained by a tooltip, without repeating it in long hints. Node-local cost fields explicitly state that measurements are not implemented, except for the separately labelled historical CLOCK path ranges. There is no permanent inspector or large summary strip.
+
+Selecting a root block opens its internal composition; Back returns to the root graph. Internal views show concrete mechanisms without duplicating the parent block. Version 3 distinguishes synchronous exception handling and the context-switch bridge from boot admission, architectural MMU/root activation and user-translation permission checks from memory allocation, and protected assembly byte copying from range validation. These roles carry actual source-backed interactions, including GIC register configuration and UART status/transmission at hardware boundaries. Ordinary native applications use the shared runtime ABI; transitive application-to-kernel shortcuts do not replace that path. CLOCK, CAPTURE/READ_WINDOW, deadline helpers and STEP event notification remain distinct branches. Every child retains an explicit unimplemented-measurement state; historical CLOCK path observations stay at the parent and are not divided among children.
+
+Root hover keeps only a brief responsibility hint. Name hover shows a concise responsibility hint without repeating the title or metrics; source references are direct links on the cards. The explicit Data action on the CLOCK parent opens the retained six repeat medians, sample counts and original passport links. Edge hints explain the action and source evidence. These details are available on demand rather than filling the graph with repeated measurements or long descriptions.
+
+Internal views continue the root graph across the selected block boundary. Root relations retain their identity through audited `member_endpoints` pairs, attaching incoming and outgoing links to the mechanisms that actually participate. A compound root relation can have several detail branches; these do not increase the root relation count. External group cards navigate to the connected group. Incoming external components appear above the internal mechanisms and outgoing components below; a bidirectional group appears at both boundaries. Every route hover uses the same compact format: source → target plus the interaction description; additional remote-context notes are shown only when pinned. Short action captions identify each link, while detailed tooltips retain the full interaction and evidence. This is selected source coverage, not an exhaustive call graph or measured execution trace.
+
+`cargo xtask arena map --check` is mandatory and also runs in the ordinary repository check. It verifies model identity, source freshness and root/detail boundary correspondence in the declared model; it cannot prove exhaustive semantic coverage or validate rendered HTML behavior. Renderer changes also require rendered-output and interaction review. Architecture changes, the map and full EN/RU semantic review belong in the same task and PR, with no silent digest refresh.
+
+Russian viewer labels are stored in the separate [locale catalog](../../translations/ru/docs/architecture/kernel-component-map.labels.json); canonical English model data remains English. The model's `localization_ru` field binds that catalog by path and LF-normalized SHA-256. The loader verifies its hash and member/action translation coverage before supplying Russian labels to the renderer. Review catalog meaning together with the model and both document editions in the same task and PR; updating the catalog hash alone does not establish translation review.
+
+The map validates canonical IDs, source paths and LF-normalized reviewed source hashes. Changed sources reject the snapshot as STALE instead of silently presenting an outdated topology as current. The historical CLOCK overlay reads retained admissible passports and labels DEV/PROD path measurements separately. It measures an envelope using three CLOCK calls, including partial transitions of the boundary calls; it does not isolate the cost of the CLOCK group or its neighbours. Other component costs, interaction frequencies and weights remain unknown; no missing measurement becomes zero. Viewing the map does not execute the kernel, establish a speedup or publish a record. Historical topology reconstruction, measured runtime edge weights and a general architecture graph remain outside this bounded view.
 
 <a name="kolvrt-arena-cost-l"></a>
 
@@ -112,6 +134,10 @@ Fresh machine-mode evidence execution through the shared xtask runner requires e
 
 The CLOCK pilot adds a real-kernel campaign producer through the existing xtask/native executor, with separate DEV/PROD profiles, frozen protocol, checked report oracle and matched recorder observations. Its [accepted bounded passport](../research/clock-passport.md) retains twelve successful DEV/PROD boots and six portable pair receipts; independent admission remains structural. Existing offline admission remains structural and record eligibility remains false; this producer does not implement records/history, hardware performance, IPC passports or REL/fuzz campaigns. Execution acceptance and current evidence belong to the pilot feature, not an inferred acceptance of the entire Arena.
 
+## Issue 33 integration
+
+Issue #33 adds an experimental external IPC producer through the shared CLOCK build/execution path. Its functional pilot and selected original production-service execution do not complete SEC applicability, main sampling or record publication. Existing Arena admission remains authoritative; incomplete or lossy populations cannot be relabeled eligible. [IPC pilot](../research/ipc-passport.md) owns its current scope and gates.
+
 <!-- knowledge -->
 
 ```json
@@ -141,13 +167,14 @@ The CLOCK pilot adds a real-kernel campaign producer through the existing xtask/
       "tags": ["arena", "passports", "components"],
       "read_when": ["compare replaceable components Arena"],
       "gaps": [
-        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history and versioned architecture projection remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
+        "IPC, REL/fuzz and broader mechanism campaigns, trusted general evidence admission, records/history, historical topology reconstruction and measured runtime graph weights remain unimplemented; the bounded QEMU CLOCK passport is accepted separately."
       ],
       "feature": {
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
+        "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; a source-bound version 3 logical architecture map with terminal/HTML projections and mandatory level-consistency checking, explicit exception/MMU/copy roles, shared EL0 runtime and GIC/UART boundaries; no general records publication.",
         "sources": [
           "crates/repository-checks/src/arena.rs",
+          "crates/repository-checks/src/arena/report.rs",
           "crates/repository-checks/tests/arena.rs",
           "schemas/arena-standards.schema.json",
           "schemas/arena-profile.schema.json",
@@ -158,7 +185,10 @@ The CLOCK pilot adds a real-kernel campaign producer through the existing xtask/
           "crates/repository-checks/src/lib.rs",
           "crates/xtask/src/main.rs",
           "scripts/run-arena.ps1",
-          "crates/repository-checks/tests/arena_launcher.rs"
+          "crates/repository-checks/tests/arena_launcher.rs",
+          "crates/repository-checks/src/arena/architecture.rs",
+          "crates/repository-checks/src/arena/architecture.html",
+          "translations/ru/docs/architecture/kernel-component-map.labels.json"
         ],
         "acceptance": [
           "research/results/arena-foundation-host.json",

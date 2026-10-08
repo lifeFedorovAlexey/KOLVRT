@@ -1,4 +1,6 @@
 mod arena_clock;
+mod arena_common;
+mod arena_ipc;
 mod matrix;
 mod native_apps;
 mod output;
@@ -499,7 +501,12 @@ fn run() -> Result<()> {
     fs::create_dir_all("target/kernel")?;
     let args = output::color_arguments(env::args().skip(1).collect())?;
     match args.first().map(String::as_str) {
-        Some("arena") if args.get(1).map(String::as_str) == Some("run") => arena_clock::run(&args[2..]),
+        Some("arena") if args.get(1).map(String::as_str) == Some("run") => {
+            match args.get(2).map(String::as_str) {
+                Some("ipc-query" | "ipc-publish" | "ipc-pilot" | "ipc-smoke") => arena_ipc::run(&args[2..]),
+                _ => arena_clock::run(&args[2..]),
+            }
+        },
         Some("docs" | "arena") => {
             let status = Command::new(env::var("CARGO").unwrap_or_else(|_| "cargo".into()))
                 .args(["run", "--locked", "-p", "repository-checks", "--", &args[0]])
@@ -627,7 +634,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask arena run clock-query | selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask arena run clock-query | arena run ipc-query | arena run ipc-publish DIR | arena run ipc-pilot | arena run ipc-smoke CASE [--prod] | selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {

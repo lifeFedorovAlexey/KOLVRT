@@ -133,6 +133,12 @@ The process quantum regression accepts zero as the first counter snapshot when a
 
 The CLOCK passport uses the shared original-ELF builder with an explicitly selected external ABI root. It launches no production service and does not claim to exercise the supervisor. Ordinary service, lifecycle and crash-recovery selection remains unchanged. The shared executor selects a scenario oracle while preserving the mandatory fresh device-observation gate. The SDK snapshot exposes existing CLOCK outputs; the legacy two-result call retains its original DEV instruction sequence. This runner/SDK source change requires new exact-source evidence; historical native receipts retain their original scope.
 
+## Completed report transport
+
+The generic machine-event exporter preserves the existing 2048-word per-process report buffer. Reports of at most 64 words retain one unchanged `native-user-report` event. Longer completed root reports use version 2 `native-user-report-chunk` events, each with at most 64 words and explicit root slot, process generation, offset and total, followed by one `native-user-report-end` with the same identity and total. The loader event supplies the root slot and generation. An exact multiple of 64 is discovered through the existing zero-length read at the final offset; no extra empty chunk is published. Each event remains within the existing logger bound. Progress snapshots retain their previous first-64-word meaning and are not final report evidence.
+
+The shared host `logical_report` reader validates the loaded root identity, contiguous exact offsets, fixed total, unsigned words, buffer bound and terminal marker. Missing, duplicate, overlapping, truncated, mixed-version or mismatched streams fail. Legacy reports remain limited to 64 words. Reassembly establishes transport completeness only; each application oracle separately checks its schema, actual useful result, exit and reclamation. The exporter does not interpret application protocols, add measurement probes, enlarge buffers or grant authority. Host rejection checks do not establish fresh DEV/PROD execution; owner verification remains STALE until applicable exact-source evidence is retained.
+
 <!-- knowledge -->
 
 ```json
@@ -268,7 +274,7 @@ The CLOCK passport uses the shared original-ELF builder with an explicitly selec
           {
             "environment": "qemu-arm64",
             "state": "STALE",
-            "reason": "The retained 43af402 receipt predates diagnostic/test and CLOCK shared runner/SDK changes, so this owner-specific verification remains STALE. The owner closed #133 and master #37 closed after reviewed PR #137 and passing merged-main bc8222a checks. Historical latency attribution remains UNKNOWN; those dispositions do not relabel the old receipt as current-source evidence.",
+            "reason": "The retained 43af402 receipt predates diagnostic/test, CLOCK shared runner/SDK and completed report transport changes, so this owner-specific verification remains STALE. The owner closed #133 and master #37 closed after reviewed PR #137 and passing merged-main bc8222a checks. Historical latency attribution remains UNKNOWN; those dispositions do not relabel the old receipt as current-source evidence.",
             "scope": "Implementation 43af402b185afab82177713ed3076595d7e648a6; DEV/PROD; pinned QEMU 10.1.0 virt/cortex-a57/TCG with two CPUs. Full ordinary suite 147 checks/profile; coverage classes and integration inputs explicitly scoped.",
             "receipt": "research/results/native-phase37-43af402.json",
             "receipt_sha256": "4b94b24e4fb6096bea7db0e5f7fa5c5986d30527c14cb7e867f4edad5b976e45"

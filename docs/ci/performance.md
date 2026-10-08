@@ -91,6 +91,10 @@ Fresh machine-mode evidence execution through the shared xtask runner requires e
 
 The separate `cargo xtask arena run clock-query` campaign uses the existing native build/execution path and retains twelve fresh DEV/PROD invocations. Its fixed paired sampling does not replace foundation matrix obligations or introduce CI retries. Scenario-specific validation still requires the shared fresh device observation. An ineligible passport cannot turn into a passing measurement command, and raw failed attempts remain retained.
 
+## Issue 33 integration
+
+The issue #33 IPC functional pilot retains all fixed offered attempts, including capacity refusals, and does not replace the full foundation matrix. A successful smoke run is not a completed paired campaign or eligible performance record. Retain the original failed attempts and exact-source regression before acceptance; see the [IPC pilot](../research/ipc-passport.md).
+
 <!-- knowledge -->
 
 ```json

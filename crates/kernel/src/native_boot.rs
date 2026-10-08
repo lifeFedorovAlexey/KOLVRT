@@ -55,7 +55,8 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
             cpu::poweroff()
         });
     crate::event!(
-        "{{\"event\":\"native-root-image\",\"format\":\"elf64\",\"generation\":{}}}",
+        "{{\"event\":\"native-root-image\",\"format\":\"elf64\",\"slot\":{},\"generation\":{}}}",
+        supervisor.slot(),
         supervisor.generation()
     );
     let mut scope = Scope::install(
@@ -129,11 +130,42 @@ pub(crate) fn exercise(physical: &mut memory::Physical, registry: &mut Registry)
         .completion(supervisor)
         .expect("root completion")
         .reason;
-    let (words, length) = completed.report_chunk(supervisor.slot(), 0);
-    crate::event!(
-        "{{\"event\":\"native-user-report\",\"words\":{:?}}}",
-        &words[..length]
-    );
+    // Read only the completed report; no new storage or application interpretation.
+    let mut total = 0;
+    loop {
+        let (_, length) = completed.report_chunk(supervisor.slot(), total);
+        total += length;
+        if length < crate::scheduler::REPORT_CHUNK_WORDS {
+            break;
+        }
+    }
+    if total <= crate::scheduler::REPORT_CHUNK_WORDS {
+        let (words, length) = completed.report_chunk(supervisor.slot(), 0);
+        crate::event!(
+            "{{\"event\":\"native-user-report\",\"words\":{:?}}}",
+            &words[..length]
+        );
+    } else {
+        let mut offset = 0;
+        while offset < total {
+            let (words, length) = completed.report_chunk(supervisor.slot(), offset);
+            crate::event!(
+                "{{\"event\":\"native-user-report-chunk\",\"version\":2,\"slot\":{},\"generation\":{},\"offset\":{},\"total\":{},\"words\":{:?}}}",
+                supervisor.slot(),
+                supervisor.generation(),
+                offset,
+                total,
+                &words[..length]
+            );
+            offset += length;
+        }
+        crate::event!(
+            "{{\"event\":\"native-user-report-end\",\"version\":2,\"slot\":{},\"generation\":{},\"total\":{}}}",
+            supervisor.slot(),
+            supervisor.generation(),
+            total
+        );
+    }
     if reason != Reason::Exited(0) {
         let (kind, detail) = match reason {
             Reason::Exited(code) => ("exit", code),

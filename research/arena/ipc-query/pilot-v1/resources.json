@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "policy": "Existing native image, process, domain and lifecycle limits, acquired ownership and normal reclamation.",
+  "endpoint_capacity": 1,
+  "actor_max_offered": 36,
+  "stack_bytes": 16384,
+  "report_storage_words": 2048,
+  "report_event_chunk_words": 64,
+  "logger_record_bytes": 4096,
+  "termination": "Root exit0, owners released, original frames restored, zero live processes and domains; failed roots retain failure evidence, never successful performance.",
+  "production_changes": "No expanded grants, larger buffers, forced rendezvous, mutation hooks, retries or timing allowances."
+}

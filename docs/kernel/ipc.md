@@ -117,6 +117,10 @@ The process quantum regression accepts zero as the first counter snapshot when a
 
 The shared host executor now accepts a scenario-specific oracle for the external CLOCK pilot. The ordinary IPC and native validators remain selected by their existing commands; the mandatory fresh device observation is checked before any scenario oracle. CLOCK is read-only observation, adds no IPC grant or endpoint operation, and does not replace IPC correctness or performance evidence.
 
+## Issue 33 integration
+
+The issue #33 external pilot measures the ordinary native.request path, including capability checks, copies, bounded charging and terminal collection. Its selected transport/production-service cases, complete refusal populations and external timing boundaries are defined in the [IPC pilot](../research/ipc-passport.md). The historical Phase 3.5 mechanism acceptance does not prove this new measurement campaign.
+
 <!-- knowledge -->
 
 ```json

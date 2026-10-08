@@ -25,7 +25,7 @@ fn run() -> CheckResult<()> {
             if matches!(command,"check" | "validate") { repository_checks::compat_modules::check(&root)?; }
             if matches!(command,"check" | "check-docs") { documents::check_docs(&root)?; }
             if matches!(command,"check" | "check-translations") { documents::check_translations(&root)?; }
-            if command == "check" { repository_checks::arena::check(&root)?; report::report(&root, true)?; knowledge::generate(&root, true)?; knowledge::pilot(&root, true)?; }
+            if command == "check" { repository_checks::arena::architecture::check(&root)?; repository_checks::arena::check(&root)?; report::report(&root, true)?; knowledge::generate(&root, true)?; knowledge::pilot(&root, true)?; }
             println!("{command}: passed. Structural checks do not establish historical truth or kernel behavior.");
         }
         "check-cost-l" if args.len() == 1 || (args.len() == 3 && args[1] == "--directory") => {

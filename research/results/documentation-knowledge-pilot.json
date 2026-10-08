@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 54259,
-  "catalog_bytes": 86314,
-  "catalog_nodes": 212,
+  "approximate_tokens": 56510,
+  "catalog_bytes": 95316,
+  "catalog_nodes": 233,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "2133284a60d87242e62c5d5f4e677490bb4f7f334b58f313bdb590c85760fb34",
+  "catalog_sha256": "135837c14f5e3f8bbe41c4a4d3eaea194cd23cf243beb0781e62998ce5d7b096",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 217036,
+  "context_plus_catalog_bytes": 226038,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 111,
-    "utf8_bytes": 1028594
+    "documents": 114,
+    "utf8_bytes": 1226155
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -27,6 +27,8 @@
       "doc.kolvrt.native-applications.fixture-review",
       "doc.kolvrt.supervision.acceptance-review",
       "kolvrt.apps.native-elf",
+      "kolvrt.arena.ipc-measurement.contract",
+      "kolvrt.arena.ipc-passport",
       "kolvrt.handles.identity",
       "kolvrt.handles.local",
       "kolvrt.ipc.cancel",
@@ -42,6 +44,13 @@
       "kolvrt.ipc.transport",
       "kolvrt.ipc.wait",
       "kolvrt.ipc.wakeup",
+      "kolvrt.kernel.view.authority",
+      "kolvrt.kernel.view.counter-service",
+      "kolvrt.kernel.view.ipc",
+      "kolvrt.kernel.view.native-runtime",
+      "kolvrt.kernel.view.process",
+      "kolvrt.kernel.view.supervisor",
+      "kolvrt.kernel.view.wait",
       "kolvrt.security.capability-revocation",
       "kolvrt.security.domains",
       "kolvrt.security.event-revocation",
@@ -71,12 +80,12 @@
   "query": "review Phase 3.4 capability revocation",
   "rendered_context_bytes": 130722,
   "russian_pilot": {
-    "approximate_tokens": 83678,
-    "catalog_bytes": 86314,
-    "context_plus_navigation_bytes": 334712,
+    "approximate_tokens": 86953,
+    "catalog_bytes": 95316,
+    "context_plus_navigation_bytes": 347811,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 49225,
+    "localized_navigation_bytes": 53322,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",

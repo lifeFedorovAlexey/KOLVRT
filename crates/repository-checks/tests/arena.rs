@@ -323,3 +323,59 @@ fn cli_enforces_nonzero_rejections_without_publishing_records() {
     assert!(!output.status.success());
     assert!(output.stdout.is_empty());
 }
+
+#[test]
+fn readable_report_and_diff_use_actual_admission_and_compatibility() {
+    let (bundle, mut run) = fixture();
+    let left = bundle.join("a-run.json");
+    let right = bundle.join("b-run.json");
+    fs::write(&left, serde_json::to_string(&run).unwrap()).unwrap();
+    run["run_id"] = json!("synthetic-second-repeat");
+    run["observations"][0]["samples"] = json!((0..100).map(|i| i as f64 + 2.0).collect::<Vec<_>>());
+    fs::write(&right, serde_json::to_string(&run).unwrap()).unwrap();
+    let rendered = arena::report::render(&root(), Some(&bundle)).unwrap();
+    assert!(rendered.admissible);
+    assert!(rendered.text.contains("MEDIAN"));
+    assert!(rendered.text.contains("N=100"));
+    assert!(rendered.text.contains("No baseline selected"));
+    assert!(rendered.text.find("a-run.json").unwrap() < rendered.text.find("b-run.json").unwrap());
+    let diff = arena::report::diff(&root(), &left, &right).unwrap();
+    assert!(diff.contains("+2.000000"));
+    assert!(diff.contains("Same retained source snapshot"));
+    assert!(diff.contains("No statistical significance"));
+    run["observations"][0]["failures"] = json!(1);
+    fs::write(&right, serde_json::to_string(&run).unwrap()).unwrap();
+    let rejected = arena::report::render(&root(), Some(&right)).unwrap();
+    assert!(!rejected.admissible);
+    assert!(rejected.text.contains("failures=1"));
+    assert!(rejected.text.contains("Admission reason:"));
+    assert!(arena::report::diff(&root(), &left, &right).is_err());
+    let mut unavailable = run.clone();
+    unavailable["observations"][0] = json!({"metric_id":"arena.metric.range-median","state":"INCONCLUSIVE","reason":"actual samples missing","missing_observations":100,"evidence":["evidence.txt"]});
+    unavailable["overhead_result"]["state"] = json!("UNAVAILABLE");
+    unavailable["overhead_result"]["off_samples"] = json!([]);
+    unavailable["overhead_result"]["on_samples"] = json!([]);
+    fs::write(&right, serde_json::to_string(&unavailable).unwrap()).unwrap();
+    let absent = arena::report::render(&root(), Some(&right)).unwrap();
+    assert!(!absent.admissible);
+    assert!(absent.text.contains("INCONCLUSIVE: actual samples missing"));
+    assert!(absent.text.contains("Recorder reason:"));
+    assert!(arena::report::diff(&root(), &left, &right).is_err());
+    run["observations"][0]["failures"] = json!(0);
+    run["profile_snapshot"]["workload"]["seed"] = json!("different-class");
+    seal(&mut run);
+    fs::write(&right, serde_json::to_string(&run).unwrap()).unwrap();
+    assert!(arena::report::diff(&root(), &left, &right).is_err());
+    let classes = arena::report::render(&root(), Some(&bundle)).unwrap();
+    assert_eq!(
+        classes.text.matches("Workload:").count(),
+        2,
+        "same profile ID with different comparison classes needs distinct headers"
+    );
+    fs::write(&right, "broken").unwrap();
+    let corrupt = arena::report::render(&root(), Some(&bundle)).unwrap();
+    assert!(!corrupt.admissible);
+    assert!(corrupt.text.contains("INVALID"));
+    assert!(corrupt.text.contains("a-run.json"));
+    fs::remove_dir_all(bundle).unwrap();
+}

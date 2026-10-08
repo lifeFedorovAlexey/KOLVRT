@@ -1,0 +1,4432 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>KOLVRT · Architecture</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1220;
+        --panel: #152337;
+        --ink: #eff6ff;
+        --muted: #a7bdd5;
+        --line: #344c68;
+        --accent: #62e1c9;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          14px/1.45 system-ui,
+          sans-serif;
+      }
+      button,
+      a {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+        color: var(--ink);
+        background: #17273d;
+        border: 1px solid #3a506c;
+        border-radius: 9px;
+        padding: 8px 12px;
+      }
+      button:hover,
+      button:focus-visible {
+        border-color: var(--accent);
+        outline: 2px solid #62e1c955;
+      }
+      a {
+        color: #9bd5ff;
+        overflow-wrap: anywhere;
+      }
+      header {
+        position: fixed;
+        z-index: 3;
+        left: 20px;
+        right: 20px;
+        top: 16px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        pointer-events: none;
+      }
+      header > div {
+        pointer-events: auto;
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        background: #0b1220eb;
+        border: 1px solid #2d425e;
+        border-radius: 13px;
+        padding: 6px;
+      }
+      .brand {
+        padding: 0 9px;
+        font-weight: 750;
+        letter-spacing: 0.03em;
+      }
+      .brand small {
+        display: block;
+        font-size: 10px;
+        font-weight: 400;
+        color: var(--muted);
+      }
+      #canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        cursor: grab;
+      }
+      #canvas.dragging {
+        cursor: grabbing;
+      }
+      .node {
+        cursor: pointer;
+        outline: none;
+      }
+      .node .card {
+        fill: #152337;
+        stroke: #3a5574;
+        stroke-width: 1.4;
+      }
+      .node:hover .card,
+      .node:focus .card {
+        stroke: #9bd5ff;
+        stroke-width: 2.4;
+      }
+      .node.active .card {
+        fill: #143a3f;
+        stroke: #62e1c9;
+        stroke-width: 2.4;
+      }
+      .node text {
+        pointer-events: none;
+        fill: var(--ink);
+      }
+      .node .name {
+        font-size: 18px;
+        font-weight: 650;
+      }
+      .node .stats {
+        font-size: 13px;
+        fill: #aec7df;
+      }
+      .node .perf {
+        font-size: 12px;
+        fill: #b9cce0;
+      }
+      .node .measured {
+        fill: #78e8d1;
+      }
+      .icon {
+        stroke: #b9d6ef;
+        stroke-width: 1.8;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .edge {
+        fill: none;
+        stroke-width: 1.6;
+        opacity: 0.52;
+        pointer-events: stroke;
+        cursor: pointer;
+      }
+      .edge.active {
+        stroke-width: 2.6;
+        opacity: 1;
+      }
+      .edge.muted {
+        opacity: 0.2;
+      }
+      .layerbox {
+        fill: #0e1929;
+        stroke: #243954;
+        stroke-width: 1.5;
+        rx: 18;
+      }
+      .layerlabel {
+        fill: #819fbd;
+        font-size: 14px;
+        font-weight: 650;
+        letter-spacing: 1px;
+      }
+      .popup {
+        position: fixed;
+        z-index: 5;
+        width: 370px;
+        max-width: calc(100vw - 24px);
+        max-height: calc(100vh - 110px);
+        overscroll-behavior: contain;
+        overflow: auto;
+        padding: 18px;
+        border: 1px solid #567591;
+        border-radius: 14px;
+        background: #142236fa;
+        box-shadow: 0 16px 60px #0009;
+        backdrop-filter: blur(14px);
+      }
+      .popup.tooltip {
+        width: 260px;
+        max-width: calc(100vw - 24px);
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      .popup.tooltip p {
+        margin: 3px 0;
+      }
+      .popup.tooltip .relation-heading {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .popup[hidden] {
+        display: none;
+      }
+      .popup h2 {
+        font-size: 20px;
+        margin: 0 30px 6px 0;
+      }
+      .popup p {
+        margin: 8px 0;
+      }
+      .popup .muted {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .popup .close {
+        position: absolute;
+        right: 9px;
+        top: 9px;
+        padding: 3px 9px;
+      }
+      .popup h3 {
+        font-size: 12px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: #a7c3de;
+        margin: 16px 0 6px;
+      }
+      .popup details {
+        padding: 5px 0;
+        border-bottom: 1px solid #2a4059;
+      }
+      .popup summary {
+        cursor: pointer;
+      }
+      .popup a {
+        font-size: 11px;
+        display: block;
+        margin: 4px 0;
+      }
+      .popup .values {
+        color: var(--accent);
+        font-size: 17px;
+        font-weight: 650;
+      }
+      .relation {
+        padding: 7px 0;
+        border-bottom: 1px solid #2a4059;
+        cursor: pointer;
+      }
+      .relation:hover {
+        color: var(--accent);
+      }
+      footer {
+        position: fixed;
+        bottom: 12px;
+        left: 20px;
+        right: 20px;
+        pointer-events: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        color: #9fb6cf;
+        font-size: 11px;
+      }
+      footer span {
+        background: #0b1220e8;
+        padding: 5px 8px;
+        border-radius: 7px;
+      }
+      .legend-dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        margin-right: 7px;
+      }
+      @media (max-width: 700px) {
+        header {
+          left: 8px;
+          right: 8px;
+          top: 8px;
+        }
+        .brand {
+          font-size: 12px;
+        }
+        .brand small {
+          max-width: 140px;
+        }
+        button {
+          padding: 7px 9px;
+        }
+        footer {
+          left: 8px;
+          right: 8px;
+          font-size: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <button id="back" hidden></button
+        ><button id="detail-data" hidden></button
+        ><span class="brand">KOLVRT<small id="subtitle"></small></span>
+      </div>
+      <div>
+        <button id="minus" aria-label="Zoom out">−</button
+        ><button id="plus" aria-label="Zoom in">+</button
+        ><button id="fit"></button><button id="lang">EN</button
+        ><button id="help">?</button>
+      </div>
+    </header>
+    <svg id="canvas" aria-label="Architecture graph">
+      <defs id="defs"></defs>
+      <g id="scene"></g>
+    </svg>
+    <section
+      id="popup"
+      class="popup"
+      hidden
+      tabindex="-1"
+      role="dialog"
+      aria-label="Подробности компонента"
+    ></section>
+    <footer><span id="hint"></span><span id="provenance"></span></footer>
+    <script id="arena-model" type="application/json">
+      __ARENA_MODEL__
+    </script>
+    <script>
+      "use strict";
+      const model = JSON.parse(
+        document.getElementById("arena-model").textContent,
+      );
+      const translations = {
+        members: {
+          "Boot admission sequence": "Допуск при загрузке",
+          "Selected platform initialization": "Инициализация платформы",
+          "Hardware abstraction selection": "Выбор аппаратного интерфейса",
+          "Platform description decoding": "Разбор описания платформы",
+          "Physical and virtual memory ownership":
+            "Владение физической и виртуальной памятью",
+          "Frame allocation state": "Состояние распределения фреймов",
+          "Address-space identifier lifecycle": "Жизненный цикл ASID",
+          "Architectural context save and restore":
+            "Сохранение и восстановление контекста",
+          "Vector installation and exception dispatch":
+            "Векторы и обработка исключений",
+          "Interrupt-controller dispatch": "Обработка контроллера прерываний",
+          "Secondary CPU and invalidation coordination":
+            "Вторичные CPU и инвалидация",
+          "Per-CPU identity and local state":
+            "Идентичность и локальное состояние CPU",
+          "Native-call and scheduling dispatch":
+            "Диспетчеризация native-вызовов и задач",
+          "Task context and completion state": "Контекст и завершение задач",
+          "Guarded per-CPU scheduler storage":
+            "Защищённое хранилище планировщика CPU",
+          "Task ownership transitions": "Переходы владения задачами",
+          "Process admission and resource lifecycle":
+            "Допуск процессов и ресурсов",
+          "Process registry transitions": "Переходы реестра процессов",
+          "ELF image validation": "Проверка ELF",
+          "Granted lifecycle operation enforcement":
+            "Исполнение разрешённых операций жизненного цикла",
+          "Initial native admission and completion reporting":
+            "Начальный допуск и отчёт завершения",
+          "Immutable bootstrap grant validation":
+            "Проверка неизменяемых разрешений загрузки",
+          "Protected user-memory copy boundary":
+            "Защищённое копирование пользовательской памяти",
+          "User range and snapshot validation": "Проверка диапазонов и снимков",
+          "Local handle resolution": "Разрешение локальных дескрипторов",
+          "Capability and domain enforcement": "Проверка полномочий и доменов",
+          "Generational handle namespace":
+            "Поколения пространства дескрипторов",
+          "Domain rights and resource accounting":
+            "Права домена и учёт ресурсов",
+          "Wait identity and terminal transitions":
+            "Идентичность ожиданий и завершение",
+          "Kernel synchronization primitives": "Примитивы синхронизации ядра",
+          "Task wait and wake integration": "Ожидание и пробуждение задач",
+          "Bounded endpoint and request state machine":
+            "Автомат ограниченных endpoint и запросов",
+          "IPC runtime integration": "Интеграция IPC с исполнением",
+          "Endpoint and request storage": "Хранилище endpoint и запросов",
+          "Admission, payload copy and completion":
+            "Допуск, копирование и завершение",
+          "Deferred wake and owner continuation":
+            "Отложенное пробуждение владельца",
+          "Counter reads and deadline arithmetic":
+            "Чтение счётчика и арифметика сроков",
+          "Own-task execution observation service":
+            "Наблюдение исполнения своей задачи",
+          "Time value arithmetic": "Арифметика времени",
+          "Checked immutable window reduction":
+            "Проверенное сведение неизменяемого окна",
+          "Execution observation ABI and report bounds":
+            "ABI наблюдений и границы отчёта",
+          "Native CLOCK dispatch": "Диспетчеризация CLOCK",
+          "Current-task accumulated observations":
+            "Накопленные наблюдения задачи",
+          "Immutable descriptor validation":
+            "Проверка неизменяемого дескриптора",
+          "Platform identity extraction": "Извлечение идентичности платформы",
+          "Boot descriptor publication": "Публикация загрузочного дескриптора",
+          "Bounded event serialization and console output":
+            "Ограниченная сериализация событий и вывод",
+          "Service policy and readiness coordination":
+            "Политика сервиса и готовность",
+          "Production recovery operation": "Восстановление production-сервиса",
+          "Counter request execution": "Исполнение запросов счётчика",
+          "Public native ABI call interface": "Интерфейс публичного native ABI",
+          "Own-task native-call dispatch":
+            "Диспетчеризация native-вызовов собственной задачи",
+          "Coalescing event latches and retained signal admission":
+            "Объединяемые события и допуск удерживаемого сигнала",
+          "Ordinary-lock exclusion and scheduler entry guard":
+            "Исключение обычных блокировок и защита входа планировщика",
+          "Retained IPC wake publication and acknowledgement":
+            "Публикация и подтверждение удерживаемого пробуждения IPC",
+          "Diagnostic record framing": "Форматирование диагностических записей",
+          "Bounded diagnostic output admission":
+            "Ограниченный допуск диагностического вывода",
+          "Bounded polled console writer":
+            "Ограниченный опрос и запись в консоль",
+          "Counter codec and private state":
+            "Кодек счётчика и приватное состояние",
+          "Bounded MMIO access": "Ограниченный доступ MMIO",
+          "User range and byte-limit validation":
+            "Проверка диапазонов и лимитов копирования",
+          "Event notification authority and charging":
+            "Полномочия и учёт уведомлений",
+          "Vector installation and architectural IRQ operations":
+            "Установка векторов и операции IRQ",
+          "Scheduler-storage ownership admission":
+            "Допуск к состоянию планировщика",
+          "Scheduler storage ownership transitions":
+            "Переходы владения хранилищем планировщика",
+          "EL0 context validation and trap bridge":
+            "Проверка контекста EL0 и передача исключений",
+          "Synchronous exception recovery":
+            "Восстановление после синхронного исключения",
+          "Fatal exception handling": "Обработка фатального исключения",
+          "Architectural address-space activation":
+            "Архитектурное включение адресных пространств",
+          "Architectural cache and TLB maintenance":
+            "Архитектурное обслуживание кэша и TLB",
+          "Architectural timer programming":
+            "Программирование архитектурного таймера",
+          "PSCI CPU and system lifecycle":
+            "Жизненный цикл CPU и системы через PSCI",
+          "Architectural user-translation permission check":
+            "Архитектурная проверка трансляции и прав пользователя",
+          "Protected user byte-copy instructions and recovery labels":
+            "Защищённые инструкции копирования байтов пользователя и метки восстановления",
+          "Shared native syscall ABI wrappers":
+            "Общие обёртки native syscall ABI",
+          "Shared counter codec and private state":
+            "Общий кодек счётчика и приватное состояние",
+          "Bounded own-task report storage and export":
+            "Ограниченное хранение и экспорт отчёта задачи",
+          "Vector installation and architectural exception/IRQ operations":
+            "Установка векторов и архитектурные операции исключений/IRQ",
+        },
+        nodes: {
+          "kolvrt.kernel.view.boot": {
+            ru: "Старт / платформа",
+            en: "Boot / platform",
+            ruResponsibility:
+              "Запускает ядро, проверяет платформу и обеспечивает ограниченный доступ к её регистрам.",
+          },
+          "kolvrt.kernel.view.memory": {
+            ru: "Память",
+            en: "Memory",
+            ruResponsibility:
+              "Управляет владением памятью и адресными пространствами.",
+          },
+          "kolvrt.kernel.view.interrupts": {
+            ru: "Прерывания",
+            en: "Interrupts",
+            ruResponsibility:
+              "Сохраняет контекст и передаёт исключения и IRQ обработчикам.",
+          },
+          "kolvrt.kernel.view.smp": {
+            ru: "SMP / CPU",
+            en: "SMP / CPU",
+            ruResponsibility:
+              "Координирует CPU, локальное состояние и инвалидацию.",
+          },
+          "kolvrt.kernel.view.scheduler": {
+            ru: "Планировщик",
+            en: "Scheduler",
+            ruResponsibility:
+              "Управляет исполнением, владением и завершением задач.",
+          },
+          "kolvrt.kernel.view.process": {
+            ru: "Процессы",
+            en: "Processes",
+            ruResponsibility:
+              "Проверяет образы и управляет допуском и жизненным циклом процессов.",
+          },
+          "kolvrt.kernel.view.user-copy": {
+            ru: "Копирование",
+            en: "User-copy",
+            ruResponsibility:
+              "Проверяет и копирует пользовательские данные через защищённую границу.",
+          },
+          "kolvrt.kernel.view.authority": {
+            ru: "Полномочия",
+            en: "Authority",
+            ruResponsibility:
+              "Разрешает имена, проверяет полномочия и учитывает ресурсы.",
+          },
+          "kolvrt.kernel.view.wait": {
+            ru: "Ожидание",
+            en: "Wait / wake",
+            ruResponsibility:
+              "Управляет ожиданием, пробуждением и синхронизацией.",
+          },
+          "kolvrt.kernel.view.ipc": {
+            ru: "IPC",
+            en: "IPC",
+            ruResponsibility:
+              "Обеспечивает ограниченный обмен запросами и ответами.",
+          },
+          "kolvrt.kernel.view.clock": {
+            ru: "Время / CLOCK",
+            en: "Time / CLOCK",
+            ruResponsibility:
+              "Предоставляет время и наблюдения исполнения собственной задачи.",
+          },
+          "kolvrt.kernel.view.devices": {
+            ru: "Устройства",
+            en: "Devices",
+            ruResponsibility:
+              "Проверяет неизменяемую идентичность устройств; не выдаёт полномочия.",
+          },
+          "kolvrt.kernel.view.diagnostics": {
+            ru: "Диагностика",
+            en: "Diagnostics",
+            ruResponsibility:
+              "Сериализует события и выводит их через загрузочную консоль.",
+          },
+          "kolvrt.kernel.view.supervisor": {
+            ru: "Супервизор",
+            en: "Supervisor",
+            ruResponsibility:
+              "Применяет политику сервиса, готовности и восстановления.",
+          },
+          "kolvrt.kernel.view.counter-service": {
+            ru: "Сервис счётчика",
+            en: "Counter service",
+            ruResponsibility: "Исполняет запросы настоящего сервиса счётчика.",
+          },
+          "kolvrt.kernel.view.native-runtime": {
+            ru: "Библиотека",
+            en: "Native runtime",
+            ruResponsibility:
+              "Общие пользовательские обёртки ABI и кодек/состояние счётчика; библиотека, а не отдельный процесс.",
+          },
+        },
+        edges: {
+          "Initialize physical memory, MMU and heap": {
+            ru: "Инициализирует физическую память, MMU и кучу",
+            ruShort: "инициализирует",
+            enShort: "initialize",
+          },
+          "Install exception vectors and interrupt controller": {
+            ru: "Устанавливает векторы исключений и контроллер прерываний",
+            ruShort: "ставит векторы",
+            enShort: "install vectors",
+          },
+          "Initialize per-CPU state and start secondary CPUs": {
+            ru: "Инициализирует состояние CPU и запускает вторичные CPU",
+            ruShort: "запускает CPU",
+            enShort: "start CPUs",
+          },
+          "Admit initial native images": {
+            ru: "Допускает начальные native-образы",
+            ruShort: "допускает ELF",
+            enShort: "admit ELF",
+          },
+          "Validate and publish reserved console descriptor": {
+            ru: "Проверяет и публикует зарезервированный дескриптор консоли",
+            ruShort: "публикует",
+            enShort: "publish",
+          },
+          "Validated reserved console address configures diagnostics": {
+            ru: "Настраивает диагностику проверенным адресом консоли",
+            ruShort: "настраивает",
+            enShort: "configure",
+          },
+          "Initialize console and emit boot diagnostics": {
+            ru: "Инициализирует консоль и выводит события загрузки",
+            ruShort: "выводит",
+            enShort: "emit",
+          },
+          "Dispatch timer interrupt to scheduler": {
+            ru: "Передаёт прерывание таймера планировщику",
+            ruShort: "тик таймера",
+            enShort: "timer tick",
+          },
+          "Dispatch inter-processor interrupt": {
+            ru: "Передаёт межпроцессорное прерывание",
+            ruShort: "доставляет IPI",
+            enShort: "deliver IPI",
+          },
+          "Require acquired invalidation acknowledgements before reuse": {
+            ru: "Требует полученные подтверждения инвалидации до повторного использования",
+            ruShort: "ждёт ACK",
+            enShort: "await ACK",
+          },
+          "Own and release process user-space frames": {
+            ru: "Владеет фреймами процесса и освобождает их",
+            ruShort: "владеет фреймами",
+            enShort: "own frames",
+          },
+          "Admit task contexts and acquire completion": {
+            ru: "Допускает контексты задач и получает завершение",
+            ruShort: "допускает задачи",
+            enShort: "admit tasks",
+          },
+          "Enforce domain charges and local namespace limits": {
+            ru: "Обеспечивает учёт домена и лимиты локального пространства имён",
+            ruShort: "учитывает ресурсы",
+            enShort: "charge resources",
+          },
+          "Create endpoints and senders under existing grants": {
+            ru: "Создаёт endpoint и отправителей по существующим разрешениям",
+            ruShort: "создаёт endpoint",
+            enShort: "create endpoints",
+          },
+          "Dispatch prepare, execute, copy and finish operations": {
+            ru: "Передаёт подготовку, исполнение, копирование и завершение",
+            ruShort: "исполняет IPC",
+            enShort: "execute IPC",
+          },
+          "Resolve current-task handle and security operations": {
+            ru: "Разрешает дескрипторы текущей задачи и операции безопасности",
+            ruShort: "проверяет права",
+            enShort: "check rights",
+          },
+          "Publish own-task counters through CLOCK": {
+            ru: "Публикует счётчики своей задачи через CLOCK",
+            ruShort: "публикует время",
+            enShort: "publish time",
+          },
+          "Integrate event waits and wakeups with task state": {
+            ru: "Связывает ожидание событий и пробуждение с состоянием задачи",
+            ruShort: "будит / ожидает",
+            enShort: "wait / wake",
+          },
+          "Snapshot and copy initialized user payload bytes": {
+            ru: "Создаёт снимок и копирует инициализированные байты пользователя",
+            ruShort: "копирует",
+            enShort: "copy payload",
+          },
+          "Check namespace rights and charge retained requests": {
+            ru: "Проверяет права пространства имён и учитывает удерживаемые запросы",
+            ruShort: "проверяет права",
+            enShort: "check rights",
+          },
+          "Retain exact wait identities until terminal wakeup": {
+            ru: "Удерживает точную идентичность ожидания до финального пробуждения",
+            ruShort: "держит ожидание",
+            enShort: "retain wait",
+          },
+          "Ping owner CPU for deferred continuations": {
+            ru: "Посылает сигнал CPU владельца для отложенного продолжения",
+            ruShort: "сигналит CPU",
+            enShort: "ping CPU",
+          },
+          "Use protected user-address range boundaries": {
+            ru: "Использует защищённые границы пользовательского адресного пространства",
+            ruShort: "проверяет диапазон",
+            enShort: "check range",
+          },
+          "Dispatch scheduler IPI and secondary polling": {
+            ru: "Передаёт IPI планировщика и опрос вторичного CPU",
+            ruShort: "доставляет IPI",
+            enShort: "deliver IPI",
+          },
+          "Request lifecycle operations within immutable grants": {
+            ru: "Запрашивает операции жизненного цикла в рамках неизменяемых разрешений",
+            ruShort: "управляет процессом",
+            enShort: "manage lifecycle",
+          },
+          "Issue readiness and service control requests": {
+            ru: "Посылает запросы готовности и управления сервисом",
+            ruShort: "проверяет готовность",
+            enShort: "probe readiness",
+          },
+          "Receive, commit and reply through native runtime": {
+            ru: "Получает, фиксирует и отвечает через native runtime",
+            ruShort: "запрос / ответ",
+            enShort: "request / reply",
+          },
+          "Publish lifecycle and generic report events": {
+            ru: "Публикует события жизненного цикла и общие отчёты",
+            ruShort: "публикует события",
+            enShort: "publish events",
+          },
+          "CLOCK reads ticks and counter frequency": {
+            ru: "CLOCK читает тики и частоту счётчика",
+            ruShort: "CLOCK читает тики и частоту счётчика",
+            enShort: "CLOCK reads ticks and counter frequency",
+          },
+          "CLOCK reads accumulated task counters into x2 and x3": {
+            ru: "CLOCK читает накопленные счётчики задачи в x2 и x3",
+            ruShort: "CLOCK читает накопленные счётчики задачи в x2 и x3",
+            enShort: "CLOCK reads accumulated task counters into x2 and x3",
+          },
+          "Decode the native CLOCK operation identifier": {
+            ru: "Декодирует идентификатор native-операции CLOCK",
+            ruShort: "Декодирует идентификатор native-операции CLOCK",
+            enShort: "Decode the native CLOCK operation identifier",
+          },
+          "Dispatch CAPTURE and READ_WINDOW through Observations::call": {
+            ru: "Передаёт CAPTURE и READ_WINDOW в Observations::call",
+            ruShort: "Передаёт CAPTURE и READ_WINDOW в Observations::call",
+            enShort:
+              "Dispatch CAPTURE and READ_WINDOW through Observations::call",
+          },
+          "READ_WINDOW validates captured span with window::checked": {
+            ru: "READ_WINDOW проверяет захваченный диапазон через window::checked",
+            ruShort:
+              "READ_WINDOW проверяет захваченный диапазон через window::checked",
+            enShort: "READ_WINDOW validates captured span with window::checked",
+          },
+          "Decode CAPTURE/READ_WINDOW and initialize bounded replies": {
+            ru: "Декодирует CAPTURE/READ_WINDOW и инициализирует ограниченные ответы",
+            ruShort:
+              "Декодирует CAPTURE/READ_WINDOW и инициализирует ограниченные ответы",
+            enShort:
+              "Decode CAPTURE/READ_WINDOW and initialize bounded replies",
+          },
+          "Task state owns embedded Observations": {
+            ru: "Состояние задачи владеет встроенным Observations",
+            ruShort: "Состояние задачи владеет встроенным Observations",
+            enShort: "Task state owns embedded Observations",
+          },
+          "deadline_after converts durations through duration_ticks": {
+            ru: "deadline_after преобразует длительности через duration_ticks",
+            ruShort:
+              "deadline_after преобразует длительности через duration_ticks",
+            enShort: "deadline_after converts durations through duration_ticks",
+          },
+          "STEP WAIT_OWN_EVENT registers then rechecks pending notification": {
+            ru: "STEP WAIT_OWN_EVENT регистрирует ожидание и повторно проверяет уведомление",
+            ruShort:
+              "STEP WAIT_OWN_EVENT регистрирует ожидание и повторно проверяет уведомление",
+            enShort:
+              "STEP WAIT_OWN_EVENT registers then rechecks pending notification",
+          },
+          "Local ownership entry asserts no ordinary lock is held": {
+            ru: "Вход во владение локальным состоянием проверяет отсутствие обычной блокировки",
+            ruShort:
+              "Вход во владение локальным состоянием проверяет отсутствие обычной блокировки",
+            enShort: "Local ownership entry asserts no ordinary lock is held",
+          },
+          "deferred_local consumes the exact wake after applying or rejecting it":
+            {
+              ru: "deferred_local потребляет точное пробуждение после применения или отклонения",
+              ruShort:
+                "deferred_local потребляет точное пробуждение после применения или отклонения",
+              enShort:
+                "deferred_local consumes the exact wake after applying or rejecting it",
+            },
+          "pending exposes sequence for saved WaitKey and process-generation validation":
+            {
+              ru: "pending предоставляет последовательность для проверки сохранённого WaitKey и поколения процесса",
+              ruShort:
+                "pending предоставляет последовательность для проверки сохранённого WaitKey и поколения процесса",
+              enShort:
+                "pending exposes sequence for saved WaitKey and process-generation validation",
+            },
+          "deferred_local polls retained wake publication and source acknowledgements":
+            {
+              ru: "deferred_local опрашивает удерживаемое пробуждение и подтверждения источника",
+              ruShort:
+                "deferred_local опрашивает удерживаемое пробуждение и подтверждения источника",
+              enShort:
+                "deferred_local polls retained wake publication and source acknowledgements",
+            },
+          "kernel_main obtains the validated boot description through discover_boot":
+            {
+              ru: "kernel_main получает проверенное описание загрузки через discover_boot",
+              ruShort:
+                "kernel_main получает проверенное описание загрузки через discover_boot",
+              enShort:
+                "kernel_main obtains the validated boot description through discover_boot",
+            },
+          "discover_boot bounds the DTB slice, calls discover, and verifies platform constraints":
+            {
+              ru: "discover_boot ограничивает срез DTB, вызывает discover и проверяет ограничения платформы",
+              ruShort:
+                "discover_boot ограничивает срез DTB, вызывает discover и проверяет ограничения платформы",
+              enShort:
+                "discover_boot bounds the DTB slice, calls discover, and verifies platform constraints",
+            },
+          "Physical initializes and reserves Pool extents, then allocates aligned frame ranges":
+            {
+              ru: "Physical инициализирует и резервирует области Pool, затем выделяет выровненные диапазоны кадров",
+              ruShort:
+                "Physical инициализирует и резервирует области Pool, затем выделяет выровненные диапазоны кадров",
+              enShort:
+                "Physical initializes and reserves Pool extents, then allocates aligned frame ranges",
+            },
+          "Physical::release returns frames to Pool only after mapping and retained-charge checks":
+            {
+              ru: "Physical::release возвращает кадры в Pool только после проверок отображений и удерживаемых ресурсов",
+              ruShort:
+                "Physical::release возвращает кадры в Pool только после проверок отображений и удерживаемых ресурсов",
+              enShort:
+                "Physical::release returns frames to Pool only after mapping and retained-charge checks",
+            },
+          "OwnedUserSpace::new allocates an owner-bound ASID lease for the process slot":
+            {
+              ru: "OwnedUserSpace::new выделяет привязанную к владельцу аренду ASID для слота процесса",
+              ruShort:
+                "OwnedUserSpace::new выделяет привязанную к владельцу аренду ASID для слота процесса",
+              enShort:
+                "OwnedUserSpace::new allocates an owner-bound ASID lease for the process slot",
+            },
+          "reclaim and unpublished rollback release the ASID lease before returning owned frames":
+            {
+              ru: "reclaim и откат неопубликованного пространства освобождают аренду ASID до возврата принадлежащих пространству кадров",
+              ruShort:
+                "reclaim и откат неопубликованного пространства освобождают аренду ASID до возврата принадлежащих пространству кадров",
+              enShort:
+                "reclaim and unpublished rollback release the ASID lease before returning owned frames",
+            },
+          "vectors installs the assembly vector-table address in VBAR_EL1": {
+            ru: "vectors устанавливает адрес таблицы векторов из ассемблера в VBAR_EL1",
+            ruShort:
+              "vectors устанавливает адрес таблицы векторов из ассемблера в VBAR_EL1",
+            enShort:
+              "vectors installs the assembly vector-table address in VBAR_EL1",
+          },
+          "IRQ vector entries save context and call interrupt_entry": {
+            ru: "Входы IRQ-векторов сохраняют контекст и вызывают interrupt_entry",
+            ruShort:
+              "Входы IRQ-векторов сохраняют контекст и вызывают interrupt_entry",
+            enShort: "IRQ vector entries save context and call interrupt_entry",
+          },
+          "interrupt_entry reads acknowledge and calls end_irq for serviced interrupts":
+            {
+              ru: "interrupt_entry читает acknowledge и вызывает end_irq для обработанных прерываний",
+              ruShort:
+                "interrupt_entry читает acknowledge и вызывает end_irq для обработанных прерываний",
+              enShort:
+                "interrupt_entry reads acknowledge and calls end_irq for serviced interrupts",
+            },
+          "ping reads the target CPU affinity for SGI delivery": {
+            ru: "ping читает affinity целевого CPU для отправки SGI",
+            ruShort: "ping читает affinity целевого CPU для отправки SGI",
+            enShort: "ping reads the target CPU affinity for SGI delivery",
+          },
+          "secondary_main publishes ONLINE, post-invalidation tlb_ack and final QUIESCENT state":
+            {
+              ru: "secondary_main публикует ONLINE, tlb_ack после инвалидации и окончательное состояние QUIESCENT",
+              ruShort:
+                "secondary_main публикует ONLINE, tlb_ack после инвалидации и окончательное состояние QUIESCENT",
+              enShort:
+                "secondary_main publishes ONLINE, post-invalidation tlb_ack and final QUIESCENT state",
+            },
+          "request_invalidation and acknowledged acquire remote state and acknowledgement before retirement completes":
+            {
+              ru: "request_invalidation и acknowledged читают удалённое состояние и подтверждение с Acquire до завершения вывода из обращения",
+              ruShort:
+                "request_invalidation и acknowledged читают удалённое состояние и подтверждение с Acquire до завершения вывода из обращения",
+              enShort:
+                "request_invalidation and acknowledged acquire remote state and acknowledgement before retirement completes",
+            },
+          "Dispatch enters Local::with for owned queue mutation and Local::inspect after completion":
+            {
+              ru: "Диспетчеризация входит в Local::with для изменения очереди владельцем и в Local::inspect после завершения",
+              ruShort:
+                "Диспетчеризация входит в Local::with для изменения очереди владельцем и в Local::inspect после завершения",
+              enShort:
+                "Dispatch enters Local::with for owned queue mutation and Local::inspect after completion",
+            },
+          "Local gates prepare, publish, start, mutate, inspect and complete through Ownership":
+            {
+              ru: "Local проверяет prepare, publish, start, mutate, inspect и complete через Ownership",
+              ruShort:
+                "Local проверяет prepare, publish, start, mutate, inspect и complete через Ownership",
+              enShort:
+                "Local gates prepare, publish, start, mutate, inspect and complete through Ownership",
+            },
+          "Local retains State task contexts behind exclusive ownership-scoped access":
+            {
+              ru: "Local удерживает контексты задач State за исключительным доступом в рамках владения",
+              ruShort:
+                "Local удерживает контексты задач State за исключительным доступом в рамках владения",
+              enShort:
+                "Local retains State task contexts behind exclusive ownership-scoped access",
+            },
+          "deferred_local publishes exact IPC readiness through Task::publish_ipc_ready":
+            {
+              ru: "deferred_local публикует готовность точного ожидания IPC через Task::publish_ipc_ready",
+              ruShort:
+                "deferred_local публикует готовность точного ожидания IPC через Task::publish_ipc_ready",
+              enShort:
+                "deferred_local publishes exact IPC readiness through Task::publish_ipc_ready",
+            },
+          "Registry reserves, prepares, admits and reclaims through Table transitions":
+            {
+              ru: "Registry резервирует, подготавливает, допускает и освобождает через переходы Table",
+              ruShort:
+                "Registry резервирует, подготавливает, допускает и освобождает через переходы Table",
+              enShort:
+                "Registry reserves, prepares, admits and reclaims through Table transitions",
+            },
+          "Image admission parses ELF and checks the accepted load segment": {
+            ru: "Допуск образа разбирает ELF и проверяет допустимый загружаемый сегмент",
+            ruShort:
+              "Допуск образа разбирает ELF и проверяет допустимый загружаемый сегмент",
+            enShort:
+              "Image admission parses ELF and checks the accepted load segment",
+          },
+          "Granted lifecycle commands create, bind, start and stop process instances":
+            {
+              ru: "Разрешённые команды жизненного цикла создают, связывают, запускают и останавливают экземпляры процессов",
+              ruShort:
+                "Разрешённые команды жизненного цикла создают, связывают, запускают и останавливают экземпляры процессов",
+              enShort:
+                "Granted lifecycle commands create, bind, start and stop process instances",
+            },
+          "Scope installation validates immutable bootstrap grants": {
+            ru: "Проверяет неизменяемые разрешения загрузки при установке области управления",
+            ruShort:
+              "Проверяет неизменяемые разрешения загрузки при установке области управления",
+            enShort: "Scope installation validates immutable bootstrap grants",
+          },
+          "Native boot creates the root and acquires registry completion": {
+            ru: "Загрузка создаёт корневой процесс и получает подтверждение завершения через реестр",
+            ruShort:
+              "Загрузка создаёт корневой процесс и получает подтверждение завершения через реестр",
+            enShort:
+              "Native boot creates the root and acquires registry completion",
+          },
+          "Native boot installs the grant scope and services captured lifecycle commands":
+            {
+              ru: "Нативная загрузка устанавливает scope полномочий и обслуживает захваченные команды жизненного цикла",
+              ruShort:
+                "Нативная загрузка устанавливает scope полномочий и обслуживает захваченные команды жизненного цикла",
+              enShort:
+                "Native boot installs the grant scope and services captured lifecycle commands",
+            },
+          "Access validation checks bounded user ranges before translation and copying":
+            {
+              ru: "Проверка Access проверяет ограниченные пользовательские диапазоны до трансляции и копирования",
+              ruShort:
+                "Проверка Access проверяет ограниченные пользовательские диапазоны до трансляции и копирования",
+              enShort:
+                "Access validation checks bounded user ranges before translation and copying",
+            },
+          "Copied local handle requests resolve, transfer and close namespace entries":
+            {
+              ru: "Скопированные локальные запросы handles разрешают, передают и закрывают записи namespace",
+              ruShort:
+                "Скопированные локальные запросы handles разрешают, передают и закрывают записи namespace",
+              enShort:
+                "Copied local handle requests resolve, transfer and close namespace entries",
+            },
+          "Event notification validates the caller namespace and admits or revokes signal authority":
+            {
+              ru: "Уведомление Event проверяет namespace вызывающего и допускает либо отзывает полномочие сигнала",
+              ruShort:
+                "Уведомление Event проверяет namespace вызывающего и допускает либо отзывает полномочие сигнала",
+              enShort:
+                "Event notification validates the caller namespace and admits or revokes signal authority",
+            },
+          "Accepted event work charges consumer requests, service requests and queue capacity":
+            {
+              ru: "Принятая работа Event учитывает запросы потребителя, службы и ёмкость очереди",
+              ruShort:
+                "Принятая работа Event учитывает запросы потребителя, службы и ёмкость очереди",
+              enShort:
+                "Accepted event work charges consumer requests, service requests and queue capacity",
+            },
+          "Namespace domain binding validates the owner and charges retained handles":
+            {
+              ru: "Привязка домена namespace проверяет владельца и учитывает удерживаемые handles",
+              ruShort:
+                "Привязка домена namespace проверяет владельца и учитывает удерживаемые handles",
+              enShort:
+                "Namespace domain binding validates the owner and charges retained handles",
+            },
+          "Trusted endpoint creation and rollback enter endpoint-local storage":
+            {
+              ru: "Доверенное создание и откат endpoint входят в локальное хранилище endpoint",
+              ruShort:
+                "Доверенное создание и откат endpoint входят в локальное хранилище endpoint",
+              enShort:
+                "Trusted endpoint creation and rollback enter endpoint-local storage",
+            },
+          "Reap requires actual deferred mailbox quiescence": {
+            ru: "Освобождение требует фактического покоя отложенных mailbox",
+            ruShort:
+              "Освобождение требует фактического покоя отложенных mailbox",
+            enShort: "Reap requires actual deferred mailbox quiescence",
+          },
+          "Endpoint cells retain concrete state under acquired nonblocking permits":
+            {
+              ru: "Ячейки endpoint удерживают конкретное состояние под полученными неблокирующими разрешениями",
+              ruShort:
+                "Ячейки endpoint удерживают конкретное состояние под полученными неблокирующими разрешениями",
+              enShort:
+                "Endpoint cells retain concrete state under acquired nonblocking permits",
+            },
+          "Native continuations resolve exact receipts and access endpoints through storage permits":
+            {
+              ru: "Нативные продолжения разрешают точные receipts и обращаются к endpoint через разрешения хранилища",
+              ruShort:
+                "Нативные продолжения разрешают точные receipts и обращаются к endpoint через разрешения хранилища",
+              enShort:
+                "Native continuations resolve exact receipts and access endpoints through storage permits",
+            },
+          "Native execution submits, receives, commits, replies and collects through Endpoint methods":
+            {
+              ru: "Нативное исполнение отправляет, получает, фиксирует, отвечает и собирает через методы Endpoint",
+              ruShort:
+                "Нативное исполнение отправляет, получает, фиксирует, отвечает и собирает через методы Endpoint",
+              enShort:
+                "Native execution submits, receives, commits, replies and collects through Endpoint methods",
+            },
+          "Deferred polling visits endpoint cells outside scheduler storage": {
+            ru: "Отложенный опрос обходит ячейки endpoint вне хранилища scheduler",
+            ruShort:
+              "Отложенный опрос обходит ячейки endpoint вне хранилища scheduler",
+            enShort:
+              "Deferred polling visits endpoint cells outside scheduler storage",
+          },
+          "Deferred polling expires requests and publishes or acknowledges retained wakes":
+            {
+              ru: "Отложенный опрос завершает просроченные запросы и публикует либо подтверждает удерживаемые пробуждения",
+              ruShort:
+                "Отложенный опрос завершает просроченные запросы и публикует либо подтверждает удерживаемые пробуждения",
+              enShort:
+                "Deferred polling expires requests and publishes or acknowledges retained wakes",
+            },
+          "discover_boot obtains the validated platform description through discover":
+            {
+              ru: "discover_boot получает проверенное описание платформы через discover",
+              ruShort:
+                "discover_boot получает проверенное описание платформы через discover",
+              enShort:
+                "discover_boot obtains the validated platform description through discover",
+            },
+          "After complete FDT validation, discover constructs the immutable console snapshot with Descriptor::validated":
+            {
+              ru: "После полной проверки FDT discover создаёт неизменяемый снимок консоли через Descriptor::validated",
+              ruShort:
+                "После полной проверки FDT discover создаёт неизменяемый снимок консоли через Descriptor::validated",
+              enShort:
+                "After complete FDT validation, discover constructs the immutable console snapshot with Descriptor::validated",
+            },
+          "Boot reads boot_console, observes its identity and resolves the descriptor before publishing console fields":
+            {
+              ru: "Загрузка получает boot_console, регистрирует идентичность и разрешает дескриптор перед публикацией полей консоли",
+              ruShort:
+                "Загрузка получает boot_console, регистрирует идентичность и разрешает дескриптор перед публикацией полей консоли",
+              enShort:
+                "Boot reads boot_console, observes its identity and resolves the descriptor before publishing console fields",
+            },
+          "recover delegates to recover_service, which requires observed terminal state before replacement":
+            {
+              ru: "recover вызывает recover_service, который требует наблюдаемое завершение перед заменой сервиса",
+              ruShort:
+                "recover вызывает recover_service, который требует наблюдаемое завершение перед заменой сервиса",
+              enShort:
+                "recover delegates to recover_service, which requires observed terminal state before replacement",
+            },
+          "The service receives, commits and replies through native::call operations 2, 3 and 4":
+            {
+              ru: "Сервис получает, фиксирует и отвечает через native::call с операциями 2, 3 и 4",
+              ruShort:
+                "Сервис получает, фиксирует и отвечает через native::call с операциями 2, 3 и 4",
+              enShort:
+                "The service receives, commits and replies through native::call operations 2, 3 and 4",
+            },
+          "status, boot_banner and enabled machine event framing submit format arguments to print":
+            {
+              ru: "status, boot_banner и включённое форматирование машинных событий передают аргументы вывода в print",
+              ruShort:
+                "status, boot_banner и включённое форматирование машинных событий передают аргументы вывода в print",
+              enShort:
+                "status, boot_banner and enabled machine event framing submit format arguments to print",
+            },
+          "print invokes Writer only after secondary-CPU rejection and bounded Length validation":
+            {
+              ru: "print вызывает Writer только после отклонения вторичного CPU и проверки ограничения Length",
+              ruShort:
+                "print вызывает Writer только после отклонения вторичного CPU и проверки ограничения Length",
+              enShort:
+                "print invokes Writer only after secondary-CPU rejection and bounded Length validation",
+            },
+          "Writer returns fmt::Error for unavailable UART or exhausted polling; print increments DROPPED":
+            {
+              ru: "Writer возвращает fmt::Error при недоступном UART или исчерпании опроса; print увеличивает DROPPED",
+              ruShort:
+                "Writer возвращает fmt::Error при недоступном UART или исчерпании опроса; print увеличивает DROPPED",
+              enShort:
+                "Writer returns fmt::Error for unavailable UART or exhausted polling; print increments DROPPED",
+            },
+          "Decode the exact 16-byte CounterRequest, apply it to private Counter state and encode counter_reply":
+            {
+              ru: "Декодирует CounterRequest ровно из 16 байт, применяет его к приватному Counter и кодирует counter_reply",
+              ruShort:
+                "Декодирует CounterRequest ровно из 16 байт, применяет его к приватному Counter и кодирует counter_reply",
+              enShort:
+                "Decode the exact 16-byte CounterRequest, apply it to private Counter state and encode counter_reply",
+            },
+          "Access interrupt-controller registers through bounded MMIO": {
+            ru: "Обращается к регистрам контроллера прерываний через ограниченный MMIO",
+            ruShort: "Доступ MMIO",
+            enShort: "MMIO access",
+          },
+          "Write console bytes through bounded MMIO": {
+            ru: "Записывает байты консоли через ограниченный MMIO",
+            ruShort: "Запись MMIO",
+            enShort: "MMIO write",
+          },
+          "Lower-EL vectors pass saved context and entry ticks to user_trap": {
+            ru: "Векторы нижнего уровня передают сохранённый контекст и тики входа в user_trap",
+            ruShort: "Кадр EL0",
+            enShort: "Saved EL0 frame",
+          },
+          "Checked context entry calls run_user to restore the retained EL0 context":
+            {
+              ru: "Вход с проверенным контекстом вызывает run_user для восстановления удерживаемого контекста EL0",
+              ruShort: "Возврат в EL0",
+              enShort: "Restore EL0",
+            },
+          "sync_vector passes ESR, FAR and saved PC to synchronous": {
+            ru: "sync_vector передаёт ESR, FAR и сохранённый PC в synchronous",
+            ruShort: "Исключение EL1",
+            enShort: "EL1 sync fault",
+          },
+          "fatal_vector calls fatal_exception with exception registers": {
+            ru: "fatal_vector вызывает fatal_exception с регистрами исключения",
+            ruShort: "Фатальный вектор",
+            enShort: "Fatal vector",
+          },
+          "An unrecoverable ordinary synchronous exception enters fatal_exception":
+            {
+              ru: "Невосстановимое обычное синхронное исключение передаётся в fatal_exception",
+              ruShort: "Отказ восстановления",
+              enShort: "Recovery rejected",
+            },
+          "An unexpected interrupt ID enters fatal_exception": {
+            ru: "Неожиданный ID прерывания передаётся в fatal_exception",
+            ruShort: "Неожиданный IRQ",
+            enShort: "Unexpected IRQ",
+          },
+          "user_trap decodes the exception and calls scheduler::trap with its saved frame":
+            {
+              ru: "user_trap декодирует исключение и вызывает scheduler::trap с сохранённым кадром",
+              ruShort: "Передать исключение",
+              enShort: "Dispatch trap",
+            },
+          "Scheduler enters the selected retained context through context::enter":
+            {
+              ru: "Планировщик входит в выбранный удерживаемый контекст через context::enter",
+              ruShort: "Запустить задачу",
+              enShort: "Enter selected task",
+            },
+          "synchronous asks recover to validate the exact active copy fault and return its resume PC":
+            {
+              ru: "synchronous вызывает recover для проверки точного сбоя активного копирования и получения PC восстановления",
+              ruShort: "Восстановить копирование",
+              enShort: "Recover copy fault",
+            },
+          "Primary-CPU fatal handling emits the fatal event and exception status":
+            {
+              ru: "Обработка фатального исключения на основном CPU выводит событие fatal и статус исключения",
+              ruShort: "Диагностика отказа",
+              enShort: "Fatal diagnostics",
+            },
+          "A fatal exception on the secondary CPU invokes secondary_failure": {
+            ru: "Фатальное исключение на вторичном CPU вызывает secondary_failure",
+            ruShort: "Остановить CPU",
+            enShort: "Stop failed CPU",
+          },
+          "fatal_exception identifies the secondary CPU before selecting the failure path":
+            {
+              ru: "fatal_exception определяет вторичный CPU перед выбором пути отказа",
+              ruShort: "Выбрать путь отказа",
+              enShort: "Select CPU failure path",
+            },
+          "Context entry rejects a live per-CPU scheduler borrow before ERET": {
+            ru: "Вход в контекст запрещает активное заимствование scheduler текущего CPU перед ERET",
+            ruShort: "Проверить заимствование",
+            enShort: "Check owner borrow",
+          },
+          "Context entry asserts that no ordinary kernel lock crosses user entry":
+            {
+              ru: "Вход в контекст проверяет отсутствие обычной блокировки ядра при входе в пользователя",
+              ruShort: "Проверить отсутствие lock",
+              enShort: "Check unlocked entry",
+            },
+          "kernel_main constructs the initial Registry": {
+            ru: "kernel_main создаёт начальный Registry",
+            ruShort: "Создать registry",
+            enShort: "Create registry",
+          },
+          "Physical allocation and release require the primary CPU": {
+            ru: "Выделение и освобождение Physical требуют основной CPU",
+            ruShort: "Проверить CPU0",
+            enShort: "Check CPU0 owner",
+          },
+          "Memory table and heap operations acquire ordinary Lock guards": {
+            ru: "Операции с таблицами памяти и heap получают обычные guards Lock",
+            ruShort: "Защитить таблицы и heap",
+            enShort: "Lock tables and heap",
+          },
+          "ASID allocation, retirement and release check the observed CPU owner":
+            {
+              ru: "Выделение, вывод из обращения и освобождение ASID проверяют текущий CPU-владелец",
+              ruShort: "Проверить владельца ASID",
+              enShort: "Check ASID owner",
+            },
+          "Interrupt initialization checks CPU0 and timer delivery updates the current CPU counter":
+            {
+              ru: "Инициализация прерываний проверяет CPU0, доставка таймера обновляет счётчик текущего CPU",
+              ruShort: "Счётчик своего CPU",
+              enShort: "Own timer counter",
+            },
+          "secondary_main installs vectors and masks or unmasks IRQ around CPU lifecycle":
+            {
+              ru: "secondary_main устанавливает векторы и маскирует либо разрешает IRQ при изменении состояния CPU",
+              ruShort: "Установить векторы",
+              enShort: "Install local vectors",
+            },
+          "secondary_main initializes its local GIC interface": {
+            ru: "secondary_main инициализирует локальный интерфейс GIC",
+            ruShort: "Инициализировать GIC",
+            enShort: "Initialize local GIC",
+          },
+          "SMP startup reads kernel bounds before cache publication": {
+            ru: "Запуск SMP читает границы ядра перед публикацией кэша",
+            ruShort: "Получить границы ядра",
+            enShort: "Read kernel bounds",
+          },
+          "Scheduler notifies remote owners and waits for actual arrival or completion publication":
+            {
+              ru: "Планировщик уведомляет удалённых владельцев и ждёт фактической публикации прибытия либо завершения",
+              ruShort: "Согласовать владельцев",
+              enShort: "Coordinate owners",
+            },
+          "Scheduler selects owner-local queues from the observed CPU identity":
+            {
+              ru: "Планировщик выбирает очередь владельца по наблюдаемой идентичности CPU",
+              ruShort: "Выбрать очередь CPU",
+              enShort: "Select owner queue",
+            },
+          "Local scopes atomically enter and leave the per-CPU scheduler_borrow guard":
+            {
+              ru: "Области Local атомарно устанавливают и снимают scheduler_borrow текущего CPU",
+              ruShort: "Защитить заимствование",
+              enShort: "Guard CPU borrow",
+            },
+          "Scheduler obtains the native table root and validates the current process space":
+            {
+              ru: "Планировщик получает корень native-таблиц и проверяет текущее пространство процесса",
+              ruShort: "Проверить корень",
+              enShort: "Check retained root",
+            },
+          "Scheduler retires pinned ASID leases before publishing completion": {
+            ru: "Планировщик выводит закреплённые аренды ASID из обращения до публикации завершения",
+            ruShort: "Завершить аренду ASID",
+            enShort: "Retire ASID lease",
+          },
+          "Scheduler computes quantum deadlines through deadline_after": {
+            ru: "Планировщик вычисляет deadlines квантов через deadline_after",
+            ruShort: "Рассчитать deadline",
+            enShort: "Compute quantum deadline",
+          },
+          "Lifecycle SVC dispatch captures the current task command": {
+            ru: "Диспетчеризация lifecycle SVC захватывает команду текущей задачи",
+            ruShort: "Принять lifecycle-команду",
+            enShort: "Capture lifecycle command",
+          },
+          "Local storage entry rejects an ordinary lock held across scheduler ownership":
+            {
+              ru: "Вход в Local запрещает обычную блокировку при владении хранилищем scheduler",
+              ruShort: "Проверить порядок lock",
+              enShort: "Check lock order",
+            },
+          "initialize_mmu activates initialized owned page tables": {
+            ru: "initialize_mmu включает подготовленные принадлежащие ядру таблицы страниц",
+            ruShort: "Включить MMU",
+            enShort: "Enable MMU",
+          },
+          "enable_mmu initializes ASID capability; root activation encodes or checks ASID use":
+            {
+              ru: "enable_mmu инициализирует поддержку ASID; включение корня кодирует либо проверяет использование ASID",
+              ruShort: "Настроить ASID",
+              enShort: "Configure ASID use",
+            },
+          "retire performs owner-local ASID invalidation before publishing retirement":
+            {
+              ru: "retire выполняет локальную инвалидацию ASID до публикации вывода из обращения",
+              ruShort: "Инвалидировать ASID",
+              enShort: "Invalidate retired ASID",
+            },
+          "UserSpace image publication cleans written code and invalidates instruction caches":
+            {
+              ru: "Публикация образа UserSpace очищает записанный код и инвалидирует кэш инструкций",
+              ruShort: "Опубликовать код",
+              enShort: "Publish code bytes",
+            },
+          "SMP cleans bootstrap memory and completes local TLBI before publishing acknowledgements":
+            {
+              ru: "SMP очищает загрузочную память и завершает локальный TLBI до публикации подтверждений",
+              ruShort: "Публикация и TLBI",
+              enShort: "Publish and invalidate",
+            },
+          "SMP starts, observes and stops secondary CPUs through PSCI": {
+            ru: "SMP запускает, наблюдает и останавливает вторичные CPU через PSCI",
+            ruShort: "Управлять вторичным CPU",
+            enShort: "Manage secondary CPU",
+          },
+          "secondary_main enables the retained boot address space": {
+            ru: "secondary_main включает удерживаемое загрузочное адресное пространство",
+            ruShort: "Включить MMU CPU1",
+            enShort: "Enable secondary MMU",
+          },
+          "Scheduler activates selected user roots and restores the native root":
+            {
+              ru: "Планировщик включает выбранные пользовательские корни и восстанавливает native-корень",
+              ruShort: "Сменить пространство",
+              enShort: "Switch address space",
+            },
+          "Scheduler programs absolute timer deadlines and stops idle timers": {
+            ru: "Планировщик задаёт абсолютные deadlines таймера и останавливает неиспользуемый таймер",
+            ruShort: "Настроить таймер",
+            enShort: "Program scheduling timer",
+          },
+          "Timer IRQ handling stops the architectural timer before scheduler notification":
+            {
+              ru: "Обработка IRQ таймера останавливает архитектурный таймер до уведомления scheduler",
+              ruShort: "Остановить таймер",
+              enShort: "Stop delivered timer",
+            },
+          "Secondary startup, shutdown and failure stop the architectural timer":
+            {
+              ru: "Запуск, остановка и отказ вторичного CPU останавливают архитектурный таймер",
+              ruShort: "Остановить таймер CPU1",
+              enShort: "Stop secondary timer",
+            },
+          "Primary fatal handling stops the timer before diagnostics and shutdown":
+            {
+              ru: "Фатальный обработчик основного CPU останавливает таймер до диагностики и выключения",
+              ruShort: "Остановить таймер",
+              enShort: "Stop fatal-path timer",
+            },
+          "Primary fatal handling requests PSCI system shutdown after diagnostics":
+            {
+              ru: "Фатальный обработчик основного CPU запрашивает выключение системы PSCI после диагностики",
+              ruShort: "Выключить систему",
+              enShort: "Shut down failed system",
+            },
+          "Completed boot validation requests system poweroff": {
+            ru: "Завершённая загрузочная проверка запрашивает выключение системы",
+            ruShort: "Завершить проверку",
+            enShort: "Finish boot validation",
+          },
+          "user_trap reads ESR and only valid FAR; context entry checks IRQ masking":
+            {
+              ru: "user_trap читает ESR и только допустимый FAR; вход в контекст проверяет маскирование IRQ",
+              ruShort: "Декодировать исключение",
+              enShort: "Decode exception state",
+            },
+          "ping delivers an SGI to the validated target CPU affinity": {
+            ru: "ping отправляет SGI по проверенной affinity целевого CPU",
+            ruShort: "Послать SGI владельцу",
+            enShort: "Send owner SGI",
+          },
+          "Scheduler masks IRQ for ownership transitions and uses ipc_idle for interrupt-driven idle":
+            {
+              ru: "Планировщик маскирует IRQ при переходах владения и использует ipc_idle для ожидания прерывания",
+              ruShort: "Управлять IRQ scheduler",
+              enShort: "Manage scheduler IRQ state",
+            },
+          "Primary fatal handling masks IRQ before shutdown": {
+            ru: "Фатальный обработчик основного CPU маскирует IRQ перед выключением",
+            ruShort: "Маскировать IRQ",
+            enShort: "Mask fatal-path IRQ",
+          },
+          "Copy the caller handle request through Access::current and copy_from_user":
+            {
+              ru: "Копирование запроса handles вызывающего через Access::current и copy_from_user",
+              ruShort: "Снимок запроса",
+              enShort: "Snapshot request",
+            },
+          "Copy the Event notification request through the protected user boundary":
+            {
+              ru: "Копирование запроса уведомления Event через защищённую пользовательскую границу",
+              ruShort: "Снимок уведомления",
+              enShort: "Snapshot notification",
+            },
+          "Shared Event references admit signals and delegated references or revoke future admission":
+            {
+              ru: "Ссылки общего Event допускают сигналы и делегированные ссылки либо отзывают будущий допуск",
+              ruShort: "Допуск или отзыв",
+              enShort: "Admit or revoke",
+            },
+          "Accepted Event work finishes its retained signal after the service effect":
+            {
+              ru: "Принятая работа Event завершает удерживаемый сигнал после эффекта службы",
+              ruShort: "Завершить сигнал",
+              enShort: "Finish signal",
+            },
+          "Endpoint handles check open service identity, admit delegation and revoke sender admission":
+            {
+              ru: "Handles endpoint проверяют открытую идентичность службы, допускают делегирование и отзывают допуск отправителя",
+              ruShort: "Права endpoint",
+              enShort: "Endpoint authority",
+            },
+          "Access checks the executing task and current address-space context through copy_context":
+            {
+              ru: "Access проверяет исполняемую задачу и текущее адресное пространство через copy_context",
+              ruShort: "Проверить задачу",
+              enShort: "Validate current task",
+            },
+          "CopyGuard and recovery select the current CPU recovery record through percpu::id":
+            {
+              ru: "CopyGuard и восстановление выбирают запись восстановления текущего CPU через percpu::id",
+              ruShort: "Выбрать CPU-запись",
+              enShort: "Select CPU recovery",
+            },
+          "Registry context_contract requires the boot CPU identity": {
+            ru: "context_contract реестра требует идентичность загрузочного CPU",
+            ruShort: "Проверить CPU владельца",
+            enShort: "Check owner CPU",
+          },
+          "Registry context_contract requires masked IRQ state": {
+            ru: "context_contract реестра требует маскированного состояния IRQ",
+            ruShort: "Проверить IRQ-контекст",
+            enShort: "Check IRQ context",
+          },
+          "Lifecycle replacement and retirement discard endpoints and require IPC reap quiescence":
+            {
+              ru: "Замена и вывод из обращения уничтожают endpoints и требуют покоя при IPC reap",
+              ruShort: "Освободить endpoints",
+              enShort: "Retire endpoints",
+            },
+          "Lifecycle service and retirement poll pending endpoint wake and acknowledgement work":
+            {
+              ru: "Обслуживание и вывод жизненного цикла опрашивают ожидающие пробуждения и подтверждения endpoint",
+              ruShort: "Обработать IPC",
+              enShort: "Drain IPC work",
+            },
+          "Native boot finalization invokes IPC reap after completion": {
+            ru: "Завершение нативной загрузки вызывает IPC reap после завершения процессов",
+            ruShort: "Освободить после завершения",
+            enShort: "Reap after completion",
+          },
+          "Native boot finalization polls deferred endpoint work before resource checks":
+            {
+              ru: "Завершение нативной загрузки опрашивает отложенную работу endpoint перед проверкой ресурсов",
+              ruShort: "Финальный опрос IPC",
+              enShort: "Final IPC drain",
+            },
+          "Native boot reads live_domains for final resource-accounting evidence":
+            {
+              ru: "Нативная загрузка читает live_domains для итоговых свидетельств учёта ресурсов",
+              ruShort: "Проверить живые домены",
+              enShort: "Observe live domains",
+            },
+          "Registry dispatch and reclamation publish machine events through event framing":
+            {
+              ru: "Диспетчеризация и освобождение реестра публикуют машинные события через форматирование событий",
+              ruShort: "События реестра",
+              enShort: "Publish registry events",
+            },
+          "Endpoint storage acquisition asserts no ordinary lock is held": {
+            ru: "Захват хранилища endpoint проверяет отсутствие удерживаемой обычной блокировки",
+            ruShort: "Проверить блокировки",
+            enShort: "Check lock exclusion",
+          },
+          "Storage invariant violations reject scheduler overlap or nonquiescent removal":
+            {
+              ru: "Нарушения инвариантов хранилища отклоняют пересечение со scheduler или удаление до покоя",
+              ruShort: "Отклонить неверное состояние",
+              enShort: "Reject invalid storage state",
+            },
+          "Endpoint permits check primary CPU and current CPU borrow and lock state":
+            {
+              ru: "Разрешения endpoint проверяют основной CPU и состояние заимствования и блокировок текущего CPU",
+              ruShort: "Проверить CPU-владение",
+              enShort: "Check CPU-local ownership",
+            },
+          "Endpoint permit acquisition requires masked IRQ state": {
+            ru: "Получение разрешения endpoint требует маскированного состояния IRQ",
+            ruShort: "Проверить IRQ-контекст",
+            enShort: "Check IRQ context",
+          },
+          "Deferred endpoint polling reads counter ticks for actual request expiry":
+            {
+              ru: "Отложенный опрос endpoint читает счётчик времени для фактического истечения запросов",
+              ruShort: "Прочитать время",
+              enShort: "Read expiry time",
+            },
+          "Native IPC preparation maps handle errors through the public status adapter":
+            {
+              ru: "Подготовка нативного IPC преобразует ошибки handles через адаптер статуса",
+              ruShort: "Преобразовать статус",
+              enShort: "Map handle status",
+            },
+          "Event notification returns handle-domain failures through the shared status adapter":
+            {
+              ru: "Уведомление Event возвращает ошибки handles и доменов через общий адаптер статуса",
+              ruShort: "Статус уведомления",
+              enShort: "Map notification status",
+            },
+          "Access::validate uses architectural user_translation for each covered page and requested access direction":
+            {
+              ru: "Access::validate использует архитектурную user_translation для каждой покрытой страницы и требуемого направления доступа",
+              ruShort: "Проверить права страниц",
+              enShort: "Check page permissions",
+            },
+          "Snapshot input and output invoke user_copy_in and user_copy_out with exact copied-byte results":
+            {
+              ru: "Копирование входа и выхода вызывает user_copy_in и user_copy_out с точным результатом числа скопированных байтов",
+              ruShort: "Копировать защищённые байты",
+              enShort: "Copy protected bytes",
+            },
+          "Recovery accepts only the exact load/store fault labels and returns user_copy_resume":
+            {
+              ru: "Восстановление принимает только точные метки ошибочных load/store и возвращает user_copy_resume",
+              ruShort: "Выбрать восстановление",
+              enShort: "Resolve copy fixup",
+            },
+          "service_timer reads the architectural counter to accumulate timer history":
+            {
+              ru: "service_timer читает аппаратный счётчик для накопления истории таймера",
+              ruShort: "Читает таймер",
+              enShort: "Read timer counter",
+            },
+          "Scheduler arms quantum deadlines and reads counter values for task execution accounting":
+            {
+              ru: "Планировщик задаёт сроки квантов и читает счётчик для учёта исполнения задач",
+              ruShort: "Измеряет исполнение",
+              enShort: "Time scheduling",
+            },
+          "The timer trap invokes Observations::service_timer for the current task":
+            {
+              ru: "Обработчик таймера вызывает service_timer для наблюдений текущей задачи",
+              ruShort: "Обновляет историю",
+              enShort: "Update timer history",
+            },
+          "Deferred IPC polling reads current ticks before expiring pending requests":
+            {
+              ru: "Отложенный опрос IPC читает время перед завершением просроченных запросов",
+              ruShort: "Проверяет время",
+              enShort: "Read expiry time",
+            },
+          "print rejects secondary-CPU output using percpu::is_secondary": {
+            ru: "print проверяет принадлежность CPU и отклоняет вывод со вторичного процессора",
+            ruShort: "Проверяет CPU",
+            enShort: "Check console owner",
+          },
+          "report_secondary_panic submits the retained secondary panic location to diagnostics::status":
+            {
+              ru: "report_secondary_panic передаёт сохранённое место паники вторичного CPU в диагностику",
+              ruShort: "Сообщает панику",
+              enShort: "Report secondary panic",
+            },
+          "Registry emits enabled diagnostic transition records and ordinary rejection events":
+            {
+              ru: "Реестр выводит включённые диагностические записи переходов и события отказа",
+              ruShort: "Сообщает состояние",
+              enShort: "Report process state",
+            },
+          "Scheduler rejection paths publish machine events through diagnostic framing":
+            {
+              ru: "Отказы планировщика публикуют машинные события через диагностический вывод",
+              ruShort: "Сообщает отказ",
+              enShort: "Report rejection",
+            },
+          "Supervisor policy invokes native lifecycle, IPC, CLOCK, REPORT and FINISH wrappers":
+            {
+              ru: "Политика супервизора вызывает обёртки жизненного цикла, IPC, времени, отчёта и завершения",
+              ruShort: "Вызывает native ABI",
+              enShort: "Call native ABI",
+            },
+          "Recovery invokes native lifecycle, CLOCK and RPC wrappers after observing service state":
+            {
+              ru: "Восстановление вызывает обёртки жизненного цикла, времени и RPC после проверки состояния сервиса",
+              ruShort: "Восстанавливает через ABI",
+              enShort: "Recover through ABI",
+            },
+          "The counter loop receives, commits, replies and exits through native ABI wrappers":
+            {
+              ru: "Цикл счётчика получает, фиксирует, отвечает и завершает процесс через native ABI",
+              ruShort: "Вызывает ABI сервиса",
+              enShort: "Execute service ABI",
+            },
+          "Supervisor encodes CounterRequest and validates counter replies through shared userspace codec":
+            {
+              ru: "Супервизор кодирует CounterRequest и проверяет ответы общим пользовательским кодеком",
+              ruShort: "Проверяет ответы",
+              enShort: "Use counter codec",
+            },
+          "Recovery encodes Get and validates the replacement service reply through shared codec":
+            {
+              ru: "Восстановление кодирует Get и проверяет ответ заменённого сервиса общим кодеком",
+              ruShort: "Проверяет замену",
+              enShort: "Validate fresh service",
+            },
+          "Decode the exact 16-byte CounterRequest, apply private Counter state and encode the reply":
+            {
+              ru: "Декодирует запрос ровно из 16 байт, изменяет приватный Counter и кодирует ответ",
+              ruShort: "Применяет запрос",
+              enShort: "Apply counter request",
+            },
+          "Native ABI wrappers issue SVC and enter the lower-EL vector through architectural exception delivery":
+            {
+              ru: "Обёртки native ABI выполняют SVC и входят в вектор нижнего уровня через аппаратную доставку исключения",
+              ruShort: "Входит через SVC",
+              enShort: "Enter SVC vector",
+            },
+          "The REPORT branch appends a word only within bounded task report storage and advances report_len":
+            {
+              ru: "Ветка REPORT добавляет слово только в пределах хранилища отчёта задачи и увеличивает report_len",
+              ruShort: "Сохраняет отчёт",
+              enShort: "Append report word",
+            },
+          "Completed::report_chunk reads report storage through Local::inspect_reports for the exact generation":
+            {
+              ru: "Completed::report_chunk читает отчёт через Local::inspect_reports с проверкой точного поколения",
+              ruShort: "Читает отчёт",
+              enShort: "Read owned report",
+            },
+          "Report extraction checks task identity, generation and report_len before copying words":
+            {
+              ru: "Извлечение отчёта проверяет задачу, поколение и report_len перед копированием слов",
+              ruShort: "Проверяет владельца",
+              enShort: "Validate report owner",
+            },
+          "Native boot exports completed task reports by calling Completed::report_chunk":
+            {
+              ru: "Native boot экспортирует отчёты завершённых задач через Completed::report_chunk",
+              ruShort: "Экспортирует отчёт",
+              enShort: "Export task report",
+            },
+          "An own-process FINISH trap marks the current task CONTEXT_EXITED before rescheduling":
+            {
+              ru: "Ловушка FINISH своего процесса переводит текущую задачу в CONTEXT_EXITED перед перепланированием",
+              ruShort: "Завершает задачу",
+              enShort: "Finish current task",
+            },
+          "The boot publication path obtains platform data by directly calling platform::discover_boot":
+            {
+              ru: "Публикация загрузочного дескриптора получает данные прямым вызовом platform::discover_boot",
+              ruShort: "Получает платформу",
+              enShort: "Discover boot platform",
+            },
+          "After complete FDT validation discover directly constructs Descriptor::validated":
+            {
+              ru: "После полной проверки FDT discover напрямую создаёт Descriptor::validated",
+              ruShort: "Создаёт дескриптор",
+              enShort: "Construct descriptor",
+            },
+          "Calls: Boot and platform → Memory and address spaces": {
+            ru: "Вызовы: Старт / платформа → Память",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Boot and platform → Exceptions and interrupts": {
+            ru: "Вызовы: Старт / платформа → Прерывания",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Boot and platform → SMP and per-CPU state": {
+            ru: "Вызовы: Старт / платформа → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Boot and platform → Processes, images and lifecycle": {
+            ru: "Вызовы: Старт / платформа → Процессы",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Boot and platform → Immutable device identity": {
+            ru: "Вызовы: Старт / платформа → Устройства",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Data exchange: Immutable device identity → Diagnostics and boot console":
+            {
+              ru: "Обмен данными: Устройства → Диагностика",
+              enShort: "Data exchange",
+              ruShort: "Обмен данными",
+            },
+          "Calls: Boot and platform → Diagnostics and boot console": {
+            ru: "Вызовы: Старт / платформа → Диагностика",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Exceptions and interrupts → Scheduling and task ownership": {
+            ru: "Вызовы: Прерывания → Планировщик",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Exceptions and interrupts → SMP and per-CPU state": {
+            ru: "Вызовы: Прерывания → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Lifetime obligations: Memory and address spaces → SMP and per-CPU state":
+            {
+              ru: "Обязанности жизненного цикла: Память → SMP / CPU",
+              enShort: "Lifetime obligations",
+              ruShort: "Обязанности жизненного цикла",
+            },
+          "Lifetime obligations: Processes, images and lifecycle → Memory and address spaces":
+            {
+              ru: "Обязанности жизненного цикла: Процессы → Память",
+              enShort: "Lifetime obligations",
+              ruShort: "Обязанности жизненного цикла",
+            },
+          "Calls: Processes, images and lifecycle → Scheduling and task ownership":
+            {
+              ru: "Вызовы: Процессы → Планировщик",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Authority checks: Processes, images and lifecycle → Names, rights and resource authority":
+            {
+              ru: "Проверки полномочий: Процессы → Полномочия",
+              enShort: "Authority checks",
+              ruShort: "Проверки полномочий",
+            },
+          "Authority checks: Processes, images and lifecycle → Bounded IPC": {
+            ru: "Проверки полномочий: Процессы → IPC",
+            enShort: "Authority checks",
+            ruShort: "Проверки полномочий",
+          },
+          "Calls: Scheduling and task ownership → Bounded IPC": {
+            ru: "Вызовы: Планировщик → IPC",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Authority checks: Scheduling and task ownership → Names, rights and resource authority":
+            {
+              ru: "Проверки полномочий: Планировщик → Полномочия",
+              enShort: "Authority checks",
+              ruShort: "Проверки полномочий",
+            },
+          "Data exchange: Scheduling and task ownership → Time and own-task observations":
+            {
+              ru: "Обмен данными: Планировщик → Время / CLOCK",
+              enShort: "Data exchange",
+              ruShort: "Обмен данными",
+            },
+          "Calls: Scheduling and task ownership → Wait, wake and synchronization":
+            {
+              ru: "Вызовы: Планировщик → Ожидание",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Data exchange: Bounded IPC → User-copy boundary": {
+            ru: "Обмен данными: IPC → Копирование",
+            enShort: "Data exchange",
+            ruShort: "Обмен данными",
+          },
+          "Authority checks: Bounded IPC → Names, rights and resource authority":
+            {
+              ru: "Проверки полномочий: IPC → Полномочия",
+              enShort: "Authority checks",
+              ruShort: "Проверки полномочий",
+            },
+          "Lifetime obligations: Bounded IPC → Wait, wake and synchronization":
+            {
+              ru: "Обязанности жизненного цикла: IPC → Ожидание",
+              enShort: "Lifetime obligations",
+              ruShort: "Обязанности жизненного цикла",
+            },
+          "Calls: Bounded IPC → SMP and per-CPU state": {
+            ru: "Вызовы: IPC → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Data exchange: User-copy boundary → Memory and address spaces": {
+            ru: "Обмен данными: Копирование → Память",
+            enShort: "Data exchange",
+            ruShort: "Обмен данными",
+          },
+          "Calls: SMP and per-CPU state → Scheduling and task ownership": {
+            ru: "Вызовы: SMP / CPU → Планировщик",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Data exchange: Processes, images and lifecycle → Diagnostics and boot console":
+            {
+              ru: "Обмен данными: Процессы → Диагностика",
+              enShort: "Data exchange",
+              ruShort: "Обмен данными",
+            },
+          "Calls: Exceptions and interrupts → Boot and platform": {
+            ru: "Вызовы: Прерывания → Старт / платформа",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Diagnostics and boot console → Boot and platform": {
+            ru: "Вызовы: Диагностика → Старт / платформа",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Scheduling and task ownership → Exceptions and interrupts": {
+            ru: "Вызовы: Планировщик → Прерывания",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Exceptions and interrupts → User-copy boundary": {
+            ru: "Вызовы: Прерывания → Копирование",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Exceptions and interrupts → Diagnostics and boot console": {
+            ru: "Вызовы: Прерывания → Диагностика",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Data exchange: Exceptions and interrupts → SMP and per-CPU state": {
+            ru: "Обмен данными: Прерывания → SMP / CPU",
+            enShort: "Data exchange",
+            ruShort: "Обмен данными",
+          },
+          "Calls: Exceptions and interrupts → Wait, wake and synchronization": {
+            ru: "Вызовы: Прерывания → Ожидание",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Memory and address spaces → SMP and per-CPU state": {
+            ru: "Вызовы: Память → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Memory and address spaces → Wait, wake and synchronization": {
+            ru: "Вызовы: Память → Ожидание",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: SMP and per-CPU state → Exceptions and interrupts": {
+            ru: "Вызовы: SMP / CPU → Прерывания",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: SMP and per-CPU state → Memory and address spaces": {
+            ru: "Вызовы: SMP / CPU → Память",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Scheduling and task ownership → SMP and per-CPU state": {
+            ru: "Вызовы: Планировщик → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Data exchange: Scheduling and task ownership → SMP and per-CPU state":
+            {
+              ru: "Обмен данными: Планировщик → SMP / CPU",
+              enShort: "Data exchange",
+              ruShort: "Обмен данными",
+            },
+          "Calls: Scheduling and task ownership → Memory and address spaces": {
+            ru: "Вызовы: Планировщик → Память",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Lifetime obligations: Scheduling and task ownership → Memory and address spaces":
+            {
+              ru: "Обязанности жизненного цикла: Планировщик → Память",
+              enShort: "Lifetime obligations",
+              ruShort: "Обязанности жизненного цикла",
+            },
+          "Calls: Scheduling and task ownership → Processes, images and lifecycle":
+            {
+              ru: "Вызовы: Планировщик → Процессы",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Calls: Scheduling and task ownership → Time and own-task observations":
+            {
+              ru: "Вызовы: Планировщик → Время / CLOCK",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Calls: Exceptions and interrupts → Time and own-task observations": {
+            ru: "Вызовы: Прерывания → Время / CLOCK",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: SMP and per-CPU state → Time and own-task observations": {
+            ru: "Вызовы: SMP / CPU → Время / CLOCK",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Names, rights and resource authority → User-copy boundary": {
+            ru: "Вызовы: Полномочия → Копирование",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Authority checks: Names, rights and resource authority → Wait, wake and synchronization":
+            {
+              ru: "Проверки полномочий: Полномочия → Ожидание",
+              enShort: "Authority checks",
+              ruShort: "Проверки полномочий",
+            },
+          "Calls: Names, rights and resource authority → Wait, wake and synchronization":
+            {
+              ru: "Вызовы: Полномочия → Ожидание",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Authority checks: Names, rights and resource authority → Bounded IPC":
+            {
+              ru: "Проверки полномочий: Полномочия → IPC",
+              enShort: "Authority checks",
+              ruShort: "Проверки полномочий",
+            },
+          "Calls: User-copy boundary → Scheduling and task ownership": {
+            ru: "Вызовы: Копирование → Планировщик",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: User-copy boundary → SMP and per-CPU state": {
+            ru: "Вызовы: Копирование → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Processes, images and lifecycle → SMP and per-CPU state": {
+            ru: "Вызовы: Процессы → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Processes, images and lifecycle → Exceptions and interrupts":
+            {
+              ru: "Вызовы: Процессы → Прерывания",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Lifetime obligations: Processes, images and lifecycle → Bounded IPC":
+            {
+              ru: "Обязанности жизненного цикла: Процессы → IPC",
+              enShort: "Lifetime obligations",
+              ruShort: "Обязанности жизненного цикла",
+            },
+          "Calls: Processes, images and lifecycle → Bounded IPC": {
+            ru: "Вызовы: Процессы → IPC",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Data exchange: Processes, images and lifecycle → Names, rights and resource authority":
+            {
+              ru: "Обмен данными: Процессы → Полномочия",
+              enShort: "Data exchange",
+              ruShort: "Обмен данными",
+            },
+          "Calls: Bounded IPC → Wait, wake and synchronization": {
+            ru: "Вызовы: IPC → Ожидание",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Bounded IPC → Scheduling and task ownership": {
+            ru: "Вызовы: IPC → Планировщик",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Bounded IPC → Exceptions and interrupts": {
+            ru: "Вызовы: IPC → Прерывания",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Bounded IPC → Time and own-task observations": {
+            ru: "Вызовы: IPC → Время / CLOCK",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Bounded IPC → Names, rights and resource authority": {
+            ru: "Вызовы: IPC → Полномочия",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: User-copy boundary → Memory and address spaces": {
+            ru: "Вызовы: Копирование → Память",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Diagnostics and boot console → SMP and per-CPU state": {
+            ru: "Вызовы: Диагностика → SMP / CPU",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: SMP and per-CPU state → Diagnostics and boot console": {
+            ru: "Вызовы: SMP / CPU → Диагностика",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Processes, images and lifecycle → Diagnostics and boot console":
+            {
+              ru: "Вызовы: Процессы → Диагностика",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Calls: Scheduling and task ownership → Diagnostics and boot console":
+            {
+              ru: "Вызовы: Планировщик → Диагностика",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Calls: Native supervisor → Shared native userspace runtime": {
+            ru: "Вызовы: Супервизор → Общая native-библиотека",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Counter service → Shared native userspace runtime": {
+            ru: "Вызовы: Сервис счётчика → Общая native-библиотека",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+          "Calls: Shared native userspace runtime → Exceptions and interrupts":
+            {
+              ru: "Вызовы: Общая native-библиотека → Прерывания",
+              enShort: "Calls",
+              ruShort: "Вызовы",
+            },
+          "Calls: Immutable device identity → Boot and platform": {
+            ru: "Вызовы: Устройства → Старт / платформа",
+            enShort: "Calls",
+            ruShort: "Вызовы",
+          },
+        },
+      };
+      const actionCaptions = {
+        "kernel_main obtains the validated boot description through discover_boot":
+          { ru: "Получает платформу", en: "Discover platform" },
+        "discover_boot bounds the DTB slice, calls discover, and verifies platform constraints":
+          { ru: "Проверяет DTB", en: "Validate DTB" },
+        "Physical initializes and reserves Pool extents, then allocates aligned frame ranges":
+          { ru: "Выделяет фреймы", en: "Allocate frames" },
+        "Physical::release returns frames to Pool only after mapping and retained-charge checks":
+          { ru: "Возвращает фреймы", en: "Release frames" },
+        "OwnedUserSpace::new allocates an owner-bound ASID lease for the process slot":
+          { ru: "Выделяет ASID", en: "Allocate ASID" },
+        "reclaim and unpublished rollback release the ASID lease before returning owned frames":
+          { ru: "Освобождает ASID", en: "Release ASID" },
+        "vectors installs the assembly vector-table address in VBAR_EL1": {
+          ru: "Устанавливает векторы",
+          en: "Install vectors",
+        },
+        "IRQ vector entries save context and call interrupt_entry": {
+          ru: "Передаёт IRQ",
+          en: "Dispatch IRQ",
+        },
+        "interrupt_entry reads acknowledge and calls end_irq for serviced interrupts":
+          { ru: "Подтверждает IRQ", en: "Acknowledge IRQ" },
+        "ping reads the target CPU affinity for SGI delivery": {
+          ru: "Выбирает CPU",
+          en: "Select CPU",
+        },
+        "secondary_main publishes ONLINE, post-invalidation tlb_ack and final QUIESCENT state":
+          { ru: "Публикует состояние", en: "Publish state" },
+        "request_invalidation and acknowledged acquire remote state and acknowledgement before retirement completes":
+          { ru: "Проверяет ACK", en: "Check ACK" },
+        "Dispatch enters Local::with for owned queue mutation and Local::inspect after completion":
+          { ru: "Получает доступ", en: "Acquire access" },
+        "Local gates prepare, publish, start, mutate, inspect and complete through Ownership":
+          { ru: "Проверяет владение", en: "Check ownership" },
+        "Local retains State task contexts behind exclusive ownership-scoped access":
+          { ru: "Хранит контексты", en: "Retain contexts" },
+        "deferred_local publishes exact IPC readiness through Task::publish_ipc_ready":
+          { ru: "Публикует готовность", en: "Publish readiness" },
+        "Registry reserves, prepares, admits and reclaims through Table transitions":
+          { ru: "Меняет состояние", en: "Transition state" },
+        "Image admission parses ELF and checks the accepted load segment": {
+          ru: "Проверяет ELF",
+          en: "Validate ELF",
+        },
+        "Granted lifecycle commands create, bind, start and stop process instances":
+          { ru: "Управляет процессами", en: "Manage processes" },
+        "Scope installation validates immutable bootstrap grants": {
+          ru: "Проверяет разрешения",
+          en: "Validate grants",
+        },
+        "Native boot creates the root and acquires registry completion": {
+          ru: "Создаёт процесс",
+          en: "Create process",
+        },
+        "Native boot installs the grant scope and services captured lifecycle commands":
+          { ru: "Исполняет команды", en: "Execute commands" },
+        "Access validation checks bounded user ranges before translation and copying":
+          { ru: "Проверяет диапазон", en: "Validate range" },
+        "Copied local handle requests resolve, transfer and close namespace entries":
+          { ru: "Разрешает дескрипторы", en: "Resolve handles" },
+        "Event notification validates the caller namespace and admits or revokes signal authority":
+          { ru: "Проверяет полномочия", en: "Check authority" },
+        "Accepted event work charges consumer requests, service requests and queue capacity":
+          { ru: "Учитывает ресурсы", en: "Charge resources" },
+        "Namespace domain binding validates the owner and charges retained handles":
+          { ru: "Привязывает домен", en: "Bind domain" },
+        "STEP WAIT_OWN_EVENT registers then rechecks pending notification": {
+          ru: "Регистрирует ожидание",
+          en: "Register wait",
+        },
+        "Local ownership entry asserts no ordinary lock is held": {
+          ru: "Исключает блокировку",
+          en: "Exclude locks",
+        },
+        "deferred_local consumes the exact wake after applying or rejecting it":
+          { ru: "Применяет пробуждение", en: "Apply wake" },
+        "pending exposes sequence for saved WaitKey and process-generation validation":
+          { ru: "Проверяет поколение", en: "Check generation" },
+        "deferred_local polls retained wake publication and source acknowledgements":
+          { ru: "Опрос подтверждений", en: "Poll ACKs" },
+        "Trusted endpoint creation and rollback enter endpoint-local storage": {
+          ru: "Создаёт endpoint",
+          en: "Create endpoint",
+        },
+        "Reap requires actual deferred mailbox quiescence": {
+          ru: "Ждёт покоя",
+          en: "Await quiescence",
+        },
+        "Endpoint cells retain concrete state under acquired nonblocking permits":
+          { ru: "Удерживает состояние", en: "Retain state" },
+        "Native continuations resolve exact receipts and access endpoints through storage permits":
+          { ru: "Разрешает квитанции", en: "Resolve receipts" },
+        "Native execution submits, receives, commits, replies and collects through Endpoint methods":
+          { ru: "Исполняет IPC", en: "Execute IPC" },
+        "Deferred polling visits endpoint cells outside scheduler storage": {
+          ru: "Обходит endpoint",
+          en: "Visit endpoints",
+        },
+        "Deferred polling expires requests and publishes or acknowledges retained wakes":
+          { ru: "Завершает ожидания", en: "Complete waits" },
+        "CLOCK reads ticks and counter frequency": {
+          ru: "Читает время",
+          en: "Read time",
+        },
+        "CLOCK reads accumulated task counters into x2 and x3": {
+          ru: "Читает счётчики",
+          en: "Read counters",
+        },
+        "Decode the native CLOCK operation identifier": {
+          ru: "Декодирует CLOCK",
+          en: "Decode CLOCK",
+        },
+        "Dispatch CAPTURE and READ_WINDOW through Observations::call": {
+          ru: "Передаёт наблюдения",
+          en: "Dispatch observations",
+        },
+        "READ_WINDOW validates captured span with window::checked": {
+          ru: "Проверяет окно",
+          en: "Validate window",
+        },
+        "Decode CAPTURE/READ_WINDOW and initialize bounded replies": {
+          ru: "Готовит ответ",
+          en: "Prepare reply",
+        },
+        "Task state owns embedded Observations": {
+          ru: "Владеет наблюдениями",
+          en: "Own observations",
+        },
+        "deadline_after converts durations through duration_ticks": {
+          ru: "Вычисляет срок",
+          en: "Compute deadline",
+        },
+        "discover_boot obtains the validated platform description through discover":
+          { ru: "Получает платформу", en: "Discover platform" },
+        "After complete FDT validation, discover constructs the immutable console snapshot with Descriptor::validated":
+          { ru: "Создаёт дескриптор", en: "Create descriptor" },
+        "Boot reads boot_console, observes its identity and resolves the descriptor before publishing console fields":
+          { ru: "Публикует устройство", en: "Publish device" },
+        "status, boot_banner and enabled machine event framing submit format arguments to print":
+          { ru: "Форматирует вывод", en: "Frame output" },
+        "print invokes Writer only after secondary-CPU rejection and bounded Length validation":
+          { ru: "Передаёт запись", en: "Write record" },
+        "Writer returns fmt::Error for unavailable UART or exhausted polling; print increments DROPPED":
+          { ru: "Сообщает отказ", en: "Report failure" },
+        "recover delegates to recover_service, which requires observed terminal state before replacement":
+          { ru: "Восстанавливает сервис", en: "Recover service" },
+        "The service receives, commits and replies through native::call operations 2, 3 and 4":
+          { ru: "Принимает и отвечает", en: "Receive and reply" },
+        "Decode the exact 16-byte CounterRequest, apply it to private Counter state and encode counter_reply":
+          { ru: "Применяет запрос", en: "Apply request" },
+        "Lower-EL vectors pass saved context and entry ticks to user_trap": {
+          ru: "Кадр EL0",
+          en: "Saved EL0 frame",
+        },
+        "Checked context entry calls run_user to restore the retained EL0 context":
+          { ru: "Возврат в EL0", en: "Restore EL0" },
+        "sync_vector passes ESR, FAR and saved PC to synchronous": {
+          ru: "Исключение EL1",
+          en: "EL1 sync fault",
+        },
+        "fatal_vector calls fatal_exception with exception registers": {
+          ru: "Фатальный вектор",
+          en: "Fatal vector",
+        },
+        "An unrecoverable ordinary synchronous exception enters fatal_exception":
+          { ru: "Отказ восстановления", en: "Recovery rejected" },
+        "An unexpected interrupt ID enters fatal_exception": {
+          ru: "Неожиданный IRQ",
+          en: "Unexpected IRQ",
+        },
+        "user_trap decodes the exception and calls scheduler::trap with its saved frame":
+          { ru: "Передать исключение", en: "Dispatch trap" },
+        "Scheduler enters the selected retained context through context::enter":
+          { ru: "Запустить задачу", en: "Enter selected task" },
+        "synchronous asks recover to validate the exact active copy fault and return its resume PC":
+          { ru: "Восстановить копирование", en: "Recover copy fault" },
+        "Primary-CPU fatal handling emits the fatal event and exception status":
+          { ru: "Диагностика отказа", en: "Fatal diagnostics" },
+        "A fatal exception on the secondary CPU invokes secondary_failure": {
+          ru: "Остановить CPU",
+          en: "Stop failed CPU",
+        },
+        "fatal_exception identifies the secondary CPU before selecting the failure path":
+          { ru: "Выбрать путь отказа", en: "Select CPU failure path" },
+        "Context entry rejects a live per-CPU scheduler borrow before ERET": {
+          ru: "Проверить заимствование",
+          en: "Check owner borrow",
+        },
+        "Context entry asserts that no ordinary kernel lock crosses user entry":
+          { ru: "Проверить отсутствие lock", en: "Check unlocked entry" },
+        "kernel_main constructs the initial Registry": {
+          ru: "Создать registry",
+          en: "Create registry",
+        },
+        "Physical allocation and release require the primary CPU": {
+          ru: "Проверить CPU0",
+          en: "Check CPU0 owner",
+        },
+        "Memory table and heap operations acquire ordinary Lock guards": {
+          ru: "Защитить таблицы и heap",
+          en: "Lock tables and heap",
+        },
+        "ASID allocation, retirement and release check the observed CPU owner":
+          { ru: "Проверить владельца ASID", en: "Check ASID owner" },
+        "Interrupt initialization checks CPU0 and timer delivery updates the current CPU counter":
+          { ru: "Счётчик своего CPU", en: "Own timer counter" },
+        "secondary_main installs vectors and masks or unmasks IRQ around CPU lifecycle":
+          { ru: "Установить векторы", en: "Install local vectors" },
+        "secondary_main initializes its local GIC interface": {
+          ru: "Инициализировать GIC",
+          en: "Initialize local GIC",
+        },
+        "SMP startup reads kernel bounds before cache publication": {
+          ru: "Получить границы ядра",
+          en: "Read kernel bounds",
+        },
+        "Scheduler notifies remote owners and waits for actual arrival or completion publication":
+          { ru: "Согласовать владельцев", en: "Coordinate owners" },
+        "Scheduler selects owner-local queues from the observed CPU identity": {
+          ru: "Выбрать очередь CPU",
+          en: "Select owner queue",
+        },
+        "Local scopes atomically enter and leave the per-CPU scheduler_borrow guard":
+          { ru: "Защитить заимствование", en: "Guard CPU borrow" },
+        "Scheduler obtains the native table root and validates the current process space":
+          { ru: "Проверить корень", en: "Check retained root" },
+        "Scheduler retires pinned ASID leases before publishing completion": {
+          ru: "Завершить аренду ASID",
+          en: "Retire ASID lease",
+        },
+        "Scheduler computes quantum deadlines through deadline_after": {
+          ru: "Рассчитать deadline",
+          en: "Compute quantum deadline",
+        },
+        "Lifecycle SVC dispatch captures the current task command": {
+          ru: "Принять lifecycle-команду",
+          en: "Capture lifecycle command",
+        },
+        "Local storage entry rejects an ordinary lock held across scheduler ownership":
+          { ru: "Проверить порядок lock", en: "Check lock order" },
+        "initialize_mmu activates initialized owned page tables": {
+          ru: "Включить MMU",
+          en: "Enable MMU",
+        },
+        "enable_mmu initializes ASID capability; root activation encodes or checks ASID use":
+          { ru: "Настроить ASID", en: "Configure ASID use" },
+        "retire performs owner-local ASID invalidation before publishing retirement":
+          { ru: "Инвалидировать ASID", en: "Invalidate retired ASID" },
+        "UserSpace image publication cleans written code and invalidates instruction caches":
+          { ru: "Опубликовать код", en: "Publish code bytes" },
+        "SMP cleans bootstrap memory and completes local TLBI before publishing acknowledgements":
+          { ru: "Публикация и TLBI", en: "Publish and invalidate" },
+        "SMP starts, observes and stops secondary CPUs through PSCI": {
+          ru: "Управлять вторичным CPU",
+          en: "Manage secondary CPU",
+        },
+        "secondary_main enables the retained boot address space": {
+          ru: "Включить MMU CPU1",
+          en: "Enable secondary MMU",
+        },
+        "Scheduler activates selected user roots and restores the native root":
+          { ru: "Сменить пространство", en: "Switch address space" },
+        "Scheduler programs absolute timer deadlines and stops idle timers": {
+          ru: "Настроить таймер",
+          en: "Program scheduling timer",
+        },
+        "Timer IRQ handling stops the architectural timer before scheduler notification":
+          { ru: "Остановить таймер", en: "Stop delivered timer" },
+        "Secondary startup, shutdown and failure stop the architectural timer":
+          { ru: "Остановить таймер CPU1", en: "Stop secondary timer" },
+        "Primary fatal handling stops the timer before diagnostics and shutdown":
+          { ru: "Остановить таймер", en: "Stop fatal-path timer" },
+        "Primary fatal handling requests PSCI system shutdown after diagnostics":
+          { ru: "Выключить систему", en: "Shut down failed system" },
+        "Completed boot validation requests system poweroff": {
+          ru: "Завершить проверку",
+          en: "Finish boot validation",
+        },
+        "user_trap reads ESR and only valid FAR; context entry checks IRQ masking":
+          { ru: "Декодировать исключение", en: "Decode exception state" },
+        "ping delivers an SGI to the validated target CPU affinity": {
+          ru: "Послать SGI владельцу",
+          en: "Send owner SGI",
+        },
+        "Scheduler masks IRQ for ownership transitions and uses ipc_idle for interrupt-driven idle":
+          { ru: "Управлять IRQ scheduler", en: "Manage scheduler IRQ state" },
+        "Primary fatal handling masks IRQ before shutdown": {
+          ru: "Маскировать IRQ",
+          en: "Mask fatal-path IRQ",
+        },
+        "Copy the caller handle request through Access::current and copy_from_user":
+          { ru: "Снимок запроса", en: "Snapshot request" },
+        "Copy the Event notification request through the protected user boundary":
+          { ru: "Снимок уведомления", en: "Snapshot notification" },
+        "Shared Event references admit signals and delegated references or revoke future admission":
+          { ru: "Допуск или отзыв", en: "Admit or revoke" },
+        "Accepted Event work finishes its retained signal after the service effect":
+          { ru: "Завершить сигнал", en: "Finish signal" },
+        "Endpoint handles check open service identity, admit delegation and revoke sender admission":
+          { ru: "Права endpoint", en: "Endpoint authority" },
+        "Access checks the executing task and current address-space context through copy_context":
+          { ru: "Проверить задачу", en: "Validate current task" },
+        "CopyGuard and recovery select the current CPU recovery record through percpu::id":
+          { ru: "Выбрать CPU-запись", en: "Select CPU recovery" },
+        "Registry context_contract requires the boot CPU identity": {
+          ru: "Проверить CPU владельца",
+          en: "Check owner CPU",
+        },
+        "Registry context_contract requires masked IRQ state": {
+          ru: "Проверить IRQ-контекст",
+          en: "Check IRQ context",
+        },
+        "Lifecycle replacement and retirement discard endpoints and require IPC reap quiescence":
+          { ru: "Освободить endpoints", en: "Retire endpoints" },
+        "Lifecycle service and retirement poll pending endpoint wake and acknowledgement work":
+          { ru: "Обработать IPC", en: "Drain IPC work" },
+        "Native boot finalization invokes IPC reap after completion": {
+          ru: "Освободить после завершения",
+          en: "Reap after completion",
+        },
+        "Native boot finalization polls deferred endpoint work before resource checks":
+          { ru: "Финальный опрос IPC", en: "Final IPC drain" },
+        "Native boot reads live_domains for final resource-accounting evidence":
+          { ru: "Проверить живые домены", en: "Observe live domains" },
+        "Registry dispatch and reclamation publish machine events through event framing":
+          { ru: "События реестра", en: "Publish registry events" },
+        "Endpoint storage acquisition asserts no ordinary lock is held": {
+          ru: "Проверить блокировки",
+          en: "Check lock exclusion",
+        },
+        "Storage invariant violations reject scheduler overlap or nonquiescent removal":
+          {
+            ru: "Отклонить неверное состояние",
+            en: "Reject invalid storage state",
+          },
+        "Endpoint permits check primary CPU and current CPU borrow and lock state":
+          { ru: "Проверить CPU-владение", en: "Check CPU-local ownership" },
+        "Endpoint permit acquisition requires masked IRQ state": {
+          ru: "Проверить IRQ-контекст",
+          en: "Check IRQ context",
+        },
+        "Deferred endpoint polling reads counter ticks for actual request expiry":
+          { ru: "Прочитать время", en: "Read expiry time" },
+        "Native IPC preparation maps handle errors through the public status adapter":
+          { ru: "Преобразовать статус", en: "Map handle status" },
+        "Event notification returns handle-domain failures through the shared status adapter":
+          { ru: "Статус уведомления", en: "Map notification status" },
+        "Access::validate uses architectural user_translation for each covered page and requested access direction":
+          { ru: "Проверить права страниц", en: "Check page permissions" },
+        "Snapshot input and output invoke user_copy_in and user_copy_out with exact copied-byte results":
+          { ru: "Копировать защищённые байты", en: "Copy protected bytes" },
+        "Recovery accepts only the exact load/store fault labels and returns user_copy_resume":
+          { ru: "Выбрать восстановление", en: "Resolve copy fixup" },
+        "service_timer reads the architectural counter to accumulate timer history":
+          { ru: "Читает таймер", en: "Read timer counter" },
+        "Scheduler arms quantum deadlines and reads counter values for task execution accounting":
+          { ru: "Измеряет исполнение", en: "Time scheduling" },
+        "The timer trap invokes Observations::service_timer for the current task":
+          { ru: "Обновляет историю", en: "Update timer history" },
+        "Deferred IPC polling reads current ticks before expiring pending requests":
+          { ru: "Проверяет время", en: "Read expiry time" },
+        "print rejects secondary-CPU output using percpu::is_secondary": {
+          ru: "Проверяет CPU",
+          en: "Check console owner",
+        },
+        "report_secondary_panic submits the retained secondary panic location to diagnostics::status":
+          { ru: "Сообщает панику", en: "Report secondary panic" },
+        "Registry emits enabled diagnostic transition records and ordinary rejection events":
+          { ru: "Сообщает состояние", en: "Report process state" },
+        "Scheduler rejection paths publish machine events through diagnostic framing":
+          { ru: "Сообщает отказ", en: "Report rejection" },
+        "Supervisor policy invokes native lifecycle, IPC, CLOCK, REPORT and FINISH wrappers":
+          { ru: "Вызывает native ABI", en: "Call native ABI" },
+        "Recovery invokes native lifecycle, CLOCK and RPC wrappers after observing service state":
+          { ru: "Восстанавливает через ABI", en: "Recover through ABI" },
+        "The counter loop receives, commits, replies and exits through native ABI wrappers":
+          { ru: "Вызывает ABI сервиса", en: "Execute service ABI" },
+        "Supervisor encodes CounterRequest and validates counter replies through shared userspace codec":
+          { ru: "Проверяет ответы", en: "Use counter codec" },
+        "Recovery encodes Get and validates the replacement service reply through shared codec":
+          { ru: "Проверяет замену", en: "Validate fresh service" },
+        "Decode the exact 16-byte CounterRequest, apply private Counter state and encode the reply":
+          { ru: "Применяет запрос", en: "Apply counter request" },
+        "Native ABI wrappers issue SVC and enter the lower-EL vector through architectural exception delivery":
+          { ru: "Входит через SVC", en: "Enter SVC vector" },
+        "The REPORT branch appends a word only within bounded task report storage and advances report_len":
+          { ru: "Сохраняет отчёт", en: "Append report word" },
+        "Completed::report_chunk reads report storage through Local::inspect_reports for the exact generation":
+          { ru: "Читает отчёт", en: "Read owned report" },
+        "Report extraction checks task identity, generation and report_len before copying words":
+          { ru: "Проверяет владельца", en: "Validate report owner" },
+        "Native boot exports completed task reports by calling Completed::report_chunk":
+          { ru: "Экспортирует отчёт", en: "Export task report" },
+        "An own-process FINISH trap marks the current task CONTEXT_EXITED before rescheduling":
+          { ru: "Завершает задачу", en: "Finish current task" },
+        "The boot publication path obtains platform data by directly calling platform::discover_boot":
+          { ru: "Получает платформу", en: "Discover boot platform" },
+        "After complete FDT validation discover directly constructs Descriptor::validated":
+          { ru: "Создаёт дескриптор", en: "Construct descriptor" },
+        "Calls: Boot and platform → Memory and address spaces": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Boot and platform → Exceptions and interrupts": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Boot and platform → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Boot and platform → Processes, images and lifecycle": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Boot and platform → Immutable device identity": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Data exchange: Immutable device identity → Diagnostics and boot console":
+          { en: "Data exchange", ru: "Обмен данными" },
+        "Calls: Boot and platform → Diagnostics and boot console": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Exceptions and interrupts → Scheduling and task ownership": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Exceptions and interrupts → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Lifetime obligations: Memory and address spaces → SMP and per-CPU state":
+          { en: "Lifetime obligations", ru: "Обязанности жизненного цикла" },
+        "Lifetime obligations: Processes, images and lifecycle → Memory and address spaces":
+          { en: "Lifetime obligations", ru: "Обязанности жизненного цикла" },
+        "Calls: Processes, images and lifecycle → Scheduling and task ownership":
+          { en: "Calls", ru: "Вызовы" },
+        "Authority checks: Processes, images and lifecycle → Names, rights and resource authority":
+          { en: "Authority checks", ru: "Проверки полномочий" },
+        "Authority checks: Processes, images and lifecycle → Bounded IPC": {
+          en: "Authority checks",
+          ru: "Проверки полномочий",
+        },
+        "Calls: Scheduling and task ownership → Bounded IPC": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Authority checks: Scheduling and task ownership → Names, rights and resource authority":
+          { en: "Authority checks", ru: "Проверки полномочий" },
+        "Data exchange: Scheduling and task ownership → Time and own-task observations":
+          { en: "Data exchange", ru: "Обмен данными" },
+        "Calls: Scheduling and task ownership → Wait, wake and synchronization":
+          { en: "Calls", ru: "Вызовы" },
+        "Data exchange: Bounded IPC → User-copy boundary": {
+          en: "Data exchange",
+          ru: "Обмен данными",
+        },
+        "Authority checks: Bounded IPC → Names, rights and resource authority":
+          { en: "Authority checks", ru: "Проверки полномочий" },
+        "Lifetime obligations: Bounded IPC → Wait, wake and synchronization": {
+          en: "Lifetime obligations",
+          ru: "Обязанности жизненного цикла",
+        },
+        "Calls: Bounded IPC → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Data exchange: User-copy boundary → Memory and address spaces": {
+          en: "Data exchange",
+          ru: "Обмен данными",
+        },
+        "Calls: SMP and per-CPU state → Scheduling and task ownership": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Data exchange: Processes, images and lifecycle → Diagnostics and boot console":
+          { en: "Data exchange", ru: "Обмен данными" },
+        "Calls: Exceptions and interrupts → Boot and platform": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Diagnostics and boot console → Boot and platform": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Scheduling and task ownership → Exceptions and interrupts": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Exceptions and interrupts → User-copy boundary": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Exceptions and interrupts → Diagnostics and boot console": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Data exchange: Exceptions and interrupts → SMP and per-CPU state": {
+          en: "Data exchange",
+          ru: "Обмен данными",
+        },
+        "Calls: Exceptions and interrupts → Wait, wake and synchronization": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Memory and address spaces → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Memory and address spaces → Wait, wake and synchronization": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: SMP and per-CPU state → Exceptions and interrupts": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: SMP and per-CPU state → Memory and address spaces": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Scheduling and task ownership → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Data exchange: Scheduling and task ownership → SMP and per-CPU state":
+          { en: "Data exchange", ru: "Обмен данными" },
+        "Calls: Scheduling and task ownership → Memory and address spaces": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Lifetime obligations: Scheduling and task ownership → Memory and address spaces":
+          { en: "Lifetime obligations", ru: "Обязанности жизненного цикла" },
+        "Calls: Scheduling and task ownership → Processes, images and lifecycle":
+          { en: "Calls", ru: "Вызовы" },
+        "Calls: Scheduling and task ownership → Time and own-task observations":
+          { en: "Calls", ru: "Вызовы" },
+        "Calls: Exceptions and interrupts → Time and own-task observations": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: SMP and per-CPU state → Time and own-task observations": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Names, rights and resource authority → User-copy boundary": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Authority checks: Names, rights and resource authority → Wait, wake and synchronization":
+          { en: "Authority checks", ru: "Проверки полномочий" },
+        "Calls: Names, rights and resource authority → Wait, wake and synchronization":
+          { en: "Calls", ru: "Вызовы" },
+        "Authority checks: Names, rights and resource authority → Bounded IPC":
+          { en: "Authority checks", ru: "Проверки полномочий" },
+        "Calls: User-copy boundary → Scheduling and task ownership": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: User-copy boundary → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Processes, images and lifecycle → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Processes, images and lifecycle → Exceptions and interrupts": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Lifetime obligations: Processes, images and lifecycle → Bounded IPC": {
+          en: "Lifetime obligations",
+          ru: "Обязанности жизненного цикла",
+        },
+        "Calls: Processes, images and lifecycle → Bounded IPC": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Data exchange: Processes, images and lifecycle → Names, rights and resource authority":
+          { en: "Data exchange", ru: "Обмен данными" },
+        "Calls: Bounded IPC → Wait, wake and synchronization": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Bounded IPC → Scheduling and task ownership": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Bounded IPC → Exceptions and interrupts": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Bounded IPC → Time and own-task observations": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Bounded IPC → Names, rights and resource authority": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: User-copy boundary → Memory and address spaces": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Diagnostics and boot console → SMP and per-CPU state": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: SMP and per-CPU state → Diagnostics and boot console": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Processes, images and lifecycle → Diagnostics and boot console":
+          { en: "Calls", ru: "Вызовы" },
+        "Calls: Scheduling and task ownership → Diagnostics and boot console": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Native supervisor → Shared native userspace runtime": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Counter service → Shared native userspace runtime": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Shared native userspace runtime → Exceptions and interrupts": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+        "Calls: Immutable device identity → Boot and platform": {
+          en: "Calls",
+          ru: "Вызовы",
+        },
+      };
+      let language = "ru",
+        selected = null,
+        pinned = false,
+        hoverTimer = null,
+        popupKind = null;
+      const words = {
+        ru: {
+          subtitle: "Карта ядра",
+          fit: "Вписать",
+          hint: "Тяните фон · колесо: масштаб · нажмите блок: состав и связи",
+          groups: "групп",
+          edges: "связей",
+          members: "состав",
+          ins: "вход",
+          outs: "выход",
+          perf: "замер",
+          none: "нет",
+          topology:
+            "Числа описывают состав и связи этой модели, а не полный граф вызовов или частоту исполнения.",
+          composition: "Состав",
+          links: "Связи",
+          sources: "Исходники",
+          contracts: "Контракты",
+          responsibility: "Назначение",
+          close: "Закрыть",
+          help: "Как читать карту",
+          call: "Вызов",
+          data: "Данные",
+          authority: "Полномочия",
+          lifetime: "Время жизни",
+          helpline:
+            "Стрелка направлена от инициатора к получателю. Цвет показывает вид связи; подпись — действие. Подведите курсор или выберите блок, чтобы раскрыть связи.",
+          helpnav:
+            "Тяните фон для перемещения; колесо или +/− меняют масштаб. Вписать возвращает всю карту. Tab и Enter выбирают блок; Escape закрывает подробности.",
+          notmeasured:
+            "Стоимость компонента отдельно не измерена. «—» не означает ноль.",
+          historical: "Исторический CLOCK-путь",
+          repeat: "Медианы отдельных повторов",
+          scope:
+            "2 граничных CLOCK + 1 запрос + учёт измерителя. Не эксклюзивная стоимость блока; стоимости частей неизвестны.",
+          baseline: "Базового замера нет.",
+          kernel: "EL1 · ЯДРО",
+          apps: "EL0 · СЛУЖБЫ И БИБЛИОТЕКА",
+          snapshot: "снимок",
+          dirty: "рабочие изменения",
+          unavailable: "Недоступные замеры",
+          pin: "Нажмите для закрепления",
+          source: "исходники",
+          us: "мкс",
+          pending: "Замеры не реализованы",
+          missingMeasurements: "Замеры недоступны",
+          medianLabel: "Исторические медианы повторов",
+          noData: "нет данных",
+          ticks: "тики",
+        },
+        en: {
+          subtitle: "Kernel map",
+          fit: "Fit",
+          hint: "Drag background · wheel: zoom · select a node: composition and relations",
+          groups: "groups",
+          edges: "edges",
+          members: "parts",
+          ins: "in",
+          outs: "out",
+          perf: "measured",
+          none: "none",
+          topology:
+            "Counts describe this model’s composition and relations, not the complete call graph or execution frequency.",
+          composition: "Composition",
+          links: "Relations",
+          sources: "Sources",
+          contracts: "Contracts",
+          responsibility: "Responsibility",
+          close: "Close",
+          help: "Reading the map",
+          call: "Call",
+          data: "Data",
+          authority: "Authority",
+          lifetime: "Lifetime",
+          helpline:
+            "Arrows point from initiator to recipient. Color identifies relation kind; the label describes its action. Hover or select a node to reveal its relations.",
+          helpnav:
+            "Drag the background to pan; wheel or +/− zoom. Fit restores the full graph. Tab and Enter select nodes; Escape closes details.",
+          notmeasured:
+            "Component cost has not been measured separately. “—” does not mean zero.",
+          historical: "Historical CLOCK path",
+          repeat: "Medians of separate repeats",
+          scope:
+            "2 boundary CLOCK calls + 1 query + harness bookkeeping. Not exclusive component cost; subcosts are unknown.",
+          baseline: "No baseline measurement.",
+          kernel: "EL1 · KERNEL",
+          apps: "EL0 · SERVICES AND RUNTIME",
+          snapshot: "snapshot",
+          dirty: "working changes",
+          unavailable: "Unavailable measurements",
+          pin: "Click to pin",
+          source: "source",
+          us: "µs",
+          pending: "Measurements not implemented",
+          missingMeasurements: "Measurements unavailable",
+          medianLabel: "Historical repeat medians",
+          noData: "unavailable",
+          ticks: "ticks",
+        },
+      };
+      const t = (k) => words[language][k];
+      const shortId = (n) => n.id.split(".").at(-1);
+      const title = (n) => translations.nodes[n.id][language];
+      const memberName = (m) =>
+        language === "ru" ? m.name_ru || translations.members[m.name] : m.name;
+      const edgeText = (e) =>
+        language === "ru"
+          ? e.label_ru || translations.edges[e.label].ru
+          : e.label;
+      const edgeShort = (e) =>
+        language === "ru"
+          ? e.caption_ru || translations.edges[e.label].ruShort
+          : e.caption_en || translations.edges[e.label].enShort;
+      const colors = {
+        call: "#79b9ff",
+        data: "#5ed6bc",
+        authority: "#e7b86e",
+        lifetime: "#b49aff",
+        mmio: "#f2bf76",
+      };
+      const softwareGroupCount = model.nodes.length,
+        softwareEdgeCount = model.edges.length;
+      const softwareNodes = [...model.nodes];
+      for (const target of model.external_targets || []) {
+        translations.nodes[target.id] = {
+          en:
+            target.id === "kolvrt.hardware.pl011"
+              ? "UART PL011"
+              : target.id === "kolvrt.hardware.gicv3"
+                ? "GICv3"
+                : target.label,
+          ru:
+            target.id === "kolvrt.hardware.pl011"
+              ? "UART PL011"
+              : target.id === "kolvrt.hardware.gicv3"
+                ? "GICv3"
+                : target.label_ru,
+          ruResponsibility: target.responsibility_ru,
+        };
+        model.nodes.push({
+          ...target,
+          external: true,
+          layer: "HARDWARE",
+          members: [],
+          member_relations: [],
+          contracts: [],
+          measurements: [],
+        });
+      }
+      for (const relation of model.hardware_relations || []) {
+        const owner = softwareNodes.find((n) =>
+          n.members.some((m) => m.id === relation.from_member),
+        );
+        translations.edges[relation.label] = {
+          ru: relation.label_ru,
+          enShort: relation.caption_en,
+          ruShort: relation.caption_ru,
+        };
+        actionCaptions[relation.label] = {
+          en: relation.caption_en,
+          ru: relation.caption_ru,
+        };
+        model.edges.push({
+          ...relation,
+          from: owner.id,
+          to: relation.to_target,
+          hardware: true,
+          member_endpoints: [
+            {
+              from_member: relation.from_member,
+              to_member: relation.to_target,
+            },
+          ],
+        });
+      }
+      const nodes = new Map(model.nodes.map((n) => [n.id, n]));
+      const svg = document.getElementById("canvas"),
+        scene = document.getElementById("scene"),
+        popup = document.getElementById("popup");
+      const nodeEls = new Map(),
+        edgeEls = [],
+        positions = new Map();
+      let detailNode = null;
+      const W = 3200,
+        H = 12500,
+        CW = Math.max(
+          218,
+          40 +
+            8 *
+              (1 +
+                Math.max(
+                  ...model.nodes.map(
+                    (n) =>
+                      model.edges.filter(
+                        (e) => e.from === n.id || e.to === n.id,
+                      ).length,
+                  ),
+                )),
+        ),
+        CH = 120;
+      const slots = {
+        boot: [40, 2000],
+        memory: [640, 2000],
+        interrupts: [1240, 2000],
+        smp: [1840, 2000],
+        devices: [2440, 2000],
+        process: [40, 4200],
+        scheduler: [640, 4200],
+        ipc: [1240, 4200],
+        authority: [1840, 4200],
+        diagnostics: [2440, 4200],
+        "user-copy": [640, 6400],
+        wait: [1240, 6400],
+        clock: [1840, 6400],
+        supervisor: [640, 8600],
+        "counter-service": [1240, 8600],
+        "native-runtime": [1840, 8600],
+        gicv3: [40, 10800],
+        pl011: [640, 10800],
+      };
+      for (const n of model.nodes) positions.set(n.id, slots[shortId(n)]);
+      const icons = {
+        "native-runtime": "M4 4h16v16H4z M8 8h8M8 12h8M8 16h5",
+        gicv3: "M4 4h16v16H4z",
+        pl011: "M3 6h18v12H3z",
+        boot: "M12 3v8 M8 5a8 8 0 1 0 8 0",
+        memory:
+          "M5 6h14v12H5z M8 3v3m4-3v3m4-3v3M8 18v3m4-3v3m4-3v3M2 9h3m-3 6h3m14-6h3m-3 6h3",
+        interrupts: "M13 2 5 13h6l-1 9 9-13h-6z",
+        smp: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
+        scheduler: "M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6m-5 0v6",
+        process: "M5 3h11l4 4v14H5z M16 3v5h4 M8 12h8m-8 4h6",
+        "user-copy": "M3 5h7v14H3z M14 5h7v14h-7z M8 12h9m-3-3 3 3-3 3",
+        authority: "M12 2 21 6v6c0 5-9 10-9 10S3 17 3 12V6z M8 12l3 3 5-6",
+        wait: "M5 3h14M5 21h14M7 3c0 6 10 12 10 18M17 3c0 6-10 12-10 18",
+        ipc: "M3 5h14v9H8l-5 4z M9 18h8l4 3V10h-2",
+        clock: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 7v5l4 3",
+        devices: "M7 3h10v18H7z M10 6h4 M11 18h2",
+        diagnostics: "M3 4h18v16H3z M6 8l3 3-3 3m6 1h5",
+        supervisor: "M12 3 3 8l9 5 9-5z M3 13l9 5 9-5 M3 18l9 5 9-5",
+        "counter-service": "M6 3v18m12-18v18M3 8h18M3 16h18",
+      };
+      function element(tag, text, cls) {
+        const e = document.createElement(tag);
+        if (text !== undefined) e.textContent = text;
+        if (cls) e.className = cls;
+        return e;
+      }
+      function se(tag, attrs = {}, text) {
+        const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        for (const [k, v] of Object.entries(attrs))
+          e.setAttribute(k, String(v));
+        if (text !== undefined) e.textContent = text;
+        return e;
+      }
+      function link(path, label) {
+        const a = element("a", label || path);
+        a.href =
+          model.view.repository_href +
+          path.split("/").map(encodeURIComponent).join("/");
+        a.target = "_blank";
+        a.rel = "noopener";
+        return a;
+      }
+      for (const [k, c] of Object.entries(colors)) {
+        const marker = se("marker", {
+          id: "arrow-" + k,
+          viewBox: "0 0 10 10",
+          refX: 9,
+          refY: 5,
+          markerWidth: 7,
+          markerHeight: 7,
+          orient: "auto",
+        });
+        marker.append(se("path", { d: "M0 0L10 5L0 10Z", fill: c }));
+        document.getElementById("defs").append(marker);
+      }
+      let minimumScale = 0.000001;
+      let scale = 1,
+        tx = 0,
+        ty = 0;
+      function transform() {
+        scene.setAttribute(
+          "transform",
+          `translate(${tx} ${ty}) scale(${scale})`,
+        );
+      }
+      function fit() {
+        const bounds = scene.getBBox();
+        scale = Math.min(
+          (innerWidth - 40) / (bounds.width + 20),
+          (innerHeight - 115) / (bounds.height + 20),
+        );
+        minimumScale = Math.max(Number.EPSILON, scale / 8);
+        tx = (innerWidth - bounds.width * scale) / 2 - bounds.x * scale;
+        ty =
+          70 +
+          (innerHeight - 115 - bounds.height * scale) / 2 -
+          bounds.y * scale;
+        transform();
+      }
+      function zoom(f, x = innerWidth / 2, y = innerHeight / 2) {
+        const next = Math.max(minimumScale, Math.min(3.5, scale * f));
+        tx = x - ((x - tx) * next) / scale;
+        ty = y - ((y - ty) * next) / scale;
+        scale = next;
+        transform();
+        if (!pinned) closePopup();
+      }
+      svg.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          zoom(Math.exp(-e.deltaY * 0.001), e.clientX, e.clientY);
+        },
+        { passive: false },
+      );
+      let drag = null;
+      svg.addEventListener("pointerdown", (e) => {
+        if (e.target.closest(".node") || e.target.closest(".edge")) return;
+        drag = { x: e.clientX, y: e.clientY, tx, ty };
+        svg.setPointerCapture(e.pointerId);
+        svg.classList.add("dragging");
+        closePopup();
+      });
+      svg.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        tx = drag.tx + e.clientX - drag.x;
+        ty = drag.ty + e.clientY - drag.y;
+        transform();
+      });
+      function endDrag() {
+        drag = null;
+        svg.classList.remove("dragging");
+      }
+      svg.addEventListener("pointerup", endDrag);
+      svg.addEventListener("pointercancel", endDrag);
+      // Route through the visibility grid between inflated card bounds. Card interiors
+      // are obstacles; only the initial/final port segments touch their own cards.
+      function routingGrid(
+        locations = positions,
+        relations = model.edges,
+        width = CW,
+        height = CH,
+        heights = new Map(),
+      ) {
+        const slots = new Map(),
+          boxes = [...locations].map(([id, p]) => ({
+            id,
+            x: p[0],
+            y: p[1],
+            width,
+            height: heights.get(id) || height,
+          }));
+        for (const [id, p] of locations) {
+          const incident = relations.filter(
+            (e) => e.from === id || e.to === id,
+          );
+          incident.forEach((e, i) =>
+            slots.set(relations.indexOf(e) + ":" + id, {
+              x: p[0] + 20 + (i + 1) * 8,
+              y: p[1],
+            }),
+          );
+          if (20 + (incident.length + 1) * 8 > width)
+            throw Error("Insufficient ports: " + id);
+        }
+        const occupied = [],
+          paths = new Map();
+        const overlap = (a, b, c, d) =>
+          Math.max(Math.min(a, b), Math.min(c, d)) <
+          Math.min(Math.max(a, b), Math.max(c, d)) - 1e-7;
+        function clear(a, b) {
+          if (a.x === b.x && a.y === b.y) return true;
+          for (const r of boxes)
+            if (
+              a.x === b.x
+                ? a.x > r.x &&
+                  a.x < r.x + r.width &&
+                  overlap(a.y, b.y, r.y, r.y + r.height)
+                : a.y > r.y &&
+                  a.y < r.y + r.height &&
+                  overlap(a.x, b.x, r.x, r.x + r.width)
+            )
+              return false;
+          for (const [c, d] of occupied)
+            if (
+              a.x === b.x && c.x === d.x
+                ? Math.abs(a.x - c.x) < 7.5 && overlap(a.y, b.y, c.y, d.y)
+                : a.y === b.y &&
+                  c.y === d.y &&
+                  Math.abs(a.y - c.y) < 7.5 &&
+                  overlap(a.x, b.x, c.x, d.x)
+            )
+              return false;
+          return true;
+        }
+        const left = Math.min(...boxes.map((b) => b.x)),
+          right = Math.max(...boxes.map((b) => b.x + b.width));
+        const candidates = new Set();
+        for (const r of boxes)
+          for (let i = 1; i <= 12; i++) {
+            candidates.add(r.x - i * 8);
+            candidates.add(r.x + r.width + i * 8);
+          }
+        for (let i = 1; i <= relations.length + 1; i++) {
+          candidates.add(left - i * 8);
+          candidates.add(right + i * 8);
+        }
+        const order = relations
+          .map((e, i) => ({
+            e,
+            i,
+            a: slots.get(i + ":" + e.from),
+            b: slots.get(i + ":" + e.to),
+          }))
+          .sort(
+            (u, v) =>
+              Math.abs(u.a.y - u.b.y) - Math.abs(v.a.y - v.b.y) ||
+              Math.abs(u.a.x - u.b.x) - Math.abs(v.a.x - v.b.x) ||
+              u.i - v.i,
+          );
+        for (const { e, i, a, b } of order) {
+          let path = null;
+          // A local U is sufficient for many neighbours; no global trunk.
+          if (a.y === b.y)
+            for (
+              let lane = 0;
+              lane < relations.length * 2 + 4 && !path;
+              lane++
+            ) {
+              const y = a.y - 16 - lane * 12,
+                q = { x: a.x, y },
+                r = { x: b.x, y };
+              if (clear(a, q) && clear(q, r) && clear(r, b))
+                path = [a, q, r, b];
+            }
+          if (!path)
+            for (const x of [...candidates]
+              .filter(
+                (x) =>
+                  ![...slots.values()].some((p) => Math.abs(p.x - x) < 7.5),
+              )
+              .sort(
+                (x, y) =>
+                  Math.abs(a.x - x) +
+                    Math.abs(b.x - x) -
+                    Math.abs(a.x - y) -
+                    Math.abs(b.x - y) || x - y,
+              )) {
+              let q = null;
+              for (let lane = 0; lane < relations.length * 2 + 4; lane++) {
+                const y = a.y - 16 - lane * 12,
+                  v = { x: a.x, y },
+                  w = { x, y };
+                if (clear(a, v) && clear(v, w)) {
+                  q = [v, w];
+                  break;
+                }
+              }
+              if (!q) continue;
+              for (let lane = 0; lane < relations.length * 2 + 4; lane++) {
+                const y = b.y - 16 - lane * 12,
+                  v = { x, y },
+                  w = { x: b.x, y };
+                if (clear(q[1], v) && clear(v, w) && clear(w, b)) {
+                  path = [a, ...q, v, w, b];
+                  break;
+                }
+              }
+              if (path) break;
+            }
+          if (!path) throw Error("No local route: " + e.from + " -> " + e.to);
+          paths.set(e, path);
+          for (let j = 1; j < path.length; j++)
+            occupied.push([path[j - 1], path[j]]);
+        }
+        // Pack each row according to the tracks actually used immediately above it.
+        const rows = [...new Set(boxes.map((b) => b.y))].sort((a, b) => a - b),
+          mapping = new Map();
+        let cursor = 80;
+        for (const old of rows) {
+          const points = [...paths.values()]
+            .flat()
+            .filter((p) => p.y <= old && p.y > old - 1800);
+          const min = Math.min(old, ...points.map((p) => p.y));
+          const next = cursor + (old - min);
+          mapping.set(old, next);
+          cursor =
+            next +
+            Math.max(...boxes.filter((b) => b.y === old).map((b) => b.height)) +
+            100;
+        }
+        const mapY = (y) => {
+          const row = rows.find((r) => y <= r);
+          return row === undefined ? y : y - row + mapping.get(row);
+        };
+        for (const path of paths.values())
+          for (const point of path) {
+            if (!point.mapped) {
+              point.y = mapY(point.y);
+              point.mapped = true;
+            }
+          }
+        for (const [id, p] of locations) p[1] = mapping.get(p[1]);
+        return { locations, relations, slots, paths };
+      }
+      const routeGrid = routingGrid(),
+        routeUse = new Map(),
+        reservedSegments = [];
+      function edgeGeometry(e, grid = routeGrid) {
+        const path = grid.paths.get(e);
+        const simple = [];
+        for (const point of path) {
+          while (simple.length > 1) {
+            const a = simple.at(-2),
+              b = simple.at(-1);
+            if (
+              (a.x === b.x && b.x === point.x) ||
+              (a.y === b.y && b.y === point.y)
+            )
+              simple.pop();
+            else break;
+          }
+          simple.push(point);
+        }
+        for (let i = 1; i < simple.length; i++)
+          reservedSegments.push([simple[i - 1], simple[i]]);
+        let label = 0;
+        for (let i = 1; i < simple.length - 1; i++)
+          if (
+            Math.abs(simple[i + 1].x - simple[i].x) +
+              Math.abs(simple[i + 1].y - simple[i].y) >
+            Math.abs(simple[label + 1].x - simple[label].x) +
+              Math.abs(simple[label + 1].y - simple[label].y)
+          )
+            label = i;
+        let d = "M" + simple[0].x + " " + simple[0].y;
+        for (let i = 1; i < simple.length - 1; i++) {
+          const a = simple[i - 1],
+            b = simple[i],
+            c = simple[i + 1],
+            ab = Math.abs(a.x - b.x) + Math.abs(a.y - b.y),
+            bc = Math.abs(c.x - b.x) + Math.abs(c.y - b.y),
+            r = Math.min(4, ab / 2, bc / 2);
+          const before = {
+              x: b.x + ((a.x - b.x) * r) / ab,
+              y: b.y + ((a.y - b.y) * r) / ab,
+            },
+            after = {
+              x: b.x + ((c.x - b.x) * r) / bc,
+              y: b.y + ((c.y - b.y) * r) / bc,
+            };
+          d +=
+            " L" +
+            before.x +
+            " " +
+            before.y +
+            " Q" +
+            b.x +
+            " " +
+            b.y +
+            " " +
+            after.x +
+            " " +
+            after.y;
+        }
+        d += " L" + simple.at(-1).x + " " + simple.at(-1).y;
+        return {
+          d,
+          x: (simple[label].x + simple[label + 1].x) / 2,
+          y: (simple[label].y + simple[label + 1].y) / 2 - 6,
+          points: simple,
+        };
+      }
+      function highlight(id) {
+        for (const { e, path } of edgeEls) {
+          const active = id && (e.from === id || e.to === id);
+          path.classList.toggle("active", !!active);
+          path.classList.toggle("muted", !!id && !active);
+        }
+        for (const [k, g] of nodeEls) g.classList.toggle("active", k === id);
+      }
+      function draw() {
+        if (detailNode) {
+          drawDetail();
+          return;
+        }
+        routeUse.clear();
+        reservedSegments.length = 0;
+        scene.replaceChildren();
+        nodeEls.clear();
+        edgeEls.length = 0;
+        for (const [layer, label] of [
+          ["EL1", t("kernel")],
+          ["EL0", t("apps")],
+          [
+            "HARDWARE",
+            language === "ru" ? "Аппаратная граница" : "Hardware boundary",
+          ],
+        ]) {
+          const members = model.nodes.filter((n) =>
+            layer === "HARDWARE"
+              ? n.external
+              : !n.external &&
+                (layer === "EL1" ? n.layer === "EL1" : n.layer !== "EL1"),
+          );
+          if (!members.length) continue;
+          const pts = members.map((n) => positions.get(n.id)),
+            x = Math.min(...pts.map((p) => p[0])) - 24,
+            y = Math.min(...pts.map((p) => p[1])) - 52;
+          const width = Math.max(...pts.map((p) => p[0] + CW)) - x + 24,
+            height = Math.max(...pts.map((p) => p[1] + CH)) - y + 24;
+          scene.append(
+            se("rect", { x, y, width, height, rx: 12, class: "layerbox" }),
+            se("text", { x: x + 14, y: y + 24, class: "layerlabel" }, label),
+          );
+        }
+        model.edges.forEach((e, i) => {
+          const geo = edgeGeometry(e),
+            p = se("path", {
+              d: geo.d,
+              stroke: colors[e.kind],
+              class: "edge",
+              "marker-end": `url(#arrow-${e.kind})`,
+              tabindex: 0,
+              role: "button",
+              "aria-label": edgeText(e),
+            });
+
+          p.addEventListener("pointerenter", (ev) => {
+            if (pinned) return;
+            showEdge(e, ev.clientX, ev.clientY, false);
+          });
+          p.addEventListener("pointerleave", () => scheduleClose());
+          p.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            showEdge(e, ev.clientX, ev.clientY, true);
+          });
+          p.addEventListener("focus", () => {
+            if (!pinned) {
+              const r = p.getBoundingClientRect();
+              showEdge(e, r.x + r.width / 2, r.y + r.height / 2, false);
+            }
+          });
+          p.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              const r = p.getBoundingClientRect();
+              showEdge(e, r.x + r.width / 2, r.y + r.height / 2, true);
+            }
+          });
+          scene.append(p);
+          for (const point of [geo.points[0], geo.points.at(-1)])
+            scene.append(
+              se("circle", {
+                cx: point.x,
+                cy: point.y,
+                r: 3.5,
+                fill: colors[e.kind],
+                "pointer-events": "none",
+              }),
+            );
+          edgeEls.push({ e, path: p });
+        });
+        for (const n of model.nodes) {
+          const [x, y] = positions.get(n.id),
+            g = se("g", {
+              transform: `translate(${x} ${y})`,
+              class: "node",
+              tabindex: 0,
+              role: "button",
+              "aria-label": title(n),
+            });
+          g.append(
+            se("rect", { width: CW, height: CH, rx: 12, class: "card" }),
+            se("path", {
+              d: icons[shortId(n)],
+              transform: "translate(14 14)",
+              class: "icon",
+            }),
+            se("text", { x: 47, y: 33, class: "name" }, title(n)),
+          );
+          const ins = model.edges.filter((e) => e.to === n.id).length,
+            outs = model.edges.filter((e) => e.from === n.id).length;
+          g.append(
+            se(
+              "text",
+              { x: 14, y: 59, class: "stats" },
+              n.external
+                ? language === "ru"
+                  ? "Внешняя аппаратная граница"
+                  : "External hardware boundary"
+                : `${t("members")}: ${n.members.length} · ${t("ins")}: ${ins} / ${t("outs")}: ${outs}`,
+            ),
+          );
+          if (n.measurements.length) {
+            g.append(
+              se(
+                "text",
+                { x: 14, y: 76, class: "perf", style: "font-size:10px" },
+                t("medianLabel"),
+              ),
+            );
+            for (const [p, i] of [
+              ["DEV", 0],
+              ["PROD", 1],
+            ]) {
+              const ms = n.measurements
+                .filter((r) => r.execution_profile === p)
+                .map((r) => r.metrics[0]);
+              if (!ms.length) {
+                g.append(
+                  se(
+                    "text",
+                    { x: 14, y: 93 + i * 17, class: "perf" },
+                    p + ": " + t("noData"),
+                  ),
+                );
+                continue;
+              }
+              const converted = ms.every(
+                (v) => typeof v.microseconds === "number",
+              );
+              const values = ms.map((v) =>
+                converted ? v.microseconds : v.value,
+              );
+              g.append(
+                se(
+                  "text",
+                  { x: 14, y: 93 + i * 17, class: "perf measured" },
+                  `${p} ${Math.min(...values).toFixed(3)}–${Math.max(...values).toFixed(3)} ${converted ? t("us") : t("ticks")}`,
+                ),
+              );
+            }
+          } else {
+            g.append(
+              se(
+                "text",
+                { x: 14, y: 88, class: "perf" },
+                n.external
+                  ? language === "ru"
+                    ? "Чтение статуса / запись регистров"
+                    : "Status reads / register writes"
+                  : n.contracts.includes("kolvrt.clock.query")
+                    ? t("missingMeasurements")
+                    : t("pending"),
+              ),
+            );
+          }
+          const label = g.querySelector(".name");
+          label.style.pointerEvents = "all";
+          label.addEventListener("pointerenter", () => {
+            clearTimeout(hoverTimer);
+            if (!pinned)
+              hoverTimer = setTimeout(() => showLabel(n, label), 150);
+          });
+          label.addEventListener("pointerleave", scheduleClose);
+          g.addEventListener("pointerenter", () => {
+            if (!pinned) {
+              highlight(n.id);
+            }
+          });
+          g.addEventListener("pointerleave", scheduleClose);
+          g.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            enterDetail(n);
+          });
+          g.addEventListener("focus", () => {
+            highlight(n.id);
+          });
+          g.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              enterDetail(n);
+            }
+          });
+          scene.append(g);
+          nodeEls.set(n.id, g);
+        }
+        highlight(selected);
+        updateUI();
+      }
+      function enterDetail(n) {
+        if (n.external) {
+          popupBase(title(n), true);
+          popup.append(
+            element(
+              "p",
+              language === "ru" ? n.responsibility_ru : n.responsibility,
+            ),
+          );
+          for (const source of n.sources) popup.append(link(source));
+          positionPopup(innerWidth / 2, 120);
+          return;
+        }
+        closePopup();
+        detailNode = n;
+        draw();
+        fit();
+      }
+      const textCanvas = document.createElement("canvas"),
+        textMetrics = textCanvas.getContext("2d");
+      const fontFamily = getComputedStyle(document.body).fontFamily;
+      function textWidth(text, font = "650 13px") {
+        textMetrics.font = font + " " + fontFamily;
+        return textMetrics.measureText(text).width;
+      }
+      function wrapName(name, maxWidth = 200) {
+        const lines = [];
+        let line = "";
+        for (const word of name.split(/\s+/)) {
+          if (textWidth(word) > maxWidth) {
+            if (line) {
+              lines.push(line);
+              line = "";
+            }
+            let part = "";
+            for (const char of word) {
+              if (part && textWidth(part + char) > maxWidth) {
+                lines.push(part);
+                part = char;
+              } else part += char;
+            }
+            line = part;
+          } else if (line && textWidth(line + " " + word) > maxWidth) {
+            lines.push(line);
+            line = word;
+          } else line += (line ? " " : "") + word;
+        }
+        if (line) lines.push(line);
+        return lines;
+      }
+      function captionPosition(geo, text, cardBoxes, labelBoxes) {
+        const probe = se(
+          "text",
+          { style: "font:600 11px " + fontFamily + ";visibility:hidden" },
+          text,
+        );
+        scene.append(probe);
+        const measured = probe.getBBox().width;
+        probe.remove();
+        const width = Math.ceil(measured) + 20,
+          height = 22;
+        const overlap = (a, b) =>
+          a.x < b.x + b.width + 5 &&
+          a.x + a.width + 5 > b.x &&
+          a.y < b.y + b.height + 5 &&
+          a.y + a.height + 5 > b.y;
+        const segments = geo.points
+          .slice(1)
+          .map((b, i) => ({
+            a: geo.points[i],
+            b,
+            length:
+              Math.abs(b.x - geo.points[i].x) + Math.abs(b.y - geo.points[i].y),
+          }))
+          .sort((a, b) => b.length - a.length);
+        for (const offset of [16, -16, 32, -32, 50, -50, 72, -72, 100, -100])
+          for (const segment of segments)
+            for (const fraction of [0.5, 0.3, 0.7]) {
+              const x = segment.a.x + (segment.b.x - segment.a.x) * fraction,
+                y = segment.a.y + (segment.b.y - segment.a.y) * fraction,
+                horizontal = segment.a.y === segment.b.y;
+              const box = {
+                x:
+                  x -
+                  width / 2 +
+                  (horizontal
+                    ? 0
+                    : offset + (offset > 0 ? width / 2 : -width / 2)),
+                y: y - height / 2 + (horizontal ? offset : 0),
+                width,
+                height,
+              };
+              if (
+                [...cardBoxes, ...labelBoxes].some((other) =>
+                  overlap(box, other),
+                )
+              )
+                continue;
+              return { ...box, anchor: { x, y } };
+            }
+        throw new Error("No free caption position: " + text);
+      }
+      function showMember(member, index, pin) {
+        const responsibility =
+          typeof member.responsibility === "object"
+            ? member.responsibility?.[language]
+            : language === "en"
+              ? member.responsibility
+              : member.responsibility_ru;
+        if (!responsibility) {
+          closePopup();
+          return;
+        }
+        popupKind = { member: index };
+        popupBase(t("responsibility"), pin);
+        popup.querySelector("h2")?.remove();
+        popup.append(element("p", responsibility));
+        const rect = nodeEls
+          .get(member.id || detailNode.id + ".member-" + index)
+          .querySelector(".name")
+          .getBoundingClientRect();
+        positionPopup(rect.right, rect.bottom);
+      }
+      function detailLayoutSize(n) {
+        const degree = new Map();
+        let count = 0;
+        const add = (id) => degree.set(id, (degree.get(id) || 0) + 1);
+        for (const e of n.member_relations || []) {
+          count++;
+          add(e.from);
+          add(e.to);
+        }
+        for (const e of model.edges) {
+          if (e.from !== n.id && e.to !== n.id) continue;
+          const out = e.from === n.id;
+          for (const pair of e.member_endpoints) {
+            count++;
+            add(out ? pair.from_member : pair.to_member);
+            add((out ? "out:" : "in:") + (out ? e.to : e.from));
+          }
+        }
+        return {
+          width: Math.max(260, 40 + 8 * (1 + Math.max(0, ...degree.values()))),
+          band: 1800,
+        };
+      }
+      function drawDetail() {
+        routeUse.clear();
+        reservedSegments.length = 0;
+        scene.replaceChildren();
+        nodeEls.clear();
+        edgeEls.length = 0;
+        const n = detailNode,
+          DW = detailLayoutSize(n).width,
+          routeBand = detailLayoutSize(n).band,
+          heights = new Map(),
+          locations = new Map();
+        const children = n.members.map((m, i) => ({
+          ...m,
+          id: m.id || n.id + ".member-" + i,
+        }));
+        children.forEach((m) =>
+          heights.set(
+            m.id,
+            54 + wrapName(memberName(m)).length * 18 + m.sources.length * 14,
+          ),
+        );
+        const incident = model.edges
+          .map((edge, index) => ({ edge, index }))
+          .filter(({ edge }) => edge.from === n.id || edge.to === n.id);
+        const boundaryNodes = [];
+        for (const direction of ["in", "out"]) {
+          const ids = new Set(
+            incident
+              .filter(({ edge }) =>
+                direction === "in" ? edge.to === n.id : edge.from === n.id,
+              )
+              .map(({ edge }) => (direction === "in" ? edge.from : edge.to)),
+          );
+          for (const id of ids)
+            boundaryNodes.push({
+              id: "boundary:" + direction + ":" + id,
+              direction,
+              group: nodes.get(id),
+            });
+        }
+        const boundaryByGroup = new Map(
+          boundaryNodes.map((b) => [b.direction + ":" + b.group.id, b]),
+        );
+        const upper = boundaryNodes.filter((b) => b.direction === "in"),
+          lower = boundaryNodes.filter((b) => b.direction === "out");
+        function boundaryRow(row, y) {
+          row.forEach((b, i) => {
+            locations.set(b.id, [
+              (W - (row.length * DW + (row.length - 1) * 35)) / 2 +
+                i * (DW + 35),
+              y,
+            ]);
+            heights.set(b.id, 76);
+          });
+        }
+        boundaryRow(upper, routeBand + 20);
+        let rowY = upper.length ? routeBand * 2 + 226 : routeBand + 60;
+        for (let offset = 0; offset < children.length; offset += 3) {
+          const row = children.slice(offset, offset + 3);
+          row.forEach((m, column) =>
+            locations.set(m.id, [
+              (W - (row.length * DW + (row.length - 1) * 130)) / 2 +
+                column * (DW + 130),
+              rowY,
+            ]),
+          );
+          rowY +=
+            Math.max(...row.map((m) => heights.get(m.id))) + routeBand + 130;
+        }
+        const softwareLower = lower.filter((b) => !b.group.external),
+          hardwareLower = lower.filter((b) => b.group.external);
+        boundaryRow(softwareLower, rowY + 20);
+        const hardwareY =
+          rowY + 20 + (softwareLower.length ? routeBand + 180 : 0);
+        boundaryRow(hardwareLower, hardwareY);
+        const separatorBoxes = [];
+        function externalSeparator(y, direction) {
+          const label =
+            direction === "hardware"
+              ? language === "ru"
+                ? "Аппаратная граница · MMIO"
+                : "Hardware boundary · MMIO"
+              : language === "ru"
+                ? direction === "in"
+                  ? "Входящие связи"
+                  : "Исходящие связи"
+                : direction === "in"
+                  ? "Incoming connections"
+                  : "Outgoing connections";
+          const width = Math.ceil(textWidth(label, "600 11px")) + 12;
+          separatorBoxes.push({ x: detailLeft, y: y - 26, width, height: 20 });
+          scene.append(
+            se("line", {
+              x1: detailLeft,
+              y1: y,
+              x2: detailRight,
+              y2: y,
+              stroke: "#4b627d",
+              "stroke-width": 1,
+              "stroke-dasharray": "6 5",
+              opacity: 0.65,
+              "pointer-events": "none",
+            }),
+            se(
+              "text",
+              {
+                x: detailLeft + 4,
+                y: y - 10,
+                fill: "#a7bdd5",
+                style: "font:600 11px " + fontFamily + ";pointer-events:none",
+              },
+              label,
+            ),
+          );
+        }
+
+        const relations = [...(n.member_relations || [])];
+        for (const { edge, index } of incident) {
+          if (
+            !Array.isArray(edge.member_endpoints) ||
+            !edge.member_endpoints.length
+          )
+            throw new Error("Missing reviewed root member endpoints: " + index);
+          const outgoing = edge.from === n.id,
+            remote = outgoing ? edge.to : edge.from,
+            boundary = boundaryByGroup.get(
+              (outgoing ? "out:" : "in:") + remote,
+            );
+          for (const pair of edge.member_endpoints) {
+            const local = outgoing ? pair.from_member : pair.to_member;
+            if (!children.some((m) => m.id === local))
+              throw new Error("Invalid local boundary member: " + local);
+            relations.push({
+              ...edge,
+              ...(pair.actions?.length
+                ? {
+                    label: pair.actions.map((a) => a.label).join("; "),
+                    label_ru: pair.actions.map((a) => a.label_ru).join("; "),
+                    caption_en:
+                      pair.actions[0].caption_en +
+                      (pair.actions.length > 1
+                        ? " +" + (pair.actions.length - 1)
+                        : ""),
+                    caption_ru:
+                      pair.actions[0].caption_ru +
+                      (pair.actions.length > 1
+                        ? " +" + (pair.actions.length - 1)
+                        : ""),
+                    evidence: [
+                      ...new Set(pair.actions.flatMap((a) => a.evidence)),
+                    ],
+                  }
+                : {}),
+              from: outgoing ? local : boundary.id,
+              to: outgoing ? boundary.id : local,
+              root_index: index,
+              member_pair: pair,
+              external_member: outgoing ? pair.to_member : pair.from_member,
+            });
+          }
+        }
+        const captionBoxes = [],
+          captionLayer = se("g", { class: "detail-captions" });
+        const grid = relations.length
+          ? routingGrid(locations, relations, DW, CH, heights)
+          : null;
+        const cardBoxes = [...children, ...boundaryNodes].map((m) => ({
+          id: m.id,
+          x: locations.get(m.id)[0],
+          y: locations.get(m.id)[1],
+          width: DW,
+          height: heights.get(m.id),
+        }));
+        const routeXs = grid
+          ? [...grid.paths.values()].flatMap((path) =>
+              path.map((point) => point.x),
+            )
+          : [];
+        const detailLeft =
+          Math.min(...cardBoxes.map((box) => box.x), ...routeXs) - 20;
+        const detailRight =
+          Math.max(...cardBoxes.map((box) => box.x + box.width), ...routeXs) +
+          20;
+        if (upper.length)
+          externalSeparator(
+            Math.max(
+              ...upper.map((b) => locations.get(b.id)[1] + heights.get(b.id)),
+            ) + 50,
+            "in",
+          );
+        if (softwareLower.length)
+          externalSeparator(
+            Math.min(...softwareLower.map((b) => locations.get(b.id)[1])) - 35,
+            "out",
+          );
+        if (hardwareLower.length)
+          externalSeparator(
+            Math.min(...hardwareLower.map((b) => locations.get(b.id)[1])) - 35,
+            "hardware",
+          );
+        for (const relation of relations) {
+          const geo = edgeGeometry(relation, grid),
+            path = se("path", {
+              d: geo.d,
+              class: "edge",
+              stroke: colors[relation.kind],
+              "marker-end": `url(#arrow-${relation.kind})`,
+            });
+          const explain = (pin, event) => {
+            const names = new Map([
+                ...children.map((m) => [m.id, memberName(m)]),
+                ...boundaryNodes.map((b) => [b.id, title(b.group) + " ↗"]),
+              ]),
+              heading =
+                names.get(relation.from) + " → " + names.get(relation.to);
+            popupKind = null;
+            routeDescription(relation, heading, pin);
+            if (pin && relation.external_member) {
+              const remoteMember = model.nodes
+                .flatMap((group) => group.members)
+                .find((m) => m.id === relation.external_member);
+              popup.append(
+                element(
+                  "p",
+                  (language === "ru"
+                    ? "На другой стороне: "
+                    : "Remote mechanism: ") +
+                    (remoteMember
+                      ? memberName(remoteMember)
+                      : title(nodes.get(relation.external_member))),
+                  "muted",
+                ),
+              );
+            }
+            const rect = path.getBoundingClientRect();
+            positionPopup(
+              event?.clientX ?? rect.x + rect.width / 2,
+              event?.clientY ?? rect.y + rect.height / 2,
+            );
+          };
+          if (relation.root_index !== undefined) {
+            path.setAttribute("data-root-index", relation.root_index);
+            path.setAttribute(
+              "data-from-member",
+              relation.member_pair.from_member,
+            );
+            path.setAttribute("data-to-member", relation.member_pair.to_member);
+          }
+          path.setAttribute("tabindex", "0");
+          path.setAttribute("role", "button");
+          path.setAttribute("aria-label", edgeText(relation));
+          path.addEventListener("pointerenter", (event) => {
+            if (!pinned) {
+              path.classList.add("active");
+              explain(false, event);
+            }
+          });
+          path.addEventListener("pointerleave", () => {
+            path.classList.remove("active");
+            scheduleClose();
+          });
+          path.addEventListener("focus", () => {
+            if (!pinned) explain(false);
+          });
+          path.addEventListener("blur", scheduleClose);
+          path.addEventListener("click", (event) => explain(true, event));
+          path.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              explain(true);
+            }
+          });
+          const caption =
+              actionCaptions[relation.label]?.[language] || edgeShort(relation),
+            box = captionPosition(
+              geo,
+              caption,
+              cardBoxes.concat(separatorBoxes),
+              captionBoxes,
+            );
+          captionBoxes.push({
+            ...box,
+            from: relation.from,
+            to: relation.to,
+            label: caption,
+            root_index: relation.root_index ?? null,
+          });
+          const pill = se("g", {
+            class: "edge-caption",
+            tabindex: 0,
+            role: "button",
+            "aria-label": edgeText(relation),
+          });
+          pill.append(
+            se("line", {
+              x1: box.anchor.x,
+              y1: box.anchor.y,
+              x2: box.x + box.width / 2,
+              y2: box.y + box.height / 2,
+              stroke: colors[relation.kind],
+              "stroke-width": 1,
+              "pointer-events": "none",
+            }),
+            se("rect", {
+              x: box.x,
+              y: box.y,
+              width: box.width,
+              height: box.height,
+              rx: 6,
+              fill: "#0c1929",
+              stroke: colors[relation.kind],
+              "stroke-width": 1,
+            }),
+            se(
+              "text",
+              {
+                x: box.x + 8,
+                y: box.y + 15,
+                fill: colors[relation.kind],
+                style: "font:600 11px " + fontFamily + ";pointer-events:none",
+              },
+              caption,
+            ),
+          );
+          pill.addEventListener("pointerenter", (event) => {
+            if (!pinned) explain(false, event);
+          });
+          pill.addEventListener("pointerleave", scheduleClose);
+          pill.addEventListener("click", (event) => explain(true, event));
+          pill.addEventListener("focus", () => {
+            if (!pinned) explain(false);
+          });
+          pill.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              explain(true);
+            }
+          });
+          captionLayer.append(pill);
+          scene.append(path);
+          for (const point of [geo.points[0], geo.points.at(-1)])
+            scene.append(
+              se("circle", {
+                cx: point.x,
+                cy: point.y,
+                r: 3.5,
+                fill: colors[relation.kind],
+                "pointer-events": "none",
+              }),
+            );
+        }
+        children.forEach((m, i) => {
+          const [x, y] = locations.get(m.id),
+            DH = heights.get(m.id),
+            sourceY = 38 + wrapName(memberName(m)).length * 18,
+            card = se("g", {
+              transform: `translate(${x} ${y})`,
+              class: "node",
+              role: "group",
+              "aria-label": memberName(m),
+            });
+          card.append(
+            se("rect", { width: DW, height: DH, rx: 12, class: "card" }),
+            se("path", {
+              d: icons[shortId(n)],
+              transform: "translate(14 14)",
+              class: "icon",
+            }),
+          );
+          const name = se("g", {
+            tabindex: 0,
+            role: "note",
+            "aria-label": memberName(m),
+            style: "pointer-events:all",
+          });
+          wrapName(memberName(m)).forEach((line, j) =>
+            name.append(
+              se(
+                "text",
+                {
+                  x: 47,
+                  y: 28 + j * 18,
+                  class: "name",
+                  style: "font-size:13px;pointer-events:all",
+                },
+                line,
+              ),
+            ),
+          );
+          name.addEventListener("pointerenter", () => {
+            clearTimeout(hoverTimer);
+            if (!pinned)
+              hoverTimer = setTimeout(() => showMember(m, i, false), 150);
+          });
+          name.addEventListener("pointerleave", scheduleClose);
+          name.addEventListener("focus", () => {
+            if (!pinned) showMember(m, i, false);
+          });
+          card.append(name);
+          m.sources.forEach((file, j) => {
+            const a = se("a", {
+              href:
+                model.view.repository_href +
+                file.split("/").map(encodeURIComponent).join("/"),
+              target: "_blank",
+              rel: "noopener",
+              "aria-label": file,
+            });
+            a.append(
+              se(
+                "text",
+                {
+                  x: 14,
+                  y: sourceY + j * 14,
+                  fill: "#9bd5ff",
+                  style:
+                    "font-size:11px;pointer-events:all;text-decoration:underline",
+                },
+                file.split("/").slice(-2).join("/") + " ↗",
+              ),
+            );
+            card.append(a);
+          });
+          const metricStatus = se(
+            "text",
+            {
+              x: 14,
+              y: DH - 12,
+              class: "perf",
+              tabindex: 0,
+              style: "pointer-events:all",
+              "aria-label": t("pending"),
+            },
+            language === "ru" ? "Замеры: —" : "Metrics: —",
+          );
+          const explainMetrics = () => {
+            if (pinned) return;
+            popupKind = null;
+            popupBase(t("pending"), false);
+            popup.append(element("p", t("pending")));
+            const rect = metricStatus.getBoundingClientRect();
+            positionPopup(rect.right, rect.bottom);
+          };
+          metricStatus.addEventListener("pointerenter", explainMetrics);
+          metricStatus.addEventListener("focus", explainMetrics);
+          metricStatus.addEventListener("pointerleave", scheduleClose);
+          metricStatus.addEventListener("blur", scheduleClose);
+          card.append(metricStatus);
+          scene.append(card);
+          nodeEls.set(m.id, card);
+        });
+        for (const boundary of boundaryNodes) {
+          const [x, y] = locations.get(boundary.id),
+            card = se("g", {
+              transform: `translate(${x} ${y})`,
+              class: "node boundary",
+              tabindex: 0,
+              role: "button",
+              "aria-label": title(boundary.group),
+            });
+          card.append(
+            se("rect", {
+              width: DW,
+              height: 76,
+              rx: 12,
+              fill: "#0e1b2b",
+              stroke: "#708aa6",
+              "stroke-width": 1.5,
+              "stroke-dasharray": "5 3",
+            }),
+            se("path", {
+              d: icons[shortId(boundary.group)],
+              transform: "translate(14 14)",
+              class: "icon",
+            }),
+            se(
+              "text",
+              { x: 47, y: 33, class: "name", style: "font-size:14px" },
+              title(boundary.group) + (boundary.group.external ? " ◇" : " ↗"),
+            ),
+            se(
+              "text",
+              { x: 14, y: 60, class: "stats" },
+              boundary.group.external
+                ? language === "ru"
+                  ? "Устройство · аппаратная граница"
+                  : "Device · hardware boundary"
+                : language === "ru"
+                  ? "Внешний компонент"
+                  : "External component",
+            ),
+          );
+          card.addEventListener("click", () => enterDetail(boundary.group));
+          card.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              enterDetail(boundary.group);
+            }
+          });
+          scene.append(card);
+          nodeEls.set(boundary.id, card);
+        }
+        scene.append(captionLayer);
+        window.arenaGeometry = {
+          node: n.id,
+          language,
+          cardBoxes,
+          labelBoxes: captionBoxes,
+          annotationBoxes: separatorBoxes,
+          incidentRootIndices: incident.map((item) => item.index),
+          boundaryBranches: relations
+            .filter((relation) => relation.root_index !== undefined)
+            .map((relation) => ({
+              root_index: relation.root_index,
+              from: relation.from,
+              to: relation.to,
+              external_member: relation.external_member,
+              member_pair: relation.member_pair,
+            })),
+        };
+        updateUI();
+      }
+      function showLabel(n, label) {
+        popupKind = null;
+        popupBase(title(n), false);
+        popup.append(
+          element(
+            "p",
+            language === "ru"
+              ? translations.nodes[n.id].ruResponsibility
+              : n.responsibility,
+          ),
+        );
+        const rect = label.getBoundingClientRect();
+        positionPopup(rect.right, rect.bottom);
+      }
+      function popupBase(heading, pin) {
+        clearTimeout(hoverTimer);
+        pinned = pin;
+        popup.replaceChildren();
+        popup.hidden = false;
+        popup.classList.toggle("tooltip", !pin);
+        popup.setAttribute("role", pin ? "dialog" : "tooltip");
+        popup.setAttribute("aria-label", heading);
+        if (pin) {
+          const close = element("button", "×", "close");
+          close.setAttribute("aria-label", t("close"));
+          close.onclick = closePopup;
+          popup.append(close, element("h2", heading));
+        }
+      }
+      function positionPopup(x, y) {
+        popup.style.maxHeight =
+          Math.max(
+            120,
+            Math.min(pinned ? innerHeight - 110 : 240, innerHeight - 110),
+          ) + "px";
+        const w = popup.offsetWidth,
+          h = popup.offsetHeight;
+        popup.style.left =
+          Math.max(12, Math.min(innerWidth - w - 12, x + 16)) + "px";
+        popup.style.top =
+          Math.max(76, Math.min(innerHeight - h - 16, y)) + "px";
+      }
+      function showData(n) {
+        popupKind = { node: n.id };
+        popupBase(
+          (language === "ru" ? "Данные · " : "Data · ") + title(n),
+          true,
+        );
+        popup.append(
+          element("p", t("historical")),
+          element("p", t("repeat"), "muted"),
+        );
+        for (const profile of ["DEV", "PROD"]) {
+          const runs = n.measurements.filter(
+              (r) => r.execution_profile === profile,
+            ),
+            metrics = runs.map((r) => r.metrics[0]);
+          if (!runs.length) {
+            popup.append(element("p", profile + ": " + t("noData")));
+            continue;
+          }
+          const converted = metrics.every(
+            (m) => typeof m.microseconds === "number",
+          );
+          popup.append(
+            element(
+              "p",
+              profile +
+                " " +
+                metrics
+                  .map((m) =>
+                    Number(converted ? m.microseconds : m.value).toFixed(3),
+                  )
+                  .join(" / ") +
+                " " +
+                (converted ? t("us") : t("ticks")),
+              "values",
+            ),
+            element(
+              "p",
+              "N=" +
+                metrics.map((m) => m.sample_count).join(" / ") +
+                " · QEMU · " +
+                runs[0].exact_commit.slice(0, 12),
+              "muted",
+            ),
+          );
+          for (const run of runs) popup.append(link(run.path));
+        }
+        popup.append(element("p", t("scope"), "muted"));
+        const rect = (
+          detailNode
+            ? document.getElementById("detail-data")
+            : nodeEls.get(n.id)
+        ).getBoundingClientRect();
+        positionPopup(rect.right, rect.top);
+      }
+      function routeDescription(e, heading, pin) {
+        popupBase(heading, pin);
+        if (!pin) popup.append(element("p", heading, "relation-heading"));
+        const actions =
+          e.member_pair?.actions ||
+          e.member_endpoints?.flatMap((p) => p.actions || []) ||
+          [];
+        const captions = [
+          ...new Set(
+            actions.map((a) =>
+              language === "ru" ? a.caption_ru : a.caption_en,
+            ),
+          ),
+        ];
+        const brief =
+          actions.length === 1
+            ? language === "ru"
+              ? actions[0].label_ru
+              : actions[0].label
+            : captions.length
+              ? captions.slice(0, 2).join(" · ") +
+                (captions.length > 2 ? " +" + (captions.length - 2) : "")
+              : edgeShort(e);
+        if (!pin || !actions.length)
+          popup.append(element("p", pin ? edgeText(e) : brief));
+        if (pin) {
+          for (const a of actions)
+            popup.append(
+              element("p", language === "ru" ? a.label_ru : a.label),
+            );
+          for (const file of e.evidence) popup.append(link(file));
+        }
+      }
+      function showEdge(e, x, y, pin) {
+        popupKind = { edge: model.edges.indexOf(e) };
+        const heading =
+          title(nodes.get(e.from)) + " → " + title(nodes.get(e.to));
+        routeDescription(e, heading, pin);
+        positionPopup(x, y);
+      }
+      function closePopup() {
+        clearTimeout(hoverTimer);
+        popup.hidden = true;
+        pinned = false;
+        popupKind = null;
+        selected = null;
+        highlight(null);
+      }
+      function scheduleClose() {
+        clearTimeout(hoverTimer);
+        if (!pinned) hoverTimer = setTimeout(closePopup, 260);
+      }
+      popup.addEventListener("wheel", (e) => e.stopPropagation(), {
+        passive: true,
+      });
+      popup.addEventListener(
+        "toggle",
+        () => {
+          if (!popup.hidden)
+            positionPopup(
+              parseFloat(popup.style.left) - 16,
+              parseFloat(popup.style.top),
+            );
+        },
+        true,
+      );
+      popup.addEventListener("pointerenter", () => clearTimeout(hoverTimer));
+      popup.addEventListener("pointerleave", scheduleClose);
+      popup.addEventListener("click", () => {
+        if (!popup.hidden) pinned = true;
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closePopup();
+      });
+      function help() {
+        popupKind = { help: true };
+        popupBase(t("help"), true);
+        for (const [k, c] of Object.entries(colors)) {
+          const row = element("p"),
+            dot = element("span", undefined, "legend-dot");
+          dot.style.background = c;
+          row.append(dot, document.createTextNode(t(k)));
+          popup.append(row);
+        }
+        popup.append(
+          element("p", t("helpline")),
+          element("p", t("helpnav")),
+          element("p", t("topology"), "muted"),
+          element("p", t("notmeasured"), "muted"),
+        );
+        for (const w of model.view.measurement_warnings)
+          popup.append(
+            element(
+              "p",
+              t("unavailable") + ": " + w.path + " — " + w.reason,
+              "muted",
+            ),
+          );
+        popup.append(
+          link(model.view.canonical_document),
+          element(
+            "p",
+            t("snapshot") + ": " + model.view.snapshot_sha256,
+            "muted",
+          ),
+        );
+        positionPopup(innerWidth - 400, 75);
+      }
+      function updateUI() {
+        document.documentElement.lang = language;
+        document.title = "KOLVRT · " + t("subtitle");
+        document.getElementById("subtitle").textContent =
+          `${t("subtitle")} · ${model.view.el1_groups} EL1 + 2 EL0 + 1 ${language === "ru" ? "библиотека" : "library"} · ${softwareEdgeCount} ${t("edges")} + ${(model.hardware_relations || []).length} MMIO`;
+        document.getElementById("fit").textContent = t("fit");
+        document.getElementById("lang").textContent =
+          language === "ru" ? "EN" : "RU";
+        document.getElementById("hint").textContent = detailNode
+          ? language === "ru"
+            ? "Цветные стрелки — подтверждённые взаимодействия. Замеры механизмов не реализованы."
+            : "Colored arrows: reviewed interactions. Mechanism measurements not implemented."
+          : t("hint");
+        document.getElementById("back").hidden = !detailNode;
+        document.getElementById("detail-data").hidden = !(
+          detailNode && detailNode.measurements.length
+        );
+        document.getElementById("detail-data").textContent =
+          language === "ru" ? "Данные" : "Data";
+        document.getElementById("back").textContent =
+          language === "ru" ? "← Ядро" : "← Kernel";
+        if (detailNode)
+          document.getElementById("subtitle").textContent =
+            title(detailNode) +
+            " · " +
+            detailNode.members.length +
+            " " +
+            t("members") +
+            " · " +
+            t("ins") +
+            ":" +
+            model.edges.filter((e) => e.to === detailNode.id).length +
+            " / " +
+            t("outs") +
+            ":" +
+            model.edges.filter((e) => e.from === detailNode.id).length;
+        document.getElementById("provenance").textContent =
+          t("source") +
+          " " +
+          model.view.source_commit.slice(0, 12) +
+          (model.view.worktree_dirty ? " + " + t("dirty") : "");
+        document.getElementById("help").title = t("help");
+        document.getElementById("help").setAttribute("aria-label", t("help"));
+        document
+          .getElementById("plus")
+          .setAttribute(
+            "aria-label",
+            language === "ru" ? "Увеличить" : "Zoom in",
+          );
+        document
+          .getElementById("minus")
+          .setAttribute(
+            "aria-label",
+            language === "ru" ? "Уменьшить" : "Zoom out",
+          );
+        svg.setAttribute("aria-label", t("subtitle"));
+        if (popup.hidden)
+          popup.setAttribute(
+            "aria-label",
+            language === "ru" ? "Подробности компонента" : "Component details",
+          );
+      }
+      document.getElementById("detail-data").onclick = () =>
+        showData(detailNode);
+      document.getElementById("back").onclick = () => {
+        closePopup();
+        detailNode = null;
+        draw();
+        fit();
+      };
+      document.getElementById("plus").onclick = () => zoom(1.25);
+      document.getElementById("minus").onclick = () => zoom(0.8);
+      document.getElementById("fit").onclick = () => {
+        closePopup();
+        fit();
+      };
+      document.getElementById("help").onclick = help;
+      document.getElementById("lang").onclick = () => {
+        const old = popupKind,
+          pin = pinned;
+        language = language === "ru" ? "en" : "ru";
+        draw();
+        if (old?.member !== undefined && detailNode)
+          showMember(detailNode.members[old.member], old.member, pin);
+        else if (old?.node) showData(nodes.get(old.node));
+        else if (old?.edge !== undefined)
+          showEdge(model.edges[old.edge], innerWidth - 400, 80, pin);
+        else if (old?.help) help();
+      };
+      window.addEventListener("resize", () => {
+        closePopup();
+        fit();
+      });
+      draw();
+      fit();
+    </script>
+  </body>
+</html>

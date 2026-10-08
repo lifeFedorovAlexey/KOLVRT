@@ -36,6 +36,10 @@ Runner теперь требует ровно одно корректное на
 
 Паспорт CLOCK повторно использует executor свежего machine-mode запуска, поэтому до успешного завершения собственного oracle обязан опубликовать то же проверенное наблюдение устройства. Выбор другого внешнего root не обходит discovery и не создаёт device grant. Изменение исходников общего runner делает предыдущий receipt историческим для той ревизии runner; реализация descriptor и принятый ограниченный scope не меняются.
 
+## Интеграция issue 33
+
+Общий путь исполнения Arena для CLOCK и IPC pilot по-прежнему требует свежего проверенного boot-наблюдения устройства для каждого фактического запуска. Сборка IPC report из частей не заменяет это наблюдение и не подтверждает новый драйвер или grants. Приёмка дескриптора сохраняет прежние границы; изменённые общие исходники требуют новой current-source проверки.
+
 <!-- knowledge -->
 
 ```json
@@ -79,8 +83,8 @@ Runner теперь требует ровно одно корректное на
         "verification": [
           {
             "environment": "qemu-arm64",
-            "state": "VERIFIED",
-            "reason": "Current-source full matrix passed after the shared CLOCK executor refactor; fresh device validation remains mandatory before every scenario oracle. Historical descriptor acceptance is unchanged.",
+            "state": "STALE",
+            "reason": "Historical bounded acceptance is retained; issue33 changes shared execution/report sources and requires new exact-source regression evidence before current verification.",
             "scope": "Pinned QEMU 10.1.0 virt/cortex-a57/TCG DEV/PROD; descriptor discovery and fresh observation gate, not driver or physical readiness.",
             "receipt": "research/measurements/runs/1791408804253-phase40-clock-passport-488919492db0.json",
             "receipt_sha256": "1e6b5dfd336c6a36e1aff2e57dcfa5d1d2c3d7601a90ddbcfec198b2a970eb84"

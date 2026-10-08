@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "workload": "arena.workload.ipc-query",
+  "version": "1",
+  "phase": "main",
+  "case_ids": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  "profiles": ["DEV", "PROD"],
+  "warmup_offered": 4,
+  "measured_offered": 32,
+  "saturation_warmup_offered": 3,
+  "saturation_measured_offered": 33,
+  "pairs_per_profile_case": 12,
+  "pair_order": "Even pairs OFF/ON, odd pairs ON/OFF; outer pair0..11, then case0..11, DEV/PROD",
+  "total_boots": 576,
+  "retry_policy": "None. Fixed offered attempts; failed or unfinished boots and operations are retained."
+}

@@ -19,7 +19,7 @@
     "oracle": {
       "id": "arena.oracle.clock-query",
       "version": "1",
-      "sha256": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194"
+      "sha256": "d0eb2322fdccf7e0e4469bdd628c3cb68a049411581414b82e693620335cc093"
     }
   },
   "environment": {

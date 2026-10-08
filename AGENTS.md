@@ -14,6 +14,12 @@ Run `cargo xtask docs generate`, `cargo xtask docs pilot`, `cargo run --locked -
 
 [Russian translation](translations/ru/AGENTS.md)
 
+## Architecture map changes and level consistency
+
+Changes to architecture, component responsibilities or their interactions must update the [canonical kernel component map](docs/architecture/kernel-component-map.md) and its complete Russian mirror in the same task and pull request as the implementation. Record the concrete mechanisms, direct interactions, boundary member endpoints and reviewed source evidence; do not substitute file adjacency, transitive shortcuts or synthetic links. Check every affected level: root incoming/outgoing relations must continue through the corresponding real members in detail views, including compound branches and external-group navigation. Review the model semantically against the changed code before refreshing source digests; silently refreshing hashes is not a map review.
+
+Run `cargo xtask arena map --check` for every such change. The ordinary repository check also invokes this mandatory level-consistency check. Passing structural checks establishes identifiers, evidence freshness and root/detail correspondence in the declared model, not exhaustive semantic coverage of every production interaction. The checker does not execute the HTML renderer; renderer changes also require rendered-output and interaction review. Complete source and EN/RU semantic review in the same task and PR; do not defer missing map updates to a later issue or describe unreviewed coverage as complete.
+
 ## Performance and test integrity
 
 Do not reduce runtime performance, weaken invariants or alter production semantics merely to make tests pass. Tests must exercise the intended architecture. Do not add arbitrary fixed-duration publication/copy-drain deadlines to normal runtime synchronization. Completion and reclamation require actual acquired quiescence, never elapsed time. Test watchdogs provide diagnostics and do not replace required kernel failure handling. Do not hide failures by increasing timeouts, adding retries or inventing performance allowances.
