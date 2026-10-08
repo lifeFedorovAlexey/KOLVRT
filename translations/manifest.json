@@ -2,8 +2,8 @@
   "locales": {
     "ru": {
       "AGENTS.md": {
-        "source_sha256": "9a64a571a46c22dea16d0be293388273f4054be1697b5dfcd5d374771d492719",
-        "translation_sha256": "d61f4582406296e178eeecf1559e9d044758c32d655be2ace4706c680f790a79"
+        "source_sha256": "116be94aa824c028d0a87dee8ff71191e8ddd9c8aee2c4256d0ad0b5739065ab",
+        "translation_sha256": "1bb24b06ffaa00f5c7d41f19d5f9f2162fef238f74df75b0cc4344ee022e534c"
       },
       "CONTRIBUTING.md": {
         "source_sha256": "7af3945c1eeb2f2f5e44171168f3c0f57b887ff49b8b36dd465312a5b8c0e5f1",
@@ -150,16 +150,16 @@
         "translation_sha256": "27099d2860b554c9ff6b7d9b316293108021f9d5965e479a5c02d2fb794fecf1"
       },
       "docs/architecture/compatibility-manifests.md": {
-        "source_sha256": "1f3c195ba2566faa440e649b1d9bf8537fdad141ee47262274bcf20f142edc48",
-        "translation_sha256": "61672ddbce35165ea36ab13005c7b79092d9f8fd6fe6f5ef3dd409e880ec1c3a"
+        "source_sha256": "e1fc0c2614964ff97b6efbed81cc452e725e726a629ff168a261c7773a6cc26b",
+        "translation_sha256": "82f19923b11204c38d6627711720ed867f8285bc7fcc6400a4a78e1c800e16ee"
       },
       "docs/architecture/compatibility-model.md": {
         "source_sha256": "5026400cd373e9dd33154781669a19acfaa4ddeb308972e6b9c173f3574a3ff9",
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "337c79e374bae1cb4391388f67d21d6e1be2fd9d373cb48a8182f24e9b63021d",
-        "translation_sha256": "81ca285f0d71f0056775b69bef17e382aae4807465523d556710c88fc9f88a4d"
+        "source_sha256": "94c098af7e56e70a294c7421ae34da0706683d124bf5579bc0fb597c2b1f62d0",
+        "translation_sha256": "cee881f8177d4a077e55a0a5e6c651efad1add03612ef81bf9ac54e1401c0f3a"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
@@ -194,8 +194,8 @@
         "translation_sha256": "e95188f0108c8bb1fb5d62cb02439a93653b4078b842810947f2fe79cf1d9ec3"
       },
       "docs/architecture/kernel-component-map.md": {
-        "source_sha256": "09c19b2db3e2093d2aed13e84973f0aaee29412e94c5c2fe2a56e99e29af1ded",
-        "translation_sha256": "36cdbd6f7d7e7b9a69789fb41a2487bbff6f5335ea07559d030cd6be86afede9"
+        "source_sha256": "bed6b5bc41ac7384fde19fcf80dbcd232fb4cc7b0c3f0544429ca0d13b1dfe46",
+        "translation_sha256": "a146b3921d044a09695f72db711be2f7816d0164e0ffe34344a355971679f128"
       },
       "docs/architecture/kernel-laws.md": {
         "source_sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",
@@ -274,8 +274,8 @@
         "translation_sha256": "3874d45a9a193f81720e73a0d0daba75036f37216710d699012a5e7e83bf0909"
       },
       "docs/documentation-policy.md": {
-        "source_sha256": "fbb5b4aaf17366f18a5b41c74eac8627fb3af313dd481017a38f8e350fe3119d",
-        "translation_sha256": "f0f8060a4a50345ab33676736c79dc955637f5a383cb36c50b55027107eefb24"
+        "source_sha256": "ae3397c0c43308f4791e56861f9fb53cc2bbcce6713857479a0347dac03117b9",
+        "translation_sha256": "4853cdbf686be6d489663c59e9290bddb064bf30a6290667e3b519e4a22f7d4f"
       },
       "docs/index.md": {
         "source_sha256": "908624e2456ee40147b98e1a4056f02aad81724fcd3a36d3605a91c9011eebfe",
@@ -398,8 +398,8 @@
         "translation_sha256": "7a51fe1c9ee0290b1e8adf4fb99a02db4b83369c2c292fe0c78d72bcacfceaf3"
       },
       "docs/research/cost-l-queries.md": {
-        "source_sha256": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
-        "translation_sha256": "11ec1ab0303c9d8d10ceb1f702d2e9c4444f4cad8e96b34b2a3c36e3e807b731"
+        "source_sha256": "d4b00e8ff391e037f3e97c415455f34b3fe2aaaedada295cf09add57b9aeee1b",
+        "translation_sha256": "c14e8296cfd0b22e05f3c5c9b94adae1a68836ec69e3b46d51b222ea1862795d"
       },
       "docs/research/host-survey.md": {
         "source_sha256": "f3027d023eb3b9ce3e65c14823bf88bf9bc0be2f1a1eed934d32abf15b8935e2",

@@ -2,6 +2,7 @@
 use super::*;
 use std::{fmt::Write as _, path::PathBuf, process::Command};
 const DOCUMENT: &str = "docs/architecture/kernel-component-map.md";
+const RU_LABELS: &str = "translations/ru/docs/architecture/kernel-component-map.labels.json";
 const MARKER: &str = "<!-- arena-architecture -->";
 const CLOCK: &str = "research/arena/runs/clock-query-2978ad9";
 const TEMPLATE: &str = include_str!("architecture.html");
@@ -50,8 +51,13 @@ fn parse(document: &str) -> CheckResult<Value> {
     parse_json(json.trim())
 }
 fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult<BTreeSet<String>> {
-    if model["schema_version"] != 1 || !matches!(model["version"].as_str(), Some("1" | "2")) {
+    if model["schema_version"] != 1 || !matches!(model["version"].as_str(), Some("1" | "2" | "3")) {
         return Err("unsupported architecture model schema/version".into());
+    }
+    if model["version"] != "3"
+        && (model.get("external_targets").is_some() || model.get("hardware_relations").is_some())
+    {
+        return Err("hardware boundaries require architecture model version 3".into());
     }
     let nodes = list(model, "nodes")?;
     let edges = list(model, "edges")?;
@@ -86,7 +92,10 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
             return Err("architecture group must have 1..200 members".into());
         }
         for member in member_list {
-            if model["version"] == "2" {
+            if model["version"] == "3" {
+                text(member, "name_ru")?;
+            }
+            if matches!(model["version"].as_str(), Some("2" | "3")) {
                 let member_id = text(member, "id")?;
                 let prefix = format!("{id}.");
                 if !member_id.starts_with(&prefix)
@@ -110,7 +119,7 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
                 sources.insert(path.to_owned());
             }
         }
-        if model["version"] == "2" {
+        if matches!(model["version"].as_str(), Some("2" | "3")) {
             let relations = node["member_relations"]
                 .as_array()
                 .ok_or("architecture member_relations must be an array")?;
@@ -152,7 +161,7 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
         if !matches!(kind, "call" | "data" | "authority" | "lifetime") {
             return Err("unsupported architecture edge kind".into());
         }
-        if model["version"] == "2" {
+        if matches!(model["version"].as_str(), Some("2" | "3")) {
             let mut endpoint_pairs = BTreeSet::new();
             for pair in list(edge, "member_endpoints")? {
                 let source = text(pair, "from_member")?;
@@ -164,6 +173,25 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
                     || !endpoint_pairs.insert((source, target))
                 {
                     return Err("invalid architecture boundary member endpoints".into());
+                }
+                if model["version"] == "3" {
+                    let mut actions = BTreeSet::new();
+                    for action in list(pair, "actions")? {
+                        let label = text(action, "label")?;
+                        if !actions.insert(label) {
+                            return Err("duplicate architecture boundary action".into());
+                        }
+                        for key in ["label_ru", "caption_en", "caption_ru"] {
+                            text(action, key)?;
+                        }
+                        for source in list(action, "evidence")? {
+                            let path = source
+                                .as_str()
+                                .ok_or("boundary action evidence must be text")?;
+                            safe_file(root, path)?;
+                            sources.insert(path.to_owned());
+                        }
+                    }
                 }
             }
         }
@@ -177,7 +205,72 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
             sources.insert(path.to_owned());
         }
     }
+    if model["version"] == "3" {
+        validate_hardware(root, model, &all_member_ids, &mut sources)?;
+    }
     Ok(sources)
+}
+fn validate_hardware(
+    root: &Path,
+    model: &Value,
+    members: &BTreeSet<String>,
+    sources: &mut BTreeSet<String>,
+) -> CheckResult<()> {
+    let targets = list(model, "external_targets")?;
+    let relations = list(model, "hardware_relations")?;
+    if targets.len() > 100 || relations.len() > 1000 {
+        return Err("architecture hardware exceeds bounded limits".into());
+    }
+    let mut ids = BTreeSet::new();
+    for target in targets {
+        let id = text(target, "id")?;
+        if !id.starts_with("kolvrt.hardware.")
+            || id.len() <= "kolvrt.hardware.".len()
+            || id.len() > 240
+            || !id
+                .bytes()
+                .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'.' || c == b'-')
+            || !ids.insert(id)
+            || target["kind"] != "hardware"
+        {
+            return Err("invalid or duplicate architecture hardware target".into());
+        }
+        for key in ["label", "label_ru", "responsibility", "responsibility_ru"] {
+            text(target, key)?;
+        }
+        for source in list(target, "sources")? {
+            let path = source.as_str().ok_or("hardware source must be text")?;
+            safe_file(root, path)?;
+            sources.insert(path.to_owned());
+        }
+    }
+    let mut seen = BTreeSet::new();
+    let mut used = BTreeSet::new();
+    for relation in relations {
+        let from = text(relation, "from_member")?;
+        let to = text(relation, "to_target")?;
+        let label = text(relation, "label")?;
+        if !members.contains(from)
+            || !ids.contains(to)
+            || relation["kind"] != "mmio"
+            || !seen.insert((from, to, label))
+        {
+            return Err("invalid or duplicate architecture hardware relation".into());
+        }
+        used.insert(to);
+        for key in ["label_ru", "caption_en", "caption_ru"] {
+            text(relation, key)?;
+        }
+        for source in list(relation, "evidence")? {
+            let path = source.as_str().ok_or("hardware evidence must be text")?;
+            safe_file(root, path)?;
+            sources.insert(path.to_owned());
+        }
+    }
+    if used != ids {
+        return Err("architecture hardware target has no declared interaction".into());
+    }
+    Ok(())
 }
 fn git(root: &Path, args: &[&str]) -> CheckResult<String> {
     let out = Command::new("git")
@@ -300,10 +393,12 @@ fn measurements(root: &Path, nodes: &mut [Value]) -> Vec<Value> {
                 Ok(value) => {
                     let mut matched = false;
                     for node in nodes.iter_mut() {
-                        if node["contracts"].as_array().is_some_and(|contracts| {
-                            contracts.contains(&value["block_id"])
-                                || contracts.contains(&value["contract_id"])
-                        }) {
+                        if node["id"] == "kolvrt.kernel.view.clock"
+                            && node["contracts"].as_array().is_some_and(|contracts| {
+                                contracts.contains(&value["block_id"])
+                                    || contracts.contains(&value["contract_id"])
+                            })
+                        {
                             node["measurements"]
                                 .as_array_mut()
                                 .unwrap()
@@ -321,9 +416,65 @@ fn measurements(root: &Path, nodes: &mut [Value]) -> Vec<Value> {
     }
     warnings
 }
-pub fn snapshot(root: &Path) -> CheckResult<Value> {
+fn localization(root: &Path, model: &Value) -> CheckResult<Value> {
+    if model["localization_ru"]["path"] != RU_LABELS {
+        return Err("architecture requires the canonical Russian label catalog".into());
+    }
+    let raw = fs::read_to_string(safe_file(root, RU_LABELS)?).map_err(|e| e.to_string())?;
+    if model["localization_ru"]["sha256"] != bytes_digest(raw.replace("\r\n", "\n").as_bytes()) {
+        return Err("STALE architecture Russian label catalog; review its model binding".into());
+    }
+    let catalog = parse_json(&raw)?;
+    if catalog["schema_version"] != 1 || !catalog["strings"].is_object() {
+        return Err("invalid architecture Russian label catalog".into());
+    }
+    for (key, value) in catalog["strings"].as_object().unwrap() {
+        if key.trim().is_empty() || value.as_str().is_none_or(|v| v.trim().is_empty()) {
+            return Err("architecture localized labels must be nonempty text".into());
+        }
+    }
+    Ok(catalog["strings"].clone())
+}
+fn hydrate_ru(value: &mut Value, strings: &Value) {
+    match value {
+        Value::Object(object) => {
+            for (source, target) in [
+                ("name", "name_ru"),
+                ("label", "label_ru"),
+                ("responsibility", "responsibility_ru"),
+                ("caption_en", "caption_ru"),
+            ] {
+                if let Some(translated) = object
+                    .get(source)
+                    .and_then(Value::as_str)
+                    .and_then(|key| strings.get(key))
+                    .cloned()
+                {
+                    object.insert(target.into(), translated);
+                }
+            }
+            for child in object.values_mut() {
+                hydrate_ru(child, strings);
+            }
+        }
+        Value::Array(array) => {
+            for child in array {
+                hydrate_ru(child, strings);
+            }
+        }
+        _ => {}
+    }
+}
+fn checked_model(root: &Path) -> CheckResult<(Value, Knowledge, BTreeSet<String>)> {
     let raw = fs::read_to_string(root.join(DOCUMENT)).map_err(|e| e.to_string())?;
     let mut model = parse(&raw)?;
+    let mirror = fs::read_to_string(root.join("translations/ru").join(DOCUMENT))
+        .map_err(|e| format!("architecture Russian mirror: {e}"))?;
+    matching_models(&model, &parse(&mirror)?)?;
+    if model["version"] == "3" {
+        let strings = localization(root, &model)?;
+        hydrate_ru(&mut model, &strings);
+    }
     let knowledge = Knowledge::build(root)?;
     let known = knowledge.graph["nodes"]
         .as_object()
@@ -333,6 +484,23 @@ pub fn snapshot(root: &Path) -> CheckResult<Value> {
         .collect();
     let mut sources = validate(root, &model, &known)?;
     fresh_sources(root, &model, &sources)?;
+    if model["version"] == "3" {
+        sources.insert(RU_LABELS.into());
+    }
+    Ok((model, knowledge, sources))
+}
+fn matching_models(canonical: &Value, mirror: &Value) -> CheckResult<()> {
+    if canonical != mirror {
+        return Err("architecture EN/RU machine models differ".into());
+    }
+    Ok(())
+}
+/// Validate declared levels and their exact source snapshot without rendering or measurement I/O.
+pub fn check(root: &Path) -> CheckResult<()> {
+    checked_model(root).map(|_| ())
+}
+pub fn snapshot(root: &Path) -> CheckResult<Value> {
+    let (mut model, knowledge, mut sources) = checked_model(root)?;
     sources.insert(DOCUMENT.into());
     let files = sources
         .iter()
@@ -415,6 +583,19 @@ pub fn terminal(model: &Value) -> String {
             .unwrap();
         }
     }
+    if let Some(relations) = model["hardware_relations"].as_array() {
+        writeln!(out, "\nMMIO → аппаратные регистры (не программные вызовы)").unwrap();
+        for relation in relations {
+            writeln!(
+                out,
+                "  {} → {}: {}",
+                short(s(relation, "from_member")),
+                short(s(relation, "to_target")),
+                s(relation, "label_ru")
+            )
+            .unwrap();
+        }
+    }
     for n in a(model, "nodes")
         .iter()
         .filter(|n| !a(n, "measurements").is_empty())
@@ -480,6 +661,13 @@ pub fn html(model: &Value) -> CheckResult<String> {
     Ok(TEMPLATE.replace("__ARENA_MODEL__", &embedded_json(model)?))
 }
 pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
+    if args == ["--check"] {
+        check(root)?;
+        println!(
+            "Architecture model: levels, source snapshot and EN/RU parity passed; semantic completeness requires review."
+        );
+        return Ok(());
+    }
     let output = match args
         .iter()
         .map(String::as_str)
@@ -489,7 +677,7 @@ pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
         [] => None,
         ["--html"] => Some(root.join("target/arena-map.html")),
         ["--html", path] => Some(PathBuf::from(path)),
-        _ => return Err("usage: cargo xtask arena map [--html [OUTPUT]]".into()),
+        _ => return Err("usage: cargo xtask arena map [--check | --html [OUTPUT]]".into()),
     };
     let mut view = snapshot(root)?;
     if let Some(path) = output {
@@ -510,6 +698,203 @@ pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn hardware_fixture() -> Value {
+        json!({"external_targets":[{"id":"kolvrt.hardware.console","kind":"hardware","label":"Console registers","label_ru":"Регистры консоли","responsibility":"Console MMIO","responsibility_ru":"MMIO консоли","sources":["Cargo.lock"]}],"hardware_relations":[{"from_member":"test.one.mmio","to_target":"kolvrt.hardware.console","kind":"mmio","label":"Write bytes","label_ru":"Записывает байты","caption_en":"Write","caption_ru":"Запись","evidence":["Cargo.toml"]}]})
+    }
+    #[test]
+    fn localization_is_source_bound_and_preserves_action_identity() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let mut model = parse(&fs::read_to_string(root.join(DOCUMENT)).unwrap()).unwrap();
+        assert!(localization(&root, &model).is_ok());
+        model["localization_ru"]["sha256"] = json!("unreviewed");
+        assert!(localization(&root, &model).unwrap_err().contains("STALE"));
+        let mut value = json!({"name":"Mechanism","actions":[{"label":"Read state","caption_en":"Read","evidence":["source.rs"]}]});
+        hydrate_ru(
+            &mut value,
+            &json!({"Mechanism":"Механизм","Read state":"Читает состояние","Read":"Читает"}),
+        );
+        assert_eq!(value["name_ru"], "Механизм");
+        assert_eq!(value["actions"][0]["label_ru"], "Читает состояние");
+        assert_eq!(value["actions"][0]["label"], "Read state");
+        assert_eq!(value["actions"][0]["evidence"], json!(["source.rs"]));
+    }
+    #[test]
+    fn version_three_requires_reviewable_boundary_actions_and_hardware_ids() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let known = ["test.one".to_owned(), "test.contract".to_owned()]
+            .into_iter()
+            .collect();
+        let mut valid = hardware_fixture();
+        valid["schema_version"] = json!(1);
+        valid["version"] = json!("3");
+        valid["nodes"] = json!([{"id":"test.one","label":"One","responsibility":"Test scope","layer":"EL1","contracts":["test.contract"],"members":[{"id":"test.one.mmio","name":"MMIO","name_ru":"MMIO","sources":["Cargo.toml"]}],"member_relations":[]}]);
+        valid["edges"] = json!([{"from":"test.one","to":"test.one","kind":"data","label":"State","evidence":["Cargo.toml"],"member_endpoints":[{"from_member":"test.one.mmio","to_member":"test.one.mmio","actions":[{"label":"Read state","label_ru":"Чтение состояния","caption_en":"Read","caption_ru":"Чтение","evidence":["Cargo.toml"]}]}]}]);
+        assert!(validate(&root, &valid, &known).is_ok());
+        let mut missing = valid.clone();
+        missing["edges"][0]["member_endpoints"][0]
+            .as_object_mut()
+            .unwrap()
+            .remove("actions");
+        assert!(validate(&root, &missing, &known).is_err());
+        let action = valid["edges"][0]["member_endpoints"][0]["actions"][0].clone();
+        for bad in [json!([]), json!([action.clone(), action])] {
+            let mut changed = valid.clone();
+            changed["edges"][0]["member_endpoints"][0]["actions"] = bad;
+            assert!(validate(&root, &changed, &known).is_err());
+        }
+        for bad in [
+            json!([]),
+            json!(["../outside"]),
+            json!(["missing-boundary-source.rs"]),
+        ] {
+            let mut changed = valid.clone();
+            changed["edges"][0]["member_endpoints"][0]["actions"][0]["evidence"] = bad;
+            assert!(validate(&root, &changed, &known).is_err());
+        }
+        for version in ["1", "2"] {
+            let mut changed = valid.clone();
+            changed["version"] = json!(version);
+            assert!(
+                validate(&root, &changed, &known)
+                    .unwrap_err()
+                    .contains("hardware boundaries require")
+            );
+        }
+        for bad in [
+            "kolvrt.hardware.",
+            "kolvrt.hardware.bad name",
+            "kolvrt.hardware.UPPER",
+        ] {
+            let mut changed = valid.clone();
+            changed["external_targets"][0]["id"] = json!(bad);
+            changed["hardware_relations"][0]["to_target"] = json!(bad);
+            assert!(validate(&root, &changed, &known).is_err());
+        }
+    }
+    #[test]
+    fn hardware_rejects_dangling_identities_duplicates_and_non_mmio() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let members = ["test.one.mmio".to_owned()].into_iter().collect();
+        let valid = hardware_fixture();
+        let validate_input =
+            |value: &Value| validate_hardware(&root, value, &members, &mut BTreeSet::new());
+        assert!(validate_input(&valid).is_ok());
+        for (field, bad) in [
+            ("from_member", "test.one.absent"),
+            ("to_target", "kolvrt.hardware.absent"),
+            ("kind", "call"),
+        ] {
+            let mut changed = valid.clone();
+            changed["hardware_relations"][0][field] = json!(bad);
+            assert!(
+                validate_input(&changed).is_err(),
+                "accepted invalid {field}"
+            );
+        }
+        for field in ["external_targets", "hardware_relations"] {
+            let mut changed = valid.clone();
+            let duplicate = changed[field][0].clone();
+            changed[field].as_array_mut().unwrap().push(duplicate);
+            assert!(
+                validate_input(&changed).is_err(),
+                "accepted duplicate {field}"
+            );
+        }
+        let mut changed = valid.clone();
+        let mut unused = changed["external_targets"][0].clone();
+        unused["id"] = json!("kolvrt.hardware.unused");
+        changed["external_targets"]
+            .as_array_mut()
+            .unwrap()
+            .push(unused);
+        assert!(
+            validate_input(&changed)
+                .unwrap_err()
+                .contains("no declared interaction")
+        );
+        let mut changed = valid;
+        changed["external_targets"][0]["kind"] = json!("software");
+        assert!(validate_input(&changed).is_err());
+    }
+    #[test]
+    fn hardware_sources_join_exact_reviewed_inventory_and_cannot_escape() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let members = ["test.one.mmio".to_owned()].into_iter().collect();
+        let mut model = hardware_fixture();
+        let mut sources = BTreeSet::new();
+        validate_hardware(&root, &model, &members, &mut sources).unwrap();
+        assert_eq!(
+            sources,
+            ["Cargo.lock".to_owned(), "Cargo.toml".to_owned()]
+                .into_iter()
+                .collect()
+        );
+        let reviewed: serde_json::Map<String, Value> = sources
+            .iter()
+            .map(|path| {
+                let raw = fs::read_to_string(root.join(path)).unwrap();
+                (
+                    path.clone(),
+                    json!(bytes_digest(raw.replace("\r\n", "\n").as_bytes())),
+                )
+            })
+            .collect();
+        model["reviewed_base"] = json!("reviewed-hardware-fixture");
+        model["source_files"] = json!(reviewed);
+        assert!(fresh_sources(&root, &model, &sources).is_ok());
+        let mut missing = model.clone();
+        missing["source_files"]
+            .as_object_mut()
+            .unwrap()
+            .remove("Cargo.lock");
+        assert!(fresh_sources(&root, &missing, &sources).is_err());
+        let mut stale = model.clone();
+        stale["source_files"]["Cargo.lock"] = json!("stale-target-source");
+        assert!(
+            fresh_sources(&root, &stale, &sources)
+                .unwrap_err()
+                .contains("STALE")
+        );
+        for (array, field) in [
+            ("external_targets", "sources"),
+            ("hardware_relations", "evidence"),
+        ] {
+            for bad in [
+                json!([]),
+                json!(["../outside"]),
+                json!(["missing-hardware-source.rs"]),
+            ] {
+                let mut changed = model.clone();
+                changed[array][0][field] = bad;
+                assert!(
+                    validate_hardware(&root, &changed, &members, &mut BTreeSet::new()).is_err()
+                );
+            }
+        }
+    }
+    #[test]
+    fn translation_cannot_change_hardware_identity_or_action() {
+        let model = hardware_fixture();
+        assert!(matching_models(&model, &model).is_ok());
+        for (array, field) in [
+            ("external_targets", "id"),
+            ("hardware_relations", "to_target"),
+            ("hardware_relations", "label_ru"),
+        ] {
+            let mut mirror = model.clone();
+            mirror[array][0][field] = json!("different");
+            assert!(matching_models(&model, &mirror).is_err());
+        }
+    }
+    #[test]
+    fn translation_cannot_drop_a_boundary_endpoint() {
+        let model =
+            json!({"edges":[{"member_endpoints":[{"from_member":"a.x","to_member":"b.y"}]}]});
+        let mut mirror = model.clone();
+        assert!(matching_models(&model, &mirror).is_ok());
+        mirror["edges"][0]["member_endpoints"] = json!([]);
+        assert!(matching_models(&model, &mirror).is_err());
+    }
     #[test]
     fn embedding_cannot_close_script_or_create_markup() {
         let value = json!({"label":"</script><img src=x onerror=alert(1)>&\u{2028}"});
@@ -521,6 +906,18 @@ mod tests {
         assert!(page.contains("application/json"));
         assert!(!page.contains("innerHTML"));
         assert!(!page.contains("<img src=x"));
+    }
+    #[test]
+    fn historical_clock_path_does_not_measure_shared_runtime() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let mut nodes = [
+            json!({"id":"kolvrt.kernel.view.clock","contracts":["kolvrt.clock.query.api"],"measurements":[]}),
+            json!({"id":"kolvrt.kernel.view.native-runtime","contracts":["kolvrt.clock.query.api"],"measurements":[]}),
+        ];
+        let warnings = measurements(&root, &mut nodes);
+        assert!(warnings.is_empty(), "{warnings:?}");
+        assert_eq!(nodes[0]["measurements"].as_array().unwrap().len(), 6);
+        assert!(nodes[1]["measurements"].as_array().unwrap().is_empty());
     }
     #[test]
     fn clock_attachment_rejects_relabeling_valid_other_workload() {

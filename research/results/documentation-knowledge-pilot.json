@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 56394,
-  "catalog_bytes": 94851,
-  "catalog_nodes": 232,
+  "approximate_tokens": 56510,
+  "catalog_bytes": 95316,
+  "catalog_nodes": 233,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "00bbb76e6ab6dc25436cda678f599b9023622d5ac81514ab8b8506a46a932cfe",
+  "catalog_sha256": "135837c14f5e3f8bbe41c4a4d3eaea194cd23cf243beb0781e62998ce5d7b096",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 225573,
+  "context_plus_catalog_bytes": 226038,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -15,7 +15,7 @@
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
     "documents": 114,
-    "utf8_bytes": 1144108
+    "utf8_bytes": 1226155
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -47,6 +47,7 @@
       "kolvrt.kernel.view.authority",
       "kolvrt.kernel.view.counter-service",
       "kolvrt.kernel.view.ipc",
+      "kolvrt.kernel.view.native-runtime",
       "kolvrt.kernel.view.process",
       "kolvrt.kernel.view.supervisor",
       "kolvrt.kernel.view.wait",
@@ -79,12 +80,12 @@
   "query": "review Phase 3.4 capability revocation",
   "rendered_context_bytes": 130722,
   "russian_pilot": {
-    "approximate_tokens": 86784,
-    "catalog_bytes": 94851,
-    "context_plus_navigation_bytes": 347135,
+    "approximate_tokens": 86953,
+    "catalog_bytes": 95316,
+    "context_plus_navigation_bytes": 347811,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 53111,
+    "localized_navigation_bytes": 53322,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",

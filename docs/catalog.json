@@ -750,7 +750,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 25744,
+      "estimated_bytes": 27164,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -780,7 +780,7 @@
     {
       "document": "doc.kolvrt.architecture.compatibility-manifests",
       "document_status": "CURRENT",
-      "estimated_bytes": 12787,
+      "estimated_bytes": 13786,
       "id": "doc.kolvrt.architecture.compatibility-manifests",
       "kind": "subsystem-contract",
       "path": "docs/architecture/compatibility-manifests.md",
@@ -801,7 +801,7 @@
       "depends_on": ["adr.0010", "adr.0008", "doc.kolvrt.architecture.arena"],
       "document": "doc.kolvrt.architecture.kernel-component-map",
       "document_status": "CURRENT",
-      "estimated_bytes": 76827,
+      "estimated_bytes": 153681,
       "id": "doc.kolvrt.architecture.kernel-component-map",
       "kind": "subsystem-contract",
       "path": "docs/architecture/kernel-component-map.md",
@@ -1114,7 +1114,7 @@
     {
       "document": "doc.kolvrt.research.cost-l-queries",
       "document_status": "CURRENT",
-      "estimated_bytes": 12361,
+      "estimated_bytes": 13380,
       "id": "doc.kolvrt.research.cost-l-queries",
       "kind": "subsystem-contract",
       "path": "docs/research/cost-l-queries.md",
@@ -2000,6 +2000,18 @@
       "path": "docs/architecture/kernel-component-map.md",
       "summary": "View grouping: Memory and address spaces.",
       "title": "Memory and address spaces (EL1)"
+    },
+    {
+      "anchor": "kolvrt-kernel-view-native-runtime",
+      "depends_on": ["kolvrt.apps.native-elf", "kolvrt.clock.query.api"],
+      "document": "doc.kolvrt.architecture.kernel-component-map",
+      "document_status": "CURRENT",
+      "estimated_bytes": 386,
+      "id": "kolvrt.kernel.view.native-runtime",
+      "kind": "subsystem-contract",
+      "path": "docs/architecture/kernel-component-map.md",
+      "summary": "View grouping: shared native userspace runtime library.",
+      "title": "Shared native userspace runtime (EL0 library)"
     },
     {
       "anchor": "kolvrt-kernel-view-process",

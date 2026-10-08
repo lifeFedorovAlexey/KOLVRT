@@ -14,28 +14,35 @@
       "before_sha256_lf": "39d0d0e635ac92ef03f2e1b031859a3319f932fffd20026385b56c5ec63b0c0b",
       "after_sha256_lf": "bca36119db0984d95577938b3455189b918911cd1d404ef5120eaa17734f2004",
       "disposition": "existing-feature",
-      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations, exact member actions, hardware boundaries and evidence freshness; make declared-level and EN/RU parity validation mandatory in repository checks, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
     },
     {
       "path": "crates/repository-checks/src/arena/architecture.html",
       "before_sha256_lf": null,
-      "after_sha256_lf": "ab75da124ba8e1cb162520aef75552e2b4e0318f97df6dc9d04ca627f93c28a1",
+      "after_sha256_lf": "f473dd98ca5d523683944b6ce4dae48774745f10f9c0ae5d6fbb50cf9ff97387",
       "disposition": "existing-feature",
-      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations, exact member actions, hardware boundaries and evidence freshness; make declared-level and EN/RU parity validation mandatory in repository checks, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
     },
     {
       "path": "crates/repository-checks/src/arena/architecture.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "d9e306a24df2a1aea6798cbff7e829b0ac412a6d9e72ac222f9b62c90f8e9237",
+      "after_sha256_lf": "312bdbeb03ba18ceefe9a758219bca144117dc9a2273a61d85a1a7cadac2ac61",
       "disposition": "existing-feature",
-      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations, exact member actions, hardware boundaries and evidence freshness; make declared-level and EN/RU parity validation mandatory in repository checks, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
     },
     {
       "path": "crates/repository-checks/src/arena/report.rs",
       "before_sha256_lf": null,
       "after_sha256_lf": "bb6efcab0b1c179e64eaf8887e0067227e7b5ad9a74345834b4dadbf1e762c13",
       "disposition": "existing-feature",
-      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations and evidence freshness, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations, exact member actions, hardware boundaries and evidence freshness; make declared-level and EN/RU parity validation mandatory in repository checks, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
+    },
+    {
+      "path": "crates/repository-checks/src/main.rs",
+      "before_sha256_lf": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d",
+      "after_sha256_lf": "7792e50685b4c900141b97ddc097869af68091bb334843efa3a437b4f051546c",
+      "disposition": "existing-feature",
+      "reason": "Add readable Arena reports and a source-bound logical component map in terminal and standalone HTML; validate canonical relations, exact member actions, hardware boundaries and evidence freshness; make declared-level and EN/RU parity validation mandatory in repository checks, preserve historical path measurements and unknown per-component costs without changing kernel behavior."
     },
     {
       "path": "crates/repository-checks/tests/arena.rs",
@@ -540,6 +547,13 @@
       "after_sha256_lf": "87b5692d46ba8e7339cbc2291d29855e8ae4663528c8a45e0eec3de6c8aae5cd",
       "disposition": "new-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "translations/ru/docs/architecture/kernel-component-map.labels.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "573604b441974b375e041835182af43ff6a7c458f0b85511a7a54502baa4141a",
+      "disposition": "existing-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     }
   ],
   "features": [
@@ -551,7 +565,7 @@
     {
       "id": "kolvrt.arena",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU documents describe the implemented terminal/HTML logical map and readable evidence views, with reviewed source bindings and explicit historical measurement scope; general publication, graph history and runtime cost attribution remain incomplete."
+      "reason": "Canonical EN/RU documents describe the implemented terminal/HTML logical map and readable evidence views, with reviewed source bindings, explicit MMIO hardware effects, separated exception/MMU/protected-copy mechanisms, same-PR map obligations and declared-level validation, and explicit historical measurement scope; general publication, graph history and runtime cost attribution remain incomplete."
     },
     {
       "id": "kolvrt.arena.clock-passport",
@@ -567,6 +581,16 @@
       "id": "kolvrt.ci.performance",
       "disposition": "semantic-change",
       "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
+    },
+    {
+      "id": "kolvrt.compatibility.manifests",
+      "disposition": "semantic-change",
+      "reason": "Document the changed shared command integration: ordinary repository checking now includes mandatory architecture-model freshness and level validation, while dedicated compatibility and COST-L commands retain bounded scopes and do not establish whole-repository acceptance. Preserve historical STALE receipts."
+    },
+    {
+      "id": "kolvrt.cost-l.offline-queries",
+      "disposition": "semantic-change",
+      "reason": "Document the changed shared command integration: ordinary repository checking now includes mandatory architecture-model freshness and level validation, while dedicated compatibility and COST-L commands retain bounded scopes and do not establish whole-repository acceptance. Preserve historical STALE receipts."
     },
     {
       "id": "kolvrt.devices.observations",
