@@ -152,6 +152,21 @@ fn validate(root: &Path, model: &Value, known: &BTreeSet<String>) -> CheckResult
         if !matches!(kind, "call" | "data" | "authority" | "lifetime") {
             return Err("unsupported architecture edge kind".into());
         }
+        if model["version"] == "2" {
+            let mut endpoint_pairs = BTreeSet::new();
+            for pair in list(edge, "member_endpoints")? {
+                let source = text(pair, "from_member")?;
+                let target = text(pair, "to_member")?;
+                if !all_member_ids.contains(source)
+                    || !all_member_ids.contains(target)
+                    || !source.starts_with(&format!("{from}."))
+                    || !target.starts_with(&format!("{to}."))
+                    || !endpoint_pairs.insert((source, target))
+                {
+                    return Err("invalid architecture boundary member endpoints".into());
+                }
+            }
+        }
         text(edge, "label")?;
         if !links.insert((from, to, kind, text(edge, "label")?)) {
             return Err("duplicate architecture edge".into());
@@ -543,7 +558,7 @@ mod tests {
         let known = ["test.one".to_owned(), "test.contract".to_owned()]
             .into_iter()
             .collect();
-        let valid = json!({"schema_version":1,"version":"2","nodes":[{"id":"test.one","label":"One","layer":"EL1","responsibility":"scope","contracts":["test.contract"],"members":[{"id":"test.one.first","name":"First","sources":["Cargo.toml"]},{"id":"test.one.second","name":"Second","sources":["Cargo.toml"]}],"member_relations":[{"from":"test.one.first","to":"test.one.second","kind":"call","label":"Actual call","evidence":["Cargo.toml"]}]}],"edges":[{"from":"test.one","to":"test.one","kind":"data","label":"Owned state","evidence":["Cargo.toml"]}]});
+        let valid = json!({"schema_version":1,"version":"2","nodes":[{"id":"test.one","label":"One","layer":"EL1","responsibility":"scope","contracts":["test.contract"],"members":[{"id":"test.one.first","name":"First","sources":["Cargo.toml"]},{"id":"test.one.second","name":"Second","sources":["Cargo.toml"]}],"member_relations":[{"from":"test.one.first","to":"test.one.second","kind":"call","label":"Actual call","evidence":["Cargo.toml"]}]}],"edges":[{"from":"test.one","to":"test.one","kind":"data","label":"Owned state","evidence":["Cargo.toml"],"member_endpoints":[{"from_member":"test.one.first","to_member":"test.one.second"}]}]});
         assert!(
             validate(&root, &valid, &known)
                 .unwrap()
@@ -559,6 +574,14 @@ mod tests {
         assert!(validate(&root, &changed, &known).is_err());
         let mut changed = valid.clone();
         changed["nodes"][0]["members"][1]["id"] = json!("test.one.first");
+        assert!(validate(&root, &changed, &known).is_err());
+        for target in ["test.other.member", "test.one.absent"] {
+            let mut changed = valid.clone();
+            changed["edges"][0]["member_endpoints"][0]["to_member"] = json!(target);
+            assert!(validate(&root, &changed, &known).is_err());
+        }
+        let mut changed = valid.clone();
+        changed["edges"][0]["member_endpoints"] = json!([]);
         assert!(validate(&root, &changed, &known).is_err());
         let mut changed = valid;
         changed["nodes"][0]["member_relations"][0]["evidence"] = json!(["../outside"]);

@@ -138,8 +138,8 @@
         "translation_sha256": "414fd41d2bdbae5e905aa64fe6a7c4abe37ab315b48524be57625b37f499385f"
       },
       "docs/architecture/arena-measurement-contract.md": {
-        "source_sha256": "2bf2c329d15eacf74b9ea62ca3bd0eaafb7ea3e6f101a865fb545b3e3e7526f6",
-        "translation_sha256": "e0ea51f1e11c26a547a6d7c39114fff50d35f168bb655eb7dea021f59766d5f3"
+        "source_sha256": "209579185723e6ed12ef3ad285340043e4a0e15f05385386286f4cccd86484f7",
+        "translation_sha256": "4aa1274293c2b1de21e50ce60e54b41313688d3da12ea2116e2a57d132afb3eb"
       },
       "docs/architecture/benchmarking.md": {
         "source_sha256": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
@@ -158,8 +158,8 @@
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "4b2417b9b76365da901d7a768ae3dfbfd0573a0ac5abb22b4c4d319cfeedbf02",
-        "translation_sha256": "1f075d97a401e4d9b057132fbd182d73ad32c30bb03ccb557b250d892ec3ebcb"
+        "source_sha256": "337c79e374bae1cb4391388f67d21d6e1be2fd9d373cb48a8182f24e9b63021d",
+        "translation_sha256": "81ca285f0d71f0056775b69bef17e382aae4807465523d556710c88fc9f88a4d"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
@@ -194,8 +194,8 @@
         "translation_sha256": "e95188f0108c8bb1fb5d62cb02439a93653b4078b842810947f2fe79cf1d9ec3"
       },
       "docs/architecture/kernel-component-map.md": {
-        "source_sha256": "8691f580aad88a8030f350ec827dcbb2cf70b25864fe8713ff5c5748d3b8bb9d",
-        "translation_sha256": "ea999e0e7137e0e1da9d0966872afd40c3b8afff6ac52398a22ad7677e870042"
+        "source_sha256": "09c19b2db3e2093d2aed13e84973f0aaee29412e94c5c2fe2a56e99e29af1ded",
+        "translation_sha256": "36cdbd6f7d7e7b9a69789fb41a2487bbff6f5335ea07559d030cd6be86afede9"
       },
       "docs/architecture/kernel-laws.md": {
         "source_sha256": "5197d18b55cd3f46e302830965f0caf4039b170fdf9228f216872123037e7491",

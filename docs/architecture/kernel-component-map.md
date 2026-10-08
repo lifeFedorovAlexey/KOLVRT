@@ -28,7 +28,7 @@ The same canonical machine model drives terminal and interactive views. Both mus
 
 ### Boot and platform (EL1)
 
-Initialize the selected platform and admit the initial runtime.
+Initialize the selected platform, admit the initial runtime and provide bounded MMIO register access.
 
 <a name="kolvrt-kernel-view-memory"></a>
 
@@ -116,11 +116,13 @@ Execute production counter requests and publish replies.
 
 ## Internal composition
 
-Every logical member has a stable identifier under its parent node. These are scoped model identities, not new ABI or authority identifiers. The optional `member_relations` list uses the same typed interaction vocabulary and source evidence as root edges, with both endpoints inside that parent. Version 2 initially records eight reviewed relations among the seven time/observation members. Labels distinguish the CLOCK dispatch path, CAPTURE/READ_WINDOW handling and the deadline helper; these are selected source relationships, not a claim that every relation executes during CLOCK.
+Every logical member has a stable identifier under its parent node. These are scoped model identities, not new ABI or authority identifiers. The optional `member_relations` list uses the same typed interaction vocabulary and source evidence as root edges, with both endpoints inside that parent. Version 2 records 55 logical members and 56 selected internal relations across all 15 groups. Eight relations connect the seven time/observation members. Labels distinguish the CLOCK dispatch path, CAPTURE/READ_WINDOW handling and the deadline helper; these are selected source relationships, not a claim that every relation executes during CLOCK.
 
 The wait group additionally records five reviewed relations among four mechanisms. Its STEP-only WAIT_OWN_EVENT branch uses coalescing event latches; it is not the ordinary IPC wait path. The scheduler entry guard forbids ordinary locks during ownership access, without inventing a latch-to-lock call. For IPC, deferred source polling publishes retained wake sequences, then notifies remote CPUs after endpoint permits are released. The owner validates the exact saved WaitKey, process generation and blocked state before READY; stale wakes are acknowledged without making a task runnable. Source acknowledgement retires the retained endpoint wake before clearing the mailbox acknowledgement. READY on this wake path restarts the syscall; it does not assert that the RPC completed. Copy-finish completion is a separate scheduler path.
 
-Remaining groups expose composition without asserted internal relations. An empty list means internal interactions have not been mapped, not that none exist. Internal members have no measured cost attribution: historical CLOCK envelopes stay attached to the parent path and cannot be divided among its children. Adding member identity and composition does not change the root counting boundary of 13 EL1 groups and two EL0 services or its 28 selected root interactions.
+Each group now has source-reviewed internal relations, without claiming exhaustive coverage. The boot/platform group also provides bounded register access: the interrupt controller and polled console writer call its MMIO mechanism through explicitly retained cross-group boundaries. A missing edge means no selected reviewed interaction, not proof that no interaction exists. Stable member IDs remain opaque model identities when a displayed role is refined. Internal members have no measured cost attribution: historical CLOCK envelopes stay attached to the parent path and cannot be divided among its children. Adding member identity and composition does not change the root counting boundary of 13 EL1 groups and two EL0 services or its 30 selected root interactions.
+
+Internal views continue the root graph across the selected block boundary. All 30 root relations retain their identity through 41 audited `member_endpoints` pairs, attaching incoming and outgoing links to the mechanisms that actually participate. A compound root relation can have several detail branches; these do not increase the root relation count. External group cards navigate to the connected group. Incoming external components appear above the internal mechanisms and outgoing components below; a bidirectional group appears at both boundaries. Every route hover uses the same compact format: source → target plus the interaction description; additional remote-context notes are shown only when pinned. Short action captions identify each link, while detailed tooltips retain the full interaction and evidence. This is selected source coverage, not an exhaustive call graph or measured execution trace.
 
 ## Canonical machine model
 
@@ -187,7 +189,7 @@ The machine identifiers and labels below are shared by both language editions.
       "id": "kolvrt.kernel.view.boot",
       "label": "Boot and platform",
       "layer": "EL1",
-      "responsibility": "Initialize the selected platform and admit the initial runtime.",
+      "responsibility": "Initialize the selected platform and provide bounded platform-register access.",
       "members": [
         {
           "name": "Boot admission sequence",
@@ -200,7 +202,7 @@ The machine identifiers and labels below are shared by both language editions.
           "id": "kolvrt.kernel.view.boot.selected-platform-initialization"
         },
         {
-          "name": "Hardware abstraction selection",
+          "name": "Bounded MMIO access",
           "sources": ["crates/kernel/src/hal/mod.rs"],
           "id": "kolvrt.kernel.view.boot.hardware-abstraction-selection"
         },
@@ -211,7 +213,28 @@ The machine identifiers and labels below are shared by both language editions.
         }
       ],
       "contracts": ["adr.0010", "adr.0005"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to": "kolvrt.kernel.view.boot.selected-platform-initialization",
+          "kind": "call",
+          "label": "kernel_main obtains the validated boot description through discover_boot",
+          "evidence": [
+            "crates/kernel/src/main.rs",
+            "crates/kernel/src/platform/mod.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.boot.selected-platform-initialization",
+          "to": "kolvrt.kernel.view.boot.platform-description-decoding",
+          "kind": "call",
+          "label": "discover_boot bounds the DTB slice, calls discover, and verifies platform constraints",
+          "evidence": [
+            "crates/kernel/src/platform/mod.rs",
+            "crates/kernel-core/src/platform.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.memory",
@@ -236,7 +259,48 @@ The machine identifiers and labels below are shared by both language editions.
         }
       ],
       "contracts": ["adr.0010", "kolvrt.process.asid"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership",
+          "to": "kolvrt.kernel.view.memory.frame-allocation-state",
+          "kind": "call",
+          "label": "Physical initializes and reserves Pool extents, then allocates aligned frame ranges",
+          "evidence": [
+            "crates/kernel/src/memory/mod.rs",
+            "crates/kernel-core/src/memory.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership",
+          "to": "kolvrt.kernel.view.memory.frame-allocation-state",
+          "kind": "lifetime",
+          "label": "Physical::release returns frames to Pool only after mapping and retained-charge checks",
+          "evidence": [
+            "crates/kernel/src/memory/mod.rs",
+            "crates/kernel-core/src/memory.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership",
+          "to": "kolvrt.kernel.view.memory.address-space-identifier-lifecycle",
+          "kind": "call",
+          "label": "OwnedUserSpace::new allocates an owner-bound ASID lease for the process slot",
+          "evidence": [
+            "crates/kernel/src/memory/mod.rs",
+            "crates/kernel/src/asid.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership",
+          "to": "kolvrt.kernel.view.memory.address-space-identifier-lifecycle",
+          "kind": "lifetime",
+          "label": "reclaim and unpublished rollback release the ASID lease before returning owned frames",
+          "evidence": [
+            "crates/kernel/src/memory/mod.rs",
+            "crates/kernel/src/asid.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.interrupts",
@@ -250,7 +314,7 @@ The machine identifiers and labels below are shared by both language editions.
           "id": "kolvrt.kernel.view.interrupts.architectural-context-save-and-restore"
         },
         {
-          "name": "Vector installation and exception dispatch",
+          "name": "Vector installation and architectural IRQ operations",
           "sources": ["crates/kernel/src/arch/aarch64/mod.rs"],
           "id": "kolvrt.kernel.view.interrupts.vector-installation-and-exception-dispatch"
         },
@@ -261,7 +325,38 @@ The machine identifiers and labels below are shared by both language editions.
         }
       ],
       "contracts": ["adr.0014", "adr.0010"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.interrupts.vector-installation-and-exception-dispatch",
+          "to": "kolvrt.kernel.view.interrupts.architectural-context-save-and-restore",
+          "kind": "data",
+          "label": "vectors installs the assembly vector-table address in VBAR_EL1",
+          "evidence": [
+            "crates/kernel/src/arch/aarch64/mod.rs",
+            "crates/kernel/src/arch/aarch64/entry.S"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.interrupts.architectural-context-save-and-restore",
+          "to": "kolvrt.kernel.view.interrupts.interrupt-controller-dispatch",
+          "kind": "call",
+          "label": "IRQ vector entries save context and call interrupt_entry",
+          "evidence": [
+            "crates/kernel/src/arch/aarch64/entry.S",
+            "crates/kernel/src/interrupt/mod.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.interrupts.interrupt-controller-dispatch",
+          "to": "kolvrt.kernel.view.interrupts.vector-installation-and-exception-dispatch",
+          "kind": "call",
+          "label": "interrupt_entry reads acknowledge and calls end_irq for serviced interrupts",
+          "evidence": [
+            "crates/kernel/src/interrupt/mod.rs",
+            "crates/kernel/src/arch/aarch64/mod.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.smp",
@@ -281,7 +376,38 @@ The machine identifiers and labels below are shared by both language editions.
         }
       ],
       "contracts": ["adr.0012"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination",
+          "to": "kolvrt.kernel.view.smp.per-cpu-identity-and-local-state",
+          "kind": "data",
+          "label": "ping reads the target CPU affinity for SGI delivery",
+          "evidence": [
+            "crates/kernel/src/smp.rs",
+            "crates/kernel/src/percpu.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination",
+          "to": "kolvrt.kernel.view.smp.per-cpu-identity-and-local-state",
+          "kind": "data",
+          "label": "secondary_main publishes ONLINE, post-invalidation tlb_ack and final QUIESCENT state",
+          "evidence": [
+            "crates/kernel/src/smp.rs",
+            "crates/kernel/src/percpu.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination",
+          "to": "kolvrt.kernel.view.smp.per-cpu-identity-and-local-state",
+          "kind": "lifetime",
+          "label": "request_invalidation and acknowledged acquire remote state and acknowledgement before retirement completes",
+          "evidence": [
+            "crates/kernel/src/smp.rs",
+            "crates/kernel/src/percpu.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.scheduler",
@@ -305,13 +431,55 @@ The machine identifiers and labels below are shared by both language editions.
           "id": "kolvrt.kernel.view.scheduler.guarded-per-cpu-scheduler-storage"
         },
         {
-          "name": "Task ownership transitions",
+          "name": "Scheduler-storage ownership admission",
           "sources": ["crates/kernel-core/src/scheduling/ownership.rs"],
           "id": "kolvrt.kernel.view.scheduler.task-ownership-transitions"
         }
       ],
       "contracts": ["doc.kolvrt.kernel.scheduler", "adr.0016"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch",
+          "to": "kolvrt.kernel.view.scheduler.guarded-per-cpu-scheduler-storage",
+          "kind": "call",
+          "label": "Dispatch enters Local::with for owned queue mutation and Local::inspect after completion",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/scheduler/local.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.scheduler.guarded-per-cpu-scheduler-storage",
+          "to": "kolvrt.kernel.view.scheduler.task-ownership-transitions",
+          "kind": "call",
+          "label": "Local gates prepare, publish, start, mutate, inspect and complete through Ownership",
+          "evidence": [
+            "crates/kernel/src/scheduler/local.rs",
+            "crates/kernel-core/src/scheduling/ownership.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.scheduler.guarded-per-cpu-scheduler-storage",
+          "to": "kolvrt.kernel.view.scheduler.task-context-and-completion-state",
+          "kind": "lifetime",
+          "label": "Local retains State task contexts behind exclusive ownership-scoped access",
+          "evidence": [
+            "crates/kernel/src/scheduler/local.rs",
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/scheduler/task.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch",
+          "to": "kolvrt.kernel.view.scheduler.task-context-and-completion-state",
+          "kind": "call",
+          "label": "deferred_local publishes exact IPC readiness through Task::publish_ipc_ready",
+          "evidence": [
+            "crates/kernel/src/scheduler/mod.rs",
+            "crates/kernel/src/scheduler/task.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.process",
@@ -355,7 +523,68 @@ The machine identifiers and labels below are shared by both language editions.
         "kolvrt.services.supervision",
         "kolvrt.apps.native-elf"
       ],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "to": "kolvrt.kernel.view.process.process-registry-transitions",
+          "kind": "call",
+          "label": "Registry reserves, prepares, admits and reclaims through Table transitions",
+          "evidence": [
+            "crates/kernel/src/process.rs",
+            "crates/kernel-core/src/process.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "to": "kolvrt.kernel.view.process.elf-image-validation",
+          "kind": "call",
+          "label": "Image admission parses ELF and checks the accepted load segment",
+          "evidence": [
+            "crates/kernel/src/process.rs",
+            "crates/kernel-core/src/elf.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.process.granted-lifecycle-operation-enforcement",
+          "to": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "kind": "authority",
+          "label": "Granted lifecycle commands create, bind, start and stop process instances",
+          "evidence": [
+            "crates/kernel/src/supervision.rs",
+            "crates/kernel/src/process.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.process.granted-lifecycle-operation-enforcement",
+          "to": "kolvrt.kernel.view.process.immutable-bootstrap-grant-validation",
+          "kind": "call",
+          "label": "Scope installation validates immutable bootstrap grants",
+          "evidence": [
+            "crates/kernel/src/supervision.rs",
+            "crates/kernel-core/src/supervision.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.process.initial-native-admission-and-completion-reporting",
+          "to": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "kind": "call",
+          "label": "Native boot creates the root and acquires registry completion",
+          "evidence": [
+            "crates/kernel/src/native_boot.rs",
+            "crates/kernel/src/process.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.process.initial-native-admission-and-completion-reporting",
+          "to": "kolvrt.kernel.view.process.granted-lifecycle-operation-enforcement",
+          "kind": "call",
+          "label": "Native boot installs the grant scope and services captured lifecycle commands",
+          "evidence": [
+            "crates/kernel/src/native_boot.rs",
+            "crates/kernel/src/supervision.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.user-copy",
@@ -369,13 +598,24 @@ The machine identifiers and labels below are shared by both language editions.
           "id": "kolvrt.kernel.view.user-copy.protected-user-memory-copy-boundary"
         },
         {
-          "name": "User range and snapshot validation",
+          "name": "User range and byte-limit validation",
           "sources": ["crates/kernel-core/src/user_copy.rs"],
           "id": "kolvrt.kernel.view.user-copy.user-range-and-snapshot-validation"
         }
       ],
       "contracts": ["kolvrt.memory.user-copy"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.user-copy.protected-user-memory-copy-boundary",
+          "to": "kolvrt.kernel.view.user-copy.user-range-and-snapshot-validation",
+          "kind": "call",
+          "label": "Access validation checks bounded user ranges before translation and copying",
+          "evidence": [
+            "crates/kernel/src/user_copy.rs",
+            "crates/kernel-core/src/user_copy.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.authority",
@@ -389,7 +629,7 @@ The machine identifiers and labels below are shared by both language editions.
           "id": "kolvrt.kernel.view.authority.local-handle-resolution"
         },
         {
-          "name": "Capability and domain enforcement",
+          "name": "Event notification authority and charging",
           "sources": ["crates/kernel/src/security.rs"],
           "id": "kolvrt.kernel.view.authority.capability-and-domain-enforcement"
         },
@@ -409,7 +649,48 @@ The machine identifiers and labels below are shared by both language editions.
         "kolvrt.security.capability-revocation",
         "kolvrt.security.domains"
       ],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.authority.local-handle-resolution",
+          "to": "kolvrt.kernel.view.authority.generational-handle-namespace",
+          "kind": "call",
+          "label": "Copied local handle requests resolve, transfer and close namespace entries",
+          "evidence": [
+            "crates/kernel/src/handles.rs",
+            "crates/kernel-core/src/handles.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.authority.capability-and-domain-enforcement",
+          "to": "kolvrt.kernel.view.authority.generational-handle-namespace",
+          "kind": "authority",
+          "label": "Event notification validates the caller namespace and admits or revokes signal authority",
+          "evidence": [
+            "crates/kernel/src/security.rs",
+            "crates/kernel-core/src/handles.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.authority.capability-and-domain-enforcement",
+          "to": "kolvrt.kernel.view.authority.domain-rights-and-resource-accounting",
+          "kind": "call",
+          "label": "Accepted event work charges consumer requests, service requests and queue capacity",
+          "evidence": [
+            "crates/kernel/src/security.rs",
+            "crates/kernel-core/src/domain.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.authority.generational-handle-namespace",
+          "to": "kolvrt.kernel.view.authority.domain-rights-and-resource-accounting",
+          "kind": "authority",
+          "label": "Namespace domain binding validates the owner and charges retained handles",
+          "evidence": [
+            "crates/kernel-core/src/handles.rs",
+            "crates/kernel-core/src/domain.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.wait",
@@ -534,7 +815,78 @@ The machine identifiers and labels below are shared by both language editions.
         }
       ],
       "contracts": ["kolvrt.ipc.transport", "kolvrt.ipc.request"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.ipc.ipc-runtime-integration",
+          "to": "kolvrt.kernel.view.ipc.endpoint-and-request-storage",
+          "kind": "call",
+          "label": "Trusted endpoint creation and rollback enter endpoint-local storage",
+          "evidence": [
+            "crates/kernel/src/ipc.rs",
+            "crates/kernel/src/ipc/storage.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.ipc.ipc-runtime-integration",
+          "to": "kolvrt.kernel.view.ipc.deferred-wake-and-owner-continuation",
+          "kind": "lifetime",
+          "label": "Reap requires actual deferred mailbox quiescence",
+          "evidence": [
+            "crates/kernel/src/ipc.rs",
+            "crates/kernel/src/ipc/deferred.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.ipc.endpoint-and-request-storage",
+          "to": "kolvrt.kernel.view.ipc.bounded-endpoint-and-request-state-machine",
+          "kind": "lifetime",
+          "label": "Endpoint cells retain concrete state under acquired nonblocking permits",
+          "evidence": [
+            "crates/kernel/src/ipc/storage.rs",
+            "crates/kernel-core/src/ipc.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion",
+          "to": "kolvrt.kernel.view.ipc.endpoint-and-request-storage",
+          "kind": "call",
+          "label": "Native continuations resolve exact receipts and access endpoints through storage permits",
+          "evidence": [
+            "crates/kernel/src/ipc/native.rs",
+            "crates/kernel/src/ipc/storage.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion",
+          "to": "kolvrt.kernel.view.ipc.bounded-endpoint-and-request-state-machine",
+          "kind": "call",
+          "label": "Native execution submits, receives, commits, replies and collects through Endpoint methods",
+          "evidence": [
+            "crates/kernel/src/ipc/native.rs",
+            "crates/kernel-core/src/ipc.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.ipc.deferred-wake-and-owner-continuation",
+          "to": "kolvrt.kernel.view.ipc.endpoint-and-request-storage",
+          "kind": "call",
+          "label": "Deferred polling visits endpoint cells outside scheduler storage",
+          "evidence": [
+            "crates/kernel/src/ipc/deferred.rs",
+            "crates/kernel/src/ipc/storage.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.ipc.deferred-wake-and-owner-continuation",
+          "to": "kolvrt.kernel.view.ipc.bounded-endpoint-and-request-state-machine",
+          "kind": "call",
+          "label": "Deferred polling expires requests and publishes or acknowledges retained wakes",
+          "evidence": [
+            "crates/kernel/src/ipc/deferred.rs",
+            "crates/kernel-core/src/ipc.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.clock",
@@ -688,7 +1040,39 @@ The machine identifiers and labels below are shared by both language editions.
         }
       ],
       "contracts": ["kolvrt.devices.observations"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.devices.boot-descriptor-publication",
+          "to": "kolvrt.kernel.view.devices.platform-identity-extraction",
+          "kind": "call",
+          "label": "discover_boot obtains the validated platform description through discover",
+          "evidence": [
+            "crates/kernel/src/main.rs",
+            "crates/kernel/src/platform/mod.rs",
+            "crates/kernel-core/src/platform.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.devices.platform-identity-extraction",
+          "to": "kolvrt.kernel.view.devices.immutable-descriptor-validation",
+          "kind": "call",
+          "label": "After complete FDT validation, discover constructs the immutable console snapshot with Descriptor::validated",
+          "evidence": [
+            "crates/kernel-core/src/platform.rs",
+            "crates/kernel-core/src/device.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.devices.boot-descriptor-publication",
+          "to": "kolvrt.kernel.view.devices.immutable-descriptor-validation",
+          "kind": "call",
+          "label": "Boot reads boot_console, observes its identity and resolves the descriptor before publishing console fields",
+          "evidence": [
+            "crates/kernel/src/main.rs",
+            "crates/kernel-core/src/device.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.diagnostics",
@@ -697,13 +1081,45 @@ The machine identifiers and labels below are shared by both language editions.
       "responsibility": "Emit bounded diagnostics through the reserved boot console.",
       "members": [
         {
-          "name": "Bounded event serialization and console output",
-          "sources": ["crates/kernel/src/diagnostics/mod.rs"],
-          "id": "kolvrt.kernel.view.diagnostics.bounded-event-serialization-and-console-output"
+          "id": "kolvrt.kernel.view.diagnostics.record-framing",
+          "name": "Diagnostic record framing",
+          "sources": ["crates/kernel/src/diagnostics/mod.rs"]
+        },
+        {
+          "id": "kolvrt.kernel.view.diagnostics.bounded-event-serialization-and-console-output",
+          "name": "Bounded diagnostic output admission",
+          "sources": ["crates/kernel/src/diagnostics/mod.rs"]
+        },
+        {
+          "id": "kolvrt.kernel.view.diagnostics.polled-console-writer",
+          "name": "Bounded polled console writer",
+          "sources": ["crates/kernel/src/diagnostics/mod.rs"]
         }
       ],
       "contracts": ["adr.0003", "adr.0010"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.diagnostics.record-framing",
+          "to": "kolvrt.kernel.view.diagnostics.bounded-event-serialization-and-console-output",
+          "kind": "call",
+          "label": "status, boot_banner and enabled machine event framing submit format arguments to print",
+          "evidence": ["crates/kernel/src/diagnostics/mod.rs"]
+        },
+        {
+          "from": "kolvrt.kernel.view.diagnostics.bounded-event-serialization-and-console-output",
+          "to": "kolvrt.kernel.view.diagnostics.polled-console-writer",
+          "kind": "call",
+          "label": "print invokes Writer only after secondary-CPU rejection and bounded Length validation",
+          "evidence": ["crates/kernel/src/diagnostics/mod.rs"]
+        },
+        {
+          "from": "kolvrt.kernel.view.diagnostics.polled-console-writer",
+          "to": "kolvrt.kernel.view.diagnostics.bounded-event-serialization-and-console-output",
+          "kind": "data",
+          "label": "Writer returns fmt::Error for unavailable UART or exhausted polling; print increments DROPPED",
+          "evidence": ["crates/kernel/src/diagnostics/mod.rs"]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.supervisor",
@@ -723,7 +1139,18 @@ The machine identifiers and labels below are shared by both language editions.
         }
       ],
       "contracts": ["kolvrt.services.supervision", "kolvrt.apps.native-elf"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.supervisor.service-policy-and-readiness-coordination",
+          "to": "kolvrt.kernel.view.supervisor.production-recovery-operation",
+          "kind": "call",
+          "label": "recover delegates to recover_service, which requires observed terminal state before replacement",
+          "evidence": [
+            "apps/native-apps/src/supervisor.rs",
+            "apps/native-apps/src/supervision.rs"
+          ]
+        }
+      ]
     },
     {
       "id": "kolvrt.kernel.view.counter-service",
@@ -740,10 +1167,36 @@ The machine identifiers and labels below are shared by both language editions.
           "name": "Public native ABI call interface",
           "sources": ["apps/native-runtime/src/lib.rs"],
           "id": "kolvrt.kernel.view.counter-service.public-native-abi-call-interface"
+        },
+        {
+          "id": "kolvrt.kernel.view.counter-service.counter-codec-and-private-state",
+          "name": "Counter codec and private state",
+          "sources": ["apps/native-runtime/src/lib.rs"]
         }
       ],
       "contracts": ["kolvrt.apps.native-elf"],
-      "member_relations": []
+      "member_relations": [
+        {
+          "from": "kolvrt.kernel.view.counter-service.counter-request-execution",
+          "to": "kolvrt.kernel.view.counter-service.public-native-abi-call-interface",
+          "kind": "call",
+          "label": "The service receives, commits and replies through native::call operations 2, 3 and 4",
+          "evidence": [
+            "apps/native-apps/src/counter-service.rs",
+            "apps/native-runtime/src/lib.rs"
+          ]
+        },
+        {
+          "from": "kolvrt.kernel.view.counter-service.counter-request-execution",
+          "to": "kolvrt.kernel.view.counter-service.counter-codec-and-private-state",
+          "kind": "call",
+          "label": "Decode the exact 16-byte CounterRequest, apply it to private Counter state and encode counter_reply",
+          "evidence": [
+            "apps/native-apps/src/counter-service.rs",
+            "apps/native-runtime/src/lib.rs"
+          ]
+        }
+      ]
     }
   ],
   "edges": [
@@ -752,21 +1205,47 @@ The machine identifiers and labels below are shared by both language editions.
       "kind": "call",
       "label": "Initialize physical memory, MMU and heap",
       "evidence": ["crates/kernel/src/main.rs"],
-      "from": "kolvrt.kernel.view.boot"
+      "from": "kolvrt.kernel.view.boot",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.interrupts",
       "kind": "call",
       "label": "Install exception vectors and interrupt controller",
       "evidence": ["crates/kernel/src/main.rs"],
-      "from": "kolvrt.kernel.view.boot"
+      "from": "kolvrt.kernel.view.boot",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.interrupts.vector-installation-and-exception-dispatch"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.interrupts.interrupt-controller-dispatch"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.smp",
       "kind": "call",
       "label": "Initialize per-CPU state and start secondary CPUs",
       "evidence": ["crates/kernel/src/main.rs"],
-      "from": "kolvrt.kernel.view.boot"
+      "from": "kolvrt.kernel.view.boot",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.smp.per-cpu-identity-and-local-state"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.process",
@@ -776,7 +1255,13 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/main.rs",
         "crates/kernel/src/native_boot.rs"
       ],
-      "from": "kolvrt.kernel.view.boot"
+      "from": "kolvrt.kernel.view.boot",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.process.initial-native-admission-and-completion-reporting"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.devices",
@@ -786,7 +1271,13 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/main.rs",
         "crates/kernel-core/src/device.rs"
       ],
-      "from": "kolvrt.kernel.view.boot"
+      "from": "kolvrt.kernel.view.boot",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.devices.immutable-descriptor-validation"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.diagnostics",
@@ -796,28 +1287,56 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/main.rs",
         "crates/kernel/src/diagnostics/mod.rs"
       ],
-      "from": "kolvrt.kernel.view.devices"
+      "from": "kolvrt.kernel.view.devices",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.devices.boot-descriptor-publication",
+          "to_member": "kolvrt.kernel.view.diagnostics.polled-console-writer"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.diagnostics",
       "kind": "call",
       "label": "Initialize console and emit boot diagnostics",
       "evidence": ["crates/kernel/src/main.rs"],
-      "from": "kolvrt.kernel.view.boot"
+      "from": "kolvrt.kernel.view.boot",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.diagnostics.polled-console-writer"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.boot.boot-admission-sequence",
+          "to_member": "kolvrt.kernel.view.diagnostics.record-framing"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.scheduler",
       "kind": "call",
       "label": "Dispatch timer interrupt to scheduler",
       "evidence": ["crates/kernel/src/interrupt/mod.rs"],
-      "from": "kolvrt.kernel.view.interrupts"
+      "from": "kolvrt.kernel.view.interrupts",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.interrupts.interrupt-controller-dispatch",
+          "to_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.smp",
       "kind": "call",
       "label": "Dispatch inter-processor interrupt",
       "evidence": ["crates/kernel/src/interrupt/mod.rs"],
-      "from": "kolvrt.kernel.view.interrupts"
+      "from": "kolvrt.kernel.view.interrupts",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.interrupts.interrupt-controller-dispatch",
+          "to_member": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.smp",
@@ -827,28 +1346,56 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/memory/mod.rs",
         "crates/kernel/src/smp.rs"
       ],
-      "from": "kolvrt.kernel.view.memory"
+      "from": "kolvrt.kernel.view.memory",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership",
+          "to_member": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.memory",
       "kind": "lifetime",
       "label": "Own and release process user-space frames",
       "evidence": ["crates/kernel/src/process.rs"],
-      "from": "kolvrt.kernel.view.process"
+      "from": "kolvrt.kernel.view.process",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "to_member": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.scheduler",
       "kind": "call",
       "label": "Admit task contexts and acquire completion",
       "evidence": ["crates/kernel/src/process.rs"],
-      "from": "kolvrt.kernel.view.process"
+      "from": "kolvrt.kernel.view.process",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "to_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.authority",
       "kind": "authority",
       "label": "Enforce domain charges and local namespace limits",
       "evidence": ["crates/kernel/src/process.rs"],
-      "from": "kolvrt.kernel.view.process"
+      "from": "kolvrt.kernel.view.process",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "to_member": "kolvrt.kernel.view.authority.domain-rights-and-resource-accounting"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "to_member": "kolvrt.kernel.view.authority.generational-handle-namespace"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.ipc",
@@ -858,21 +1405,43 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/process.rs",
         "crates/kernel/src/supervision.rs"
       ],
-      "from": "kolvrt.kernel.view.process"
+      "from": "kolvrt.kernel.view.process",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.process.process-admission-and-resource-lifecycle",
+          "to_member": "kolvrt.kernel.view.ipc.ipc-runtime-integration"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.ipc",
       "kind": "call",
       "label": "Dispatch prepare, execute, copy and finish operations",
       "evidence": ["crates/kernel/src/scheduler/mod.rs"],
-      "from": "kolvrt.kernel.view.scheduler"
+      "from": "kolvrt.kernel.view.scheduler",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch",
+          "to_member": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.authority",
       "kind": "authority",
       "label": "Resolve current-task handle and security operations",
       "evidence": ["crates/kernel/src/scheduler/mod.rs"],
-      "from": "kolvrt.kernel.view.scheduler"
+      "from": "kolvrt.kernel.view.scheduler",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch",
+          "to_member": "kolvrt.kernel.view.authority.local-handle-resolution"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch",
+          "to_member": "kolvrt.kernel.view.authority.capability-and-domain-enforcement"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.clock",
@@ -882,21 +1451,43 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/scheduler/mod.rs",
         "crates/kernel/src/scheduler/task.rs"
       ],
-      "from": "kolvrt.kernel.view.scheduler"
+      "from": "kolvrt.kernel.view.scheduler",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.scheduler.task-context-and-completion-state",
+          "to_member": "kolvrt.kernel.view.clock.dispatch"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.wait",
       "kind": "call",
       "label": "Integrate event waits and wakeups with task state",
       "evidence": ["crates/kernel/src/scheduler/mod.rs"],
-      "from": "kolvrt.kernel.view.scheduler"
+      "from": "kolvrt.kernel.view.scheduler",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch",
+          "to_member": "kolvrt.kernel.view.wait.wait-identity-and-terminal-transitions"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch",
+          "to_member": "kolvrt.kernel.view.wait.retained-ipc-wake-publication-and-acknowledgement"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.user-copy",
       "kind": "data",
       "label": "Snapshot and copy initialized user payload bytes",
       "evidence": ["crates/kernel/src/ipc/native.rs"],
-      "from": "kolvrt.kernel.view.ipc"
+      "from": "kolvrt.kernel.view.ipc",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion",
+          "to_member": "kolvrt.kernel.view.user-copy.protected-user-memory-copy-boundary"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.authority",
@@ -906,7 +1497,17 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/ipc/native.rs",
         "crates/kernel-core/src/ipc.rs"
       ],
-      "from": "kolvrt.kernel.view.ipc"
+      "from": "kolvrt.kernel.view.ipc",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion",
+          "to_member": "kolvrt.kernel.view.authority.generational-handle-namespace"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.ipc.bounded-endpoint-and-request-state-machine",
+          "to_member": "kolvrt.kernel.view.authority.domain-rights-and-resource-accounting"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.wait",
@@ -917,28 +1518,56 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/ipc/deferred.rs",
         "crates/kernel/src/scheduler/mod.rs"
       ],
-      "from": "kolvrt.kernel.view.ipc"
+      "from": "kolvrt.kernel.view.ipc",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion",
+          "to_member": "kolvrt.kernel.view.wait.task-wait-and-wake-integration"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.ipc.deferred-wake-and-owner-continuation",
+          "to_member": "kolvrt.kernel.view.wait.retained-ipc-wake-publication-and-acknowledgement"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.smp",
       "kind": "call",
       "label": "Ping owner CPU for deferred continuations",
       "evidence": ["crates/kernel/src/ipc/deferred.rs"],
-      "from": "kolvrt.kernel.view.ipc"
+      "from": "kolvrt.kernel.view.ipc",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.ipc.deferred-wake-and-owner-continuation",
+          "to_member": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.memory",
       "kind": "data",
       "label": "Use protected user-address range boundaries",
       "evidence": ["crates/kernel/src/user_copy.rs"],
-      "from": "kolvrt.kernel.view.user-copy"
+      "from": "kolvrt.kernel.view.user-copy",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.user-copy.protected-user-memory-copy-boundary",
+          "to_member": "kolvrt.kernel.view.memory.physical-and-virtual-memory-ownership"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.scheduler",
       "kind": "call",
       "label": "Dispatch scheduler IPI and secondary polling",
       "evidence": ["crates/kernel/src/smp.rs"],
-      "from": "kolvrt.kernel.view.smp"
+      "from": "kolvrt.kernel.view.smp",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.smp.secondary-cpu-and-invalidation-coordination",
+          "to_member": "kolvrt.kernel.view.scheduler.native-call-and-scheduling-dispatch"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.process",
@@ -948,14 +1577,37 @@ The machine identifiers and labels below are shared by both language editions.
         "apps/native-apps/src/supervisor.rs",
         "crates/kernel/src/supervision.rs"
       ],
-      "from": "kolvrt.kernel.view.supervisor"
+      "from": "kolvrt.kernel.view.supervisor",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.supervisor.service-policy-and-readiness-coordination",
+          "to_member": "kolvrt.kernel.view.process.granted-lifecycle-operation-enforcement"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.supervisor.production-recovery-operation",
+          "to_member": "kolvrt.kernel.view.process.granted-lifecycle-operation-enforcement"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.ipc",
       "kind": "call",
       "label": "Issue readiness and service control requests",
-      "evidence": ["apps/native-apps/src/supervisor.rs"],
-      "from": "kolvrt.kernel.view.supervisor"
+      "evidence": [
+        "apps/native-apps/src/supervisor.rs",
+        "apps/native-apps/src/supervision.rs"
+      ],
+      "from": "kolvrt.kernel.view.supervisor",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.supervisor.service-policy-and-readiness-coordination",
+          "to_member": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.supervisor.production-recovery-operation",
+          "to_member": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.ipc",
@@ -965,7 +1617,13 @@ The machine identifiers and labels below are shared by both language editions.
         "apps/native-apps/src/counter-service.rs",
         "apps/native-runtime/src/lib.rs"
       ],
-      "from": "kolvrt.kernel.view.counter-service"
+      "from": "kolvrt.kernel.view.counter-service",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.counter-service.public-native-abi-call-interface",
+          "to_member": "kolvrt.kernel.view.ipc.admission-payload-copy-and-completion"
+        }
+      ]
     },
     {
       "to": "kolvrt.kernel.view.diagnostics",
@@ -975,7 +1633,49 @@ The machine identifiers and labels below are shared by both language editions.
         "crates/kernel/src/native_boot.rs",
         "crates/kernel/src/supervision.rs"
       ],
-      "from": "kolvrt.kernel.view.process"
+      "from": "kolvrt.kernel.view.process",
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.process.initial-native-admission-and-completion-reporting",
+          "to_member": "kolvrt.kernel.view.diagnostics.record-framing"
+        },
+        {
+          "from_member": "kolvrt.kernel.view.process.granted-lifecycle-operation-enforcement",
+          "to_member": "kolvrt.kernel.view.diagnostics.record-framing"
+        }
+      ]
+    },
+    {
+      "from": "kolvrt.kernel.view.interrupts",
+      "to": "kolvrt.kernel.view.boot",
+      "kind": "call",
+      "label": "Access interrupt-controller registers through bounded MMIO",
+      "evidence": [
+        "crates/kernel/src/interrupt/mod.rs",
+        "crates/kernel/src/hal/mod.rs"
+      ],
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.interrupts.interrupt-controller-dispatch",
+          "to_member": "kolvrt.kernel.view.boot.hardware-abstraction-selection"
+        }
+      ]
+    },
+    {
+      "from": "kolvrt.kernel.view.diagnostics",
+      "to": "kolvrt.kernel.view.boot",
+      "kind": "call",
+      "label": "Write console bytes through bounded MMIO",
+      "evidence": [
+        "crates/kernel/src/diagnostics/mod.rs",
+        "crates/kernel/src/hal/mod.rs"
+      ],
+      "member_endpoints": [
+        {
+          "from_member": "kolvrt.kernel.view.diagnostics.polled-console-writer",
+          "to_member": "kolvrt.kernel.view.boot.hardware-abstraction-selection"
+        }
+      ]
     }
   ]
 }
