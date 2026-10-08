@@ -1,5 +1,7 @@
 //! External IPC pilot through the ordinary native ELF pipeline. No qualifying record is inferred.
 use super::*;
+mod analysis;
+mod passport;
 use crate::arena_common::{AttemptSpec, compiler_identity, digest, git, run_attempt, write_json};
 const MAGIC: u64 = 0x0049_5043_3301;
 const HEADER: usize = 128;
@@ -351,35 +353,76 @@ fn verify_build_environment(manifest: &Value, compiler: &str) -> Result<()> {
     }
     Ok(())
 }
-fn definition_snapshot() -> Result<Value> {
-    let directory = Path::new("research/arena/ipc-query");
-    let _ = fs::read(directory.join("protocol.json"))?;
-    let mut paths = Vec::new();
-    walk(directory, &mut paths)?;
-    paths.sort();
-    let mut files = Vec::new();
-    for path in paths {
-        let bytes = fs::read(&path)?;
-        files
-            .push(json!({"path":path.to_string_lossy().replace('\\',"/"),"sha256":digest(&bytes)}));
+fn definition_snapshot(main: bool) -> Result<Value> {
+    let paths = if main {
+        passport::paths()
+    } else {
+        [
+            "protocol.json",
+            "input.json",
+            "resources.json",
+            "dev-environment.json",
+            "prod-environment.json",
+        ]
+        .iter()
+        .map(|name| format!("research/arena/ipc-query/pilot-v1/{name}"))
+        .collect()
+    };
+    crate::arena_common::passport::snapshot(&paths)
+}
+fn campaign_plan(main: bool) -> Vec<(u64, bool, usize, usize, u64)> {
+    let mut plan = Vec::new();
+    if main {
+        for pair in 0..12 {
+            for case in 0..12 {
+                for prod in [false, true] {
+                    for (position, &mode) in ORDERS[pair % 2].iter().enumerate() {
+                        plan.push((case, prod, pair, position, mode));
+                    }
+                }
+            }
+        }
+    } else {
+        for case in 0..12 {
+            for prod in [false, true] {
+                for (pair, order) in ORDERS.iter().enumerate() {
+                    for (position, &mode) in order.iter().enumerate() {
+                        plan.push((case, prod, pair, position, mode));
+                    }
+                }
+            }
+        }
     }
-    Ok(json!(files))
+    plan
 }
 pub(super) fn run(args: &[String]) -> Result<()> {
+    if args.first().map(String::as_str) == Some("ipc-publish") {
+        if args.len() != 2 {
+            return Err("usage: arena run ipc-publish DIR".into());
+        }
+        let root = Path::new(&args[1]);
+        return passport::write(root, &read_json(root.join("campaign.json"))?);
+    }
+    let main = args.first().map(String::as_str) == Some("ipc-query");
     let smoke = match args.first().map(String::as_str) {
-        Some("ipc-pilot") if args.len() == 1 => None,
+        Some("ipc-pilot" | "ipc-query") if args.len() == 1 => None,
         Some("ipc-smoke") if args.len() == 2 || (args.len() == 3 && args[2] == "--prod") => {
             Some((args[1].parse::<u64>()?, args.len() == 3))
         }
-        _ => return Err("usage: cargo xtask arena run ipc-pilot | ipc-smoke CASE [--prod]".into()),
+        _ => return Err("usage: cargo xtask arena run ipc-query | ipc-publish DIR | ipc-pilot | ipc-smoke CASE [--prod]".into()),
     };
     if smoke.is_some_and(|(case, _)| case > 11) {
         return Err("IPC case outside0..11".into());
     }
     let compiler = compiler_identity()?;
+    let definition_base = if main {
+        "research/arena/ipc-query"
+    } else {
+        "research/arena/ipc-query/pilot-v1"
+    };
     let environments = [
-        read_json("research/arena/ipc-query/dev-environment.json")?,
-        read_json("research/arena/ipc-query/prod-environment.json")?,
+        read_json(format!("{definition_base}/dev-environment.json"))?,
+        read_json(format!("{definition_base}/prod-environment.json"))?,
     ];
     for environment in &environments {
         verify_build_environment(environment, &compiler)?;
@@ -392,29 +435,22 @@ pub(super) fn run(args: &[String]) -> Result<()> {
     fs::create_dir_all(root.parent().ok_or("campaign parent absent")?)?;
     fs::create_dir(&root)?;
     let sources = source_inventory()?;
-    let definitions = definition_snapshot()?;
+    let definitions = definition_snapshot(main)?;
     write_json(root.join("source-files.json"), &sources)?;
     write_json(root.join("definitions.json"), &definitions)?;
+    crate::arena_common::passport::retain_definitions(&root, &definitions)?;
     let revision = git(&["rev-parse", "HEAD"])?;
     let dirty = !git(&["status", "--porcelain"])?.is_empty();
     let mut plan = Vec::new();
     if let Some((case, prod)) = smoke {
         plan.push((case, prod, 0, 0, 1));
     } else {
-        for case in 0..12 {
-            for prod in [false, true] {
-                for (pair, order) in ORDERS.iter().enumerate() {
-                    for (position, &mode) in order.iter().enumerate() {
-                        plan.push((case, prod, pair, position, mode));
-                    }
-                }
-            }
-        }
+        plan = campaign_plan(main);
     }
     let mut attempts = Vec::new();
     let mut unchanged = true;
     for &(case, prod, pair, position, mode) in &plan {
-        if source_inventory()? != sources || definition_snapshot()? != definitions {
+        if source_inventory()? != sources || definition_snapshot(main)? != definitions {
             unchanged = false;
             break;
         }
@@ -436,6 +472,7 @@ pub(super) fn run(args: &[String]) -> Result<()> {
                 images: ["selftest-ipc-measure-root", service, client],
                 argument: argument(case, mode),
                 directory: &directory,
+                image_store: Some(&root.join("images")),
             },
             json!({"case":case,"profile":profile,"pair":pair,"order":position,"mode":mode,"argument":argument(case,mode)}),
             validate,
@@ -452,11 +489,14 @@ pub(super) fn run(args: &[String]) -> Result<()> {
         }
         attempts.push(attempt);
     }
-    unchanged &= source_inventory()? == sources && definition_snapshot()? == definitions;
+    unchanged &= source_inventory()? == sources && definition_snapshot(main)? == definitions;
     let passed = attempts.iter().filter(|a| a["status"] == "passed").count();
     let success = unchanged && passed == plan.len() && attempts.len() == plan.len();
-    let campaign = json!({"schema_version":1,"stage":if smoke.is_some(){"partial-functional-smoke"}else{"functional-pilot"},"exact_commit":revision,"worktree_dirty":dirty,"compiler_version":compiler,"source_files":sources,"definition_snapshot":definitions,"source_unchanged":unchanged,"planned_attempts":plan.len(),"attempted":attempts.len(),"passed":passed,"functional_status":if success{"passed"}else{"failed"},"admission_state":"INELIGIBLE","admission_reason":"pilot does not establish main sample plan, tail adequacy or current full SEC evidence; losses preserved","record_eligible":false,"attempts":attempts});
+    let campaign = json!({"schema_version":1,"stage":if smoke.is_some(){"partial-functional-smoke"}else if main{"main"}else{"functional-pilot"},"exact_commit":revision,"worktree_dirty":dirty,"compiler_version":compiler,"source_files":sources,"definition_snapshot":definitions,"source_unchanged":unchanged,"planned_attempts":plan.len(),"attempted":attempts.len(),"passed":passed,"functional_status":if success{"passed"}else{"failed"},"admission_state":"INELIGIBLE","admission_reason":if main{"Main observations retained pending existing schema assessment; actual losses and missing evidence can remain INELIGIBLE"}else{"pilot does not establish main sample plan, tail adequacy or current full SEC evidence; losses preserved"},"record_eligible":false,"attempts":attempts});
     write_json(root.join("campaign.json"), &campaign)?;
+    if main {
+        return passport::write(&root, &campaign);
+    }
     println!(
         "IPC functional evidence: {}; Arena admission INELIGIBLE (pilot only)",
         root.display()
@@ -473,7 +513,7 @@ pub(super) fn run(args: &[String]) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    fn fixture() -> Vec<u64> {
+    pub(super) fn fixture() -> Vec<u64> {
         let mut words = vec![0; HEADER];
         words[..29].copy_from_slice(&[
             MAGIC, 1, 0, 1, 62500000, 4, 32, 1, 36, 80, 1000, 36, 36, 36, 0, 0, 0, 36, 0, 0, 0, 0,
@@ -525,6 +565,19 @@ mod tests {
     }
     #[test]
     fn ipc_case_schedule_and_arguments_are_bounded() {
+        let main = campaign_plan(true);
+        assert_eq!(main.len(), 576);
+        assert_eq!(campaign_plan(false).len(), 96);
+        assert_eq!(main[0], (0, false, 0, 0, 1));
+        assert_eq!(main[48], (0, false, 1, 0, 2));
+        for case in 0..12 {
+            for prod in [false, true] {
+                let rows: Vec<_> = main.iter().filter(|r| r.0 == case && r.1 == prod).collect();
+                assert_eq!(rows.len(), 24);
+                assert_eq!(rows.iter().filter(|r| r.3 == 0 && r.4 == 1).count(), 6);
+            }
+        }
+
         for case in 0..12 {
             let a = argument(case, 2);
             assert_eq!(a & 255, case);

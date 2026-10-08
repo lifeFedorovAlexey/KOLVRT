@@ -1,5 +1,6 @@
 //! Shared retention and ordinary ELF execution for actual Arena producers.
 use super::*;
+pub(crate) mod passport;
 pub(super) fn write_json(path: impl AsRef<Path>, value: &Value) -> Result<()> {
     fs::write(path, serde_json::to_string_pretty(value)?)?;
     Ok(())
@@ -50,6 +51,7 @@ pub(super) struct AttemptSpec<'a> {
     pub images: [&'a str; 3],
     pub argument: u64,
     pub directory: &'a Path,
+    pub image_store: Option<&'a Path>,
 }
 pub(super) fn run_attempt(
     spec: AttemptSpec<'_>,
@@ -62,6 +64,7 @@ pub(super) fn run_attempt(
         images,
         argument,
         directory,
+        image_store,
     } = spec;
     let profile = if prod { "prod" } else { "dev" };
     fs::create_dir_all(directory)?;
@@ -71,8 +74,24 @@ pub(super) fn run_attempt(
         let (built, applications) = native_apps::build_images(prod, images, argument)?;
         attempt["applications"] = applications;
         let elf = directory.join("kernel.elf");
-        fs::copy(&built, &elf)?;
-        let hash = digest(&fs::read(&elf)?);
+        let bytes = fs::read(&built)?;
+        let hash = digest(&bytes);
+        if let Some(store) = image_store {
+            fs::create_dir_all(store)?;
+            let retained = store.join(format!("{hash}.elf"));
+            if retained.exists() {
+                if fs::read(&retained)? != bytes {
+                    return Err("shared image identity mismatch".into());
+                }
+            } else {
+                fs::write(&retained, &bytes)?;
+            }
+            // Separate execution paths/logs share immutable ELF bytes on the same volume.
+            fs::hard_link(&retained, &elf)?;
+        } else {
+            fs::write(&elf, &bytes)?;
+        }
+
         attempt["kernel"] = json!({"artifact":elf,"sha256":hash});
         let build = read_json(built.with_file_name(format!("{profile}-native-apps-build.json")))?;
         write_json(directory.join("kernel-build.json"), &build)?;
@@ -84,13 +103,7 @@ pub(super) fn run_attempt(
         }
         let events = read_json(elf.with_extension("results.json"))?;
         let result = validator(events.as_array().ok_or("Arena events absent")?)?;
-        for &(key, value) in expected {
-            if result[key] != value {
-                return Err(
-                    format!("Arena observed {key} does not match scheduled invocation").into(),
-                );
-            }
-        }
+        validate_expected(&result, expected)?;
         attempt["result"] = result;
         attempt["run"] = run;
         attempt["events"] = events;
@@ -142,4 +155,30 @@ pub(super) fn manifest_matches(attempt: &Value, manifest: &Value) -> bool {
                     line.split_whitespace().nth(3) == manifest["qemu_version"].as_str()
                 })
             })
+}
+
+pub(super) fn validate_expected(result: &Value, expected: &[(&str, u64)]) -> Result<()> {
+    for &(key, value) in expected {
+        if result[key] != value {
+            return Err(format!("Arena observed {key} does not match scheduled invocation").into());
+        }
+    }
+    Ok(())
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn scheduled_identity_rejects_wrong_missing_mode_and_case() {
+        assert!(
+            validate_expected(&json!({"mode":1,"case":3}), &[("mode", 1), ("case", 3)]).is_ok()
+        );
+        for value in [
+            json!({"mode":2,"case":3}),
+            json!({"case":3}),
+            json!({"mode":1,"case":4}),
+        ] {
+            assert!(validate_expected(&value, &[("mode", 1), ("case", 3)]).is_err());
+        }
+    }
 }

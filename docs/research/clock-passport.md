@@ -90,7 +90,8 @@ No clock authorization grant is invented. PMU, physical hardware, resource peaks
           "research/arena/clock-query/resources.json",
           "research/arena/clock-query/dev-environment.json",
           "research/arena/clock-query/prod-environment.json",
-          "crates/xtask/src/arena_common.rs"
+          "crates/xtask/src/arena_common.rs",
+          "crates/xtask/src/arena_common/passport.rs"
         ],
         "acceptance": ["research/results/clock-passport-acceptance.json"],
         "issues": [32],

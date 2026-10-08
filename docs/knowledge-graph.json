@@ -616,6 +616,11 @@
     },
     {
       "from": "kolvrt.arena",
+      "to": "crates/repository-checks/src/arena/report.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena",
       "to": "crates/repository-checks/src/lib.rs",
       "type": "implemented_by"
     },
@@ -776,6 +781,11 @@
     },
     {
       "from": "kolvrt.arena.clock-passport",
+      "to": "crates/xtask/src/arena_common/passport.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.clock-passport",
       "to": "crates/xtask/src/main.rs",
       "type": "implemented_by"
     },
@@ -855,6 +865,31 @@
       "type": "implemented_by"
     },
     {
+      "from": "kolvrt.arena.ipc-measurement.contract",
+      "to": "doc.kolvrt.architecture.benchmarking",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena.ipc-measurement.contract",
+      "to": "doc.kolvrt.arena.measurement-contract",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena.ipc-measurement.contract",
+      "to": "kolvrt.apps.native-elf",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena.ipc-measurement.contract",
+      "to": "kolvrt.clock.query.api",
+      "type": "depends_on"
+    },
+    {
+      "from": "kolvrt.arena.ipc-measurement.contract",
+      "to": "kolvrt.ipc.request",
+      "type": "depends_on"
+    },
+    {
       "from": "kolvrt.arena.ipc-passport",
       "to": "adr.0006",
       "type": "depends_on"
@@ -891,7 +926,22 @@
     },
     {
       "from": "kolvrt.arena.ipc-passport",
+      "to": "crates/xtask/src/arena_common/passport.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
       "to": "crates/xtask/src/arena_ipc.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "crates/xtask/src/arena_ipc/analysis.rs",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "crates/xtask/src/arena_ipc/passport.rs",
       "type": "implemented_by"
     },
     {
@@ -947,6 +997,246 @@
     {
       "from": "kolvrt.arena.ipc-passport",
       "to": "research/arena/ipc-query/resources.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-0-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-0-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-0-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-0-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-1-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-1-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-1-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-1-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-10-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-10-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-10-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-10-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-11-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-11-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-11-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-11-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-2-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-2-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-2-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-2-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-3-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-3-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-3-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-3-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-4-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-4-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-4-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-4-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-5-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-5-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-5-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-5-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-6-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-6-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-6-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-6-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-7-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-7-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-7-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-7-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-8-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-8-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-8-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-8-prod-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-9-dev-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-9-dev-throughput.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-9-prod-latency.json",
+      "type": "implemented_by"
+    },
+    {
+      "from": "kolvrt.arena.ipc-passport",
+      "to": "research/arena/profiles/ipc-query-9-prod-throughput.json",
       "type": "implemented_by"
     },
     {
@@ -3162,7 +3452,8 @@
     "crates/native-protocol-model/Cargo.toml": "53fb94b0f3c3a7f04ed3487a2e6c7123ce95c6490f93bdc460f7808332b5ba8e",
     "crates/native-state-models/Cargo.toml": "4577c4ea2e4541d6e0c7ccb077a9701dab066e82f97b5bd711f2f822d5681007",
     "crates/repository-checks/Cargo.toml": "90c543bdaed3980edabb0c9d661f3a31a608888b8b2227f94e919b388b4f35b8",
-    "crates/repository-checks/src/arena.rs": "39d0d0e635ac92ef03f2e1b031859a3319f932fffd20026385b56c5ec63b0c0b",
+    "crates/repository-checks/src/arena.rs": "5021c2d39fed56328a943f605bd090cb29caf1086b841d14023f8c5390ec9b72",
+    "crates/repository-checks/src/arena/report.rs": "565d9a0568474ece86323ef1c11d4560f49cb492c21f07fec86707b39fccccd2",
     "crates/repository-checks/src/compat_modules.rs": "8a053ff7e6285e11d8bef8e5c8ea8c88ddbb13929092e8cf77bf051430761c76",
     "crates/repository-checks/src/cost_l.rs": "045971103a1bfe03e5c414d3cbc5824ce0727faf5da9b44fdb00a443c7f6a98e",
     "crates/repository-checks/src/cost_l_queries.rs": "567932099224415c21466ca823cb46666679beff1de961b9d37ac491bfb0195e",
@@ -3170,7 +3461,7 @@
     "crates/repository-checks/src/knowledge/impact.rs": "2e052a3fd35ae06df9f8303902034c88df9394668ebd7c8fa90e4fff3e452804",
     "crates/repository-checks/src/lib.rs": "321bf155abcd7bf03ebfbd586722f7bc9c32d56d55fa37b62f338c57d4ec804d",
     "crates/repository-checks/src/main.rs": "d4420b80a1ff54cf285d935b02afeef96dd3b4b47944fc092aabd8b70772ed7d",
-    "crates/repository-checks/tests/arena.rs": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
+    "crates/repository-checks/tests/arena.rs": "a3ac7a7f2cd4d0baa1c8f447c32620cd9fbdd6220b33633a663467fe851e4047",
     "crates/repository-checks/tests/arena_launcher.rs": "e9c55f7bd1944557dea30761e98d3b78bec0da0370484f13643d263942c13c48",
     "crates/repository-checks/tests/compat_modules.rs": "1d0cb757806db8f0dbce2825bed411b89212cf29da0360a71fc20b650ae73b18",
     "crates/repository-checks/tests/cost_l_queries.rs": "1b601783787af14365fbfa4a1b280dc2b59303f9727b87145c1c468046876f87",
@@ -3182,11 +3473,14 @@
     "crates/window-compat/src/lib.rs": "cc91c97b8cf45c110f186c3e4afc3f15b8046ada8e42ed76caeae36bceea3a3b",
     "crates/window-compat/tests/protocols.rs": "237dc2c6e12351e69c419f0c79af46b01e7e23b4866979da47b4004161a4e533",
     "crates/xtask/Cargo.toml": "eafb479f3f59e5b36cda6beeea64e38ca8c40f4ef5714f5bffbcbd6ae9ef6f7d",
-    "crates/xtask/src/arena_clock.rs": "84674da3e00e9f5ca5f7737528c80af3322d1e772380ef00e7dd55813b2e7181",
-    "crates/xtask/src/arena_clock/passport.rs": "6ec6c2a9b83b6170042bbd574030ec3f511ff171fe770d90a8a7a3da76029639",
-    "crates/xtask/src/arena_common.rs": "c0b012605d95468b4f21e18df1908434942fa35c852bf4544be49bf165ecf285",
-    "crates/xtask/src/arena_ipc.rs": "4ff65900efe7d957334bddf01fe51984c31010277da8bcd9d9a55e86c8a8ff32",
-    "crates/xtask/src/main.rs": "90d83b321159f4e4ede7d3a7684591772023f53b8f6050020f002de13e9ef9d3",
+    "crates/xtask/src/arena_clock.rs": "d0eb2322fdccf7e0e4469bdd628c3cb68a049411581414b82e693620335cc093",
+    "crates/xtask/src/arena_clock/passport.rs": "422ec110d6fdb13f7543f24b251c44252cca695314e64a5b9b6e288d7dddd95f",
+    "crates/xtask/src/arena_common.rs": "4ef2fd94b8a7c5e34e0a2c6e7ff660b06ef70b769a0584b33ce5eee03d5885b0",
+    "crates/xtask/src/arena_common/passport.rs": "3c490da81591fcff57d4914bd7149bc74082351f4e79232e4689e77481eed8af",
+    "crates/xtask/src/arena_ipc.rs": "fedd0f4a13b652f340e2b9ea959fb99cd14def8a43f2278aaa122103b4538a85",
+    "crates/xtask/src/arena_ipc/analysis.rs": "b13e6e1720655d5d81fd233d85bde2ee2573e01734b272f597dc84b08ed6f304",
+    "crates/xtask/src/arena_ipc/passport.rs": "dfa5f292b893741e70a791fdcbf244de0d29ed5e88b3893922e1725dbcf69df0",
+    "crates/xtask/src/main.rs": "1d7b33d59d326c48af76208dbbfdc7230644182e693fd2932d124be8f36aaea9",
     "crates/xtask/src/matrix.rs": "058cecab5631d0b102d320d0460ed262db0d2d1d0a4616b541f25cbdfe2acb4a",
     "crates/xtask/src/native_apps.rs": "7e3e73c3f15765066480b6ccf20f8d7507d5106a835a616e1ca9a31018c6d4e9",
     "crates/xtask/src/output.rs": "4a4e1313760b677b500758c69d563fb1b82268503a6094d670242b15e31d3702",
@@ -3227,7 +3521,7 @@
     "docs/architecture/arena-measurement-contract.md": "6d4ff7279604685099759a753bb90346f06bc1657e29ef582312c123fbd82446",
     "docs/architecture/benchmarking.md": "90948fd7b9f53d3fbee48c876585223bef0a6e396e08baf7d0a666cbfb856f1f",
     "docs/architecture/compatibility-manifests.md": "1f3c195ba2566faa440e649b1d9bf8537fdad141ee47262274bcf20f142edc48",
-    "docs/architecture/component-arena.md": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+    "docs/architecture/component-arena.md": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
     "docs/architecture/dependency-hygiene.md": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
     "docs/architecture/first-native-slice.md": "46a668922aab3f1aa7829bcf666c336a65a307f88d198d226e474c34d4adc325",
     "docs/architecture/ipc-phase35-acceptance-review.md": "164dddd59105968934437a867e3f0de9b87918ae588dfdea3e1adb7d3cd680cd",
@@ -3253,12 +3547,13 @@
     "docs/kernel/supervision.md": "dce0718ba484852651c41e91ecdee7842f49e1529afef5e3e8e54810427b4c0d",
     "docs/kernel/user-copy.md": "16941492671fc63f4550421d6592472bd6035e6a4ecf8a67e9282806942fbe4d",
     "docs/kernel/wait.md": "7dd7bf8bef8b3cdff4dc5d41d68ee396410a49362979fa42172b61fc854b65e1",
-    "docs/knowledge-enrollment.json": "f83b9c4c2de102070c08e2e9905392817a882ba4c848fe57df039516f6066539",
+    "docs/knowledge-enrollment.json": "890a3fd94f271f470dd07383f990ab75ad8f8d93df4d068463260634d54b160c",
     "docs/knowledge-system.md": "78b422175bc3d927c3a3b80ef5fec2c616587e56503fb632bb4c06b499b24a72",
-    "docs/research/clock-passport.md": "c90213a8fec992483ed37d6882d6147f73b4862eb0a287a69326bff8ec97f082",
+    "docs/research/clock-passport.md": "927ac62cb954279fdc46fb8faf260429cc8d401b07a854aa09b1a98acd8758c1",
     "docs/research/cost-l-queries.md": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
     "docs/research/host-survey.md": "f3027d023eb3b9ce3e65c14823bf88bf9bc0be2f1a1eed934d32abf15b8935e2",
-    "docs/research/ipc-passport.md": "63d28d2f1873752985e8a57a15995222161e5858c6d9cea8adf014f6f56a8043",
+    "docs/research/ipc-measurement-contract.md": "b1c405a1f9c45efaa6be8b3494db8ae300aaece39385613b3a461ee7547a547d",
+    "docs/research/ipc-passport.md": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
     "docs/research/phase-0-1-report.md": "31bd1ac5a3662e6495925911c7638c751f050314bddc2b3f81ee10ba1993e3ae",
     "docs/security/threat-model.md": "927eb459470f3bc2a6c4b889a7698682dc530ea836d1ca1e3a8b9ed60307dfa6",
     "docs/security/verifier-time.md": "a54b7c49207b6e43b66b23ba4ec8ff870035073b817031a8ab97bb09df3fef35",
@@ -3271,12 +3566,60 @@
     "research/arena/clock-query/protocol.json": "6fc80652aa9e4ab938b82e4b7fd0dad39f1c90cda317c180de4cc4df80d08d72",
     "research/arena/clock-query/resources.json": "392e03b36dbeb25bed21ef083e3e42ecd20e1e4ce0ce6cf6b1b398e120d1e5e6",
     "research/arena/ipc-query/dev-environment.json": "e83985152e088b6cb98c2636368322d0cb461e027bdee8cd51212be8951f3c0d",
-    "research/arena/ipc-query/input.json": "f992f25cdb570d9312004e944c0d096ae8e148ec9cb1aceee9620219e2aa1382",
+    "research/arena/ipc-query/input.json": "99702e0508f7613f4856a516959a776526f1b4f11d88f6082cfc0ad4cf842c7f",
     "research/arena/ipc-query/prod-environment.json": "442c1d4dcc3370bacf31e6f429bdc8ebab433d269630f2585d704df82558c748",
-    "research/arena/ipc-query/protocol.json": "91f55645b3b2c945accc9e5eac3e32fe4d57f85239d8ba9a49001d0cf79a0bec",
+    "research/arena/ipc-query/protocol.json": "7e883c9f9fdf372918254c05337e91746a36b62b572a51c036c7185815f1557f",
     "research/arena/ipc-query/resources.json": "1a2caffeb2ce91678f35c89fa5c729553970784c7867d63af9acbf58b17fa6b3",
-    "research/arena/profiles/clock-query-dev.json": "ceaf039fc7e7bd837372a21083e5c0612145930c6c03db034617184e010afa0c",
-    "research/arena/profiles/clock-query-prod.json": "d347435c39a3c1a84c0e81d39064515c22728c1bf909edeb8279ee927d4c90eb",
+    "research/arena/profiles/clock-query-dev.json": "4b8ee06d50636b639ffc30c39e60cdb3a0e53d89b9943749c77f6cf90ebf20fc",
+    "research/arena/profiles/clock-query-prod.json": "12a03e5b0f2fd9bc6f682d5cef66471e4513aece4f8d1efb59e054d852029379",
+    "research/arena/profiles/ipc-query-0-dev-latency.json": "c8999a0e6c2de9e4cbbddcc7c4dcdbb080c1a67ec4c9bd3e3f6d23b30d4b7b88",
+    "research/arena/profiles/ipc-query-0-dev-throughput.json": "d92047b38e9efe0b681ffb05ffbcab8036199372bf308b9e064f157d2d3ab928",
+    "research/arena/profiles/ipc-query-0-prod-latency.json": "dcc3f224ce8b30fdb4c5cc6e275ca063483764671b46850c311cb765610ac452",
+    "research/arena/profiles/ipc-query-0-prod-throughput.json": "f587a574bceef5f040bdb64f4c88140b22af08a9638dde59513d3b4055b0d426",
+    "research/arena/profiles/ipc-query-1-dev-latency.json": "ed2d0b26f54030b959175e9cf04cad1ec79900639b719d1253e6206be2868a6b",
+    "research/arena/profiles/ipc-query-1-dev-throughput.json": "a157d56592be1aa945656d7e996000ed24035de6cd97d8d1573e061c71aaa0a3",
+    "research/arena/profiles/ipc-query-1-prod-latency.json": "069202ae2f94f829f5a57ea04f03cec632bc41fde59c813b9c1d60c3ee479528",
+    "research/arena/profiles/ipc-query-1-prod-throughput.json": "59eff7fd08c064a19d88300800eb5c7bd0f034e0877d7dd96ea04c2bcf5a69d6",
+    "research/arena/profiles/ipc-query-10-dev-latency.json": "48bdd768f4c146301d36921bc03add26028aaaa7f622feac84b7b90c3c01e141",
+    "research/arena/profiles/ipc-query-10-dev-throughput.json": "23e43a1631c402f5bafa2152b37d85ce74a8780f88d12127b221315c0317215a",
+    "research/arena/profiles/ipc-query-10-prod-latency.json": "52d1a5fb17d871734791f75cc8e86599fb29cd546e590dfa91c0086155d76765",
+    "research/arena/profiles/ipc-query-10-prod-throughput.json": "179db4735a6f25df16ced05c7fd0b7ed821495ac66d396e770cbeb3fb2d5d7dd",
+    "research/arena/profiles/ipc-query-11-dev-latency.json": "f3e3b0fc4ac5626f1ec3683232e1a5189c2822e76e73b464c9e09f142f83d01b",
+    "research/arena/profiles/ipc-query-11-dev-throughput.json": "2bd8fd69224c4c1fa09a65a66a18d8f2c8f0cd709938cf4c5c126f3ac56a3f5d",
+    "research/arena/profiles/ipc-query-11-prod-latency.json": "9a61e5cbf4c2c8de6c453d26701921455bbf52f5066deae705e9eb44cc40a3c1",
+    "research/arena/profiles/ipc-query-11-prod-throughput.json": "21360fbd050913b2fa655dda228ac1f5159cdd00303c6e8945ed9473efc8b96d",
+    "research/arena/profiles/ipc-query-2-dev-latency.json": "60a6b09d8c7af84f0a61e9598b021e06891f768768b995f49624b220f8645be8",
+    "research/arena/profiles/ipc-query-2-dev-throughput.json": "873ecc407aa66df14863301dd56edbccb0875c4096d6ac6f662a78f9ae22d72c",
+    "research/arena/profiles/ipc-query-2-prod-latency.json": "76ece298ee30d76654139ed34066a1d3ca8631d49cb7a704ffe879904faa0357",
+    "research/arena/profiles/ipc-query-2-prod-throughput.json": "cda3c98bc3c91aa2887121cb869e0a40f29619168880d18900dd95236f685683",
+    "research/arena/profiles/ipc-query-3-dev-latency.json": "215b498314bb02454795ee4b5217a40ff5fed1d6b7fdda338688922881abe928",
+    "research/arena/profiles/ipc-query-3-dev-throughput.json": "fc1c217a57d9e6387c458ba289be3c7d44e8c3198873f99e1aee7f6bdceea0b3",
+    "research/arena/profiles/ipc-query-3-prod-latency.json": "a04792650ea096f08e263958fa8950cda31d9f659be58e24f8177570cefa0611",
+    "research/arena/profiles/ipc-query-3-prod-throughput.json": "7d41f22abc2521ee7c129c16efbbca69980a0ebcdc0291494c038296cf57fb31",
+    "research/arena/profiles/ipc-query-4-dev-latency.json": "087a1ae2568c779f16d31bd31b19a7df6b1e42a4a10d26d413d1885748f2a3d3",
+    "research/arena/profiles/ipc-query-4-dev-throughput.json": "f179d935705fc98e79a68aeb8e4e38259516f234fa6589d220513a39aa1d97d1",
+    "research/arena/profiles/ipc-query-4-prod-latency.json": "03ef4797129436a48691057a7761eaffc3a2890ef029e800bf066d6b9c464718",
+    "research/arena/profiles/ipc-query-4-prod-throughput.json": "4463bc3ae72069062e35dc123543cd67b66dd1b9d2a217da1dee63736fc0d519",
+    "research/arena/profiles/ipc-query-5-dev-latency.json": "1a4777836d7c7a9b99636a6ea2d4600a0e70a9ac7aee01f088d34a4828b30951",
+    "research/arena/profiles/ipc-query-5-dev-throughput.json": "7271b10e7efa496c20517654170516c3f25d977ce4874114d354d5c9e5735197",
+    "research/arena/profiles/ipc-query-5-prod-latency.json": "429cc8a045138341d7aa5ea8d2485183b160b0f951771be7aa87b7a4df345adf",
+    "research/arena/profiles/ipc-query-5-prod-throughput.json": "b0a9b66bc87e5c3cf2794d939ac0cf826ca0259bf463ebd39821d79287142021",
+    "research/arena/profiles/ipc-query-6-dev-latency.json": "42bc33c8be69050a3b6b1c56fef187ca3bca4b0ed86ef860e7b56c62d1fd1c95",
+    "research/arena/profiles/ipc-query-6-dev-throughput.json": "a94b862d8ee8f41c489f95cc5e26fd321039680852895b74ba7e29eee3d2c5ed",
+    "research/arena/profiles/ipc-query-6-prod-latency.json": "5e732ed248fa9231f6fe72c4d49ae290e62f7bd61af5b6a660c34a91cb017cf1",
+    "research/arena/profiles/ipc-query-6-prod-throughput.json": "6a740d4cd8f0e3f8291ce9ab1cb4728e8dea8979eda3282934748c9845ee3891",
+    "research/arena/profiles/ipc-query-7-dev-latency.json": "88e8f93ed1ec50fcfd586e95667d4f80bee2c8cab7f184fba813efd08b724a2b",
+    "research/arena/profiles/ipc-query-7-dev-throughput.json": "65c7c57b27d3919fc0511a817d89b8d7e109d4a82a46f6c030bb58397a6b96db",
+    "research/arena/profiles/ipc-query-7-prod-latency.json": "3733c298c1ad658b1637f34263ed8c78c47515913da5ddaa864ce61544edd16b",
+    "research/arena/profiles/ipc-query-7-prod-throughput.json": "3725d0e4ae3d295b76502c270c0c52b59e23f99de34e28fa201c105fe33cc31f",
+    "research/arena/profiles/ipc-query-8-dev-latency.json": "f3630527d4920ba4e8e46231b22e97ca8035fdc516b3c2977cba866412f421be",
+    "research/arena/profiles/ipc-query-8-dev-throughput.json": "c85e3aeda5e80a701cfcbb72eb6e569ec314236da0ce18d20e7b4ac837e5d9b0",
+    "research/arena/profiles/ipc-query-8-prod-latency.json": "a85a46e813c56eae173c3ad9574b9d7a7d084af0408c521b694b13451996c949",
+    "research/arena/profiles/ipc-query-8-prod-throughput.json": "443f1651189936d97ebf5bad084b55b83ad3ee8f0b5cf777387b1a0670c46a1b",
+    "research/arena/profiles/ipc-query-9-dev-latency.json": "c60e035c2a05f6020bd44252407acd1e04e0677b56acc5a43fd7732be3da18b2",
+    "research/arena/profiles/ipc-query-9-dev-throughput.json": "9a93be26474398e4092b53f0df908760fae7b66e64138c3e0f73ee35192a50c5",
+    "research/arena/profiles/ipc-query-9-prod-latency.json": "42f8ef8e6915c62bee283c89d64b2bb504da1ee899888ba66686be7234681ce3",
+    "research/arena/profiles/ipc-query-9-prod-throughput.json": "1ae6ec485252796a2ea955b45294b83bd622a34c2226b475056774eae1f3a38c",
     "research/arena/profiles/user-copy-range.json": "d47b52839ddda707c692d2c2d40c0a312a9fd08aee56d5bbb4d48cf29fcd6c41",
     "research/arena/standards.json": "2c3c19dc87c981ea858fc1c1bcb874637a0346e796ed36f1aeddba27050da351",
     "research/cases/KOL-PATH-0001.json": "5b842d57a4f5d43dd24978419a0f10d43a905c0680b6f594a0c57b38e4810323",
@@ -3368,7 +3711,7 @@
     "tests/system/native-crash-recovery.cjs": "b966c2aadfceac2a7ae9076dcd72339b759823c15b61d8370636cd30fc9ead95",
     "tests/system/native-crash-recovery.test.cjs": "e6cc2af493494e64fdbc7671efd6b7abbe0e954f25336a7e203206ed2cd86d38",
     "tests/system/supervision-host-stall.cjs": "4548dec31744a6ef1719b5fa5f5460d7a087c0c462bd5186e649809be80f982f",
-    "translations/manifest.json": "9a0d463a9ec9772f9fceecc95cc99ac72c4019235d4848a0419504aea7d60c50",
+    "translations/manifest.json": "8818046deee14b5f541d46e1258dc570ecc9e3b27845aee98e1722a8241020f9",
     "translations/ru/docs/architecture-decisions/0001-native-authority.md": "e0859ef16b32cdae27983aee3e2f19b54ae7b4967647762b0d467b5adabf3d3c",
     "translations/ru/docs/architecture-decisions/0002-stateful-routing.md": "7c09413b4b97c465ae407aadb5ee45e075a92e916fead4671eb4bcc29fe75379",
     "translations/ru/docs/architecture-decisions/0003-profiles.md": "3f13e84058e68cb6b4845a519202fb31208ac6d82cd4dd17398dfcd694916122",
@@ -3400,7 +3743,7 @@
     "translations/ru/docs/architecture/arena-measurement-contract.md": "22756357dc74b1d279f13f60b8d8d3d470e1f2c8a3afaf4407069e8f2f2a7194",
     "translations/ru/docs/architecture/benchmarking.md": "03ecf0ff122c5718852fa07d17d6c85dd48a596cf7b50ab2c8daea914dbfe012",
     "translations/ru/docs/architecture/compatibility-manifests.md": "61672ddbce35165ea36ab13005c7b79092d9f8fd6fe6f5ef3dd409e880ec1c3a",
-    "translations/ru/docs/architecture/component-arena.md": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+    "translations/ru/docs/architecture/component-arena.md": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
     "translations/ru/docs/architecture/dependency-hygiene.md": "90ec082b25c9f409ceb054dd094906f23cc61445de98ea06ada20f2b04d6c172",
     "translations/ru/docs/architecture/first-native-slice.md": "b0155cfc7eaa77cfbfa3ad3e073af5151e4a8c9803aedae053ac903caf4c8dee",
     "translations/ru/docs/architecture/ipc-phase35-acceptance-review.md": "665bdfe887d1999d98002a6fcb116eecdf39c5e98b32e8c27403592b5030ade9",
@@ -3427,10 +3770,11 @@
     "translations/ru/docs/kernel/user-copy.md": "72164fc7c526a3b24f2bd50842c01ce2641fee6fee996e162b9a0b47479229b6",
     "translations/ru/docs/kernel/wait.md": "a4f7a1b09e9f032bcddd11e5988e0e0a954cac5f6cd28d7e92ac5ecb60019cf6",
     "translations/ru/docs/knowledge-system.md": "68392d90261c6d9060769ab11d4e1c13d7f99161aff470ee1b7c6aecc6d75bdf",
-    "translations/ru/docs/research/clock-passport.md": "67865c927e0626d9c25b5e721bd7b7af5bd516678dc91dd733f49120273d628a",
+    "translations/ru/docs/research/clock-passport.md": "7a51fe1c9ee0290b1e8adf4fb99a02db4b83369c2c292fe0c78d72bcacfceaf3",
     "translations/ru/docs/research/cost-l-queries.md": "11ec1ab0303c9d8d10ceb1f702d2e9c4444f4cad8e96b34b2a3c36e3e807b731",
     "translations/ru/docs/research/host-survey.md": "786cc999b220cf1c0989a5b9ed33c4874265306c43431dc69c44b3021f1fdc9b",
-    "translations/ru/docs/research/ipc-passport.md": "2f686d461ba8d2b192050d2e17801e4220b60f044e9c112e643669b7effac736",
+    "translations/ru/docs/research/ipc-measurement-contract.md": "66d23740d70ebfc19891916ed464c66da61a42f9fe0a5c6a7b2887e61e85918d",
+    "translations/ru/docs/research/ipc-passport.md": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc",
     "translations/ru/docs/research/phase-0-1-report.md": "890e7b4cddb6c8ebf59636c5ca5b8a680bdeb190da34fff8949f7013843781ef",
     "translations/ru/docs/security/threat-model.md": "665d402913be529155df25391d9d77e9cba9938850685f5a0428847754d04732",
     "translations/ru/docs/security/verifier-time.md": "6ba3042bf7b49b3ce0cfae58283203c4dc169b5842ac497fb2b575c294604d84",
@@ -5524,7 +5868,7 @@
     "doc.kolvrt.architecture.arena": {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 19903,
+      "estimated_bytes": 21060,
       "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
@@ -5538,15 +5882,15 @@
       },
       "locations": {
         "en": {
-          "end": 262,
+          "end": 267,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
           "start": 1
         },
         "ru": {
-          "end": 262,
+          "end": 267,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
           "start": 1
         }
       },
@@ -6611,7 +6955,7 @@
     "doc.kolvrt.research.clock-passport": {
       "document": "doc.kolvrt.research.clock-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 13130,
+      "estimated_bytes": 13185,
       "evidence_scope": "accepted bounded issue #32 CLOCK pilot on source 2978ad9; real QEMU DEV/PROD execution, exact artifacts and independent review, not physical performance or eligible Arena records.",
       "id": "doc.kolvrt.research.clock-passport",
       "kind": "subsystem-contract",
@@ -6625,15 +6969,15 @@
       },
       "locations": {
         "en": {
-          "end": 138,
+          "end": 139,
           "path": "docs/research/clock-passport.md",
-          "sha256": "c90213a8fec992483ed37d6882d6147f73b4862eb0a287a69326bff8ec97f082",
+          "sha256": "927ac62cb954279fdc46fb8faf260429cc8d401b07a854aa09b1a98acd8758c1",
           "start": 1
         },
         "ru": {
-          "end": 138,
+          "end": 139,
           "path": "translations/ru/docs/research/clock-passport.md",
-          "sha256": "67865c927e0626d9c25b5e721bd7b7af5bd516678dc91dd733f49120273d628a",
+          "sha256": "7a51fe1c9ee0290b1e8adf4fb99a02db4b83369c2c292fe0c78d72bcacfceaf3",
           "start": 1
         }
       },
@@ -6710,11 +7054,45 @@
       "summary": "Local allowlisted research-host observations with synthetic verification and no publication or device authority.",
       "title": "Local research-host surveys"
     },
+    "doc.kolvrt.research.ipc-measurement-contract": {
+      "document": "doc.kolvrt.research.ipc-measurement-contract",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 11219,
+      "evidence_scope": "normative main-campaign measurement protocol; no execution result, verification state or acceptance receipt.",
+      "id": "doc.kolvrt.research.ipc-measurement-contract",
+      "kind": "subsystem-contract",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Fixed IPC measurement populations, useful-result oracles, observer pairing and bounded uncertainty.",
+          "tags": null,
+          "title": "Контракт измерений IPC"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 75,
+          "path": "docs/research/ipc-measurement-contract.md",
+          "sha256": "b1c405a1f9c45efaa6be8b3494db8ae300aaece39385613b3a461ee7547a547d",
+          "start": 1
+        },
+        "ru": {
+          "end": 75,
+          "path": "translations/ru/docs/research/ipc-measurement-contract.md",
+          "sha256": "66d23740d70ebfc19891916ed464c66da61a42f9fe0a5c6a7b2887e61e85918d",
+          "start": 1
+        }
+      },
+      "path": "docs/research/ipc-measurement-contract.md",
+      "schema_version": 1,
+      "summary": "Fixed IPC measurement populations, useful-result oracles, observer pairing and bounded uncertainty.",
+      "title": "IPC measurement contract"
+    },
     "doc.kolvrt.research.ipc-passport": {
       "document": "doc.kolvrt.research.ipc-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 9016,
-      "evidence_scope": "implementation in progress for issue #33; protocol and source changes do not establish successful execution or acceptance.",
+      "estimated_bytes": 14910,
+      "evidence_scope": "96 retained functional pilot boots; the separately preregistered 576-boot main campaign and current-source acceptance remain pending. Historical pilot evidence does not verify later writer changes.",
       "id": "doc.kolvrt.research.ipc-passport",
       "kind": "subsystem-contract",
       "localized": {
@@ -6722,27 +7100,27 @@
           "read_when": null,
           "summary": "External IPC pilot with complete outcomes, real counter-service and bounded report export.",
           "tags": null,
-          "title": "Pilot Arena для IPC и production-сервиса"
+          "title": "Паспорт Arena для IPC и production-сервиса"
         }
       },
       "locations": {
         "en": {
-          "end": 112,
+          "end": 169,
           "path": "docs/research/ipc-passport.md",
-          "sha256": "63d28d2f1873752985e8a57a15995222161e5858c6d9cea8adf014f6f56a8043",
+          "sha256": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
           "start": 1
         },
         "ru": {
-          "end": 112,
+          "end": 169,
           "path": "translations/ru/docs/research/ipc-passport.md",
-          "sha256": "2f686d461ba8d2b192050d2e17801e4220b60f044e9c112e643669b7effac736",
+          "sha256": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc",
           "start": 1
         }
       },
       "path": "docs/research/ipc-passport.md",
       "schema_version": 1,
       "summary": "External IPC pilot with complete outcomes, real counter-service and bounded report export.",
-      "title": "IPC and production-service Arena pilot"
+      "title": "IPC and production-service Arena passport"
     },
     "doc.kolvrt.security.threat-model": {
       "document": "doc.kolvrt.security.threat-model",
@@ -7108,6 +7486,7 @@
         "roadmap_gate": "Replaceable Component Arena / Performance & Reliability Passports",
         "sources": [
           "crates/repository-checks/src/arena.rs",
+          "crates/repository-checks/src/arena/report.rs",
           "crates/repository-checks/tests/arena.rs",
           "schemas/arena-standards.schema.json",
           "schemas/arena-profile.schema.json",
@@ -7167,13 +7546,13 @@
         "en": {
           "end": 20,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
           "start": 7
         },
         "ru": {
           "end": 20,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
           "start": 7
         }
       },
@@ -7204,13 +7583,13 @@
         "en": {
           "end": 42,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
           "start": 33
         },
         "ru": {
           "end": 42,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
           "start": 33
         }
       },
@@ -7263,7 +7642,8 @@
           "research/arena/clock-query/resources.json",
           "research/arena/clock-query/dev-environment.json",
           "research/arena/clock-query/prod-environment.json",
-          "crates/xtask/src/arena_common.rs"
+          "crates/xtask/src/arena_common.rs",
+          "crates/xtask/src/arena_common/passport.rs"
         ],
         "transitions": [
           {
@@ -7308,13 +7688,13 @@
         "en": {
           "end": 14,
           "path": "docs/research/clock-passport.md",
-          "sha256": "c90213a8fec992483ed37d6882d6147f73b4862eb0a287a69326bff8ec97f082",
+          "sha256": "927ac62cb954279fdc46fb8faf260429cc8d401b07a854aa09b1a98acd8758c1",
           "start": 7
         },
         "ru": {
           "end": 14,
           "path": "translations/ru/docs/research/clock-passport.md",
-          "sha256": "67865c927e0626d9c25b5e721bd7b7af5bd516678dc91dd733f49120273d628a",
+          "sha256": "7a51fe1c9ee0290b1e8adf4fb99a02db4b83369c2c292fe0c78d72bcacfceaf3",
           "start": 7
         }
       },
@@ -7327,7 +7707,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 1142,
+      "estimated_bytes": 2241,
       "evidence_scope": "experimental general Arena validation and the accepted bounded QEMU CLOCK pilot; records/history, general attribution and graph UI remain unimplemented.",
       "id": "kolvrt.arena.comparison",
       "kind": "contract-section",
@@ -7341,15 +7721,15 @@
       },
       "locations": {
         "en": {
-          "end": 80,
+          "end": 84,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
           "start": 63
         },
         "ru": {
-          "end": 80,
+          "end": 84,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
           "start": 63
         }
       },
@@ -7378,13 +7758,13 @@
         "en": {
           "end": 34,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
           "start": 19
         },
         "ru": {
           "end": 34,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
           "start": 19
         }
       },
@@ -7411,21 +7791,62 @@
       },
       "locations": {
         "en": {
-          "end": 90,
+          "end": 94,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
-          "start": 79
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "start": 83
         },
         "ru": {
-          "end": 90,
+          "end": 94,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
-          "start": 79
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "start": 83
         }
       },
       "path": "docs/architecture/component-arena.md",
       "summary": "Actual adapter/native COST-L attribution and migration evidence.",
       "title": "COST-L migration evidence"
+    },
+    "kolvrt.arena.ipc-measurement.contract": {
+      "anchor": "kolvrt-arena-ipc-measurement-contract",
+      "depends_on": [
+        "kolvrt.ipc.request",
+        "kolvrt.clock.query.api",
+        "kolvrt.apps.native-elf",
+        "doc.kolvrt.architecture.benchmarking",
+        "doc.kolvrt.arena.measurement-contract"
+      ],
+      "document": "doc.kolvrt.research.ipc-measurement-contract",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1751,
+      "evidence_scope": "normative main-campaign measurement protocol; no execution result, verification state or acceptance receipt.",
+      "id": "kolvrt.arena.ipc-measurement.contract",
+      "kind": "contract-section",
+      "localized": {
+        "ru": {
+          "read_when": null,
+          "summary": "Normative external IPC and production-counter measurement contract; no execution acceptance.",
+          "tags": null,
+          "title": "Нагрузки и полномочия"
+        }
+      },
+      "locations": {
+        "en": {
+          "end": 16,
+          "path": "docs/research/ipc-measurement-contract.md",
+          "sha256": "b1c405a1f9c45efaa6be8b3494db8ae300aaece39385613b3a461ee7547a547d",
+          "start": 7
+        },
+        "ru": {
+          "end": 16,
+          "path": "translations/ru/docs/research/ipc-measurement-contract.md",
+          "sha256": "66d23740d70ebfc19891916ed464c66da61a42f9fe0a5c6a7b2887e61e85918d",
+          "start": 7
+        }
+      },
+      "path": "docs/research/ipc-measurement-contract.md",
+      "summary": "Normative external IPC and production-counter measurement contract; no execution acceptance.",
+      "title": "Workloads and authority"
     },
     "kolvrt.arena.ipc-passport": {
       "anchor": "kolvrt-arena-ipc-passport",
@@ -7439,18 +7860,18 @@
       ],
       "document": "doc.kolvrt.research.ipc-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 1846,
-      "evidence_scope": "implementation in progress for issue #33; protocol and source changes do not establish successful execution or acceptance.",
+      "estimated_bytes": 1845,
+      "evidence_scope": "96 retained functional pilot boots; the separately preregistered 576-boot main campaign and current-source acceptance remain pending. Historical pilot evidence does not verify later writer changes.",
       "feature": {
         "acceptance": [],
         "adrs": ["adr.0006", "adr.0025", "adr.0026"],
         "implementation": "EXPERIMENTAL",
-        "implementation_scope": "External functional IPC pilot covering three transport payloads, selected same/cross CPU placements, two requesters, capacity-one rejection and unchanged production counter-service; source implementation and acceptance are in progress.",
+        "implementation_scope": "Experimental external IPC producer with selected transport and original counter-service workloads, complete bounded report export, shared custody/admission and 48 profiles for a fixed 576-boot main plan. The retained 96-boot functional pilot is historical source-bound evidence; current main execution and SEC acceptance remain pending.",
         "issues": [33],
         "limitations": [
           "Pilot does not establish final main-campaign acceptance, adequate tail precision, physical performance or eligible records. No full Cartesian CPU/contention coverage or same-CPU counter claim."
         ],
-        "next_gate": "Execute retained functional pilot, review actual outcome/stack/export behavior, freeze main sampling and admission profiles, obtain current-source SEC and regression evidence and independent EN/RU review before closing issue33.",
+        "next_gate": "Execute the preregistered 576-boot main campaign without replacement; retain conditional paired uncertainty, complete outcomes and current-source SEC/full-matrix evidence, then independently review bounded acceptance. Historical pilot boots do not fill main slots.",
         "readiness": "NOT_READY",
         "sources": [
           "tests/native-apps/Cargo.toml",
@@ -7471,7 +7892,58 @@
           "tests/native-apps/src/ipc_measure_protocol.rs",
           "tests/native-apps/tests/ipc_measure_protocol.rs",
           "apps/native-runtime/src/lib.rs",
-          "apps/native-apps/src/counter-service.rs"
+          "apps/native-apps/src/counter-service.rs",
+          "crates/xtask/src/arena_common/passport.rs",
+          "crates/xtask/src/arena_ipc/passport.rs",
+          "research/arena/profiles/ipc-query-0-dev-latency.json",
+          "research/arena/profiles/ipc-query-0-dev-throughput.json",
+          "research/arena/profiles/ipc-query-0-prod-latency.json",
+          "research/arena/profiles/ipc-query-0-prod-throughput.json",
+          "research/arena/profiles/ipc-query-1-dev-latency.json",
+          "research/arena/profiles/ipc-query-1-dev-throughput.json",
+          "research/arena/profiles/ipc-query-1-prod-latency.json",
+          "research/arena/profiles/ipc-query-1-prod-throughput.json",
+          "research/arena/profiles/ipc-query-2-dev-latency.json",
+          "research/arena/profiles/ipc-query-2-dev-throughput.json",
+          "research/arena/profiles/ipc-query-2-prod-latency.json",
+          "research/arena/profiles/ipc-query-2-prod-throughput.json",
+          "research/arena/profiles/ipc-query-3-dev-latency.json",
+          "research/arena/profiles/ipc-query-3-dev-throughput.json",
+          "research/arena/profiles/ipc-query-3-prod-latency.json",
+          "research/arena/profiles/ipc-query-3-prod-throughput.json",
+          "research/arena/profiles/ipc-query-4-dev-latency.json",
+          "research/arena/profiles/ipc-query-4-dev-throughput.json",
+          "research/arena/profiles/ipc-query-4-prod-latency.json",
+          "research/arena/profiles/ipc-query-4-prod-throughput.json",
+          "research/arena/profiles/ipc-query-5-dev-latency.json",
+          "research/arena/profiles/ipc-query-5-dev-throughput.json",
+          "research/arena/profiles/ipc-query-5-prod-latency.json",
+          "research/arena/profiles/ipc-query-5-prod-throughput.json",
+          "research/arena/profiles/ipc-query-6-dev-latency.json",
+          "research/arena/profiles/ipc-query-6-dev-throughput.json",
+          "research/arena/profiles/ipc-query-6-prod-latency.json",
+          "research/arena/profiles/ipc-query-6-prod-throughput.json",
+          "research/arena/profiles/ipc-query-7-dev-latency.json",
+          "research/arena/profiles/ipc-query-7-dev-throughput.json",
+          "research/arena/profiles/ipc-query-7-prod-latency.json",
+          "research/arena/profiles/ipc-query-7-prod-throughput.json",
+          "research/arena/profiles/ipc-query-8-dev-latency.json",
+          "research/arena/profiles/ipc-query-8-dev-throughput.json",
+          "research/arena/profiles/ipc-query-8-prod-latency.json",
+          "research/arena/profiles/ipc-query-8-prod-throughput.json",
+          "research/arena/profiles/ipc-query-9-dev-latency.json",
+          "research/arena/profiles/ipc-query-9-dev-throughput.json",
+          "research/arena/profiles/ipc-query-9-prod-latency.json",
+          "research/arena/profiles/ipc-query-9-prod-throughput.json",
+          "research/arena/profiles/ipc-query-10-dev-latency.json",
+          "research/arena/profiles/ipc-query-10-dev-throughput.json",
+          "research/arena/profiles/ipc-query-10-prod-latency.json",
+          "research/arena/profiles/ipc-query-10-prod-throughput.json",
+          "research/arena/profiles/ipc-query-11-dev-latency.json",
+          "research/arena/profiles/ipc-query-11-dev-throughput.json",
+          "research/arena/profiles/ipc-query-11-prod-latency.json",
+          "research/arena/profiles/ipc-query-11-prod-throughput.json",
+          "crates/xtask/src/arena_ipc/analysis.rs"
         ],
         "transitions": [
           {
@@ -7483,7 +7955,7 @@
         "verification": [
           {
             "environment": "qemu-arm64",
-            "reason": "Current IPC actor/runner changes have not completed a reviewed campaign.",
+            "reason": "The retained 96-boot pilot passed at its named source; subsequent shared writer/security admission changes and the main campaign have no accepted current-source receipt.",
             "state": "UNKNOWN"
           },
           {
@@ -7507,13 +7979,13 @@
         "en": {
           "end": 16,
           "path": "docs/research/ipc-passport.md",
-          "sha256": "63d28d2f1873752985e8a57a15995222161e5858c6d9cea8adf014f6f56a8043",
+          "sha256": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
           "start": 7
         },
         "ru": {
           "end": 16,
           "path": "translations/ru/docs/research/ipc-passport.md",
-          "sha256": "2f686d461ba8d2b192050d2e17801e4220b60f044e9c112e643669b7effac736",
+          "sha256": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc",
           "start": 7
         }
       },
@@ -7542,13 +8014,13 @@
         "en": {
           "end": 56,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
           "start": 41
         },
         "ru": {
           "end": 56,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
           "start": 41
         }
       },
@@ -7577,13 +8049,13 @@
         "en": {
           "end": 64,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
           "start": 55
         },
         "ru": {
           "end": 64,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
           "start": 55
         }
       },
@@ -7610,16 +8082,16 @@
       },
       "locations": {
         "en": {
-          "end": 104,
+          "end": 108,
           "path": "docs/architecture/component-arena.md",
-          "sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
-          "start": 89
+          "sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+          "start": 93
         },
         "ru": {
-          "end": 104,
+          "end": 108,
           "path": "translations/ru/docs/architecture/component-arena.md",
-          "sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb",
-          "start": 89
+          "sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd",
+          "start": 93
         }
       },
       "path": "docs/architecture/component-arena.md",

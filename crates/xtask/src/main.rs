@@ -503,7 +503,7 @@ fn run() -> Result<()> {
     match args.first().map(String::as_str) {
         Some("arena") if args.get(1).map(String::as_str) == Some("run") => {
             match args.get(2).map(String::as_str) {
-                Some("ipc-pilot" | "ipc-smoke") => arena_ipc::run(&args[2..]),
+                Some("ipc-query" | "ipc-publish" | "ipc-pilot" | "ipc-smoke") => arena_ipc::run(&args[2..]),
                 _ => arena_clock::run(&args[2..]),
             }
         },
@@ -634,7 +634,7 @@ fn run() -> Result<()> {
             archive_measurements(label, &starting_sources)?;
             Ok(())
         }
-        _ => Err("usage: cargo xtask arena run clock-query | arena run ipc-pilot | arena run ipc-smoke CASE [--prod] | selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
+        _ => Err("usage: cargo xtask arena run clock-query | arena run ipc-query | arena run ipc-publish DIR | arena run ipc-pilot | arena run ipc-smoke CASE [--prod] | selftest [--prod] | app-smoke [--prod] | service-run [--prod] [--live] | crash-recovery [--prod] | native-controls [--prod] | test [--record LABEL] | matrix-task FLAG [--prod] | matrix-shard INDEX COUNT | asid-bench | compare BASELINE CANDIDATE | build [--prod] | run [--prod] [--machine] | audit | debug".into()),
     }
 }
 fn archive_ipc_benchmark(sources: &Value) -> Result<()> {

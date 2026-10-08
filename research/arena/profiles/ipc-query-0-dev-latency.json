@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "id": "arena.profile.ipc-query.case-0.dev.latency",
+  "version": "1",
+  "review_state": "REVIEWED",
+  "target": {
+    "block_id": "kolvrt.ipc.transport",
+    "contract_id": "kolvrt.arena.ipc-measurement.contract",
+    "functional_version": "native.request/1",
+    "contract_sha256": "b1c405a1f9c45efaa6be8b3494db8ae300aaece39385613b3a461ee7547a547d"
+  },
+  "workload": {
+    "id": "arena.workload.ipc-query.case-0",
+    "version": "1",
+    "semantics_sha256": "7e883c9f9fdf372918254c05337e91746a36b62b572a51c036c7185815f1557f",
+    "input_sha256": "99702e0508f7613f4856a516959a776526f1b4f11d88f6082cfc0ad4cf842c7f",
+    "seed": "fixed-twelve-pair-rounds-alternating-ab-ba-v1",
+    "useful_operation": "transport-0-same-single: original request/response and checked service effect through existing grants; all offered attempts and real refusals retained.",
+    "oracle": {
+      "id": "arena.oracle.ipc-query",
+      "version": "1",
+      "sha256": "fedd0f4a13b652f340e2b9ea959fb99cd14def8a43f2278aaa122103b4538a85"
+    }
+  },
+  "environment": {
+    "architecture": "ARM64",
+    "platform_kind": "QEMU",
+    "hardware_profile": {
+      "id": "arena.hardware.qemu-virt-a57",
+      "version": "10.1.0-two-cpus-256m"
+    },
+    "configuration_sha256": "e83985152e088b6cb98c2636368322d0cb461e027bdee8cd51212be8951f3c0d",
+    "execution_profile": "DEV",
+    "toolchain": {
+      "compiler": "rustc",
+      "version": "1.99.0",
+      "flags": ["-C", "force-frame-pointers=yes", "-D", "warnings"]
+    },
+    "measurement": {
+      "id": "arena.mechanism.ipc-query-envelope",
+      "version": "1",
+      "clock": "AArch64 architectural counter via production native CLOCK; declared QEMU TCG",
+      "resolution_units": "timer_ticks",
+      "instrumentation": "EXTERNAL"
+    },
+    "resource_policy_sha256": "1a2caffeb2ce91678f35c89fa5c729553970784c7867d63af9acbf58b17fa6b3"
+  },
+  "sampling": {
+    "version": "1",
+    "warmup_samples": 4,
+    "samples": 32,
+    "repeats": 12,
+    "stopping_rule": "Fixed 576-boot campaign: twelve fresh alternating OFF/ON pairs per case/profile in preregistered pair-round order. No retry or replacement. Latency population is success-conditioned and actual losses/sample shortfalls remain visible and INELIGIBLE; throughput is one measured aggregate, zero separate aggregate warmup observations, retaining actual request warmups.",
+    "quantile_estimator": "NEAREST_RANK",
+    "analysis_version": "1"
+  },
+  "overhead": {
+    "id": "arena.overhead.ipc-query.case-0",
+    "version": "1",
+    "matched_workload_sha256": "7e883c9f9fdf372918254c05337e91746a36b62b572a51c036c7185815f1557f",
+    "collection_method": "Both modes retain three CLOCK probes and every fixed offered operation. ON adds exactly one volatile middle.ticks store; OFF omits only that store. Match all measured offered IDs/outcomes; differing outcome vectors are INCONCLUSIVE, no success truncation or exact subtraction."
+  },
+  "metrics": [
+    {
+      "id": "arena.metric.ipc-query.latency-median",
+      "dimension": "PERF",
+      "definition": "Descriptive nearest-rank MEDIAN of OFF successful userspace Submit-to-Collect envelopes; includes common probes and scheduling. All refusals retained separately. At most32 successes/boot do not establish tail precision.",
+      "units": "timer_ticks",
+      "denominator": "one successful useful request, conditioned on actual terminal success",
+      "origin": "KOLVRT_DEFINED",
+      "methodologies": [
+        {
+          "id": "arena.methodology.kolvrt-profile",
+          "version": "1",
+          "section": "Descriptive sampling"
+        },
+        {
+          "id": "arena.standard.spec-run-rules",
+          "version": "CPU2017-6644-2021-09-13",
+          "section": "1.2 and 1.3: validation, disclosure and reproducibility principles"
+        }
+      ],
+      "visibility": "SHARED",
+      "statistic": "MEDIAN",
+      "direction": "MIN",
+      "minimum_samples": 32
+    },
+    {
+      "id": "arena.metric.ipc-query.latency-p95",
+      "dimension": "PERF",
+      "definition": "Descriptive nearest-rank P95 of OFF successful userspace Submit-to-Collect envelopes; includes common probes and scheduling. All refusals retained separately. At most32 successes/boot do not establish tail precision.",
+      "units": "timer_ticks",
+      "denominator": "one successful useful request, conditioned on actual terminal success",
+      "origin": "KOLVRT_DEFINED",
+      "methodologies": [
+        {
+          "id": "arena.methodology.kolvrt-profile",
+          "version": "1",
+          "section": "Descriptive sampling"
+        },
+        {
+          "id": "arena.standard.spec-run-rules",
+          "version": "CPU2017-6644-2021-09-13",
+          "section": "1.2 and 1.3: validation, disclosure and reproducibility principles"
+        }
+      ],
+      "visibility": "SHARED",
+      "statistic": "P95",
+      "direction": "MIN",
+      "minimum_samples": 32
+    },
+    {
+      "id": "arena.metric.ipc-query.latency-p99",
+      "dimension": "PERF",
+      "definition": "Descriptive nearest-rank P99 of OFF successful userspace Submit-to-Collect envelopes; includes common probes and scheduling. All refusals retained separately. At most32 successes/boot do not establish tail precision.",
+      "units": "timer_ticks",
+      "denominator": "one successful useful request, conditioned on actual terminal success",
+      "origin": "KOLVRT_DEFINED",
+      "methodologies": [
+        {
+          "id": "arena.methodology.kolvrt-profile",
+          "version": "1",
+          "section": "Descriptive sampling"
+        },
+        {
+          "id": "arena.standard.spec-run-rules",
+          "version": "CPU2017-6644-2021-09-13",
+          "section": "1.2 and 1.3: validation, disclosure and reproducibility principles"
+        }
+      ],
+      "visibility": "SHARED",
+      "statistic": "P99",
+      "direction": "MIN",
+      "minimum_samples": 32
+    }
+  ],
+  "security": {
+    "id": "arena.security.native-request",
+    "version": "1",
+    "definition_origin": "KOLVRT_DEFINED",
+    "methodologies": [
+      {
+        "id": "arena.standard.cc2022",
+        "version": "Release-1-errata-1.2",
+        "section": "TOE/SPD/SFR/SAR conceptual model; no normative component mapping"
+      },
+      {
+        "id": "arena.standard.nist800-55-vol1",
+        "version": "2024",
+        "section": "Data quality and validation of measures"
+      }
+    ],
+    "toe": "Production native.request/1 capability, identity, lifetime and bounded charging mechanisms; external original ELF workload and host evidence admission.",
+    "spd": {
+      "attacker_model": "Untrusted requesters or malformed user frames/handles; malformed or incomplete external reports and retained evidence. Malicious kernel or fully forged evidence chain is excluded.",
+      "threats": [
+        "Foreign or stale process/capability identity accepted; SEND rights widened or receiver authority substituted.",
+        "Quota or retained request lifetime violated during exhaustion/revoke.",
+        "Fake useful success, missing observations or stale evidence admitted as verified performance."
+      ],
+      "assumptions": [
+        "Trusted immutable development boot image/grant inputs and working declared QEMU counter.",
+        "Original ELF/source custody is retained and reviewed, not cryptographic attestation; physical hardware and production image authentication are outside scope."
+      ],
+      "policies": [
+        "No privilege, buffer or timeout changes for benchmark success.",
+        "Actual failures/refusals and mandatory missing/failed SAR remain visible and prevent qualifying admission."
+      ],
+      "boundaries": [
+        "Selected CPU0->0 and CPU0->1 paths; two-requester cross-CPU cases, original16-byte counter separately.",
+        "No broad fuzz, physical, vulnerability-certification, exclusive CPU, PMU or production supervisor acceptance claim."
+      ]
+    },
+    "sfr": [
+      {
+        "id": "arena.sfr.ipc.caller-identity",
+        "claim": "IPC service tokens and request receipts are scoped to actual executing process identity; forged/foreign caller access is rejected.",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.ipc.source-review",
+          "arena.sar.ipc.kernel-regression"
+        ]
+      },
+      {
+        "id": "arena.sfr.ipc.authority",
+        "claim": "SEND/receiver rights and attenuation follow actual production capability checks; client IDs or numeric names cannot mint authority.",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.ipc.source-review",
+          "arena.sar.ipc.kernel-regression"
+        ]
+      },
+      {
+        "id": "arena.sfr.ipc.stale-isolation",
+        "claim": "Process-local identity and generation separate stale or foreign capabilities and prevent cross-domain aliasing.",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.ipc.source-review",
+          "arena.sar.ipc.kernel-regression"
+        ]
+      },
+      {
+        "id": "arena.sfr.ipc.bounded-resources",
+        "claim": "Admission and terminal ownership preserve bounded quota charging and eventual acquired reclamation; exhaustion cannot create unaccounted ownership.",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.ipc.source-review",
+          "arena.sar.ipc.kernel-regression"
+        ]
+      },
+      {
+        "id": "arena.sfr.ipc.revoke",
+        "claim": "Revoke prevents subsequent admission through affected authority while preserving already accepted request/receipt lifetime until terminal collection.",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.ipc.source-review",
+          "arena.sar.ipc.kernel-regression"
+        ]
+      },
+      {
+        "id": "arena.sfr.ipc.useful-execution",
+        "claim": "Actual original service execution agrees with payload/sequence or counter final-state oracle; incomplete or fabricated evidence cannot satisfy the declared importer checks.",
+        "mandatory": true,
+        "required_sar": [
+          "arena.sar.ipc.source-review",
+          "arena.sar.ipc.negative-inputs",
+          "arena.sar.ipc.workload-execution"
+        ]
+      }
+    ],
+    "sar": [
+      {
+        "id": "arena.sar.ipc.source-review",
+        "method": "DETERMINISTIC",
+        "scope": "Independent source-bound review of actual native IPC/handles/domains/revoke paths, external actors and evidence pipeline; not an execution substitute."
+      },
+      {
+        "id": "arena.sar.ipc.kernel-regression",
+        "method": "DETERMINISTIC",
+        "scope": "Fresh full DEV/PROD matrix and named actual passing caller/rights/stale/domain/charge/revoke assertions, with verified same-invocation donor lineage and source matching."
+      },
+      {
+        "id": "arena.sar.ipc.negative-inputs",
+        "method": "NEGATIVE_CONTROL",
+        "scope": "Invalid inputs to actual production methods and host report/admission oracle; forged count/sequence/identity, incomplete custody and missing required evidence rejected without production mutation."
+      },
+      {
+        "id": "arena.sar.ipc.workload-execution",
+        "method": "DETERMINISTIC",
+        "scope": "Fresh original kernel/application ELFs, useful reply/sequence/final counter state, complete outcomes and normal root retirement/reclamation."
+      }
+    ],
+    "ava_van_scope": "Not evaluated; current bounded source/runtime/negative input evidence is not vulnerability certification.",
+    "attack_potential_scope": "Not evaluated; no attack potential level claimed."
+  }
+}

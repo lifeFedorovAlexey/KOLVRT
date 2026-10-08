@@ -750,7 +750,7 @@
     {
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 19903,
+      "estimated_bytes": 21060,
       "id": "doc.kolvrt.architecture.arena",
       "kind": "subsystem-contract",
       "path": "docs/architecture/component-arena.md",
@@ -1093,7 +1093,7 @@
     {
       "document": "doc.kolvrt.research.clock-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 13130,
+      "estimated_bytes": 13185,
       "id": "doc.kolvrt.research.clock-passport",
       "kind": "subsystem-contract",
       "path": "docs/research/clock-passport.md",
@@ -1121,14 +1121,24 @@
       "title": "Local research-host surveys"
     },
     {
+      "document": "doc.kolvrt.research.ipc-measurement-contract",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 11219,
+      "id": "doc.kolvrt.research.ipc-measurement-contract",
+      "kind": "subsystem-contract",
+      "path": "docs/research/ipc-measurement-contract.md",
+      "summary": "Fixed IPC measurement populations, useful-result oracles, observer pairing and bounded uncertainty.",
+      "title": "IPC measurement contract"
+    },
+    {
       "document": "doc.kolvrt.research.ipc-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 9016,
+      "estimated_bytes": 14910,
       "id": "doc.kolvrt.research.ipc-passport",
       "kind": "subsystem-contract",
       "path": "docs/research/ipc-passport.md",
       "summary": "External IPC pilot with complete outcomes, real counter-service and bounded report export.",
-      "title": "IPC and production-service Arena pilot"
+      "title": "IPC and production-service Arena passport"
     },
     {
       "document": "doc.kolvrt.security.threat-model",
@@ -1267,7 +1277,7 @@
       "depends_on": [],
       "document": "doc.kolvrt.architecture.arena",
       "document_status": "CURRENT",
-      "estimated_bytes": 1142,
+      "estimated_bytes": 2241,
       "id": "kolvrt.arena.comparison",
       "kind": "contract-section",
       "path": "docs/architecture/component-arena.md",
@@ -1299,6 +1309,24 @@
       "title": "COST-L migration evidence"
     },
     {
+      "anchor": "kolvrt-arena-ipc-measurement-contract",
+      "depends_on": [
+        "kolvrt.ipc.request",
+        "kolvrt.clock.query.api",
+        "kolvrt.apps.native-elf",
+        "doc.kolvrt.architecture.benchmarking",
+        "doc.kolvrt.arena.measurement-contract"
+      ],
+      "document": "doc.kolvrt.research.ipc-measurement-contract",
+      "document_status": "DESIGN BASELINE",
+      "estimated_bytes": 1751,
+      "id": "kolvrt.arena.ipc-measurement.contract",
+      "kind": "contract-section",
+      "path": "docs/research/ipc-measurement-contract.md",
+      "summary": "Normative external IPC and production-counter measurement contract; no execution acceptance.",
+      "title": "Workloads and authority"
+    },
+    {
       "anchor": "kolvrt-arena-ipc-passport",
       "depends_on": [
         "kolvrt.ipc",
@@ -1310,7 +1338,7 @@
       ],
       "document": "doc.kolvrt.research.ipc-passport",
       "document_status": "CURRENT",
-      "estimated_bytes": 1846,
+      "estimated_bytes": 1845,
       "id": "kolvrt.arena.ipc-passport",
       "implementation": "EXPERIMENTAL",
       "kind": "feature",

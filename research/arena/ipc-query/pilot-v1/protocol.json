@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "id": "arena.protocol.ipc-query",
+  "version": "pilot-1",
+  "status": "PROPOSED",
+  "definition_origin": "KOLVRT_DEFINED",
+  "api_contract": "native.request/1",
+  "cases": [
+    {
+      "id": 0,
+      "name": "transport-0-same-single",
+      "request_bytes": 0,
+      "kind": "transport",
+      "topology": "same-single",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 1,
+      "name": "transport-0-cross-single",
+      "request_bytes": 0,
+      "kind": "transport",
+      "topology": "cross-single",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 2,
+      "name": "transport-0-cross-two",
+      "request_bytes": 0,
+      "kind": "transport",
+      "topology": "cross-two",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 3,
+      "name": "transport-8-same-single",
+      "request_bytes": 8,
+      "kind": "transport",
+      "topology": "same-single",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 4,
+      "name": "transport-8-cross-single",
+      "request_bytes": 8,
+      "kind": "transport",
+      "topology": "cross-single",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 5,
+      "name": "transport-8-cross-two",
+      "request_bytes": 8,
+      "kind": "transport",
+      "topology": "cross-two",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 6,
+      "name": "transport-256-same-single",
+      "request_bytes": 256,
+      "kind": "transport",
+      "topology": "same-single",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 7,
+      "name": "transport-256-cross-single",
+      "request_bytes": 256,
+      "kind": "transport",
+      "topology": "cross-single",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 8,
+      "name": "transport-256-cross-two",
+      "request_bytes": 256,
+      "kind": "transport",
+      "topology": "cross-two",
+      "service": "external ABI responder; no production counterpart"
+    },
+    {
+      "id": 9,
+      "name": "queue-one-saturation",
+      "request_bytes": 8,
+      "kind": "expected-rejection",
+      "topology": "cross-single",
+      "service": "external ABI responder held by ordinary feedback RPC"
+    },
+    {
+      "id": 10,
+      "name": "counter-cross-single",
+      "request_bytes": 16,
+      "kind": "production-counter",
+      "topology": "cross-single",
+      "service": "unchanged counter-service"
+    },
+    {
+      "id": 11,
+      "name": "counter-cross-two",
+      "request_bytes": 16,
+      "kind": "production-counter",
+      "topology": "cross-two",
+      "service": "unchanged counter-service"
+    }
+  ],
+  "authority": "Existing immutable native bootstrap grants only. Root CPU0 sends to slot1 CPU0 for same-CPU transport or slot0 CPU1 for cross-CPU transport/service. Root and slot1 each hold authentic SEND to slot0 for two-requester cases. No raw handle transfer, grant widening or deployment configuration.",
+  "scope_excluded": [
+    "same-CPU two-requester contention",
+    "reverse CPU direction",
+    "same-CPU production counter",
+    "production supervisor recovery measurement",
+    "physical ARM64 performance"
+  ],
+  "useful_operation": "A real Submit/Wait/Collect request and checked reply/effect. Transport responder verifies payload and returns execution sequence; production counter uses its unchanged exact sixteen-byte Add/Get protocol.",
+  "outcomes": "Record every offered attempt with exact request/client/stage/status. Exhausted is not a successful useful operation. Saturation requires exact queue-full rejection, successful drainage and subsequent service. Unexpected failure remains failure; no retries.",
+  "measurement": {
+    "wall": "CLOCK immediately before Submit to CLOCK after terminal Collect (or admission rejection); userspace envelope, not exact internal admission-to-terminal timestamps.",
+    "execution_window": "CLOCK x2 client observation includes transition edges and stalls; not exclusive CPU or service execution.",
+    "read_window": "CLOCK x3 measures READ_WINDOW body, not IPC execution.",
+    "throughput": "Measured-phase useful successes only. Common start is after both requesters finish warmups and before peer GO reply. End is after peer DONE receipt (or final root sample for one requester), before bulk raw export. Includes GO/DONE control overhead; never invert median or sum overlapping intervals.",
+    "unavailable": [
+      "kernel admission-to-terminal timestamps",
+      "queue residence",
+      "service CPU",
+      "capability/lock attribution",
+      "dynamic copy counters",
+      "per-request scheduler switches",
+      "PMU cycles",
+      "peak resident memory"
+    ],
+    "clock_calls": "Start, immediately after Submit, and end after Collect/rejection: three common probes in both observer modes."
+  },
+  "observer": {
+    "modes": ["OFF", "ON"],
+    "contract": "Identical useful requests, three common CLOCK calls and oracle. ON adds exactly one volatile store of the middle CLOCK ticks into actor-private memory before end CLOCK. OFF omits only this store. Incremental recorder cost, no exact subtraction."
+  },
+  "sampling": {
+    "phase": "functional pilot; not final acceptance",
+    "warmup_offered": 4,
+    "measured_offered": 32,
+    "saturation_warmup_offered": 3,
+    "saturation_measured_offered": 33,
+    "pairs_per_case_profile": 2,
+    "profiles": ["DEV", "PROD"],
+    "order": [
+      ["OFF", "ON"],
+      ["ON", "OFF"]
+    ],
+    "total_boots": 96,
+    "repeat_unit": "fresh guest boot/pair; requests within a boot may correlate",
+    "stopping": "Fixed attempts, no retry, selective omission, outlier deletion or historical reuse. Retain failed boots and source changes.",
+    "main_gate": "Freeze separate main sample/analysis plan only after pilot and stack/export capacity review. No p99 adequacy is claimed by this pilot.",
+    "population": "36 total offered attempts across requesters. Two-requester cases split 18 each: two warmups and sixteen measured. Saturation has twelve cycles, each one admitted, one refused and one recovered request; first cycle is warmup."
+  },
+  "resources": {
+    "endpoint_capacity": 1,
+    "actor_max_offered": 36,
+    "existing_stack_bytes": 16384,
+    "existing_kernel_report_words": 2048,
+    "report_event_chunk_words": 64,
+    "logger_record_bytes": 4096,
+    "boundary": "No increase of any production buffer/stack/queue limit. Reports are exported outside individual latency envelopes."
+  },
+  "admission": "Existing Arena schemas, registry and assessor only. Preserve strict loss/sample/security gates. Ineligible or incomplete populations retain reasons; no fabricated successful samples or zeroed failures. Pilot alone never closes issue33 or yields an eligible Arena record.",
+  "request_deadline": {
+    "policy": "Existing native::rpc client policy, one counter-frequency interval from start; not a kernel synchronization timeout or performance allowance.",
+    "absolute": "start.ticks + start.frequency, checked arithmetic; reconstruct from retained raw start and frequency",
+    "failure": "Every expiration and stage/status retained; no deadline increase or retries."
+  },
+  "report": {
+    "magic": 314879193857,
+    "version": 1,
+    "header_words": 128,
+    "record_words": 8,
+    "pilot_total_words": 416,
+    "header": [
+      "magic",
+      "version",
+      "case",
+      "mode",
+      "frequency",
+      "warmup_offered_total",
+      "measured_offered_total",
+      "clients",
+      "total_records",
+      "aggregate_start",
+      "aggregate_end",
+      "offered",
+      "admitted",
+      "successful",
+      "exhausted",
+      "expired",
+      "other_errors",
+      "server_execution_count",
+      "sequence_request_hash",
+      "counter_final_value",
+      "reserved_zero",
+      "payload_bytes",
+      "same_cpu_flag",
+      "reserved_zero",
+      "root_records",
+      "peer_records",
+      "root_warmups",
+      "peer_warmups",
+      "oracle_pass",
+      "words29..127_reserved_zero"
+    ],
+    "record": [
+      "client_in_high32_phase_in_low32",
+      "request_id",
+      "start_ticks",
+      "end_ticks",
+      "execution_window_delta",
+      "read_window_delta",
+      "stage_in_high32_status_in_low32",
+      "successful_sequence_or_zero"
+    ],
+    "ordering": "Root records first, then peer records; each client retains chronological warmup prefix and all measured attempts. Saturation admits A, rejects B while A retained, then completes a fresh C; A/B envelopes deliberately overlap.",
+    "error_stage": {
+      "0": "success",
+      "1": "Submit",
+      "2": "Wait",
+      "3": "Collect syscall",
+      "4": "Collect terminal outcome"
+    },
+    "storage": "Existing 2048-word kernel report capacity; bounded64word transport chunks with exact identity/order/end validation. No enlarged stack, logger or report buffer."
+  },
+  "saturation_latency_scope": "Admitted request A intentionally includes nested rejected B probes and ordinary feedback-release RPC before A Collect. This controlled saturation/drainage envelope is a separate workload, not an independent ordinary round-trip sample."
+}

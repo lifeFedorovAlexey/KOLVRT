@@ -8,6 +8,8 @@ use std::{
     path::{Component, Path},
 };
 
+pub mod report;
+
 const MAX_INPUT_BYTES: u64 = 32 * 1024 * 1024;
 
 /// Canonical JSON digest (serde_json's ordered object maps), independent of formatting.
@@ -502,6 +504,31 @@ fn bundle_base(path: &Path) -> &Path {
         .unwrap_or_else(|| Path::new("."))
 }
 pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
+    match args
+        .iter()
+        .map(String::as_str)
+        .collect::<Vec<_>>()
+        .as_slice()
+    {
+        ["report"] | ["report", _] => {
+            let result = report::render(root, args.get(1).map(Path::new))?;
+            print!("{}", result.text);
+            return if result.admissible {
+                Ok(())
+            } else {
+                Err(
+                    "Arena report contains invalid or ineligible runs; reasons are shown above"
+                        .into(),
+                )
+            };
+        }
+        ["diff", left, right] => {
+            print!("{}", report::diff(root, Path::new(left), Path::new(right))?);
+            return Ok(());
+        }
+        _ => {}
+    }
+
     let registry = input(&root.join("research/arena/standards.json"))?;
     let output=match args.iter().map(String::as_str).collect::<Vec<_>>().as_slice() {
         ["check"]=>{check(root)?;json!({"state":"PASS","scope":"Registry/profile validation only; no kernel run or certification"})},
@@ -526,7 +553,7 @@ pub fn cli(root: &Path, args: &[String]) -> CheckResult<()> {
             json!({"comparison_class":la["comparison_class"],"left":la,"right":ra,"scope":"Descriptive comparison only; no superiority, regression statistics or records"})
         },
         ["assess",path]=>{let run=input(Path::new(path))?;assess(root,bundle_base(Path::new(path)),&run)?},
-        _=>return Err("usage: cargo xtask arena check | registry | profile PATH | assess RUN | compare LEFT_RUN RIGHT_RUN".into())
+        _=>return Err("usage: cargo xtask arena report [DIR|RUN] | diff BASE_RUN CANDIDATE_RUN | check | registry | profile PATH | assess RUN | compare LEFT_RUN RIGHT_RUN".into())
     };
     println!(
         "{}",

@@ -107,6 +107,7 @@ pub(super) fn run(args: &[String]) -> Result<()> {
                         images: ["selftest-clock-client", "counter-service", "counter-client"],
                         argument: mode,
                         directory: &directory,
+                        image_store: None,
                     },
                     json!({"profile":profile,"pair":pair,"order":position,"mode":mode}),
                     validate,

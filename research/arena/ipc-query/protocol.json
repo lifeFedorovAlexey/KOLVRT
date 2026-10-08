@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "arena.protocol.ipc-query",
-  "version": "pilot-1",
+  "version": "1",
   "status": "PROPOSED",
   "definition_origin": "KOLVRT_DEFINED",
   "api_contract": "native.request/1",
@@ -128,29 +128,30 @@
       "PMU cycles",
       "peak resident memory"
     ],
-    "clock_calls": "Start, immediately after Submit, and end after Collect/rejection: three common probes in both observer modes."
+    "clock_calls": "Start, immediately after Submit, and end after Collect/rejection: three common probes in both observer modes.",
+    "saturation_distributions": "Report admitted A, refused B and recovered C separately; pooled successful A/C quantiles are supplemental heterogeneous distributions."
   },
   "observer": {
     "modes": ["OFF", "ON"],
-    "contract": "Identical useful requests, three common CLOCK calls and oracle. ON adds exactly one volatile store of the middle CLOCK ticks into actor-private memory before end CLOCK. OFF omits only this store. Incremental recorder cost, no exact subtraction."
+    "contract": "Identical useful requests, three common CLOCK calls and oracle. ON adds exactly one volatile store of the middle CLOCK ticks into actor-private memory before end CLOCK. OFF omits only this store. Incremental recorder cost, no exact subtraction.",
+    "outcome_policy": "Use all offered measured intervals with request/phase identities, never truncate successful populations. Differing outcome vectors make observer interpretation INCONCLUSIVE; even matching outcomes do not isolate CPU recorder cost."
   },
   "sampling": {
-    "phase": "functional pilot; not final acceptance",
+    "phase": "preregistered main campaign; no result asserted",
     "warmup_offered": 4,
     "measured_offered": 32,
     "saturation_warmup_offered": 3,
     "saturation_measured_offered": 33,
-    "pairs_per_case_profile": 2,
+    "pairs_per_case_profile": 12,
     "profiles": ["DEV", "PROD"],
-    "order": [
-      ["OFF", "ON"],
-      ["ON", "OFF"]
-    ],
-    "total_boots": 96,
+    "order": "pair0..11 outer, case0..11, DEV then PROD, OFF/ON on even pair and ON/OFF on odd pair",
+    "total_boots": 576,
     "repeat_unit": "fresh guest boot/pair; requests within a boot may correlate",
     "stopping": "Fixed attempts, no retry, selective omission, outlier deletion or historical reuse. Retain failed boots and source changes.",
-    "main_gate": "Freeze separate main sample/analysis plan only after pilot and stack/export capacity review. No p99 adequacy is claimed by this pilot.",
-    "population": "36 total offered attempts across requesters. Two-requester cases split 18 each: two warmups and sixteen measured. Saturation has twelve cycles, each one admitted, one refused and one recovered request; first cycle is warmup."
+    "main_gate": "Fixed plan after independently reviewed 96-boot pilot; no replacement, retries, selective omission or outcome-dependent stopping.",
+    "population": "36 total offered attempts across requesters. Two-requester cases split 18 each: two warmups and sixteen measured. Saturation has twelve cycles, each one admitted, one refused and one recovered request; first cycle is warmup.",
+    "conditioning": "Fixed finite-session warmup, not a demonstrated steady-state stabilization criterion.",
+    "uncertainty": "All twelve boot-pair differences/logratios, median and sorted third-to-tenth interval (0.96142578125 nominal conditional coverage for median under IID continuous paired observations); expose host drift assumptions, no simultaneous inference, p99 adequacy or superiority claim."
   },
   "resources": {
     "endpoint_capacity": 1,
@@ -225,5 +226,6 @@
     },
     "storage": "Existing 2048-word kernel report capacity; bounded64word transport chunks with exact identity/order/end validation. No enlarged stack, logger or report buffer."
   },
-  "saturation_latency_scope": "Admitted request A intentionally includes nested rejected B probes and ordinary feedback-release RPC before A Collect. This controlled saturation/drainage envelope is a separate workload, not an independent ordinary round-trip sample."
+  "saturation_latency_scope": "Admitted request A intentionally includes nested rejected B probes and ordinary feedback-release RPC before A Collect. This controlled saturation/drainage envelope is a separate workload, not an independent ordinary round-trip sample.",
+  "canonical_measurement_contract": "kolvrt.arena.ipc-measurement.contract"
 }

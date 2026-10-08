@@ -158,8 +158,8 @@
         "translation_sha256": "aa85d08424ac281a4bbe33b545394c48a25cffafb41f27c984d211821cc4faa9"
       },
       "docs/architecture/component-arena.md": {
-        "source_sha256": "3fb6dbce72d3452cfbf67272be7c47478eac496357950649e34d2748a12ad4bc",
-        "translation_sha256": "5c9b8a2d58fba8b5b5443df12ec73f5d05d0649775de0e530d489cb6453735cb"
+        "source_sha256": "2a7e53b8e1b6f2395da5989bc606c940f6f1160079c290f27af5950093756c11",
+        "translation_sha256": "037f3c98f9eae8b7b662807b0b0b15b02223269cdc2578dcc8b8dfedcc5c33fd"
       },
       "docs/architecture/dependency-hygiene.md": {
         "source_sha256": "d1c1e83bc65844c2a39b38a240a9888c1c080a366a8dc6a46083a6dddfeb1220",
@@ -390,8 +390,8 @@
         "translation_sha256": "a47b17b48533d5613e8e2549f7124a8617253f83409c61bcb9ea53331f604c34"
       },
       "docs/research/clock-passport.md": {
-        "source_sha256": "c90213a8fec992483ed37d6882d6147f73b4862eb0a287a69326bff8ec97f082",
-        "translation_sha256": "67865c927e0626d9c25b5e721bd7b7af5bd516678dc91dd733f49120273d628a"
+        "source_sha256": "927ac62cb954279fdc46fb8faf260429cc8d401b07a854aa09b1a98acd8758c1",
+        "translation_sha256": "7a51fe1c9ee0290b1e8adf4fb99a02db4b83369c2c292fe0c78d72bcacfceaf3"
       },
       "docs/research/cost-l-queries.md": {
         "source_sha256": "c23c1a30036c6ff542beeba49e0658f4d7aea3eb9ded601ec1bc5535ab0df6a1",
@@ -401,9 +401,13 @@
         "source_sha256": "f3027d023eb3b9ce3e65c14823bf88bf9bc0be2f1a1eed934d32abf15b8935e2",
         "translation_sha256": "786cc999b220cf1c0989a5b9ed33c4874265306c43431dc69c44b3021f1fdc9b"
       },
+      "docs/research/ipc-measurement-contract.md": {
+        "source_sha256": "b1c405a1f9c45efaa6be8b3494db8ae300aaece39385613b3a461ee7547a547d",
+        "translation_sha256": "66d23740d70ebfc19891916ed464c66da61a42f9fe0a5c6a7b2887e61e85918d"
+      },
       "docs/research/ipc-passport.md": {
-        "source_sha256": "63d28d2f1873752985e8a57a15995222161e5858c6d9cea8adf014f6f56a8043",
-        "translation_sha256": "2f686d461ba8d2b192050d2e17801e4220b60f044e9c112e643669b7effac736"
+        "source_sha256": "e9121e2db48a20f32711a67641d7bfa114ade921dd8653716e700a7504fc3d90",
+        "translation_sha256": "40a95a61763284fe5e7834a0392938df7325dc5dfe46973211ada1f72b8a09dc"
       },
       "docs/research/issue-submissions.md": {
         "source_sha256": "c9b6aed813fa54af671408b2be840837b8a07aadd8ed01ca223953cc4c310020",

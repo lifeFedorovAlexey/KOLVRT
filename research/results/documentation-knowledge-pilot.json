@@ -1,11 +1,11 @@
 {
-  "approximate_tokens": 54484,
-  "catalog_bytes": 87213,
-  "catalog_nodes": 214,
+  "approximate_tokens": 54733,
+  "catalog_bytes": 88209,
+  "catalog_nodes": 216,
   "catalog_serialization": "compact standard JSON, whitespace has no meaning",
-  "catalog_sha256": "c5c76ae8111f0dd01646a271fca7eebf9a2e4e8633109025c24da39f2a643dce",
+  "catalog_sha256": "9a835ed398a29e0fdf92e9ed3e3af46d4fee39e96f9cfa596bf1fa2cca7288c6",
   "claim": "Executed offline deterministic navigation and metadata validation only; no LLM correctness, kernel or physical-hardware evidence.",
-  "context_plus_catalog_bytes": 217935,
+  "context_plus_catalog_bytes": 218931,
   "correctness": {
     "budget": "within 131072 bytes",
     "mandatory_ids": "present",
@@ -14,8 +14,8 @@
   },
   "coverage_review": "The actual test asserts required authority/lifetime IDs; a reviewer still judges semantic sufficiency. Unenrolled historical/docs domains remain staged.",
   "docs_baseline": {
-    "documents": 112,
-    "utf8_bytes": 1041372
+    "documents": 113,
+    "utf8_bytes": 1059697
   },
   "estimate": "ceil UTF-8 bytes/4, not a tokenizer",
   "evidence_loading": "Receipts are linked, not loaded by context. Inspect their exact-source scope when the task audits execution; add their bytes to any end-to-end claim.",
@@ -27,6 +27,7 @@
       "doc.kolvrt.native-applications.fixture-review",
       "doc.kolvrt.supervision.acceptance-review",
       "kolvrt.apps.native-elf",
+      "kolvrt.arena.ipc-measurement.contract",
       "kolvrt.arena.ipc-passport",
       "kolvrt.handles.identity",
       "kolvrt.handles.local",
@@ -72,12 +73,12 @@
   "query": "review Phase 3.4 capability revocation",
   "rendered_context_bytes": 130722,
   "russian_pilot": {
-    "approximate_tokens": 84017,
-    "catalog_bytes": 87213,
-    "context_plus_navigation_bytes": 336066,
+    "approximate_tokens": 84385,
+    "catalog_bytes": 88209,
+    "context_plus_navigation_bytes": 337538,
     "correctness": "English pilot prerequisites preserved; Unicode query and Russian locations executed; no semantic completeness proof.",
     "locale": "ru",
-    "localized_navigation_bytes": 49680,
+    "localized_navigation_bytes": 50156,
     "missing": [
       {
         "id": "kolvrt.security.capability-revocation",

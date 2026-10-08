@@ -10,37 +10,79 @@
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
+      "path": "crates/repository-checks/src/arena.rs",
+      "before_sha256_lf": "39d0d0e635ac92ef03f2e1b031859a3319f932fffd20026385b56c5ec63b0c0b",
+      "after_sha256_lf": "5021c2d39fed56328a943f605bd090cb29caf1086b841d14023f8c5390ec9b72",
+      "disposition": "existing-feature",
+      "reason": "Add human-readable Arena report and descriptive diff over the existing assessor and comparison-class gates, retaining invalid evidence and distinguishing repeat/recorder observations from proven implementation improvements."
+    },
+    {
+      "path": "crates/repository-checks/src/arena/report.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "565d9a0568474ece86323ef1c11d4560f49cb492c21f07fec86707b39fccccd2",
+      "disposition": "existing-feature",
+      "reason": "Add human-readable Arena report and descriptive diff over the existing assessor and comparison-class gates, retaining invalid evidence and distinguishing repeat/recorder observations from proven implementation improvements."
+    },
+    {
+      "path": "crates/repository-checks/tests/arena.rs",
+      "before_sha256_lf": "85cd592420fed964f5271d3eb8230df81f079eb761598b170c0340f2efd3b21e",
+      "after_sha256_lf": "a3ac7a7f2cd4d0baa1c8f447c32620cd9fbdd6220b33633a663467fe851e4047",
+      "disposition": "existing-feature",
+      "reason": "Add human-readable Arena report and descriptive diff over the existing assessor and comparison-class gates, retaining invalid evidence and distinguishing repeat/recorder observations from proven implementation improvements."
+    },
+    {
       "path": "crates/xtask/src/arena_clock.rs",
       "before_sha256_lf": "66a0745270db150404c38b60b160386faadf768225c8173c89619b6771a84194",
-      "after_sha256_lf": "84674da3e00e9f5ca5f7737528c80af3322d1e772380ef00e7dd55813b2e7181",
+      "after_sha256_lf": "d0eb2322fdccf7e0e4469bdd628c3cb68a049411581414b82e693620335cc093",
       "disposition": "existing-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/arena_clock/passport.rs",
       "before_sha256_lf": "9ca4cdc068132564de33da07ea303d1e9fc9975611c14352865172d2bd3d9029",
-      "after_sha256_lf": "6ec6c2a9b83b6170042bbd574030ec3f511ff171fe770d90a8a7a3da76029639",
+      "after_sha256_lf": "422ec110d6fdb13f7543f24b251c44252cca695314e64a5b9b6e288d7dddd95f",
       "disposition": "existing-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/arena_common.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "c0b012605d95468b4f21e18df1908434942fa35c852bf4544be49bf165ecf285",
+      "after_sha256_lf": "4ef2fd94b8a7c5e34e0a2c6e7ff660b06ef70b769a0584b33ce5eee03d5885b0",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "crates/xtask/src/arena_common/passport.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "3c490da81591fcff57d4914bd7149bc74082351f4e79232e4689e77481eed8af",
       "disposition": "new-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/arena_ipc.rs",
       "before_sha256_lf": null,
-      "after_sha256_lf": "4ff65900efe7d957334bddf01fe51984c31010277da8bcd9d9a55e86c8a8ff32",
+      "after_sha256_lf": "fedd0f4a13b652f340e2b9ea959fb99cd14def8a43f2278aaa122103b4538a85",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "crates/xtask/src/arena_ipc/analysis.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "b13e6e1720655d5d81fd233d85bde2ee2573e01734b272f597dc84b08ed6f304",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "crates/xtask/src/arena_ipc/passport.rs",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "dfa5f292b893741e70a791fdcbf244de0d29ed5e88b3893922e1725dbcf69df0",
       "disposition": "new-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
     {
       "path": "crates/xtask/src/main.rs",
       "before_sha256_lf": "e0b0bcc5196064637284b8ee2299968c59345a596bf5948c5f17d044bee83746",
-      "after_sha256_lf": "90d83b321159f4e4ede7d3a7684591772023f53b8f6050020f002de13e9ef9d3",
+      "after_sha256_lf": "1d7b33d59d326c48af76208dbbfdc7230644182e693fd2932d124be8f36aaea9",
       "disposition": "new-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
@@ -61,7 +103,7 @@
     {
       "path": "research/arena/ipc-query/input.json",
       "before_sha256_lf": null,
-      "after_sha256_lf": "f992f25cdb570d9312004e944c0d096ae8e148ec9cb1aceee9620219e2aa1382",
+      "after_sha256_lf": "99702e0508f7613f4856a516959a776526f1b4f11d88f6082cfc0ad4cf842c7f",
       "disposition": "new-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
@@ -75,7 +117,7 @@
     {
       "path": "research/arena/ipc-query/protocol.json",
       "before_sha256_lf": null,
-      "after_sha256_lf": "91f55645b3b2c945accc9e5eac3e32fe4d57f85239d8ba9a49001d0cf79a0bec",
+      "after_sha256_lf": "7e883c9f9fdf372918254c05337e91746a36b62b572a51c036c7185815f1557f",
       "disposition": "new-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
@@ -83,6 +125,356 @@
       "path": "research/arena/ipc-query/resources.json",
       "before_sha256_lf": null,
       "after_sha256_lf": "1a2caffeb2ce91678f35c89fa5c729553970784c7867d63af9acbf58b17fa6b3",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/clock-query-dev.json",
+      "before_sha256_lf": "ceaf039fc7e7bd837372a21083e5c0612145930c6c03db034617184e010afa0c",
+      "after_sha256_lf": "4b8ee06d50636b639ffc30c39e60cdb3a0e53d89b9943749c77f6cf90ebf20fc",
+      "disposition": "existing-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/clock-query-prod.json",
+      "before_sha256_lf": "d347435c39a3c1a84c0e81d39064515c22728c1bf909edeb8279ee927d4c90eb",
+      "after_sha256_lf": "12a03e5b0f2fd9bc6f682d5cef66471e4513aece4f8d1efb59e054d852029379",
+      "disposition": "existing-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-0-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "c8999a0e6c2de9e4cbbddcc7c4dcdbb080c1a67ec4c9bd3e3f6d23b30d4b7b88",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-0-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "d92047b38e9efe0b681ffb05ffbcab8036199372bf308b9e064f157d2d3ab928",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-0-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "dcc3f224ce8b30fdb4c5cc6e275ca063483764671b46850c311cb765610ac452",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-0-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f587a574bceef5f040bdb64f4c88140b22af08a9638dde59513d3b4055b0d426",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-1-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "ed2d0b26f54030b959175e9cf04cad1ec79900639b719d1253e6206be2868a6b",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-1-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a157d56592be1aa945656d7e996000ed24035de6cd97d8d1573e061c71aaa0a3",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-1-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "069202ae2f94f829f5a57ea04f03cec632bc41fde59c813b9c1d60c3ee479528",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-1-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "59eff7fd08c064a19d88300800eb5c7bd0f034e0877d7dd96ea04c2bcf5a69d6",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-10-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "48bdd768f4c146301d36921bc03add26028aaaa7f622feac84b7b90c3c01e141",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-10-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "23e43a1631c402f5bafa2152b37d85ce74a8780f88d12127b221315c0317215a",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-10-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "52d1a5fb17d871734791f75cc8e86599fb29cd546e590dfa91c0086155d76765",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-10-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "179db4735a6f25df16ced05c7fd0b7ed821495ac66d396e770cbeb3fb2d5d7dd",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-11-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f3e3b0fc4ac5626f1ec3683232e1a5189c2822e76e73b464c9e09f142f83d01b",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-11-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "2bd8fd69224c4c1fa09a65a66a18d8f2c8f0cd709938cf4c5c126f3ac56a3f5d",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-11-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "9a61e5cbf4c2c8de6c453d26701921455bbf52f5066deae705e9eb44cc40a3c1",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-11-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "21360fbd050913b2fa655dda228ac1f5159cdd00303c6e8945ed9473efc8b96d",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-2-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "60a6b09d8c7af84f0a61e9598b021e06891f768768b995f49624b220f8645be8",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-2-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "873ecc407aa66df14863301dd56edbccb0875c4096d6ac6f662a78f9ae22d72c",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-2-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "76ece298ee30d76654139ed34066a1d3ca8631d49cb7a704ffe879904faa0357",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-2-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "cda3c98bc3c91aa2887121cb869e0a40f29619168880d18900dd95236f685683",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-3-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "215b498314bb02454795ee4b5217a40ff5fed1d6b7fdda338688922881abe928",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-3-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "fc1c217a57d9e6387c458ba289be3c7d44e8c3198873f99e1aee7f6bdceea0b3",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-3-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a04792650ea096f08e263958fa8950cda31d9f659be58e24f8177570cefa0611",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-3-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "7d41f22abc2521ee7c129c16efbbca69980a0ebcdc0291494c038296cf57fb31",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-4-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "087a1ae2568c779f16d31bd31b19a7df6b1e42a4a10d26d413d1885748f2a3d3",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-4-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f179d935705fc98e79a68aeb8e4e38259516f234fa6589d220513a39aa1d97d1",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-4-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "03ef4797129436a48691057a7761eaffc3a2890ef029e800bf066d6b9c464718",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-4-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "4463bc3ae72069062e35dc123543cd67b66dd1b9d2a217da1dee63736fc0d519",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-5-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "1a4777836d7c7a9b99636a6ea2d4600a0e70a9ac7aee01f088d34a4828b30951",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-5-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "7271b10e7efa496c20517654170516c3f25d977ce4874114d354d5c9e5735197",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-5-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "429cc8a045138341d7aa5ea8d2485183b160b0f951771be7aa87b7a4df345adf",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-5-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "b0a9b66bc87e5c3cf2794d939ac0cf826ca0259bf463ebd39821d79287142021",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-6-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "42bc33c8be69050a3b6b1c56fef187ca3bca4b0ed86ef860e7b56c62d1fd1c95",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-6-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a94b862d8ee8f41c489f95cc5e26fd321039680852895b74ba7e29eee3d2c5ed",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-6-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "5e732ed248fa9231f6fe72c4d49ae290e62f7bd61af5b6a660c34a91cb017cf1",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-6-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "6a740d4cd8f0e3f8291ce9ab1cb4728e8dea8979eda3282934748c9845ee3891",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-7-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "88e8f93ed1ec50fcfd586e95667d4f80bee2c8cab7f184fba813efd08b724a2b",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-7-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "65c7c57b27d3919fc0511a817d89b8d7e109d4a82a46f6c030bb58397a6b96db",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-7-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "3733c298c1ad658b1637f34263ed8c78c47515913da5ddaa864ce61544edd16b",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-7-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "3725d0e4ae3d295b76502c270c0c52b59e23f99de34e28fa201c105fe33cc31f",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-8-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "f3630527d4920ba4e8e46231b22e97ca8035fdc516b3c2977cba866412f421be",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-8-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "c85e3aeda5e80a701cfcbb72eb6e569ec314236da0ce18d20e7b4ac837e5d9b0",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-8-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "a85a46e813c56eae173c3ad9574b9d7a7d084af0408c521b694b13451996c949",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-8-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "443f1651189936d97ebf5bad084b55b83ad3ee8f0b5cf777387b1a0670c46a1b",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-9-dev-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "c60e035c2a05f6020bd44252407acd1e04e0677b56acc5a43fd7732be3da18b2",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-9-dev-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "9a93be26474398e4092b53f0df908760fae7b66e64138c3e0f73ee35192a50c5",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-9-prod-latency.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "42f8ef8e6915c62bee283c89d64b2bb504da1ee899888ba66686be7234681ce3",
+      "disposition": "new-feature",
+      "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
+    },
+    {
+      "path": "research/arena/profiles/ipc-query-9-prod-throughput.json",
+      "before_sha256_lf": null,
+      "after_sha256_lf": "1ae6ec485252796a2ea955b45294b83bd622a34c2226b475056774eae1f3a38c",
       "disposition": "new-feature",
       "reason": "Add external IPC actors and a shared measured execution path, preserve ordinary production authority and limits, export complete bounded reports, and retain failed attempts and current verification limits."
     },
@@ -145,7 +537,7 @@
     {
       "id": "kolvrt.arena",
       "disposition": "semantic-change",
-      "reason": "Canonical EN/RU contracts describe IPC producer and generic report transport integration, preserve historical receipts and distinguish incomplete measurement acceptance from current-source verification."
+      "reason": "Canonical EN/RU documentation adds validated human-readable report/diff commands and preserves machine JSON, compatibility rules and historical evidence limits."
     },
     {
       "id": "kolvrt.arena.clock-passport",

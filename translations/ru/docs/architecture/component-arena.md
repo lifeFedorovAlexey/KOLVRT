@@ -64,6 +64,10 @@ Arena применяется к заменяемым аллокаторам, п�
 
 ## Сравнение и таблица результатов
 
+Реализованное представление в терминале — `cargo xtask arena report [DIR|RUN]`. Без пути оно открывает сохранённую кампанию CLOCK `research/arena/runs/clock-query-2978ad9`; это исторический вариант по умолчанию, а не автоматический поиск новейших исходников. Команда читает оригинальные паспорта через существующую проверку допуска и показывает операцию, среду, повторы, метрику/статистику, единицы, количество наблюдений, потери и допуск. Неверные или неполные свидетельства остаются видимыми. Просмотр результатов не запускает кампанию ядра.
+
+Для читаемого описательного сравнения используйте `cargo xtask arena diff BASE_RUN CANDIDATE_RUN`. Оба запуска должны пройти существующие проверки допуска и точного совпадения класса сравнения; DEV и PROD не взаимозаменяемы. Представление показывает абсолютную и процентную разницу с объявленным направлением метрики. Благоприятное наблюдаемое значение не доказывает улучшения: повторные измерения одной реализации, пары observer OFF/ON и недостаточные свидетельства неопределённости не устанавливают регрессию ревизии или превосходство. Существующие команды `assess` и `compare` сохраняют машиночитаемый JSON-вывод.
+
 Эти команды показывают задуманный интерфейс; сейчас они недоступны:
 
 ```bash
@@ -152,6 +156,7 @@ Issue #33 добавляет экспериментальный внешний I
         "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
         "sources": [
           "crates/repository-checks/src/arena.rs",
+          "crates/repository-checks/src/arena/report.rs",
           "crates/repository-checks/tests/arena.rs",
           "schemas/arena-standards.schema.json",
           "schemas/arena-profile.schema.json",

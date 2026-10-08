@@ -64,6 +64,10 @@ Use paired runs and recorded ordering under equivalent quotas, devices and instr
 
 ## Comparison and leaderboard
 
+The implemented terminal view is `cargo xtask arena report [DIR|RUN]`. With no path it opens the retained CLOCK campaign `research/arena/runs/clock-query-2978ad9`; this is a historical default, not automatic discovery of the latest source. It reads original run passports through the existing assessor and shows operation, environment, repetitions, metric/statistic, units, sample counts, losses and admission. Invalid or incomplete evidence stays visible. Viewing results does not execute a kernel campaign.
+
+Use `cargo xtask arena diff BASE_RUN CANDIDATE_RUN` for a readable descriptive comparison. Both runs must pass the existing admission and exact comparison-class checks; DEV and PROD are not interchangeable. The view shows absolute and percentage differences with the declared metric direction. A favorable observed value is not proof of improvement: repeated measurements of one implementation, observer OFF/ON pairs and insufficient uncertainty evidence cannot establish a revision regression or superiority. Existing `assess` and `compare` commands retain machine-readable JSON output.
+
 These commands illustrate the intended interface; they are not available commands:
 
 ```bash
@@ -152,6 +156,7 @@ Issue #33 adds an experimental external IPC producer through the shared CLOCK bu
         "implementation_scope": "Offline A0/A1 registry and closed schemas, frozen profile/run validation, conservative comparison classes and correctness/SFR/SAR rejection gates, integrated with the separately accepted bounded CLOCK producer; no general records publication.",
         "sources": [
           "crates/repository-checks/src/arena.rs",
+          "crates/repository-checks/src/arena/report.rs",
           "crates/repository-checks/tests/arena.rs",
           "schemas/arena-standards.schema.json",
           "schemas/arena-profile.schema.json",
