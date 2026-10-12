@@ -21,7 +21,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           TIMING_RUN_ID: ${{ github.event.workflow_run.id }}
         run: node scripts/ci-timings.cjs "$GITHUB_REPOSITORY" "$TIMING_RUN_ID" target/ci-timings research/measurements/ci-legacy-baseline.json
-      - uses: actions/upload-artifact@v7.0.1
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: ci-timings-${{ github.event.workflow_run.id }}
           path: target/ci-timings/
